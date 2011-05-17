@@ -5,21 +5,28 @@
   (import [com.sun.syndication.feed.synd SyndEntry SyndFeed]
           [com.sun.syndication.io FeedException SyndFeedInput]))
 
+(defn- rss-bean?
+  [e]
+  (re-find #"sun" (str (class e))))
 
-(let [rome? (fn [e] (re-find #"syndication" (str (class e))))]
-  (defn- decode-bean [c]
-    (let [target (if (rome? c) (bean c) c)]
-      (cond
-       (map? target)
-       (into {}
-             (for [[k v] target]
-               [(keyword k) (decode-bean v)]))
-       (vector? target)
-       (vec (map decode-bean target))
-       :else target))))
+(defn- list-like? [o]
+  (or (vector? o)
+      (list? o)
+      (instance? java.util.List o)))
+
+(defn- decode-bean [c]
+  (let [target (if (rss-bean? c) (bean c) c)]
+    (cond
+     (map? target)
+     (into {}
+           (for [[k v] target]
+             [k  (decode-bean v)]))
+     (list-like? target)
+     (map decode-bean target)
+     :else target)))
 
 (defn parse [file]
   (let [feed (.build (SyndFeedInput.) file)]
-    (map decode-bean (trace (.getEntries feed)))))
+    (decode-bean feed)))
 
 
