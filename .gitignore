@@ -3,3 +3,8 @@ pom.xml
 /lib/
 /classes/
 .lein-deps-sum
+.cake
+.project
+.classpath
+bin/
+.settings
