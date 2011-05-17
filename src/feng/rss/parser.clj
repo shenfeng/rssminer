@@ -14,13 +14,20 @@
       (list? o)
       (instance? java.util.List o)))
 
+(defn- keep? [e]
+  (not (or (nil? e)
+           (when (seq? e) 
+             (empty? e)))))
+
 (defn- decode-bean [c]
   (let [target (if (rss-bean? c) (bean c) c)]
     (cond
      (map? target)
      (into {}
-           (for [[k v] target]
-             [k  (decode-bean v)]))
+           (for [[k v] target
+                 d (list (decode-bean v))
+                 :when (keep? d)]
+             [k d]))
      (list-like? target)
      (map decode-bean target)
      :else target)))

@@ -8,4 +8,4 @@
                  [commons-dbcp/commons-dbcp "1.4"]
                  [ring/ring-core "0.3.8"]
                  [ring/ring-jetty-adapter "0.3.8"]
-                 [rome/rome "0.9"]])
+                 [net.java.dev.rome/rome "1.0.0"]])
