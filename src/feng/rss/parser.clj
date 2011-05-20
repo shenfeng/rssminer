@@ -1,9 +1,5 @@
 (ns feng.rss.parser
-  (use [clojure.walk :only [postwalk]]
-       clojure.contrib.trace)
-  (require [clojure.zip :as zip])
-  (import [com.sun.syndication.feed.synd SyndEntry SyndFeed]
-          [com.sun.syndication.io FeedException SyndFeedInput]))
+  (import [com.sun.syndication.io SyndFeedInput]))
 
 (defn- rss-bean?
   [e]

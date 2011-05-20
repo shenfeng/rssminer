@@ -6,7 +6,7 @@
 (def TEST_PSQL_USERNAME "postgres")
 (def TEST_PSQL_PASSWORD "123456")
 
-(defn gen-random [num]
+(defn- gen-random [num]
   (let [alphabet "abcdefghjklmnpqrstuvwxy123456789"]
     (apply str
            (take num (shuffle (seq alphabet))))))
@@ -34,7 +34,7 @@
         con (java.sql.DriverManager/getConnection
              con-uri TEST_PSQL_USERNAME TEST_PSQL_PASSWORD)]
     (.close (doto (.createStatement con) ; create a temp postgres database
-              (.addbatch create-sql)
+              (.addBatch create-sql)
               (.executeBatch)))
     (use-psql-database! :jdbc-url (str "jdbc:postgresql://"
                                        TEST_DB_HOST "/" tmpdb)

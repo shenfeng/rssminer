@@ -2,11 +2,7 @@
   (use clojure.pprint
        clojure.test
        clojure.contrib.trace
-       feng.rss.parser)
-  (require [clojure.zip :as zip]
-           [clojure.contrib.lazy-xml :as xml])
-  (import [com.sun.syndication.feed.synd SyndEntry SyndFeed]
-          [com.sun.syndication.io FeedException SyndFeedInput]))
+       feng.rss.parser))
 
 (def rss1
   "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
@@ -29,7 +25,7 @@
 </channel>
 </rss>")
 
-(def atom
+(def atom1
   "<?xml version=\"1.0\" encoding=\"utf-8\"?>
 <feed xmlns=\"http://www.w3.org/2005/Atom\">
          <title>Example Feed</title>
@@ -65,9 +61,9 @@
 
 
 (deftest test-atom
-  (let [sr (java.io.StringReader. atom)
+  (let [sr (java.io.StringReader. atom1)
         rss (parse sr)
         feeds (:entries rss)]
-    (pprint rss)
     (is (= "Example Feed") (:title rss))
-    (is (= 1 (count feeds)))))
+    (is (= 1 (count feeds)))
+    (is (= "Atom-Powered Robots Run Amok" (-> feeds first :title)))))
