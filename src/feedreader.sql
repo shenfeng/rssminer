@@ -11,9 +11,12 @@ CREATE TABLE users
 CREATE TABLE feedsources
 (
   id serial NOT NULL,
-  uri character varying(300),
+  link character varying(300),
+  title character varying(300),
+  description text,
   last_check timestamp with time zone,
   last_update timestamp with time zone,
+  CONSTRAINT uniq_feedsources_link UNIQUE (link),
   CONSTRAINT pk_feedsources PRIMARY KEY (id)
 )
 ----
@@ -23,9 +26,38 @@ CREATE TABLE user_feedsource
   feedsource_id integer NOT NULL,
   CONSTRAINT pk_userfeedsource PRIMARY KEY (user_id, feedsource_id),
   CONSTRAINT fk_userfeedsource_feedsourceid FOREIGN KEY (feedsource_id)
-      REFERENCES feedsource (id) MATCH SIMPLE
+      REFERENCES feedsources (id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT fk_userfeedsource_userid FOREIGN KEY (user_id)
+      REFERENCES users (id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+)
+----
+CREATE TABLE feeds
+(
+  id serial NOT NULL,
+  feedsource_id integer,
+  guid character varying(50), --uniqe string per item
+  title character varying(200),
+  updated timestamp with time zone,
+  pubDate timestamp with time zone,
+  description text,
+  "summary" text,
+  CONSTRAINT pk_feeds PRIMARY KEY (id),
+  CONSTRAINT fk_feeds_feedsourceid FOREIGN KEY (feedsource_id)
+      REFERENCES feedsources (id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+)
+----
+CREATE TABLE user_feed
+(
+  user_id integer NOT NULL,
+  feed_id integer NOT NULL,
+  CONSTRAINT pk_userfeed PRIMARY KEY (user_id, feed_id),
+  CONSTRAINT fk_userfeed_feedid FOREIGN KEY (feed_id)
+      REFERENCES feeds (id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT fk_userfeed_userid FOREIGN KEY (user_id)
       REFERENCES users (id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE
 )
