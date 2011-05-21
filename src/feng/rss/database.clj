@@ -3,7 +3,6 @@
   (:import (clojure.lang RT)
            (org.apache.commons.dbcp BasicDataSource)))
 
-
 (def *factory* {:factory nil
               :ds nil})
 

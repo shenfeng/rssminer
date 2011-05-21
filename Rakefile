@@ -18,6 +18,11 @@ task :download do
   end
 end
 
+desc "Run development server"
+task :run => ["css:compile", "html:compress"] do
+  sh 'scripts/run --profile development'
+end
+
 namespace :js do
   desc 'start jstestdriver srever'
   task :startserver do
