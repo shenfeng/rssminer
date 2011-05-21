@@ -6,7 +6,7 @@ CREATE TABLE users
   "name" character varying(30),
   CONSTRAINT pk_users PRIMARY KEY (id),
   CONSTRAINT uniq_users_email UNIQUE (email)
-)
+);
 ----
 CREATE TABLE feedsources
 (
@@ -18,7 +18,7 @@ CREATE TABLE feedsources
   last_update timestamp with time zone,
   CONSTRAINT uniq_feedsources_link UNIQUE (link),
   CONSTRAINT pk_feedsources PRIMARY KEY (id)
-)
+);
 ----
 CREATE TABLE user_feedsource
 (
@@ -31,7 +31,7 @@ CREATE TABLE user_feedsource
   CONSTRAINT fk_userfeedsource_userid FOREIGN KEY (user_id)
       REFERENCES users (id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE
-)
+);
 ----
 CREATE TABLE feeds
 (
@@ -47,7 +47,7 @@ CREATE TABLE feeds
   CONSTRAINT fk_feeds_feedsourceid FOREIGN KEY (feedsource_id)
       REFERENCES feedsources (id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE
-)
+);
 ----
 CREATE TABLE user_feed
 (

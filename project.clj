@@ -7,6 +7,7 @@
                  [clj-http "0.1.3"]
                  [postgresql/postgresql "9.0-801.jdbc4"]
                  [commons-dbcp/commons-dbcp "1.4"]
+                 [sandbar/sandbar "0.4.0-SNAPSHOT"]
                  [ring/ring-core "0.3.8"]
                  [ring/ring-jetty-adapter "0.3.8"]
                  [net.java.dev.rome/rome "1.0.0"]]

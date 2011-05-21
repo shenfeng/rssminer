@@ -6,13 +6,15 @@
                          [file-info :only [wrap-file-info]]
                          [params :only [wrap-params]]
                          [file :only [wrap-file]]
-                         [cookies :only [wrap-cookies]])
+                         [session :only [wrap-session]])
         (feng.rss [middleware :only (wrap-reload-in-dev
                                      wrap-cache-header
                                      wrap-request-logging)]
                   [database :only [use-psql-database!]])
-        (feng.rss.handlers [feedreader :as index]))
-  (:require [feng.rss.config :as config]))
+        [sandbar.stateful-session :only [wrap-stateful-session]])
+  (:require [feng.rss.config :as config]
+            (feng.rss.handlers [feedreader :as index]
+                               [users :as user])))
 
 (let [views-ns '[feng.rss.views.feedreader]
       all-rss-ns (filter
@@ -32,6 +34,13 @@
 
 (defroutes all-routes
   (GET "/" [] index/index-page)
+  ;; (GET "/login" [] "")
+  (context "/login" []
+           (GET "/" [] user/show-login-page)
+           (POST "/" [] user/login))
+  (context "/signup" []
+           (GET "/" [] user/show-signup-page)
+           (POST "/" [] user/signup))
   (ANY "*" [] {:status 404,
                :headers {"content-type" "text/html"}
                :body "<h1>Page not found.</h1>"}))
@@ -39,7 +48,7 @@
 (defn app [] (-> #'all-routes
                  wrap-keyword-params
                  wrap-params
-                 wrap-cookies
+                 wrap-stateful-session
                  (wrap-reload-in-dev reload-meta)
                  (wrap-file "public")
                  wrap-cache-header                               

@@ -1,3 +1,37 @@
 @import "global_var.inc";
 
 @import "reset.inc";
+
+#main {
+	margin: 0 auto;
+	width: @page_width;
+}
+
+#accouts-div{
+    margin-top:80px;
+    input{  font-size: 1.2em; }
+    .textfield{ padding: 0.2em; width: 300px; }
+}
+
+.post-form {
+    margin-top: 3em;
+    caption,td { padding: 5px 2px; }
+    caption { font-weight: bold; font-size: 1.5em; }
+    table, h2{
+        margin: 0 auto;
+    }
+    tr td:first-child {
+        text-align:right;
+        vertical-align: middle;
+    }
+    input.textfield,textarea {
+        width: 340px;
+        padding: 0.2em;
+    }
+    label{
+        font-weight: bold;
+        padding: 0.2m 1em;
+    }
+    
+}
+.required { color: #CC0000; }

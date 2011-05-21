@@ -1,0 +1,27 @@
+<div id="accouts-div">
+  <form action="/login" method="post" class="post-form">
+    <table>
+      <caption>Login</caption>
+      <tr>
+        <td><label for="email">Email:</label>
+        </td>
+        <td><input class="textfield" name="email" id="email" />
+          <span class="required">*</span>
+        </td>
+      </tr>
+      <tr>
+        <td><label for="password">Password:</label>
+        </td>
+        <td><input class="textfield" name="password" 
+                   id="password" type="password"/>
+          <span class="required">*</span>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><input class="submit" type="submit" value="Login" /></td>
+      </tr>
+    </table>
+    <input id="return-url" name="return-url" type="hidden" />
+  </form>
+</div>

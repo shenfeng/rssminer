@@ -16,6 +16,9 @@ task :download do
   unless File.exists? 'scripts/JsTestDriver-1.3.2.jar'
     sh 'wget -O scripts/JsTestDriver-1.3.2.jar http://js-test-driver.googlecode.com/files/JsTestDriver-1.3.2.jar'
   end
+  unless File.exists? 'script/htmlcompressor-1.3.1.jar'
+    sh 'wget -O scripts/htmlcompressor-1.3.1.jar http://htmlcompressor.googlecode.com/files/htmlcompressor-1.3.1.jar'
+  end
 end
 
 desc "Run development server"
@@ -36,6 +39,7 @@ namespace :js do
 end
 
 namespace :css do
+  CLEAN.include('public/css/*')
   desc 'Compile less , Compress css'
   task :compile do
     less = FileList['less/**/*.less'].exclude('less/**/*.inc.less')
@@ -60,7 +64,7 @@ namespace :html do
   html_triples.each do |src, tgt, dir|
     directory dir
     file tgt => [src, dir] do
-      sh "java -jar scripts/htmlcompressor-1.1.jar #{src} -o #{tgt}"
+      sh "java -jar scripts/htmlcompressor-1.3.1.jar #{src} -o #{tgt}"
     end
   end
 
@@ -69,25 +73,13 @@ namespace :html do
 end
 
 namespace :watch do
-  desc 'Run rake css:compile when modification detected '
-  task :css => ["css:compile"] do
-    sh 'while inotifywait -e modify less/; do rake css; done'
-  end
-
-  desc 'Run rake html:compress when modification detected'
-  task :html => ["html:compress"] do
-    sh 'while inotifywait -r -e modify templates/; do rake html:compress; done'
-  end
-  
   desc 'Watch css, html; after Ctrl+C, process sh should be manually killed'
-  task :all => ["css:compile", "html:compress"] do
+  task :all => ["css:compile", "html:compress", "download"] do
     t1 = Thread.new do
-      sh 'while inotifywait -e modify less/; do
-rake css:compile; done'
+      sh 'while inotifywait -e modify less/; do rake css:compile; done'
     end
     t2 = Thread.new do
-      sh 'while inotifywait -r -e modify templates/; do
-rake html:compress; done'
+      sh 'while inotifywait -r -e modify templates/; do rake html:compress; done'
     end
     t1.join
     t2.join
