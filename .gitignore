@@ -8,3 +8,6 @@ pom.xml
 .classpath
 bin/
 .settings
+public/css/
+src/templates/
+.idea/
