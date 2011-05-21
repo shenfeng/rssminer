@@ -2,7 +2,8 @@
   (:require [clojure.string :as str])
   (:use [feng.rss.database :only [close-global-psql-factory use-psql-database!]]))
 
-(def TEST_DB_HOST "127.0.0.1")
+(def TEST_DB_HOST
+  (get (System/getenv) "READER_DB_HOST" "127.0.0.1"))
 (def TEST_PSQL_USERNAME "postgres")
 (def TEST_PSQL_PASSWORD "123456")
 
