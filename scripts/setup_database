@@ -1,15 +1,10 @@
 #!/bin/sh
 
-# TODO: Move database setup code to Clojure and remove this file.
-
 READLINK=readlink
 if which greadlink > /dev/null; then
     READLINK=greadlink
 fi
-
 ABSOLUTE_PATH=$(${READLINK} -f $0)
 HOME="${ABSOLUTE_PATH%/*/*}"
+cd "${HOME}" && java -Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8 -server -cp "lib/*:src/:test/" clojure.main scripts/setup_database.clj $@
 
-echo 'DROP DATABASE IF EXISTS feedreader;' | psql -U postgres
-echo 'CREATE DATABASE feedreader;' | psql -U postgres
-psql -U postgres feedreader -f ${HOME}/src/feedreader.sql

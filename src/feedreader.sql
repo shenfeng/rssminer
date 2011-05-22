@@ -37,7 +37,7 @@ CREATE TABLE feeds
 (
   id serial NOT NULL,
   feedsource_id integer,
-  guid character varying(50), --uniqe string per item
+  guid character varying(200), --uniqe string per item
   author character varying(50),
   title character varying(200),
   link character varying(200),
