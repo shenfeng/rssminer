@@ -1,6 +1,9 @@
 (ns feng.rss.test-util
   (:require [clojure.string :as str])
-  (:use [feng.rss.database :only [close-global-psql-factory use-psql-database!]]))
+  (:use [feng.rss.database :only [close-global-psql-factory
+                                  use-psql-database!]]
+        [feng.rss.db.user :only [create-user]]
+        [feng.rss.test-common :only [test-user]]))
 
 (def TEST_DB_HOST
   (get (System/getenv) "READER_DB_HOST" "127.0.0.1"))
@@ -12,7 +15,7 @@
     (apply str
            (take num (shuffle (seq alphabet))))))
 
-(defn- exec-prepared-sqlfile [tmpdb]
+(defn exec-prepared-sqlfile [tmpdb]
   (let [sql (slurp (-> (clojure.lang.RT/baseLoader)
                        (.getResourceAsStream "feedreader.sql")))
         stats (filter (complement str/blank?)
@@ -42,6 +45,7 @@
                         :user TEST_PSQL_USERNAME
                         :password TEST_PSQL_PASSWORD)
     (exec-prepared-sqlfile tmpdb)
+    (create-user test-user)
     (test-fn)
     (close-global-psql-factory)         ; close global psql connetion
     (doto (.createStatement con)        ; drop test psql database

@@ -1,0 +1,2100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xml-stylesheet type="text/xsl" href="http://weblogs.asp.net/utility/FeedStylesheets/rss.xsl" media="screen"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:wfw="http://wellformedweb.org/CommentAPI/">
+	<channel>
+		<title>ScottGu's Blog</title>
+		<link>http://weblogs.asp.net/scottgu/default.aspx</link>
+		<description>Scott Guthrie lives in Seattle and builds a few products
+			for Microsoft</description>
+		<dc:language>en</dc:language>
+		<generator>CommunityServer 2007 SP1 (Build: 20510.895)</generator>
+		<item>
+			<title>Upcoming Conference talks in Norway, Germany and the UK</title>
+			<link>http://weblogs.asp.net/scottgu/archive/2011/05/16/upcoming-conference-talks-in-norway-germany-and-the-uk.aspx</link>
+			<pubDate>Tue, 17 May 2011 06:09:31 GMT</pubDate>
+			<guid isPermaLink="false">c06e2b9d-981a-45b4-a55f-ab0d8bbfdc1c:7793966</guid>
+			<dc:creator>ScottGu</dc:creator>
+			<slash:comments>0</slash:comments>
+			<wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/rsscomments.aspx?PostID=7793966
+			</wfw:commentRss>
+			<wfw:comment xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/commentapi.aspx?PostID=7793966
+			</wfw:comment>
+			<comments>http://weblogs.asp.net/scottgu/archive/2011/05/16/upcoming-conference-talks-in-norway-germany-and-the-uk.aspx#comments</comments>
+			<description>&lt;p&gt;Next month I’ll be in Europe giving
+				presentations at some great .NET conferences.&amp;#160;&amp;#160;
+				Below are details on the three conferences I’m presenting at:
+				&lt;/p&gt; &lt;h2&gt;&lt;u&gt;Norwegian Developers Conference (NDC
+				2011)&lt;/u&gt;&lt;/h2&gt; &lt;p&gt;I’ll be in Oslo, Norway for the
+				&lt;a href="http://www.ndc2011.no/" target="_blank"&gt;NDC 2011
+				conference&lt;/a&gt; (June 8th to 10th).&amp;#160; I’ve heard really
+				great things about NDC – I’m excited to be able to finally attend in
+				person!&amp;#160; I’m doing a keynote talk, two breakout talks, and
+				an unplugged Q&amp;amp;A session.&lt;/p&gt; &lt;p&gt;Details on NDC
+				can be found &lt;a href="http://www.ndc2011.no/"
+				target="_blank"&gt;here&lt;/a&gt;.&lt;/p&gt;
+				&lt;h2&gt;&lt;u&gt;Microsoft DevConnections
+				Germany&lt;/u&gt;&lt;/h2&gt; &lt;p&gt;I’ll be in Karlsruhe, Germany
+				for the &lt;a
+				href="http://www.devconnections.com/shows/europe2011/default.aspx?s=175"
+				target="_blank"&gt;Microsoft DevConnections Germany
+				conference&lt;/a&gt; (June 8th to 10th). I’m doing a keynote talk on
+				the 10th (Friday).&amp;#160; &lt;/p&gt; &lt;p&gt;Details on
+				Microsoft DevConnections Germany can be found &lt;a
+				href="http://www.devconnections.com/shows/europe2011/default.aspx?s=175"
+				target="_blank"&gt;here&lt;/a&gt;.&lt;/p&gt;
+				&lt;h2&gt;&lt;u&gt;Microsoft DevConnections UK&lt;/u&gt;&lt;/h2&gt;
+				&lt;p&gt;I’ll be in London, England for the &lt;a
+				href="http://www.devconnections.com/shows/europe2011/default.aspx?s=174"
+				target="_blank"&gt;Microsoft DevConnections UK conference&lt;/a&gt;
+				(June 13th to 15th).&amp;#160; I’m doing a keynote talk on the 14th
+				(Tuesday). &lt;/p&gt; &lt;p&gt;Details on Microsoft DevConnections
+				UK can be found &lt;a
+				href="http://www.devconnections.com/shows/europe2011/default.aspx?s=174"
+				target="_blank"&gt;here&lt;/a&gt;.&lt;/p&gt; &lt;p&gt;Hope to see
+				some of you at one of these events!&lt;/p&gt;
+				&lt;p&gt;Scott&lt;/p&gt; &lt;p&gt;P.S. In addition to blogging, I am
+				also now using Twitter for quick updates and to share links. Follow
+				me at: &lt;a href="http://www.twitter.com/scottgu"
+				target="_blank"&gt;twitter.com/scottgu&lt;/a&gt;&lt;/p&gt;&lt;img
+				src="http://weblogs.asp.net/aggbug.aspx?PostID=7793966" width="1"
+				height="1"&gt;</description>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/ASP.NET/default.aspx">ASP.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Visual+Studio/default.aspx">Visual Studio</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/.NET/default.aspx">.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Community+News/default.aspx">Community News</category>
+		</item>
+		<item>
+			<title>Great Free Video Training on ASP.NET Web Forms and ASP.NET MVC</title>
+			<link>http://weblogs.asp.net/scottgu/archive/2011/05/15/great-free-video-training-on-asp-net-web-forms-and-asp-net-mvc.aspx</link>
+			<pubDate>Mon, 16 May 2011 03:15:30 GMT</pubDate>
+			<guid isPermaLink="false">c06e2b9d-981a-45b4-a55f-ab0d8bbfdc1c:7792575</guid>
+			<dc:creator>ScottGu</dc:creator>
+			<slash:comments>15</slash:comments>
+			<wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/rsscomments.aspx?PostID=7792575
+			</wfw:commentRss>
+			<wfw:comment xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/commentapi.aspx?PostID=7792575
+			</wfw:comment>
+			<comments>http://weblogs.asp.net/scottgu/archive/2011/05/15/great-free-video-training-on-asp-net-web-forms-and-asp-net-mvc.aspx#comments</comments>
+			<description>&lt;p&gt;We’ve recently published some great end-to-end
+				ASP.NET video training courses on the &lt;a href="http://asp.net"
+				target="_blank"&gt;http://asp.net&lt;/a&gt; web-site.&amp;#160;
+				&lt;/p&gt; &lt;p&gt;Created by &lt;a
+				href="http://www.pluralsight-training.net/microsoft/"
+				target="_blank"&gt;Pluralsight&lt;/a&gt; (a great .NET training
+				company), these video courses are available
+				&lt;strong&gt;&lt;u&gt;free of charge&lt;/u&gt;&lt;/strong&gt; and
+				provide a great way to learn (or brush-up your knowledge of) ASP.NET
+				Web Forms 4 and ASP.NET MVC 3.&amp;#160; Each course is taught by a
+				single trainer, and provides a nice end-to-end curriculum (from
+				basic concepts to working with the new Entity Framework “code first”
+				model to security, deployment, and
+				testing).&amp;#160;&amp;#160;&amp;#160; &lt;/p&gt; &lt;p&gt;Below
+				are some details on the two free training courses we published this
+				weekend (and links for how to watch them):&lt;/p&gt;
+				&lt;h2&gt;&lt;u&gt;ASP.NET MVC 3 Training&lt;/u&gt;&lt;/h2&gt;
+				&lt;p&gt;This weekend we posted the final videos in a brand new 10
+				part ASP.NET MVC 3 training course taught by K Scott
+				Allen.&amp;#160; You can now watch the entire series for free on the
+				&lt;a href="http://asp.net/mvc"
+				target="_blank"&gt;http://asp.net/mvc&lt;/a&gt; page (it is on the
+				left-hand side within the “Essential Videos” section):&lt;/p&gt;
+				&lt;p&gt;&lt;a href="http://www.asp.net/mvc"
+				target="_blank"&gt;&lt;img style="background-image: none;
+				border-bottom: 0px; border-left: 0px; padding-left: 0px;
+				padding-right: 0px; display: inline; border-top: 0px; border-right:
+				0px; padding-top: 0px" title="image" border="0" alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_33F6BC3A.png"
+				width="313" height="534" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;Below is
+				a breakdown of the 10 video modules in the ASP.NET MVC 3
+				series:&lt;/p&gt; &lt;ul&gt; &lt;li&gt;&lt;a
+				href="http://www.pluralsight-training.net/microsoft/players/PSODPlayer.aspx?author=scott-allen&amp;amp;name=mvc3-building-intro&amp;amp;mode=live&amp;amp;clip=0&amp;amp;course=aspdotnet-mvc3-intro"
+				target="_blank"&gt;Introduction&lt;/a&gt; (35 minutes)&lt;/li&gt;
+				&lt;li&gt;&lt;a
+				href="http://www.pluralsight-training.net/microsoft/players/PSODPlayer.aspx?author=scott-allen&amp;amp;name=mvc3-building-controllers&amp;amp;mode=live&amp;amp;clip=0&amp;amp;course=aspdotnet-mvc3-intro"
+				target="_blank"&gt;Controllers&lt;/a&gt; (35 minutes)&lt;/li&gt;
+				&lt;li&gt;&lt;a
+				href="http://www.pluralsight-training.net/microsoft/players/PSODPlayer.aspx?author=scott-allen&amp;amp;name=mvc3-building-views&amp;amp;mode=live&amp;amp;clip=0&amp;amp;course=aspdotnet-mvc3-intro"
+				target="_blank"&gt;Razor Views&lt;/a&gt; (45 minutes)&lt;/li&gt;
+				&lt;li&gt;&lt;a
+				href="http://www.pluralsight-training.net/microsoft/players/PSODPlayer.aspx?author=scott-allen&amp;amp;name=mvc3-building-data-i&amp;amp;mode=live&amp;amp;clip=0&amp;amp;course=aspdotnet-mvc3-intro"
+				target="_blank"&gt;Working with Data: Entity Framework Code
+				First&lt;/a&gt; (39 minutes)&lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://www.pluralsight-training.net/microsoft/players/PSODPlayer.aspx?author=scott-allen&amp;amp;name=mvc3-building-data-ii&amp;amp;mode=live&amp;amp;clip=0&amp;amp;course=aspdotnet-mvc3-intro"
+				target="_blank"&gt;Working with Data: Validation and
+				Mapping&lt;/a&gt; (33 minutes)&lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://www.pluralsight-training.net/microsoft/players/PSODPlayer.aspx?author=scott-allen&amp;amp;name=mvc3-building-ajax&amp;amp;mode=live&amp;amp;clip=0&amp;amp;course=aspdotnet-mvc3-intro"
+				target="_blank"&gt;Javascript, jQuery and Ajax&lt;/a&gt; (47
+				minutes)&lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://www.pluralsight-training.net/microsoft/players/PSODPlayer.aspx?author=scott-allen&amp;amp;name=mvc3-building-security&amp;amp;mode=live&amp;amp;clip=0&amp;amp;course=aspdotnet-mvc3-intro"
+				target="_blank"&gt;Security&lt;/a&gt; (43 minutes)&lt;/li&gt;
+				&lt;li&gt;&lt;a
+				href="http://www.pluralsight-training.net/microsoft/players/PSODPlayer.aspx?author=scott-allen&amp;amp;name=mvc3-building-infrastructure&amp;amp;mode=live&amp;amp;clip=0&amp;amp;course=aspdotnet-mvc3-intro"
+				target="_blank"&gt;Caching, Localization, Resources and
+				Diagnostics&lt;/a&gt; (34 minutes)&lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://www.pluralsight-training.net/microsoft/players/PSODPlayer.aspx?author=scott-allen&amp;amp;name=mvc3-building-tdd&amp;amp;mode=live&amp;amp;clip=0&amp;amp;course=aspdotnet-mvc3-intro"
+				target="_blank"&gt;Unit Testing&lt;/a&gt; (37 minutes)&lt;/li&gt;
+				&lt;li&gt;&lt;a
+				href="http://www.pluralsight-training.net/microsoft/players/PSODPlayer.aspx?author=scott-allen&amp;amp;name=mvc3-building-deploy&amp;amp;mode=live&amp;amp;clip=0&amp;amp;course=aspdotnet-mvc3-intro"
+				target="_blank"&gt;Deployment and Configuration&lt;/a&gt; (37
+				minutes)&lt;/li&gt; &lt;/ul&gt; &lt;p&gt;You can find pointers to
+				the entire series on the &lt;a href="http://asp.net/mvc"
+				target="_blank"&gt;http://asp.net/mvc&lt;/a&gt; page.&lt;/p&gt;
+				&lt;h2&gt;&lt;u&gt;ASP.NET Web Forms 4 Training&lt;/u&gt;&lt;/h2&gt;
+				&lt;p&gt;Dan Wahlin is developing a great course on ASP.NET Web
+				Forms 4.&lt;/p&gt; &lt;p&gt;You can watch the series for free on the
+				&lt;a href="http://asp.net/web-forms"
+				target="_blank"&gt;http://asp.net/web-forms&lt;/a&gt; page (it is on
+				the left-hand side within the “Essential Videos” section):&lt;/p&gt;
+				&lt;p&gt;&lt;a href="http://asp.net/web-forms"
+				target="_blank"&gt;&lt;img style="background-image: none;
+				border-bottom: 0px; border-left: 0px; padding-left: 0px;
+				padding-right: 0px; display: inline; border-top: 0px; border-right:
+				0px; padding-top: 0px" title="image" border="0" alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_39D15FD3.png"
+				width="308" height="499" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;Below is
+				a breakdown of the 9 video modules in the ASP.NET Web Forms
+				series:&lt;/p&gt; &lt;ul&gt; &lt;li&gt;&lt;a
+				href="http://www.pluralsight-training.net/microsoft/players/PSODPlayer.aspx?author=dan-wahlin&amp;amp;name=webforms-01&amp;amp;mode=live&amp;amp;clip=0&amp;amp;course=aspdotnet-webforms4-intro"
+				target="_blank"&gt;Introduction to ASP.NET&lt;/a&gt; (64
+				minutes)&lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://www.pluralsight-training.net/microsoft/players/PSODPlayer.aspx?author=dan-wahlin&amp;amp;name=webforms-02&amp;amp;mode=live&amp;amp;clip=0&amp;amp;course=aspdotnet-webforms4-intro"
+				target="_blank"&gt;ASP.NET Web Forms Features&lt;/a&gt; (111
+				minutes)&lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://www.pluralsight-training.net/microsoft/players/PSODPlayer.aspx?author=dan-wahlin&amp;amp;name=webforms-03&amp;amp;mode=live&amp;amp;clip=0&amp;amp;course=aspdotnet-webforms4-intro"
+				target="_blank"&gt;Working with Data&lt;/a&gt; (75
+				minutes)&lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://www.pluralsight-training.net/microsoft/players/PSODPlayer.aspx?author=dan-wahlin&amp;amp;name=webforms-04&amp;amp;mode=live&amp;amp;clip=0&amp;amp;course=aspdotnet-webforms4-intro"
+				target="_blank"&gt;Entity Framework&lt;/a&gt; (47
+				minutes)&lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://www.pluralsight-training.net/microsoft/players/PSODPlayer.aspx?author=dan-wahlin&amp;amp;name=webforms-05&amp;amp;mode=live&amp;amp;clip=0&amp;amp;course=aspdotnet-webforms4-intro"
+				target="_blank"&gt;Master Pages&lt;/a&gt; (24 minutes)&lt;/li&gt;
+				&lt;li&gt;&lt;a
+				href="http://www.pluralsight-training.net/microsoft/players/PSODPlayer.aspx?author=dan-wahlin&amp;amp;name=webforms-06&amp;amp;mode=live&amp;amp;clip=0&amp;amp;course=aspdotnet-webforms4-intro"
+				target="_blank"&gt;JavaScript and Ajax&lt;/a&gt; (62
+				minutes)&lt;/li&gt; &lt;li&gt;Security (coming soon)&lt;/li&gt;
+				&lt;li&gt;Using ASP.NET Dynamic Data (coming soon)&lt;/li&gt;
+				&lt;li&gt;Web Deployment (coming soon)&lt;/li&gt; &lt;/ul&gt;
+				&lt;p&gt;You can find pointers to the entire series on the &lt;a
+				href="http://asp.net/web-forms"
+				target="_blank"&gt;http://asp.net/web-forms&lt;/a&gt;
+				page.&amp;#160; We’ll be posting links to the final 3 videos in the
+				series later this month.&lt;/p&gt; &lt;h2&gt;&lt;u&gt;Even More
+				Content Coming&lt;/u&gt;&lt;/h2&gt; &lt;p&gt;Keep an eye on the
+				&lt;a href="http://asp.net/web-forms"
+				target="_blank"&gt;http://asp.net/web-forms&lt;/a&gt; and &lt;a
+				href="http://asp.net/mvc"
+				target="_blank"&gt;http://asp.net/mvc&lt;/a&gt; learning centers in
+				the months ahead as we post even more textual and video training
+				content.&amp;#160; Each of the two learning centers now has a nice
+				structured outline of content that you can use to quickly look
+				things up as well as learn how ASP.NET works.&amp;#160; We’ll be
+				refining and extending the content even more in the weeks and months
+				ahead.&lt;/p&gt; &lt;p&gt;Hope this helps,&lt;/p&gt;
+				&lt;p&gt;Scott&lt;/p&gt; &lt;p&gt;P.S. In addition to blogging, I am
+				also now using Twitter for quick updates and to share links. Follow
+				me at: &lt;a href="http://www.twitter.com/scottgu"
+				target="_blank"&gt;twitter.com/scottgu&lt;/a&gt;&lt;/p&gt;&lt;img
+				src="http://weblogs.asp.net/aggbug.aspx?PostID=7792575" width="1"
+				height="1"&gt;</description>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/ASP.NET/default.aspx">ASP.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Visual+Studio/default.aspx">Visual Studio</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/.NET/default.aspx">.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Community+News/default.aspx">Community News</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/MVC/default.aspx">MVC</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Web+Forms/default.aspx">Web Forms</category>
+		</item>
+		<item>
+			<title>ASP.NET MVC 3 and the @helper syntax within Razor</title>
+			<link>http://weblogs.asp.net/scottgu/archive/2011/05/12/asp-net-mvc-3-and-the-helper-syntax-within-razor.aspx</link>
+			<pubDate>Fri, 13 May 2011 04:37:01 GMT</pubDate>
+			<guid isPermaLink="false">c06e2b9d-981a-45b4-a55f-ab0d8bbfdc1c:7788909</guid>
+			<dc:creator>ScottGu</dc:creator>
+			<slash:comments>59</slash:comments>
+			<wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/rsscomments.aspx?PostID=7788909
+			</wfw:commentRss>
+			<wfw:comment xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/commentapi.aspx?PostID=7788909
+			</wfw:comment>
+			<comments>http://weblogs.asp.net/scottgu/archive/2011/05/12/asp-net-mvc-3-and-the-helper-syntax-within-razor.aspx#comments</comments>
+			<description>&lt;p&gt;ASP.NET MVC 3 supports a new view-engine option
+				called “Razor” (in addition to continuing to support/enhance the
+				existing .aspx view engine).&amp;#160; Razor minimizes the number of
+				characters and keystrokes required when writing a view template, and
+				enables a fast, fluid coding workflow.&lt;/p&gt; &lt;p&gt;Unlike
+				most template syntaxes, with Razor you do not need to interrupt your
+				coding to explicitly denote the start and end of server blocks
+				within your HTML. The Razor parser is smart enough to infer this
+				from your code. This enables a compact and expressive syntax which
+				is clean, fast and fun to type. &lt;/p&gt; &lt;p&gt;You can learn
+				more about Razor from some of the blog posts I’ve done about it over
+				the last last 9 months:&lt;/p&gt; &lt;ul&gt; &lt;li&gt;&lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2010/07/02/introducing-razor.aspx"
+				target="_blank"&gt;Introducing Razor&lt;/a&gt;&lt;/li&gt;
+				&lt;li&gt;&lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2010/10/19/asp-net-mvc-3-new-model-directive-support-in-razor.aspx"
+				target="_blank"&gt;New @model keyword in Razor&lt;/a&gt;&lt;/li&gt;
+				&lt;li&gt;&lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2010/10/22/asp-net-mvc-3-layouts.aspx"
+				target="_blank"&gt;Layouts with Razor&lt;/a&gt;&lt;/li&gt;
+				&lt;li&gt;&lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2010/11/12/asp-net-mvc-3-server-side-comments-with-razor.aspx"
+				target="_blank"&gt;Server-Side Comments with
+				Razor&lt;/a&gt;&lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2010/12/15/asp-net-mvc-3-razor-s-and-lt-text-gt-syntax.aspx"
+				target="_blank"&gt;Razor’s @: and &amp;lt;text&amp;gt;
+				syntax&lt;/a&gt;&lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2010/12/16/asp-net-mvc-3-implicit-and-explicit-code-nuggets-with-razor.aspx"
+				target="_blank"&gt;Implicit and Explicit code nuggets with
+				Razor&lt;/a&gt;&lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2010/12/30/asp-net-mvc-3-layouts-and-sections-with-razor.aspx"
+				target="_blank"&gt;Layouts and Sections with
+				Razor&lt;/a&gt;&lt;/li&gt; &lt;/ul&gt; &lt;p&gt;Today’s blog post
+				covers a cool feature of Razor that a lot of people don’t know about
+				– which is the ability to define re-usable helper methods using the
+				@helper syntax.&lt;/p&gt; &lt;h2&gt;&lt;u&gt;Simple @helper method
+				scenario&lt;/u&gt;&lt;/h2&gt; &lt;p&gt;The @helper syntax within
+				Razor enables you to easily create re-usable helper methods that can
+				encapsulate output functionality within your view
+				templates.&amp;#160; They enable better code reuse, and can also
+				facilitate more readable code.&amp;#160; Let’s look at a
+				super-simple scenario of how the @helper syntax can be
+				used.&amp;#160; &lt;/p&gt; &lt;p&gt;&lt;u&gt;Code before we define a
+				@helper method&lt;/u&gt;&lt;/p&gt; &lt;p&gt;Let’s look at a simple
+				product listing scenario where we list product details, and output
+				either the price of the product – or the word “FREE!” if the item
+				doesn’t cost anything:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/image_27F4C14A.png"&gt;&lt;img
+				style="background-image: none; border-bottom: 0px; border-left: 0px;
+				margin: 0px; padding-left: 0px; padding-right: 0px; display: inline;
+				border-top: 0px; border-right: 0px; padding-top: 0px" title="image"
+				border="0" alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_thumb_66E641E5.png"
+				width="640" height="570" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;The
+				above code is fairly straight-forward, and Razor’s syntax makes it
+				easy to integrate server-side C# code within the HTML.&amp;#160;
+				&lt;/p&gt; &lt;p&gt;One place that is a little messy, though, is the
+				if/else logic for the price.&amp;#160; We will likely output prices
+				elsewhere within the site (or within the same page), and duplicating
+				the above logic everywhere would be error-prone and hard to
+				maintain.&amp;#160; Scenarios like this are prime candidates to
+				extract and refactor into helper methods using the @helper
+				syntax.&lt;/p&gt; &lt;p&gt;&lt;u&gt;Refactoring the above sample
+				using the @helper syntax&lt;/u&gt;&lt;/p&gt; &lt;p&gt;Let’s extract
+				the price output logic, and encapsulate it within a helper method
+				that we’ll name “DisplayPrice”.&amp;#160; We can do this by
+				re-writing the sample to the code below:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/image_45F2CF3E.png"&gt;&lt;img
+				style="background-image: none; border-bottom: 0px; border-left: 0px;
+				margin: 0px; padding-left: 0px; padding-right: 0px; display: inline;
+				border-top: 0px; border-right: 0px; padding-top: 0px" title="image"
+				border="0" alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_thumb_2909AA69.png"
+				width="533" height="672" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;We’ve
+				used the @helper syntax above to define a reusable helper method
+				named “DisplayPrice”.&amp;#160; Just like a standard C#/VB method,
+				it can contain any number of arguments (you can also define the
+				arguments to be either nullable or optional).&amp;#160; Unlike
+				standard C#/VB methods, though, @helper methods can contain both
+				content and code, and support the full Razor syntax within them –
+				which makes it really easy to define and encapsulate
+				rendering/formatting helper methods:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/SNAGHTML20fae4df_6F1A677C.png"&gt;&lt;img
+				style="background-image: none; border-bottom: 0px; border-left: 0px;
+				margin: 0px; padding-left: 0px; padding-right: 0px; display: inline;
+				border-top: 0px; border-right: 0px; padding-top: 0px"
+				title="SNAGHTML20fae4df" border="0" alt="SNAGHTML20fae4df"
+				src="http://weblogs.asp.net/blogs/scottgu/SNAGHTML20fae4df_thumb_5546314D.png"
+				width="434" height="216" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;You can
+				invoke @helper methods just like you would a standard C# or VB
+				method:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/SNAGHTML20fcdc86_22762AD9.png"&gt;&lt;img
+				style="background-image: none; border-bottom: 0px; border-left: 0px;
+				margin: 0px; padding-left: 0px; padding-right: 0px; display: inline;
+				border-top: 0px; border-right: 0px; padding-top: 0px"
+				title="SNAGHTML20fcdc86" border="0" alt="SNAGHTML20fcdc86"
+				src="http://weblogs.asp.net/blogs/scottgu/SNAGHTML20fcdc86_thumb_2CC74F39.png"
+				width="366" height="83" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;Visual
+				Studio will provide code intellisense when invoking the
+				method:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/image_6C2502C9.png"&gt;&lt;img
+				style="background-image: none; border-bottom: 0px; border-left: 0px;
+				margin: 0px; padding-left: 0px; padding-right: 0px; display: inline;
+				border-top: 0px; border-right: 0px; padding-top: 0px" title="image"
+				border="0" alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_thumb_2B82B65A.png"
+				width="414" height="124" /&gt;&lt;/a&gt;&lt;/p&gt;
+				&lt;h2&gt;&lt;u&gt;Reusing @helpers across multiple
+				views&lt;/u&gt;&lt;/h2&gt; &lt;p&gt;In the example above, we defined
+				our @helper method within the same view template as the code that
+				called it.&amp;#160; Alternatively, we can define the @helper method
+				outside of our view template, and enable it to be re-used across all
+				of the view templates in our project.&lt;/p&gt; &lt;p&gt;We can
+				accomplish this by saving our @helper methods within .cshtml/.vbhtml
+				files that are placed within a
+				&lt;strong&gt;\App_Code&lt;/strong&gt; directory that you create at
+				the root of a project.&amp;#160; For example, below I created a
+				“ScottGu.cshtml” file within the \App_Code folder, and defined two
+				separate helper methods within the file (you can have any number of
+				helper methods within each file):&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/SNAGHTML2107b6ae_18CDBCA3.png"&gt;&lt;img
+				style="background-image: none; border-bottom: 0px; border-left: 0px;
+				margin: 0px; padding-left: 0px; padding-right: 0px; display: inline;
+				border-top: 0px; border-right: 0px; padding-top: 0px"
+				title="SNAGHTML2107b6ae" border="0" alt="SNAGHTML2107b6ae"
+				src="http://weblogs.asp.net/blogs/scottgu/SNAGHTML2107b6ae_thumb_37A43081.png"
+				width="759" height="476" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;Once our
+				helpers are defined at the app level, we can use them within any
+				view template of our application.&amp;#160; &lt;/p&gt; &lt;p&gt;The
+				ScottGu.cshtml template in the \App_Code folder above will logically
+				compile down to a class called “ScottGu” with static members of
+				“DisplayPrice” and “AnotherHelper” within it.&amp;#160; We can
+				re-write our previous sample to call it using the code
+				below:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/SNAGHTML210d65c1_216E152F.png"&gt;&lt;img
+				style="background-image: none; border-bottom: 0px; border-left: 0px;
+				margin: 0px; padding-left: 0px; padding-right: 0px; display: inline;
+				border-top: 0px; border-right: 0px; padding-top: 0px"
+				title="SNAGHTML210d65c1" border="0" alt="SNAGHTML210d65c1"
+				src="http://weblogs.asp.net/blogs/scottgu/SNAGHTML210d65c1_thumb_2748B8C8.png"
+				width="565" height="463" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;Visual
+				Studio will provide code intellisense when calling app-level helpers
+				like this:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/image_344298D9.png"&gt;&lt;img
+				style="background-image: none; border-bottom: 0px; border-left: 0px;
+				margin: 0px; padding-left: 0px; padding-right: 0px; display: inline;
+				border-top: 0px; border-right: 0px; padding-top: 0px" title="image"
+				border="0" alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_thumb_5EAEC9F6.png"
+				width="584" height="100" /&gt;&lt;/a&gt;&lt;/p&gt;
+				&lt;p&gt;&lt;strong&gt;May 15th Update&lt;/strong&gt;: One issue
+				that a few people have pointed out is that when a @helper is saved
+				within the \app_code directory, you don’t by default get access to
+				the ASP.NET MVC Html helper methods within it (e.g.
+				Html.ActionLink(), Html.TextBox(), etc).&amp;#160; You
+				&lt;em&gt;do&lt;/em&gt; get access to the built-in HTML helper
+				methods when they are defined in the same file as your
+				views.&amp;#160; This is not supported out of the box, though, when
+				the helpers are within the \app_code directory - we’ll add this in
+				the next release.&amp;#160; Paul Stovall has a nice helper class
+				that you can use in the meantime to access and use the built-in Html
+				helper methods within @helper methods you define in the \app_code
+				directory.&amp;#160; You can learn how to use it &lt;a
+				href="http://stackoverflow.com/questions/4710853/using-mvc-htmlhelper-extensions-from-razor-declarative-views"
+				target="_blank"&gt;here&lt;/a&gt;.&lt;/p&gt;
+				&lt;h2&gt;&lt;u&gt;Summary&lt;/u&gt;&lt;/h2&gt; &lt;p&gt;Razor’s
+				@helper syntax provides a convenient way to encapsulate rendering
+				functionality into helper methods that you can re-use within
+				individual view templates, or across all view templates within a
+				project.&amp;#160; &lt;/p&gt; &lt;p&gt;You can use this
+				functionality to write code that is even cleaner and more
+				maintainable.&amp;#160; &lt;/p&gt; &lt;p&gt;Hope this
+				helps,&lt;/p&gt; &lt;p&gt;Scott&lt;/p&gt; &lt;p&gt;P.S. In addition
+				to blogging, I am also now using Twitter for quick updates and to
+				share links. Follow me at: &lt;a
+				href="http://www.twitter.com/scottgu"
+				target="_blank"&gt;twitter.com/scottgu&lt;/a&gt;&lt;/p&gt;&lt;img
+				src="http://weblogs.asp.net/aggbug.aspx?PostID=7788909" width="1"
+				height="1"&gt;</description>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/ASP.NET/default.aspx">ASP.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Visual+Studio/default.aspx">Visual Studio</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/.NET/default.aspx">.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/MVC/default.aspx">MVC</category>
+		</item>
+		<item>
+			<title>HTML5 Improvements with the ASP.NET MVC 3 Tools Update</title>
+			<link>http://weblogs.asp.net/scottgu/archive/2011/05/09/html5-improvements-with-the-asp-net-mvc-3-tools-update.aspx</link>
+			<pubDate>Tue, 10 May 2011 02:54:45 GMT</pubDate>
+			<guid isPermaLink="false">c06e2b9d-981a-45b4-a55f-ab0d8bbfdc1c:7783819</guid>
+			<dc:creator>ScottGu</dc:creator>
+			<slash:comments>23</slash:comments>
+			<wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/rsscomments.aspx?PostID=7783819
+			</wfw:commentRss>
+			<wfw:comment xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/commentapi.aspx?PostID=7783819
+			</wfw:comment>
+			<comments>http://weblogs.asp.net/scottgu/archive/2011/05/09/html5-improvements-with-the-asp-net-mvc-3-tools-update.aspx#comments</comments>
+			<description>&lt;font face="arial"&gt; &lt;p&gt;Last week I blogged
+				about the new &lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2011/05/03/asp-net-mvc-3-tools-update.aspx"
+				target="_blank"&gt;ASP.NET MVC 3 Tools Update&lt;/a&gt;, and then
+				followed it up with a detailed post that covered using the &lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2011/05/05/ef-code-first-and-data-scaffolding-with-the-asp-net-mvc-3-tools-update.aspx"
+				target="_blank"&gt;EF Code First and the new Data Scaffolding
+				features&lt;/a&gt; in it.&lt;/p&gt; &lt;p&gt;Today’s blog post is a
+				continuation of this series and covers some of the new HTML5
+				improvements with the ASP.NET MVC 3 Tools Update release.&lt;/p&gt;
+				&lt;h2&gt;&lt;u&gt;Project Template Support for HTML5 Semantic
+				Markup&lt;/u&gt;&lt;/h2&gt; &lt;p&gt;The ASP.NET MVC 3 Tools Update
+				adds support for you to optionally use HTML5 semantic markup when
+				creating new ASP.NET MVC 3 projects.&amp;#160; You can specify this
+				by checking the “Use HTML5 semantic markup” checkbox when creating
+				new projects:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/SNAGHTML10f01f0d_634A9639.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="SNAGHTML10f01f0d" border="0"
+				alt="SNAGHTML10f01f0d"
+				src="http://weblogs.asp.net/blogs/scottgu/SNAGHTML10f01f0d_thumb_5587B464.png"
+				width="674" height="608" /&gt;&lt;/a&gt;&lt;/p&gt;
+				&lt;p&gt;Selecting this checkbox option does two things:&lt;/p&gt;
+				&lt;p&gt;1) It causes VS 2010 to use HTML5 semantic markup elements
+				like &amp;lt;header&amp;gt;, &amp;lt;footer&amp;gt;,
+				&amp;lt;section&amp;gt; and &amp;lt;nav&amp;gt; within the default
+				layout.cshtml file that is generated.&amp;#160; This is instead of
+				just using &amp;lt;div&amp;gt; elements for header/footer/navigation
+				elements – which is the default behavior if the HTML5 semantic
+				checkbox isn’t selected (and the same behavior that we have shipped
+				earlier).&lt;/p&gt; &lt;p&gt;2) It causes VS 2010 to reference the
+				modernizr.js JavaScript library by default within the layout.cshtml
+				– which among other things will allow you to use CSS to style HTML5
+				semantic markup elements even with older browsers like IE6 (ensuring
+				your site still works for older browsers).&lt;/p&gt;
+				&lt;h2&gt;&lt;u&gt;Understanding Semantic HTML5
+				Markup&lt;/u&gt;&lt;/h2&gt; &lt;p&gt;HTML5 introduces a number of
+				new elements and APIs that introduce new &lt;em&gt;behavioral
+				capability&lt;/em&gt; (features like &amp;lt;video&amp;gt;,
+				&amp;lt;canvas&amp;gt;, &amp;lt;svg&amp;gt;, etc).&amp;#160;
+				&lt;/p&gt; &lt;p&gt;HTML5 also introduces new elements (like
+				&amp;lt;section&amp;gt;, &amp;lt;article&amp;gt;,
+				&amp;lt;aside&amp;gt;, &amp;lt;header&amp;gt;, and
+				&amp;lt;nav&amp;gt;) that enable you to enrich the
+				&lt;em&gt;semantic meaning and structure &lt;/em&gt;of your content
+				and pages.&amp;#160; These features allow you to write your pages so
+				that you don’t have to use opaque &amp;lt;div&amp;gt; elements to
+				structure everything, and instead they allow you to better express
+				the semantic meaning of your content.&amp;#160; This makes your code
+				a little cleaner to read, and long-term will hopefully enable
+				browsers and search engines to better understand your markup and
+				provide even richer experiences.&lt;/p&gt; &lt;p&gt;When you create
+				a new ASP.NET MVC 3 Project with the “Use HTML5 semantic markup”
+				checkbox selected, Visual Studio will use semantic HTML instead of
+				&amp;lt;div&amp;gt; elements (where appropriate) within the
+				layout.cshtml file that is generated for the new project.&amp;#160;
+				This means that the top of the site is wrapped in a
+				&amp;lt;header&amp;gt; element, navigation links are surrounded by a
+				&amp;lt;nav&amp;gt; element, and the footer is encapsulated within a
+				&amp;lt;footer&amp;gt; element.&lt;/p&gt; &lt;p&gt;&lt;u&gt;Learn
+				more about Semantic HTML5 Markup&lt;/u&gt;&lt;/p&gt; &lt;p&gt;Bruce
+				Lawson and Remy Sharp have a great &lt;a
+				href="http://www.amazon.com/gp/product/0321687299/ref=as_li_ss_tl?ie=UTF8&amp;amp;tag=scoblo04-20&amp;amp;linkCode=as2&amp;amp;camp=217145&amp;amp;creative=399349&amp;amp;creativeASIN=0321687299"
+				target="_blank"&gt;Introducing HTML5&lt;/a&gt; book that covers
+				(among other new HTML5 features) how you can take advantage of
+				semantic HTML5 markup:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://www.amazon.com/gp/product/0321687299/ref=as_li_ss_tl?ie=UTF8&amp;amp;tag=scoblo04-20&amp;amp;linkCode=as2&amp;amp;camp=217145&amp;amp;creative=399349&amp;amp;creativeASIN=0321687299"
+				target="_blank"&gt;&lt;img style="background-image: none;
+				border-bottom: 0px; border-left: 0px; padding-left: 0px;
+				padding-right: 0px; display: inline; border-top: 0px; border-right:
+				0px; padding-top: 0px" title="image" border="0" alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_6EDD65C7.png"
+				width="126" height="178" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;You can
+				also read Emily Lewis’ &lt;a
+				href="http://msdn.microsoft.com/en-us/scriptjunkie/gg454786"
+				target="_blank"&gt;Using HTML5’s New Semantic Tags Today&lt;/a&gt;
+				article on MSDN’s ScriptJunkie site to learn more about the role of
+				HTML5 semantic markup and see a practical example of it in
+				action.&lt;/p&gt; &lt;h2&gt;&lt;u&gt;HTML5 Intellisense within VS
+				2010 SP1&lt;/u&gt;&lt;/h2&gt; &lt;p&gt;With VS 2010 SP1, you can now
+				change the “Target Schema for Validation” drop-down within the Text
+				Editor toolbar to target HTML5 with intellisense:&lt;/p&gt;
+				&lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/image_38EA76EA.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="image" border="0" alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_thumb_1C8D0EFD.png"
+				width="351" height="217" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;When you
+				select HTML5 as your validation target, the HTML intellisense engine
+				within Visual Studio will provide appropriate intellisense for the
+				new HTML5 elements and attributes.&amp;#160; This is true for both
+				behavioral elements like &amp;lt;canvas&amp;gt; and
+				&amp;lt;video&amp;gt; as well as semantic elements like
+				&amp;lt;article&amp;gt; and &amp;lt;nav&amp;gt;:&lt;/p&gt;
+				&lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/SNAGHTML1115b0b2_07BB167D.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="SNAGHTML1115b0b2" border="0"
+				alt="SNAGHTML1115b0b2"
+				src="http://weblogs.asp.net/blogs/scottgu/SNAGHTML1115b0b2_thumb_71F12E1F.png"
+				width="191" height="237" /&gt;&lt;/a&gt;&lt;/p&gt;
+				&lt;p&gt;&lt;em&gt;Note: the next release of VS will default to
+				honoring the &amp;lt;!DOCTYPE&amp;gt; at the top of the page when
+				driving intellisense, and then allow you to specify a default
+				standard to use when it isn’t present (or when you are editing
+				within user controls, or partial/editor templates).&amp;#160; With
+				VS 2010 and earlier versions of Visual Studio you have to explicitly
+				set which HTML version you want to target.&lt;/em&gt;&lt;/p&gt;
+				&lt;h2&gt;&lt;u&gt;Modernizr.js Library&lt;/u&gt;&lt;/h2&gt;
+				&lt;p&gt;Semantic HTML5 markup is now supported by all modern
+				browser vendors, and you can use standard CSS techniques to stylize
+				and customize pages built with it.&lt;/p&gt; &lt;p&gt;One challenge,
+				though, is that there are still a lot of older browsers out there –
+				and browsers like IE6 &lt;em&gt;by default &lt;/em&gt;don’t allow
+				you to stylize semantic HTML5 elements using CSS.&amp;#160; The
+				semantic HTML5 site that looks beautiful in a modern browser might
+				end up looking broken unless you use a library that enables you to
+				work around this limitation.&lt;/p&gt;
+				&lt;p&gt;&lt;u&gt;&lt;strong&gt;Modernizr.js&lt;/strong&gt;&lt;/u&gt;&lt;/p&gt;
+				&lt;p&gt;&lt;a href="http://www.modernizr.com/"
+				target="_blank"&gt;Modernizr&lt;/a&gt; is a small and elegant
+				open-source JavaScript library that helps you take advantage of
+				emerging web technologies (HTML5, CSS3) while still maintaining a
+				level of compatibility with older browsers that may not yet support
+				these new capabilities.&amp;#160; You can learn more about Modernizr
+				from the &lt;a href="http://modernizr.com/"
+				target="_blank"&gt;http://modernizr.com/&lt;/a&gt;
+				website.&lt;/p&gt; &lt;p&gt;Starting with the ASP.NET MVC 3 Tools
+				Update, we are now shipping Modernizr with ASP.NET MVC 3, and adding
+				it by default to all new ASP.NET MVC 3 projects.&amp;#160; If you
+				select the “Use HTML5 semantic markup” checkbox when creating new
+				ASP.NET MVC 3 projects, Visual Studio will also add a reference to
+				the Modernizr.js library by default within your layout.cshtml
+				template:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/image_32EF87B7.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="image" border="0" alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_thumb_22940FFE.png"
+				width="944" height="232" /&gt;&lt;/a&gt;&lt;/p&gt;
+				&lt;p&gt;&lt;strong&gt;&lt;u&gt;Modernizr.js and using CSS with
+				Semantic HTML5 on older Browsers&lt;/u&gt;&lt;/strong&gt;&lt;/p&gt;
+				&lt;p&gt;Including the above Modernizr.js script reference will
+				enable you to use CSS to stylize semantic HTML5 elements – and have
+				it work both in modern browsers (where it is natively supported), as
+				well as older ones (including IE6).&amp;#160; Among other things,
+				Modernizr is smart enough to run a little script that will cause
+				older browsers to honor CSS rules with unknown elements they
+				encounter.&lt;/p&gt; &lt;p&gt;You can see the benefit Modernizr
+				brings with this by running the default ASP.NET MVC 3 project that
+				is created using IE9.&amp;#160; If you use the default IE9 rendering
+				mode (which supports Semantic HTML5 elements) the site will look
+				like below, and use the browser’s built-in CSS support for semantic
+				HTML5:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/SNAGHTML112b7c79_213F5152.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="SNAGHTML112b7c79" border="0"
+				alt="SNAGHTML112b7c79"
+				src="http://weblogs.asp.net/blogs/scottgu/SNAGHTML112b7c79_thumb_3F996C6E.png"
+				width="706" height="380" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;If you
+				enable “Compatibility View” within the browser (the second icon at
+				the top of IE’s navigation bar) – you’ll see a “downlevel” rendering
+				of the page (just like what IE6/7/8 users would see).&amp;#160;
+				Modernizr allows our CSS rules to work in this downlevel mode –
+				despite the older IE rendering engine not natively supporting
+				elements like &amp;lt;header&amp;gt;, &amp;lt;footer&amp;gt;,
+				&amp;lt;nav&amp;gt;, &amp;lt;section&amp;gt;, etc:&lt;/p&gt;
+				&lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/SNAGHTML112e4acf_6C7EA97C.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="SNAGHTML112e4acf" border="0"
+				alt="SNAGHTML112e4acf"
+				src="http://weblogs.asp.net/blogs/scottgu/SNAGHTML112e4acf_thumb_1FCA470C.png"
+				width="706" height="380" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;If we
+				had not included Modernizr.js on the page, visitors to the site
+				using older browsers would have instead seen something broken like
+				this:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/SNAGHTML1130d736_7D8215B8.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="SNAGHTML1130d736" border="0"
+				alt="SNAGHTML1130d736"
+				src="http://weblogs.asp.net/blogs/scottgu/SNAGHTML1130d736_thumb_49A9F99A.png"
+				width="706" height="380" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;As you
+				can see – Modernizr provides a big improvement over what users with
+				older browser would have otherwise seen!&amp;#160; Best of all, we
+				didn’t have to write any code or author an alternative CSS
+				style-sheet to get this to work.&amp;#160; And we are using HTML5
+				Semantic Markup throughout the site.&lt;/p&gt;
+				&lt;p&gt;&lt;strong&gt;&lt;u&gt;Using Modernizr to Detect Browser
+				Capabilities&lt;/u&gt;&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;The above
+				Semantic HTML5 markup example is just one of the nice benefits that
+				Modernizr brings.&amp;#160; &lt;/p&gt; &lt;p&gt;Modernizr also makes
+				it easy to check for browser capabilities (without you having to
+				hard-code browser versions into code), and enables you to easily
+				detect and light-up if a specific feature is supported.&amp;#160;
+				You can learn more about how this works on the &lt;a
+				href="http://modernizr.com"
+				target="_blank"&gt;http://modernizr.com&lt;/a&gt;
+				web-site.&amp;#160; &lt;/p&gt; &lt;p&gt;Justin Schwartzenberger has
+				a nice blog post that shows this in action, and highlights &lt;a
+				href="http://www.iwantmymvc.com/html5-localstorage-modernizr-in-mvc3-tools-release"
+				target="_blank"&gt;How to use Modernizr with ASP.NET MVC 3 to store
+				user data via HTML5 localstorage&lt;/a&gt;.&amp;#160; His tutorial
+				shows an end-to-end ASP.NET MVC 3 sample where he uses HTML5’s
+				localstorage feature if it is available, and falls back to just
+				using cookies on older browsers.&amp;#160; &lt;/p&gt;
+				&lt;h2&gt;&lt;u&gt;Summary&lt;/u&gt;&lt;/h2&gt; &lt;p&gt;The new
+				ASP.NET MVC 3 Tooling Update is full of goodness.&amp;#160; If you
+				haven’t already downloaded and installed it I highly recommend you
+				do so.&amp;#160; You can run the ASP.NET MVC 3 installer on the
+				&lt;a href="http://asp.net/mvc"
+				target="_blank"&gt;http://asp.net/mvc&lt;/a&gt; site to make sure
+				you have the latest version.&lt;/p&gt; &lt;p&gt;The HTML5 Semantic
+				Markup improvements in ASP.NET MVC 3 enable you to start designing
+				sites that take better advantage of HTML5 and modern
+				browsers.&amp;#160; Using Modernizr.js you can also have these sites
+				continue to work with older browsers, and optionally light-up only
+				when new features are enabled.&lt;/p&gt; &lt;p&gt;Hope this
+				helps,&lt;/p&gt; &lt;p&gt;Scott&lt;/p&gt; &lt;p&gt;P.S. I am also
+				now using Twitter for quick updates and to share links. Follow me
+				at: &lt;a href="http://twitter.com/scottgu"
+				target="_blank"&gt;twitter.com/scottgu&lt;/a&gt;&lt;/p&gt;
+				&lt;/font&gt;&lt;img
+				src="http://weblogs.asp.net/aggbug.aspx?PostID=7783819" width="1"
+				height="1"&gt;</description>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/ASP.NET/default.aspx">ASP.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Visual+Studio/default.aspx">Visual Studio</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/.NET/default.aspx">.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/MVC/default.aspx">MVC</category>
+		</item>
+		<item>
+			<title>EF Code First and Data Scaffolding with the ASP.NET MVC 3
+				Tools Update</title>
+			<link>http://weblogs.asp.net/scottgu/archive/2011/05/05/ef-code-first-and-data-scaffolding-with-the-asp-net-mvc-3-tools-update.aspx</link>
+			<pubDate>Fri, 06 May 2011 05:50:07 GMT</pubDate>
+			<guid isPermaLink="false">c06e2b9d-981a-45b4-a55f-ab0d8bbfdc1c:7778223</guid>
+			<dc:creator>ScottGu</dc:creator>
+			<slash:comments>67</slash:comments>
+			<wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/rsscomments.aspx?PostID=7778223
+			</wfw:commentRss>
+			<wfw:comment xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/commentapi.aspx?PostID=7778223
+			</wfw:comment>
+			<comments>http://weblogs.asp.net/scottgu/archive/2011/05/05/ef-code-first-and-data-scaffolding-with-the-asp-net-mvc-3-tools-update.aspx#comments</comments>
+			<description>&lt;font face="arial"&gt; &lt;p&gt;Earlier this week
+				&lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2011/05/03/asp-net-mvc-3-tools-update.aspx"
+				target="_blank"&gt;I blogged&lt;/a&gt; about the new &lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2011/05/03/asp-net-mvc-3-tools-update.aspx"
+				target="_blank"&gt;ASP.NET MVC 3 Tools Update&lt;/a&gt; that we
+				shipped last month.&amp;#160; &lt;/p&gt; &lt;p&gt;In today’s blog
+				post I’m going to go into more detail about two of the cool new
+				features it brings: &lt;/p&gt; &lt;ol&gt; &lt;li&gt;Built-in support
+				for EF 4.1 (which includes the new EF “code-first” support)
+				&lt;/li&gt; &lt;li&gt;Built-in data scaffolding support within
+				Visual Studio (which enables you to rapidly create data-driven
+				sites) &lt;/li&gt; &lt;/ol&gt; &lt;p&gt;These two features provide a
+				really sweet, and extremely powerful, way to work with data and
+				build data-driven web applications.&lt;/p&gt;
+				&lt;h2&gt;&lt;u&gt;Scenario We’ll Build&lt;/u&gt;&lt;/h2&gt;
+				&lt;p&gt;To help illustrate how to use the above features, we’ll
+				walkthrough building a simple data-drive site.&amp;#160; It will
+				support listing products:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4e066438_3D02CC98.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="SNAGHTML4e066438" border="0"
+				alt="SNAGHTML4e066438"
+				src="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4e066438_thumb_06B1A489.png"
+				width="677" height="475" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;As well
+				as creating/editing new products (and categories):&lt;/p&gt;
+				&lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4e078291_335A5E62.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="SNAGHTML4e078291" border="0"
+				alt="SNAGHTML4e078291"
+				src="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4e078291_thumb_1D244310.png"
+				width="694" height="642" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;We can
+				now build this entire application (and create the database that
+				backs it) with ASP.NET MVC 3 in only a minute or two.&lt;/p&gt;
+				&lt;h2&gt;&lt;u&gt;Step 1: Create New Project&lt;/u&gt;&lt;/h2&gt;
+				&lt;p&gt;We’ll begin by creating a new ASP.NET MVC 3 project (using
+				the File-&amp;gt;New Project menu command).&amp;#160; We’ll use the
+				“Internet Project” template – which will provide us with a default
+				starter template for our application.&amp;#160; &lt;/p&gt;
+				&lt;p&gt;When you look at the newly created project within the
+				Solution Explorer, you’ll see that the ASP.NET MVC 3 Tools update
+				adds a new assembly – &lt;em&gt;EntityFramework&lt;/em&gt; – to our
+				ASP.NET MVC 3 projects:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/image_17D55C5F.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="image" border="0" alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_thumb_48F496FF.png"
+				width="220" height="234" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;The
+				&lt;em&gt;EntityFramework&lt;/em&gt; assembly implements Entity
+				Framework 4.1 – which we also &lt;a
+				href="http://blogs.msdn.com/b/adonet/archive/2011/04/11/ef-4-1-released.aspx"
+				target="_blank"&gt;released last month&lt;/a&gt;.&amp;#160; EF 4.1
+				brings with it a bunch of great data API improvements to .NET –
+				including the new “code first” option.&amp;#160; EF Code First
+				provides a really elegant and clean way to work with data, and
+				enables you to do so without requiring a designer or XML mapping
+				file.&amp;#160; You can now easily take advantage of this by default
+				with all new ASP.NET MVC 3 projects.&lt;/p&gt; &lt;p&gt;We’ll be
+				using the EF Code First approach to implement our data access for
+				this application.&lt;/p&gt; &lt;h2&gt;&lt;u&gt;Step 2: Implement
+				Model Classes&lt;/u&gt;&lt;/h2&gt; &lt;p&gt;Our first step will be
+				to create two classes – Product and Category – that we’ll use to
+				define the “model” of our application.&amp;#160; We’ll implement
+				these as standard “plain old C# objects” within the \Models folder
+				of our project using the code below:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/image_0F055413.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="image" border="0" alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_thumb_200981F6.png"
+				width="552" height="376" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;Notice
+				how the above classes are just standard classes with .NET
+				data-types.&amp;#160; They do not need to derive from any base
+				class, nor implement any interfaces.&amp;#160; &lt;/p&gt;
+				&lt;p&gt;In addition to standard scalar properties, each class has
+				an “association” property.&amp;#160; For example, the “Product”
+				class has a “Category” property that enables a developer to get
+				access to the Category it belongs to.&amp;#160; Likewise the
+				“Category” class has a “Products” property that enables a developer
+				to retrieve the Products that are within that particular
+				Category.&amp;#160; EF Code First can handle automatically managing
+				these associations (using the Primary Key/Foreign Key values), and
+				can lazy load the appropriate data on-demand.&lt;/p&gt;
+				&lt;h2&gt;&lt;u&gt;Step 3: Implement a StoreContext Class using EF
+				Code First&lt;/u&gt;&lt;/h2&gt; &lt;p&gt;Now that we’ve defined our
+				two model classes, our next step will be to implement a “DbContext”
+				class using EF code First that will map the model classes to tables
+				in a database.&amp;#160; We’ll implement this using the code
+				below:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4d35a6ee_5EFB0291.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="SNAGHTML4d35a6ee" border="0"
+				alt="SNAGHTML4d35a6ee"
+				src="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4d35a6ee_thumb_4526CC62.png"
+				width="484" height="130" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;The
+				“StoreContext” class above is the DbContext class we are using to
+				map our Product and Category classes to/from a database.&amp;#160;
+				It derives from the DbContext base class provided by EF Code First,
+				and exposes two properties that correspond to tables within our
+				database.&amp;#160; For this sample we are using the default
+				“convention over configuration” based mapping rules to define how
+				the classes should map to/from the database.&amp;#160; This means
+				that the Products property will map to a Products table, and the
+				Categories property will map to a Categories table.&amp;#160; In
+				later blog posts I’ll talk about how you can optionally override
+				this and perform custom mappings.&lt;/p&gt; &lt;p&gt;You can add the
+				above class anywhere within your solution.&amp;#160; For example,
+				you could add it within the \Models folder of your project – or
+				within a separate class library project if you prefer to keep your
+				data code separate.&amp;#160; You’ll want to add a “using” statement
+				to the &lt;em&gt;System.Data.Entity&lt;/em&gt; namespace at the top
+				of the class file (in order to reference the DbContext and
+				DbSet&amp;lt;T&amp;gt; classes).&lt;/p&gt; &lt;p&gt;After you’ve
+				saved the above class files, compile the project – you’ll want to
+				have built it before the next step.&lt;/p&gt;
+				&lt;h2&gt;&lt;u&gt;Step 4: Scaffold a Categories
+				Controller&lt;/u&gt;&lt;/h2&gt; &lt;p&gt;We have everything we need
+				to model our data and save/retrieve it from a database.&amp;#160;
+				Now let’s create an ASP.NET MVC Controller class that will implement
+				the support necessary to display our Category data and enable
+				creating/editing/deleting Category objects.&amp;#160; Prior to last
+				month’s ASP.NET MVC 3 Tools Update, you would have had to manually
+				write a Controller class to do this (and implement all of the EF
+				data access code yourself).&amp;#160; The ASP.NET MVC 3 Tools Update
+				now includes built-in “scaffolding” support that can help do this
+				for you automatically.&lt;/p&gt; &lt;p&gt;To scaffold a new
+				Categories controller class, we’ll right-click on the “/Controllers”
+				folder of our project and choose the Add-&amp;gt;Controller context
+				menu:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/image_64697335.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="image" border="0" alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_thumb_312D39CC.png"
+				width="646" height="430" /&gt;&lt;/a&gt;&lt;/p&gt;
+				&lt;p&gt;Selecting Add-&amp;gt;Controller will bring up the “Add
+				Controller” dialog.&amp;#160; We’ll name the controller class we
+				want to create “CategoriesController”.&amp;#160; Starting with last
+				month’s ASP.NET MVC 3 Tools Update, the “Add Controller” dialog also
+				now supports a new “Scaffolding options” section – which enables you
+				to choose to “scaffold” the new controller using a variety of
+				built-in templates:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/image_68FF7DEF.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="image" border="0" alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_thumb_12FF7C18.png"
+				width="604" height="393" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;We’ll
+				choose the “Controller with read/write actions and views, using
+				Entity Framework” template – which will create a Controller class
+				that has all of the EF code necessary to create, update, list and
+				delete model objects.&lt;/p&gt; &lt;p&gt;After selecting this
+				template, we can choose the model class we want our Controller to
+				implement CRUD support for – in this case the “Category”
+				class.&amp;#160; We can also select the EF DbContext/ObjectContext
+				class that we want to use to access the database – in this case the
+				“StoreContext” class we defined earlier:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4d81d687_465B3F74.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="SNAGHTML4d81d687" border="0"
+				alt="SNAGHTML4d81d687"
+				src="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4d81d687_thumb_770E471F.png"
+				width="604" height="393" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;When we
+				click the “Add” button, Visual Studio will automatically create a
+				CategoriesController class for us – with appropriate Create, Edit,
+				Details, Delete and Index action methods inside it – as well
+				associated view templates for each of the actions:&lt;/p&gt;
+				&lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/image_2EE08B43.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="image" border="0" alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_thumb_54D63B99.png"
+				width="222" height="551" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;If you
+				open the CategoriesController.cs class you’ll find that the action
+				methods within it implement the EF data access code necessary for
+				CRUD support:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/image_13C7BC35.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="image" border="0" alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_thumb_52B93CD0.png"
+				width="488" height="425" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;And now
+				we have all of the code we need to implement data listing/editing
+				for Categories within our database&lt;/p&gt; &lt;h2&gt;&lt;u&gt;Step
+				5: Configuring our Database Location&lt;/u&gt;&lt;/h2&gt;
+				&lt;p&gt;The last step we’ll do before running our application is to
+				point our application at the database we want to use.&amp;#160; EF
+				code first allows you to use an existing database you already have
+				defined, or alternatively you can point it at a database that
+				doesn’t yet exist – in which case it will automatically create it
+				for you using the model classes you’ve defined.&lt;/p&gt;
+				&lt;p&gt;&lt;u&gt;No Connection-String&lt;/u&gt;&lt;/p&gt;
+				&lt;p&gt;By default, you actually don’t need to configure a
+				connection-string to point at a database.&amp;#160; If you don’t
+				specify one, EF Code-First will by default create a new SQL Express
+				database whose name matches your DbContext class name (for example:
+				above it would create a
+				&lt;em&gt;ScaffoldingDemo.Models.StoreContext&lt;/em&gt; database
+				within your local .\SQLExpress database instance).&amp;#160;
+				&lt;/p&gt; &lt;p&gt;&lt;u&gt;Explicitly Specifying a
+				Connection-String&lt;/u&gt;&lt;/p&gt; &lt;p&gt;You can alternatively
+				explicitly specify where you want your database to live by adding a
+				connection-string to your application’s web.config file.&amp;#160;
+				You’ll want the name of the connection-string to match the DbContext
+				class name.&amp;#160; For example – in our application above our
+				DbContext class was named “StoreContext”, and so by default EF will
+				look for a connection-string with the same name to determine the
+				database location.&lt;/p&gt; &lt;p&gt;Below is the entry we’d add to
+				our web.config file if we wanted to use an embedded SQL CE database
+				named “Store.sdf” within our application’s \App_data
+				folder:&lt;/p&gt; &lt;p&gt;&amp;lt;configuration&amp;gt; &lt;br
+				/&gt;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;
+				&amp;lt;connectionStrings&amp;gt; &lt;br
+				/&gt;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;
+				&amp;lt;add name=&amp;quot;StoreContext&amp;quot; &lt;br
+				/&gt;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;
+				connectionString=&amp;quot;Data
+				Source=|DataDirectory|\Store.sdf&amp;quot; &lt;br
+				/&gt;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;
+				providerName=&amp;quot;System.Data.SqlServerCe.4.0&amp;quot;
+				/&amp;gt; &lt;br
+				/&gt;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;
+				&amp;lt;/connectionStrings&amp;gt;&lt;/p&gt;
+				&lt;p&gt;&amp;lt;/configuration&amp;gt;&lt;/p&gt; &lt;p&gt;You can
+				learn more about SQL CE – and the new VS 2010 SP1 tooling support
+				for it – from &lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2011/01/11/vs-2010-sp1-and-sql-ce.aspx"
+				target="_blank"&gt;my previous blog post about
+				it&lt;/a&gt;.&lt;/p&gt; &lt;h2&gt;&lt;u&gt;Step 6: Run the
+				Application&lt;/u&gt;&lt;/h2&gt; &lt;p&gt;Ok – let’s now run the
+				application and navigate to the &lt;em&gt;/Categories&lt;/em&gt;
+				URL.&amp;#160; This will execute our CategoriesController’s Index()
+				method – which will list all categories in our database.&amp;#160;
+				Currently we don’t have any:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4dede162_4AC19A6E.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="SNAGHTML4dede162" border="0"
+				alt="SNAGHTML4dede162"
+				src="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4dede162_thumb_4572B3BD.png"
+				width="669" height="406" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;Let’s
+				click the “Create New” link to create a new category – this will
+				navigate to the &lt;em&gt;/Categories/Create&lt;/em&gt; URL, which
+				provides us with a form to create a new category:&lt;/p&gt;
+				&lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4def03ef_24130E21.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="SNAGHTML4def03ef" border="0"
+				alt="SNAGHTML4def03ef"
+				src="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4def03ef_thumb_24BBC44B.png"
+				width="714" height="532" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;Clicking
+				the “Create” button will post the form to our CategoriesController
+				and add a new Category to our database.&amp;#160; We can repeat this
+				a few times to add several different categories:&lt;/p&gt;
+				&lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4df02093_3573492C.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="SNAGHTML4df02093" border="0"
+				alt="SNAGHTML4df02093"
+				src="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4df02093_thumb_4200F648.png"
+				width="678" height="517" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;The cool
+				thing is that we didn’t have to write any Controller or View code to
+				enable this – the scaffolding support automatically generated the
+				code we needed to enable this.&amp;#160; This provides a really easy
+				way to get started.&amp;#160; We can then go in and tweak it as
+				necessary to customize the functionality further.&lt;/p&gt;
+				&lt;h2&gt;&lt;u&gt;Step 7: Looking at the
+				database&lt;/u&gt;&lt;/h2&gt; &lt;p&gt;We configured our application
+				to use a connection-string that pointed to a SQL CE database that
+				(at the time) didn’t exist.&amp;#160; When we ran our application,
+				EF 4.1 detected that the database didn’t exist and automatically
+				created it for us – based on the Product and Category classes we
+				defined earlier.&amp;#160; &lt;/p&gt; &lt;p&gt;To see the database,
+				click the “Show All Files” icon at the top of Visual Studio’s
+				“Solution Explorer” and add the “Store.sdf” database that was
+				automatically created by EF to your project:&lt;/p&gt;
+				&lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/image_59B82DAE.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="image" border="0" alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_thumb_31A57E8F.png"
+				width="327" height="361" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;You can
+				then double-click the database to open it up in the Server Explorer
+				– and expand the tables within it to see the schema that was
+				created:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/image_7096FF2A.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="image" border="0" alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_thumb_019B2D0E.png"
+				width="243" height="396" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;Notice
+				above how EF Code First automatically created the appropriate
+				database schema based on the Category and Product classes we created
+				earlier.&amp;#160; It also automatically setup Primary
+				Key/Foreign-Key relationships between the two tables based on the
+				association properties specified in the classes.&lt;/p&gt;
+				&lt;h2&gt;&lt;u&gt;Step 8: Scaffolding a Products Controller
+				&lt;/u&gt;&lt;/h2&gt; &lt;p&gt;We’ve created a CategoriesController
+				class to manage listing and editing Categories.&amp;#160; Let’s now
+				create a ProductsController class to manage listing and editing
+				Products.&lt;/p&gt; &lt;p&gt;Just like before, we’ll right-click on
+				the \Controllers folder in our project and choose the
+				Add-&amp;gt;Controller context menu.&amp;#160; We’ll name the
+				Controller class we want to create “ProductsController” and indicate
+				that we want to scaffold using the EF template with a Product model
+				class:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4dfb7c0b_6E7A0061.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="SNAGHTML4dfb7c0b" border="0"
+				alt="SNAGHTML4dfb7c0b"
+				src="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4dfb7c0b_thumb_5439973D.png"
+				width="604" height="393" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;Clicking
+				the “Add” button will scaffold a ProductsController class for us,
+				with appropriate action methods for CRUD scenarios, and create the
+				associated view templates that go with them:&lt;/p&gt;
+				&lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/image_39F92E19.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="image" border="0" alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_thumb_1D100944.png"
+				width="229" height="445" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;We can
+				then run our project again and navigate to the&lt;em&gt;
+				/Products&lt;/em&gt; URL within it:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4dfeca88_70F30C52.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="SNAGHTML4dfeca88" border="0"
+				alt="SNAGHTML4dfeca88"
+				src="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4dfeca88_thumb_56B2A32E.png"
+				width="668" height="412" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;Let’s
+				click the “Create New” link to create a new Product:&lt;/p&gt;
+				&lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4e028a2f_7589170C.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="SNAGHTML4e028a2f" border="0"
+				alt="SNAGHTML4e028a2f"
+				src="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4e028a2f_thumb_1869D8BD.png"
+				width="695" height="641" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;One cool
+				thing to notice is that the “Category” is a drop-down of valid
+				Categories (and not just a textbox with a foreign-key integer
+				value):&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/image_45129296.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px; margin: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="image" border="0" alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_thumb_12428C22.png"
+				width="334" height="386" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;The
+				scaffolding support within Visual Studio was smart enough to detect
+				that Category was an association, and scaffold EF code that
+				populates the drop-down with valid Categories.&lt;/p&gt;
+				&lt;p&gt;After entering several products our
+				&lt;em&gt;/Products&lt;/em&gt; URL will display the data like
+				below:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4e066438_1C93B082.png"&gt;&lt;img
+				style="background-image: none; border-right-width: 0px;
+				padding-left: 0px; padding-right: 0px; display: inline;
+				border-top-width: 0px; border-bottom-width: 0px; border-left-width:
+				0px; padding-top: 0px" title="SNAGHTML4e066438" border="0"
+				alt="SNAGHTML4e066438"
+				src="http://weblogs.asp.net/blogs/scottgu/SNAGHTML4e066438_thumb_69577718.png"
+				width="677" height="475" /&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;Notice
+				again how Category is displayed using the friendly name – and not
+				just the foreign-key value.&lt;/p&gt; &lt;h2&gt;&lt;u&gt;Learning
+				More&lt;/u&gt;&lt;/h2&gt; &lt;p&gt;The above walkthrough provided a
+				quick look at the new EF code-first and data scaffolding support
+				built-into the ASP.NET MVC 3 Tools Update, and how you can use them
+				to easily and quickly jumpstart application development.&amp;#160;
+				EF Code First enables you to write incredibly clean data access
+				code.&amp;#160; The data scaffolding support enables you to rapidly
+				create data UI – and then allows you to go in and easily
+				tweak/customize it further.&lt;/p&gt; &lt;p&gt;In addition to
+				working with EF Code-First, you can also use the data scaffolding
+				support against standard EF ObjectContext objects (built using
+				either the database-first or model-first approach and the EF WYSIWYG
+				designer).&lt;/p&gt;
+				&lt;p&gt;&lt;u&gt;Scaffolding&lt;/u&gt;&lt;/p&gt; &lt;p&gt;You can
+				learn more about the new ASP.NET MVC 3 Scaffolding Support from
+				Steve Sanderson’s excellent talk about it at MIX:&lt;/p&gt;
+				&lt;ul&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Events/MIX/MIX11/FRM13"
+				target="_blank"&gt;Scaffolding – ASP.NET, NuGet,
+				MVCScaffolding&lt;/a&gt; – Steve Sanderon’s MIX talk about it
+				&lt;/li&gt; &lt;/ul&gt; &lt;p&gt;In his talk Steve also covers how
+				you can use the scaffolding support from the command-line (using
+				NuGet) as well as how you can download and use additional
+				scaffolding templates (for example: ones that can automatically
+				implement a repository pattern, etc).&amp;#160; Also make sure you
+				bookmark Steve’s excellent blog series about scaffolding (and its
+				extensibility) here:&lt;/p&gt; &lt;ul&gt; &lt;li&gt;&lt;a
+				href="http://blog.stevensanderson.com/2011/01/13/scaffold-your-aspnet-mvc-3-project-with-the-mvcscaffolding-package/"
+				target="_blank"&gt;Scaffolding with ASP.NET MVC 3&lt;/a&gt; –
+				Excellent blog series about ASP.NET MVC 3 Scaffolding &lt;/li&gt;
+				&lt;/ul&gt; &lt;p&gt;&lt;u&gt;EF Code First&lt;/u&gt;&lt;/p&gt;
+				&lt;p&gt;I’ll be doing more blog posts about EF Code First in the
+				future.&amp;#160; Below are links to some tutorials I’ve written in
+				the past about it:&lt;/p&gt; &lt;ul&gt; &lt;li&gt;&lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2010/07/16/code-first-development-with-entity-framework-4.aspx"
+				target="_blank"&gt;Code First Development with Entity Framework
+				4.x&lt;/a&gt; &lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2010/07/23/entity-framework-4-code-first-custom-database-schema-mapping.aspx"
+				target="_blank"&gt;EF Code First: Custom Database Schema
+				Mapping&lt;/a&gt; &lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2010/08/03/using-ef-code-first-with-an-existing-database.aspx"
+				target="_blank"&gt;Using EF Code First with an Existing
+				Database&lt;/a&gt; &lt;/li&gt; &lt;/ul&gt; &lt;p&gt;&lt;em&gt;Note:
+				The above tutorials were written against the CTP4 release of EF Code
+				First (and so some APIs are a little different) – but the concepts
+				and scenarios outlined in them are the same as with the final
+				release.&lt;/em&gt;&lt;/p&gt; &lt;p&gt;&lt;u&gt;ASP.NET MVC
+				3&lt;/u&gt;&lt;/p&gt; &lt;p&gt;If you want to learn more about
+				ASP.NET MVC 3, I highly recommend Scott Hanselman’s excellent video
+				presentations at the Dutch DevDays and at MIX:&lt;/p&gt; &lt;ul&gt;
+				&lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Events/DevDays/DevDays-2011-Netherlands/Devdays002"
+				target="_blank"&gt;ASP.NET MVC 3 101 &lt;/a&gt;– From Beginning to
+				Advanced &lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Events/MIX/MIX11/FRM02"
+				target="_blank"&gt;Overview of the MS Web Stack of Love&lt;/a&gt; –
+				Scott’s talk at MIX &lt;/li&gt; &lt;/ul&gt; &lt;p&gt;Also check out
+				all of the new content and videos on the &lt;a
+				href="http://asp.net/mvc"
+				target="_blank"&gt;http://asp.net/mvc&lt;/a&gt; web-site:&lt;/p&gt;
+				&lt;ul&gt; &lt;li&gt;&lt;a href="http://www.asp.net/mvc"
+				target="_blank"&gt;ASP.NET MVC 3 Videos and Tutorials&lt;/a&gt;
+				&lt;/li&gt; &lt;/ul&gt;
+				&lt;h2&gt;&lt;u&gt;Summary&lt;/u&gt;&lt;/h2&gt; &lt;p&gt;The new
+				ASP.NET MVC 3 Tooling Update is full of goodness.&amp;#160; If you
+				haven’t already downloaded and installed it I highly recommend you
+				do so.&amp;#160; Stay tuned for even more blog posts about
+				it!&lt;/p&gt; &lt;p&gt;Hope this helps,&lt;/p&gt;
+				&lt;p&gt;Scott&lt;/p&gt; &lt;p&gt;&lt;em&gt;P.S. I am also now using
+				Twitter for quick updates and to share links. Follow me at: &lt;a
+				href="http://twitter.com/scottgu"
+				target="_blank"&gt;twitter.com/scottgu&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+				&lt;/font&gt;&lt;img
+				src="http://weblogs.asp.net/aggbug.aspx?PostID=7778223" width="1"
+				height="1"&gt;</description>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/ASP.NET/default.aspx">ASP.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Visual+Studio/default.aspx">Visual Studio</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/.NET/default.aspx">.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/MVC/default.aspx">MVC</category>
+		</item>
+		<item>
+			<title>ASP.NET MVC 3 Tools Update</title>
+			<link>http://weblogs.asp.net/scottgu/archive/2011/05/03/asp-net-mvc-3-tools-update.aspx</link>
+			<pubDate>Wed, 04 May 2011 04:46:10 GMT</pubDate>
+			<guid isPermaLink="false">c06e2b9d-981a-45b4-a55f-ab0d8bbfdc1c:7776254</guid>
+			<dc:creator>ScottGu</dc:creator>
+			<slash:comments>26</slash:comments>
+			<wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/rsscomments.aspx?PostID=7776254
+			</wfw:commentRss>
+			<wfw:comment xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/commentapi.aspx?PostID=7776254
+			</wfw:comment>
+			<comments>http://weblogs.asp.net/scottgu/archive/2011/05/03/asp-net-mvc-3-tools-update.aspx#comments</comments>
+			<description>&lt;font face="arial"&gt; &lt;p&gt;Three weeks ago we
+				held our MIX 2011 conference in Las Vegas.&amp;#160; MIX is one of
+				my favorite events of the year, and the conference always has a ton
+				of great content and announcements.&amp;#160; All of the keynotes
+				and breakout sessions from the event can be watched online for free
+				&lt;a href="http://channel9.msdn.com/events/mix/mix11"
+				target="_blank"&gt;here&lt;/a&gt;.&amp;#160; I’ll be doing a few
+				posts in the upcoming weeks that also cover some highlights from
+				it.&lt;/p&gt; &lt;h3&gt;&lt;u&gt;ASP.NET MVC 3 Tools
+				Update&lt;/u&gt;&lt;/h3&gt; &lt;p&gt;One of the announcements I made
+				in my Day 1 keynote was the release of an &lt;strong&gt;ASP.NET MVC
+				3 Tools Update&lt;/strong&gt;.&amp;#160; This update is a small, but
+				very tasty, update that includes a bunch of really nice tooling
+				improvements for ASP.NET MVC 3.&amp;#160; You can install it from
+				the &lt;a href="http://asp.net/mvc"
+				target="_blank"&gt;http://asp.net/mvc&lt;/a&gt; site (just click the
+				installer).&lt;/p&gt; &lt;p&gt;The ASP.NET MVC 3 Tools Update can be
+				installed on top of the original ASP.NET MVC 3 release (no need to
+				uninstall it if you already have it installed) or just installed
+				directly on a clean machine (there is no need to have the original
+				ASP.NET MVC 3 bits already installed).&amp;#160; &lt;/p&gt;
+				&lt;p&gt;The ASP.NET MVC 3 Tools update only includes Visual Studio
+				tooling improvements and default project template changes – it does
+				not include any changes to the ASP.NET MVC 3 runtime
+				binaries.&amp;#160; Because it uses the same ASP.NET MVC 3 runtime
+				binaries as our original January release, there is no need to update
+				existing MVC 3 projects you are working on or make any code changes
+				to them.&amp;#160; &lt;/p&gt; &lt;h3&gt;&lt;u&gt;What is in the
+				ASP.NET MVC 3 Tools Update?&lt;/u&gt;&lt;/h3&gt; &lt;p&gt;The
+				ASP.NET MVC 3 Tools Update includes a bunch of nice tooling
+				improvements for ASP.NET MVC 3 including:&lt;/p&gt; &lt;ul&gt;
+				&lt;li&gt;The &lt;strong&gt;final release of EF 4.1&lt;/strong&gt;
+				(which includes EF Code First) is now included by default with all
+				new projects.&amp;#160; Previously you had to download this library
+				separately or get it using NuGet.&amp;#160; Now it is referenced by
+				default when you create new projects (enabling a really clean,
+				powerful data API out of the box). &lt;/li&gt; &lt;/ul&gt;
+				&lt;ul&gt; &lt;li&gt;Built-in &lt;strong&gt;data scaffolding
+				support&lt;/strong&gt; is now supported with the
+				Add-&amp;gt;Controller dialog within Visual Studio.&amp;#160; This
+				enables you to automatically scaffold a Controller class (which
+				includes all the necessary data access code) and all of the view
+				templates required to implement a CRUD solution against an EF model
+				class (using either code-first, database-first or
+				model-first).&amp;#160; It makes it super easy to quickly create a
+				data driven site using ASP.NET MVC.&amp;#160; &lt;/li&gt;
+				&lt;/ul&gt; &lt;ul&gt; &lt;li&gt;&lt;strong&gt;New HTML5 project
+				templates&lt;/strong&gt; are included that make it easy to use HTML5
+				semantic markup when creating new sites (meaning elements like
+				&amp;lt;header&amp;gt;, &amp;lt;footer&amp;gt;,
+				&amp;lt;section&amp;gt;, &amp;lt;aside&amp;gt;, etc).&amp;#160; We
+				also now include the &lt;strong&gt;Modernizr 1.7 JavaScript
+				library&lt;/strong&gt; with new projects.&amp;#160; Modernizr is a
+				cool OSS library that makes it easy to check for HTML5 capabilities
+				within browsers, and also allows you to use standard CSS to style
+				HTML5 semantic elements and still have the styling work on older
+				browsers (like IE6). &lt;/li&gt; &lt;/ul&gt; &lt;ul&gt; &lt;li&gt;A
+				new &lt;strong&gt;Intranet Project Template&lt;/strong&gt; has been
+				included with this release that makes it easy to create a new
+				project that uses Windows authentication to identify users (as
+				opposed to the Forms Authentication pages built-into the Internet
+				template today).&amp;#160; Speaking of the Internet Project
+				Template, the AccountController class within it has also been
+				cleaned up with this release. &lt;/li&gt; &lt;/ul&gt; &lt;ul&gt;
+				&lt;li&gt;&lt;strong&gt;Newer versions of jQuery core, jQuery UI and
+				jQuery Validation&lt;/strong&gt; are included with this
+				release.&amp;#160; The default versions added to new projects are
+				also now added as NuGet libraries (meaning they are listed in the
+				packages.config file of the project) – which means that you can use
+				NuGet to easily update them to even more recent versions as a later
+				date. &lt;/li&gt; &lt;/ul&gt; &lt;p&gt;I’m going to do several blog
+				posts in the days and weeks ahead that cover the above features and
+				how to take advantage of them.&amp;#160; You can also learn more
+				about the release (and see it in action) from the following
+				posts/videos:&lt;/p&gt; &lt;ul&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Events/MIX/MIX11/FRM02"
+				target="_blank"&gt;Overview of the MS Web Stack of Love&lt;/a&gt; –
+				Scott Hanselman at his usual best &lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Events/MIX/MIX11/FRM13"
+				target="_blank"&gt;Scaffolding – ASP.NET, NuGet,
+				MVCScaffolding&lt;/a&gt; – Steve Sanderson presents on the
+				scaffolding improvements &lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://haacked.com/archive/2011/04/12/introducing-asp-net-mvc-3-tools-update.aspx"
+				target="_blank"&gt;Introducing ASP.NET MVC 3 Tools Update&lt;/a&gt;
+				– Nice summary post by Phil Haack &lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://www.hanselman.com/blog/Mix11WebPlatformAndToolsKeynoteDemoScript.aspx"
+				target="_blank"&gt;Scott Hanselman’s MIX 11 Keynote Demo Script
+				Showing off ASP.NET MVC 3 and More&lt;/a&gt; &lt;/li&gt; &lt;/ul&gt;
+				&lt;p&gt;Hope this helps,&lt;/p&gt; &lt;p&gt;Scott&lt;/p&gt;
+				&lt;p&gt;&lt;em&gt;P.S. I am also now using Twitter for quick
+				updates and to share links. Follow me at: &lt;a
+				href="http://twitter.com/scottgu"
+				target="_blank"&gt;twitter.com/scottgu&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+				&lt;/font&gt;&lt;img
+				src="http://weblogs.asp.net/aggbug.aspx?PostID=7776254" width="1"
+				height="1"&gt;</description>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/ASP.NET/default.aspx">ASP.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/.NET/default.aspx">.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Community+News/default.aspx">Community News</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/MVC/default.aspx">MVC</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/NuGet/default.aspx">NuGet</category>
+		</item>
+		<item>
+			<title>Hacking Education: A Contest for Developers and Data Crunchers</title>
+			<link>http://weblogs.asp.net/scottgu/archive/2011/04/26/hacking-education-a-contest-for-developers-and-data-crunchers.aspx</link>
+			<pubDate>Tue, 26 Apr 2011 08:00:14 GMT</pubDate>
+			<guid isPermaLink="false">c06e2b9d-981a-45b4-a55f-ab0d8bbfdc1c:7770707</guid>
+			<dc:creator>ScottGu</dc:creator>
+			<slash:comments>6</slash:comments>
+			<wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/rsscomments.aspx?PostID=7770707
+			</wfw:commentRss>
+			<wfw:comment xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/commentapi.aspx?PostID=7770707
+			</wfw:comment>
+			<comments>http://weblogs.asp.net/scottgu/archive/2011/04/26/hacking-education-a-contest-for-developers-and-data-crunchers.aspx#comments</comments>
+			<description>&lt;font face="arial"&gt; &lt;p&gt;The folks over at
+				&lt;a href="http://www.donorschoose.org/hacking-education"
+				target="_blank"&gt;DonorsChoose.org&lt;/a&gt; are running an
+				&amp;quot;open data&amp;quot; context in April that I thought you
+				all might be interested in! DonorsChoose is an online charity that
+				makes it easy for anyone to help students in need. The difference is
+				that the Donor can target a project directly...you can choose where
+				your $1 goes.&lt;/p&gt; &lt;p&gt;So far, more than 165,000 teachers
+				at 43,000 public schools have posted over 300,000 classroom projects
+				supported by 409,000 citizen philanthropists who have made
+				&amp;gt;900,000 project donations at &lt;a
+				href="http://www.donorschoose.org/hacking-education"
+				target="_blank"&gt;DonorsChoose.org&lt;/a&gt; to date. &lt;/p&gt;
+				&lt;p&gt;That makes for a whole lot of data that is publicly
+				accessible for a contest, after of course scrubbing identifying
+				information about teachers and donors. The resulting info will
+				include everything from the search queries performed by donors; to
+				subject area (civics, geography) and resource type (field trip,
+				technology) of each project; to teacher affiliation (Teach for
+				America, NY Teaching Fellow); to the latitude, longitude, and
+				poverty rate of each school.&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://en.wikipedia.org/wiki/Clay_A._Johnson"&gt;Clay
+				Johnson&lt;/a&gt;, a leader in helping government agencies open up
+				their data and engage the web developer community, is helping to run
+				the contest. &lt;a
+				href="http://www.donorschoose.org/hacking-education"
+				target="_blank"&gt;DonorsChoose&lt;/a&gt; is hoping that developers,
+				designers, researchers, and number crunchers will be able to use our
+				API and our data to:&lt;/p&gt; &lt;ul&gt; &lt;li&gt;Identify trends
+				that could impact budgeting or pedagogy, i.e.
+				&amp;quot;3&lt;sup&gt;rd&lt;/sup&gt; grade teachers in the Bronx are
+				submitting 40% more projects requesting listening centers than they
+				were one year ago&amp;quot; or &amp;quot;these are the top 10 novels
+				requested by high school teachers in low-income
+				communities.&amp;quot; &lt;/li&gt; &lt;li&gt;Build applications that
+				reinvent the &lt;a
+				href="http://www.donorschoose.org/hacking-education"
+				target="_blank"&gt;DonorsChoose.org&lt;/a&gt; experience, i.e. a
+				mobile phone app which shows you classroom projects from schools
+				within a 1-mile radius of where you’re standing; or a classroom
+				project discovery experience based on serendipity. &lt;/li&gt;
+				&lt;li&gt;Identify trends in pedagogy through the lens of content of
+				essay requests, resources, geography, eg. &amp;quot;These are the
+				top 10 novels requested by high school teachers in low-income
+				communities.&amp;quot;Study the dynamics of an active web
+				marketplace where lots of real money has changed hands (as there are
+				very few data sets of this kind available to the research
+				community). &lt;/li&gt; &lt;li&gt;Create a unique mobile-friendly
+				project discovery UX, eg. seeing live/completed classroom projects
+				from schools that are closest to your current location. &lt;/li&gt;
+				&lt;/ul&gt; &lt;p&gt;I think the MS developer community might really
+				enjoy participating. You can build anything you like but hopefully
+				this list of suggestions will help get your creative juices flowing!
+				&lt;/p&gt; &lt;p&gt;There are 6 data sets, each of which is provided
+				as a single CSV file: Classroom projects, Project resources, Project
+				essays, Donations, Gift cards, Search log (keywords and
+				filters).&lt;/p&gt; &lt;p&gt;There are will be categories for
+				JavaScript, Ruby, Python, PHP and .NET. Scott Hanselman and I will
+				judge the entries for the .NET category. Whoever wins the .NET
+				category gets a free copy of Visual Studio Ultimate, an Xbox 360
+				with Kinect, and more!&lt;/p&gt; &lt;p&gt;The winner of each
+				category will square off in front of the finalist judges—Arianna
+				Huffington, Fred Wilson, and Wendy Kopp, CEO/founder of Teach For
+				America—to win the grand prize of four tickets to the Colbert
+				Report, where Stephen Colbert will present the winner their trophy
+				and take a celebratory photo together!&lt;/p&gt; &lt;p&gt;I hope you
+				participate and have fun with this great opportunity to write
+				interesting and relevant code AND help a great charity. All the
+				details you need to participate are at &lt;a
+				href="http://www.donorschoose.org/hacking-education"
+				target="_blank"&gt;http://www.donorschoose.org/hacking-education&lt;/a&gt;.
+				&lt;/p&gt; &lt;p&gt;&lt;em&gt;Disclaimer: This is not a
+				Microsoft-run or Microsoft-endorsed contest, we're just helping out
+				by judging because it sounded fun. &lt;/em&gt;&lt;/p&gt;
+				&lt;p&gt;Hope this helps!&lt;/p&gt; &lt;p&gt;Scott&lt;/p&gt;
+				&lt;/font&gt;&lt;img
+				src="http://weblogs.asp.net/aggbug.aspx?PostID=7770707" width="1"
+				height="1"&gt;</description>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Visual+Studio/default.aspx">Visual Studio</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/.NET/default.aspx">.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Community+News/default.aspx">Community News</category>
+		</item>
+		<item>
+			<title>My Annual Arizona .NET Speaking Event this Friday</title>
+			<link>http://weblogs.asp.net/scottgu/archive/2011/04/17/my-annual-arizona-net-speaking-event-this-friday.aspx</link>
+			<pubDate>Mon, 18 Apr 2011 06:02:00 GMT</pubDate>
+			<guid isPermaLink="false">c06e2b9d-981a-45b4-a55f-ab0d8bbfdc1c:7762737</guid>
+			<dc:creator>ScottGu</dc:creator>
+			<slash:comments>1</slash:comments>
+			<wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/rsscomments.aspx?PostID=7762737
+			</wfw:commentRss>
+			<wfw:comment xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/commentapi.aspx?PostID=7762737
+			</wfw:comment>
+			<comments>http://weblogs.asp.net/scottgu/archive/2011/04/17/my-annual-arizona-net-speaking-event-this-friday.aspx#comments</comments>
+			<description>&lt;font face="arial"&gt; &lt;p&gt;This Friday, April
+				22nd, I’ll be holding my 8th Annual “Day of .NET” event in
+				Arizona.&amp;#160; Organized by my friend Scott Cate, this all-day
+				event is free and contains a ton of great content and presentations
+				on recent technologies in the .NET world.&amp;#160; It is hosted in
+				a great facility and is a lot of fun.&lt;/p&gt; &lt;p&gt;This year
+				I’ll be presenting together with Mark Russinovich, and we’ll be
+				covering ASP.NET + Azure + Silverlight + Windows Phone 7.&amp;#160;
+				It will be great!&lt;/p&gt; &lt;p&gt;You can learn more about the
+				event, and register to attend for free &lt;a
+				href="http://azgroups.org/2011scottguevent.aspx#"
+				target="_blank"&gt;here&lt;/a&gt;.&lt;/p&gt; &lt;p&gt;Hope to see
+				you there!&lt;/p&gt; &lt;p&gt;Scott&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://azgroups.org/2011scottguevent.aspx#"
+				target="_blank"&gt;&lt;img style="border-right-width: 0px;
+				border-top-width: 0px; border-bottom-width: 0px; margin-left: 0px;
+				border-left-width: 0px; margin-right: 0px" title="azgroupslogo2"
+				border="0" alt="azgroupslogo2" align="left"
+				src="http://weblogs.asp.net/blogs/scottgu/azgroupslogo2_758F1941.jpg"
+				width="240" height="77"
+				/&gt;&lt;/a&gt;&lt;/p&gt;&lt;br/&gt;&lt;br/&gt; &lt;/font&gt;&lt;img
+				src="http://weblogs.asp.net/aggbug.aspx?PostID=7762737" width="1"
+				height="1"&gt;</description>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/ASP.NET/default.aspx">ASP.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/.NET/default.aspx">.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Talks/default.aspx">Talks</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Community+News/default.aspx">Community News</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Windows+Phone/default.aspx">Windows Phone</category>
+		</item>
+		<item>
+			<title>RC of Entity Framework 4.1 (which includes EF Code First)</title>
+			<link>http://weblogs.asp.net/scottgu/archive/2011/03/19/rc-of-entity-framework-4-1-which-includes-ef-code-first.aspx</link>
+			<pubDate>Sun, 20 Mar 2011 06:32:43 GMT</pubDate>
+			<guid isPermaLink="false">c06e2b9d-981a-45b4-a55f-ab0d8bbfdc1c:7727982</guid>
+			<dc:creator>ScottGu</dc:creator>
+			<slash:comments>45</slash:comments>
+			<wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/rsscomments.aspx?PostID=7727982
+			</wfw:commentRss>
+			<wfw:comment xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/commentapi.aspx?PostID=7727982
+			</wfw:comment>
+			<comments>http://weblogs.asp.net/scottgu/archive/2011/03/19/rc-of-entity-framework-4-1-which-includes-ef-code-first.aspx#comments</comments>
+			<description>&lt;p&gt;Last week the data team shipped the Release
+				Candidate of Entity Framework 4.1.&amp;#160; You can learn more
+				about it and download it &lt;a
+				href="http://blogs.msdn.com/b/adonet/archive/2011/03/15/ef-4-1-release-candidate-available.aspx"
+				target="_blank"&gt;here&lt;/a&gt;.&lt;/p&gt; &lt;p&gt;EF 4.1
+				includes the new “EF Code First” option that I’ve blogged about
+				several times in the past.&amp;#160; EF Code First provides a really
+				elegant and clean way to work with data, and enables you to do so
+				without requiring a designer or XML mapping file.&amp;#160; Below
+				are links to some tutorials I’ve written in the past about
+				it:&lt;/p&gt; &lt;ul&gt; &lt;li&gt;&lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2010/07/16/code-first-development-with-entity-framework-4.aspx"
+				target="_blank"&gt;Code First Development with Entity Framework
+				4.x&lt;/a&gt;&lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2010/07/23/entity-framework-4-code-first-custom-database-schema-mapping.aspx"
+				target="_blank"&gt;EF Code First: Custom Database Schema
+				Mapping&lt;/a&gt;&lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2010/08/03/using-ef-code-first-with-an-existing-database.aspx"
+				target="_blank"&gt;Using EF Code First with an Existing
+				Database&lt;/a&gt;&lt;/li&gt; &lt;/ul&gt; &lt;p&gt;The above
+				tutorials were written against the CTP4 release of EF Code First
+				(and so some APIs might be a little different) – but the concepts
+				and scenarios outlined in them are the same as with the
+				RC.&lt;/p&gt; &lt;h3&gt;&lt;u&gt;Go Live
+				License&lt;/u&gt;&lt;/h3&gt; &lt;p&gt;Last week’s EF 4.1 RC ships
+				with a “go live” license that enables you to use it in production
+				environments.&amp;#160; The final release of EF 4.1 will ship within
+				the next 4 weeks and will be 100% API compatible with the RC
+				release.&lt;/p&gt; &lt;h3&gt;&lt;u&gt;Improvements with the
+				RC&lt;/u&gt;&lt;/h3&gt; &lt;p&gt;The RC includes several
+				improvements and enhancements.&amp;#160; The EF team has a good blog
+				post &lt;a
+				href="http://blogs.msdn.com/b/adonet/archive/2011/03/15/ef-4-1-release-candidate-available.aspx"
+				target="_blank"&gt;summarizing the RC changes&lt;/a&gt;.&amp;#160;
+				Scott Hanselman also has a nice &lt;a
+				href="http://www.hanselman.com/blog/EntityFramework41ReleaseCandidateWithGoLiveWithFinalReleaseToFollowInAMonth.aspx"
+				target="_blank"&gt;video interview with the data team&lt;/a&gt; that
+				talks more about the release.&lt;/p&gt; &lt;p&gt;One of my favorite
+				improvements introduced with last week’s RC is its support for
+				medium trust security.&amp;#160; This enables you to use EF 4.1 (and
+				code-first) within low-cost ASP.NET shared hosting web environments
+				– without requiring a hoster to install anything to use
+				it.&lt;/p&gt; &lt;p&gt;EF 4.1 also now supports validation with not
+				only code-first scenarios, but also model-first and database-first
+				workflows.&amp;#160; &lt;/p&gt; &lt;h3&gt;&lt;u&gt;Upgrading from
+				previous releases&lt;/u&gt;&lt;/h3&gt; &lt;p&gt;The RC does include
+				a few API tweaks and changes from the prior CTP builds.&amp;#160;
+				Read the release notes that come with the release to get a more
+				detailed listing of the changes.&lt;/p&gt; &lt;p&gt;John Papa also
+				has an excellent &lt;a
+				href="http://johnpapa.net/silverlight/upgrading-to-entity-framework-4-1-rc/"
+				target="_blank"&gt;Upgrading to EF 4.1 RC blog post&lt;/a&gt; that
+				describes the steps he took when upgrading a large project he wrote
+				with the previous CTP5 release.&amp;#160; The work to upgrade is
+				pretty straight forward and easy – use his write-up as a guide on
+				how to quickly update projects of your own.&lt;/p&gt;
+				&lt;h3&gt;&lt;u&gt;NuGet Package Rename&lt;/u&gt;&lt;/h3&gt;
+				&lt;p&gt;One of the changes that the data team made between the CTP5
+				and RC releases was to rename the NuGet package name from
+				“EFCodeFirst” to “EntityFramework”. They decided to make this change
+				since the EF 4.1 release now includes several additions above and
+				beyond just code first.&lt;/p&gt; &lt;p&gt;If you already have
+				installed the “EFCodeFirst” NuGet package, you’ll want to uninstall
+				it and then install the new “EntityFramework” NuGet
+				package.&amp;#160; John Papa’s &lt;a
+				href="http://johnpapa.net/silverlight/upgrading-to-entity-framework-4-1-rc/"
+				target="_blank"&gt;blog post&lt;/a&gt; details the exact steps on
+				how to do this (it only takes ~20 seconds to do this).&lt;/p&gt;
+				&lt;h3&gt;&lt;u&gt;More EF Tutorials&lt;/u&gt;&lt;/h3&gt;
+				&lt;p&gt;Julie Lerman has created some nice whitepapers and
+				tutorials for MSDN that show using the new EF4 and EF 4.1 feature
+				set. &lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://thedatafarm.com/blog/data-access/new-ef4-amp-ef4-1-content-on-msdn/"
+				target="_blank"&gt;Click here&lt;/a&gt; to find links to read and
+				watch them.&lt;/p&gt;
+				&lt;h3&gt;&lt;u&gt;Summary&lt;/u&gt;&lt;/h3&gt; &lt;p&gt;I’m really
+				excited about the EF 4.1 release that will be shipping next
+				month.&amp;#160; It significantly improves the Entity Framework, and
+				makes it even easier and cleaner to work with data inside of
+				.NET.&amp;#160; &lt;/p&gt; &lt;p&gt;You can take advantage of it
+				within all ASP.NET projects (including both Web Forms and MVC),
+				within client projects using Windows Forms and WPF, and within other
+				project types like WCF, Console and Services.&amp;#160; You can use
+				NuGet to easily install it within all of them.&lt;/p&gt;
+				&lt;p&gt;Hope this helps,&lt;/p&gt; &lt;p&gt;Scott&lt;/p&gt;
+				&lt;p&gt;&lt;em&gt;P.S. I am also now using Twitter for quick
+				updates and to share links. Follow me at: &lt;a
+				href="http://twitter.com/scottgu"&gt;twitter.com/scottgu&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;&lt;img
+				src="http://weblogs.asp.net/aggbug.aspx?PostID=7727982" width="1"
+				height="1"&gt;</description>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/ASP.NET/default.aspx">ASP.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/.NET/default.aspx">.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/LINQ/default.aspx">LINQ</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Data/default.aspx">Data</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Community+News/default.aspx">Community News</category>
+		</item>
+		<item>
+			<title>Visual Studio 2010 SP1</title>
+			<link>http://weblogs.asp.net/scottgu/archive/2011/03/15/visual-studio-2010-sp1.aspx</link>
+			<pubDate>Tue, 15 Mar 2011 19:14:33 GMT</pubDate>
+			<guid isPermaLink="false">c06e2b9d-981a-45b4-a55f-ab0d8bbfdc1c:7724373</guid>
+			<dc:creator>ScottGu</dc:creator>
+			<slash:comments>53</slash:comments>
+			<wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/rsscomments.aspx?PostID=7724373
+			</wfw:commentRss>
+			<wfw:comment xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/commentapi.aspx?PostID=7724373
+			</wfw:comment>
+			<comments>http://weblogs.asp.net/scottgu/archive/2011/03/15/visual-studio-2010-sp1.aspx#comments</comments>
+			<description>&lt;p&gt;Last week we shipped Service Pack 1 of Visual
+				Studio 2010 and the Visual Studio Express Tools.&amp;#160;
+				&lt;/p&gt; &lt;p&gt;In addition to bug fixes and performance
+				improvements, SP1 includes a number of feature
+				enhancements.&amp;#160; This includes &lt;a
+				href="http://thirdblogfromthesun.com/2011/03/new-local-help-viewer-available-in-visual-studio-2010-sp1/"
+				target="_blank"&gt;improved local help support&lt;/a&gt;,
+				IntelliTrace support for 64-bit applications and SharePoint,
+				built-in Silverlight 4 Tooling support in the box, unit testing
+				support when targeting .NET 3.5, a new performance wizard for
+				Silverlight, &lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2011/01/03/vs-2010-sp1-beta-and-iis-developer-express.aspx"
+				target="_blank"&gt;IIS Express&lt;/a&gt; and &lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2011/01/11/vs-2010-sp1-and-sql-ce.aspx"
+				target="_blank"&gt;SQL CE Tooling support&lt;/a&gt; for web
+				projects, HTML5 Intellisense for ASP.NET, and more.&amp;#160;
+				&lt;/p&gt; &lt;p&gt;TFS 2010 SP1 was also released last week,
+				together with a new TFS Project Server Integration Pack and Load
+				Test Feature Pack.&amp;#160; Brian Harry has a &lt;a
+				href="http://blogs.msdn.com/b/bharry/archive/2011/03/08/vs-tfs-2010-sp1-and-tfs-project-server-integration-feature-pack-have-released.aspx"
+				target="_blank"&gt;good blog post&lt;/a&gt; about the TFS updates
+				&lt;a
+				href="http://blogs.msdn.com/b/bharry/archive/2011/03/08/vs-tfs-2010-sp1-and-tfs-project-server-integration-feature-pack-have-released.aspx"
+				target="_blank"&gt;here&lt;/a&gt;.&lt;/p&gt; &lt;h3&gt;&lt;u&gt;VS
+				2010 SP1 Download&lt;/u&gt;&lt;/h3&gt; &lt;p&gt;&lt;a
+				href="http://www.microsoft.com/downloads/en/details.aspx?FamilyID=75568aa6-8107-475d-948a-ef22627e57a5&amp;amp;displaylang=en"
+				target="_blank"&gt;Click here&lt;/a&gt; to download and install SP1
+				for all versions of Visual Studio (including express).&amp;#160;
+				&lt;/p&gt; &lt;p&gt;This installer examines what you have installed
+				on your machine, and only downloads the servicing downloads
+				necessary to update them to SP1.&amp;#160; The time it takes to
+				download and update will consequently depend on what all you have
+				installed.&amp;#160; Jon Galloway has a &lt;a
+				href="http://weblogs.asp.net/jgalloway/archive/2011/03/09/tips-on-installing-visual-studio-2010-sp1.aspx"
+				target="_blank"&gt;good blog post&lt;/a&gt; on &lt;a
+				href="http://weblogs.asp.net/jgalloway/archive/2011/03/09/tips-on-installing-visual-studio-2010-sp1.aspx"
+				target="_blank"&gt;tips to speed up the SP1 install&lt;/a&gt; by
+				uninstalling unused components.&lt;/p&gt; &lt;h3&gt;&lt;u&gt;Web
+				Platform Installer Bundles&lt;/u&gt;&lt;/h3&gt; &lt;p&gt;In addition
+				to the core VS 2010 SP1 installer, we have also put together two Web
+				Platform Installer (WebPI) bundles that automate installing SP1
+				together with additional web-specific components:&lt;/p&gt;
+				&lt;ul&gt; &lt;li&gt;&lt;a
+				href="http://www.microsoft.com/web/gallery/install.aspx?appsxml=&amp;amp;appid=VS2010SP1Pack"
+				target="_blank"&gt;VS 2010 SP1 WebPI Bundle&lt;/a&gt; &lt;/li&gt;
+				&lt;li&gt;&lt;a
+				href="http://www.microsoft.com/web/gallery/install.aspx?appsxml=&amp;amp;appid=VWD"
+				target="_blank"&gt;Visual Web Developer 2010 SP1 WebPI
+				Bundle&lt;/a&gt; &lt;/li&gt; &lt;/ul&gt; &lt;p&gt;The above WebPI
+				bundles automate installing:&lt;/p&gt; &lt;ul&gt; &lt;li&gt;VS
+				2010/VWD 2010 SP1 &lt;/li&gt; &lt;li&gt;ASP.NET MVC 3 (runtime +
+				tools support) &lt;/li&gt; &lt;li&gt;IIS 7.5 Express &lt;/li&gt;
+				&lt;li&gt;SQL Server Compact Edition 4.0 (runtime + tools support)
+				&lt;/li&gt; &lt;li&gt;Web Deployment 2.0 &lt;/li&gt; &lt;/ul&gt;
+				&lt;p&gt;Only the components that are not already installed on your
+				machine will be downloaded when you use the above WebPI
+				bundles.&amp;#160; This means that you can run the WebPI bundle at
+				any time (even if you have already installed SP1 or ASP.NET MVC 3)
+				and not have to worry about wasting time downloading/installing
+				these components again.&lt;/p&gt; &lt;p&gt;Earlier this year I did
+				two posts that discussed how to use IIS Express and SQL CE with
+				ASP.NET projects in SP1.&amp;#160; Read the below posts to learn
+				more about how to use them after you run the above
+				bundles:&lt;/p&gt; &lt;ul&gt; &lt;li&gt;&lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2011/01/03/vs-2010-sp1-beta-and-iis-developer-express.aspx"
+				target="_blank"&gt;Visual Studio 2010 SP1 and IIS Express&lt;/a&gt;
+				&lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2011/01/11/vs-2010-sp1-and-sql-ce.aspx"
+				target="_blank"&gt;Visual Studio 2010 SP1 and SQL CE for
+				ASP.NET&lt;/a&gt; &lt;/li&gt; &lt;/ul&gt; &lt;p&gt;The above feature
+				additions work with any web project type – including both ASP.NET
+				Web Forms and ASP.NET MVC.&lt;/p&gt; &lt;h3&gt;&lt;u&gt;Additional
+				SP1 Notes&lt;/u&gt;&lt;/h3&gt; &lt;p&gt;Two additional notes about
+				VS 2010 SP1:&lt;/p&gt; &lt;p&gt;1) One change we made between RTM
+				and SP1 is that by default Visual Studio now uses software rendering
+				instead of hardware acceleration when running on Windows
+				XP.&amp;#160; We made this change because we’ve seen reports of
+				(often inconsistent) performance issues caused by older video
+				drivers.&amp;#160; Running in software mode eliminates these and
+				delivers consistent speeds.&amp;#160; You can optionally re-enable
+				hardware acceleration with SP1 using Visual Studio’s
+				Tools-&amp;gt;Options menu command – we did not remove support for
+				HW acceleration on XP, we simply changed the default setting for
+				it.&amp;#160; Jason Zander has written more details on the change
+				and how to re-enable HW acceleration inside VS &lt;a
+				href="http://blogs.msdn.com/b/jasonz/archive/2011/03/03/performance-troubleshooting-article-and-vs2010-sp1-change.aspx"
+				target="_blank"&gt;here&lt;/a&gt;.&lt;/p&gt; &lt;p&gt;2) We have
+				discovered an issue where installing SP1 can cause TSQL intellisense
+				within SQL Server Management Studio 2008 R2 to stop working (typing
+				still works – but intellisense doesn’t show up).&amp;#160; The SQL
+				team is investigating this now and I’ll post an update on how to fix
+				this once more details are known.&amp;#160; &lt;/p&gt; &lt;p&gt;Hope
+				this helps,&lt;/p&gt; &lt;p&gt;Scott&lt;/p&gt;
+				&lt;p&gt;&lt;em&gt;P.S. I am also now using Twitter for quick
+				updates and to share links. Follow me at: &lt;a
+				href="http://twitter.com/scottgu"
+				target="_blank"&gt;twitter.com/scottgu&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;&lt;img
+				src="http://weblogs.asp.net/aggbug.aspx?PostID=7724373" width="1"
+				height="1"&gt;</description>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/ASP.NET/default.aspx">ASP.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Visual+Studio/default.aspx">Visual Studio</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/.NET/default.aspx">.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Community+News/default.aspx">Community News</category>
+		</item>
+		<item>
+			<title>Free Video Training: ASP.NET MVC 3 Features</title>
+			<link>http://weblogs.asp.net/scottgu/archive/2011/03/09/free-video-training-asp-net-mvc-3-features.aspx</link>
+			<pubDate>Thu, 10 Mar 2011 07:44:28 GMT</pubDate>
+			<guid isPermaLink="false">c06e2b9d-981a-45b4-a55f-ab0d8bbfdc1c:7719281</guid>
+			<dc:creator>ScottGu</dc:creator>
+			<slash:comments>47</slash:comments>
+			<wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/rsscomments.aspx?PostID=7719281
+			</wfw:commentRss>
+			<wfw:comment xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/commentapi.aspx?PostID=7719281
+			</wfw:comment>
+			<comments>http://weblogs.asp.net/scottgu/archive/2011/03/09/free-video-training-asp-net-mvc-3-features.aspx#comments</comments>
+			<description>&lt;p&gt;A few weeks ago &lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2011/02/08/special-48-hour-offer-free-asp-net-mvc-3-video-training.aspx"
+				target="_blank"&gt;I blogged about a great ASP.NET MVC 3 video
+				training course&lt;/a&gt; from &lt;a
+				href="http://www.pluralsight-training.net/microsoft/?utm_source=microsoft&amp;amp;utm_medium=sponsored-page&amp;amp;utm_content=mvc3-fundamentals&amp;amp;utm_campaign=microsoft-sponsored-course"
+				target="_blank"&gt;Pluralsight&lt;/a&gt; that was made available for
+				free for 48 hours for people to watch.&amp;#160; The feedback from
+				the people that had a chance to watch it was really
+				fantastic.&amp;#160; We also received feedback from people who
+				really wanted to watch it – but unfortunately weren’t able to within
+				the 48 hour window.&lt;/p&gt; &lt;p&gt;The good news is that we’ve
+				worked with &lt;a
+				href="http://www.pluralsight-training.net/microsoft/?utm_source=microsoft&amp;amp;utm_medium=sponsored-page&amp;amp;utm_content=mvc3-fundamentals&amp;amp;utm_campaign=microsoft-sponsored-course"
+				target="_blank"&gt;Pluralsight&lt;/a&gt; to make the course
+				available for free again until March 18th.&amp;#160; You can watch
+				any of the course modules for free, through March 18th, on the &lt;a
+				href="http://www.asp.net/mvc"&gt;www.asp.net/mvc&lt;/a&gt; website
+				&lt;a href="http://www.asp.net/mvc/pluralsight"
+				target="_blank"&gt;here&lt;/a&gt;:&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://www.asp.net/mvc/pluralsight" target="_blank"&gt;&lt;img
+				style="border-bottom: 0px; border-left: 0px; display: inline;
+				border-top: 0px; border-right: 0px" title="image" border="0"
+				alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_3A11EB20.png"
+				width="662" height="456" /&gt;&lt;/a&gt; &lt;/p&gt; &lt;p&gt;The 6
+				videos in this course are a total of 3 hours and 17 minutes long,
+				and provide a nice overview of the new features introduced with
+				ASP.NET MVC 3 including: Razor, Unobtrusive JavaScript, Richer
+				Validation, ViewBag, Output Caching, Global Action Filters, NuGet,
+				Dependency Injection, and much more.&amp;#160; &lt;/p&gt;
+				&lt;p&gt;Scott Allen is the presenter, and the format, video player,
+				and cadence of the course is really excellent. It provides a great
+				way to quickly come up to speed with all of the new features
+				introduced with the new ASP.NET MVC 3 release.&lt;/p&gt;
+				&lt;h3&gt;&lt;u&gt;Introductory ASP.NET MVC 3 course also coming
+				soon&lt;/u&gt;&lt;/h3&gt; &lt;p&gt;The above course provides a good
+				way for people already familiar with ASP.NET MVC to quickly learn
+				the new features in the V3 release.&lt;/p&gt; &lt;p&gt;Pluralsight
+				is also working on a new introductory ASP.NET MVC 3 course series
+				designed for developers who are brand new to ASP.NET MVC, and who
+				want an end to end training curriculum on how to come up to speed
+				with it.&amp;#160; It will cover all of the basics of ASP.NET MVC
+				(including the new Razor view engine), how to use EF code first for
+				data access, using JavaScript/AJAX with MVC, security scenarios with
+				MVC, unit testing applications, deploying applications, and
+				more.&lt;/p&gt; &lt;p&gt;I’m excited to pre-announce that we’ll also
+				make this new introductory series free on the &lt;a
+				href="http://www.asp.net/mvc"
+				target="_blank"&gt;www.asp.net/mvc&lt;/a&gt; web-site for anyone to
+				watch. I’ll do another blog post linking to it once it is live and
+				available.&lt;/p&gt; &lt;p&gt;Hope this helps,&lt;/p&gt;
+				&lt;p&gt;Scott&lt;/p&gt;&lt;img
+				src="http://weblogs.asp.net/aggbug.aspx?PostID=7719281" width="1"
+				height="1"&gt;</description>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/ASP.NET/default.aspx">ASP.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/.NET/default.aspx">.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Community+News/default.aspx">Community News</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/MVC/default.aspx">MVC</category>
+		</item>
+		<item>
+			<title>DevConnections Conference</title>
+			<link>http://weblogs.asp.net/scottgu/archive/2011/03/09/devconnections-conference.aspx</link>
+			<pubDate>Thu, 10 Mar 2011 05:08:32 GMT</pubDate>
+			<guid isPermaLink="false">c06e2b9d-981a-45b4-a55f-ab0d8bbfdc1c:7719196</guid>
+			<dc:creator>ScottGu</dc:creator>
+			<slash:comments>6</slash:comments>
+			<wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/rsscomments.aspx?PostID=7719196
+			</wfw:commentRss>
+			<wfw:comment xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/commentapi.aspx?PostID=7719196
+			</wfw:comment>
+			<comments>http://weblogs.asp.net/scottgu/archive/2011/03/09/devconnections-conference.aspx#comments</comments>
+			<description>&lt;font size="2" face="arial"&gt; &lt;p&gt;The
+				excellent &lt;a href="http://devconnections.com/home.aspx"
+				target="_blank"&gt;DevConnections conference&lt;/a&gt; will be held
+				in Florida later this month (March 27th to 30th).&amp;#160;
+				DevConnections features multiple concurrent tracks – including
+				ASP.NET Connections, Silverlight Connections, Visual Studio
+				Connections, SQL Server Connections, and SharePoint
+				Connections.&lt;/p&gt; &lt;p&gt;I’ll be doing a keynote on the first
+				day, and there will be dozens of fantastic talks that week by some
+				of the best presenters in the .NET community.&amp;#160; You can
+				learn more about the conference &lt;a
+				href="http://devconnections.com/home.aspx"
+				target="_blank"&gt;here&lt;/a&gt;.&lt;/p&gt; &lt;p&gt;I highly
+				recommend the conference – and hope to meet up with some of you
+				there!&lt;/p&gt; &lt;p&gt;Scott&lt;/p&gt; &lt;p&gt;P.S. Use the
+				discount code “DevCon1” to save $200 when registering.&lt;/p&gt;
+				&lt;/font&gt;&lt;img
+				src="http://weblogs.asp.net/aggbug.aspx?PostID=7719196" width="1"
+				height="1"&gt;</description>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/ASP.NET/default.aspx">ASP.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/.NET/default.aspx">.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Talks/default.aspx">Talks</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Community+News/default.aspx">Community News</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Silverlight/default.aspx">Silverlight</category>
+		</item>
+		<item>
+			<title>March 6th Links: ASP.NET, ASP.NET MVC, jQuery, EF, .NET</title>
+			<link>http://weblogs.asp.net/scottgu/archive/2011/03/06/march-6th-links-asp-net-asp-net-mvc-jquery-ef-net.aspx</link>
+			<pubDate>Mon, 07 Mar 2011 04:53:26 GMT</pubDate>
+			<guid isPermaLink="false">c06e2b9d-981a-45b4-a55f-ab0d8bbfdc1c:7717011</guid>
+			<dc:creator>ScottGu</dc:creator>
+			<slash:comments>33</slash:comments>
+			<wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/rsscomments.aspx?PostID=7717011
+			</wfw:commentRss>
+			<wfw:comment xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/commentapi.aspx?PostID=7717011
+			</wfw:comment>
+			<comments>http://weblogs.asp.net/scottgu/archive/2011/03/06/march-6th-links-asp-net-asp-net-mvc-jquery-ef-net.aspx#comments</comments>
+			<description>&lt;font size="2" face="arial"&gt; &lt;p&gt;Here is the
+				latest in my &lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2011/02/02/feb-2nd-links-visual-studio-asp-net-asp-net-mvc-jquery-windows-phone.aspx"
+				target="_blank"&gt;link-listing series&lt;/a&gt;.&amp;#160; Also
+				check out my &lt;a
+				href="http://weblogs.asp.net/scottgu/archive/2010/12/31/links-to-my-best-of-2010-posts.aspx"
+				target="_blank"&gt;Best of 2010 Summary&lt;/a&gt; for links to 100+
+				other posts I’ve done in the last year.&lt;/p&gt;
+				&lt;p&gt;&lt;em&gt;[I am also now using Twitter for quick updates
+				and to share links. Follow me at: &lt;a
+				href="http://twitter.com/scottgu"
+				target="_blank"&gt;twitter.com/scottgu&lt;/a&gt;]&lt;/em&gt;&lt;/p&gt;
+				&lt;h3&gt;&lt;u&gt;ASP.NET&lt;/u&gt;&lt;/h3&gt; &lt;ul&gt;
+				&lt;li&gt; &lt;p&gt;&lt;a
+				href="http://www.msjoe.com/2011/02/asp-net-visual-studio-2010-quick-videos-35/"
+				target="_blank"&gt;35 ASP.NET and VS 2010 What’s New
+				Videos&lt;/a&gt;: 35 free videos from Joe Stagner that highlight
+				some of the new features that came in ASP.NET 4 and VS
+				2010.&lt;/p&gt; &lt;/li&gt; &lt;/ul&gt; &lt;ul&gt; &lt;li&gt;
+				&lt;p&gt;&lt;a
+				href="http://www.4guysfromrolla.com/articles/030211-1.aspx"
+				target="_blank"&gt;Filling in PDF Forms with ASP.NET and
+				iTextSharp&lt;/a&gt;: Nice article by Scott Mitchell on how to
+				populate PDF forms using ASP.NET and iTextSharp – an open source PDF
+				library for .NET.&lt;/p&gt; &lt;/li&gt; &lt;/ul&gt; &lt;ul&gt;
+				&lt;li&gt; &lt;p&gt;&lt;a
+				href="http://msdn.microsoft.com/en-us/magazine/gg650661.aspx"
+				target="_blank"&gt;Building and Using Custom OutputCache Providers
+				with ASP.NET&lt;/a&gt;: A good MSDN Magazine article on how to
+				outputcache ASP.NET Content with MongoDB and the AppFabric Cache
+				Provider.&lt;/p&gt; &lt;/li&gt; &lt;/ul&gt; &lt;ul&gt; &lt;li&gt;
+				&lt;p&gt;&lt;a
+				href="http://www.4guysfromrolla.com/articles/022311-1.aspx"
+				target="_blank"&gt;Using ASP.NET, Membership and jQuery to Determine
+				Username Availability&lt;/a&gt;: Nice article from Scott Mitchell
+				that talks about how to build client-side UI that can better detect
+				if a username has already been taken.&lt;/p&gt; &lt;/li&gt;
+				&lt;/ul&gt; &lt;h3&gt;&lt;u&gt;ASP.NET MVC&lt;/u&gt;&lt;/h3&gt;
+				&lt;ul&gt; &lt;li&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/srkirkland/archive/2011/02/23/introducing-data-annotations-extensions.aspx"
+				target="_blank"&gt;Data Annotations Extensions&lt;/a&gt;: Nice post
+				from Scott Kirkland that discusses a very cool NuGet package that
+				provides a bunch of additional DataAnnotations that you can take
+				advantage of.&lt;/p&gt; &lt;/li&gt; &lt;/ul&gt; &lt;ul&gt;
+				&lt;li&gt; &lt;p&gt;&lt;a
+				href="http://davidhayden.com/blog/dave/archive/2011/02/09/SessionLessControllersMvc3.aspx"
+				target="_blank"&gt;SessionLess Controllers in ASP.NET MVC
+				3&lt;/a&gt;: Good post from David Hayden that talks about the new
+				[SessionState] attribute in ASP.NET MVC 3 and how you can use it to
+				indicate session behavior on Controller classes.&lt;/p&gt;
+				&lt;/li&gt; &lt;/ul&gt; &lt;ul&gt; &lt;li&gt; &lt;p&gt;&lt;a
+				href="http://haacked.com/archive/2011/02/27/templated-razor-delegates.aspx"
+				target="_blank"&gt;Templated Razor Delegates&lt;/a&gt;: Phil Haack
+				has a nice post that discuses how to take advantage of Razor’s
+				Templated Delegate support.&amp;#160; This enables you to build some
+				pretty cool templated HTML helpers.&lt;/p&gt; &lt;/li&gt;
+				&lt;/ul&gt; &lt;ul&gt; &lt;li&gt; &lt;p&gt;&lt;a
+				href="http://haacked.com/archive/2011/03/05/defining-default-content-for-a-razor-layout-section.aspx"
+				target="_blank"&gt;Defining Default Content for a Razor Layout
+				Section&lt;/a&gt;: Another great post from Phil Haack – this one
+				showing how you can use Razor’s templated helper support (see above)
+				to build a new Html.RenderSection() helper that supports default
+				content.&lt;/p&gt; &lt;/li&gt; &lt;/ul&gt; &lt;ul&gt; &lt;li&gt;
+				&lt;p&gt;&lt;a
+				href="http://blogs.msdn.com/b/stuartleeks/archive/2011/01/25/asp-net-mvc-3-integrating-with-the-jquery-ui-date-picker-and-adding-a-jquery-validate-date-range-validator.aspx"
+				target="_blank"&gt;Integrating the jQuery UI date picker and adding
+				a jQuery validate date range validator&lt;/a&gt;: Nice post from
+				Stuart Leeks that looks at how you can use the jQuery UI date picker
+				within ASP.NET MVC 3.&lt;/p&gt; &lt;/li&gt; &lt;/ul&gt;
+				&lt;h3&gt;&lt;u&gt;ASP.NET and jQuery&lt;/u&gt;&lt;/h3&gt;
+				&lt;ul&gt; &lt;li&gt; &lt;p&gt;&lt;a
+				href="http://woorkup.com/2011/02/19/jquery-1-5-visual-cheat-sheet/"
+				target="_blank"&gt;jQuery 1.5 Visual Cheat Sheet&lt;/a&gt;: A free
+				PDF that you can download and print which provides an easy way to
+				lookup and remember jQuery APIs and commands.&lt;/p&gt; &lt;/li&gt;
+				&lt;/ul&gt; &lt;ul&gt; &lt;li&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/gunnarpeipman/archive/2011/03/05/asp-net-building-tree-picker-dialog-using-jquery-ui-and-treeview-control.aspx"
+				target="_blank"&gt;Building a Tree Picker Dialog using jQuery UI and
+				the ASP.NET TreeView Control:&lt;/a&gt; Nice post by Gunnar on how
+				to create a hierarchical tree-view dialog picker.&lt;/p&gt;
+				&lt;/li&gt; &lt;/ul&gt; &lt;h3&gt;&lt;u&gt;Entity
+				Framework&lt;/u&gt;&lt;/h3&gt; &lt;ul&gt; &lt;li&gt; &lt;p&gt;&lt;a
+				href="http://blogs.msdn.com/b/adonet/archive/2011/03/02/ef-4-1-is-coming-dbcontext-api-amp-code-first-rtw.aspx"
+				target="_blank"&gt;EF 4.1 Release is Coming&lt;/a&gt;: The ADO.NET
+				Team blogs about the release plans for EF 4.1 – which includes the
+				new “code first” support that I’ve done several blog posts
+				about.&amp;#160; Final release coming soon!&lt;/p&gt; &lt;/li&gt;
+				&lt;/ul&gt; &lt;ul&gt; &lt;li&gt; &lt;p&gt;&lt;a
+				href="http://weblogs.asp.net/jgalloway/archive/2011/02/24/generating-ef-code-first-model-classes-from-an-existing-database.aspx"
+				target="_blank"&gt;How to Generate EF Code First Model Classes from
+				an Existing Database&lt;/a&gt;: Nice post from John Galloway on how
+				you can quickly generate EF Code First POCO model classes from an
+				existing database.&lt;/p&gt; &lt;/li&gt; &lt;/ul&gt; &lt;ul&gt;
+				&lt;li&gt; &lt;p&gt;&lt;a
+				href="http://blogs.msdn.com/b/adonet/archive/2011/02/22/oracle-releases-beta-of-entity-framework-provider.aspx"
+				target="_blank"&gt;Oracle Support for Entity Framework 4:&lt;/a&gt;
+				Blog post from Oracle that announces the beta of their official EF
+				provider – which allows you to use EF and EF Code First against
+				Oracle database.&lt;/p&gt; &lt;/li&gt; &lt;/ul&gt; &lt;ul&gt;
+				&lt;li&gt; &lt;p&gt;&lt;a
+				href="http://msdn.microsoft.com/en-us/data/ff830362.aspx"
+				target="_blank"&gt;Model-First in the Entity Framework 4&lt;/a&gt;:
+				Nice MSDN article from Jon Fancey that talks about how to use a
+				model-first development approach with EF4.&lt;/p&gt; &lt;/li&gt;
+				&lt;/ul&gt; &lt;h3&gt;&lt;u&gt;.NET&lt;/u&gt;&lt;/h3&gt; &lt;ul&gt;
+				&lt;li&gt; &lt;p&gt;&lt;a
+				href="http://geekswithblogs.net/BlackRabbitCoder/archive/2011/02/22/c.net-little-wonders-a-redux.aspx"
+				target="_blank"&gt;C#/.NET Little Wonders&lt;/a&gt;: James Michael
+				Hare has a nice post that links to a number of great C#/.NET
+				articles he has written that shows off cool tips and
+				tricks.&lt;/p&gt; &lt;/li&gt; &lt;/ul&gt; &lt;ul&gt; &lt;li&gt;
+				&lt;p&gt;&lt;a
+				href="http://dotnetslackers.com/articles/aspnet/5-Helpful-DateTime-Extension-Methods.aspx"
+				target="_blank"&gt;5 Helpful DateTime Extension Methods&lt;/a&gt;:
+				Nice post from Scott Mitchell that shows off 5 useful DateTime
+				extension methods that you can take advantage of.&lt;/p&gt;
+				&lt;/li&gt; &lt;/ul&gt; &lt;p&gt;Hope this helps,&lt;/p&gt;
+				&lt;p&gt;Scott&lt;/p&gt; &lt;/font&gt;&lt;img
+				src="http://weblogs.asp.net/aggbug.aspx?PostID=7717011" width="1"
+				height="1"&gt;</description>
+		</item>
+		<item>
+			<title>36 Hour Free Offer: jQuery Fundamentals Training</title>
+			<link>http://weblogs.asp.net/scottgu/archive/2011/02/23/36-hour-free-offer-jquery-fundamentals-training.aspx</link>
+			<pubDate>Wed, 23 Feb 2011 18:19:46 GMT</pubDate>
+			<guid isPermaLink="false">c06e2b9d-981a-45b4-a55f-ab0d8bbfdc1c:7711622</guid>
+			<dc:creator>ScottGu</dc:creator>
+			<slash:comments>22</slash:comments>
+			<wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/rsscomments.aspx?PostID=7711622
+			</wfw:commentRss>
+			<wfw:comment xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/commentapi.aspx?PostID=7711622
+			</wfw:comment>
+			<comments>http://weblogs.asp.net/scottgu/archive/2011/02/23/36-hour-free-offer-jquery-fundamentals-training.aspx#comments</comments>
+			<description>&lt;font size="2" face="arial"&gt; &lt;p&gt;Pluralsight
+				(a great .NET training company) is offering the opportunity to watch
+				their &lt;a
+				href="http://www.pluralsight-training.net/microsoft/olt/Course/Toc.aspx?n=jquery-fundamentals"
+				target="_blank"&gt;jQuery Fundamentals course&lt;/a&gt; for free for
+				the next 36 hours.&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://www.pluralsight-training.net/microsoft/olt/Course/Toc.aspx?n=jquery-fundamentals"
+				target="_blank"&gt;&lt;img style="border-right-width: 0px; display:
+				inline; border-top-width: 0px; border-bottom-width: 0px;
+				border-left-width: 0px" title="image" border="0" alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_4F99CA99.png"
+				width="687" height="453" /&gt;&lt;/a&gt; &lt;/p&gt; &lt;p&gt;The
+				course is presented by the most excellent &lt;a
+				href="http://weblogs.asp.net/dwahlin" target="_blank"&gt;Dan
+				Wahlin&lt;/a&gt; and contains 5 hours of great end to end
+				content.&amp;#160; Pluralsight will be offering &lt;a
+				href="http://www.pluralsight-training.net/microsoft/olt/Course/Toc.aspx?n=jquery-fundamentals"
+				target="_blank"&gt;this jQuery Fundamentals course&lt;/a&gt; for
+				&lt;strong&gt;free until Thursday evening (9pm
+				PST).&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;Pluralsight has about 100
+				other great training courses available similar to this
+				one.&amp;#160; They recently launched a &lt;a
+				href="http://www.pluralsight-training.net/microsoft/olt/subscriptions.aspx"
+				target="_blank"&gt;new subscription plan&lt;/a&gt; that allows you
+				to watch all of their courses online starting from $29 a
+				month.&amp;#160; They also offer a 10 day free trial option that you
+				can use to try it out.&amp;#160; You can learn more about it &lt;a
+				href="http://www.pluralsight-training.net/microsoft/olt/subscriptions.aspx"
+				target="_blank"&gt;here&lt;/a&gt;.&lt;/p&gt; &lt;h3&gt;&lt;u&gt;Free
+				jQuery 1.5 Visual Cheat Sheet&lt;/u&gt;&lt;/h3&gt; &lt;p&gt;While on
+				the topic of jQuery, I wanted to link to one other useful resource
+				to download if you are using jQuery – which is a free &lt;a
+				href="http://woorkup.com/2011/02/19/jquery-1-5-visual-cheat-sheet/"
+				target="_blank"&gt;jQuery PDF “cheat sheet”&lt;/a&gt; for the jQuery
+				1.5 APIs.&lt;/p&gt; &lt;p&gt;&lt;a
+				href="http://woorkup.com/2011/02/19/jquery-1-5-visual-cheat-sheet/"
+				target="_blank"&gt;&lt;img style="border-right-width: 0px; display:
+				inline; border-top-width: 0px; border-bottom-width: 0px;
+				border-left-width: 0px" title="image" border="0" alt="image"
+				src="http://weblogs.asp.net/blogs/scottgu/image_09E51AAE.png"
+				width="605" height="434" /&gt;&lt;/a&gt; &lt;/p&gt; &lt;p&gt;You can
+				download it for free &lt;a
+				href="http://woorkup.com/2011/02/19/jquery-1-5-visual-cheat-sheet/"
+				target="_blank"&gt;here&lt;/a&gt;.&lt;/p&gt; &lt;p&gt;Hope this
+				helps,&lt;/p&gt; &lt;p&gt;Scott&lt;/p&gt; &lt;p&gt;&lt;em&gt;P.S. I
+				am also now using Twitter for quick updates and to share links.
+				Follow me at: &lt;a
+				href="http://twitter.com/scottgu"&gt;twitter.com/scottgu&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+				&lt;/font&gt;&lt;img
+				src="http://weblogs.asp.net/aggbug.aspx?PostID=7711622" width="1"
+				height="1"&gt;</description>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/ASP.NET/default.aspx">ASP.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Talks/default.aspx">Talks</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/jQuery/default.aspx">jQuery</category>
+		</item>
+		<item>
+			<title>ASP.NET mvcConf Videos Available</title>
+			<link>http://weblogs.asp.net/scottgu/archive/2011/02/22/mvcconf-videos-available.aspx</link>
+			<pubDate>Wed, 23 Feb 2011 03:10:39 GMT</pubDate>
+			<guid isPermaLink="false">c06e2b9d-981a-45b4-a55f-ab0d8bbfdc1c:7711336</guid>
+			<dc:creator>ScottGu</dc:creator>
+			<slash:comments>15</slash:comments>
+			<wfw:commentRss xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/rsscomments.aspx?PostID=7711336
+			</wfw:commentRss>
+			<wfw:comment xmlns:wfw="http://wellformedweb.org/CommentAPI/">http://weblogs.asp.net/scottgu/commentapi.aspx?PostID=7711336
+			</wfw:comment>
+			<comments>http://weblogs.asp.net/scottgu/archive/2011/02/22/mvcconf-videos-available.aspx#comments</comments>
+			<description>&lt;font size="2" face="arial"&gt; &lt;p&gt;Earlier this
+				month the ASP.NET MVC developer community held the 2nd annual &lt;a
+				href="http://www.mvcconf.com/" target="_blank"&gt;mvcConf
+				event&lt;/a&gt;.&amp;#160; This was a free, online conference
+				focused on ASP.NET MVC – with more than 27 talks that covered a wide
+				variety of ASP.NET MVC topics.&amp;#160; Almost all of the talks
+				were presented by developers within the community, and the quality
+				and topic diversity of the talks was fantastic.&lt;/p&gt;
+				&lt;p&gt;Below are links to free recordings of the talks that you
+				can watch (and optionally download):&lt;/p&gt; &lt;ul&gt;
+				&lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2011-Scott-Guthrie-Keynote"&gt;Scott
+				Guthrie Keynote&lt;/a&gt; &lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Phil-Haack-The-NuGet-y-Goodness-of-Delivering-Packages"&gt;The
+				NuGet-y Goodness of Delivering Packages&lt;/a&gt; (Phil Haack)
+				&lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Andy-Wahrenberger-Industrial-Strenght-NuGet"&gt;Industrial
+				Strenght NuGet&lt;/a&gt; (Andy Wahrenberger) &lt;/li&gt;
+				&lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-John-Petersen-Intro-to-MVC-3"&gt;Intro
+				to MVC 3&lt;/a&gt; (John Petersen) &lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2011-Brad-Wilson-Advanced-MVC-3"&gt;Advanced
+				MVC 3&lt;/a&gt; (Brad Wilson) &lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Eric-Sowell-Evolving-Practices-in-Using-jQuery-and-Ajax-in-ASPNET-MVC-Applications"&gt;Evolving
+				Practices in Using jQuery and Ajax in ASP.NET MVC
+				Applications&lt;/a&gt; (Eric Sowell) &lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Rob-Conery-Web-Matrix"&gt;Web
+				Matrix&lt;/a&gt; (Rob Conery) &lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Steven-Smith-Improving-ASPNET-MVC-Application-Performance"&gt;Improving
+				ASP.NET MVC Application Performance&lt;/a&gt; (Steven Smith)
+				&lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-John-Sheehan-Intro-to-Building-Twilio-Apps-with-ASPNET-MVC"&gt;Intro
+				to Building Twilio Apps with ASP.NET MVC&lt;/a&gt; (John Sheehan)
+				&lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Shay-Friedman-The-Big-Comparison-of-ASPNET-MVC-View-Engines"&gt;The
+				Big Comparison of ASP.NET MVC View Engines&lt;/a&gt; (Shay Friedman)
+				&lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Mitch-Denny-Writing-BDD-style-Tests-for-ASPNET-MVC-using-MSTestContrib"&gt;Writing
+				BDD-style Tests for ASP.NET MVC using MSTestContrib&lt;/a&gt; (Mitch
+				Denny) &lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Brandom-Satrom-BDD-in-ASPNET-MVC-using-SpecFlow-WatiN-and-WatiN-Test-Helpers"&gt;BDD
+				in ASP.NET MVC using SpecFlow, WatiN and WatiN Test
+				Helpers&lt;/a&gt; (Brandon Satrom) &lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Andrew-Davey-Going-Postal-Generating-email-with-View-Engines"&gt;Going
+				Postal - Generating email with View Engines&lt;/a&gt; (Andrew Davey)
+				&lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Glenn-Block-Take-some-REST-with-WCF"&gt;Take
+				some REST with WCF&lt;/a&gt; (Glenn Block) &lt;/li&gt;
+				&lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Jeffrey-Palermo-MVC-QA"&gt;MVC
+				Q&amp;amp;A (Jeffrey Palermo)&lt;/a&gt; &lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Troels-Thomsen-Deploy-ASPNET-MVC-with-No-Effort"&gt;Deploy
+				ASP.NET MVC with No Effort&lt;/a&gt; (Troels Thomsen) &lt;/li&gt;
+				&lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Vaidy-Gopalakrishnan-IIS-Express"&gt;IIS
+				Express&lt;/a&gt; (Vaidy Gopalakrishnan) &lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Chris-Bannon-Putting-the-V-in-MVC"&gt;Putting
+				the V in MVC&lt;/a&gt; (Chris Bannon) &lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Ashic-Mahtab-CQRS-and-Event-Sourcing-with-MVC-3"&gt;CQRS
+				and Event Sourcing with MVC 3&lt;/a&gt; (Ashic Mahtab) &lt;/li&gt;
+				&lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Roberto-Hernandez-MVC-3-Extensibility"&gt;MVC
+				3 Extensibility&lt;/a&gt; (Roberto Hernandez) &lt;/li&gt;
+				&lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Steve-Sanderson-MvcScaffolding"&gt;MvcScaffolding&lt;/a&gt;
+				(Steve Sanderson) &lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Chris-Canal-ASPNET-Castle-Windsor"&gt;Real
+				World Application Development with Mvc3 NHibernate, FluentNHibernate
+				and Castle Windsor&lt;/a&gt; (Chris Canal) &lt;/li&gt;
+				&lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Sebastien-Lambla-Building-composite-web-applications-with-Open-frameworks"&gt;Building
+				composite web applications with Open frameworks&lt;/a&gt; (Sebastien
+				Lambla) &lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Amir-Barylko-Quality-Driven-Web-Acceptance-Testing"&gt;Quality
+				Driven Web Acceptance Testing&lt;/a&gt; (Amir Barylko) &lt;/li&gt;
+				&lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Steve-Hebert-ModelBinding-derived-types-using-the-DerivedTypeModelBinder-in-MvcContrib"&gt;ModelBinding
+				derived types using the DerivedTypeModelBinder in
+				MvcContrib&lt;/a&gt; (Steve Hebert) &lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Chris-Zavaleta-Entity-Framework-Code-First-Domain-Driven-CRUD"&gt;Entity
+				Framework &amp;quot;Code First&amp;quot;: Domain Driven
+				CRUD&lt;/a&gt; (Chris Zavaleta) &lt;/li&gt; &lt;li&gt;&lt;a
+				href="http://channel9.msdn.com/Series/mvcConf/mvcConf-2-Wrap-Up-with-Jon-Galloway--Javier-Lozano"&gt;Wrap
+				Up with Jon Galloway &amp;amp; Javier Lozano&lt;/a&gt; &lt;/li&gt;
+				&lt;/ul&gt; &lt;p&gt;I’d like to say a huge thank you to all of the
+				speakers who presented, and to Javier Lozano, Eric Hexter and Jon
+				Galloway for all their hard work in organizing the event and making
+				it happen.&lt;/p&gt; &lt;p&gt;Hope this helps,&lt;/p&gt;
+				&lt;p&gt;Scott&lt;/p&gt; &lt;p&gt;&lt;em&gt;P.S. I am also now using
+				Twitter for quick updates and to share links. Follow me at: &lt;a
+				href="http://twitter.com/scottgu"
+				target="_blank"&gt;twitter.com/scottgu&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+				&lt;/font&gt;&lt;img
+				src="http://weblogs.asp.net/aggbug.aspx?PostID=7711336" width="1"
+				height="1"&gt;</description>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/ASP.NET/default.aspx">ASP.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/.NET/default.aspx">.NET</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Talks/default.aspx">Talks</category>
+			<category
+				domain="http://weblogs.asp.net/scottgu/archive/tags/Community+News/default.aspx">Community News</category>
+		</item>
+	</channel>
+</rss>

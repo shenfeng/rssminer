@@ -11,3 +11,4 @@ bin/
 public/css/
 src/templates/
 .idea/
+.emacs.desktop

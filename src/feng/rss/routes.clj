@@ -9,11 +9,14 @@
                          [session :only [wrap-session]])
         (feng.rss [middleware :only (wrap-reload-in-dev
                                      wrap-cache-header
-                                     wrap-request-logging)]
+                                     wrap-auth
+                                     wrap-request-logging
+                                     JPOST JPUT JDELETE JGET)]
                   [database :only [use-psql-database!]])
         [sandbar.stateful-session :only [wrap-stateful-session]])
   (:require [feng.rss.config :as config]
             (feng.rss.handlers [feedreader :as index]
+                               [feeds :as feed]
                                [users :as user])))
 
 (let [views-ns '[feng.rss.views.feedreader]
@@ -32,6 +35,10 @@
   (def reload-meta
     (apply merge src-ns-map)))
 
+(defroutes api-routes
+  (JGET "/feeds/:fs-id" [] feed/get-feeds)
+  (JPUT "/feedsource" [] feed/add-feedsource)) 
+
 (defroutes all-routes
   (GET "/" [] index/index-page)
   ;; (GET "/login" [] "")
@@ -41,6 +48,7 @@
   (context "/signup" []
            (GET "/" [] user/show-signup-page)
            (POST "/" [] user/signup))
+  (context "/api" [] api-routes)
   (ANY "*" [] {:status 404,
                :headers {"content-type" "text/html"}
                :body "<h1>Page not found.</h1>"}))
@@ -48,6 +56,7 @@
 (defn app [] (-> #'all-routes
                  wrap-keyword-params
                  wrap-params
+                 wrap-auth
                  wrap-stateful-session
                  (wrap-reload-in-dev reload-meta)
                  (wrap-file "public")

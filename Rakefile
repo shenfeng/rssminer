@@ -7,7 +7,7 @@ def lessc(source, target)
 end
 
 def compress(type, source, target)
-  sh "java -jar 'scripts/yuicompressor-2.4.2.jar' --type #{type} " +
+  sh "java -jar 'scripts/yuicompressor-2.4.6.jar' --type #{type} " +
     "--charset utf-8 -o #{target} \"#{source}\" 2> /dev/null > /dev/null"
 end
 

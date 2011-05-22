@@ -2,7 +2,8 @@
   (use clojure.pprint
        clojure.test
        clojure.contrib.trace
-       feng.rss.parser))
+       feng.rss.parser
+       [feng.rss.test-common :only [test-rss-str]]))
 
 (def rss1
   "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
@@ -51,8 +52,7 @@
 </feed>")
 
 (deftest test-rss
-  (let [sr (java.io.StringReader. rss1)
-        rss (parse sr)
+  (let [rss (parse rss1)
         feeds (:entries rss)]
     (is (= "RSS Title" (:title rss)))
     (is (= "This is an example of an RSS feed" (:description rss)))
@@ -61,9 +61,13 @@
 
 
 (deftest test-atom
-  (let [sr (java.io.StringReader. atom1)
-        rss (parse sr)
+  (let [rss (parse atom1)
         feeds (:entries rss)]
     (is (= "Example Feed") (:title rss))
     (is (= 1 (count feeds)))
     (is (= "Atom-Powered Robots Run Amok" (-> feeds first :title)))))
+
+(deftest test-parse-scottgu-rss
+  (let [rss (parse test-rss-str)
+        feeds (:entries rss)]
+    (is (= 15 (count feeds)))))

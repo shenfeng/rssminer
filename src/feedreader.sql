@@ -38,11 +38,12 @@ CREATE TABLE feeds
   id serial NOT NULL,
   feedsource_id integer,
   guid character varying(50), --uniqe string per item
+  author character varying(50),
   title character varying(200),
+  link character varying(200),
   updated timestamp with time zone,
-  pubDate timestamp with time zone,
+  pub_date timestamp with time zone,
   description text,
-  "summary" text,
   CONSTRAINT pk_feeds PRIMARY KEY (id),
   CONSTRAINT fk_feeds_feedsourceid FOREIGN KEY (feedsource_id)
       REFERENCES feedsources (id) MATCH SIMPLE

@@ -1,5 +1,7 @@
 (ns feng.rss.parser
-  (import [com.sun.syndication.io SyndFeedInput]))
+  (import [com.sun.syndication.io SyndFeedInput]
+          java.sql.Timestamp
+          java.util.Date))
 
 (defn- rss-bean?
   [e]
@@ -11,9 +13,10 @@
       (instance? java.util.List o)))
 
 (defn- keep? [e]
-  (not (or (nil? e)
-           (when (seq? e) 
-             (empty? e)))))
+  (and e
+       (if(seq? e) 
+         (some keep? e)
+         true)))
 
 (defn- decode-bean [c]
   (let [target (if (rss-bean? c) (bean c) c)]
@@ -26,10 +29,13 @@
              [k d]))
      (list-like? target)
      (map decode-bean target)
-     :else target)))
+     :else (if (instance? Date target)
+             (Timestamp. (.getTime target))
+             target))))
 
-(defn parse [file]
-  (let [feed (.build (SyndFeedInput.) file)]
+(defn parse [str]
+  (let [input (java.io.StringReader. str)
+        feed (.build (SyndFeedInput.) input)]
     (decode-bean feed)))
 
 
