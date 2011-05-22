@@ -34,8 +34,10 @@
              target))))
 
 (defn parse [str]
-  (let [input (java.io.StringReader. str)
-        feed (.build (SyndFeedInput.) input)]
-    (decode-bean feed)))
+  (try
+    (let [input (java.io.StringReader. str)
+          feed (.build (SyndFeedInput.) input)]
+      (decode-bean feed))
+    (catch Exception e)))
 
 
