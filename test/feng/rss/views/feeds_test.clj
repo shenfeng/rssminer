@@ -23,9 +23,12 @@
           fetch-resp (auth-app {:uri (str "/api/feeds/" (:id obj))
                                 :request-method :get
                                 :params {"limit" 13}})
+          fetch-all (auth-app {:uri "/api/feeds"
+                               :request-method :get})
           fetch-obj (-> fetch-resp :body read-json)]
       (is (= 200 (:status resp)))
       (is (= 200 (:status fetch-resp)))
+      (is (= 200 (:status fetch-all)))
       (is (= 400 (:status add-again)))
       (is (= 15 (count (:items obj))))
       (is (= 13 (count (:items fetch-obj)))))))

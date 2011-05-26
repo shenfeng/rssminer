@@ -16,7 +16,7 @@
                             (get (System/getenv) "READER_DB_HOST" "localhost"))
                         "/" db-name)
           server-port (Integer. (or port
-                                    (get (System/getenv) "READER_PORT" "8000")))]
+                                    (get (System/getenv) "READER_PORT" "8100")))]
       (start-server :jdbc-url jdbc-url
                     :db-user db-user
                     :db-password db-password
