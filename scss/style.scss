@@ -1,10 +1,10 @@
-@import "global_var.inc";
-
-@import "reset.inc";
+@import "variable";
+@import "css3";
+@import "reset";
 
 #main {
 	margin: 0 auto;
-	width: @page_width;
+	width: $page_width;
 }
 
 #accouts-div{

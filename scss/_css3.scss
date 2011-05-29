@@ -1,0 +1,77 @@
+// ==== CSS3 SASS MIXINS ==== 
+// https://github.com/madr/css3-sass-mixins
+
+//  Should IE filters be used or not?
+//  PROS: gradients, drop shadows etc will be handled by css.
+//  CONS: will harm the site performance badly, 
+//        especially on sites with heavy rendering and scripting. 
+$useIEFilters: 0; // might be 0 or 1. disabled by default.
+
+@mixin border-radius ($values) {
+  -moz-border-radius: $values;
+  -webkit-border-radius: $values;
+  border-radius: $values;
+}
+
+@mixin box-shadow ($x, $y, $offset, $hex, $ie: $useIEFilters) {
+  -moz-box-shadow: $x $y $offset $hex;
+  -o-box-shadow: $x $y $offset $hex;
+  -webkit-box-shadow: $x $y $offset $hex;
+  box-shadow: $x $y $offset $hex;
+  
+  @if $ie == 1 {
+    $iecolor: '#' + red($hex) + green($hex) + blue($hex);
+    filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=#{$x}, OffY=#{$y}, Color='#{$iecolor}');
+    -ms-filter: quote(progid:DXImageTransform.Microsoft.dropshadow(OffX=#{$x}, OffY=#{$y}, Color='#{$iecolor}'));
+  }
+}
+
+@mixin linear-gradient($from, $to, $ie: $useIEFilters) {
+  @if $ie != 1 {
+    background-color: $to;
+  }
+  
+  background-image: -moz-linear-gradient($from, $to);
+  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, $from),color-stop(1, $to));
+  background-image: -webkit-linear-gradient($from, $to);
+  background-image: -o-linear-gradient($from, $to);
+
+  @if $ie == 1 { 
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$from}', endColorstr='#{$to}');
+    -ms-filter: quote(progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$from}', endColorstr='#{$to}'));
+  }
+}
+
+@mixin rgba($hex, $alpha, $ie: $useIEFilters) {     
+  @if $ie == 1 { 
+    // this formula is not accurate enough, will be fixed with sass 3.1
+    $hexopac: '#' + ceil((($alpha * 255)/16) *10) + $hex;
+    background-color: none;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#{$hexopac}',EndColorStr='#{$hexopac}}');
+    -ms-filter: quote(progid:DXImageTransform.Microsoft.gradient(startColorStr='#{$hexopac}',EndColorStr='#{$hexopac}'));
+  }
+  @else {
+    background-color: $hex;
+    background-color: rgba(red($hex), green($hex), blue($hex), $alpha);
+  }
+}
+
+@mixin rotate ($deg, $ie: $useIEFilters) {
+  -moz-transform: rotate(#{$deg}deg);
+  -o-transform: rotate(#{$deg}deg);
+  -webkit-transform: rotate(#{$deg}deg);
+  // not ready, impediment: cos required!
+  //@if $ie == 1 {
+  //  filter: progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=0.99144486137381, M12=--0.130526192220052, M21=0.130526192220052, M22=0.99144486137381);
+  //  -ms-filter: quote(progid:DXImageTransform.Microsoft.Matrix(SizingMethod='auto expand', M11=0.99144486137381, M12=--0.130526192220052, M21=0.130526192220052, M22=0.99144486137381));
+  //  zoom: 1;
+  //}
+}
+
+@mixin transition ($value) {
+  -moz-transition: $value;
+  -o-transition: $value;
+  -webkit-transition: $value;
+  transition: $value;
+}
+// ==== /CSS3 SASS MIXINS ====

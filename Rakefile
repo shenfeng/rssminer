@@ -2,10 +2,6 @@ require 'rake/clean'
 require 'tempfile'
 task :default => :test
 
-def lessc(source, target)
-  sh "lessc #{source} #{target}"
-end
-
 def compress(type, source, target)
   sh "java -jar 'scripts/yuicompressor-2.4.6.jar' --type #{type} " +
     "--charset utf-8 -o #{target} \"#{source}\" 2> /dev/null > /dev/null"
@@ -16,7 +12,7 @@ task :download do
   unless File.exists? 'scripts/JsTestDriver-1.3.2.jar'
     sh 'wget -O scripts/JsTestDriver-1.3.2.jar http://js-test-driver.googlecode.com/files/JsTestDriver-1.3.2.jar'
   end
-  unless File.exists? 'script/htmlcompressor-1.3.1.jar'
+  unless File.exists? 'scripts/htmlcompressor-1.3.1.jar'
     sh 'wget -O scripts/htmlcompressor-1.3.1.jar http://htmlcompressor.googlecode.com/files/htmlcompressor-1.3.1.jar'
   end
 end
@@ -40,13 +36,20 @@ end
 
 namespace :css do
   CLEAN.include('public/css/*')
-  desc 'Compile less , Compress css'
+  desc 'Compile scss, Generate css'
   task :compile do
-    less = FileList['less/**/*.less'].exclude('less/**/*.inc.less')
-
-    less.each do |source|
-      target = source.sub(/less$/, 'css').sub(/^less/, 'public/css')
-      lessc source, target
+    scss = FileList['scss/**/*.scss'].exclude('scss/**/_*.scss')
+    scss.each do |source|
+      target = source.sub(/scss$/, 'css').sub(/^scss/, 'public/css')
+      sh "sass -t expanded -g --cache-location /tmp #{source} #{target}"
+    end
+  end
+  desc 'Compile scss, Compress generated css'
+  task :compress do
+    scss = FileList['scss/**/*.scss'].exclude('scss/**/_*.scss')
+    scss.each do |source|
+      target = source.sub(/scss$/, 'css').sub(/^scss/, 'public/css')
+      sh "sass -t compressed --cache-location /tmp #{source} #{target}"
     end
    end
 end
@@ -76,7 +79,7 @@ namespace :watch do
   desc 'Watch css, html; after Ctrl+C, process sh should be manually killed'
   task :all => ["css:compile", "html:compress", "download"] do
     t1 = Thread.new do
-      sh 'while inotifywait -e modify less/; do rake css:compile; done'
+      sh 'while inotifywait -e modify scss/; do rake css:compile; done'
     end
     t2 = Thread.new do
       sh 'while inotifywait -r -e modify templates/; do rake html:compress; done'
