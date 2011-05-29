@@ -79,8 +79,8 @@ a:link { -webkit-tap-highlight-color: #FF5E99; }
 /* Accessible focus treatment: people.opera.com/patrickl/experiments/keyboard/test */
 a:hover, a:active { outline: none; }
 
-a, a:active, a:visited { color: #607890; }
-a:hover { color: #036; }
+a, a:active, a:visited { color: $link_color; }
+a:hover { color: $link_hover_color; }
 
 ul, ol { margin-left: 2em; }
 ol { list-style-type: decimal; }

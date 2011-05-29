@@ -19,7 +19,8 @@
                                [feeds :as feed]
                                [users :as user])))
 
-(let [views-ns '[feng.rss.views.feedreader]
+(let [views-ns '[feng.rss.views.feedreader
+                 feng.rss.views.layouts]
       all-rss-ns (filter
                    #(re-find #"^feng" (str %)) (all-ns))
       ns-to-path (fn [clj-ns]

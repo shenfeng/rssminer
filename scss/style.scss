@@ -2,10 +2,7 @@
 @import "css3";
 @import "reset";
 
-#main {
-	margin: 0 auto;
-	width: $page_width;
-}
+a { text-decoration: none;}
 
 #accouts-div{
     margin-top:80px;
@@ -35,3 +32,149 @@
     
 }
 .required { color: #CC0000; }
+.icon {
+    background: url("/imgs/sprite.png") no-repeat scroll 0 0 transparent;
+    cursor: pointer;
+    height: 18px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 23px;
+    z-index: 2;
+}
+
+.link {
+    cursor: pointer;
+    color: $link_color;
+    padding: 0 0.2em;
+}
+.link-selected {
+    cursor: default;
+    font-weight: bold;
+    color: #000;
+    
+}
+// color copyied from stackoverflow
+.filter {
+    padding: 3px 5px;
+    cursor: pointer;
+    background: #E0EAF1;
+    color: #3E6D8E;
+    font-size: 0.95em;
+    @include border-radius(2px);
+    border-bottom: 1px solid #3E6D8E;
+    border-right: 1px solid #7F9FB6;
+}
+
+.filter-selected, span.filter:hover {
+    background-color: #3E6D8E;
+    border-bottom: 1px solid #37607D;
+    border-right: 1px solid #37607D;
+    color: #E0EAF1;
+}
+
+
+header {
+    padding: 0.5em;
+    h1 {
+        text-indent: 1em;
+        font-size: 3em;
+        text-shadow: 2px 2px 2px #555;
+        .sub {
+            font-style: italic;
+            font-size: 14px;
+        }
+    }
+}
+
+#main { margin: 10px 0; }
+
+nav {
+    width: $nav_width;
+    float: left;
+}
+
+.nav-tree {
+    li {
+        position: relative;
+        > ul { padding-left: 1em; }
+        a {
+            display: block;
+            overflow: hidden;
+            @include border-radius(4px);
+            padding: 4px;
+            padding-left: 23px;
+            color: black;
+            white-space: nowrap;
+            &:hover { background: $hover_color; }
+        }
+        a.selected { background: $selected_color; }
+    }
+    .toggle { background-position: 9px -58px;  }
+    .collapsed {
+        .toggle { background-position: -14px -58px;}
+        ul { display: none; }
+    }
+}
+
+#content-header {
+    position: relative;
+    padding: 0.7em 0.5em;
+    background: $selected_color;
+    @include border-radius(3px);
+    .feed-title {
+        font-weight: bold;
+    }
+    .commands {
+        margin-left: 2em;
+    }
+    #view-style {
+        position: absolute;
+        right:0;
+        top: 30%;
+        padding-right: 12px;
+    }
+}
+
+#content {
+    margin-left: $nav_width;
+    div.collapsed {
+        -moz-user-select: none;
+        height: 2em;
+        line-height: 2;
+        position: relative;
+        overflow: hidden;
+        h4 { display: inline;}
+        @include border-radius(4px);
+        border-bottom: 1px solid #E3E3E3;
+        cursor: pointer;
+        &:hover { background: $hover_color; }
+    }
+    .entry-date {
+        float: right;
+        margin: 0 2em;
+    }
+    .entry-main {
+        overflow: hidden;
+        margin-left: 2em;
+        h4 { font-weight: normal; }
+        .snippet {
+            color: #777;
+        }
+    }
+    li.current-entry {
+        border: 2px solid #6688EE;   
+    }
+    > ul {
+        list-style: none;
+        margin: 0;
+    }
+    .icon {
+        top: 5px;
+        left: 3px;
+        width: 16px;
+        height: 16px;
+    }
+}
+
+

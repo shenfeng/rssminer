@@ -1,1 +1,182 @@
-<h1>Comming soon</h1>
+<script id="app-template" type="text/template">
+  {{#view READER.AppView}}
+
+  <div id="items"
+       {{#collection model colTag="ul" colId="item-list" itemView="READER.ItemView"}}
+       <p>{{description}}</p>
+       {{#feeditems }}
+       
+       {{/feeditems}}
+       {{/collection}}
+</div>
+{{/view}}
+</script>
+
+<nav>
+  <ul class="nav-tree">
+    <li class="folder">
+      <span class="toggle icon"></span>
+      <a href="#">Blogs</a>
+      <ul >
+        <li class="sub"><a href="#">Peter Norvig</a></li>
+        <li class="sub"><a href="#">Css tricks</a></li>
+        <li class="sub"><a href="#">Jquery for designers</a></li>
+      </ul>
+    </li>
+    <li class="folder collapsed">
+      <span class="toggle icon"></span>
+      <a href="#">Blogs</a>
+      <ul >
+        <li class="sub"><a href="#">Peter Norvig</a></li>
+        <li class="sub"><a href="#">Css tricks</a></li>
+        <li class="sub"><a href="#">Jquery for designers</a></li>
+      </ul>
+    </li>
+    <li class="folder">
+      <span class="toggle icon"></span>
+      <a href="#">Blogs</a>
+      <ul >
+        <li class="sub"><a href="#">Peter Norvig</a></li>
+        <li class="sub"><a href="#">Css tricks</a></li>
+        <li class="sub"><a href="#">Jquery for designers</a></li>
+      </ul>
+    </li>
+    <li class="folder">
+      <span class="toggle icon"></span>
+      <a href="#">Blogs</a>
+      <ul >
+        <li class="sub"><a href="#">Peter Norvig</a></li>
+        <li class="sub"><a href="#">Css tricks</a></li>
+        <li class="sub"><a href="#">Jquery for designers</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+<div id="content">
+  <div id="content-header">
+    <span id="view-style">Show:
+      <span id="view-expanded" class="link">Expanded</span>
+      <span id="view-list" class="link link-selected">List</span>
+    </span>
+
+    <span class="feed-title">ScottGu's Blog</span>
+
+    <span class="commands">
+      <span class="filter">All Items(100)</span>
+      <span class="filter filter-selected">Unread(10)</span>
+      |
+      <span class="filter">Date asc</span>
+      <span class="filter filter-selected">Date desc</span>
+      |
+      <span class="filter">java</span>
+      <span class="filter">lisp</span>
+      <span class="filter">python</span>
+    </span>
+    
+    
+  </div>
+  <ul id="entries">
+    <li class="entry">
+      <div class="collapsed">
+        <span class="icon"></span>
+        <div class="entry-date">May 16, 2011</div>
+        <div class="entry-main">
+          <h4>ASP.NET MVC 3 Tools Update</h4> -
+          <span class="snippet">We’ve recently published some great end-to-end ASP.NET video training courses on the http://asp.net web-site.&nbsp;    Created by Pluralsight (a great .NET training company), these video courses are ava...Three weeks ago we held our MIX 2011 conference in Las Vegas.&nbsp; MIX is one of my favorite events of the year </span>
+        </div>
+      </div>
+    </li>
+    <li class="entry">
+      <div class="collapsed">
+        <span class="icon"></span>
+        <div class="entry-date">May 16, 2011</div>
+        <div class="entry-main">
+          <h4>ASP.NET MVC 3 Tools Update</h4> -
+          <span class="snippet">We’ve recently published some great end-to-end ASP.NET video training courses on the http://asp.net web-site.&nbsp;    Created by Pluralsight (a great .NET training company), these video courses are ava...Three weeks ago we held our MIX 2011 conference in Las Vegas.&nbsp; MIX is one of my favorite events of the year </span>
+        </div>
+      </div>
+    </li>
+    <li class="entry">
+      <div class="collapsed">
+        <span class="icon"></span>
+        <div class="entry-date">May 16, 2011</div>
+        <div class="entry-main">
+          <h4>ASP.NET MVC 3 Tools Update</h4> -
+          <span class="snippet">We’ve recently published some great end-to-end ASP.NET video training courses on the http://asp.net web-site.&nbsp;    Created by Pluralsight (a great .NET training company), these video courses are ava...Three weeks ago we held our MIX 2011 conference in Las Vegas.&nbsp; MIX is one of my favorite events of the year </span>
+        </div>
+      </div>
+    </li>
+    <li class="entry">
+      <div class="collapsed">
+        <span class="icon"></span>
+        <div class="entry-date">May 16, 2011</div>
+        <div class="entry-main">
+          <h4>ASP.NET MVC 3 Tools Update</h4> -
+          <span class="snippet">We’ve recently published some great end-to-end ASP.NET video training courses on the http://asp.net web-site.&nbsp;    Created by Pluralsight (a great .NET training company), these video courses are ava...Three weeks ago we held our MIX 2011 conference in Las Vegas.&nbsp; MIX is one of my favorite events of the year </span>
+        </div>
+      </div>
+    </li>
+    <li class="entry">
+      <div class="collapsed">
+        <span class="icon"></span>
+        <div class="entry-date">May 16, 2011</div>
+        <div class="entry-main">
+          <h4>ASP.NET MVC 3 Tools Update</h4> -
+          <span class="snippet">We’ve recently published some great end-to-end ASP.NET video training courses on the http://asp.net web-site.&nbsp;    Created by Pluralsight (a great .NET training company), these video courses are ava...Three weeks ago we held our MIX 2011 conference in Las Vegas.&nbsp; MIX is one of my favorite events of the year </span>
+        </div>
+      </div>
+    </li>
+    <li class="entry">
+      <div class="collapsed">
+        <span class="icon"></span>
+        <div class="entry-date">May 16, 2011</div>
+        <div class="entry-main">
+          <h4>ASP.NET MVC 3 Tools Update</h4> -
+          <span class="snippet">We’ve recently published some great end-to-end ASP.NET video training courses on the http://asp.net web-site.&nbsp;    Created by Pluralsight (a great .NET training company), these video courses are ava...Three weeks ago we held our MIX 2011 conference in Las Vegas.&nbsp; MIX is one of my favorite events of the year </span>
+        </div>
+      </div>
+    </li>
+    <li class="entry">
+      <div class="collapsed">
+        <span class="icon"></span>
+        <div class="entry-date">May 16, 2011</div>
+        <div class="entry-main">
+          <h4>ASP.NET MVC 3 Tools Update</h4> -
+          <span class="snippet">We’ve recently published some great end-to-end ASP.NET video training courses on the http://asp.net web-site.&nbsp;    Created by Pluralsight (a great .NET training company), these video courses are ava...Three weeks ago we held our MIX 2011 conference in Las Vegas.&nbsp; MIX is one of my favorite events of the year </span>
+        </div>
+      </div>
+    </li>
+    <li class="entry">
+      <div class="collapsed">
+        <span class="icon"></span>
+        <div class="entry-date">May 16, 2011</div>
+        <div class="entry-main">
+          <h4>ASP.NET MVC 3 Tools Update</h4> -
+          <span class="snippet">We’ve recently published some great end-to-end ASP.NET video training courses on the http://asp.net web-site.&nbsp;    Created by Pluralsight (a great .NET training company), these video courses are ava...Three weeks ago we held our MIX 2011 conference in Las Vegas.&nbsp; MIX is one of my favorite events of the year </span>
+        </div>
+      </div>
+    </li>
+    <li class="entry">
+      <div class="collapsed">
+        <span class="icon"></span>
+        <div class="entry-date">May 16, 2011</div>
+        <div class="entry-main">
+          <h4>ASP.NET MVC 3 Tools Update</h4> -
+          <span class="snippet">We’ve recently published some great end-to-end ASP.NET video training courses on the http://asp.net web-site.&nbsp;    Created by Pluralsight (a great .NET training company), these video courses are ava...Three weeks ago we held our MIX 2011 conference in Las Vegas.&nbsp; MIX is one of my favorite events of the year </span>
+        </div>
+      </div>
+    </li>
+    <li class="entry">
+      <div class="collapsed">
+        <span class="icon"></span>
+        <div class="entry-date">May 16, 2011</div>
+        <div class="entry-main">
+          <h4>ASP.NET MVC 3 Tools Update</h4> -
+          <span class="snippet">We’ve recently published some great end-to-end ASP.NET video training courses on the http://asp.net web-site.&nbsp;    Created by Pluralsight (a great .NET training company), these video courses are ava...Three weeks ago we held our MIX 2011 conference in Las Vegas.&nbsp; MIX is one of my favorite events of the year </span>
+        </div>
+      </div>
+    </li>
+
+  </ul>
+</div>
