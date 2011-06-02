@@ -23,14 +23,17 @@
    (exec-query (select-sql-params :feedsources map))))
 
 (defn fetch-user-feedsource [map]
-  (first
-   (exec-query (select-sql-params :user_feedsource map))))
+  (exec-query
+   (select-sql-params :user_feedsource map 100 0)))
 
-
-(defn fetch-feed
-  ([fs-id] (exec-query ["select * from feeds"]))
+(defn fetch-feeds
+  ([fs-id] (exec-query ["SELECT * FROM feeds"]))
   ([user-id fs-id limit offset]
-     (exec-query ["select feeds.* from feeds join user_feed on feeds.id =
-                     user_feed.feed_id where user_feed.user_id = ? and
-                     feeds.feedsource_id = ? limit ? offset ?"
+     (exec-query ["SELECT
+                       feeds.*
+                  FROM feeds
+                       JOIN user_feed ON feeds.id = user_feed.feed_id
+                  WHERE
+                      user_feed.user_id = ? and feeds.feedsource_id = ?
+                  LIMIT ? OFFSET ?"
                   user-id fs-id limit offset])))

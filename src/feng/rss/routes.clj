@@ -37,7 +37,8 @@
     (apply merge src-ns-map)))
 
 (defroutes api-routes
-  (JGET "/feeds/:fs-id" [] feed/get-feeds)
+  (JGET "/feeds" [] feed/list-all-feeds)
+  (JGET "/feeds/:fs-id" [] feed/list-feeds)
   (JPUT "/feedsource" [] feed/add-feedsource)) 
 
 (defroutes all-routes

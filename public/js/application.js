@@ -9,7 +9,6 @@ window.READER = (function (window, document, undefined) {
     var ItemList = Backbone.Collection.extend({
         model: Item,
         url:"/api/feeds/1"
-
     });
 
     var Items = new ItemList;
@@ -17,7 +16,6 @@ window.READER = (function (window, document, undefined) {
     var ItemView = Backbone.View.extend({
         tagName: "ol",
         className: "item"
-
     });
 
     var AppView = Backbone.View.extend({
@@ -34,9 +32,7 @@ window.READER = (function (window, document, undefined) {
         Items: Items,
         ItemView: ItemView
 
-    }
-
-
+    };
 })(this, this.document);
 
 $(function () {
