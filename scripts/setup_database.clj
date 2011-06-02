@@ -9,6 +9,11 @@
 
 (def links ["http://weblogs.asp.net/scottgu/rss.aspx"
             "http://blog.sina.com.cn/rss/kaifulee.xml"
+            "http://norvig.com/rss-feed.xml"
+            "http://www.asp.net/learn/videos/rss.ashx"
+            "http://blog.raek.se/feed/"
+            "http://cemerick.com/feed/"
+            "http://blog.raynes.me/?feed=rss2"
             "http://weblogs.asp.net/scottgu/atom.aspx"])
 
 (defn setup []

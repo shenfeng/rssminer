@@ -16,6 +16,7 @@ CREATE TABLE feedsources
   description text,
   last_check timestamp with time zone,
   last_update timestamp with time zone,
+  favicon text,
   CONSTRAINT uniq_feedsources_link UNIQUE (link),
   CONSTRAINT pk_feedsources PRIMARY KEY (id)
 );

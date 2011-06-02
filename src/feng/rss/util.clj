@@ -1,8 +1,11 @@
 (ns feng.rss.util
-  (:use [clojure.contrib.json :only[json-str Write-JSON]])
+  (:use (clojure.contrib [json :only [json-str Write-JSON]]
+                         [base64 :only [encode *base64-alphabet*]]))
   (:require  [clj-http.client :as http])
   (:import java.io.PrintWriter
            java.text.SimpleDateFormat
+           [java.net URL URI]
+           [java.io InputStream StringWriter]
            [java.security NoSuchAlgorithmException MessageDigest]))
 
 (defn md5-sum
@@ -36,3 +39,23 @@
   ([uri req] (try
                (http/request (merge req  {:method :get :url uri}))
                (catch Exception e))))
+
+(defn get-host [host]
+  (let [uri (URI. host)
+        port (if (= -1 (.getPort uri)) ""
+                 (str ":" (.getPort uri)))
+        schema (.getScheme uri)
+        host (.getHost uri)]
+    (str schema "://" host port)))
+
+(defn download-favicon [url]
+  (let [url (URL. url)
+        output (StringWriter.)
+        in (.. url openConnection getInputStream)]
+    (encode in output *base64-alphabet* nil)
+    (str "data:image/x-icon;base64," (.toString output))))
+
+(defn get-favicon [host]
+  (let [url (str (get-host host) "/favicon.ico")]
+    (try (download-favicon url)
+         (catch Exception e nil))))

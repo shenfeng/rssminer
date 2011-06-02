@@ -6,12 +6,13 @@
         (feng.rss [middleware :only [*user*]]
                   [test-common :only [auth-app mock-http-get]]
                   [test-util :only [postgresql-fixture]]
-                  [util :only [http-get]])))
+                  [util :only [http-get get-favicon]])))
 
 (use-fixtures :each postgresql-fixture)
 
 (deftest test-add-feedsource
-  (binding [http-get mock-http-get]
+  (binding [http-get mock-http-get
+            get-favicon (fn [link] nil)]
     (let [link "http://link-to-scottgu's rss"
           req {:uri "/api/feedsource"
                :request-method :put

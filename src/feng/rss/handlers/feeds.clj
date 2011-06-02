@@ -1,6 +1,6 @@
 (ns feng.rss.handlers.feeds
   (:use (feng.rss [middleware :only [*user* *json-body*]]
-                  [util :only [http-get]]
+                  [util :only [http-get get-favicon]]
                   [parser :only [parse]]))  
   (:require [feng.rss.db.feed :as db]))
 
@@ -25,9 +25,11 @@
 
 (defn- create-fs-add-it-to-user [link user-id]
   (if-let [feeds (parse (:body (http-get link)))]
-    (let [ ;; 1. save feedsource
+    (let [favicon (get-favicon link)
+          ;; 1. save feedsource
           fs (db/inser-feedsource
-              {:link link 
+              {:link link
+               :favicon favicon
                :description (:description feeds)
                :title (:title feeds)})
           ;; 2. assoc feedsource with user
