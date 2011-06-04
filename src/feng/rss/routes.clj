@@ -38,6 +38,7 @@
 
 (defroutes api-routes
   (JPUT "/feeds" [] feed/add-subscription)
+  (JGET "/unread-count" [] feed/get-unread-count)
   (JGET "/feeds/:subscription-id" [] feed/get-feeds-by-subscription-id)) 
 
 (defroutes all-routes
