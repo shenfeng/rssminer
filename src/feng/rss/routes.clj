@@ -37,13 +37,11 @@
     (apply merge src-ns-map)))
 
 (defroutes api-routes
-  (JGET "/feeds" [] feed/list-all-feeds)
-  (JGET "/feeds/:fs-id" [] feed/list-feeds)
-  (JPUT "/feedsource" [] feed/add-feedsource)) 
+  (JPUT "/feeds" [] feed/add-subscription)
+  (JGET "/feeds/:subscription-id" [] feed/get-feeds-by-subscription-id)) 
 
 (defroutes all-routes
   (GET "/" [] index/index-page)
-  ;; (GET "/login" [] "")
   (context "/login" []
            (GET "/" [] user/show-login-page)
            (POST "/" [] user/login))
@@ -80,7 +78,7 @@
                      :profile :development]
   (stop-server)
   (reset! config/env-profile profile)
-  (use-psql-database! :jdbc-url jdbc-url
-                      :user db-user
-                      :password db-password)
+  (use-psql-database! jdbc-url
+                      db-user
+                      db-password)
   (reset! server (run-jetty (app) {:port port :join? false})))

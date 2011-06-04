@@ -1,35 +1,43 @@
+--http://www.postgresql.org/docs/current/static/datatype-character.html
 CREATE TABLE users
 (
   id serial NOT NULL,
-  email character varying(100),
-  "password" character varying(100),
-  "name" character varying(30),
+  email character varying,
+  "name" character varying,
+  "password" character varying,
+  authen_toekn character varying,
+  added_ts timestamp with time zone DEFAULT now(),
   CONSTRAINT pk_users PRIMARY KEY (id),
   CONSTRAINT uniq_users_email UNIQUE (email)
 );
 ----
-CREATE TABLE feedsources
+CREATE TABLE subscriptions
 (
   id serial NOT NULL,
-  link character varying(300),
-  title character varying(300),
+  link character varying,       -- the fee link
+  alternate character varying,  -- usually, the site's link
+  title character varying,
   description text,
-  last_check timestamp with time zone,
-  last_update timestamp with time zone,
-  favicon text,
-  CONSTRAINT uniq_feedsources_link UNIQUE (link),
-  CONSTRAINT pk_feedsources PRIMARY KEY (id)
+  favicon text,                 -- base 64 encoded
+  last_check_ts timestamp with time zone,
+  last_update_ts timestamp with time zone,
+  added_ts timestamp with time zone DEFAULT now(),
+  user_id integer NOT NULL,     -- who first add it
+  CONSTRAINT pk_subscriptions PRIMARY KEY (id),
+  CONSTRAINT uniq_subscriptions_link UNIQUE (link)
 );
 ----
-CREATE TABLE user_feedsource
+CREATE TABLE user_subscription
 (
   user_id integer NOT NULL,
-  feedsource_id integer NOT NULL,
-  CONSTRAINT pk_userfeedsource PRIMARY KEY (user_id, feedsource_id),
-  CONSTRAINT fk_userfeedsource_feedsourceid FOREIGN KEY (feedsource_id)
-      REFERENCES feedsources (id) MATCH SIMPLE
+  subscription_id integer NOT NULL,
+  group_name character varying default 'freader_ungrouped',
+  added_ts timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT pk_user_subscription PRIMARY KEY (user_id, subscription_id),
+  CONSTRAINT fk_user_subscription_subscriptionid FOREIGN KEY (subscription_id)
+      REFERENCES subscriptions (id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT fk_userfeedsource_userid FOREIGN KEY (user_id)
+  CONSTRAINT fk_user_subscription_userid FOREIGN KEY (user_id)
       REFERENCES users (id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -37,29 +45,49 @@ CREATE TABLE user_feedsource
 CREATE TABLE feeds
 (
   id serial NOT NULL,
-  feedsource_id integer,
-  guid character varying(200), --uniqe string per item
-  author character varying(50),
-  title character varying(200),
-  link character varying(200),
-  updated timestamp with time zone,
-  pub_date timestamp with time zone,
-  description text,
+  subscription_id integer,
+  author character varying,
+  title character varying,
+  summary text,
+  alternate character varying,  -- url
+  updated_ts timestamp with time zone,
+  published_ts timestamp with time zone,
+  crawl_ts timestamp with time zone DEFAULT now(),
   CONSTRAINT pk_feeds PRIMARY KEY (id),
-  CONSTRAINT fk_feeds_feedsourceid FOREIGN KEY (feedsource_id)
-      REFERENCES feedsources (id) MATCH SIMPLE
+  CONSTRAINT fk_feeds_subscriptionid FOREIGN KEY (subscription_id)
+      REFERENCES subscriptions (id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE
 );
 ----
-CREATE TABLE user_feed
+CREATE TABLE comments
 (
+  id serial NOT NULL,
+  "content" text NOT NULL,
   user_id integer NOT NULL,
   feed_id integer NOT NULL,
-  CONSTRAINT pk_userfeed PRIMARY KEY (user_id, feed_id),
-  CONSTRAINT fk_userfeed_feedid FOREIGN KEY (feed_id)
+  added_ts timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT pk_comments PRIMARY KEY (id),
+  CONSTRAINT fk_comments_feedid FOREIGN KEY (feed_id)
       REFERENCES feeds (id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT fk_userfeed_userid FOREIGN KEY (user_id)
+  CONSTRAINT fk_comments_userid FOREIGN KEY (user_id)
       REFERENCES users (id) MATCH SIMPLE
-      ON UPDATE CASCADE ON DELETE CASCADE
-)
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+---
+create table feedcategory
+(
+    "type" character varying, -- possible val: tag, freader(system type), 
+    "text" character varying, -- freader-> stared, read
+    user_id integer NOT NULL,
+    feed_id integer NOT NULL,
+    added_ts timestamp with time zone not null default now(),
+   CONSTRAINT pk_feedcategory PRIMARY KEY("type", "text", user_id, feed_id),
+   CONSTRAINT fk_feedcategory_userid FOREIGN KEY(user_id)
+     REFERENCES users(id) MATCH SIMPLE
+     ON UPDATE CASCADE ON DELETE CASCADE,
+   CONSTRAINT fk_feedcategory_feedid FOREIGN KEY(feed_id)
+     REFERENCES feeds(id) MATCH SIMPLE
+     ON UPDATE CASCADE ON DELETE CASCADE
+);
+

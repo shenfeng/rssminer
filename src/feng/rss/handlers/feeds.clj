@@ -4,85 +4,67 @@
                   [parser :only [parse]]))  
   (:require [feng.rss.db.feed :as db]))
 
-(defn- add-exists-fs-to-user [fs user-id]
-  (let [uf (db/fetch-user-feedsource
+(defn- add-exists-subscription [subscription user-id]
+  (let [uf (db/fetch-user-subscription
             {:user_id user-id 
-             :feedsource_id (:id fs)})]
+             :subscription_id (:id subscription)})]
     (if (empty? uf)
-      (let [_ (db/insert-user-feedsource
+      (let [_ (db/insert-user-subscription
                {:user_id user-id
-                :feedsource_id (:id fs)})
-            feeds (db/fetch-feeds (:id fs))
-            ufs (doall (map #(db/insert-user-feed
-                              {:user_id user-id
-                               :feed_id (:id %)}) feeds))]
-        {:items feeds
-         :title (:title fs)
-         :description (:description fs)
-         :id (:id fs)})
-      {:status 400                      ;readd is not allowed
-       :message "already added"})))
+                :subscription_id (:id subscription)})]
+        subscription)
+      {:status 409                      ;readd is not allowed
+       :message "already subscribed"})))
 
-(defn- create-fs-add-it-to-user [link user-id]
+(defn- create-subscripton [link user-id]
   (if-let [feeds (parse (:body (http-get link)))]
     (let [favicon (get-favicon link)
           ;; 1. save feedsource
-          fs (db/inser-feedsource
-              {:link link
-               :favicon favicon
-               :description (:description feeds)
-               :title (:title feeds)})
+          subscription (db/insert-subscription
+                        {:link link
+                         :user_id user-id
+                         :favicon favicon
+                         :description (:description feeds)
+                         :title (:title feeds)})
           ;; 2. assoc feedsource with user
-          _ (db/insert-user-feedsource
-                   {:user_id user-id
-                    :feedsource_id (:id fs)})
+          _ (db/insert-user-subscription
+             {:user_id user-id
+              :subscription_id (:id subscription)})
           ;; 3. save feeds
-          saved-feeds (map #(db/insert-feed
-                             {:feedsource_id (:id fs)
-                              :pub_date (:publishedDate %)
-                              :link (:link %)
-                              :description (-> % :description :value)
-                              :title (:title %)
-                              :author (:author %)
-                              :guid (:uri %)}) (:entries feeds))
-          ;; 4. assoc feeds with user
-          ufs (doall (map #(db/insert-user-feed
-                            {:user_id user-id
-                             :feed_id (:id %)}) saved-feeds))]
+          saved-feeds (doall
+                       (map #(db/insert-feed
+                              {:subscription_id (:id subscription)
+                               :author (:author %)
+                               :title (:title %)
+                               :summary (-> % :description :value)
+                               :alternate (:link %)
+                               :published_ts (:publishedDate %)})
+                            (:entries feeds)))]
       ;; 5. return data
-      {:items saved-feeds
-       :title (:title fs)
-       :description (:description fs)
-       :id (:id fs)})
-    ;; not feed link
-    {:status 400
+      subscription)
+    ;; fetch feed error
+    {:status 460
      :message "bad feedlink"}))
 
-(defn add-feedsource [req]
+(defn- fetch-feeds-by-id [user-id subscription-id limit offset]
+  (let [subscription (db/fetch-subscription {:id subscription-id})
+        feeds (db/fetch-feeds (:id subscription) limit offset)]
+    ;; TODO return what spec says
+    (assoc subscription
+      :items feeds)))
+
+(defn add-subscription [req]
   (let [link (:link *json-body*)
         user-id (:id *user*)
-        fs (db/fetch-feedsource {:link link})]
-    (if fs                              
-      (add-exists-fs-to-user fs user-id) ;we have the link
-      ;; first time feedsource
-      (create-fs-add-it-to-user link user-id))))
+        subscription (db/fetch-subscription {:link link})]
+    (if subscription                     
+      (add-exists-subscription subscription user-id) ;we have the subscription
+      ;; first time subscription
+      (create-subscripton link user-id))))
 
-(defn- fetch-feeds-by-id [user-id fs-id limit offset]
-  (let [fs (db/fetch-feedsource {:id (Integer. fs-id)})
-        feeds (db/fetch-feeds user-id (:id fs) limit offset)]
-    {:items feeds
-     :title (:title fs)
-     :description (:description fs)
-     :id fs-id}))
-
-(defn list-feeds [req]
-  (let [{:keys [fs-id limit offset]
+(defn get-feeds-by-subscription-id [req]
+  (let [{:keys [subscription-id limit offset]
          :or {limit 20 offset 0}} (:params req)
-        user-id (:id *user*)]
-    (fetch-feeds-by-id user-id fs-id limit offset)))
-
-(defn list-all-feeds [req]
-  (let [user-id (:id *user*)
-        ufs (db/fetch-user-feedsource {:user_id user-id})]
-    (map #(fetch-feeds-by-id
-           user-id (:feedsource_id %) 20 0) ufs)))
+         subscription-id (Integer. subscription-id)
+         user-id (:id *user*)]
+    (fetch-feeds-by-id user-id subscription-id limit offset)))

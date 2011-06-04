@@ -14,22 +14,18 @@
   (binding [http-get mock-http-get
             get-favicon (fn [link] nil)]
     (let [link "http://link-to-scottgu's rss"
-          req {:uri "/api/feedsource"
+          req {:uri "/api/feeds"
                :request-method :put
                :body (json-str {:link link})}
-          resp (auth-app req)
-          add-again (auth-app req)
-          obj (-> resp :body read-json)
+          subscribe-resp (auth-app req)
+          subscribe-again (auth-app req)
+          subscription (-> subscribe-resp :body read-json)
           ;; fetch to make sure it is inserted to database
-          fetch-resp (auth-app {:uri (str "/api/feeds/" (:id obj))
+          fetch-resp (auth-app {:uri (str "/api/feeds/" (:id subscription))
                                 :request-method :get
                                 :params {"limit" 13}})
-          fetch-all (auth-app {:uri "/api/feeds"
-                               :request-method :get})
-          fetch-obj (-> fetch-resp :body read-json)]
-      (is (= 200 (:status resp)))
+          fetched-feeds (-> fetch-resp :body read-json)]
+      (is (= 200 (:status subscribe-resp)))
       (is (= 200 (:status fetch-resp)))
-      (is (= 200 (:status fetch-all)))
-      (is (= 400 (:status add-again)))
-      (is (= 15 (count (:items obj))))
-      (is (= 13 (count (:items fetch-obj)))))))
+      (is (= 409 (:status subscribe-again)))
+      (is (= 13 (count (:items fetched-feeds)))))))
