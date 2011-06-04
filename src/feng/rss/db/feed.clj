@@ -2,17 +2,9 @@
   (:use [feng.rss.db.util :only [exec-query select-sql-params
                                  insert-sql-params]]))
 
-(defn insert-subscription [subscription]
+(defn insert [table data]
   (first
-   (exec-query (insert-sql-params :subscriptions subscription))))
-
-(defn insert-user-subscription [item]
-  (first
-   (exec-query (insert-sql-params :user_subscription item))))
-
-(defn insert-feed [feed]
-  (first
-   (exec-query (insert-sql-params :feeds feed))))
+   (exec-query (insert-sql-params table data))))
 
 (defn fetch-subscription [map]
   (first
@@ -29,3 +21,4 @@
                    FROM feeds
                    WHERE subscription_id = ? LIMIT ? OFFSET ?"
                   subscription-id limit offset])))
+

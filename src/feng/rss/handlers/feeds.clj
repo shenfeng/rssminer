@@ -9,37 +9,45 @@
             {:user_id user-id 
              :subscription_id (:id subscription)})]
     (if (empty? uf)
-      (let [_ (db/insert-user-subscription
-               {:user_id user-id
-                :subscription_id (:id subscription)})]
-        subscription)
+      (do (db/insert :user_subscription
+                     {:user_id user-id
+                      :subscription_id (:id subscription)})
+          subscription)
       {:status 409                      ;readd is not allowed
        :message "already subscribed"})))
+
+(defn- save-feeds [subscription feeds user-id]
+  (doseq [feed (:entries feeds)]
+    (let [saved-feed
+          (db/insert :feeds
+                     {:subscription_id (:id subscription)
+                      :author (:author feed)
+                      :title (:title feed)
+                      :summary (-> feed :description :value)
+                      :alternate (:link feed)
+                      :published_ts (:publishedDate feed)})
+          categories (:categories feed)]
+      (doseq [c categories]
+        (db/insert :feedcategory
+                   {:user_id user-id
+                    :feed_id (:id saved-feed)
+                    :type "tag"
+                    :text (:name c)})))))
 
 (defn- create-subscripton [link user-id]
   (if-let [feeds (parse (:body (http-get link)))]
     (let [favicon (get-favicon link)
           ;; 1. save feedsource
-          subscription (db/insert-subscription
-                        {:link link
-                         :user_id user-id
-                         :favicon favicon
-                         :description (:description feeds)
-                         :title (:title feeds)})
-          ;; 2. assoc feedsource with user
-          _ (db/insert-user-subscription
-             {:user_id user-id
-              :subscription_id (:id subscription)})
-          ;; 3. save feeds
-          saved-feeds (doall
-                       (map #(db/insert-feed
-                              {:subscription_id (:id subscription)
-                               :author (:author %)
-                               :title (:title %)
-                               :summary (-> % :description :value)
-                               :alternate (:link %)
-                               :published_ts (:publishedDate %)})
-                            (:entries feeds)))]
+          subscription (db/insert :subscriptions
+                                  {:link link
+                                   :user_id user-id
+                                   :favicon favicon
+                                   :description (:description feeds)
+                                   :title (:title feeds)})]
+      ;; 2. assoc feedsource with user
+      (db/insert :user_subscription {:user_id user-id
+                                     :subscription_id (:id subscription)})
+      (save-feeds subscription feeds user-id) ;; 3. save feeds
       ;; 5. return data
       subscription)
     ;; fetch feed error

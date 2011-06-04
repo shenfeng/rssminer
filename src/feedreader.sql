@@ -75,13 +75,13 @@ CREATE TABLE comments
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 ---
-create table feedcategory
+CREATE TABLE feedcategory
 (
     "type" character varying, -- possible val: tag, freader(system type), 
     "text" character varying, -- freader-> stared, read
     user_id integer NOT NULL,
     feed_id integer NOT NULL,
-    added_ts timestamp with time zone not null default now(),
+    added_ts timestamp with time zone NOT NULL DEFAULT now(),
    CONSTRAINT pk_feedcategory PRIMARY KEY("type", "text", user_id, feed_id),
    CONSTRAINT fk_feedcategory_userid FOREIGN KEY(user_id)
      REFERENCES users(id) MATCH SIMPLE
