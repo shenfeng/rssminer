@@ -2,6 +2,15 @@ require 'rake/clean'
 require 'tempfile'
 task :default => :test
 
+def get_file_as_string(filename)
+  data = ''
+  f = File.open(filename, "r") 
+  f.each_line do |line|
+    data += line
+  end
+  return data
+end
+
 def compress(type, source, target)
   sh "java -jar 'scripts/yuicompressor-2.4.6.jar' --type #{type} " +
     "--charset utf-8 -o #{target} \"#{source}\" 2> /dev/null > /dev/null"
@@ -17,13 +26,17 @@ task :download do
   end
 end
 
+desc "Prepare for test"
+task :prepare => ["css:compile", "js:tmpls"]
+
 desc "Run development server"
-task :run => ["css:compile", "html:compress"] do
+task :run => ["prepare"] do
   sh 'scripts/run --profile development'
 end
 
 namespace :js do
-  desc 'start jstestdriver srever'
+  CLEAN.include('public/js/tmpls.js')
+  desc 'start jstestdriver server'
   task :startserver do
     sh 'java -jar scripts/JsTestDriver-1.3.2.jar --port 9876 --browser `which firefox`'
   end
@@ -31,6 +44,19 @@ namespace :js do
   desc 'Run js unit test against running jstestdriver server'
   task :unit => :download do
     sh 'java -jar scripts/JsTestDriver-1.3.2.jar --tests all --captureConsole'
+  end
+
+  desc "Generate tmpls.js"
+  task :tmpls => ["html:compress"] do
+    html_views = FileList['src/templates/js-tmpls/**/*.*']
+    data = "(function(){var tmpls = {};"
+    html_views.each do |f|
+      text = get_file_as_string(f).gsub(/\s+/," ")
+      name = File.basename(f,".html")
+      data += "tmpls[\"" + name + "\"] = Handlebars.compile('" + text + "');\n"
+    end
+    data += "window.Freader = $.extend(window.Freader, {tmpls: tmpls})})();\n"
+    File.open("public/js/tmpls.js", 'w') {|f| f.write(data)}
   end
 end
 
@@ -67,7 +93,8 @@ namespace :html do
   html_triples.each do |src, tgt, dir|
     directory dir
     file tgt => [src, dir] do
-      sh "java -jar scripts/htmlcompressor-1.3.1.jar #{src} -o #{tgt}"
+      # sh "cp #{src} #{tgt}"
+      sh "java -jar scripts/htmlcompressor-1.3.1.jar --charset utf8 #{src} -o #{tgt}"
     end
   end
 
@@ -77,12 +104,12 @@ end
 
 namespace :watch do
   desc 'Watch css, html; after Ctrl+C, process sh should be manually killed'
-  task :all => ["css:compile", "html:compress", "download"] do
+  task :all => ["css:compile", "js:tmpls", "download"] do
     t1 = Thread.new do
       sh 'while inotifywait -e modify scss/; do rake css:compile; done'
     end
     t2 = Thread.new do
-      sh 'while inotifywait -r -e modify templates/; do rake html:compress; done'
+      sh 'while inotifywait -r -e modify templates/; do rake js:tmpls; done'
     end
     t1.join
     t2.join

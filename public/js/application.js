@@ -1,64 +1,50 @@
-window.READER = (function (window, document, undefined) {
-    var Item = Backbone.Model.extend({
-        parse: function(resp){
-            console.log("1111");
-            console.log(resp);
-        }
+(function (window, document, undefined) {
+  var Item = Backbone.Model.extend({
+    parse: function(resp){
+      console.log("1111");
+      console.log(resp);
+    }
+  });
+
+  var ItemList = Backbone.Collection.extend({
+    model: Item,
+    url:"/api/feeds/1"
+  });
+
+  var Items = new ItemList;
+
+  var ItemView = Backbone.View.extend({
+    tagName: "ol",
+    className: "item"
+  });
+
+  var AppView = Backbone.View.extend({
+    initialize: function() {
+      this.model = Items;
+    },
+    alive: function() {
+      this.model.fetch();
+    }
+
+  });
+  window.Freader = $.extend(
+    window.Freader, {
+      AppView: AppView,
+      Items: Items,
+      ItemView: ItemView
     });
-
-    var ItemList = Backbone.Collection.extend({
-        model: Item,
-        url:"/api/feeds/1"
-    });
-
-    var Items = new ItemList;
-
-    var ItemView = Backbone.View.extend({
-        tagName: "ol",
-        className: "item"
-    });
-
-    var AppView = Backbone.View.extend({
-        initialize: function() {
-            this.model = Items;
-        },
-        alive: function() {
-            this.model.fetch();
-        }
-
-    });
-    return {
-        AppView: AppView,
-        Items: Items,
-        ItemView: ItemView
-
-    };
 })(this, this.document);
 
 $(function () {
 
-    Handlebars.registerHelper('feeditems', function(items, fn) {
-        console.log(items);
-        var out = "<ul>";
+  Handlebars.registerHelper('feeditems', function(items, fn) {
+    console.log(items);
+    var out = "<ul>";
 
-        for (var i = 0, l = items.length; i < l; i++) {
-            out = out + "<li>" + fn(items[i]) + "</li>";
-        }
+    for (var i = 0, l = items.length; i < l; i++) {
+      out = out + "<li>" + fn(items[i]) + "</li>";
+    }
 
-        return out + "</ul>";
-    });
-
-    $(".folder .toggle").click(function(){
-        $(this).parents('.folder').toggleClass('collapsed');
-//        $(this).toggleClass('collapsed');
-    });
-
-    $(".nav-tree a").click(function(){
-        $(".nav-tree a").not(this).removeClass('selected');
-        $(this).toggleClass('selected');
-    });
-
- //   var app = new Backbone.Backrub($("#app-template").html());
- //   $("#app-template").after(app.render());
- //   app.makeAlive();
+    return out + "</ul>";
+  });
 });

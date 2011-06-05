@@ -3,6 +3,6 @@
   (:require [net.cgrand.enlive-html :as html]))
 
 (let [snippet (html/snippet
-               "templates/index.html" [html/root] [])]
+               "templates/index.html" [:div#main] [])]
   (defn index-page []
     (apply str (layout (snippet)))))

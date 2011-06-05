@@ -10,5 +10,6 @@ bin/
 .settings
 public/css/
 src/templates/
+public/js/tmpls.js
 .idea/
 .emacs.desktop*

@@ -2,9 +2,7 @@
 @import "css3";
 @import "reset";
 
-a { text-decoration: none;}
-
-#accouts-div{
+#accouts-div {
     margin-top:80px;
     input{  font-size: 1.2em; }
     .textfield{ padding: 0.2em; width: 300px; }
@@ -31,7 +29,6 @@ a { text-decoration: none;}
     }
     
 }
-.required { color: #CC0000; }
 .icon {
     background: url("/imgs/sprite.png") no-repeat scroll 0 0 transparent;
     cursor: pointer;
@@ -76,15 +73,13 @@ a { text-decoration: none;}
 
 header {
     padding: 0.5em;
-    h1 {
-        text-indent: 1em;
-        font-size: 3em;
-        text-shadow: 2px 2px 2px #555;
-        .sub {
-            font-style: italic;
-            font-size: 14px;
-        }
-    }
+    text-indent: 1em;
+    font-size: 20px;
+    text-shadow: 1px 1px 0px #E0E0E0;
+    h1 { margin: 4px 0 }
+    a { color: #303030; }
+    .sub { font-style: italic;  font-size: 14px;  }
+            
 }
 
 #main { margin: 10px 0; }
@@ -92,24 +87,29 @@ header {
 nav {
     width: $nav_width;
     float: left;
+    li, ul { margin: 0; padding: 0; list-style: none; }
 }
 
 .nav-tree {
+    overflow-y: scroll;
+    overflow-x: hidden;
     li {
         position: relative;
-        > ul { padding-left: 1em; }
         a {
             display: block;
+            color: $light_color;
             overflow: hidden;
             @include border-radius(4px);
-            padding: 4px;
-            padding-left: 23px;
-            color: black;
+            padding: 4px 4px 4px 23px;
             white-space: nowrap;
             &:hover { background: $hover_color; }
         }
+        span { font-size: 0.85em; } // unread count
         a.selected { background: $selected_color; }
     }
+    .sub a { text-indent: 20px;}
+    .favicon { position: absolute; width: 14px; height: 14px; padding: 3px; left: 20px; }
+    li.unread > a { color: black; font-weight: bold; }
     .toggle { background-position: 9px -58px;  }
     .collapsed {
         .toggle { background-position: -14px -58px;}
@@ -136,44 +136,87 @@ nav {
     }
 }
 
+#entries { overflow-y: scroll; overflow-x: hidden; }
+
 #content {
     margin-left: $nav_width;
+    > ul { padding: 0; }
     div.collapsed {
         -moz-user-select: none;
         height: 2em;
         line-height: 2;
         position: relative;
         overflow: hidden;
-        h4 { display: inline;}
         @include border-radius(4px);
         border-bottom: 1px solid #E3E3E3;
         cursor: pointer;
         &:hover { background: $hover_color; }
-    }
-    .entry-date {
-        float: right;
-        margin: 0 2em;
-    }
-    .entry-main {
-        overflow: hidden;
-        margin-left: 2em;
-        h4 { font-weight: normal; }
-        .snippet {
-            color: #777;
+        .entry-main {
+            overflow: hidden;
+            margin-left: 2em;
+            h4 { font-weight: normal; display: inline;}
+            .snippet { color: $light_color; }
         }
     }
-    li.current-entry {
-        border: 2px solid #6688EE;   
+    .expanded .entry-container { display: block; }
+    .entry-container {
+        display: none;
+        .entry-main { margin: 0.5em 1em; }
     }
-    > ul {
-        list-style: none;
-        margin: 0;
-    }
+    .current .collapsed { border: solid 2px #68E; }
+    .expanded { border: 1px solid #6688EE; }
+    .entry-date { float: right; margin: 0 2em; }
+    li.current-entry { border: 2px solid #6688EE; }
+    > ul { list-style: none; margin: 0;  }
     .icon {
         top: 5px;
         left: 3px;
         width: 16px;
         height: 16px;
+    }
+}
+
+.overlay {
+    background-color: #101030;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    z-index: 1001;
+    opacity: 0.5;
+    display: none;
+}
+#keyboard-shortcut {
+    display: none;
+    box-shadow: 0 0 18px rgba(0, 0, 0, 0.4);
+    background: white;
+    @include border-radius(5px);
+    border: 3px solid transparent;
+    z-index: 1002;
+    height: 552px;
+    width: 620px;
+    position: fixed;
+    left: 641px;
+    top: 31px;
+    .container { padding: 12px }
+    .key {
+        border-radius: 6px;
+        border-top: 1px solid #717171;
+        border-left: 1px solid #717171;
+        border-bottom: 1px solid #303030;
+        border-right: 1px solid #303030;
+        background-color: #505050;
+        color: white;
+        text-shadow: 1px 1px 0 black;
+        font-weight: bold;
+        padding: 4px 6px;
+        float: left;
+        margin: 0 4px 0 0;
+    }
+    table {
+        width: 100%;
+        caption {font-size: 22px; color: #303030; text-shadow: 1px 1px 0px #E0E0E0; }
     }
 }
 

@@ -8,6 +8,7 @@
                          [file :only [wrap-file]]
                          [session :only [wrap-session]])
         (feng.rss [middleware :only (wrap-reload-in-dev
+                                     wrap-content-type
                                      wrap-cache-header
                                      wrap-auth
                                      wrap-request-logging
@@ -59,11 +60,12 @@
                  wrap-params
                  wrap-auth
                  wrap-stateful-session
-                 (wrap-reload-in-dev reload-meta)
                  (wrap-file "public")
                  wrap-cache-header                               
                  wrap-file-info
-                 wrap-request-logging))
+                 wrap-content-type
+                 wrap-request-logging
+                 (wrap-reload-in-dev reload-meta)))
 
 (defonce server (atom nil))
 

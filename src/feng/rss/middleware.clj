@@ -40,6 +40,15 @@
            total)
       resp)))
 
+(defn wrap-content-type [handler]
+  (fn [req]
+    (let [resp (handler req)
+          ctype ((resp :headers) "Content-Type")]
+      (if (= ctype "text/html")
+        (update-in resp [:headers "Content-Type"]
+                   (fn [& args] "text/html; charset=utf-8"))
+        resp))))
+
 (defn wrap-reload-in-dev [handler reload-meta]
   (if (config/in-dev?)
     (let [read-mtime (fn [dir]
