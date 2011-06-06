@@ -52,7 +52,7 @@ namespace :js do
     data = "(function(){var tmpls = {};"
     html_views.each do |f|
       text = get_file_as_string(f).gsub(/\s+/," ")
-      name = File.basename(f,".html")
+      name = File.basename(f,".tpl")
       data += "tmpls[\"" + name + "\"] = Handlebars.compile('" + text + "');\n"
     end
     data += "window.Freader = $.extend(window.Freader, {tmpls: tmpls})})();\n"

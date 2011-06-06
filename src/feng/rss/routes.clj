@@ -44,6 +44,8 @@
 
 (defroutes all-routes
   (GET "/" [] index/index-page)
+  (GET "/demo" [] index/demo-page)
+  (GET "/expe" [] index/expe-page)
   (context "/login" []
            (GET "/" [] user/show-login-page)
            (POST "/" [] user/login))
