@@ -3,11 +3,11 @@ $(function () {
   $(".nav-tree > li").clone();
 
   _.each(_.range(1,20), function(i){
-    $(".nav-tree").append($(".nav-tree > li:first").clone());
+    // $(".nav-tree").append($(".nav-tree > li:first").clone());
   });
 
   _.each(_.range(1,69), function(i){
-    $("#entries").append($("#entries > li:first").clone());
+    // $("#entries").append($("#entries > li:first").clone());
   });
 
   $(".folder .toggle").click(function(){
