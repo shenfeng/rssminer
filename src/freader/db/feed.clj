@@ -38,10 +38,10 @@
                    WHERE subscription_id = ? LIMIT ? OFFSET ?"
                   subscription-id limit offset])))
 
-(defn fetch-unread-count [user-id]
+(defn fetch-overview [user-id]
   (exec-query ["
 SELECT
-   us.group_name, s.id, s.title, s.favicon, 
+   us.group_name, s.id, s.title, s.favicon,
    (SELECT COUNT(*) FROM feeds WHERE feeds.subscription_id = s.id) AS total_count,
    (SELECT COUNT(*) FROM feeds
     WHERE  feeds.subscription_id = s.id AND
@@ -49,7 +49,7 @@ SELECT
                              WHERE user_id = ? AND
                                   'type' = 'freader' AND
                                    text = 'read' )) AS unread_count
-FROM 
+FROM
    user_subscription AS us
    JOIN subscriptions AS s ON s.id = us.subscription_id
 WHERE us.user_id = ?" user-id user-id]))

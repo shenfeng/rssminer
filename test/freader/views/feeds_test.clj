@@ -2,9 +2,9 @@
   (:use clojure.test
         [clojure.contrib.json :only [read-json json-str]]
         (freader [middleware :only [*user*]]
-                  [test-common :only [auth-app mock-http-get]]
-                  [test-util :only [postgresql-fixture]]
-                  [util :only [http-get get-favicon]])))
+                 [test-common :only [auth-app mock-http-get]]
+                 [test-util :only [postgresql-fixture]]
+                 [util :only [http-get get-favicon]])))
 
 (use-fixtures :each postgresql-fixture
               (fn [f] (binding [http-get mock-http-get
@@ -40,12 +40,19 @@
          :title)
     (is (= 13 (count (:items fetched-feeds))))))
 
-(deftest test-unread-count
+(deftest test-get-overview
   (let [subscribe-resp (auth-app add-req)
-        unread-count-resp (auth-app {:uri "/api/unread-count"
-                                     :request-method :get})
-        unread-count (-> unread-count-resp :body read-json)]
-    (is (= 200 (:status unread-count-resp)))
-    (is (= 1 (count (:freader_ungrouped unread-count))))
-    (is (= (-> unread-count :freader_ungrouped first :unread_count)
-           (-> unread-count :freader_ungrouped first :total_count)))))
+        overview-resp (auth-app {:uri "/api/overview"
+                                 :request-method :get})
+        overview (-> overview-resp :body read-json)]
+    (is (= 200 (:status overview-resp)))
+    (is (= 1 (count overview)))
+    (are [key] (-> overview first key)
+         :group_name
+         :subscriptions)
+    (are [key] (-> overview first :subscriptions first key)
+         :id
+         :total_count
+         :total_count
+         :title
+         :favicon)))

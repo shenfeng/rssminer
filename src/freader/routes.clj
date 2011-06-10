@@ -41,7 +41,7 @@
 (defroutes api-routes
   (JPUT "/feeds" [] feed/add-subscription)
   (JGET "/feeds/:subscription-id" [] feed/get-subscription)
-  (JGET "/unread-count" [] feed/get-unread-count))
+  (JGET "/overview" [] feed/get-overview))
 
 (defroutes all-routes
   (GET "/" [] freader/index-page)

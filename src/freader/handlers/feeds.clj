@@ -101,13 +101,16 @@
          user-id (:id *user*)]
     (fetch-feeds-by-id user-id subscription-id limit offset)))
 
-(defn get-unread-count [req]
+(defn get-overview [req]
   (let [user-id (:id *user*)
-        unread-count (db/fetch-unread-count user-id)]
-    (reduce (fn [m item]
-              (let [group-name (:group_name item)
-                    c (dissoc (into {} (seq item)) :group_name)
-                    items (m group-name)]
-                (assoc m group-name
-                       (conj items c))))
-            {} unread-count)))
+        overview (db/fetch-overview user-id)
+        map (reduce
+             (fn [m item]
+               (let [group-name (:group_name item)
+                     c (dissoc (into {} (seq item)) :group_name)
+                     items (m group-name)]
+                 (assoc m group-name
+                        (conj items c))))
+             {} overview)]
+    (for [[k v] map] {:group_name k
+                      :subscriptions v})))
