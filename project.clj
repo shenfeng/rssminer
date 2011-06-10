@@ -1,5 +1,5 @@
 (defproject clj-rss "1.0.0-SNAPSHOT"
-  :description "FIXME: write description"
+  :description "A feed reader written in clojure"
   :dependencies [[org.clojure/clojure "1.2.0"]
                  [org.clojure/clojure-contrib "1.2.0"]
                  [compojure "0.6.3"]

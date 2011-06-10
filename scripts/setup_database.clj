@@ -1,9 +1,9 @@
 (ns setup-database
-  (:use (feng.rss [test-util :only [exec-prepared-sqlfile get-con exec-stats]]
+  (:use (freader [test-util :only [exec-prepared-sqlfile get-con exec-stats]]
                   [test-common :only [test-user]]
                   [database :only [use-psql-database! close-global-psql-factory]]
                   [test-common :only [mock-http-get test-user auth-app]])
-        [feng.rss.db.user :only [create-user]]
+        [freader.db.user :only [create-user]]
         clojure.contrib.json))
 
 (def links ["http://weblogs.asp.net/scottgu/rss.aspx"

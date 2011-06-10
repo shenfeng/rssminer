@@ -1,6 +1,6 @@
 (ns main
   (:use [clojure.contrib.command-line :only [with-command-line]]
-        [feng.rss.routes :only [start-server]]))
+        [freader.routes :only [start-server]]))
 
 (defn main [& args]
   (with-command-line args
