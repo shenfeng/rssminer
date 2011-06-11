@@ -11,10 +11,22 @@ $(function () {
       _.bindAll(this, "render", "toggleExpandFeed");
     },
     toggleExpandFeed: function(e) {
-      $(e.currentTarget).parents('.entry').toggleClass("expanded");
+      var $entry = $(e.currentTarget).parents('.entry'),
+          offset = $entry.offset().top - $(".entry:first").offset().top;
+      $(".entry").not($entry).removeClass('expanded');
+      $entry.toggleClass("expanded");
+      $("#entries").scrollTop(offset);
     },
     render: function () {
       var data = this.model.toJSON();
+      _.each(data.items, function(item){
+        var summary = item.summary,
+            snippet = summary && summary.replace(/<[^<>]+>/g, "")
+              .replace(/\s+/g, " ")
+              .replace(/&[^&;]+;/g,"")
+              .slice(0,200);
+        item.snippet = snippet;
+      });
       $(this.el).html(this.template(data));
       return this;
     }
@@ -54,4 +66,10 @@ $(function () {
   }
 
   $(window).resize(_.debounce(layout, 100));
+
+  $(".nav-tree a").live('click',function(){
+    $(".nav-tree a").not(this).removeClass('selected');
+    $(this).toggleClass('selected');
+  });
+
 });
