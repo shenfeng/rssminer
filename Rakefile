@@ -1,10 +1,12 @@
 require 'rake/clean'
 require 'tempfile'
+require 'rubygems'
+require 'closure-compiler'
 task :default => :test
 
 def get_file_as_string(filename)
   data = ''
-  f = File.open(filename, "r") 
+  f = File.open(filename, "r")
   f.each_line do |line|
     data += line
   end
@@ -29,13 +31,21 @@ end
 desc "Prepare for test"
 task :prepare => ["css:compile", "js:tmpls"]
 
+desc "Prepare fro production"
+task :prepare_prod => ["css:compress", "js:minify"]
+
 desc "Run development server"
 task :run => ["prepare"] do
   sh 'scripts/run --profile development'
 end
 
+desc "Run production server"
+task :run_prod => ["prepare_prod"] do
+  sh 'scripts/run --profile production'
+end
+
 namespace :js do
-  CLEAN.include('public/js/tmpls.js')
+  CLEAN.include('public/js/freader/tmpls.js','public/js/freader.min.js')
   desc 'start jstestdriver server'
   task :startserver do
     sh 'java -jar scripts/JsTestDriver-1.3.2.jar --port 9876 --browser `which firefox`'
@@ -46,17 +56,42 @@ namespace :js do
     sh 'java -jar scripts/JsTestDriver-1.3.2.jar --tests all --captureConsole'
   end
 
+  desc 'Combine all js into one, minify it using google closure'
+  task :minify => :tmpls do
+    print "Running closure against all js file, please wait....\n"
+    files = FileList['public/js/jquery-1.6.1.js',
+                     'public/js/underscore.js',
+                     'public/js/backbone.js',
+                     'public/js/handlebars-1.0.0.beta.2.js',
+                     'public/js/freader/tmpls.js',
+                     'public/js/freader/application.js']
+    src = '';
+    # closure = Closure::Compiler.new(:compilation_level =>
+    #                                 'ADVANCED_OPTIMIZATIONS')
+    closure = Closure::Compiler.new()
+
+    files.each do |f|
+      src += get_file_as_string(f);
+    end
+    minified = closure.compile(src);
+    File.open("public/js/freader.min.js", 'w') {|f| f.write(minified)}
+    # minified = closure.compile(src);
+    # File.open("/tmp/freader.js", 'w') {|f| f.write(src)}
+
+  end
+
   desc "Generate tmpls.js"
   task :tmpls => ["html:compress"] do
-    html_views = FileList['src/templates/js-tmpls/**/*.*']
+    print "Generate tmpls.js, please wait....\n"
+    html_tmpls = FileList['src/templates/js-tmpls/**/*.*']
     data = "(function(){var tmpls = {};"
-    html_views.each do |f|
+    html_tmpls.each do |f|
       text = get_file_as_string(f).gsub(/\s+/," ")
       name = File.basename(f,".tpl")
-      data += "tmpls[\"" + name + "\"] = Handlebars.compile('" + text + "');\n"
+      data += "tmpls." + name + " = Handlebars.compile('" + text + "');\n"
     end
     data += "window.Freader = $.extend(window.Freader, {tmpls: tmpls})})();\n"
-    File.open("public/js/tmpls.js", 'w') {|f| f.write(data)}
+    File.open("public/js/freader/tmpls.js", 'w') {|f| f.write(data)}
   end
 end
 
@@ -77,7 +112,7 @@ namespace :css do
       target = source.sub(/scss$/, 'css').sub(/^scss/, 'public/css')
       sh "sass -t compressed --cache-location /tmp #{source} #{target}"
     end
-   end
+  end
 end
 
 namespace :html do
@@ -86,7 +121,7 @@ namespace :html do
   def get_dir(path)
     File.split(path)[0]
   end
-  
+
   html_srcs = FileList['templates/**/*.*']
   html_triples = html_srcs.map {|f| [f, "src/#{f}", get_dir("src/#{f}")]}
 

@@ -3,12 +3,12 @@ $(function () {
   var SubscriptionView = Backbone.View.extend({
     tagName: "div",
     id: 'content',
-    template: Freader.tmpls["subscripton"],
+    template: Freader.tmpls.subscripton,
     events: {
       "click .collapsed .entry-main": "toggleExpandFeed"
     },
     initialize: function () {
-      _.bindAll(this, "render", "toggleExpandedFeed");
+      _.bindAll(this, "render", "toggleExpandFeed");
     },
     toggleExpandFeed: function(e) {
       $(e.currentTarget).parents('.entry').toggleClass("expanded");
@@ -21,7 +21,7 @@ $(function () {
   });
 
   $.get("/api/overview",function(data) {
-    var nav_template = Freader.tmpls["nav_template"];
+    var nav_template = Freader.tmpls.nav_template;
     $("nav").append(nav_template(data));
   });
 

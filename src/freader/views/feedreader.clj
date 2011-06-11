@@ -1,9 +1,14 @@
 (ns freader.views.feedreader
   (:use [freader.views.layouts :only [layout]])
-  (:require [net.cgrand.enlive-html :as html]))
+  (:require [net.cgrand.enlive-html :as html]
+            [freader.config :as config]))
 
 (let [snippet (html/snippet
-               "templates/index.html" [:div#main] [])]
+               "templates/index.html" [:div#main] []
+               [(html/attr= :data-profile "development")]
+               (if (config/in-dev?) identity (html/substitute ""))
+               [(html/attr= :data-profile "production")]
+               (if (config/in-prod?) identity (html/substitute "")))]
   (defn index-page []
     (apply str (layout (snippet)))))
 
