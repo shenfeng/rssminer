@@ -1,6 +1,7 @@
 (ns freader.middleware
   (:use [freader.util :only [json-response]]
         clojure.contrib.trace
+        [ring.util.response :only [redirect]]
         [sandbar.stateful-session :only [session-get]]
         [compojure.core :only [GET POST DELETE PUT]])
   (:require [freader.config :as config]
@@ -12,7 +13,7 @@
 (def *user* nil)
 (def *json-body* nil)
 
-(let [f (SimpleDateFormat. "yyyy-HH-dd HH:mm:ss:S" Locale/CHINA)]
+(let [f (SimpleDateFormat. "yyyy-HH-dd HH:mm:ss:SSS" Locale/CHINA)]
   (defn- current-ts-str []
     (.format f (Date.))))
 
@@ -28,8 +29,11 @@
 
 (defn wrap-auth [handler]
   (fn [req]
-    (binding [*user* (session-get :user)]
-      (handler req))))
+    (let [user (session-get :user)]
+      (if (and (not user) (= (:uri req) "/"))
+        (redirect "/login")
+        (binding [*user* user]
+          (handler req))))))
 
 (defn wrap-cache-header
   "No cache for generated text|json file. Allow nginx to greedy cache others"
@@ -62,6 +66,16 @@
                    (fn [& args] "text/html; charset=utf-8"))
         resp))))
 
+(defn wrap-failsafe
+  "show an error page instead of a stacktrace when error happens."
+  [handler]
+  (fn [req]
+    (try (handler req)
+         (catch Exception e
+           (trace req)
+           (.printStackTrace e)
+           {:status 500 :body "Sorry, an error occured."}))))
+
 (defn wrap-json
   [handler]
   (fn [req]
@@ -85,8 +99,9 @@
           finish (System/currentTimeMillis)
           total (- finish start)]
       (print
-       (format "%s: request %s %s (%dms)\n" (current-ts-str)
-               request-method uri total))
+       (format "%s: %s %d %s (%dms)\n" (current-ts-str)
+               (name request-method) (:status resp) uri total))
+      (flush)
       resp)))
 
 (defn wrap-reload-in-dev [handler reload-meta]

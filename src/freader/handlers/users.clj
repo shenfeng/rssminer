@@ -2,7 +2,6 @@
   (:use  [ring.util.response :only [redirect]]
          clojure.contrib.trace
          [sandbar.stateful-session :only [session-put!]])
-
   (:require [freader.db.user :as db]
             [freader.views.users :as view]))
 

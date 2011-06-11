@@ -7,11 +7,12 @@
                          [params :only [wrap-params]]
                          [file :only [wrap-file]]
                          [session :only [wrap-session]])
-        (freader [middleware :only (wrap-reload-in-dev
+        (freader [middleware :only (wrap-auth
                                     wrap-content-type
                                     wrap-cache-header
-                                    wrap-auth
+                                    wrap-failsafe
                                     wrap-request-logging
+                                    wrap-reload-in-dev
                                     JPOST JPUT JDELETE JGET)]
                  [database :only [use-psql-database!]])
         [sandbar.stateful-session :only [wrap-stateful-session]])
@@ -68,7 +69,8 @@
                  wrap-file-info
                  wrap-content-type
                  wrap-request-logging
-                 (wrap-reload-in-dev reload-meta)))
+                 (wrap-reload-in-dev reload-meta)
+                 wrap-failsafe))
 
 (defonce server (atom nil))
 
