@@ -3,9 +3,9 @@
   (:use [freader.routes :only [app]]
         [sandbar.stateful-session :only [session-get]]))
 
-(def test-user {:name "test-user"
+(def test-user {:name "feng"
                 :password "123456"
-                :email "test@user.com"})
+                :email "shenedu@gmail.com"})
 
 (def test-rss-str
   (slurp (-> (clojure.lang.RT/baseLoader)

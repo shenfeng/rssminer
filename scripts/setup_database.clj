@@ -2,7 +2,7 @@
   (:use (freader [test-util :only [exec-prepared-sqlfile get-con exec-stats]]
                   [test-common :only [test-user]]
                   [database :only [use-psql-database! close-global-psql-factory]]
-                  [test-common :only [mock-http-get test-user auth-app]])
+                  [test-common :only [test-user auth-app]])
         [freader.db.user :only [create-user]]
         clojure.contrib.json))
 
@@ -17,7 +17,7 @@
             "http://weblogs.asp.net/scottgu/atom.aspx"])
 
 (defn setup []
-  (let [db-name "feedreader"]
+  (let [db-name "freader"]
     (with-open [con (get-con "postgres")]
       (exec-stats con
                   (str "DROP DATABASE IF EXISTS " db-name)

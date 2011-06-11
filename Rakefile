@@ -1,6 +1,7 @@
 require 'rake/clean'
 require 'tempfile'
 require 'rubygems'
+require 'date'
 require 'closure-compiler'
 task :default => :test
 
@@ -11,6 +12,10 @@ def get_file_as_string(filename)
     data += line
   end
   return data
+end
+
+def get_version()
+  return get_file_as_string('deploy/version.conf').gsub(/#.+/,"").strip
 end
 
 def compress(type, source, target)
@@ -31,8 +36,11 @@ end
 desc "Prepare for test"
 task :prepare => ["css:compile", "js:tmpls"]
 
-desc "Prepare fro production"
-task :prepare_prod => ["css:compress", "js:minify"]
+desc "Prepare for production"
+task :prepare_prod => ["css:compress", "js:minify"] do
+  sh "find src/templates -type f|xargs -I {} sed -i \"s/{VERSION}/#{get_version}/g\" {}"
+  sh "find public/css -type f|xargs -I {} sed -i \"s/{VERSION}/#{get_version}/g\" {}"
+end
 
 desc "Run development server"
 task :run => ["prepare"] do
@@ -44,8 +52,31 @@ task :run_prod => ["prepare_prod"] do
   sh 'scripts/run --profile production'
 end
 
+task :inc_version do
+  version = Integer(get_version)+1
+  File.open("deploy/version.conf", 'w') {
+    |f| f.write("#{version} # #{DateTime.now}\n")
+  }
+end
+
+desc 'Deploy to production'
+task :deploy_prod => [:inc_version, :clean, :prepare_prod, :test] do
+  sh "scripts/deploy production"
+  sh "git tag -a deployed-v#{get_version} -m ''"
+end
+
+desc 'Deploy to staging'
+task :deploy_staging => [:clean, :prepare_prod, :test] do
+  sh "scripts/deploy staging"
+end
+
+desc "Run unit test"
+task :test do
+  sh 'lein test'
+end
+
 namespace :js do
-  CLEAN.include('public/js/freader/tmpls.js','public/js/freader.min.js')
+  CLEAN.include('public/js/freader/tmpls.js','public/js/freader*min.js')
   desc 'start jstestdriver server'
   task :startserver do
     sh 'java -jar scripts/JsTestDriver-1.3.2.jar --port 9876 --browser `which firefox`'
@@ -58,31 +89,28 @@ namespace :js do
 
   desc 'Combine all js into one, minify it using google closure'
   task :minify => :tmpls do
-    print "Running closure against all js file, please wait....\n"
+    versioned = "public/js/freader-#{get_version}-min.js"
+    print "Generating #{versioned}, please wait....\n"
+
     files = FileList['public/js/jquery-1.6.1.js',
                      'public/js/underscore.js',
                      'public/js/backbone.js',
                      'public/js/handlebars-1.0.0.beta.2.js',
                      'public/js/freader/tmpls.js',
                      'public/js/freader/application.js']
-    src = '';
     # closure = Closure::Compiler.new(:compilation_level =>
     #                                 'ADVANCED_OPTIMIZATIONS')
     closure = Closure::Compiler.new()
-
+    js_src = '';
     files.each do |f|
-      src += get_file_as_string(f);
+      js_src += get_file_as_string(f);
     end
-    minified = closure.compile(src);
-    File.open("public/js/freader.min.js", 'w') {|f| f.write(minified)}
-    # minified = closure.compile(src);
-    # File.open("/tmp/freader.js", 'w') {|f| f.write(src)}
-
+    File.open(versioned, 'w') {|f| f.write(closure.compile(js_src))}
   end
 
   desc "Generate tmpls.js"
   task :tmpls => ["html:compress"] do
-    print "Generate tmpls.js, please wait....\n"
+    print "Generating tmpls.js, please wait....\n"
     html_tmpls = FileList['src/templates/js-tmpls/**/*.*']
     data = "(function(){var tmpls = {};"
     html_tmpls.each do |f|
@@ -108,8 +136,9 @@ namespace :css do
   desc 'Compile scss, Compress generated css'
   task :compress do
     scss = FileList['scss/**/*.scss'].exclude('scss/**/_*.scss')
+    versioned = "-#{get_version}-min.css"
     scss.each do |source|
-      target = source.sub(/scss$/, 'css').sub(/^scss/, 'public/css')
+      target = source.sub(/\.scss$/, versioned).sub(/^scss/, 'public/css')
       sh "sass -t compressed --cache-location /tmp #{source} #{target}"
     end
   end

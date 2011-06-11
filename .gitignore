@@ -11,6 +11,6 @@ bin/
 public/css/
 src/templates/
 public/js/freader/tmpls.js
-public/js/freader.min.js
+public/js/freader*min.js
 .idea/
 .emacs.desktop*

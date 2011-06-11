@@ -6,4 +6,4 @@
 (deftest test-index-page
   (let [resp (test-app {:uri "/"
                         :request-method :get})]
-    (is (= 200 (:status resp)))))
+    (is (= 302 (:status resp)))))

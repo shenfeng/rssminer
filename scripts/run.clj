@@ -7,7 +7,7 @@
     "start server"
     [[port "Which port server will listen. Take from input->env(READER_PORT)->8000"]
      [db-host "Db host, Take from input->env(READER_DB_HOST)->localhost"]
-     [db-name "Which database to use" "feedreader"]
+     [db-name "Which database to use" "freader"]
      [db-user "User name for database login" "postgres"]
      [db-password "Password for database login" "123456"]
      [profile "Configuration profile (production or development)" "development"]]

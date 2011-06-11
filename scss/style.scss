@@ -27,10 +27,10 @@
         font-weight: bold;
         padding: 0.2m 1em;
     }
-    
+
 }
 .icon {
-    background: url("/imgs/sprite.png") no-repeat scroll 0 0 transparent;
+    background: url("/imgs/sprite.png?{VERSION}") no-repeat scroll 0 0 transparent;
     cursor: pointer;
     height: 18px;
     left: 0;
@@ -49,7 +49,7 @@
     cursor: default;
     font-weight: bold;
     color: #000;
-    
+
 }
 // color copyied from stackoverflow
 .filter {
@@ -79,7 +79,7 @@ header {
     h1 { margin: 4px 0 }
     a { color: #303030; }
     .sub { font-style: italic;  font-size: 14px;  }
-            
+
 }
 
 #main { margin: 10px 0; }

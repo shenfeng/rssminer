@@ -1,0 +1,50 @@
+#!/bin/bash
+
+set -e
+
+# sudo adduser deploy && copy authen key
+# deploy  ALL = NOPASSWD: /bin/cp, /bin/mkdir, /sbin/restart, /bin/readlink, /bin/chown, /sbin/start, /usr/sbin/service, /bin/ln
+
+# readlink in MacOSX behaves differently
+READLINK=readlink
+if which greadlink > /dev/null; then
+    READLINK=greadlink
+fi
+
+case $1 in
+    staging)
+        FRONTEND_HOST="192.168.1.11"
+        ;;
+    production)
+        FRONTEND_HOST="reader.shenfeng.me"
+        ;;
+    *)
+        echo "staging or production"
+        exit
+        ;;
+esac
+
+ABSOLUTE_PATH=$(${READLINK} -f $0)
+FREADER_HOME="${ABSOLUTE_PATH%/*/*}"
+DEPLOYMENT_USER="deploy"
+SSH_TARGET="${DEPLOYMENT_USER}@${FRONTEND_HOST}"
+TARGET_DIR="/var/www/freader"
+
+function remote_run {
+    ssh "${SSH_TARGET}" "$1"
+}
+
+# Create the directory if this is the first deployment.
+remote_run "sudo mkdir -p ${TARGET_DIR} && sudo chown deploy ${TARGET_DIR}"
+
+rsync --rsh='ssh' -vr --delete --delete-excluded \
+    --exclude-from deploy/exclude.txt \
+    "${FREADER_HOME}/" "${SSH_TARGET}:${TARGET_DIR}/"
+
+remote_run "sudo cp ${TARGET_DIR}/deploy/freader.conf /etc/init/"
+remote_run "sudo cp ${TARGET_DIR}/deploy/freader /etc/nginx/sites-available"
+remote_run "sudo cp ${TARGET_DIR}/deploy/gzip.conf /etc/nginx/conf.d"
+remote_run "cd /etc/nginx/sites-enabled  && sudo ln -f -s /etc/nginx/sites-available/freader"
+
+remote_run "sudo service nginx restart"
+remote_run "sudo restart freader || sudo start freader"

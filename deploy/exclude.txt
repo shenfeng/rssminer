@@ -1,0 +1,15 @@
+.git
+.gitignore
+.gitmodules
+.idea
+/build
+/classes
+/deploy/exclude.txt
+/lib/dev
+/project.clj
+/scss
+/templates
+/test
+README
+Rakefile
+jsTestDriver.conf
