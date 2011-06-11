@@ -1,50 +1,57 @@
-(function (window, document, undefined) {
-  var Item = Backbone.Model.extend({
-    parse: function(resp){
-      console.log("1111");
-      console.log(resp);
-    }
-  });
-
-  var ItemList = Backbone.Collection.extend({
-    model: Item,
-    url:"/api/feeds/1"
-  });
-
-  var Items = new ItemList;
-
-  var ItemView = Backbone.View.extend({
-    tagName: "ol",
-    className: "item"
-  });
-
-  var AppView = Backbone.View.extend({
-    initialize: function() {
-      this.model = Items;
-    },
-    alive: function() {
-      this.model.fetch();
-    }
-
-  });
-  window.Freader = $.extend(
-    window.Freader, {
-      AppView: AppView,
-      Items: Items,
-      ItemView: ItemView
-    });
-})(this, this.document);
-
 $(function () {
 
-  Handlebars.registerHelper('feeditems', function(items, fn) {
-    console.log(items);
-    var out = "<ul>";
-
-    for (var i = 0, l = items.length; i < l; i++) {
-      out = out + "<li>" + fn(items[i]) + "</li>";
+  var SubscriptionView = Backbone.View.extend({
+    tagName: "div",
+    id: 'content',
+    template: Freader.tmpls["subscripton"],
+    events: {
+      "click .collapsed .entry-main": "toggleExpandFeed"
+    },
+    initialize: function () {
+      _.bindAll(this, "render", "toggleExpandedFeed");
+    },
+    toggleExpandFeed: function(e) {
+      $(e.currentTarget).parents('.entry').toggleClass("expanded");
+    },
+    render: function () {
+      var data = this.model.toJSON();
+      $(this.el).html(this.template(data));
+      return this;
     }
-
-    return out + "</ul>";
   });
+
+  $.get("/api/overview",function(data) {
+    var nav_template = Freader.tmpls["nav_template"];
+    $("nav").append(nav_template(data));
+  });
+
+  var Router = Backbone.Router.extend({
+    routes:{
+      "": "index",
+      "/subscription/:id": "subscription"
+    },
+    index: function () {
+      window.location.hash = "/subscription/1";
+    },
+    subscription: function(id) {
+      $.get('/api/feeds/'+id, function(data) {
+        var model = new Backbone.Model(data),
+            view = new SubscriptionView({model : model});
+        $("#content").replaceWith(view.render().el);
+        $(window).resize();
+      });
+    }
+  });
+
+  var router = new Router();
+  Backbone.history.start();
+
+  function layout() {
+    var $entries = $("#entries"),
+        $nav_tree = $(".nav-tree");
+    $entries.height($(window).height() - $entries.offset().top - 20);
+    $nav_tree.height($(window).height() - $nav_tree.offset().top - 20);
+  }
+
+  $(window).resize(_.debounce(layout, 100));
 });

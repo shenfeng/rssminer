@@ -7,7 +7,7 @@
       {{#each subscriptions}}
       <li class="sub">
         <img src="{{favicon}}" class="favicon"/>
-        <a href="#">{{title}} </a>
+        <a href="#/subscription/{{id}}">{{title}} </a>
       </li>
       {{/each}}
     </ul>
