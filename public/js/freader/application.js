@@ -33,8 +33,9 @@ $(function () {
   });
 
   $.get("/api/overview",function(data) {
-    var nav_template = Freader.tmpls.nav_template;
-    $("nav").append(nav_template(data));
+    var template = Freader.tmpls.nav_template;
+    // console.log(template);
+    $("nav").append(template(data));
   });
 
   var Router = Backbone.Router.extend({
@@ -61,8 +62,12 @@ $(function () {
   function layout() {
     var $entries = $("#entries"),
         $nav_tree = $(".nav-tree");
-    $entries.height($(window).height() - $entries.offset().top - 20);
-    $nav_tree.height($(window).height() - $nav_tree.offset().top - 20);
+    if($entries.length > 0) {
+      $entries.height($(window).height() - $entries.offset().top - 20);
+    }
+    if($nav_tree.length > 0) {
+      $nav_tree.height($(window).height() - $nav_tree.offset().top - 20);
+    }
   }
 
   $(window).resize(_.debounce(layout, 100));
