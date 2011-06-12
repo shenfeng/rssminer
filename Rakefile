@@ -37,10 +37,7 @@ desc "Prepare for test"
 task :prepare => ["css:compile", "js:tmpls"]
 
 desc "Prepare for production"
-task :prepare_prod => ["css:compress", "js:minify"] do
-  sh "find src/templates -type f|xargs -I {} sed -i \"s/{VERSION}/#{get_version}/g\" {}"
-  sh "find public/css -type f|xargs -I {} sed -i \"s/{VERSION}/#{get_version}/g\" {}"
-end
+task :prepare_prod => ["css:compress", "js:minify"]
 
 desc "Run development server"
 task :run => ["prepare"] do
@@ -140,6 +137,7 @@ namespace :css do
     scss.each do |source|
       target = source.sub(/\.scss$/, versioned).sub(/^scss/, 'public/css')
       sh "sass -t compressed --cache-location /tmp #{source} #{target}"
+      sh "sed -i \"s/{VERSION}/#{get_version}/g\" #{target}"
     end
   end
 end
@@ -157,8 +155,8 @@ namespace :html do
   html_triples.each do |src, tgt, dir|
     directory dir
     file tgt => [src, dir] do
-      # sh "cp #{src} #{tgt}"
       sh "java -jar scripts/htmlcompressor-1.3.1.jar --charset utf8 #{src} -o #{tgt}"
+      sh "sed -i \"s/{VERSION}/#{get_version}/g\" #{tgt}"
     end
   end
 

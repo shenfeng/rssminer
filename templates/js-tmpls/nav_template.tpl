@@ -6,7 +6,11 @@
     <ul >
       {{#each subscriptions}}
       <li class="sub">
+        {{#if favicon}}
         <img src="{{favicon}}" class="favicon"/>
+        {{else}}
+        <img src="/imgs/16px-feed-icon.png?{VERSION}" class="favicon"/>
+        {{/if}}
         <a href="#/subscription/{{id}}">{{title}} </a>
       </li>
       {{/each}}
