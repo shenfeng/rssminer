@@ -18,7 +18,7 @@
                       :categories (or
                                    (db/fetch-categories user-id (:id f)) [])))
                   feeds)]
-       {:id 1
+       {:id subscription-id
         :title (:title subscription)
         :description (:description subscription)
         :alternate (:alternate subscription)

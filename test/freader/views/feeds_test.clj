@@ -12,7 +12,7 @@
                        (f))))
 
 (def add-req {:uri "/api/feeds"
-              :request-method :put
+              :request-method :post
               :body (json-str {:link "http://link-to-scottgu's rss"})})
 
 (deftest test-add-feedsource

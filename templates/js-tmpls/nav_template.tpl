@@ -11,7 +11,7 @@
         {{else}}
         <img src="/imgs/16px-feed-icon.png?{VERSION}" class="favicon"/>
         {{/if}}
-        <a href="#/subscription/{{id}}">{{title}} </a>
+        <a id="subs-{{id}}" href="#/subscription/{{id}}">{{title}} </a>
       </li>
       {{/each}}
     </ul>

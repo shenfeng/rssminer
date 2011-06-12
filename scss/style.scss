@@ -89,6 +89,28 @@ nav {
     float: left;
     li, ul { margin: 0; padding: 0; list-style: none; }
 }
+#add-subscription {
+    position: relative;
+    span {
+        padding: 10px;
+        display: block;
+        cursor: pointer;
+        font-weight: bold;
+        background: #EEF0F4;
+        @include border-radius (4px);
+    }
+    .form {
+        background:-webkit-gradient(linear,0% 0,5% 100%,from(#f4f9fb),to(#fff));
+        background:-moz-linear-gradient(100% 100% 107deg,#fff,#f4f9fb);
+        @include border-radius (4px);
+        padding: 6px;
+        display: none;
+        position: absolute;
+        left: 20px;
+        z-index: 20;
+        input { width: 350px; padding: 4px;}
+    }
+}
 
 .nav-tree {
     overflow-y: scroll;
@@ -108,7 +130,10 @@ nav {
         a.selected { background: $selected_color; }
     }
     .sub a { text-indent: 20px;}
-    .favicon { position: absolute; width: 14px; height: 14px; padding: 3px; left: 20px; }
+    .favicon {
+        position: absolute; width: 14px;
+        height: 14px; padding: 3px; left: 20px;
+    }
     li.unread > a { color: black; font-weight: bold; }
     .toggle { background-position: 9px -58px;  }
     .collapsed {

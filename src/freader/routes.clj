@@ -40,7 +40,7 @@
     (apply merge src-ns-map)))
 
 (defroutes api-routes
-  (JPUT "/feeds" [] feed/add-subscription)
+  (JPOST "/feeds" [] feed/add-subscription)
   (JGET "/feeds/:subscription-id" [] feed/get-subscription)
   (JGET "/overview" [] feed/get-overview))
 
