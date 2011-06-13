@@ -10,7 +10,7 @@
   <li class="entry">
     <div class="collapsed">
       <span class="icon"></span>
-      <div class="entry-date">{{published_ts}}</div>
+      <div class="entry-date">{{ymdate published_ts}}</div>
       <div class="entry-main">
         <h4>{{title}}</h4> -
         <span class="snippet">{{snippet}}</span>

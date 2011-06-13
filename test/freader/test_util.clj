@@ -4,6 +4,7 @@
   (:use [freader.database :only [close-global-psql-factory
                                   use-psql-database!]]
         [freader.db.user :only [create-user]]
+        [clojure.java.io :only [resource]]
         [freader.test-common :only [test-user]]))
 
 (defn- gen-random [num]
@@ -23,11 +24,10 @@
     (.executeBatch stmt)))
 
 (defn exec-prepared-sqlfile [tmpdb]
-  (let [sql (slurp (-> (clojure.lang.RT/baseLoader)
-                       (.getResourceAsStream "feedreader.sql")))
-        stats (filter (complement str/blank?)
-                      ;; use ----(4) to seperate sql statement
-                      (str/split sql #"\s*----*\s*"))]
+  (let [stats (filter
+               (complement str/blank?)
+               (str/split ;; use ----(4) to seperate sql statement
+                (slurp (resource "feedreader.sql")) #"\s*----*\s*"))]
     (with-open [con (get-con tmpdb)]
       (apply exec-stats con stats))))
 

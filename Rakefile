@@ -93,6 +93,7 @@ namespace :js do
                      'public/js/underscore.js',
                      'public/js/backbone.js',
                      'public/js/handlebars-1.0.0.beta.2.js',
+                     'public/js/freader/util.js',
                      'public/js/freader/tmpls.js',
                      'public/js/freader/application.js']
     # closure = Closure::Compiler.new(:compilation_level =>

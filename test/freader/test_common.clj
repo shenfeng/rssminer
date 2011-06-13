@@ -1,6 +1,7 @@
 (ns freader.test-common
   (:require [freader.config])
   (:use [freader.routes :only [app]]
+        [clojure.java.io :only [resource]]
         [sandbar.stateful-session :only [session-get]]))
 
 (def test-user {:name "feng"
@@ -8,8 +9,7 @@
                 :email "shenedu@gmail.com"})
 
 (def test-rss-str
-  (slurp (-> (clojure.lang.RT/baseLoader)
-             (.getResourceAsStream "test-rss.xml"))))
+  (slurp (resource "test-rss.xml")))
 
 (defn mock-http-get [& args]
   {:body test-rss-str})

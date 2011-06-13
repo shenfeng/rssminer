@@ -1,103 +1,31 @@
 $(function () {
 
-  var nofity = (function() {
-    var $nofity = $("#notification"),
-        $p = $("p",$nofity),
-        message,
-        count = 0;
-    function msg(a, r, msg) {
-      if(message !== msg){
-        count = 1;
-        message = msg;
-        $p.html(msg);
-        $nofity.removeClass(r).addClass(a)
-          .css({
-            marginLeft: -$p.width()/2,
-            visibility: 'visible'
-          });
-      }else {
-        count++;
-      }
-    }
+  var d_selected = 'selected',
+      freader = window.Freader,
+      tmpls = freader.tmpls,
+      util = freader.util;
 
-    function hide (msg) {
-      if(msg === message){
-        count--;
-      }
-      if( !msg || count === 0) {
-        _.delay( function (){
-          message = null;
-          $nofity.css('visibility', 'hidden');
-        }, 2000);
-      }
-    }
-    return {
-      msg: _.bind(msg, null, 'message', 'error'),
-      error: _.bind(msg, null, 'error', 'message'),
-      hide: hide
-    };
-
-  })();
-
-  var ajax = (function() {
-    var loading = 'Loading...';
-    function handler(a) {
-      return a.success(function () {
-        nofity.hide(loading);
-      });
-    };
-    function get(url, success){
-      nofity.msg(loading);
-      return handler($.ajax({
-        url: url,
-        success: success
-      }));
-    }
-    function jpost(url, data){
-      nofity.msg(loading);
-      var ajax = $.ajax({
-        url: url,
-        type: 'POST',
-        datatype: 'json',
-        contentType: 'application/json',
-        data: JSON.stringify(data)
-      });
-      return handle(ajax);
-    }
-    return {
-      get: get,
-      jpost: jpost
-    };
-  })();
-
-
-  var d_selected = "selected";
   var SubscriptionView = Backbone.View.extend({
-    tagName: "div",
+    tagName: 'div',
     id: 'content',
-    template: Freader.tmpls.subscripton,
+    template: tmpls.subscripton,
     events: {
-      "click .collapsed .entry-main": "toggleExpandFeed"
+      'click .collapsed .entry-main': 'toggleExpandFeed'
     },
     initialize: function () {
-      _.bindAll(this, "render", "toggleExpandFeed");
+      _.bindAll(this, 'render', 'toggleExpandFeed');
     },
     toggleExpandFeed: function(e) {
-      var $entry = $(e.currentTarget).parents(".entry"),
-          offset = $entry.offset().top - $(".entry:first").offset().top;
-      $(".entry").not($entry).removeClass("expanded");
-      $entry.toggleClass("expanded");
-      $("#entries").scrollTop(offset);
+      var $entry = $(e.currentTarget).parents('.entry'),
+          offset = $entry.offset().top - $('.entry:first').offset().top;
+      $('.entry').not($entry).removeClass('expanded');
+      $entry.toggleClass('expanded');
+      $('#entries').scrollTop(offset);
     },
     render: function () {
       var data = this.model.toJSON();
       _.each(data.items, function(item) {
-        var summary = item.summary,
-            snippet = summary && summary.replace(/<[^<>]+>/g, "")
-              .replace(/\s+/g, " ")
-              .replace(/&[^&;]+;/g,"")
-              .slice(0,200);
-        item.snippet = snippet;
+        item.snippet = util.snippet(item.summary);
       });
       $(this.el).html(this.template(data));
       return this;
@@ -105,7 +33,7 @@ $(function () {
   });
 
   var Magic = (function() {
-    var fdata;
+    var fdata;                  // this `class` manipulate
     function subs_comp(asub, bsub){
       return asub.title.toLowerCase() < bsub.title.toLowerCase();
     }
@@ -121,7 +49,7 @@ $(function () {
         });
       });
       if(!ret) {
-        throw new Error("get by id " + id + " fail");
+        throw new Error('get by id ' + id + ' fail');
       }
       return ret;
     }
@@ -132,13 +60,13 @@ $(function () {
     function showSubscription (data) {
       var model = new Backbone.Model(data),
           view = new SubscriptionView({model : model});
-      $("#content").replaceWith(view.render().el);
+      $('#content').replaceWith(view.render().el);
       $(window).resize();
     }
     function showById (id) {
       var saved = getById(id);
       if(!saved.items) {
-        ajax.get('/api/feeds/'+id, function(data) {
+        util.ajax.get('/api/feeds/'+id, function(data) {
           showSubscription(data);
           addFeeds(data);
         });
@@ -152,18 +80,17 @@ $(function () {
         _.each(fdata, function(group) {
           group.subscriptions.sort(subs_comp);
         });
-        var nav = Freader.tmpls.nav_template(fdata),
-            $nav = $(".nav-tree");
-        $nav.length > 0 ? $nav.replaceWith(nav) : $("nav").append(nav);
-        $("a", $nav).click(function() {
-          $(".selected").removeClass(d_selected);
+        var nav = tmpls.nav_template(fdata),
+            $nav = $('.nav-tree');
+        $nav.length > 0 ? $nav.replaceWith(nav) : $('nav').append(nav);
+        $('a', $nav).click(function() {
+          $('.selected').removeClass(d_selected);
           $(this).addClass(d_selected);
         });
       }
     }
     function init() {
-      ajax.get("/api/overview",function(data) {
-        window.Freader.data = data;
+      util.ajax.get('/api/overview',function(data) {
         fdata = data;
         reShowNav();
         new Router();
@@ -171,8 +98,8 @@ $(function () {
       });
     }
     function addSubscription (link) {
-      var ajax=  ajax.jpost("/api/feeds", {link: link});
-      ajax.success(function(data, status, xhr) {
+      var post = util.ajax.jpost('/api/feeds', {link: link});
+      post.success(function(data, status, xhr) {
         var ungroup = 'freader_ungrouped',
             group =  _.detect(fdata, function(e) {
               return e.group_name === ungroup;
@@ -186,7 +113,7 @@ $(function () {
           });
         }
         reShowNav();
-        window.location.hash = "/subscription/" + data.id;
+        window.location.hash = '/subscription/' + data.id;
       });
     }
     return {
@@ -198,22 +125,22 @@ $(function () {
 
   var Router = Backbone.Router.extend({
     routes:{
-      "": "index",
-      "/subscription/:id": "subscription"
+      '': 'index',
+      '/subscription/:id': 'subscription'
     },
     index: function () {
-      window.location.hash = "/subscription/1";
+      window.location.hash = '/subscription/1';
     },
     subscription: function(id) {
       Magic.showById(+id);
-      $(".selected").removeClass(d_selected);
-      $("#subs-" + id).addClass(d_selected);
+      $('.selected').removeClass(d_selected);
+      $('#subs-' + id).addClass(d_selected);
     }
   });
 
   function layout() {
-    var $entries = $("#entries"),
-        $nav_tree = $(".nav-tree");
+    var $entries = $('#entries'),
+        $nav_tree = $('.nav-tree');
     if($entries.length > 0) {
       $entries.height($(window).height() - $entries.offset().top - 20);
     }
@@ -225,9 +152,9 @@ $(function () {
   $(window).resize(_.debounce(layout, 100));
 
   (function() {
-    var $form = $("#add-subscription .form"),
-        $input = $("input",$form);
-    $("#add-subscription span").click(function() {
+    var $form = $('#add-subscription .form'),
+        $input = $('input',$form);
+    $('#add-subscription span').click(function() {
       $form.toggle();
       $input.focus();
     });
@@ -235,7 +162,7 @@ $(function () {
       if(e.which === 13) {
         Magic.addSubscription($input.val());
         $form.hide();
-        $input.val("");
+        $input.val('');
       }
     });
   })();

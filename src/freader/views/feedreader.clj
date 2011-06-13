@@ -3,8 +3,7 @@
   (:require [net.cgrand.enlive-html :as html]
             [freader.config :as config]))
 
-(let [snippet (html/snippet
-               "templates/index.html" [:div#main] []
+(let [snippet (html/snippet "templates/index.html" [:div#main] []
                [(html/attr= :data-profile "development")]
                (if (config/in-dev?) identity (html/substitute ""))
                [(html/attr= :data-profile "production")]
@@ -12,13 +11,10 @@
   (defn index-page []
     (apply str (layout (snippet)))))
 
-(let [snippet (html/snippet
-               "templates/demo.html" [:div#main] [])]
+(let [snippet (html/snippet "templates/demo.html" [:div#main] [])]
   (defn demo-page []
     (apply str (layout (snippet)))))
 
-(let [snippet (html/snippet
-               "templates/expe.html" [:div#main] [])]
+(let [snippet (html/snippet "templates/expe.html" [:div#main] [])]
   (defn expe-page []
     (apply str (layout (snippet)))))
-

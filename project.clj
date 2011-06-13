@@ -1,4 +1,4 @@
-(defproject clj-rss "1.0.0-SNAPSHOT"
+(defproject freader "1.0.0-SNAPSHOT"
   :description "A feed reader written in clojure"
   :dependencies [[org.clojure/clojure "1.2.0"]
                  [org.clojure/clojure-contrib "1.2.0"]

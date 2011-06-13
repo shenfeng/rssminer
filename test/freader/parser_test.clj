@@ -14,7 +14,7 @@
         <link>http://www.someexamplerssdomain.com/main.html</link>
         <lastBuildDate>Mon, 06 Sep 2010 00:01:00 +0000 </lastBuildDate>
         <pubDate>Mon, 06 Sep 2009 16:45:00 +0000 </pubDate>
- 
+
         <item>
                 <title>Example entry</title>
                 <description>Here is some text containing an interesting description.</description>
@@ -22,7 +22,7 @@
                 <guid>unique string per item</guid>
                 <pubDate>Mon, 06 Sep 2009 16:45:00 +0000 </pubDate>
         </item>
- 
+
 </channel>
 </rss>")
 
@@ -39,7 +39,7 @@
                 <name>John Doe</name>
                 <email>johndoe@example.com</email>
         </author>
- 
+
         <entry>
                 <title>Atom-Powered Robots Run Amok</title>
                 <link href=\"http://example.org/2003/12/13/atom03\" />

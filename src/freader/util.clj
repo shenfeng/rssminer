@@ -19,9 +19,12 @@
       (catch NoSuchAlgorithmException e
         (throw (new RuntimeException e))))))
 
-(let [f (SimpleDateFormat. "EEE, dd MMM yyyy HH:mm:ss Z")]
-  (defn- write-json-date [d ^PrintWriter out]
-    (.print out (str \" (.format f d) \"))))
+;; (let [f (SimpleDateFormat. "EEE, dd MMM yyyy HH:mm:ss Z")]
+;;   (defn- write-json-date [d ^PrintWriter out]
+;;     (.print out (str \" (.format f d) \"))))
+
+(defn- write-json-date [^java.util.Date d ^PrintWriter out]
+  (.print out (.getTime d)))
 
 (extend java.util.Date Write-JSON
         {:write-json write-json-date})
