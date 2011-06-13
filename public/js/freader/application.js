@@ -1,4 +1,76 @@
 $(function () {
+
+  var nofity = (function() {
+    var $nofity = $("#notification"),
+        $p = $("p",$nofity),
+        message,
+        count = 0;
+    function msg(a, r, msg) {
+      if(message !== msg){
+        count = 1;
+        message = msg;
+        $p.html(msg);
+        $nofity.removeClass(r).addClass(a)
+          .css({
+            marginLeft: -$p.width()/2,
+            visibility: 'visible'
+          });
+      }else {
+        count++;
+      }
+    }
+
+    function hide (msg) {
+      if(msg === message){
+        count--;
+      }
+      if( !msg || count === 0) {
+        _.delay( function (){
+          message = null;
+          $nofity.css('visibility', 'hidden');
+        }, 2000);
+      }
+    }
+    return {
+      msg: _.bind(msg, null, 'message', 'error'),
+      error: _.bind(msg, null, 'error', 'message'),
+      hide: hide
+    };
+
+  })();
+
+  var ajax = (function() {
+    var loading = 'Loading...';
+    function handler(a) {
+      return a.success(function () {
+        nofity.hide(loading);
+      });
+    };
+    function get(url, success){
+      nofity.msg(loading);
+      return handler($.ajax({
+        url: url,
+        success: success
+      }));
+    }
+    function jpost(url, data){
+      nofity.msg(loading);
+      var ajax = $.ajax({
+        url: url,
+        type: 'POST',
+        datatype: 'json',
+        contentType: 'application/json',
+        data: JSON.stringify(data)
+      });
+      return handle(ajax);
+    }
+    return {
+      get: get,
+      jpost: jpost
+    };
+  })();
+
+
   var d_selected = "selected";
   var SubscriptionView = Backbone.View.extend({
     tagName: "div",
@@ -66,7 +138,7 @@ $(function () {
     function showById (id) {
       var saved = getById(id);
       if(!saved.items) {
-        $.get('/api/feeds/'+id, function(data) {
+        ajax.get('/api/feeds/'+id, function(data) {
           showSubscription(data);
           addFeeds(data);
         });
@@ -90,7 +162,7 @@ $(function () {
       }
     }
     function init() {
-      $.get("/api/overview",function(data) {
+      ajax.get("/api/overview",function(data) {
         window.Freader.data = data;
         fdata = data;
         reShowNav();
@@ -99,13 +171,7 @@ $(function () {
       });
     }
     function addSubscription (link) {
-      var ajax= $.ajax({
-        url: "/api/feeds",
-        type: 'POST',
-        datatype: 'json',
-        contentType: 'application/json',
-        data: JSON.stringify({link: link})
-      });
+      var ajax=  ajax.jpost("/api/feeds", {link: link});
       ajax.success(function(data, status, xhr) {
         var ungroup = 'freader_ungrouped',
             group =  _.detect(fdata, function(e) {

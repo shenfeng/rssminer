@@ -70,6 +70,23 @@
     color: #E0EAF1;
 }
 
+#notification {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    z-index: 1000;
+    font-weight: bold;
+    font-size: 13px;
+    overflow: hidden;
+    p {
+        @include border-radius(4px);
+        padding: 5px;
+        margin: 0;
+    }
+    .message { background: yellow;  }
+    .error { background: #FDD };
+    visibility: hidden;
+}
 
 header {
     padding: 0.5em;
@@ -79,7 +96,6 @@ header {
     h1 { margin: 4px 0 }
     a { color: #303030; }
     .sub { font-style: italic;  font-size: 14px;  }
-
 }
 
 #main { margin: 10px 0; }
