@@ -1,5 +1,12 @@
-$(function(){
-  Handlebars.registerHelper('ymdate', function(context, block){
+// notification depend on dom
+window.$(function(){
+
+  var handlebars = window.Handlebars,
+      $ = window.$,
+      _ = window._,
+      JSON = window.JSON;
+
+  handlebars.registerHelper('ymdate', function(context, block){
     var d = new Date(context),
         m = d.getMonth() + 1,
         day = d.getDay();
@@ -8,11 +15,12 @@ $(function(){
             day < 10 ? '0' + day : day].join('/');
   });
 
-  var nofity = (function() {
+  var notification = (function() {
     var $nofity = $('#notification'),
         $p = $('p',$nofity),
         message,
         count = 0;
+
     function msg(a, r, msg) {
       if(message !== msg){
         count = 1;
@@ -44,25 +52,24 @@ $(function(){
       error: _.bind(msg, null, 'error', 'message'),
       hide: hide
     };
-
   })();
 
   var ajax = (function() {
     var loading = 'Loading...';
-    function handler(a) {
-      return a.success(function () {
-        nofity.hide(loading);
+    function handler(ajax) {
+      return ajax.success(function () {
+        notification.hide(loading);
       });
     };
     function get(url, success){
-      nofity.msg(loading);
+      notification.msg(loading);
       return handler($.ajax({
         url: url,
         success: success
       }));
     }
     function jpost(url, data){
-      nofity.msg(loading);
+      notification.msg(loading);
       var ajax = $.ajax({
         url: url,
         type: 'POST',
@@ -87,9 +94,10 @@ $(function(){
 
   // export
   window.Freader = $.extend(window.Freader, {
+    ajax: ajax,
     util: {
-      ajax: ajax,
-      snippet: snippet
+      snippet: snippet,
+      removeClass: function (c) { return $('.' + c).removeClass(c); }
     }
   });
 });

@@ -95,6 +95,7 @@ namespace :js do
                      'public/js/handlebars-1.0.0.beta.2.js',
                      'public/js/freader/util.js',
                      'public/js/freader/tmpls.js',
+                     'public/js/freader/magic.js',
                      'public/js/freader/application.js']
     # closure = Closure::Compiler.new(:compilation_level =>
     #                                 'ADVANCED_OPTIMIZATIONS')
