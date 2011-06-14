@@ -89,7 +89,7 @@
                      (handler req))
           status (:status resp-obj)]
       (if (number? status)
-        (json-response status (:body resp-obj))
+        (json-response status (dissoc resp-obj :status))
         (json-response 200 resp-obj)))))
 
 (defn wrap-request-logging [handler]

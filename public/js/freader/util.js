@@ -15,13 +15,13 @@ window.$(function(){
             day < 10 ? '0' + day : day].join('/');
   });
 
-  var notification = (function() {
+  var notif = (function(){
     var $nofity = $('#notification'),
-        $p = $('p',$nofity),
+        $p = $('p', $nofity),
         message,
         count = 0;
 
-    function msg(a, r, msg) {
+    function msg(a, r, msg){
       if(message !== msg){
         count = 1;
         message = msg;
@@ -31,17 +31,19 @@ window.$(function(){
             marginLeft: -$p.width()/2,
             visibility: 'visible'
           });
-      }else {
+      } else {
         count++;
       }
+      // auto hide in 10s
+      _.delay(_.bind(hide, this, msg), 10000);
     }
 
-    function hide (msg) {
+    function hide (msg){
       if(msg === message){
         count--;
       }
-      if( !msg || count === 0) {
-        _.delay( function (){
+      if(!msg || count === 0){
+        _.delay(function (){
           message = null;
           $nofity.css('visibility', 'hidden');
         }, 1000);
@@ -54,22 +56,24 @@ window.$(function(){
     };
   })();
 
-  var ajax = (function() {
+  var ajax = (function(){
     var loading = 'Loading...';
-    function handler(ajax) {
-      return ajax.success(function () {
-        notification.hide(loading);
+    function handler(ajax){
+      return ajax.success(function (){
+        notif.hide(loading);
+      }).error(function (xhr, status, code){
+        notif.error($.parseJSON(xhr.responseText).message);
       });
     };
     function get(url, success){
-      notification.msg(loading);
+      notif.msg(loading);
       return handler($.ajax({
         url: url,
         success: success
       }));
     }
     function jpost(url, data){
-      notification.msg(loading);
+      notif.msg(loading);
       var ajax = $.ajax({
         url: url,
         type: 'POST',
@@ -77,7 +81,7 @@ window.$(function(){
         contentType: 'application/json',
         data: JSON.stringify(data)
       });
-      return handle(ajax);
+      return handler(ajax);
     }
     return {
       get: get,
@@ -85,11 +89,11 @@ window.$(function(){
     };
   })();
 
-  function snippet(html) {
+  function snippet(html){
     return html && html.replace(/<[^<>]+>/g, '')
       .replace(/\s+/g, ' ')
-      .replace(/&[^&;]+;/g,'')
-      .slice(0,200);
+      .replace(/&[^&;]+;/g, '')
+      .slice(0, 200);
   }
 
   // export
