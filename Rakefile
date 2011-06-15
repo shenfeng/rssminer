@@ -33,11 +33,16 @@ task :download do
   end
 end
 
+task :copy do
+  sh 'cp ../mustache.js/mustache.js public/js/mustache.js'
+  sh 'cp ../backbone/backbone.js public/js/backbone.js'
+end
+
 desc "Prepare for test"
-task :prepare => ["css:compile", "js:tmpls"]
+task :prepare => [:copy, "css:compile", "js:tmpls"]
 
 desc "Prepare for production"
-task :prepare_prod => ["css:compress", "js:minify"]
+task :prepare_prod => [:copy, "css:compress", "js:minify"]
 
 desc "Run development server"
 task :run => ["prepare"] do
@@ -92,13 +97,15 @@ namespace :js do
     files = FileList['public/js/jquery-1.6.1.js',
                      'public/js/underscore.js',
                      'public/js/backbone.js',
-                     'public/js/handlebars-1.0.0.beta.2.js',
+                     'public/js/mustache.js',
                      'public/js/freader/util.js',
                      'public/js/freader/tmpls.js',
                      'public/js/freader/magic.js',
                      'public/js/freader/application.js']
     # closure = Closure::Compiler.new(:compilation_level =>
-    #                                 'ADVANCED_OPTIMIZATIONS')
+    #                                 'ADVANCED_OPTIMIZATIONS',
+    #                                 :formatting => 'PRETTY_PRINT'
+    #                                 )
     closure = Closure::Compiler.new()
     js_src = '';
     files.each do |f|
@@ -115,9 +122,9 @@ namespace :js do
     html_tmpls.each do |f|
       text = get_file_as_string(f).gsub(/\s+/," ")
       name = File.basename(f,".tpl")
-      data += "tmpls." + name + " = Handlebars.compile('" + text + "');\n"
+      data += "tmpls." + name + " = '" + text + "';\n"
     end
-    data += "window.Freader = $.extend(window.Freader, {tmpls: tmpls})})();\n"
+    data += "window.Freader = window.$.extend(window.Freader, {tmpls: tmpls})})();\n"
     File.open("public/js/freader/tmpls.js", 'w') {|f| f.write(data)}
   end
 end

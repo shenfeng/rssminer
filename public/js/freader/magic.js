@@ -4,11 +4,16 @@ window.$(function(){
   var backbone = window.Backbone,
       freader = window.Freader,
       tmpls = window.Freader.tmpls,
+      to_html = window.Mustache.to_html,
+      $ = window.$,
       util = window.Freader.util;
 
   var selected = 'selected';
 
   var SubscriptionView = backbone.View.extend(function(){
+    function template(data) {
+      return to_html(tmpls.subscription, data);
+    }
     function toggleExpandFeed(e) {
       var $entry = $(e.currentTarget).parents('.entry'),
           offset = $entry.offset().top - $('.entry:first').offset().top;
@@ -22,14 +27,13 @@ window.$(function(){
       _.each(data.items, function(item) {
         item.snippet = util.snippet(item.summary);
       });
-      $(this.el).html(this.template(data));
+      $(this.el).html(template(data));
       return this;
     }
 
     return {
       tagName: 'div',
       id: 'content',
-      template: tmpls.subscripton,
       events: {
         'click .collapsed .entry-main': toggleExpandFeed
       },
@@ -102,7 +106,7 @@ window.$(function(){
         _.each(fdata, function(group) {
           group.subscriptions.sort(subs_comp);
         });
-        var nav = tmpls.nav_template(fdata),
+        var nav = to_html(tmpls.nav_template, {data: fdata}),
             $nav = $('.nav-tree');
         $nav.length > 0 ? $nav.replaceWith(nav) : $('nav').append(nav);
         $('a', $nav).click(function() {
@@ -149,4 +153,5 @@ window.$(function(){
     init: magic.init,
     magic: magic
   });
+
 });

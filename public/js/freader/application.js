@@ -1,6 +1,8 @@
 window.$(function () {
 
-  var freader = window.Freader;
+  var freader = window.Freader,
+      $ = window.$,
+      _ = window._;
 
   function layout() {
     var $entries = $('#entries'),

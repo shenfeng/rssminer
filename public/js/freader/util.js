@@ -1,12 +1,12 @@
 // notification depend on dom
 window.$(function(){
 
-  var handlebars = window.Handlebars,
+  var mustache = window.Mustache,
       $ = window.$,
       _ = window._,
       JSON = window.JSON;
 
-  handlebars.registerHelper('ymdate', function(context, block){
+  mustache.registerHelper('ymdate', function(context, block){
     var d = new Date(context),
         m = d.getMonth() + 1,
         day = d.getDay();

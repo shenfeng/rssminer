@@ -6,7 +6,7 @@
   <span class="feed-title">{{title}}</span>
 </div>
 <ul id="entries">
-  {{#each items}}
+  {{#items}}
   <li class="entry">
     <div class="collapsed">
       <span class="icon"></span>
@@ -28,5 +28,5 @@
       </div>
     </div>
   </li>
-  {{/each}}
+  {{/items}}
 </ul>
