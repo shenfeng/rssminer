@@ -39,10 +39,10 @@ task :copy do
 end
 
 desc "Prepare for test"
-task :prepare => [:copy, "css:compile", "js:tmpls"]
+task :prepare => ["css:compile", "js:tmpls"]
 
 desc "Prepare for production"
-task :prepare_prod => [:copy, "css:compress", "js:minify"]
+task :prepare_prod => ["css:compress", "js:minify"]
 
 desc "Run development server"
 task :run => ["prepare"] do
@@ -98,8 +98,10 @@ namespace :js do
                      'public/js/underscore.js',
                      'public/js/backbone.js',
                      'public/js/mustache.js',
-                     'public/js/freader/util.js',
                      'public/js/freader/tmpls.js',
+                     'public/js/freader/util.js',
+                     'public/js/freader/models.js',
+                     'public/js/freader/views.js',
                      'public/js/freader/magic.js',
                      'public/js/freader/application.js']
     # closure = Closure::Compiler.new(:compilation_level =>

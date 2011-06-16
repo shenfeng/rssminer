@@ -1112,7 +1112,7 @@
     if (protoProps && protoProps.hasOwnProperty('constructor')) {
       child = protoProps.constructor;
     } else {
-      child = function(){ 
+      child = function(){
         if(isf) {
           _.extend(this, conf.apply(null));
         }

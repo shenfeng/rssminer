@@ -65,11 +65,10 @@ window.$(function(){
         notif.error($.parseJSON(xhr.responseText).message);
       });
     };
-    function get(url, success){
+    function get(url){
       notif.msg(loading);
       return handler($.ajax({
-        url: url,
-        success: success
+        url: url
       }));
     }
     function jpost(url, data){

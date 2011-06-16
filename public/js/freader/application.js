@@ -37,5 +37,6 @@ window.$(function () {
     });
   })();
 
+
   freader.init();
 });
