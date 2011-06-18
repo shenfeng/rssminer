@@ -25,7 +25,7 @@
 (let [views-ns '[freader.views.feedreader
                  freader.views.layouts]
       all-rss-ns (filter
-                  #(re-find #"^feng" (str %)) (all-ns))
+                  #(re-find #"^freader" (str %)) (all-ns))
       ns-to-path (fn [clj-ns]
                    (str
                     (str/replace
@@ -40,8 +40,9 @@
     (apply merge src-ns-map)))
 
 (defroutes api-routes
-  (JPOST "/feeds" [] feed/add-subscription)
-  (JGET "/feeds/:subscription-id" [] feed/get-subscription)
+  (JPOST "/subscription" [] feed/add-subscription)
+  (JGET "/subscription/:id" [] feed/get-subscription)
+  (JPOST "/subscription/:id" [] feed/customize-subscription)
   (JGET "/overview" [] feed/get-overview))
 
 (defroutes all-routes

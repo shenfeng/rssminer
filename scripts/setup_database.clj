@@ -31,7 +31,7 @@
     (use-psql-database! db-name)
     (create-user test-user)
     (doseq [link links]
-      (auth-app {:uri "/api/feeds"
+      (auth-app {:uri "/api/subscription"
                  :request-method :post
                  :body (json-str {:link link})}))
     (close-global-psql-factory)))

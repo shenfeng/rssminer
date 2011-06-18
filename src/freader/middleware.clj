@@ -85,8 +85,14 @@
                                                :else (slurp body))]
                             (when (> (count body-str) 0)
                               (json/read-json body-str))))
+          ;; binding for easy access
           resp-obj (binding [*json-body* json-req-body]
-                     (handler req))
+                     (try
+                       (handler req)
+                       (catch Exception e
+                         (.printStackTrace e)
+                         {:status 500
+                          :message "Opps, an error occured"})))
           status (:status resp-obj)]
       (if (number? status)
         (json-response status (dissoc resp-obj :status))

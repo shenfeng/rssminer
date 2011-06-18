@@ -14,7 +14,7 @@ CREATE TABLE users
 CREATE TABLE subscriptions
 (
   id serial NOT NULL,
-  link character varying,       -- the fee link
+  link character varying,       -- the feed link
   alternate character varying,  -- usually, the site's link
   title character varying,
   description text,
@@ -31,6 +31,7 @@ CREATE TABLE user_subscription
 (
   user_id integer NOT NULL,
   subscription_id integer NOT NULL,
+  title character varying, --user defined title, default is subscription's title
   group_name character varying default 'freader_ungrouped',
   added_ts timestamp with time zone NOT NULL DEFAULT now(),
   CONSTRAINT pk_user_subscription PRIMARY KEY (user_id, subscription_id),
@@ -77,7 +78,7 @@ CREATE TABLE comments
 ---
 CREATE TABLE feedcategory
 (
-    "type" character varying, -- possible val: tag, freader(system type), 
+    "type" character varying, -- possible val: tag, freader(system type),
     "text" character varying, -- freader-> stared, read
     user_id integer NOT NULL,
     feed_id integer NOT NULL,

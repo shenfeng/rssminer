@@ -69,7 +69,7 @@ window.$(function(){
       },
       fetch: function() {
         // return jquery ajax deffer
-        return freader.ajax.get("/api/feeds/" + that.id);
+        return freader.ajax.get("/api/subscription/" + that.id);
       }
     };
   });
@@ -94,7 +94,7 @@ window.$(function(){
 
     // return a promise of add success
     function addSubscription (link) {
-      var post = freader.ajax.jpost('/api/feeds', {link: link}),
+      var post = freader.ajax.jpost('/api/subscription', {link: link}),
           dfd = $.Deferred();
       post.done(function(data, status, xhr) {
         subscriptions.add(data);

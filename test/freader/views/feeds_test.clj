@@ -11,7 +11,7 @@
                                get-favicon (fn [link] "icon")]
                        (f))))
 
-(def add-req {:uri "/api/feeds"
+(def add-req {:uri "/api/subscription"
               :request-method :post
               :body (json-str {:link "http://link-to-scottgu's rss"})})
 
@@ -20,7 +20,7 @@
         subscribe-again (auth-app add-req)
         subscription (-> subscribe-resp :body read-json)
         ;; fetch to make sure it is inserted to database
-        fetch-resp (auth-app {:uri (str "/api/feeds/" (:id subscription))
+        fetch-resp (auth-app {:uri (str "/api/subscription/" (:id subscription))
                               :request-method :get
                               :params {"limit" "13"
                                        "offset" "0"}})
@@ -56,3 +56,23 @@
          :total_count
          :title
          :favicon)))
+
+(deftest test-customize-subscription
+  (let [subscribe (-> (auth-app add-req) :body read-json)
+        new-group "just-new-group"
+        new-title "fancy title"
+        modify-req {:uri (str "/api/subscription/" (:id subscribe))
+                    :request-method :post
+                    :body (json-str {:group_name new-group
+                                     :title new-title})}
+        resp (auth-app modify-req)
+        overview (-> (auth-app {:uri "/api/overview"
+                                :request-method :get}) :body read-json)]
+    (is (= 200 (:status resp)))
+    (is (= new-title
+           (-> resp :body read-json :title)
+           (-> overview first :subscriptions first :title)))
+    (is (= new-group
+           (-> resp :body read-json :group_name)
+           (-> overview first :group_name)))
+    (is (= (:id subscribe) (-> resp :body read-json :id)))))
