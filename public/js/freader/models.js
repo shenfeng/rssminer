@@ -51,9 +51,41 @@ window.$(function(){
       return j;
     }
 
+    function getAllGroups() {
+      // all group name
+      return that.collection.group.collection.pluck('group_name');
+    }
+
+    function getGroupName() {
+      return that.collection.group.get('group_name');
+    }
+
     function set(attr, options) {
       attr = parse(_.clone(attr));
       return backbone.Model.prototype.set.call(that, attr, options);
+    }
+
+    function getMenuJSON() {
+      var currentGroupName = getGroupName(),
+          groups = getAllGroups().map(function(name) {
+            return {
+              content: name,
+              checked: name === currentGroupName
+            };
+          });
+
+      var menus = [{
+        content: 'Rename'
+      }, {
+        content: 'Unsubscribe',
+        classes: 'seperator'
+      }, {
+        content: 'Add new folder'
+      }];
+
+      return {
+        menus: menus.concat(groups)
+      };
     }
 
     return {
@@ -61,6 +93,7 @@ window.$(function(){
       name: 'Subscription',
       toJSON: toJSON,
       set: set,
+      getMenuJSON: getMenuJSON,
       initialize: function(attributes, options) {
         that = this;
       },
@@ -109,6 +142,8 @@ window.$(function(){
         subscriptions.add(data.subscriptions);
         delete data.subscriptions;
       }
+      // allow subscription has a way to find it's group
+      subscriptions.group = that;
       return data;
     }
 
@@ -138,8 +173,9 @@ window.$(function(){
   var SubscriptionGroupList = backbone.Collection.extend(function () {
     var ungroup = 'freader_ungrouped',
         that;                   //avoid using this
-    // get subscription by id
-    function getById(id) {
+    // get subscription by id,
+    // lazy => do not fetch whole from server
+    function getById(id, lazy) {
       var dfd = $.Deferred(),
           sub;
       that.each(function(g) {
@@ -148,8 +184,8 @@ window.$(function(){
           sub = s;
         }
       });
-
-      if(sub.isFetched()) {    // already in memory
+      // already in memory, or do not need whole data
+      if(lazy || sub.isFetched()) {
         dfd.resolve(sub);
       } else {
         sub.fetch().done(function(data) { // fetch from server

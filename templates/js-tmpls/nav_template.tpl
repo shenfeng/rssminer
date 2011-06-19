@@ -14,6 +14,7 @@
             class="favicon"/>
             {{/favicon}}
             <a id="subs-{{id}}" href="#/subscription/{{id}}">{{title}} </a>
+            <div class="icon"/>
           </li>
         {{/subscriptions}}
       </ul>

@@ -33,9 +33,7 @@
     background: url("/imgs/sprite.png?{VERSION}") no-repeat scroll 0 0 transparent;
     cursor: pointer;
     height: 18px;
-    left: 0;
     position: absolute;
-    top: 0;
     width: 23px;
     z-index: 2;
 }
@@ -98,7 +96,7 @@ header {
     .sub { font-style: italic;  font-size: 14px;  }
 }
 
-#main { margin: 10px 0; }
+#main { margin: 10px 0; position: relative; }
 
 nav {
     width: $nav_width;
@@ -129,6 +127,36 @@ nav {
     }
 }
 
+#options-menu {
+    position: absolute;
+    left: 210px;
+    ul { list-style: none; padding: 0; margin: 0; }
+    /* right: 0; */
+    top: 67px;
+    z-index: 1000;
+    @include box-shadow(0, 2px, 2px, rgba(0,0,0,0.1));
+    background: white;
+    .seperator {
+        border-bottom: 1px solid gray;
+    }
+    span.checked {
+        position: absolute;
+        left: 5px;
+    }
+    li {
+        min-width: 8em;
+        padding: 4px;
+        position: relative;
+        padding-left: 20px;
+        cursor: pointer;
+        &:hover {
+            background: $selected_color;
+        }
+    }
+    li.checked { cursor: default;  }
+}
+
+
 .nav-tree {
     overflow-y: scroll;
     overflow-x: hidden;
@@ -146,7 +174,24 @@ nav {
         span { font-size: 0.85em; } // unread count
         a.selected { background: $selected_color; }
     }
-    .sub a { text-indent: 20px;}
+    .sub {
+        a { text-indent: 20px; }
+        .icon {
+            visibility: hidden;
+            right: 3px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            background-position: 0 -40px;
+            &:hover {
+                background-position: -12px -40px;
+            }
+        }
+        &:hover .icon {
+            visibility: visible;
+        }
+
+    }
     .favicon {
         position: absolute; width: 14px;
         height: 14px; padding: 3px; left: 20px;

@@ -100,6 +100,10 @@ window.$(function(){
     ajax: ajax,
     util: {
       snippet: snippet,
+      // one dom ele is within another dom, or they are just the same
+      within : function (child, parent) {
+        return $.contains(parent, child) || parent === child;
+      },
       removeClass: function (c) { return $('.' + c).removeClass(c); }
     }
   });
