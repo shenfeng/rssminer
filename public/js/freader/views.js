@@ -2,9 +2,9 @@ window.$(function(){
   var backbone = window.Backbone,
       freader = window.Freader,
       tmpls = freader.tmpls,
+      util = freader.util,
       $ = window.$,
-      to_html = window.Mustache.to_html,
-      util = window.Freader.util;
+      to_html = window.Mustache.to_html;
 
   var subscriptionadded = 'subscriptionadded';
 
@@ -112,8 +112,7 @@ window.$(function(){
   var MenuView =backbone.View.extend(function() {
     var subscription,
         el,
-        that,
-        isShow = false;
+        that;
 
     function optionHandler(e) {
       // console.log(e);
@@ -228,7 +227,7 @@ window.$(function(){
       select: select,
       events: {
         'click .folder .toggle': toggleFolder,
-        'click .icon': toggleMenu
+        'click .sub .icon': toggleMenu
       },
       initialize: function() {
         that = this;

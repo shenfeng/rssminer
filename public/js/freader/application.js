@@ -17,26 +17,5 @@ window.$(function () {
 
   $(window).resize(_.debounce(layout, 100));
 
-  (function() {
-    var $form = $('#add-subscription .form'),
-        $input = $('input',$form);
-
-    $input.blur(function(){
-      $form.hide();
-    });
-    $('#add-subscription span').click(function() {
-      $form.show();
-      $input.focus();
-    });
-    $form.keydown(function(e) {
-      if(e.which === 13) {
-        freader.magic.addSubscription($input.val());
-        $form.hide();
-        $input.val('');
-      }
-    });
-  })();
-
-
   freader.init();
 });

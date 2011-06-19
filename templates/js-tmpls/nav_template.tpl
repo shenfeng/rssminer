@@ -2,7 +2,7 @@
   {{#data}}
     <li class="folder unread">
       <span class="toggle icon"></span>
-      <a href="#">{{group_name}}</a>
+      <h4 href="#">{{group_name}}</h4>
       <ul >
         {{#subscriptions}}
           <li class="sub">

@@ -131,8 +131,6 @@ nav {
     position: absolute;
     left: 210px;
     ul { list-style: none; padding: 0; margin: 0; }
-    /* right: 0; */
-    top: 67px;
     z-index: 1000;
     @include box-shadow(0, 2px, 2px, rgba(0,0,0,0.1));
     background: white;
@@ -160,6 +158,11 @@ nav {
 .nav-tree {
     overflow-y: scroll;
     overflow-x: hidden;
+    h4 {
+        margin: 5px;
+        text-indent: 20px;
+        padding-top: 2px;
+    }
     li {
         position: relative;
         a {
@@ -176,6 +179,7 @@ nav {
     }
     .sub {
         a { text-indent: 20px; }
+        //  toggle context menu
         .icon {
             visibility: hidden;
             right: 3px;
