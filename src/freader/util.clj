@@ -21,7 +21,7 @@
       (catch NoSuchAlgorithmException e
         (throw (new RuntimeException e))))))
 
-(defn- write-json-date [^Date d ^PrintWriter out]
+(defn- write-json-date [^Date d ^PrintWriter out escape-unicode?]
   (.print out (.getTime d)))
 
 (extend Date Write-JSON
