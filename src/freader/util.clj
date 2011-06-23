@@ -1,10 +1,12 @@
 (ns freader.util
-  (:use (clojure.contrib [json :only [json-str Write-JSON]]
-                         [base64 :only [encode *base64-alphabet*]]))
-  (:require  [clj-http.client :as http])
+  (:use (clojure.contrib [json :only [json-str Write-JSON]]))
+  (:require [freader.http :as http])
   (:import java.io.PrintWriter
            java.text.SimpleDateFormat
-           [java.net URL URI]
+           org.apache.commons.io.IOUtils
+           org.apache.commons.codec.binary.Base64
+           java.util.Date
+           java.sql.Timestamp
            [java.io InputStream StringWriter]
            [java.security NoSuchAlgorithmException MessageDigest]))
 
@@ -19,16 +21,12 @@
       (catch NoSuchAlgorithmException e
         (throw (new RuntimeException e))))))
 
-;; (let [f (SimpleDateFormat. "EEE, dd MMM yyyy HH:mm:ss Z")]
-;;   (defn- write-json-date [d ^PrintWriter out]
-;;     (.print out (str \" (.format f d) \"))))
-
-(defn- write-json-date [^java.util.Date d ^PrintWriter out]
+(defn- write-json-date [^Date d ^PrintWriter out]
   (.print out (.getTime d)))
 
-(extend java.util.Date Write-JSON
+(extend Date Write-JSON
         {:write-json write-json-date})
-(extend java.sql.Timestamp Write-JSON
+(extend Timestamp Write-JSON
         {:write-json write-json-date})
 
 (defn json-response
@@ -37,28 +35,19 @@
                  :headers {"Content-Type" "application/json; charset=utf-8"}
                  :body (json-str body)})
 
-(defn http-get
-  ([url] (http-get url {}))
-  ([uri req] (try
-               (http/request (merge req  {:method :get :url uri}))
-               (catch Exception e))))
+(defn http-get [url]
+  (try
+    (http/http-get {:url url})
+    (catch Exception e)))
 
-(defn get-host [host]
-  (let [uri (URI. host)
-        port (if (= -1 (.getPort uri)) ""
-                 (str ":" (.getPort uri)))
-        schema (.getScheme uri)
-        host (.getHost uri)]
-    (str schema "://" host port)))
-
-(defn download-favicon [url]
-  (let [url (URL. url)
-        output (StringWriter.)
-        in (.. url openConnection getInputStream)]
-    (encode in output *base64-alphabet* nil)
-    (str "data:image/x-icon;base64," (.toString output))))
-
-(defn get-favicon [host]
-  (let [url (str (get-host host) "/favicon.ico")]
-    (try (download-favicon url)
-         (catch Exception e nil))))
+(defn get-favicon [url]
+  (try
+    (let [resp (http-get
+                (str (http/extract-host url) "/favicon.ico"))
+          img (Base64/encodeBase64String
+               (IOUtils/toByteArray (:body resp)))
+          code (if-let [type (:Content-Type resp)]
+                 (str "data:" type ";base64,")
+                 "data:image/x-icon;base64,")]
+      (str code img))
+    (catch Exception e)))
