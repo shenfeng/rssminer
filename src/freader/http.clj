@@ -1,5 +1,4 @@
 (ns freader.http
-  (:use clojure.contrib.trace)
   (:import [java.net URI URL Proxy Proxy$Type InetSocketAddress
             HttpURLConnection SocketException]
            [java.util.zip InflaterInputStream GZIPInputStream]))
@@ -26,6 +25,14 @@
       {:status (.getResponseCode con)
        :headers resp-headers
        :body (.getInputStream con)})))
+
+(defn wrap-redirects [client]
+  (fn [req]
+    (let [resp (client req)]
+      (if (#{301 302 307} (:status resp))
+        (let [url (get-in resp [:headers :Location])]
+          (client (assoc req :url url)))
+        resp))))
 
 (defn wrap-compression [client]
   (fn [req]
@@ -72,8 +79,9 @@
               (client (assoc req :proxy? true)))))))))
 
 (def request* (-> request
+                  wrap-compression
                   wrap-proxy
-                  wrap-compression))
+                  wrap-redirects))
 
 (defn http-get [req]
   (request* req))

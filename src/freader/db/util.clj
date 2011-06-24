@@ -1,7 +1,9 @@
 (ns freader.db.util
   (:use [freader.database :only [*factory*]]
+        [clojure.java.io :only [resource]]
         [clojure.contrib.sql :only [with-connection with-query-results]])
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [freader.config :as conf]))
 
 (defn- escape-keyword [k]
   (str \" (name k) \"))
@@ -54,3 +56,22 @@
   (with-connection *factory*
     (with-query-results rs sql-parms
       (doall rs))))
+
+(defn get-con [db]
+  (java.sql.DriverManager/getConnection
+   (str "jdbc:postgresql://" conf/DB_HOST "/" db)
+   conf/PSQL_USERNAME conf/PSQL_PASSWORD))
+
+(defn exec-stats [con & statements]
+  (with-open [stmt (.createStatement con)]
+    (doseq [s statements]
+      (.addBatch stmt s))
+    (.executeBatch stmt)))
+
+(defn exec-prepared-sqlfile [db-name]
+  (let [stats (filter
+               (complement str/blank?)
+               (str/split ;; use ----(4) to seperate sql statement
+                (slurp (resource "freader.sql")) #"\s*----*\s*"))]
+    (with-open [con (get-con db-name)]
+      (apply exec-stats con stats))))

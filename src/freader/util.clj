@@ -1,6 +1,7 @@
 (ns freader.util
   (:use (clojure.contrib [json :only [json-str Write-JSON]]))
-  (:require [freader.http :as http])
+  (:require [freader.http :as http]
+            [clojure.string :as str])
   (:import java.io.PrintWriter
            java.text.SimpleDateFormat
            org.apache.commons.io.IOUtils
@@ -35,14 +36,16 @@
                  :headers {"Content-Type" "application/json; charset=utf-8"}
                  :body (json-str body)})
 
-(defn http-get [url]
+(defn download-feed-source  [url]
   (try
-    (http/http-get {:url url})
+    (update-in (http/http-get {:url url}) [:body]
+               (fn [in]
+                 (slurp in)))
     (catch Exception e)))
 
-(defn get-favicon [url]
+(defn download-favicon [url]
   (try
-    (let [resp (http-get
+    (let [resp (http/http-get
                 (str (http/extract-host url) "/favicon.ico"))
           img (Base64/encodeBase64String
                (IOUtils/toByteArray (:body resp)))
@@ -51,3 +54,4 @@
                  "data:image/x-icon;base64,")]
       (str code img))
     (catch Exception e)))
+

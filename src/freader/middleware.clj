@@ -1,6 +1,5 @@
 (ns freader.middleware
   (:use [freader.util :only [json-response]]
-        clojure.contrib.trace
         [ring.util.response :only [redirect]]
         [sandbar.stateful-session :only [session-get]]
         [compojure.core :only [GET POST DELETE PUT]])
@@ -10,8 +9,8 @@
            [java.util Locale Calendar TimeZone Date]
            java.io.File))
 
-(def *user* nil)
-(def *json-body* nil)
+(def ^{:dynamic true} *user* nil)
+(def ^{:dynamic true} *json-body* nil)
 
 (let [f (SimpleDateFormat. "yyyy-HH-dd HH:mm:ss:SSS" Locale/CHINA)]
   (defn- current-ts-str []
@@ -72,7 +71,7 @@
   (fn [req]
     (try (handler req)
          (catch Exception e
-           (trace req)
+           (print req)
            (.printStackTrace e)
            {:status 500 :body "Sorry, an error occured."}))))
 

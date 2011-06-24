@@ -6,5 +6,5 @@ if which greadlink > /dev/null; then
 fi
 ABSOLUTE_PATH=$(${READLINK} -f $0)
 HOME="${ABSOLUTE_PATH%/*/*}"
-cd "${HOME}" && java -Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8 -server -cp "lib/*:src/:test/" clojure.main scripts/setup_database.clj $@
+cd "${HOME}" && java -Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8 -server -cp "lib/*:src/" clojure.main scripts/setup_database.clj $@
 

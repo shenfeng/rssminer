@@ -5,7 +5,7 @@
 (defn create-user [user]
   (let [u (assoc user
             :password (md5-sum (:password user)))]
-    (exec-query (insert-sql-params :users u))))
+    (first (exec-query (insert-sql-params :users u)))))
 
 (defn find-user [attr]
   (first (exec-query (select-sql-params :users attr))))

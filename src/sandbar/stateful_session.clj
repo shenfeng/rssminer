@@ -21,14 +21,14 @@
         (cond (nil? response-s) nil
               (= response-s :empty) request-s
               :else response-s)
-        
+
         (= outgoing-ss :empty)
         (cond (nil? response-s) (when incoming-ss {::session incoming-ss})
               (= response-s :empty) :empty
               :else (if incoming-ss
                       (assoc response-s ::session incoming-ss)
                       response-s))
-        
+
         :else
         (cond (nil? response-s) {::session outgoing-ss}
               (= response-s :empty)
@@ -122,8 +122,8 @@
    this request and the next."
   [k v]
   (swap! sandbar-flash (fn [a b] (-> a
-                                     (assoc-in [:outgoing k] b)
-                                     (assoc-in [:incoming k] b))) v))
+                                    (assoc-in [:outgoing k] b)
+                                    (assoc-in [:incoming k] b))) v))
 
 (defn flash-get
   "Get a value from the flash which may have been added during the current or

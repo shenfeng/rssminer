@@ -3,8 +3,8 @@
   (:import (clojure.lang RT)
            (org.apache.commons.dbcp BasicDataSource)))
 
-(def *factory* {:factory nil
-                :ds nil})
+(def ^{:dynamic true} *factory*  {:factory nil
+                                 :ds nil})
 
 (defn close-global-psql-factory []
   (if-let [ds (:ds *factory*)]

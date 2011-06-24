@@ -1,24 +1,27 @@
 (ns freader.views.feeds-test
   (:use clojure.test
         [clojure.contrib.json :only [read-json json-str]]
-        (freader [middleware :only [*user*]]
-                 [test-common :only [auth-app mock-http-get]]
+        (freader [test-common :only [auth-app mock-download-feed-source]]
                  [test-util :only [postgresql-fixture]]
-                 [util :only [http-get get-favicon]])))
+                 [util :only [download-favicon download-feed-source]])))
 
 (use-fixtures :each postgresql-fixture
-              (fn [f] (binding [http-get mock-http-get
-                               get-favicon (fn [link] "icon")]
+              (fn [f] (binding [download-feed-source mock-download-feed-source
+                               download-favicon (fn [link] "icon")]
                        (f))))
 
 (def add-req {:uri "/api/subscription"
               :request-method :post
               :body (json-str {:link "http://link-to-scottgu's rss"})})
 
+(defn- prepare []
+  (let [resp (auth-app add-req)
+        subscription (-> resp :body read-json)]
+    [resp subscription]))
+
 (deftest test-add-feedsource
-  (let [subscribe-resp (auth-app add-req)
+  (let [[subscribe-resp subscription] (prepare)
         subscribe-again (auth-app add-req)
-        subscription (-> subscribe-resp :body read-json)
         ;; fetch to make sure it is inserted to database
         fetch-resp (auth-app {:uri (str "/api/subscription/" (:id subscription))
                               :request-method :get
@@ -41,7 +44,7 @@
     (is (= 13 (count (:items fetched-feeds))))))
 
 (deftest test-get-overview
-  (let [subscribe-resp (auth-app add-req)
+  (let [[subscribe-resp] (prepare)
         overview-resp (auth-app {:uri "/api/overview"
                                  :request-method :get})
         overview (-> overview-resp :body read-json)]
@@ -58,7 +61,7 @@
          :favicon)))
 
 (deftest test-customize-subscription
-  (let [subscribe (-> (auth-app add-req) :body read-json)
+  (let [[_ subscribe] (prepare)
         new-group "just-new-group"
         new-title "fancy title"
         modify-req {:uri (str "/api/subscription/" (:id subscribe))

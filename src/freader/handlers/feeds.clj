@@ -1,7 +1,7 @@
 (ns freader.handlers.feeds
   (:use (freader [middleware :only [*user* *json-body*]]
-                  [util :only [http-get get-favicon]]
-                  [parser :only [parse]]))
+                 [util :only [download-favicon download-feed-source]]
+                 [parser :only [parse]]))
   (:require [freader.db.feed :as db]))
 
 (defn- add-subscription-ret [user-id subscription-id]
@@ -25,8 +25,8 @@
        :message "already subscribed"})))
 
 (defn- create-subscripton [link user-id]
-  (if-let [feeds (parse (:body (http-get link)))]
-    (let [favicon (get-favicon link)
+  (if-let [feeds (parse (:body (download-feed-source link)))]
+    (let [favicon (download-favicon link)
           ;; 1. save feedsource
           subscription (db/insert :subscriptions
                                   {:link link
@@ -45,14 +45,17 @@
     {:status 460
      :message "bad feedlink"}))
 
-(defn add-subscription [req]
-  (let [link (:link *json-body*)
-        user-id (:id *user*)
-        subscription (db/fetch-subscription {:link link})]
-    (if subscription
-      (add-exists-subscription subscription user-id) ;we have the subscription
-      ;; first time subscription
-      (create-subscripton link user-id))))
+(defn add-subscription
+  ([req]
+     (let [link (:link *json-body*)
+           user-id (:id *user*)]
+       (add-subscription link user-id)))
+  ([link user-id]
+     (let [sub (db/fetch-subscription {:link link})]
+       (if sub
+         (add-exists-subscription sub user-id) ;we have the subscription
+         ;; first time subscription
+         (create-subscripton link user-id)))))
 
 (defn get-subscription [req]
   (let [{:keys [id limit offset]

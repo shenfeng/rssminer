@@ -1,5 +1,4 @@
 (ns freader.test-common
-  (:require [freader.config])
   (:use [freader.routes :only [app]]
         [clojure.java.io :only [resource]]
         [sandbar.stateful-session :only [session-get]]))
@@ -11,7 +10,7 @@
 (def test-rss-str
   (slurp (resource "test-rss.xml")))
 
-(defn mock-http-get [& args]
+(defn mock-download-feed-source [& args]
   {:body test-rss-str})
 
 (def test-app
