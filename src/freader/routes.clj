@@ -1,6 +1,6 @@
 (ns freader.routes
   (:use [compojure.core :only [defroutes GET POST HEAD DELETE ANY context]]
-        [ring.adapter.jetty :only (run-jetty)]
+        [ring.adapter.jetty7 :only [run-jetty]]
         [clojure.contrib.def :only [defnk]]
         (ring.middleware [keyword-params :only [wrap-keyword-params]]
                          [file-info :only [wrap-file-info]]

@@ -12,7 +12,7 @@
                  [net.java.dev.rome/rome "1.0.0"]
                  [postgresql/postgresql "9.0-801.jdbc4"]
                  [ring/ring-core "0.3.8"]
-                 [ring/ring-jetty-adapter "0.3.8"]]
+                 [org.signaut/ring-jetty7-adapter "0.3.8.2"]]
   :dev-dependencies [[swank-clojure "1.4.0-SNAPSHOT"]
                      [org.clojure.contrib/mock "1.3.0-alpha4"]
                      [org.clojure.contrib/trace "1.3.0-alpha4"]])
