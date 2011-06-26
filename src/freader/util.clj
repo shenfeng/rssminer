@@ -38,14 +38,14 @@
 
 (defn download-feed-source  [url]
   (try
-    (update-in (http/http-get {:url url}) [:body]
+    (update-in (http/get url) [:body]
                (fn [in]
                  (slurp in)))
     (catch Exception e)))
 
 (defn download-favicon [url]
   (try
-    (let [resp (http/http-get
+    (let [resp (http/get
                 (str (http/extract-host url) "/favicon.ico"))
           img (Base64/encodeBase64String
                (IOUtils/toByteArray (:body resp)))

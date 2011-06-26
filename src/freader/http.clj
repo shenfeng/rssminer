@@ -1,4 +1,5 @@
 (ns freader.http
+  (:refer-clojure :exclude [get])
   (:import [java.net URI URL Proxy Proxy$Type InetSocketAddress
             HttpURLConnection SocketException]
            [java.util.zip InflaterInputStream GZIPInputStream]))
@@ -83,5 +84,5 @@
                   wrap-proxy
                   wrap-redirects))
 
-(defn http-get [req]
-  (request* req))
+(defn get [url]
+  (request* {:url url}))

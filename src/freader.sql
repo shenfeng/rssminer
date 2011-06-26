@@ -78,8 +78,8 @@ CREATE TABLE feedcategory
 CREATE TABLE crawl_logs
 (
    id serial primary key,
-   subscription_id integer NOT NULL,
-   --REFERENCES subscriptions MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
+   subscription_id integer NOT NULL
+      REFERENCES subscriptions MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
    added_ts timestamp with time zone default now(),
    file character varying,      --save as string, if file is not changed, it's null
    feeds_added integer,         --how many new feeds,

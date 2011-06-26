@@ -1,4 +1,5 @@
 (ns freader.http-test
+  (:refer-clojure :exclude [get])
   (:use freader.http
         clojure.test))
 

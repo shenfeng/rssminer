@@ -102,7 +102,7 @@ window.$(function(){
       },
       fetch: function() {
         // return jquery ajax deffer
-        return freader.ajax.get("/api/subscription/" + that.id);
+        return freader.ajax.get("/api/subscriptions/" + that.id);
       }
     };
   });
@@ -127,7 +127,7 @@ window.$(function(){
 
     // return a promise of add success
     function addSubscription (link) {
-      var post = freader.ajax.jpost('/api/subscription', {link: link}),
+      var post = freader.ajax.jpost('/api/subscriptions/add', {link: link}),
           dfd = $.Deferred();
       post.done(function(data, status, xhr) {
         subscriptions.add(data);
@@ -211,7 +211,7 @@ window.$(function(){
         // groups = that.models;
       },
       fetch: function (){
-        return freader.ajax.get('/api/overview').done(function(data) {
+        return freader.ajax.get('/api/subscriptions/overview').done(function(data) {
           that.add(data);
         });
       },

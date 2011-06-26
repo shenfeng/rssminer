@@ -1,8 +1,8 @@
-(ns freader.handlers.feeds
+(ns freader.handlers.subscriptions
   (:use (freader [middleware :only [*user* *json-body*]]
                  [util :only [download-favicon download-feed-source]]
                  [parser :only [parse]]))
-  (:require [freader.db.feed :as db]))
+  (:require [freader.db.subscription :as db]))
 
 (defn- add-subscription-ret [user-id subscription-id]
   (let [f-c (db/fetch-favicon-count subscription-id)]

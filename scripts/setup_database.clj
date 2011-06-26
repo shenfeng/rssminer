@@ -6,7 +6,8 @@
         [sandbar.stateful-session :only [session-get]]
         [clojure.contrib.json :only [json-str]]))
 
-(def links ["http://blog.raek.se/feed/"
+(def links [
+            ;; "http://blog.raek.se/feed/"
             "http://blog.raynes.me/?feed=rss2"
             "http://blog.sina.com.cn/rss/kaifulee.xml"
             "http://cemerick.com/feed/"
@@ -35,7 +36,7 @@
       (binding [session-get (fn [arg]
                               (if (= arg :user) user arg))]
         (doseq [link links]
-          (apply (app) [{:uri "/api/subscription"
+          (apply (app) [{:uri "/api/subscriptions/add"
                          :request-method :post
                          :body (json-str {:link link})}]))))
     (close-global-psql-factory)))

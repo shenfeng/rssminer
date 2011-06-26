@@ -1,4 +1,4 @@
-(ns freader.db.feed
+(ns freader.db.subscription
   (:use [freader.db.util :only [exec-query select-sql-params
                                 insert-sql-params]]))
 

@@ -19,7 +19,7 @@
   (:require [freader.config :as config]
             [clojure.string :as str]
             (freader.handlers [feedreader :as freader]
-                              [feeds :as feed]
+                              [subscriptions :as subscription]
                               [users :as user])))
 
 (let [views-ns '[freader.views.feedreader
@@ -40,10 +40,22 @@
     (apply merge src-ns-map)))
 
 (defroutes api-routes
-  (JPOST "/subscription" [] feed/add-subscription)
-  (JGET "/subscription/:id" [] feed/get-subscription)
-  (JPOST "/subscription/:id" [] feed/customize-subscription)
-  (JGET "/overview" [] feed/get-overview))
+  (JGET "/dashboard" [] "TODO")
+  (context "/subscriptions" []
+           (JGET "/overview" [] subscription/get-overview)
+           (JPOST "/add" [] subscription/add-subscription)
+           (JGET "/:id" [] subscription/get-subscription)
+           (JPOST "/:id" [] subscription/customize-subscription)
+           (JDELETE "/:id" [] "TODO"))
+  (context "/feeds/:feed-id/" []
+           (JPOST "/categories" [] "TODO")
+           (JDELETE "/categories" [] "TODO")
+           (JPOST "/comments" [] "TODO")
+           (JDELETE "/comments/:comment-id" [] "TODO"))
+  (JPOST "/import/opml-import" [] "TODO")
+  (JGET "/export/opml-export" [] "TODO")
+  (JGET "/feeds/search" [] "TODO")
+  (JGET "/feeds/search-ac-source" [] "TODO"))
 
 (defroutes all-routes
   (GET "/" [] freader/index-page)
