@@ -46,7 +46,7 @@
            (JPOST "/add" [] subscription/add-subscription)
            (JGET "/:id" [] subscription/get-subscription)
            (JPOST "/:id" [] subscription/customize-subscription)
-           (JDELETE "/:id" [] "TODO"))
+           (JDELETE "/:id" [] subscription/unsubscribe))
   (context "/feeds/:feed-id/" []
            (JPOST "/categories" [] "TODO")
            (JDELETE "/categories" [] "TODO")

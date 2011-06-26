@@ -102,3 +102,10 @@ WHERE us.user_id = ?" user-id user-id]))
                WHERE user_id = ? AND subscription_id = ?
                RETURNING group_name, title"
                 (:group_name data) (:title data) user-id subscription-id])))
+
+(defn delete-user-subscription [user-id subscription-id]
+  (first
+   (exec-query ["DELETE FROM user_subscription
+                 WHERE user_id = ? AND
+                 subscription_id = ? RETURNING *"
+                user-id subscription-id])))

@@ -86,3 +86,8 @@
     (assoc
         (db/update-user-subscription user-id subscription-id *json-body*)
       :id subscription-id)))
+
+(defn unsubscribe [req]
+  (let [user-id (:id *user*)
+        subscription-id (-> req :params :id Integer.)]
+    (db/delete-user-subscription user-id subscription-id)))

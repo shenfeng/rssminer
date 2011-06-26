@@ -23,7 +23,8 @@
   (let [[subscribe-resp subscription] (prepare)
         subscribe-again (auth-app add-req)
         ;; fetch to make sure it is inserted to database
-        fetch-resp (auth-app {:uri (str "/api/subscriptions/" (:id subscription))
+        fetch-resp (auth-app {:uri (str "/api/subscriptions/"
+                                        (:id subscription))
                               :request-method :get
                               :params {"limit" "13"
                                        "offset" "0"}})
@@ -61,10 +62,10 @@
          :favicon)))
 
 (deftest test-customize-subscription
-  (let [[_ subscribe] (prepare)
+  (let [[_ subscription] (prepare)
         new-group "just-new-group"
         new-title "fancy title"
-        modify-req {:uri (str "/api/subscriptions/" (:id subscribe))
+        modify-req {:uri (str "/api/subscriptions/" (:id subscription))
                     :request-method :post
                     :body (json-str {:group_name new-group
                                      :title new-title})}
@@ -78,4 +79,14 @@
     (is (= new-group
            (-> resp :body read-json :group_name)
            (-> overview first :group_name)))
-    (is (= (:id subscribe) (-> resp :body read-json :id)))))
+    (is (= (:id subscription) (-> resp :body read-json :id)))))
+
+(deftest test-delete-user-subscription
+  (let [[_ subscription] (prepare)
+        delete-resp (auth-app {:uri (str "/api/subscriptions/"
+                                         (:id subscription))
+                               :request-method :delete})
+        overview (-> (auth-app {:uri "/api/subscriptions/overview"
+                                :request-method :get}) :body read-json)]
+    (is (= 200 (:status delete-resp)))
+    (is (= 0 (count overview)))))
