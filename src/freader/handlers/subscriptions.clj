@@ -1,30 +1,35 @@
 (ns freader.handlers.subscriptions
   (:use (freader [middleware :only [*user* *json-body*]]
                  [util :only [download-favicon download-feed-source]]
-                 [parser :only [parse]]))
+                 [parser :only [parse]]
+                 [config :only [ungroup]]))
   (:require [freader.db.subscription :as db]))
 
-(defn- add-subscription-ret [user-id subscription-id]
-  (let [f-c (db/fetch-favicon-count subscription-id)]
-    (assoc (db/fetch-feeds-by-subscription-id user-id subscription-id)
-      :favicon (:favicon f-c)
-      :total_count (:count f-c)
-      :unread_count (:count f-c))))
+(defn- add-subscription-ret [us subscription count]
+  {:group_name (:group_name us)
+   :id (:id subscription)
+   :total_count count
+   :unread_count count
+   :title (:title us)
+   :favicon (:favicon subscription)})
 
-(defn- add-exists-subscription [subscription user-id]
-  (let [uf (db/fetch-user-subscription
+(defn- add-exists-subscription [subscription user-id
+                                & {:keys [group-name title]}]
+  (let [us (db/fetch-user-subscription
             {:user_id user-id
              :subscription_id (:id subscription)})]
-    (if (empty? uf)
-      (do (db/insert :user_subscription
-                     {:user_id user-id
-                      :title (:title subscription)
-                      :subscription_id (:id subscription)})
-          (add-subscription-ret user-id (:id subscription)))
+    (if us
       {:status 409                      ;readd is not allowed
-       :message "already subscribed"})))
+       :message "Already subscribed"}
+      (let [us (db/insert :user_subscription
+                          {:user_id user-id
+                           :group_name (or group-name ungroup)
+                           :title (or title (:title subscription))
+                           :subscription_id (:id subscription)})
+            count (db/fetch-feeds-count-by-id (:id subscription))]
+        (add-subscription-ret us subscription count)))))
 
-(defn- create-subscripton [link user-id]
+(defn- create-subscripton [link user-id & {:keys [group-name title]}]
   (if-let [feeds (parse (:body (download-feed-source link)))]
     (let [favicon (download-favicon link)
           ;; 1. save feedsource
@@ -33,29 +38,32 @@
                                    :user_id user-id
                                    :favicon favicon
                                    :description (:description feeds)
-                                   :title (:title feeds)})]
-      ;; 2. assoc feedsource with user
-      (db/insert :user_subscription {:user_id user-id
-                                     :title (:title subscription)
-                                     :subscription_id (:id subscription)})
+                                   :title (:title feeds)})
+          ;; 2. assoc feedsource with user
+          us (db/insert :user_subscription
+                        {:user_id user-id
+                         :group_name (or group-name ungroup)
+                         :title (or title (:title subscription))
+                         :subscription_id (:id subscription)})]
       (db/save-feeds subscription feeds user-id) ;; 3. save feeds
       ;; 5. return data
-      (add-subscription-ret user-id (:id subscription)))
-    ;; fetch feed error
+      (add-subscription-ret us subscription (count feeds)))
+    ;; fetch feeds error
     {:status 460
-     :message "bad feedlink"}))
+     :message "Bad feedlink"}))
 
-(defn add-subscription
-  ([req]
-     (let [link (:link *json-body*)
-           user-id (:id *user*)]
-       (add-subscription link user-id)))
-  ([link user-id]
-     (let [sub (db/fetch-subscription {:link link})]
-       (if sub
-         (add-exists-subscription sub user-id) ;we have the subscription
-         ;; first time subscription
-         (create-subscripton link user-id)))))
+(defn add-subscription* [link user-id & options]
+  (let [sub (db/fetch-subscription {:link link})]
+    (if sub
+      ;; we have the subscription
+      (apply add-exists-subscription sub user-id options)
+      ;; first time subscription
+      (apply create-subscripton link user-id options))))
+
+(defn add-subscription [req]
+  (let [link (:link *json-body*)
+        user-id (:id *user*)]
+    (add-subscription* link user-id)))
 
 (defn get-subscription [req]
   (let [{:keys [id limit offset]

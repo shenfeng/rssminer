@@ -41,7 +41,8 @@
     (update-in (http/get url) [:body]
                (fn [in]
                  (slurp in)))
-    (catch Exception e)))
+    (catch Exception e
+      (print "Download feed-source " url " :" (.getMessage e)))))
 
 (defn download-favicon [url]
   (try
@@ -53,5 +54,6 @@
                  (str "data:" type ";base64,")
                  "data:image/x-icon;base64,")]
       (str code img))
-    (catch Exception e)))
+    (catch Exception e
+      (print "Download favicon " url " :" (.getMessage e)))))
 

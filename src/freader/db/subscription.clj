@@ -10,16 +10,15 @@
   (first
    (exec-query (select-sql-params :subscriptions map))))
 
-(defn fetch-favicon-count [subscription-id]
-  (first
-   (exec-query ["SELECT favicon, (SELECT COUNT(*) FROM feeds
-                                  WHERE subscription_id = ?) AS count
-                FROM subscriptions WHERE id = ?"
-                subscription-id subscription-id])))
+(defn fetch-feeds-count-by-id [subscription-id]
+  (-> (exec-query ["SELECT COUNT(*) as count
+                FROM feeds WHERE subscription_id = ?" subscription-id])
+      first :count))
 
 (defn fetch-user-subscription [map]
-  (exec-query
-   (select-sql-params :user_subscription map 100 0)))
+  (first
+   (exec-query
+    (select-sql-params :user_subscription map))))
 
 (defn fetch-categories [user-id feed-id]
   (exec-query ["SELECT type, text, added_ts FROM feedcategory

@@ -5,6 +5,7 @@
         (ring.middleware [keyword-params :only [wrap-keyword-params]]
                          [file-info :only [wrap-file-info]]
                          [params :only [wrap-params]]
+                         [multipart-params :only [wrap-multipart-params]]
                          [file :only [wrap-file]]
                          [session :only [wrap-session]])
         (freader [middleware :only (wrap-auth
@@ -14,7 +15,8 @@
                                     wrap-request-logging
                                     wrap-reload-in-dev
                                     JPOST JPUT JDELETE JGET)]
-                 [database :only [use-psql-database!]])
+                 [database :only [use-psql-database!]]
+                 [import :only [opml-import]])
         [sandbar.stateful-session :only [wrap-stateful-session]])
   (:require [freader.config :as config]
             [clojure.string :as str]
@@ -47,15 +49,16 @@
            (JGET "/:id" [] subscription/get-subscription)
            (JPOST "/:id" [] subscription/customize-subscription)
            (JDELETE "/:id" [] subscription/unsubscribe))
-  (context "/feeds/:feed-id/" []
-           (JPOST "/categories" [] "TODO")
-           (JDELETE "/categories" [] "TODO")
-           (JPOST "/comments" [] "TODO")
-           (JDELETE "/comments/:comment-id" [] "TODO"))
-  (JPOST "/import/opml-import" [] "TODO")
-  (JGET "/export/opml-export" [] "TODO")
-  (JGET "/feeds/search" [] "TODO")
-  (JGET "/feeds/search-ac-source" [] "TODO"))
+  (context "/feeds/" []
+           (context "/:feed-id" []
+                    (JPOST "/categories" [] "TODO")
+                    (JDELETE "/categories" [] "TODO")
+                    (JPOST "/comments" [] "TODO")
+                    (JDELETE "/comments/:comment-id" [] "TODO"))
+           (JGET "/search" [] "TODO")
+           (JGET "/search-ac-source" [] "TODO"))
+  (JPOST "/import/opml-import" [] opml-import)
+  (JGET "/export/opml-export" [] "TODO"))
 
 (defroutes all-routes
   (GET "/" [] freader/index-page)
@@ -74,6 +77,7 @@
 
 (defn app [] (-> #'all-routes
                  wrap-keyword-params
+                 wrap-multipart-params
                  wrap-params
                  wrap-auth
                  wrap-stateful-session

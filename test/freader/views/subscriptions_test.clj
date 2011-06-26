@@ -29,14 +29,15 @@
                               :params {"limit" "13"
                                        "offset" "0"}})
         fetched-feeds (-> fetch-resp :body read-json)]
+    (is (= 200 (:status subscribe-resp)))
+    (is (= 409 (:status subscribe-again)))
     (are [key] (-> subscription key)
          :total_count
+         :id
          :unread_count
          :favicon
          :title)
-    (is (= 200 (:status subscribe-resp)))
     (is (= 200 (:status fetch-resp)))
-    (is (= 409 (:status subscribe-again)))
     (are [key] (-> fetched-feeds :items first key)
          :categories
          :comments

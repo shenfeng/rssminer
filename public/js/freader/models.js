@@ -171,7 +171,7 @@ window.$(function(){
   });
 
   var SubscriptionGroupList = backbone.Collection.extend(function () {
-    var ungroup = 'freader_ungrouped',
+    var ungroup = 'ungrouped',
         that;                   //avoid using this
     // get subscription by id,
     // lazy => do not fetch whole from server
