@@ -1,7 +1,5 @@
 (ns freader.routes
-  (:use [compojure.core :only [defroutes GET POST HEAD DELETE ANY context]]
-        [ring.adapter.jetty7 :only [run-jetty]]
-        [clojure.contrib.def :only [defnk]]
+  (:use [compojure.core :only [defroutes GET POST DELETE ANY context]]
         (ring.middleware [keyword-params :only [wrap-keyword-params]]
                          [file-info :only [wrap-file-info]]
                          [params :only [wrap-params]]
@@ -15,11 +13,10 @@
                                     wrap-request-logging
                                     wrap-reload-in-dev
                                     JPOST JPUT JDELETE JGET)]
-                 [database :only [use-psql-database!]]
-                 [import :only [opml-import]])
+                 [import :only [opml-import]]
+                 [search :only [search]])
         [sandbar.stateful-session :only [wrap-stateful-session]])
-  (:require [freader.config :as config]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
             (freader.handlers [feedreader :as freader]
                               [subscriptions :as subscription]
                               [users :as user])))
@@ -49,14 +46,14 @@
            (JGET "/:id" [] subscription/get-subscription)
            (JPOST "/:id" [] subscription/customize-subscription)
            (JDELETE "/:id" [] subscription/unsubscribe))
-  (context "/feeds/" []
+  (context "/feeds" []
            (context "/:feed-id" []
                     (JPOST "/categories" [] "TODO")
                     (JDELETE "/categories" [] "TODO")
                     (JPOST "/comments" [] "TODO")
                     (JDELETE "/comments/:comment-id" [] "TODO"))
-           (JGET "/search" [] "TODO")
-           (JGET "/search-ac-source" [] "TODO"))
+           (JGET "/search" [] search)
+           (JGET "/search-ac-source" [] search))
   (JPOST "/import/opml-import" [] opml-import)
   (JGET "/export/opml-export" [] "TODO"))
 
@@ -88,22 +85,3 @@
                  wrap-request-logging
                  (wrap-reload-in-dev reload-meta)
                  wrap-failsafe))
-
-(defonce server (atom nil))
-
-(defn stop-server []
-  (when-not (nil? @server)
-    (.stop @server)
-    (reset! server nil)))
-
-(defnk start-server [:jdbc-url "jdbc:postgresql://localhost/feedreader"
-                     :db-user "postgres"
-                     :db-password "123456"
-                     :port 8080
-                     :profile :development]
-  (stop-server)
-  (reset! config/env-profile profile)
-  (use-psql-database! jdbc-url
-                      db-user
-                      db-password)
-  (reset! server (run-jetty (app) {:port port :join? false})))

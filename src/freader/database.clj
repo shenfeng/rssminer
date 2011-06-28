@@ -4,7 +4,7 @@
            (org.apache.commons.dbcp BasicDataSource)))
 
 (def ^{:dynamic true} *factory*  {:factory nil
-                                 :ds nil})
+                                  :ds nil})
 
 (defn close-global-psql-factory []
   (if-let [ds (:ds *factory*)]

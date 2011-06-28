@@ -1,6 +1,7 @@
 (ns freader.test-util
   (:use (freader [database :only [close-global-psql-factory use-psql-database!]]
-                 [test-common :only [test-user]])
+                 [test-common :only [test-user]]
+                 [search :only [use-index-writer! close-global-index-writer!]])
         (freader.db [user :only [create-user]]
                     [util :only [get-con exec-stats exec-prepared-sqlfile]])))
 
@@ -20,3 +21,8 @@
         (test-fn)
         (finally (close-global-psql-factory) ; close global psql connetion
                  (exec-stats con (str "drop database " tmpdb)))))))
+
+(defn lucene-fixture [test-fn]
+  (use-index-writer! :RAM)
+  (test-fn)
+  (close-global-index-writer!))

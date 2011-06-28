@@ -9,6 +9,7 @@
                  [commons-io/commons-io "2.0.1"]
                  [compojure "0.6.3"]
                  [enlive "1.0.0"]
+                 [org.apache.lucene/lucene-core "3.2.0"]
                  [net.java.dev.rome/rome "1.0.0"]
                  [postgresql/postgresql "9.0-801.jdbc4"]
                  [ring/ring-core "0.3.8"]

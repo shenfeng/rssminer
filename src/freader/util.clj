@@ -38,22 +38,21 @@
 
 (defn download-feed-source  [url]
   (try
-    (update-in (http/get url) [:body]
-               (fn [in]
-                 (slurp in)))
+    (update-in (http/get url) [:body]   ;convert to string
+               (fn [in] (slurp in)))
     (catch Exception e
-      (print "Download feed-source " url " :" (.getMessage e)))))
+      (prn "ERROR GET " url ": " (.getMessage e) "\n"))))
 
 (defn download-favicon [url]
-  (try
-    (let [resp (http/get
-                (str (http/extract-host url) "/favicon.ico"))
-          img (Base64/encodeBase64String
-               (IOUtils/toByteArray (:body resp)))
-          code (if-let [type (:Content-Type resp)]
-                 (str "data:" type ";base64,")
-                 "data:image/x-icon;base64,")]
-      (str code img))
-    (catch Exception e
-      (print "Download favicon " url " :" (.getMessage e)))))
+  (let [icon-url (str (http/extract-host url) "/favicon.ico")]
+   (try
+     (let [resp (http/get icon-url)
+           img (Base64/encodeBase64String
+                (IOUtils/toByteArray (:body resp)))
+           code (if-let [type (:Content-Type resp)]
+                  (str "data:" type ";base64,")
+                  "data:image/x-icon;base64,")]
+       (str code img))
+     (catch Exception e
+       (prn "ERROR GET " icon-url ": " (.getMessage e) "\n")))))
 

@@ -1,5 +1,6 @@
 (ns setup-database
   (:use (freader [database :only [use-psql-database! close-global-psql-factory]]
+                 [search :only [use-index-writer! close-global-index-writer!]]
                  [routes :only [app]])
         (freader.db [user :only [create-user]]
                     [util :only [get-con exec-stats exec-prepared-sqlfile]])
@@ -29,6 +30,7 @@
                   (str "DROP DATABASE IF EXISTS " db-name)
                   (str "CREATE DATABASE " db-name)))
     (exec-prepared-sqlfile db-name)
+    (use-index-writer! "/tmp/feeds-index")
     (use-psql-database! db-name)
     (let [user (create-user {:name "feng"
                              :password "123456"
@@ -39,6 +41,7 @@
           (apply (app) [{:uri "/api/subscriptions/add"
                          :request-method :post
                          :body (json-str {:link link})}]))))
-    (close-global-psql-factory)))
+    (close-global-psql-factory)
+    (close-global-index-writer!)))
 
 (setup)

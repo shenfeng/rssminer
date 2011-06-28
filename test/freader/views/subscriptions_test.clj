@@ -2,10 +2,10 @@
   (:use clojure.test
         [clojure.contrib.json :only [read-json json-str]]
         (freader [test-common :only [auth-app mock-download-feed-source]]
-                 [test-util :only [postgresql-fixture]]
+                 [test-util :only [postgresql-fixture lucene-fixture]]
                  [util :only [download-favicon download-feed-source]])))
 
-(use-fixtures :each postgresql-fixture
+(use-fixtures :each postgresql-fixture lucene-fixture
               (fn [f] (binding [download-feed-source mock-download-feed-source
                                download-favicon (fn [link] "icon")]
                        (f))))

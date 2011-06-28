@@ -1,6 +1,7 @@
 (ns freader.db.subscription
   (:use [freader.db.util :only [exec-query select-sql-params
-                                insert-sql-params]]))
+                                insert-sql-params]]
+        [freader.search :only [index-feeds]]))
 
 (defn insert [table data]
   (first
@@ -87,6 +88,7 @@ WHERE us.user_id = ?" user-id user-id]))
                    :alternate (:link feed)
                    :published_ts (:publishedDate feed)})
           categories (:categories feed)]
+      (index-feeds (list saved-feed))
       (doseq [c categories]
         (insert :feedcategory
                 {:user_id user-id
