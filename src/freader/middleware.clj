@@ -1,6 +1,7 @@
 (ns freader.middleware
   (:use [freader.util :only [json-response]]
         [ring.util.response :only [redirect]]
+        [ring.middleware.file-info :only [make-http-format]]
         [sandbar.stateful-session :only [session-get]]
         [compojure.core :only [GET POST DELETE PUT]])
   (:require [freader.config :as config]
@@ -12,19 +13,13 @@
 (def ^{:dynamic true} *user* nil)
 (def ^{:dynamic true} *json-body* nil)
 
-(let [f (SimpleDateFormat. "yyyy-HH-dd HH:mm:ss:SSS" Locale/CHINA)]
-  (defn- current-ts-str []
-    (.format f (Date.))))
-
 ;;; Expires: Thu, 01 Dec 1994 16:00:00 GMT
-(let [f (doto
-            (SimpleDateFormat. "EEE, dd MMM yyyy kk:mm:ss zzz" Locale/ENGLISH)
-          (.setTimeZone (TimeZone/getTimeZone "GMT")))]
-  (defn- get-expire "get string for http expire header" [days]
-    (let [c (doto (Calendar/getInstance)
-              (.add Calendar/DAY_OF_YEAR days))
-          d (.getTime c)]
-      (.format f d))))
+(defn- get-expire "get string for http expire header" [days]
+  (let [f (make-http-format)
+        c (doto (Calendar/getInstance)
+            (.add Calendar/DAY_OF_YEAR days))
+        d (.getTime c)]
+    (.format f d)))
 
 (defn wrap-auth [handler]
   (fn [req]
@@ -41,14 +36,13 @@
     (let [resp (handler req)
           headers (resp :headers)
           ctype (headers "Content-Type")]
-      (if (or
-           (not= 200 (:status resp))
-           (and ctype (re-find #"text|json|xml" ctype)))
-         ; do not cache non-200; do not cache text, json, or xml.
+      (if (or (not= 200 (:status resp))
+              (and ctype (re-find #"text|json|xml" ctype)))
+        ;; do not cache non-200; do not cache text, json, or xml.
         (let [new-headers (assoc headers
                             "Cache-Control" "no-cache")]
           (assoc resp :headers new-headers))
-        ; cache image with status code of 200
+        ;; cache image with status code of 200
         (let [new-headers (assoc headers
                             "Cache-Control" "public, max-age=31536000"
                             ;; one year
@@ -96,6 +90,10 @@
       (if (number? status)
         (json-response status (dissoc resp-obj :status))
         (json-response 200 resp-obj)))))
+
+(let [f (SimpleDateFormat. "yyyy-HH-dd HH:mm:ss:SSS" Locale/CHINA)]
+  (defn- current-ts-str []
+    (.format f (Date.))))
 
 (defn wrap-request-logging [handler]
   (fn [{:keys [request-method uri] :as req}]

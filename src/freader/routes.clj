@@ -17,6 +17,7 @@
                  [search :only [search]])
         [sandbar.stateful-session :only [wrap-stateful-session]])
   (:require [clojure.string :as str]
+            [compojure.route :as route]
             (freader.handlers [feedreader :as freader]
                               [subscriptions :as subscription]
                               [users :as user])))
@@ -68,9 +69,8 @@
            (GET "/" [] user/show-signup-page)
            (POST "/" [] user/signup))
   (context "/api" [] api-routes)
-  (ANY "*" [] {:status 404,
-               :headers {"content-type" "text/html"}
-               :body "<h1>Page not found.</h1>"}))
+  (route/files "")
+  (route/not-found "<h1>Page not found.</h1>" ))
 
 (defn app [] (-> #'all-routes
                  wrap-keyword-params
@@ -78,9 +78,7 @@
                  wrap-params
                  wrap-auth
                  wrap-stateful-session
-                 (wrap-file "public")
                  wrap-cache-header
-                 wrap-file-info
                  wrap-content-type
                  wrap-request-logging
                  (wrap-reload-in-dev reload-meta)
