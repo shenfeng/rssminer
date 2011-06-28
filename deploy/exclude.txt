@@ -7,9 +7,12 @@
 /deploy/exclude.txt
 /lib/dev
 /project.clj
+/public/js/freader
 /scss
 /templates
 /test
 README
+pom.xml
 Rakefile
 jsTestDriver.conf
+/scripts/*.jar
