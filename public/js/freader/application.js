@@ -16,6 +16,9 @@ window.$(function () {
   }
 
   $(window).resize(_.debounce(layout, 100));
+  $("#search-input").autocomplete({
+    source: "/api/feeds/search"
+  });
 
   freader.init();
 });

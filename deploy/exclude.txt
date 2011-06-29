@@ -8,6 +8,7 @@
 /lib/dev
 /project.clj
 /public/js/freader
+/public/js/lib
 /scss
 /templates
 /test

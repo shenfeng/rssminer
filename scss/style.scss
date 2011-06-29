@@ -1,7 +1,7 @@
 @import "variable";
 @import "css3";
 @import "reset";
-
+@import "jquery-ui-1.8.13.custom";
 #accouts-div {
     margin-top:80px;
     input{  font-size: 1.2em; }
@@ -94,6 +94,14 @@ header {
     h1 { margin: 4px 0 }
     a { color: #303030; }
     .sub { font-style: italic;  font-size: 14px;  }
+}
+
+#search-input {
+    float: right;
+    padding: 3px 4px;
+    font-size: 12px;
+    width: 330px;
+    margin: 2em 5em 0 0;
 }
 
 #main { margin: 10px 0; position: relative; }

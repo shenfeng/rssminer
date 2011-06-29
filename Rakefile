@@ -46,12 +46,12 @@ task :prepare_prod => ["css:compress", "js:minify"]
 
 desc "Run development server"
 task :run => ["prepare"] do
-  sh 'scripts/run --profile development'
+  sh 'scripts/run --profile dev'
 end
 
 desc "Run production server"
 task :run_prod => ["prepare_prod"] do
-  sh 'scripts/run --profile production'
+  sh 'scripts/run --profile prod'
 end
 
 task :inc_version do
@@ -94,10 +94,11 @@ namespace :js do
     versioned = "public/js/freader-#{get_version}-min.js"
     print "Generating #{versioned}, please wait....\n"
 
-    files = FileList['public/js/jquery-1.6.1.js',
-                     'public/js/underscore.js',
-                     'public/js/backbone.js',
-                     'public/js/mustache.js',
+    files = FileList['public/js/lib/jquery-1.6.1.js',
+                     'public/js/lib/jquery-ui-1.8.13.custom.js',
+                     'public/js/lib/underscore.js',
+                     'public/js/lib/backbone.js',
+                     'public/js/lib/mustache.js',
                      'public/js/freader/tmpls.js',
                      'public/js/freader/util.js',
                      'public/js/freader/models.js',
