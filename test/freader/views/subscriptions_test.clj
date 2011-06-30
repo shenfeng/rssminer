@@ -1,11 +1,12 @@
 (ns freader.views.subscriptions-test
   (:use clojure.test
         [clojure.contrib.json :only [read-json json-str]]
-        (freader [test-common :only [auth-app mock-download-feed-source]]
-                 [test-util :only [postgresql-fixture lucene-fixture]]
+        [freader.db.util :only [exec-query select-sql-params]]
+        (freader [test-common :only [auth-app auth-app2 app-fixture
+                                     mock-download-feed-source]]
                  [util :only [download-favicon download-feed-source]])))
 
-(use-fixtures :each postgresql-fixture lucene-fixture
+(use-fixtures :each app-fixture
               (fn [f] (binding [download-feed-source mock-download-feed-source
                                download-favicon (fn [link] "icon")]
                        (f))))
@@ -22,22 +23,29 @@
 (deftest test-add-feedsource
   (let [[subscribe-resp subscription] (prepare)
         subscribe-again (auth-app add-req)
-        ;; fetch to make sure it is inserted to database
-        fetch-resp (auth-app {:uri (str "/api/subscriptions/"
-                                        (:id subscription))
-                              :request-method :get
-                              :params {"limit" "13"
-                                       "offset" "0"}})
-        fetched-feeds (-> fetch-resp :body read-json)]
+        another-resp (auth-app2 add-req)]
     (is (= 200 (:status subscribe-resp)))
     (is (= 409 (:status subscribe-again)))
+    (is (= 200 (:status another-resp)))
+    ;; make sure only one subscription is added
+    (is (= 1 (count
+              (exec-query ["select * from subscriptions"]))))
     (are [key] (-> subscription key)
          :total_count
          :id
          :unread_count
          :favicon
-         :title)
-    (is (= 200 (:status fetch-resp)))
+         :title)))
+
+(deftest test-get-subscription
+  (let [[_ subscription] (prepare)
+        resp (auth-app {:uri (str "/api/subscriptions/"
+                                  (:id subscription))
+                        :request-method :get
+                        :params {"limit" "13"
+                                 "offset" "0"}})
+        fetched-feeds (-> resp :body read-json)]
+    (is (= 200 (:status resp)))
     (are [key] (-> fetched-feeds :items first key)
          :categories
          :comments

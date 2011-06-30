@@ -2,7 +2,7 @@
   (:use clojure.test
         freader.db.user
         clojure.contrib.trace
-        [freader.test-util :only [postgresql-fixture]]))
+        (freader [test-common :only [postgresql-fixture]])))
 
 (use-fixtures :each postgresql-fixture)
 

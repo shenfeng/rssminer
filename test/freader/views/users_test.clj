@@ -2,8 +2,7 @@
   (:use clojure.test
         [sandbar.stateful-session :only [session-put!]]
         clojure.contrib.mock
-        (freader [test-common :only [test-app]]
-                  [test-util :only [postgresql-fixture]])))
+        (freader [test-common :only [test-app postgresql-fixture]])))
 
 (use-fixtures :each postgresql-fixture)
 

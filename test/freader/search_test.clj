@@ -1,8 +1,8 @@
 (ns freader.search-test
   (:use clojure.test
         [clojure.contrib.json :only [read-json json-str]]
-        (freader [test-common :only [auth-app mock-download-feed-source]]
-                 [test-util :only [postgresql-fixture lucene-fixture]]
+        (freader [test-common :only [auth-app mock-download-feed-source
+                                     app-fixture]]
                  [util :only [download-favicon download-feed-source]])))
 
 (defn- prepare [f]
@@ -13,7 +13,7 @@
                :body (json-str {:link "http://link-to-scottgu's rss"})})
     (f)))
 
-(use-fixtures :each postgresql-fixture lucene-fixture prepare)
+(use-fixtures :each app-fixture prepare)
 
 (deftest test-search
   (let [resp (auth-app {:uri "/api/feeds/search"

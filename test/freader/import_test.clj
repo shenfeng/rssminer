@@ -2,8 +2,7 @@
   (:use clojure.test
         clojure.contrib.mock
         freader.import
-        [freader.test-common :only [auth-app]]
-        [freader.test-util :only [postgresql-fixture]]
+        [freader.test-common :only [auth-app postgresql-fixture]]
         [freader.handlers.subscriptions :only [add-subscription*]]))
 
 (use-fixtures :each postgresql-fixture)
