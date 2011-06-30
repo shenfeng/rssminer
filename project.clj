@@ -14,6 +14,9 @@
                  [postgresql/postgresql "9.0-801.jdbc4"]
                  [ring/ring-core "0.3.8"]
                  [org.signaut/ring-jetty7-adapter "0.3.8.2"]]
+  :dev-resources-path "/usr/lib/jvm/java-6-openjdk/lib/tools.jar:/usr/lib/jvm/java-6-openjdk/src.zip"
+  :jvm-opts ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n"]
   :dev-dependencies [[swank-clojure "1.4.0-SNAPSHOT"]
+                     [clojure-source "1.2.1"]
                      [org.clojure.contrib/mock "1.3.0-alpha4"]
                      [org.clojure.contrib/trace "1.3.0-alpha4"]])
