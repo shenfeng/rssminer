@@ -6,7 +6,7 @@
 (deftest test-index-page
   (let [resp (test-app {:uri "/"
                         :request-method :get})
-        js-resp (test-app {:uri "/js/lib/jquery-1.6.1.js"
+        js-resp (test-app {:uri "/js/lib/jquery.js"
                            :request-method :get
                            :headers {}})]
     (is (= 200 (:status js-resp)))

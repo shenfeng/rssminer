@@ -1,4 +1,4 @@
-//     Backbone.js 0.5.0-pre
+//     Backbone.js 0.5.1
 //     (c) 2010 Jeremy Ashkenas, DocumentCloud Inc.
 //     Backbone may be freely distributed under the MIT license.
 //     For all details and documentation:
@@ -25,7 +25,7 @@
   }
 
   // Current version of the library. Keep in sync with `package.json`.
-  Backbone.VERSION = '0.5.0-pre';
+  Backbone.VERSION = '0.5.1';
 
   // Require Underscore, if we're on the server, and it's not already present.
   var _ = root._;
@@ -253,18 +253,19 @@
     // to silence it.
     clear : function(options) {
       options || (options = {});
+      var attr;
       var old = this.attributes;
 
       // Run validation.
       var validObj = {};
-      for (var attr in old) validObj[attr] = void 0;
+      for (attr in old) validObj[attr] = void 0;
       if (!options.silent && this.validate && !this._performValidation(validObj, options)) return false;
 
       this.attributes = {};
       this._escapedAttributes = {};
       this._changed = true;
       if (!options.silent) {
-        for (var attr in old) {
+        for (attr in old) {
           this.trigger('change:' + attr, this, void 0, options);
         }
         this.change(options);
@@ -339,10 +340,9 @@
       return new this.constructor(this);
     },
 
-    // A model is new if it has never been saved to the server, and has a negative
-    // ID.
+    // A model is new if it has never been saved to the server, and lacks an id.
     isNew : function() {
-      return !this.id;
+      return this.id == null;
     },
 
     // Call this method to manually fire a `change` event for this model.
@@ -420,7 +420,7 @@
     _.bindAll(this, '_onModelEvent', '_removeReference');
     this._reset();
     if (models) this.reset(models, {silent: true});
-    this.initialize(models, options);
+    this.initialize.apply(this, arguments);
   };
 
   // Define the Collection's inheritable methods.
@@ -555,7 +555,7 @@
       return _(this.models).chain();
     },
 
-    // Reset all internal state. Called when the collection is refreshed.
+    // Reset all internal state. Called when the collection is reset.
     _reset : function(options) {
       this.length = 0;
       this.models = [];
@@ -567,8 +567,8 @@
     _prepareModel: function(model, options) {
       if (!(model instanceof Backbone.Model)) {
         var attrs = model;
-        model = new this.model(null, {collection: this});
-        if (!model.set(attrs, options)) model = false;
+        model = new this.model(attrs, {collection: this});
+        if (model.validate && !model._performValidation(attrs, options)) model = false;
       } else if (!model.collection) {
         model.collection = this;
       }
@@ -640,7 +640,7 @@
   // Underscore methods that we want to implement on the Collection.
   var methods = ['forEach', 'each', 'map', 'reduce', 'reduceRight', 'find', 'detect',
     'filter', 'select', 'reject', 'every', 'all', 'some', 'any', 'include',
-    'invoke', 'max', 'min', 'sortBy', 'sortedIndex', 'toArray', 'size',
+    'contains', 'invoke', 'max', 'min', 'sortBy', 'sortedIndex', 'toArray', 'size',
     'first', 'rest', 'last', 'without', 'indexOf', 'lastIndexOf', 'isEmpty'];
 
   // Mix in each Underscore method as a proxy to `Collection#models`.
@@ -659,7 +659,7 @@
     options || (options = {});
     if (options.routes) this.routes = options.routes;
     this._bindRoutes();
-    this.initialize(options);
+    this.initialize.apply(this, arguments);
   };
 
   // Cached regular expressions for matching named param parts and splatted
@@ -691,17 +691,9 @@
       }, this));
     },
 
-    // Simple proxy to `Backbone.history` to save a fragment into the history,
-    // without triggering routes.
-    saveLocation : function(fragment) {
-      Backbone.history.saveLocation(fragment);
-    },
-
-    // Simple proxy to `Backbone.history` to both save a fragment into the
-    // history and to then load the route at that fragment.
-    setLocation : function(fragment) {
-      Backbone.history.saveLocation(fragment);
-      Backbone.history.loadUrl(fragment);
+    // Simple proxy to `Backbone.history` to save a fragment into the history.
+    navigate : function(fragment, triggerRoute) {
+      Backbone.history.navigate(fragment, triggerRoute);
     },
 
     // Bind all defined routes to `Backbone.history`. We have to reverse the
@@ -717,7 +709,7 @@
         var callback = routes[i][1];
         if(_.isFunction(callback)) {
           this.route(routes[i][0], callback.name, callback);
-        }else {
+        } else {
           // backbone default
           this.route(routes[i][0], callback, this[callback]);
         }
@@ -752,7 +744,7 @@
   };
 
   // Cached regex for cleaning hashes.
-  var hashStrip = /^#*!?/;
+  var hashStrip = /^#*/;
 
   // Cached regex for detecting MSIE.
   var isExplorer = /msie [\w.]+/;
@@ -798,7 +790,7 @@
       var oldIE             = (isExplorer.exec(navigator.userAgent.toLowerCase()) && (!docMode || docMode <= 7));
       if (oldIE) {
         this.iframe = $('<iframe src="javascript:0" tabindex="-1" />').hide().appendTo('body')[0].contentWindow;
-        this.saveLocation(fragment);
+        this.navigate(fragment);
       }
 
       // Depending on whether we're using pushState or hashes, and whether
@@ -815,13 +807,16 @@
       // opened by a non-pushState browser.
       this.fragment = fragment;
       historyStarted = true;
-      var started = this.loadUrl() || this.loadUrl(window.location.hash);
-      if (this._wantsPushState && !this._hasPushState && window.location.pathname != this.options.root) {
+      var loc = window.location;
+      var atRoot  = loc.pathname == this.options.root;
+      if (this._wantsPushState && !this._hasPushState && !atRoot) {
         this.fragment = this.getFragment(null, true);
-        window.location = this.options.root + '#' + this.fragment;
-      } else {
-        return started;
+        window.location.replace(this.options.root + '#' + this.fragment);
+      } else if (this._wantsPushState && this._hasPushState && atRoot && loc.hash) {
+        this.fragment = loc.hash.replace(hashStrip, '');
+        window.history.replaceState({}, document.title, loc.protocol + '//' + loc.host + this.options.root + this.fragment);
       }
+      return this.loadUrl();
     },
 
     // Add a route to be tested when the fragment changes. Routes added later may
@@ -836,7 +831,7 @@
       var current = this.getFragment();
       if (current == this.fragment && this.iframe) current = this.getFragment(this.iframe.location.hash);
       if (current == this.fragment || current == decodeURIComponent(this.fragment)) return false;
-      if (this.iframe) this.saveLocation(current);
+      if (this.iframe) this.navigate(current);
       this.loadUrl() || this.loadUrl(window.location.hash);
     },
 
@@ -857,21 +852,22 @@
     // Save a fragment into the hash history. You are responsible for properly
     // URL-encoding the fragment in advance. This does not trigger
     // a `hashchange` event.
-    saveLocation : function(fragment) {
-      fragment = (fragment || '').replace(hashStrip, '');
-      if (this.fragment == fragment || this.fragment == decodeURIComponent(fragment)) return;
+    navigate : function(fragment, triggerRoute) {
+      var frag = (fragment || '').replace(hashStrip, '');
+      if (this.fragment == frag || this.fragment == decodeURIComponent(frag)) return;
       if (this._hasPushState) {
         var loc = window.location;
-        if (fragment.indexOf(this.options.root) != 0) fragment = this.options.root + fragment;
-        this.fragment = fragment;
-        window.history.pushState({}, document.title, loc.protocol + '//' + loc.host + fragment);
+        if (frag.indexOf(this.options.root) != 0) frag = this.options.root + frag;
+        this.fragment = frag;
+        window.history.pushState({}, document.title, loc.protocol + '//' + loc.host + frag);
       } else {
-        window.location.hash = this.fragment = fragment;
-        if (this.iframe && (fragment != this.getFragment(this.iframe.location.hash))) {
+        window.location.hash = this.fragment = frag;
+        if (this.iframe && (frag != this.getFragment(this.iframe.location.hash))) {
           this.iframe.document.open().close();
-          this.iframe.location.hash = fragment;
+          this.iframe.location.hash = frag;
         }
       }
+      if (triggerRoute) this.loadUrl(fragment);
     }
 
   });
@@ -886,7 +882,7 @@
     this._configure(options || {});
     this._ensureElement();
     this.delegateEvents();
-    this.initialize(options);
+    this.initialize.apply(this, arguments);
   };
 
   // Element lookup, scoped to DOM elements within the current view.
@@ -961,13 +957,16 @@
       for (var key in events) {
         var methodName = events[key],
             method;
-        var match = key.match(eventSplitter);
-        var eventName = match[1], selector = match[2];
         if (_.isFunction(methodName)){
           method = _.bind(methodName, this);
         } else {
           method = _.bind(this[methodName], this);
         }
+        // var method = this[events[key]];
+        // if (!method) throw new Error('Event "' + events[key] + '" does not exist');
+        var match = key.match(eventSplitter);
+        var eventName = match[1], selector = match[2];
+        method = _.bind(method, this);
         eventName += '.delegateEvents' + this.cid;
         if (selector === '') {
           $(this.el).bind(eventName, method);
@@ -1098,11 +1097,11 @@
   // class properties to be extended.
   var inherits = function(parent, protoProps, staticProps) {
     var child,
-        conf,
+        cons,
         isf = _.isFunction(protoProps);
 
-    if(isf){
-      conf = protoProps;
+    if(isf) {
+      cons = protoProps;
       protoProps = {};
     }
 
@@ -1114,7 +1113,7 @@
     } else {
       child = function(){
         if(isf) {
-          _.extend(this, conf.apply(null));
+          _.extend(this, cons.apply(this));
         }
         return parent.apply(this, arguments);
       };
@@ -1153,7 +1152,7 @@
 
   // Throw an error when a URL is needed, and none is supplied.
   var urlError = function() {
-    throw new Error("A 'url' property or function must be specified");
+    throw new Error('A "url" property or function must be specified');
   };
 
   // Wrap an optional error callback with a fallback error event.
@@ -1169,7 +1168,7 @@
 
   // Helper function to escape a string for HTML rendering.
   var escapeHTML = function(string) {
-    return string.replace(/&(?!\w+;|#\d+;|#x[\da-f]+;)/gi, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27').replace(/\//g,'&#x2F;');
+    return string.replace(/&(?!\w+;|#\d+;|#x[\da-f]+;)/gi, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;').replace(/\//g,'&#x2F;');
   };
 
 }).call(this);

@@ -62,7 +62,7 @@ window.$(function(){
 
     function set(attr, options) {
       attr = parse(_.clone(attr));
-      return backbone.Model.prototype.set.call(that, attr, options);
+      return backbone.Model.prototype.set.call(this, attr, options);
     }
 
     function getMenuJSON() {
@@ -155,7 +155,7 @@ window.$(function(){
     }
     function set(attr, options) {
       attr = parse(_.clone(attr));
-      return backbone.Model.prototype.set.call(that, attr, options);
+      return backbone.Model.prototype.set.call(this, attr, options);
     }
     return {
       initialize: function() {
