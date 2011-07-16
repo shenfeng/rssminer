@@ -1,8 +1,3 @@
-require 'rake/clean'
-require 'tempfile'
-require 'rubygems'
-require 'date'
-require 'closure-compiler'
 task :default => :test
 
 def get_file_as_string(filename)
@@ -14,111 +9,80 @@ def get_file_as_string(filename)
   return data
 end
 
-def get_version()
-  return get_file_as_string('deploy/version.conf').gsub(/#.+/,"").strip
+def get_dir(path)
+  File.split(path)[0]
 end
 
-def compress(type, source, target)
-  sh "java -jar 'scripts/yuicompressor-2.4.6.jar' --type #{type} " +
-    "--charset utf-8 -o #{target} \"#{source}\" 2> /dev/null > /dev/null"
+version = Time.now.strftime("%Y%m%d%H%M") # timestamp
+
+file 'bin/closure-compiler.jar' do
+  mkdir_p 'bin'
+  rm_rf '/tmp/closure-compiler.zip'
+  sh 'wget http://closure-compiler.googlecode.com/files/compiler-latest.zip' +
+    ' -O /tmp/closure-compiler.zip'
+  rm_rf '/tmp/compiler.jar'
+  sh 'unzip /tmp/closure-compiler.zip compiler.jar -d /tmp'
+  rm_rf '/tmp/closure-compiler.zip'
+  mv '/tmp/compiler.jar', 'bin/closure-compiler.jar'
 end
 
-desc "Download jstestdriver from web"
-task :download do
-  unless File.exists? 'scripts/JsTestDriver-1.3.2.jar'
-    sh 'wget -O scripts/JsTestDriver-1.3.2.jar http://js-test-driver.googlecode.com/files/JsTestDriver-1.3.2.jar'
-  end
-  unless File.exists? 'scripts/htmlcompressor-1.3.1.jar'
-    sh 'wget -O scripts/htmlcompressor-1.3.1.jar http://htmlcompressor.googlecode.com/files/htmlcompressor-1.3.1.jar'
-  end
+file "bin/htmlcompressor.jar" do
+  mkdir_p 'bin'
+  sh 'wget http://htmlcompressor.googlecode.com/files/htmlcompressor-1.3.1.jar' +
+    ' -O bin/htmlcompressor.jar'
 end
 
-task :copy do
-  sh 'cp ../mustache.js/mustache.js public/js/mustache.js'
-  sh 'cp ../backbone/backbone.js public/js/backbone.js'
+task :deps => ['bin/closure-compiler.jar', "bin/htmlcompressor.jar"]
+
+freader_jss = FileList['public/js/lib/jquery.js',
+                       'public/js/lib/jquery-ui-1.8.13.custom.js',
+                       'public/js/lib/underscore.js',
+                       'public/js/lib/backbone.js',
+                       'public/js/lib/mustache.js',
+                       'public/js/freader/tmpls.js',
+                       'public/js/freader/util.js',
+                       'public/js/freader/models.js',
+                       'public/js/freader/views.js',
+                       'public/js/freader/magic.js',
+                       'public/js/freader/application.js']
+
+desc "Clean generated files"
+task :clean  do
+  rm_rf 'public/js/freader/tmpls.js'
+  rm_rf 'public/js/freader*min.js'
+  rm_rf 'public/css/*'
+  rm_rf 'src/templates'
 end
 
-desc "Prepare for test"
-task :prepare => ["css:compile", "js:tmpls"]
+desc "Prepare for development"
+task :prepare => [:clean, "css:compile", "js:tmpls"]
 
 desc "Prepare for production"
-task :prepare_prod => ["css:compress", "js:minify"]
+task :prepare_prod => [:clean, "css:compress", "js:minify"]
 
-desc "Run development server"
-task :run => ["prepare"] do
+desc "Run server in dev profile"
+task :run => :prepare do
   sh 'scripts/run --profile dev'
 end
 
-desc "Run production server"
-task :run_prod => ["prepare_prod"] do
+desc "Run server in production profile"
+task :run_prod => :prepare_prod do
   sh 'scripts/run --profile prod'
 end
 
-task :inc_version do
-  version = Integer(get_version)+1
-  File.open("deploy/version.conf", 'w') {
-    |f| f.write("#{version} # #{DateTime.now}\n")
-  }
-end
-
 desc 'Deploy to production'
-task :deploy_prod => [:inc_version, :clean, :prepare_prod, :test] do
-  sh "scripts/deploy production"
-  sh "git tag -a deployed-v#{get_version} -m ''"
-end
-
-desc 'Deploy to staging'
-task :deploy_staging => [:clean, :prepare_prod, :test] do
-  sh "scripts/deploy staging"
+task :deploy => [:prepare_prod, :test] do
+  sh "scripts/deploy"
 end
 
 desc "Run unit test"
-task :test do
+task :test => :prepare do
   sh 'lein test'
 end
 
 namespace :js do
-  CLEAN.include('public/js/freader/tmpls.js','public/js/freader*min.js')
-  desc 'start jstestdriver server'
-  task :startserver do
-    sh 'java -jar scripts/JsTestDriver-1.3.2.jar --port 9876 --browser `which firefox`'
-  end
-
-  desc 'Run js unit test against running jstestdriver server'
-  task :unit => :download do
-    sh 'java -jar scripts/JsTestDriver-1.3.2.jar --tests all --captureConsole'
-  end
-
-  desc 'Combine all js into one, minify it using google closure'
-  task :minify => :tmpls do
-    versioned = "public/js/freader-#{get_version}-min.js"
-    print "Generating #{versioned}, please wait....\n"
-
-    files = FileList['public/js/lib/jquery-1.6.1.js',
-                     'public/js/lib/jquery-ui-1.8.13.custom.js',
-                     'public/js/lib/underscore.js',
-                     'public/js/lib/backbone.js',
-                     'public/js/lib/mustache.js',
-                     'public/js/freader/tmpls.js',
-                     'public/js/freader/util.js',
-                     'public/js/freader/models.js',
-                     'public/js/freader/views.js',
-                     'public/js/freader/magic.js',
-                     'public/js/freader/application.js']
-    # closure = Closure::Compiler.new(:compilation_level =>
-    #                                 'ADVANCED_OPTIMIZATIONS',
-    #                                 :formatting => 'PRETTY_PRINT'
-    #                                 )
-    closure = Closure::Compiler.new()
-    js_src = '';
-    files.each do |f|
-      js_src += get_file_as_string(f);
-    end
-    File.open(versioned, 'w') {|f| f.write(closure.compile(js_src))}
-  end
-
-  desc "Generate tmpls.js"
-  task :tmpls => ["html:compress"] do
+  desc "Generate template js resouces"
+  task :tmpls => :html_compress do
     print "Generating tmpls.js, please wait....\n"
     html_tmpls = FileList['src/templates/js-tmpls/**/*.*']
     data = "(function(){var tmpls = {};"
@@ -130,61 +94,67 @@ namespace :js do
     data += "window.Freader = window.$.extend(window.Freader, {tmpls: tmpls})})();\n"
     File.open("public/js/freader/tmpls.js", 'w') {|f| f.write(data)}
   end
+
+  desc 'Combine all js into one, minify it using google closure'
+  task :minify => [:tmpls, :deps] do
+    target = "public/js/freader-#{version}-min.js"
+
+    source_arg = ''
+    freader_jss.each do |js|
+      source_arg += " --js #{js} "
+    end
+
+    sh 'java -jar bin/closure-compiler.jar --warning_level QUIET' +
+      " --js_output_file '#{target}' #{source_arg}"
+  end
 end
 
 namespace :css do
-  CLEAN.include('public/css/*')
-  desc 'Compile scss, Generate css'
+  scss = FileList['scss/**/*.scss'].exclude('scss/**/_*.scss')
+  desc 'Compile scss, generate css'
   task :compile do
-    scss = FileList['scss/**/*.scss'].exclude('scss/**/_*.scss')
     scss.each do |source|
       target = source.sub(/scss$/, 'css').sub(/^scss/, 'public/css')
       sh "sass -t expanded -g --cache-location /tmp #{source} #{target}"
     end
   end
-  desc 'Compile scss, Compress generated css'
+  desc 'Compile scss, compress generated css'
   task :compress do
-    scss = FileList['scss/**/*.scss'].exclude('scss/**/_*.scss')
-    versioned = "-#{get_version}-min.css"
+    versioned = "-#{version}-min.css"
     scss.each do |source|
       target = source.sub(/\.scss$/, versioned).sub(/^scss/, 'public/css')
       sh "sass -t compressed --cache-location /tmp #{source} #{target}"
-      sh "sed -i \"s/{VERSION}/#{get_version}/g\" #{target}"
+      sh "sed -i \"s/{VERSION}/#{version}/g\" #{target}"
     end
   end
 end
 
-namespace :html do
-  CLEAN.include('src/templates')
+html_srcs = FileList['templates/**/*.*']
+html_triples = html_srcs.map {|f| [f, "src/#{f}", get_dir("src/#{f}")]}
 
-  def get_dir(path)
-    File.split(path)[0]
+html_triples.each do |src, tgt, dir|
+  directory dir
+  file tgt => [src, dir] do
+    sh "java -jar bin/htmlcompressor.jar --charset utf8 #{src} -o #{tgt}"
+    sh "sed -i \"s/{VERSION}/#{version}/g\" #{tgt}"
   end
-
-  html_srcs = FileList['templates/**/*.*']
-  html_triples = html_srcs.map {|f| [f, "src/#{f}", get_dir("src/#{f}")]}
-
-  html_triples.each do |src, tgt, dir|
-    directory dir
-    file tgt => [src, dir] do
-      sh "java -jar scripts/htmlcompressor-1.3.1.jar --charset utf8 #{src} -o #{tgt}"
-      sh "sed -i \"s/{VERSION}/#{get_version}/g\" #{tgt}"
-    end
-  end
-
-  desc 'Compress html using htmlcompressor, save compressed to src/templates'
-  task :compress => html_srcs.map {|f| "src/#{f}"}
 end
+
+desc 'Compress html using htmlcompressor, save compressed to src/templates'
+task :html_compress => html_srcs.map {|f| "src/#{f}"}
 
 namespace :watch do
-  desc 'Watch css, html; after Ctrl+C, process sh should be manually killed'
-  task :all => ["css:compile", "js:tmpls", "download"] do
+  desc 'Watch css, html'
+  task :all => [:deps, "css:compile", "js:tmpls"] do
     t1 = Thread.new do
       sh 'while inotifywait -e modify scss/; do rake css:compile; done'
     end
     t2 = Thread.new do
       sh 'while inotifywait -r -e modify templates/; do rake js:tmpls; done'
     end
+    trap(:INT) {
+      sh "killall inotifywait"
+    }
     t1.join
     t2.join
   end

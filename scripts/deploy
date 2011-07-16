@@ -5,25 +5,8 @@ set -e
 # sudo adduser deploy && copy authen key
 # deploy  ALL = NOPASSWD: /bin/cp, /bin/mkdir, /sbin/restart, /bin/readlink, /bin/chown, /sbin/start, /usr/sbin/service, /bin/ln
 
-# readlink in MacOSX behaves differently
 READLINK=readlink
-if which greadlink > /dev/null; then
-    READLINK=greadlink
-fi
-
-case $1 in
-    staging)
-        FRONTEND_HOST="192.168.1.11"
-        ;;
-    production)
-        FRONTEND_HOST="reader.shenfeng.me"
-        ;;
-    *)
-        echo "staging or production"
-        exit
-        ;;
-esac
-
+FRONTEND_HOST="reader.shenfeng.me"
 ABSOLUTE_PATH=$(${READLINK} -f $0)
 FREADER_HOME="${ABSOLUTE_PATH%/*/*}"
 DEPLOYMENT_USER="deploy"
