@@ -31,17 +31,19 @@
         parser (MultiFieldQueryParser. version fields (create-analyzer))]
     (.parse parser term)))
 
+(defn close-global-index-writer! []
+  (when *indexer*
+    (.close *indexer*)))
+
 (defn use-index-writer! [path]
+  "It will close previous *indexer*"
+  (close-global-index-writer!)
   (let [conf (doto (IndexWriterConfig. version (create-analyzer))
                (.setOpenMode IndexWriterConfig$OpenMode/CREATE_OR_APPEND))
         dir (if (= path :RAM)
               (RAMDirectory.)
               (MMapDirectory. (File. path)))]
     (def *indexer* (IndexWriter. dir conf))))
-
-(defn close-global-index-writer! []
-  (when *indexer*
-    (.close *indexer*)))
 
 (defn- ^NumericField create-numericfield
   [field-name value & [{:keys [store] :or {store :yes}}]]

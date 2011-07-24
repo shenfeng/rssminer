@@ -1,6 +1,9 @@
 (ns freader.handlers.feedreader
   (:require [freader.views.feedreader :as view]))
 
+(defn landing-page [req]
+  (view/landing-page))
+
 (defn index-page [req]
   (view/index-page))
 

@@ -5,7 +5,7 @@
             [freader.views.users :as view]))
 
 (defn show-login-page [req]
-  (view/login-page "/"))
+  (view/login-page "/app"))
 
 (defn login [req]
   (let [{:keys [email password return-url]} (:params req)
@@ -23,4 +23,4 @@
   (let [{:keys [email password]} (:params req)
         user (db/create-user {:email email
                               :password password})]
-    (redirect "/")))
+    (redirect "/app")))

@@ -17,6 +17,7 @@
                          conf/PSQL_PASSWORD))
   ([jdbc-url user password]
      (RT/loadClassForName "org.postgresql.Driver")
+     (close-global-psql-factory)
      ;; TODO investigate other connection pool options, eg: BoneCP
      (let [ds (doto (BasicDataSource.)
                 (.setUrl jdbc-url)

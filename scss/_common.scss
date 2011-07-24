@@ -1,0 +1,25 @@
+#header {
+    padding: 0.5em;
+    text-indent: 1em;
+    font-size: 20px;
+    text-shadow: 1px 1px 0px #E0E0E0;
+    h1 { margin: 4px 0 }
+    a { color: #303030; }
+    .sub { font-style: italic;  font-size: 14px;  }
+}
+
+/* Hide for both screenreaders and browsers:
+   css-discuss.incutio.com/wiki/Screenreader_Visibility */
+.hidden { display: none; visibility: hidden; }
+
+/* Hide visually and from screenreaders, but maintain layout */
+.invisible { visibility: hidden; }
+
+/* The Magnificent Clearfix: Updated to prevent margin-collapsing on child elements in most situations.
+   nicolasgallagher.com/micro-clearfix-hack/ */
+
+.clearfix:before, .clearfix:after { content: ""; display: table; }
+.clearfix:after { clear: both; }
+.clearfix { zoom: 1; }
+
+.required { color: #C00; }

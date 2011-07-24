@@ -1,8 +1,10 @@
 (ns freader.test-common
   (:use [freader.routes :only [app]]
         [clojure.test :only [join-fixtures]]
-        (freader [database :only [close-global-psql-factory use-psql-database!]]
-                 [search :only [use-index-writer! close-global-index-writer!]])
+        (freader [database :only [close-global-psql-factory
+                                  use-psql-database!]]
+                 [search :only [use-index-writer!
+                                close-global-index-writer!]])
         (freader.db [util :only [get-con exec-stats exec-prepared-sqlfile]]
                     [user :only [create-user]])
         [sandbar.stateful-session :only [session-get]]))
@@ -43,6 +45,7 @@
     (fn [& args]
       (binding [session-get mock-session-get]
         (apply (app) args)))))
+
 (defn lucene-fixture [test-fn]
   (use-index-writer! :RAM)
   (test-fn)

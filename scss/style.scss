@@ -2,6 +2,8 @@
 @import "css3";
 @import "reset";
 @import "jquery-ui-1.8.13.custom";
+@import "common";
+
 #accouts-div {
     margin-top:80px;
     input{  font-size: 1.2em; }
@@ -86,18 +88,10 @@
     visibility: hidden;
 }
 
-header {
-    padding: 0.5em;
-    text-indent: 1em;
-    font-size: 20px;
-    text-shadow: 1px 1px 0px #E0E0E0;
-    h1 { margin: 4px 0 }
-    a { color: #303030; }
-    .sub { font-style: italic;  font-size: 14px;  }
-}
-
 #search-input {
-    float: right;
+    position: absolute;
+    top: -5em;
+    right: 2em;
     padding: 3px 4px;
     font-size: 12px;
     width: 330px;

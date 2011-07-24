@@ -12,7 +12,8 @@
   ([table pred-map] (select-sql-params table pred-map 1 0))
   ([table pred-map limit offset]
      (let [pred-seg (str/join " AND "
-                              (map #(str (escape-keyword %) " = ?") (keys pred-map)))
+                              (map #(str (escape-keyword %) " = ?")
+                                   (keys pred-map)))
            values (concat (vals pred-map) (list limit offset))
            sql (list "SELECT * FROM "
                      (name table)
@@ -41,7 +42,8 @@
   ([table pk data-map]
      (let [without-pk (dissoc data-map pk)
            update-segs (str/join ", "
-                                 (map #(str (escape-keyword %) " = ?") (keys without-pk)))
+                                 (map #(str (escape-keyword %) " = ?")
+                                      (keys without-pk)))
            values (concat (vals without-pk) (list (pk data-map)))
            sql (list "UPDATE "
                      (name table)

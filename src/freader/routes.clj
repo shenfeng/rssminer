@@ -59,7 +59,8 @@
   (JGET "/export/opml-export" [] "TODO"))
 
 (defroutes all-routes
-  (GET "/" [] freader/index-page)
+  (GET "/" [] freader/landing-page)
+  (GET "/app" [] freader/index-page)
   (GET "/demo" [] freader/demo-page)
   (GET "/expe" [] freader/expe-page)
   (context "/login" []

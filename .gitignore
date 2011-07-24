@@ -14,3 +14,4 @@ public/js/freader/tmpls.js
 public/js/freader*min.js
 .idea/
 .emacs.desktop*
+/tags
