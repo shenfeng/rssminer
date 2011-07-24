@@ -1,5 +1,5 @@
 (ns freader.util
-  (:use (clojure.contrib [json :only [json-str Write-JSON]]))
+  (:use (clojure.data [json :only [json-str Write-JSON]]))
   (:require [freader.http :as http]
             [clojure.string :as str])
   (:import java.io.PrintWriter

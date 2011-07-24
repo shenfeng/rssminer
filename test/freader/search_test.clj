@@ -1,6 +1,6 @@
 (ns freader.search-test
   (:use clojure.test
-        [clojure.contrib.json :only [read-json json-str]]
+        [clojure.data.json :only [read-json json-str]]
         (freader [test-common :only [auth-app mock-download-feed-source
                                      app-fixture]]
                  [util :only [download-favicon download-feed-source]])))

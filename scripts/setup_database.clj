@@ -1,11 +1,12 @@
 (ns setup-database
-  (:use (freader [database :only [use-psql-database! close-global-psql-factory]]
+  (:use (freader [database :only [use-psql-database!
+                                  close-global-psql-factory]]
                  [search :only [use-index-writer! close-global-index-writer!]]
                  [routes :only [app]])
         (freader.db [user :only [create-user]]
                     [util :only [get-con exec-stats exec-prepared-sqlfile]])
         [sandbar.stateful-session :only [session-get]]
-        [clojure.contrib.json :only [json-str]]))
+        [clojure.data.json :only [json-str]]))
 
 (def links [
             ;; "http://blog.raek.se/feed/"

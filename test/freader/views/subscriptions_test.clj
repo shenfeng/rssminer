@@ -1,6 +1,6 @@
 (ns freader.views.subscriptions-test
   (:use clojure.test
-        [clojure.contrib.json :only [read-json json-str]]
+        [clojure.data.json :only [read-json json-str]]
         [freader.db.util :only [exec-query select-sql-params]]
         (freader [test-common :only [auth-app auth-app2 app-fixture
                                      mock-download-feed-source]]

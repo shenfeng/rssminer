@@ -5,7 +5,7 @@
         [sandbar.stateful-session :only [session-get]]
         [compojure.core :only [GET POST DELETE PUT]])
   (:require [freader.config :as config]
-            [clojure.contrib.json :as json])
+            [clojure.data.json :as json])
   (:import java.text.SimpleDateFormat
            [java.util Locale Calendar TimeZone Date]
            java.io.File))

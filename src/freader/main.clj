@@ -1,6 +1,5 @@
 (ns freader.main
-  (:use [clojure.contrib.command-line :only [with-command-line]]
-        [clojure.contrib.def :only [defnk]]
+  (:use [clojure.tools.cli :only [cli optional required]]
         [ring.adapter.jetty7 :only [run-jetty]]
         (freader [database :only [use-psql-database!]]
                  [search :only [use-index-writer!]]
@@ -14,39 +13,33 @@
     (.stop @server)
     (reset! server nil)))
 
-(defn- start-server [& {:keys [jdbc-url db-user db-password port
-                               index-path profile]}]
+(defn- start-server [{:keys [db-host db-user db-password db-name port
+                             index-path profile]}]
   {:pre [(#{:prod :dev} profile)]}
   (stop-server)
   (reset! env-profile profile)
   (use-index-writer! index-path)
-  (use-psql-database! jdbc-url
+  (use-psql-database! (str "jdbc:postgresql://" db-host "/" db-name)
                       db-user
                       db-password)
   (reset! server (run-jetty (app) {:port port :join? false})))
 
+
 (defn main [& args]
-  (with-command-line args
-    "Start freader server"
-    [[port "Port to listen. READER_PORT, 8000"]
-     [db-host "Database host. READER_DB_HOST, localhost"]
-     [db-name "Database name" "freader"]
-     [db-user "Datebase user name" "postgres"]
-     [db-password "Datebase password" "123456"]
-     [index-path "Path to store Lucene index" "/tmp/feeds-index"]
-     [profile "Profile (prod || dev)" "dev"]]
-    (let [jdbc-url (str "jdbc:postgresql://"
-                        (or db-host (get (System/getenv)
-                                         "READER_DB_HOST" "localhost"))
-                        "/" db-name)
-          server-port (Integer.
-                       (or port (get (System/getenv)
-                                     "READER_PORT" "8100")))]
-      (start-server :jdbc-url jdbc-url
-                    :db-user db-user
-                    :db-password db-password
-                    :port server-port
-                    :index-path index-path
-                    :profile (keyword profile)))))
+  "Start freader server"
+  (start-server
+   (cli args
+        (optional ["-p" "--port" "Port to listen (READER_PORT || 8100)"]
+                  #(Integer.
+                    (or % (get (System/getenv) "READER_PORT" "8100"))))
+        (optional ["--profile" "profile (dev || prod)" :default "dev"]
+                  keyword)
+        (optional ["--db-host" "Database host (READER_DB_HOST || localhost)"]
+                  #(or % (get (System/getenv) "READER_DB_HOST" "localhost")))
+        (optional ["--db-name" "Database name" :default "freader"])
+        (optional ["--db-user" "Database user name" :default "postgres"])
+        (optional ["--db-password" "Database password" :default "123456"])
+        (optional ["--index-path" "Path to store lucene index"
+                   :default "/tmp/feeds-index"]))))
 
 (apply main *command-line-args*)

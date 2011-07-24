@@ -1,7 +1,7 @@
 (ns freader.db.util
   (:use [freader.database :only [*factory*]]
         [clojure.java.io :only [resource]]
-        [clojure.contrib.sql :only [with-connection with-query-results]])
+        [clojure.java.jdbc :only [with-connection with-query-results]])
   (:require [clojure.string :as str]
             [freader.config :as conf]))
 

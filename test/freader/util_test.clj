@@ -1,6 +1,6 @@
 (ns freader.util-test
   (:use freader.util
-        clojure.contrib.json
+        clojure.data.json
         clojure.test)
   (:import java.util.Date))
 
