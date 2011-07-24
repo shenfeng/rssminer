@@ -14,13 +14,14 @@ window.$(function(){
         subscriptionView;
 
     function initialize() {
+      subscriptions.add(_OVERVIEW_);
       // fetch subscription list
-      subscriptions.fetch().done(function(data) {
-        // done is executed in order
-        var nav = naview.render().el;
-        $('nav').replaceWith(nav);
-        backbone.history.start();
-      });
+      // subscriptions.fetch().done(function(data) {
+      // done is executed in order
+      var nav = naview.render().el;
+      $('nav').replaceWith(nav);
+      backbone.history.start();
+      // });
     }
 
     function index() {

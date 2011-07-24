@@ -1,10 +1,10 @@
 (ns freader.views.feedreader
   (:use [freader.views.layouts :only [layout snippet deftemplate]])
-  (:require [freader.config :as config]))
+  (:use [freader.util :only [serialize-to-js]])
+  (:require [net.cgrand.enlive-html :as html]))
 
-(let [s (snippet "templates/index.html" [:div#main] [])]
-  (defn index-page []
-    (apply str (layout (s)))))
+(deftemplate index-page "templates/index.html" [data]
+  [:head] (html/append (html/html-snippet (serialize-to-js data))))
 
 (deftemplate landing-page "templates/landing.html" [] )
 

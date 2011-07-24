@@ -1,5 +1,6 @@
 (ns freader.views.layouts
-  (:require net.cgrand.enlive-html))
+  (:require net.cgrand.enlive-html
+            freader.config))
 
 (defmacro snippet [source selector args & forms]
   (let [profile '([(net.cgrand.enlive-html/attr= :data-profile "dev")]

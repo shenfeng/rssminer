@@ -89,9 +89,7 @@
 }
 
 #search-input {
-    position: absolute;
-    top: -5em;
-    right: 2em;
+    float: right;
     padding: 3px 4px;
     font-size: 12px;
     width: 330px;

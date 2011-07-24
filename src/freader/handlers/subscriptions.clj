@@ -74,7 +74,7 @@
          user-id (:id *user*)]
     (db/fetch-feeds-by-subscription-id user-id id limit offset)))
 
-(defn get-overview [req]
+(defn get-overview* []
   (let [user-id (:id *user*)
         overview (db/fetch-overview user-id)
         map (reduce
@@ -87,6 +87,9 @@
              {} overview)]
     (for [[k v] map] {:group_name k
                       :subscriptions v})))
+
+(defn get-overview [req]
+  (get-overview*))
 
 (defn customize-subscription [req]
   (let [user-id (:id *user*)

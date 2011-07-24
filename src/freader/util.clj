@@ -43,6 +43,15 @@
     (catch Exception e
       (prn "ERROR GET " url ": " (.getMessage e) "\n"))))
 
+(defn serialize-to-js [data]
+  (let [stats (map
+               (fn [[k v]]
+                 (let [e-v (str/replace (json-str v) "'" "\\'")]
+                   (str "var _" (str/upper-case (name k))
+                        "_ = JSON.parse('" e-v "')"))) data)
+        js (concat '("<script>") stats '("</script>"))]
+    (apply str js)))
+
 (defn download-favicon [url]
   (let [icon-url (str (http/extract-host url) "/favicon.ico")]
    (try

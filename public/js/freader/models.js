@@ -210,11 +210,6 @@ window.$(function(){
         that = this;
         // groups = that.models;
       },
-      fetch: function (){
-        return freader.ajax.get('/api/subscriptions/overview').done(function(data) {
-          that.add(data);
-        });
-      },
       model: SubscriptionGroup,
       comparator: function (subscriptiongrop) {
         return subscriptiongrop.get('group_name').toLowerCase();
