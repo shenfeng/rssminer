@@ -49,16 +49,16 @@ freader_jss = FileList['public/js/lib/jquery.js',
 desc "Clean generated files"
 task :clean  do
   rm_rf 'public/js/freader/tmpls.js'
-  rm_rf 'public/js/freader*min.js'
-  rm_rf 'public/css/*'
   rm_rf 'src/templates'
+  sh 'rm public/js/freader*min.js || exit 0'
+  sh 'rm public/css/*.css || exit 0'
 end
 
 desc "Prepare for development"
-task :prepare => [:clean, "css:compile", "js:tmpls"]
+task :prepare => ["css:compile",:html_compress, "js:tmpls"]
 
 desc "Prepare for production"
-task :prepare_prod => [:clean, "css:compress", "js:minify"]
+task :prepare_prod => ["css:compress", "js:minify"]
 
 desc "Run server in dev profile"
 task :run => :prepare do
@@ -71,7 +71,7 @@ task :run_prod => :prepare_prod do
 end
 
 desc 'Deploy to production'
-task :deploy => [:prepare_prod, :test] do
+task :deploy => [:clean, :test, :prepare_prod] do
   sh "scripts/deploy"
 end
 

@@ -3,6 +3,7 @@
 .gitmodules
 .idea
 /build
+/bin
 /classes
 /deploy/exclude.txt
 /lib/dev
