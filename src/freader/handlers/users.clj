@@ -23,4 +23,5 @@
   (let [{:keys [email password]} (:params req)
         user (db/create-user {:email email
                               :password password})]
+    (session-put! :user user)
     (redirect "/app")))

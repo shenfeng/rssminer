@@ -23,3 +23,13 @@
 .clearfix { zoom: 1; }
 
 .required { color: #C00; }
+
+.lfloat { float: left; }
+.rfloat { float: right; }
+body {
+    font-family: sans-serif;
+    color: #222;
+    margin: 0;
+    padding: 0;
+    line-height: 1.231;
+}

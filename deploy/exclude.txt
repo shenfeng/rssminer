@@ -13,6 +13,7 @@
 /scss
 /templates
 /test
+/src/templates/js-tmpls
 README
 pom.xml
 Rakefile

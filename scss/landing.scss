@@ -1,6 +1,82 @@
 @import "common";
+@import "css3";
 
-#page-wrap {
-    width: 960px;
+$page-width: 960px;
+/* body {  background: #F5F5F5; } */
+
+#header {
+    .content {
+        width: $page-width;
+        margin: 0 auto;
+    }
+    /* border-bottom: 2px #C3D1EC solid; */
+    background-color: #F3F6F9;
+    background-image: -moz-linear-gradient(center bottom , #E9EAEF 10%, #F3F6F9 84%);
+}
+#signup-form {
+    td:first-child {
+        text-align: right;
+    }
+    #reg-email, #reg-password {
+        padding: 6px;
+        width: 250px;
+    }
+}
+
+#login-form {
+    td { font-size: 11px; }
+    #email, #password {
+        width: 150px;
+    }
+}
+
+#main {
+    width: $page-width;
     margin: 0 auto;
+    .lfloat {
+        padding: 1em 0;
+        width: 585px;
+        border-right: 1px solid #E0E0E0;
+        padding-right: 1em;
+    }
+    .rfloat {
+        padding-top: 2em;
+        h3 {
+            padding: 0.5em;
+            margin: 0.5em;
+            background-color: #D1E1FA;
+            background-image: -moz-linear-gradient(center bottom , #C5D7FB 16%, #D8E1FF 84%);
+        }
+    }
+    img {
+        margin: 12px auto;
+        @include box-shadow(0, 0, 10px, #666);
+    }
+    p { text-indent: 2em };
+}
+
+#footer {
+    background-color: #888888;
+    .content {
+        width: $page-width;
+        margin: 0 auto;
+        padding: 0.3em;
+        color: white;
+    }
+    border-top: #CCC solid 1px;
+    ul {
+        padding: 0;
+        li {
+            &:first-child { margin-left: 0; }
+            margin: 0 8px;
+            display: inline;
+            a {
+                /* text-shadow: 1px 1px white; */
+                color: white;
+                /* color: #638FB2; */
+                padding: 4px 0;
+                text-decoration: none;
+            }
+        }
+    }
 }

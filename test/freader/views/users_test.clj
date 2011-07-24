@@ -19,7 +19,7 @@
     (is (re-find #"name=\"password" (:body resp)))))
 
 (deftest test-signup-login-process
-  (expect [session-put! (times 1 (has-args [#(#{:user} %)])) ]
+  (expect [session-put! (times 2 (has-args [#(#{:user} %)])) ]
           (let [email "test@test.com"
                 password "123456"
                 req {:request-method :post

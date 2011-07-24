@@ -55,10 +55,10 @@ task :clean  do
 end
 
 desc "Prepare for development"
-task :prepare => ["css:compile",:html_compress, "js:tmpls"]
+task :prepare => [:css_compile,:html_compress, "js:tmpls"]
 
 desc "Prepare for production"
-task :prepare_prod => ["css:compress", "js:minify"]
+task :prepare_prod => [:css_compile, "js:minify"]
 
 desc "Run server in dev profile"
 task :run => :prepare do
@@ -109,23 +109,13 @@ namespace :js do
   end
 end
 
-namespace :css do
-  scss = FileList['scss/**/*.scss'].exclude('scss/**/_*.scss')
-  desc 'Compile scss, generate css'
-  task :compile do
-    scss.each do |source|
-      target = source.sub(/scss$/, 'css').sub(/^scss/, 'public/css')
-      sh "sass -t expanded -g --cache-location /tmp #{source} #{target}"
-    end
-  end
-  desc 'Compile scss, compress generated css'
-  task :compress do
-    versioned = "-#{version}-min.css"
-    scss.each do |source|
-      target = source.sub(/\.scss$/, versioned).sub(/^scss/, 'public/css')
-      sh "sass -t compressed --cache-location /tmp #{source} #{target}"
-      sh "sed -i \"s/{VERSION}/#{version}/g\" #{target}"
-    end
+scss = FileList['scss/**/*.scss'].exclude('scss/**/_*.scss')
+desc 'Compile scss, compress generated css'
+task :css_compile do
+  scss.each do |source|
+    target = source.sub(/scss$/, 'css').sub(/^scss/, 'public/css')
+    sh "sass -t compressed --cache-location /tmp #{source} #{target}"
+    sh "sed -i \"s/{VERSION}/#{version}/g\" #{target}"
   end
 end
 
@@ -145,9 +135,9 @@ task :html_compress => html_srcs.map {|f| "src/#{f}"}
 
 namespace :watch do
   desc 'Watch css, html'
-  task :all => [:deps, "css:compile", "js:tmpls"] do
+  task :all => [:deps, :css_compile, "js:tmpls"] do
     t1 = Thread.new do
-      sh 'while inotifywait -e modify scss/; do rake css:compile; done'
+      sh 'while inotifywait -e modify scss/; do rake css_compile; done'
     end
     t2 = Thread.new do
       sh 'while inotifywait -r -e modify templates/; do rake js:tmpls; done'
