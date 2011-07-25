@@ -12,5 +12,7 @@
                            :request-method :get
                            :headers {}})]
     (is (= 302 (:status app-resp)))
+    (is (= "no-cache" ((:headers resp) "Cache-Control")))
+    (is (= "text/html; charset=utf-8" ((:headers resp) "Content-Type")))
     (is (= 200 (:status js-resp)))
     (is (= 200 (:status resp)))))

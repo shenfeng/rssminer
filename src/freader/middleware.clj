@@ -49,16 +49,6 @@
                             "Expires" (get-expire 365))]
           (assoc resp :headers new-headers))))))
 
-
-(defn wrap-content-type [handler]
-  (fn [req]
-    (let [resp (handler req)
-          ctype ((resp :headers) "Content-Type")]
-      (if (= ctype "text/html")
-        (update-in resp [:headers "Content-Type"]
-                   (fn [& args] "text/html; charset=utf-8"))
-        resp))))
-
 (defn wrap-failsafe
   "show an error page instead of a stacktrace when error happens."
   [handler]

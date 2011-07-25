@@ -7,7 +7,6 @@
                          [file :only [wrap-file]]
                          [session :only [wrap-session]])
         (freader [middleware :only (wrap-auth
-                                    wrap-content-type
                                     wrap-cache-header
                                     wrap-failsafe
                                     wrap-request-logging
@@ -80,7 +79,6 @@
                  wrap-auth
                  wrap-stateful-session
                  wrap-cache-header
-                 wrap-content-type
                  wrap-request-logging
                  (wrap-reload-in-dev reload-meta)
                  wrap-failsafe))
