@@ -12,7 +12,7 @@
 
 (def ^{:private true} version Version/LUCENE_32)
 
-(def ^{:dynamic true} *indexer* nil)
+(defonce indexer (atom nil))
 
 (def ^{:private true} m-store {:yes Field$Store/YES
                                :no Field$Store/NO})
@@ -32,18 +32,19 @@
     (.parse parser term)))
 
 (defn close-global-index-writer! []
-  (when *indexer*
-    (.close *indexer*)))
+  (when-not (nil? @indexer)
+    (.close @indexer)
+    (reset! indexer nil)))
 
 (defn use-index-writer! [path]
-  "It will close previous *indexer*"
+  "It will close previous indexer"
   (close-global-index-writer!)
   (let [conf (doto (IndexWriterConfig. version (create-analyzer))
                (.setOpenMode IndexWriterConfig$OpenMode/CREATE_OR_APPEND))
         dir (if (= path :RAM)
               (RAMDirectory.)
               (MMapDirectory. (File. path)))]
-    (def *indexer* (IndexWriter. dir conf))))
+    (reset! indexer (IndexWriter. dir conf))))
 
 (defn- ^NumericField create-numericfield
   [field-name value & [{:keys [store] :or {store :yes}}]]
@@ -71,7 +72,7 @@
       (.add (create-field :summary summary)))))
 
 (defn index-feeds [feeds]
-  (let [^IndexWriter indexer *indexer*]
+  (let [^IndexWriter indexer @indexer]
     (doseq [feed feeds]
       (.addDocument indexer (create-document feed)))
     (.commit indexer)))
@@ -85,7 +86,7 @@
      :title (fget :title)}))
 
 (defn- search* [term n]
-  (let [searcher (IndexSearcher. (IndexReader/open *indexer* true))
+  (let [searcher (IndexSearcher. (IndexReader/open @indexer true))
         query (create-query term :title :summary)
         hits (.search searcher query n)]
     {:total-hits (.totalHits hits)

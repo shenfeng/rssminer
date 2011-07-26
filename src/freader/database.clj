@@ -3,12 +3,13 @@
   (:import (clojure.lang RT)
            (org.apache.commons.dbcp BasicDataSource)))
 
-(def ^{:dynamic true} *factory*  {:factory nil
-                                  :ds nil})
+(def db-factory  (atom {:factory nil
+                         :ds nil}))
 
 (defn close-global-psql-factory []
-  (if-let [ds (:ds *factory*)]
-    (.close ds)))
+  (if-let [ds (:ds @db-factory)]
+    (.close ds)
+    (reset! db-factory nil)))
 
 (defn use-psql-database!
   ([db-name]
@@ -25,5 +26,5 @@
                 (.setPassword password))
            f (fn [& args]  (.getConnection ds))]
        (close-global-psql-factory)
-       (def *factory* {:factory f
-                       :ds ds}))))
+       (reset! db-factory {:factory f
+                           :ds ds}))))

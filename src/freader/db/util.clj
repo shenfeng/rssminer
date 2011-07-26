@@ -1,5 +1,5 @@
 (ns freader.db.util
-  (:use [freader.database :only [*factory*]]
+  (:use [freader.database :only [db-factory]]
         [clojure.java.io :only [resource]]
         [clojure.java.jdbc :only [with-connection with-query-results]])
   (:require [clojure.string :as str]
@@ -55,7 +55,7 @@
        (apply vector (cons (apply str sql) values)))))
 
 (defn exec-query [sql-parms]
-  (with-connection *factory*
+  (with-connection @db-factory
     (with-query-results rs sql-parms
       (doall rs))))
 
