@@ -9,7 +9,8 @@
 
 (defn login [req]
   (let [{:keys [email password return-url]} (:params req)
-        user (db/authenticate email password)]
+        user (db/authenticate email password)
+        return-url (or return-url "/app")]
     (if user
       (do
         (session-put! :user user)

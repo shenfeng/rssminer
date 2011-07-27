@@ -8,6 +8,7 @@
                          [session :only [wrap-session]])
         (freader [middleware :only (wrap-auth
                                     wrap-cache-header
+                                    wrap-ring-cookie-rewrite
                                     wrap-failsafe
                                     wrap-request-logging
                                     wrap-reload-in-dev
@@ -69,16 +70,19 @@
            (GET "/" [] user/show-signup-page)
            (POST "/" [] user/signup))
   (context "/api" [] api-routes)
-  (route/files "")
+  (route/files "") ;; files under public folder
   (route/not-found "<h1>Page not found.</h1>" ))
 
+;;; The last one in the list is the first one get the request,
+;;; the last one get the response
 (defn app [] (-> #'all-routes
-                 wrap-keyword-params
-                 wrap-multipart-params
-                 wrap-params
                  wrap-auth
                  wrap-stateful-session
                  wrap-cache-header
                  wrap-request-logging
+                 wrap-ring-cookie-rewrite
+                 wrap-keyword-params
+                 wrap-multipart-params
+                 wrap-params
                  (wrap-reload-in-dev reload-meta)
                  wrap-failsafe))

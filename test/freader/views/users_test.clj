@@ -19,13 +19,23 @@
     (is (re-find #"name=\"password" (:body resp)))))
 
 (deftest test-signup-login-process
-  (expect [session-put! (times 2 (has-args [#(#{:user} %)])) ]
-          (let [email "test@test.com"
-                password "123456"
-                req {:request-method :post
-                     :params {"email" email
-                              "password" password}}
-                signup (test-app (assoc req :uri "/signup"))
-                login (test-app (assoc req :uri "/login"))]
-            (is (= 302 (:status signup)))
-            (is (= 302 (:status login))))))
+  (let [params {"email" "test@test.com"
+                "password" "123456"}
+        signup (test-app {:request-method :post
+                          :params params
+                          :uri "/signup"})
+        login (test-app {:request-method :post
+                         :params params
+                         :uri "/login"})
+        remerber-me (test-app {:request-method :post
+                               :params (assoc params
+                                         "persistent" "on")
+                               :uri "/login"})]
+    (is (not (re-find #"Expires="
+                      (first ((:headers login) "Set-Cookie")))))
+    (is (re-find #"HttpOnly"
+                 (first ((:headers login) "Set-Cookie"))))
+    (is (re-find #"Expires=|HttpOnly"
+                 (first ((:headers remerber-me) "Set-Cookie"))))
+    (is (= 302 (:status signup)))
+    (is (= 302 (:status login)))))

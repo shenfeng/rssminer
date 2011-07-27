@@ -49,6 +49,24 @@
                             "Expires" (get-expire 365))]
           (assoc resp :headers new-headers))))))
 
+(defn wrap-ring-cookie-rewrite
+  "rewrite ring-session cookie if user choose to persist the login"
+  [handler]
+  (fn [req]
+    (let [persist? (-> req :params :persistent)
+          resp (handler req)
+          set-cookie ((:headers resp) "Set-Cookie" '())]
+      (if-let [ring-cookie (first (filter
+                                   #(re-find #"^ring" %) set-cookie))]
+        (let [new-ring-cookie (if persist?
+                                (str ring-cookie "; Expires="
+                                     (get-expire 15) "; HttpOnly")
+                                (str ring-cookie "; HttpOnly"))]
+          (update-in resp [:headers] assoc "Set-Cookie"
+                     (cons new-ring-cookie
+                           (filter #(not (re-find #"^ring" %)) set-cookie))))
+        resp))))
+
 (defn wrap-failsafe
   "show an error page instead of a stacktrace when error happens."
   [handler]
