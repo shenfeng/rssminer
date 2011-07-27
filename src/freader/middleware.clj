@@ -30,7 +30,7 @@
           (handler req))))))
 
 (defn wrap-cache-header
-  "No cache for generated text|json file. Allow nginx to greedy cache others"
+  "set no-cache header."
   [handler]
   (fn [req]
     (let [resp (handler req)
@@ -42,12 +42,7 @@
         (let [new-headers (assoc headers
                             "Cache-Control" "no-cache")]
           (assoc resp :headers new-headers))
-        ;; cache image with status code of 200
-        (let [new-headers (assoc headers
-                            "Cache-Control" "public, max-age=31536000"
-                            ;; one year
-                            "Expires" (get-expire 365))]
-          (assoc resp :headers new-headers))))))
+        resp))))
 
 (defn wrap-ring-cookie-rewrite
   "rewrite ring-session cookie if user choose to persist the login"
@@ -82,13 +77,13 @@
   (fn [req]
     ;; it must be json, keywordize by default
     (let [json-req-body (if-let [body (:body req)]
-                          (let [body-str (cond (string? body) body
-                                               :else (slurp body))]
+                          (let [body-str (if (string? body) body
+                                             (slurp body))]
                             (when (> (count body-str) 0)
                               (json/read-json body-str))))
           ;; binding for easy access
           resp-obj (binding [*json-body* json-req-body]
-                     (try
+                     (try ;; easier for js to understand if this is an 500
                        (handler req)
                        (catch Exception e
                          (.printStackTrace e)
@@ -99,19 +94,18 @@
         (json-response status (dissoc resp-obj :status))
         (json-response 200 resp-obj)))))
 
-(let [f (SimpleDateFormat. "yyyy-HH-dd HH:mm:ss:SSS" Locale/CHINA)]
-  (defn- current-ts-str []
+(defn- current-ts-str []
+  (let [f (SimpleDateFormat. "yyyy-HH-dd HH:mm:ss:SSS" Locale/CHINA)]
     (.format f (Date.))))
 
 (defn wrap-request-logging [handler]
   (fn [{:keys [request-method uri] :as req}]
     (let [start (System/currentTimeMillis)
           resp (handler req)
-          finish (System/currentTimeMillis)
-          total (- finish start)]
+          finish (System/currentTimeMillis)]
       (print
        (format "%s: %s %d %s (%dms)\n" (current-ts-str)
-               (name request-method) (:status resp) uri total))
+               (name request-method) (:status resp) uri (- finish start)))
       (flush)
       resp)))
 
