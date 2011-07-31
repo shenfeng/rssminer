@@ -11,7 +11,7 @@
   ([] (fetch-crawler-links 5))
   ([limit]
      (h2-query
-      ["SELECT id, url, last_http_status, last_md5, check_interval,
+      ["SELECT id, url, last_status, last_md5, check_interval,
         DATEDIFF('SECOND', last_check_ts, NOW()) AS interval
         FROM crawler_link
         WHERE DATEDIFF('SECOND', last_check_ts, NOW()) > check_interval
@@ -33,7 +33,7 @@
                     (insert-record :crawler_link {:url href
                                                   :title title
                                                   :domain domain
-                                                  :referer (:id referer)}))
+                                                  :referer_id (:id referer)}))
                   ;; ignore voilation of uniqe constraint
                   (catch Exception e)))))]
     (filter identity (doall (map f links)))))

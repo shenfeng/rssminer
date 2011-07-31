@@ -10,13 +10,13 @@ create table crawler_link (
   title VARCHAR,
   add_ts TIMESTAMP default now(),
   domain VARCHAR, --assume one domain, one rss
-  last_http_status INTEGER default 200,
+  last_status INTEGER default 200,
   last_check_ts TIMESTAMP default DATE'1980-1-1',
   last_modified TIMESTAMP default DATE'2300-1-1',
   last_md5 VARCHAR,
-  server VARCHAR,
   check_interval INTEGER default 60 * 60 * 24 * 10, -- in seconds, ten days
-  referer INTEGER REFERENCES crawler_link
+  server VARCHAR,
+  referer_id INTEGER REFERENCES crawler_link
       ON UPDATE CASCADE ON DELETE SET NULL,
 )
 ----

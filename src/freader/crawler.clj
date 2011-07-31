@@ -25,9 +25,10 @@
         md5 (when html (md5-sum html))]
     (db/update-crawler-link {:id id
                              :last_md5 md5
-                             :last_http_status status
-                             :last_modified (parse-timestamp
-                                             (:last_modified headers))
+                             :last_status status
+                             :last_modified
+                             (when-let [lm (:last_modified headers)]
+                               (parse-timestamp lm))
                              :server (:server headers)})
     (when (and html (not= md5 last-md5))
       (extract-and-save-links referer html))))

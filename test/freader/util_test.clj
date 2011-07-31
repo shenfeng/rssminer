@@ -15,6 +15,8 @@
 (deftest test-resolve-url
   (is (= "http://a.com/c.html"
          (resolve-url "http://a.com/index?a=b" "c.html")))
+  (is (= "http://a.comrss.html"
+         (resolve-url "http://a.com" "rss.html")))
   (is (= "http://a.com/c.html"
          (resolve-url "http://a.com/b.html" "c.html")))
   (is (= "http://a.com/a/c.html"
