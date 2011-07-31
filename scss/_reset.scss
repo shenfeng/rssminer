@@ -26,7 +26,8 @@ hr { display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin:
 
 body {
     whitespace: nowrap;
-    overflow: hidden;  margin: 0; font:13px/1.231 sans-serif; *font-size:small; } /* Hack retained to preserve specificity */
+    /* overflow: hidden; */
+    margin: 0; font:13px/1.231 sans-serif; *font-size:small; } /* Hack retained to preserve specificity */
 
 /* Normalize monospace sizing:
    en.wikipedia.org/wiki/MediaWiki_talk:Common.css/Archive_11#Teletype_style_fix_for_Chrome */

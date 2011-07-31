@@ -13,3 +13,6 @@
 
 (defn expe-page [req]
   (view/expe-page))
+
+(defn dashboard-page [req]
+  (view/dashboard-page))

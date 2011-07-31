@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" type="image/png" href="/imgs/16px-feed-icon.png"/>
+    <title>Freader Dashboard</title>
+    <link href="/css/dashboard.css" rel="stylesheet" type="text/css" />
+    <script type="text/template" id="template">
+      <div id="stats">
+        <span>Total <%=total_count%></span>
+        <span>Crawled <%=crawled_count%></span>
+      </div>
+      <% if(crawled_links.length > 0) { %>
+      <div id="crawler-links" class="clearfix">
+        <table id="crawled-links">
+          <caption>Crawled Links</caption>
+          <tr>
+            <th> Url </th>
+            <th> Last Check </th>
+          </tr>
+          <% _.each(crawled_links, function(link) { %>
+          <tr>
+            <td><%= link.url%></td>
+            <td><%= _.timesince(link.last_check_ts)%></td>
+          </tr>
+          <%}); %>
+        </table>
+        <%} %>
+        <% if(pending_links.length > 0) { %>
+        <table id="pending-links">
+          <caption>Pending Links</caption>
+          <tr>
+            <th> Url </th>
+            <th> Last Check </th>
+          </tr>
+          <% _.each(pending_links, function(link) { %>
+          <tr>
+            <td><%= link.url%></td>
+            <td><%= _.timesince(link.last_check_ts)%></td>
+          </tr>
+          <%}); %>
+        </table>
+        <%} %>
+      </div>
+    </script>
+  </head>
+  <body>
+    <div id="page-wrap">
+
+    </div>
+    <script src="/js/lib/jquery.js" data-profile="dev"></script>
+    <script src="/js/lib/underscore.js" data-profile="dev"></script>
+    <script src="/js/freader/util.js" data-profile="dev"></script>
+    <script src="/js/freader/dashboard.js" data-profile="dev"></script>
+  </body>
+</html>

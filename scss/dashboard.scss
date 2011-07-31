@@ -1,0 +1,25 @@
+@import "variable";
+@import "css3";
+@import "reset";
+@import "common";
+
+$page-width: 960px;
+
+#page-wrap {
+    /* width: $page-width; */
+    margin: 0 auto;
+}
+
+#crawler-links table {
+    td {
+        padding: 2px 5px;
+    }
+}
+
+#pending-links {
+    /* float: left; */
+}
+
+#crawled-links {
+    /* float: right; */
+}

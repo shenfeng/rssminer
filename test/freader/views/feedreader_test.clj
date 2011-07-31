@@ -15,3 +15,8 @@
     (is (= "text/html; charset=utf-8" ((:headers resp) "Content-Type")))
     (is (= 200 (:status js-resp)))
     (is (= 200 (:status resp)))))
+
+(deftest test-dashboar-page
+  (let [resp (test-app {:uri "/dashboard"
+                        :request-method :get})]
+    (is (= 200 (:status resp)))))
