@@ -1,7 +1,6 @@
 (ns freader.parser-test
   (use clojure.pprint
        clojure.test
-       clojure.contrib.trace
        freader.parser
        [freader.test-common :only [test-rss-str]]))
 

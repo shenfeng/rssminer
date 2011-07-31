@@ -1,14 +1,14 @@
 (ns freader.util
   (:use (clojure.data [json :only [json-str Write-JSON]]))
   (:require [freader.http :as http]
-            [clojure.string :as str])
-  (:import java.io.PrintWriter
-           java.text.SimpleDateFormat
-           org.apache.commons.io.IOUtils
+            [clojure.string :as str]
+            [net.cgrand.enlive-html :as html])
+  (:import org.apache.commons.io.IOUtils
            org.apache.commons.codec.binary.Base64
            java.util.Date
            java.sql.Timestamp
-           [java.io InputStream StringWriter]
+           [java.net URI]
+           [java.io InputStream StringWriter PrintWriter StringReader]
            [java.security NoSuchAlgorithmException MessageDigest]))
 
 (defn md5-sum
@@ -21,6 +21,21 @@
       (.toString (new BigInteger 1 (.digest alg)) 16)
       (catch NoSuchAlgorithmException e
         (throw (new RuntimeException e))))))
+
+(defn resolve-url [base link]
+  (let [base (URI. base)
+        link (URI. link)]
+    (str (.resolve base link))))
+
+(defn extract-links [base html]
+  (let [resource (html/html-resource (StringReader. html))
+        links (html/select resource [:a])
+        f (fn [a] {:href (resolve-url base (-> a :attrs :href))
+                  :text (html/text a)})]
+    {:rss (map #(select-keys (:attrs %) [:href :title])
+                     (html/select resource
+                                  [(html/attr= :type "application/rss+xml")]))
+     :links (map f links)}))
 
 (defn- write-json-date [^Date d ^PrintWriter out escape-unicode?]
   (.print out (.getTime d)))

@@ -1,6 +1,5 @@
 (ns freader.db.util-test
   (:use clojure.test
-        clojure.contrib.trace
         [freader.db.util :only [insert-sql-params update-sql-params
                                 select-sql-params]])
   (:require [clojure.string :as str]))

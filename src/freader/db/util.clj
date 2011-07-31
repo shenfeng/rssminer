@@ -1,5 +1,5 @@
 (ns freader.db.util
-  (:use [freader.database :only [db-factory]]
+  (:use [freader.database :only [db-factory h2-db-factory]]
         [clojure.java.io :only [resource]]
         [clojure.java.jdbc :only [with-connection with-query-results]])
   (:require [clojure.string :as str]
@@ -7,6 +7,12 @@
 
 (defn- escape-keyword [k]
   (str \" (name k) \"))
+
+(defn get-sql-stats
+  "Extract sql statement from the classpath file"
+  [file]
+  (filter (complement str/blank?)
+          (str/split (slurp (resource file)) #"\s*----*\s*")))
 
 (defn select-sql-params
   ([table pred-map] (select-sql-params table pred-map 1 0))
@@ -53,6 +59,7 @@
                      (escape-keyword pk)
                      " = ? RETURNING *")]
        (apply vector (cons (apply str sql) values)))))
+
 
 (defn exec-query [sql-parms]
   (with-connection @db-factory

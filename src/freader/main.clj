@@ -24,7 +24,6 @@
                       db-password)
   (reset! server (run-jetty (app) {:port port :join? false})))
 
-
 (defn main [& args]
   "Start freader server"
   (start-server

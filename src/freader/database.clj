@@ -1,10 +1,14 @@
 (ns freader.database
   (:require [freader.config :as conf])
   (:import (clojure.lang RT)
+           org.h2.jdbcx.JdbcConnectionPool
            (org.apache.commons.dbcp BasicDataSource)))
 
-(def db-factory  (atom {:factory nil
-                         :ds nil}))
+(defonce db-factory  (atom {:factory nil
+                            :ds nil}))
+
+(defonce h2-db-factory  (atom {:factory nil
+                               :ds nil}))
 
 (defn close-global-psql-factory []
   (if-let [ds (:ds @db-factory)]
@@ -25,6 +29,18 @@
                 (.setUsername user)
                 (.setPassword password))
            f (fn [& args]  (.getConnection ds))]
-       (close-global-psql-factory)
        (reset! db-factory {:factory f
                            :ds ds}))))
+
+(defn close-global-h2-factory []
+  (if-let [ds (:ds @h2-db-factory)]
+    (.dispose ds)
+    (reset! h2-db-factory nil)))
+
+(defn use-h2-database! [file]
+  (close-global-h2-factory)
+  (let [ds (JdbcConnectionPool/create (str "jdbc:h2:" file)
+                                      "sa" "sa")
+        f (fn [& args]  (.getConnection ds))]
+    (reset! h2-db-factory {:factory f
+                           :ds ds})))

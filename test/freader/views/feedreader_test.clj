@@ -1,6 +1,5 @@
 (ns freader.views.feedreader-test
   (use clojure.test
-       clojure.contrib.trace
        [freader.test-common :only [test-app]]))
 
 (deftest test-index-page
