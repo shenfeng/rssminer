@@ -7,11 +7,11 @@ SET COMPRESS_LOB  DEFLATE;
 create table crawler_link (
   id INTEGER PRIMARY KEY auto_increment,
   url VARCHAR UNIQUE,
+  title VARCHAR,
   add_ts TIMESTAMP default now(),
   domain VARCHAR, --assume one domain, one rss
-  visited BOOLEAN default false,
   last_http_status INTEGER default 200,
-  last_check_ts TIMESTAMP default DATE'1970-1-1',
+  last_check_ts TIMESTAMP default DATE'1980-1-1',
   last_modified TIMESTAMP default DATE'2300-1-1',
   last_md5 VARCHAR,
   server VARCHAR,
@@ -23,6 +23,7 @@ create table crawler_link (
 create table rss_link (
   id INTEGER PRIMARY KEY auto_increment,
   url VARCHAR UNIQUE,
+  title VARCHAR,
   add_ts TIMESTAMP default now(),
   last_check_ts TIMESTAMP default DATE'1970-1-1',
   check_interval INTEGER default 60 * 60 * 24, -- in seconds, one day

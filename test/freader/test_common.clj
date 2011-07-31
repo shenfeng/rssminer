@@ -84,11 +84,21 @@
       (catch SQLException e
         (print-sql-exception-chain e)
         (throw e))
-      (finally (close-global-h2-factory)))))
+      ;; (finally (close-global-h2-factory))
+      )))
 
 (def app-fixture (join-fixtures [lucene-fixture
                                  postgresql-fixture
                                  user-fixture]))
+(defmacro mocking [var new-f & forms]
+  `(let [old# (atom nil)]
+     (try
+       (alter-var-root ~var (fn [f#]
+                              (reset! old# f#)
+                              ~new-f))
+       ~@forms
+       (finally
+        (alter-var-root ~var (fn [n#] @old#))))))
 
 (def test-rss-str (slurp "test/test-rss.xml"))
 

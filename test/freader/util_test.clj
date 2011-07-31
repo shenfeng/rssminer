@@ -15,6 +15,8 @@
 (deftest test-resolve-url
   (is (= "http://a.com/c.html"
          (resolve-url "http://a.com/index?a=b" "c.html")))
+  (is (= "http://a.com/c.html"
+         (resolve-url "http://a.com/b.html" "c.html")))
   (is (= "http://a.com/a/c.html"
          (resolve-url "http://a.com/a/b/" "../c.html")))
   (is (= "http://c.com/c.html"
@@ -23,5 +25,5 @@
 (deftest test-extract-links
   (let [html (slurp (resource "page.html"))
         links (extract-links "http://a.com/" html)]
-    (is (= 104 (-> links :links count)))
+    (is (= 10 (-> links :links count)))
     (is (= 1 (-> links :rss count)))))

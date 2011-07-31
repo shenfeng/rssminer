@@ -3,7 +3,10 @@
         [clojure.java.io :only [resource]]
         [clojure.java.jdbc :only [with-connection with-query-results]])
   (:require [clojure.string :as str]
-            [freader.config :as conf]))
+            [freader.config :as conf])
+  (:import java.text.SimpleDateFormat
+           java.util.Locale
+           java.sql.Timestamp))
 
 (defn- escape-keyword [k]
   (str \" (name k) \"))
@@ -60,6 +63,10 @@
                      " = ? RETURNING *")]
        (apply vector (cons (apply str sql) values)))))
 
+(defn h2-query [query]
+  (with-connection @h2-db-factory
+    (with-query-results rs query
+      (doall rs))))
 
 (defn exec-query [sql-parms]
   (with-connection @db-factory
@@ -84,3 +91,7 @@
                 (slurp (resource "freader.sql")) #"\s*----*\s*"))]
     (with-open [con (get-con db-name)]
       (apply exec-stats con stats))))
+
+(defn parse-timestamp [str]
+  (let [f (SimpleDateFormat. "EEE, dd MMM yyyy HH:mm:ss ZZZ" Locale/US)]
+    (Timestamp. (.getTime (.parse f str)))))

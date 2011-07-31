@@ -1,5 +1,6 @@
 (ns freader.http
   (:refer-clojure :exclude [get])
+  (:require [clojure.string :as str])
   (:import [java.net URI URL Proxy Proxy$Type InetSocketAddress
             HttpURLConnection SocketException]
            [java.util.zip InflaterInputStream GZIPInputStream]))
@@ -21,7 +22,9 @@
                          (let [k (.getHeaderFieldKey con i)
                                v (.getHeaderField con i)]
                            (if k
-                             (recur (inc i) (assoc headers (keyword k) v))
+                             (recur (inc i)
+                                    (assoc headers
+                                      (keyword (str/lower-case k)) v))
                              headers)))]
       {:status (.getResponseCode con)
        :headers resp-headers

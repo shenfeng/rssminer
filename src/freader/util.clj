@@ -31,7 +31,7 @@
   (let [resource (html/html-resource (StringReader. html))
         links (html/select resource [:a])
         f (fn [a] {:href (resolve-url base (-> a :attrs :href))
-                  :text (html/text a)})]
+                  :title (html/text a)})]
     {:rss (map #(select-keys (:attrs %) [:href :title])
                      (html/select resource
                                   [(html/attr= :type "application/rss+xml")]))

@@ -20,7 +20,8 @@
             [compojure.route :as route]
             (freader.handlers [feedreader :as freader]
                               [subscriptions :as subscription]
-                              [users :as user])))
+                              [users :as user]
+                              [dashboard :as dashboard])))
 
 (let [views-ns '[freader.views.feedreader
                  freader.views.layouts]
@@ -40,7 +41,8 @@
     (apply merge src-ns-map)))
 
 (defroutes api-routes
-  (JGET "/dashboard" [] "TODO")
+  (context "/dashboard" []
+           (JGET "/crawler" [] dashboard/get-crawler-stats))
   (context "/subscriptions" []
            (JGET "/overview" [] subscription/get-overview)
            (JPOST "/add" [] subscription/add-subscription)
@@ -61,6 +63,7 @@
 (defroutes all-routes
   (GET "/" [] freader/landing-page)
   (GET "/app" [] freader/index-page)
+  (GET "/dashboard" [] freader/dashboard-page)
   (GET "/demo" [] freader/demo-page)
   (GET "/expe" [] freader/expe-page)
   (context "/login" []

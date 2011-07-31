@@ -1,6 +1,6 @@
 (ns freader.config)
 
-(def env-profile (atom :prod))
+(defonce env-profile (atom :dev))
 
 (defn in-prod? []
   (= @env-profile :prod))
@@ -16,3 +16,5 @@
 (def PSQL_USERNAME "postgres")
 
 (def PSQL_PASSWORD "123456")
+
+(def crawler-threads-count 15)

@@ -1,24 +1,20 @@
 (ns freader.db.crawler
   (:use [freader.database :only [h2-db-factory]]
         [freader.http :only [extract-host]]
-        (freader [test-common :only [h2-fixture tracep]])
+        [freader.db.util :only [h2-query]]
         [clojure.java.jdbc :only [with-connection with-query-results
                                   insert-record update-values]])
   (:import java.util.Date))
 
-(defn- h2-query [query]
-  (with-connection @h2-db-factory
-    (with-query-results rs query
-      (doall rs))))
-
 (defn fetch-crawler-links
+  "Returns nil when no more"
   ([] (fetch-crawler-links 5))
   ([limit]
      (h2-query
       ["SELECT id, url, last_http_status, last_md5, check_interval,
         DATEDIFF('SECOND', last_check_ts, NOW()) AS interval
-        FROM crawler_link WHERE visited = false
-        AND DATEDIFF('SECOND', last_check_ts, NOW()) > check_interval
+        FROM crawler_link
+        WHERE DATEDIFF('SECOND', last_check_ts, NOW()) > check_interval
         ORDER BY interval LIMIT ? " limit])))
 
 (defn insert-crawler-links
@@ -27,16 +23,18 @@
   (let [multi-domains (set
                        (map :domain
                             (h2-query ["select * from multi_rss_domain"])))
-        f (fn [link]
-            (let [domain (extract-host link)]
+        f (fn [{:keys [href title]}]
+            (let [domain (extract-host href)]
               (when (or (multi-domains domain)
                         (nil? (h2-query ["SELECT domain FROM crawler_link
-                                            WHERE domain = ?" domain])))
+                                          WHERE domain = ?" domain])))
                 (try
                   (with-connection @h2-db-factory
-                    (insert-record :crawler_link {:url link
+                    (insert-record :crawler_link {:url href
+                                                  :title title
                                                   :domain domain
                                                   :referer (:id referer)}))
+                  ;; ignore voilation of uniqe constraint
                   (catch Exception e)))))]
     (filter identity (doall (map f links)))))
 
@@ -61,6 +59,7 @@
   [link]
   (with-connection @h2-db-factory
     (try (insert-record :rss_link link)
+         ;; ignore voilate of uniqe constraint
          (catch Exception e))))
 
 (defn update-rss-link [link]
