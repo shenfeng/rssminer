@@ -3,11 +3,11 @@
         [ring.util.response :only [redirect]]
         [ring.middleware.file-info :only [make-http-format]]
         [sandbar.stateful-session :only [session-get]]
+        [clojure.tools.logging :only [info error]]
         [compojure.core :only [GET POST DELETE PUT]])
   (:require [freader.config :as config]
             [clojure.data.json :as json])
-  (:import java.text.SimpleDateFormat
-           [java.util Locale Calendar TimeZone Date]
+  (:import [java.util Locale Calendar TimeZone Date]
            java.io.File))
 
 (def ^{:dynamic true} *user* nil)
@@ -30,8 +30,7 @@
           (handler req))))))
 
 (defn wrap-cache-header
-  "set no-cache header."
-  [handler]
+  "set no-cache header." [handler]
   (fn [req]
     (let [resp (handler req)
           headers (resp :headers)
@@ -68,8 +67,7 @@
   (fn [req]
     (try (handler req)
          (catch Exception e
-           (print req)
-           (.printStackTrace e)
+           (error e "error handling request" req)
            {:status 500 :body "Sorry, an error occured."}))))
 
 (defn wrap-json
@@ -79,14 +77,14 @@
     (let [json-req-body (if-let [body (:body req)]
                           (let [body-str (if (string? body) body
                                              (slurp body))]
-                            (when (> (count body-str) 0)
+                            (when (seq body-str)
                               (json/read-json body-str))))
           ;; binding for easy access
           resp-obj (binding [*json-body* json-req-body]
                      (try ;; easier for js to understand if this is an 500
                        (handler req)
                        (catch Exception e
-                         (.printStackTrace e)
+                         (error e "error api request" req)
                          {:status 500
                           :message "Opps, an error occured"})))
           status (:status resp-obj)]
@@ -94,19 +92,13 @@
         (json-response status (dissoc resp-obj :status))
         (json-response 200 resp-obj)))))
 
-(defn- current-ts-str []
-  (let [f (SimpleDateFormat. "yyyy-HH-dd HH:mm:ss:SSS" Locale/CHINA)]
-    (.format f (Date.))))
-
 (defn wrap-request-logging [handler]
   (fn [{:keys [request-method uri] :as req}]
     (let [start (System/currentTimeMillis)
           resp (handler req)
           finish (System/currentTimeMillis)]
-      (print
-       (format "%s: %s %d %s (%dms)\n" (current-ts-str)
-               (name request-method) (:status resp) uri (- finish start)))
-      (flush)
+      (info (name request-method) (:status resp) uri
+            (str (- finish start) "ms"))
       resp)))
 
 (defn wrap-reload-in-dev [handler reload-meta]
@@ -131,7 +123,7 @@
                 mtime (read-mtime file)]
             (when (> mtime last-mtime)
               (doseq [ns-sym clj-ns]
-                (println file " changed, reload " ns-sym)
+                (info file "changed, reload" ns-sym)
                 (require :reload ns-sym)
                 (swap! data assoc file {:ns clj-ns
                                         :mtime mtime})))))
