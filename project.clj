@@ -21,6 +21,9 @@
   :dev-resources-path "/usr/lib/jvm/java-6-openjdk/lib/tools.jar:/usr/lib/jvm/java-6-openjdk/src.zip"
   :exclusions [javax.activation/activation]
   :repositories {"java.net" "http://download.java.net/maven/2/"}
+  :warn-on-reflection true
+  :aot [freader.main]
+  ;; :jvm-opts ["-agentlib:hprof=cpu=samples,format=b,file=/tmp/profile.txt"]
   ;; :jvm-opts ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n"]
   :dev-dependencies [[swank-clojure "1.4.0-SNAPSHOT"]
                      [clojure-source "1.2.1"]

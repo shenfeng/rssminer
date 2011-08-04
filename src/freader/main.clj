@@ -1,9 +1,11 @@
 (ns freader.main
   (:use [clojure.tools.cli :only [cli optional required]]
         [ring.adapter.jetty7 :only [run-jetty]]
-        (freader [database :only [use-psql-database!]]
+        (freader [database :only [use-psql-database!
+                                  use-h2-database!]]
                  [search :only [use-index-writer!]]
                  [routes :only [app]]
+                 [crawler :only [start-crawler]]
                  [config :only [env-profile]])))
 
 (defonce server (atom nil))
@@ -22,6 +24,8 @@
   (use-psql-database! (str "jdbc:postgresql://" db-host "/" db-name)
                       db-user
                       db-password)
+  (use-h2-database! "/tmp/test/freader_test;TRACE_LEVEL_FILE=2")
+  (.start (Thread. start-crawler))
   (reset! server (run-jetty (app) {:port port :join? false})))
 
 (defn main [& args]
@@ -40,5 +44,3 @@
         (optional ["--db-password" "Database password" :default "123456"])
         (optional ["--index-path" "Path to store lucene index"
                    :default "/tmp/feeds-index"]))))
-
-(apply main *command-line-args*)
