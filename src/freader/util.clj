@@ -23,7 +23,9 @@
         (throw (new RuntimeException e))))))
 
 (defn resolve-url [base link]
-  (let [base (URI. base)
+  (let [base (URI. (if (= base (http/extract-host base))
+                     (str base "/")
+                     base))
         link (URI. link)]
     (str (.resolve base link))))
 
@@ -61,9 +63,8 @@
 (defn serialize-to-js [data]
   (let [stats (map
                (fn [[k v]]
-                 (let [e-v (str/replace (json-str v) "'" "\\'")]
-                   (str "var _" (str/upper-case (name k))
-                        "_ = JSON.parse('" e-v "')"))) data)
+                 (str "var _" (str/upper-case (name k))
+                      "_ = " (json-str v) "); ")) data)
         js (concat '("<script>") stats '("</script>"))]
     (apply str js)))
 

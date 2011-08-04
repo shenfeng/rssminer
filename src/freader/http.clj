@@ -2,7 +2,8 @@
   (:refer-clojure :exclude [get])
   (:require [clojure.string :as str])
   (:import [java.net URI URL Proxy Proxy$Type InetSocketAddress
-            HttpURLConnection SocketException]
+            HttpURLConnection SocketException ConnectException
+            UnknownHostException]
            [java.util.zip InflaterInputStream GZIPInputStream]))
 
 (def ^{:private true}
@@ -10,6 +11,28 @@
                       (InetSocketAddress. "localhost" 3128)))
 
 (def ^{:private true}  no-proxy Proxy/NO_PROXY)
+
+(defn extract-host [^String host]
+  (let [^URI uri (URI. host)
+        port (if (= -1 (.getPort uri)) ""
+                 (str ":" (.getPort uri)))
+        schema (.getScheme uri)
+        host (.getHost uri)]
+    (str schema "://" host port)))
+
+(defonce reseted-hosts (atom #{}))
+
+(defn- reseted-url?
+  "If the given url is reseted"
+  [url] (@reseted-hosts (extract-host url)))
+
+(defn- add-reseted-url [url]
+  (swap! reseted-hosts conj (extract-host url)))
+
+(defn reset-e?
+  "Is the given SocketException is caused by connection reset"
+  [^SocketException e]
+  (= "Connection reset" (.getMessage e)))
 
 (defn request [{:keys [url headers proxy?]}]
   (let [proxy (if proxy? socks-proxy no-proxy)
@@ -25,10 +48,11 @@
                              (recur (inc i)
                                     (assoc headers
                                       (keyword (str/lower-case k)) v))
-                             headers)))]
-      {:status (.getResponseCode con)
+                             headers)))
+          status (.getResponseCode con)]
+      {:status status
        :headers resp-headers
-       :body (.getInputStream con)})))
+       :body (when (= status 200) (.getInputStream con))})))
 
 (defn wrap-redirects [client]
   (fn [req]
@@ -46,46 +70,56 @@
                   (assoc-in req
                             [:headers :Accept-Encoding] "gzip, deflate"))]
         (case (get-in resp [:headers :Content-Encoding])
-              "gzip"
-              (update-in resp [:body]
-                         (fn [in]
-                           (GZIPInputStream. in)))
-              "deflate"
-              (update-in resp [:body]
-                         (fn [in]
-                           (InflaterInputStream. in)))
-              resp)))))
+          "gzip"
+          (update-in resp [:body]
+                     (fn [in]
+                       (GZIPInputStream. in)))
+          "deflate"
+          (update-in resp [:body]
+                     (fn [in]
+                       (InflaterInputStream. in)))
+          resp)))))
 
-(defn extract-host [host]
-  (let [uri (URI. host)
-        port (if (= -1 (.getPort uri)) ""
-                 (str ":" (.getPort uri)))
-        schema (.getScheme uri)
-        host (.getHost uri)]
-    (str schema "://" host port)))
+(defn wrap-proxy [client]
+  (fn [{:keys [url] :as req}]
+    (if (reseted-url? url)
+      (client (assoc req :proxy? true))
+      (try
+        (client req)
+        (catch SocketException e
+          (if (and (reset-e? e) (not (:proxy? req)))
+            (do
+              (add-reseted-url url)
+              (client (assoc req :proxy? true)))
+            (throw e)))))))
 
-(let [blacks (atom #{})
-      black? (fn [url]
-               (@blacks (extract-host url)))
-      add (fn [url]
-            (swap! blacks conj (extract-host url)))
-      reset? (fn [e]
-               (= "Connection reset" (.getMessage e)))]
-  (defn wrap-proxy [client]
-    (fn [{:keys [url] :as req}]
-      (if (black? url)
-        (client (assoc req :proxy? true))
-        (try
-          (client req)
-          (catch SocketException e
-            (when (reset? e)
-              (add url)
-              (client (assoc req :proxy? true)))))))))
+(defn wrap-exception [client]
+  (fn [req]
+    (try (client req)
+         (catch ConnectException e
+           {:status 450
+            :headers {}})
+         (catch UnknownHostException e
+           {:status 451
+            :headers {}})
+         (catch Exception e
+           (throw e)))))
+
+(defn- assoc-if [map & kvs]
+  "like assoc, but drop false value"
+  (let [kvs (apply concat
+                   (filter #(second %) (partition 2 kvs)))]
+    (if (seq kvs) (apply assoc map kvs) map)))
 
 (def request* (-> request
                   wrap-compression
                   wrap-proxy
-                  wrap-redirects))
+                  wrap-redirects
+                  wrap-exception))
 
-(defn get [url]
-  (request* {:url url}))
+(defn get
+  [url & {:keys [last-modified user-agent]
+          :or {user-agent "Mozilla/5.0 (X11; Linux x86_64)"}}]
+  (request* (assoc-if {:url url}
+                      :User-Agent user-agent
+                      :If-Modified-Since last-modified)))
