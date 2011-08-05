@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//LOGGER" "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
+<log4j:configuration>
+  <!--
+      an appender is an output destination, such as the console or a file;
+      names of appenders are arbitrarily chosen
+  -->
+  <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern"
+             value="%d{yy/MM/dd HH:mm:ss,SSS} [%t] %4p %c{1} - %m%n" />
+    </layout>
+  </appender>
+
+  <!-- the root category -->
+  <root>
+    <!--
+        all log messages of level "debug" or higher will be logged, unless defined otherwise
+        all log messages will be logged to the appender "stdout", unless defined otherwise
+    -->
+    <level value="debug" />
+    <appender-ref ref="stdout" />
+  </root>
+</log4j:configuration>
