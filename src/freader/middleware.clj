@@ -1,25 +1,15 @@
 (ns freader.middleware
   (:use [freader.util :only [json-response]]
         [ring.util.response :only [redirect]]
-        [ring.middleware.file-info :only [make-http-format]]
         [sandbar.stateful-session :only [session-get]]
         [clojure.tools.logging :only [info error]]
         [compojure.core :only [GET POST DELETE PUT]])
   (:require [freader.config :as config]
             [clojure.data.json :as json])
-  (:import [java.util Locale Calendar TimeZone Date]
-           java.io.File))
+  (:import java.io.File))
 
 (def ^{:dynamic true} *user* nil)
 (def ^{:dynamic true} *json-body* nil)
-
-;;; Expires: Thu, 01 Dec 1994 16:00:00 GMT
-(defn- get-expire "get string for http expire header" [days]
-  (let [f (make-http-format)
-        c (doto (Calendar/getInstance)
-            (.add Calendar/DAY_OF_YEAR days))
-        d (.getTime c)]
-    (.format f d)))
 
 (defn wrap-auth [handler]
   (fn [req]
@@ -41,24 +31,6 @@
         (let [new-headers (assoc headers
                             "Cache-Control" "no-cache")]
           (assoc resp :headers new-headers))
-        resp))))
-
-(defn wrap-ring-cookie-rewrite
-  "rewrite ring-session cookie if user choose to persist the login"
-  [handler]
-  (fn [req]
-    (let [persist? (-> req :params :persistent)
-          resp (handler req)
-          set-cookie ((:headers resp) "Set-Cookie" '())]
-      (if-let [ring-cookie (first (filter
-                                   #(re-find #"^ring" %) set-cookie))]
-        (let [new-ring-cookie (if persist?
-                                (str ring-cookie "; Expires="
-                                     (get-expire 15) "; HttpOnly")
-                                (str ring-cookie "; HttpOnly"))]
-          (update-in resp [:headers] assoc "Set-Cookie"
-                     (cons new-ring-cookie
-                           (filter #(not (re-find #"^ring" %)) set-cookie))))
         resp))))
 
 (defn wrap-failsafe

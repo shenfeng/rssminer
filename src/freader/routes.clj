@@ -8,7 +8,6 @@
                          [session :only [wrap-session]])
         (freader [middleware :only (wrap-auth
                                     wrap-cache-header
-                                    wrap-ring-cookie-rewrite
                                     wrap-failsafe
                                     wrap-request-logging
                                     wrap-reload-in-dev
@@ -83,7 +82,6 @@
                  wrap-stateful-session
                  wrap-cache-header
                  wrap-request-logging
-                 wrap-ring-cookie-rewrite
                  wrap-keyword-params
                  wrap-multipart-params
                  wrap-params

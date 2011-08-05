@@ -31,9 +31,7 @@
                                :uri "/login"})]
     (is (not (re-find #"Expires="
                       (first ((:headers login) "Set-Cookie")))))
-    (is (re-find #"HttpOnly"
-                 (first ((:headers login) "Set-Cookie"))))
-    (is (re-find #"Expires=|HttpOnly"
+    (is (re-find #"Expires="
                  (first ((:headers remerber-me) "Set-Cookie"))))
     (is (= 302 (:status signup)))
     (is (= 302 (:status login)))))
