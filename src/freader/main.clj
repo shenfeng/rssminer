@@ -9,11 +9,15 @@
                  [config :only [env-profile]])))
 
 (defonce server (atom nil))
+(defonce crawler (atom nil))
 
 (defn- stop-server []
   (when-not (nil? @server)
     (.stop @server)
-    (reset! server nil)))
+    (reset! server nil))
+  (when-not (nil? @crawler)
+    (@crawler :shutdown-wait)
+    (reset! crawler nil)))
 
 (defn- start-server [{:keys [db-host db-user db-password db-name port
                              index-path profile]}]
@@ -25,7 +29,7 @@
                       db-user
                       db-password)
   (use-h2-database! "/tmp/test/freader_test;TRACE_LEVEL_FILE=2")
-  (.start (Thread. start-crawler))
+  (reset! crawler (start-crawler))
   (reset! server (run-jetty (app) {:port port :join? false})))
 
 (defn main [& args]

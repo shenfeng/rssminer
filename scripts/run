@@ -3,7 +3,7 @@
 ABSOLUTE_PATH=$(readlink -f $0)
 HOME="${ABSOLUTE_PATH%/*/*}"
 cd "${HOME}" && java -Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8 \
-    -server -cp "lib/*:src/" clojure.main \
+    -server -cp "classes:lib/*:src/" clojure.main \
     -e "(require 'freader.main)(apply freader.main/main *command-line-args*)" \
     /dev/null $@
 

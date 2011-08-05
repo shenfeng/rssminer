@@ -5,8 +5,10 @@
   (:require [freader.db.crawler :as db]
             [freader.http :as http]
             [freader.config :as conf])
-  (:import [java.util Queue LinkedList Date]
-           [java.util.concurrent Executors ExecutorService TimeUnit]))
+  (:import crawler.CrawlerThreadFactory
+           [java.util Queue LinkedList Date]
+           [java.util.concurrent Executors ExecutorService
+            TimeUnit ThreadFactory]))
 
 (def running? (atom false))
 (def fetch-size 100)
@@ -49,19 +51,24 @@
             (get-next-link)))))))
 
 (defn start-crawler [& {:keys [threads]}]
-  (info "starting crawler")
   (let [threads (or threads conf/crawler-threads-count)
-        ^ExecutorService exec (Executors/newFixedThreadPool threads)
+        ^ExecutorService exec (Executors/newFixedThreadPool
+                               threads (CrawlerThreadFactory.))
         ^Runnable task (fn [] (loop [link (get-next-link)]
                                (when (and link @running?)
                                  (crawl-link link)
-                                 (recur (get-next-link)))))]
+                                 (recur (get-next-link)))))
+        shutdown #(do (info "shutdown crawler....")
+                      (reset! running? true))
+        wait #(do (.awaitTermination exec Integer/MAX_VALUE TimeUnit/MINUTES)
+                  (info "crawler shutdowned."))]
     (reset! running? true)
+    (info "starting crawler")
     (dotimes [_ threads]
       (.submit exec task))
-    (fn []
-      (.shutdown exec)
-      (reset! running? false)
-      (info "shutdown crawler....")
-      (.awaitTermination exec Integer/MAX_VALUE TimeUnit/MINUTES)
-      (info "crawler shutdowned."))))
+    (.shutdownNow exec)
+    (fn [op]
+      (case op
+        :wait (wait)
+        :shutdown (shutdown)
+        :shutdown-wait (do (shutdown) (wait))))))

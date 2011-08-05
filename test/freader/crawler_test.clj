@@ -32,6 +32,7 @@
 (deftest test-start-crawler
   (let [rss (db/fetch-rss-links 1000)]
     (mocking (var http/get) mock-http-get
-             (start-crawler))
+             (let [crawler  (start-crawler)]
+               (crawler :wait)))
     (is (nil? (db/fetch-crawler-links 2000)))
     (is (= 1 (- (count (db/fetch-rss-links 1000)) (count rss))))))

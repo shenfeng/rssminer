@@ -19,7 +19,11 @@ create table crawler_link (
   referer_id INTEGER REFERENCES crawler_link
       ON UPDATE CASCADE ON DELETE SET NULL,
 )
+
+---
+create index idx_crawler_link_domain on crawler_link(domain)
 ----
+
 create table rss_link (
   id INTEGER PRIMARY KEY auto_increment,
   url VARCHAR UNIQUE,
@@ -53,6 +57,7 @@ create table rss_xml (
 --seeds
 insert into crawler_link (url, domain) values
 ('http://blog.jquery.com/', 'http://blog.jquery.com'),
+('http://blogs.oracle.com/', 'http://blogs.oracle.com'),
 ('http://blog.sina.com.cn/', 'http://blog.sina.com.cn'),
 ('http://blog.sina.com.cn/kaifulee', 'http://blog.sina.com.cn'),
 ('http://briancarper.net/', 'http://briancarper.net'),
@@ -87,5 +92,6 @@ insert into rss_link (url) values
 ----
 insert into multi_rss_domain (domain) values
 ('http://blog.sina.com.cn'),
+('http://blogs.oracle.com'),
 ('http://xianguo.com'),
 ('http://www.ibm.com')
