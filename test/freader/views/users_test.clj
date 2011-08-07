@@ -1,8 +1,8 @@
 (ns freader.views.users-test
   (:use clojure.test
-        (freader [test-common :only [test-app postgresql-fixture]])))
+        (freader [test-common :only [test-app h2-fixture]])))
 
-(use-fixtures :each postgresql-fixture)
+(use-fixtures :each h2-fixture)
 
 (deftest test-login-sign-page
   (let [resp (test-app {:uri "/login"

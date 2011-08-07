@@ -3,59 +3,127 @@
 -- select datediff('SECOND', add_ts, now()) - check_interval as t from rss_link order by t limit 1
 
 SET COMPRESS_LOB  DEFLATE;
----
-create table crawler_link (
+----
+CREATE TABLE users
+(
+  id serial PRIMARY KEY,
+  email VARCHAR UNIQUE,
+  name VARCHAR,
+  password VARCHAR,
+  authen_toekn VARCHAR,
+  added_ts timestamp DEFAULT now()
+);
+
+----
+create table crawler_links (
   id INTEGER PRIMARY KEY auto_increment,
   url VARCHAR UNIQUE,
   title VARCHAR,
-  add_ts TIMESTAMP default now(),
-  domain VARCHAR, --assume one domain, one rss
-  last_status INTEGER default 200,
+  added_ts TIMESTAMP default now(),
+  domain VARCHAR,        --assume one domain, one rss, do not crawler
   last_check_ts TIMESTAMP default DATE'1980-1-1',
-  last_modified TIMESTAMP default DATE'2300-1-1',
+  last_modified VARCHAR,
   last_md5 VARCHAR,
   check_interval INTEGER default 60 * 60 * 24 * 10, -- in seconds, ten days
   server VARCHAR,
-  referer_id INTEGER REFERENCES crawler_link
+  referer_id INTEGER REFERENCES crawler_links
       ON UPDATE CASCADE ON DELETE SET NULL,
 )
 
----
-create index idx_crawler_link_domain on crawler_link(domain)
+----
+create index idx_crawler_link_domain on crawler_links(domain)
 ----
 
-create table rss_link (
+create table rss_links (
   id INTEGER PRIMARY KEY auto_increment,
   url VARCHAR UNIQUE,
   title VARCHAR,
-  add_ts TIMESTAMP default now(),
+  description VARCHAR,
+  alternate VARCHAR,            -- usually, the site's link
+  added_ts TIMESTAMP default now(),
   last_check_ts TIMESTAMP default DATE'1970-1-1',
   check_interval INTEGER default 60 * 60 * 24, -- in seconds, one day
-  last_update_ts TIMESTAMP,
-  last_md5 VARCHAR,
-  favicon CLOB,
-  server VARCHAR,
-  crawler_link_id INTEGER  REFERENCES crawler_link
-     ON UPDATE CASCADE ON DELETE SET NULL
+  last_modified VARCHAR,                -- from http response header
+  last_md5 VARCHAR,                     -- used to check if changed
+  favicon VARCHAR,             -- base64 encoded, TODO, change to cblob
+  server VARCHAR,              -- from http response header
+  subscription_count INTEGER default 0, -- how much user subscribed
+  user_id INTEGER REFERENCES users      -- who first add it
+     ON UPDATE CASCADE ON DELETE SET NULL,
+  crawler_link_id INTEGER  REFERENCES crawler_links
+     ON UPDATE CASCADE ON DELETE SET NULL,
 )
+
 ----
-create table multi_rss_domain (
+CREATE TABLE user_subscriptions
+(
+  id INTEGER PRIMARY KEY auto_increment,
+  user_id INTEGER NOT NULL
+       REFERENCES users  ON UPDATE CASCADE ON DELETE CASCADE,
+  rss_link_id INTEGER NOT NULL
+       REFERENCES rss_links  ON UPDATE CASCADE ON DELETE CASCADE,
+  title VARCHAR, --user defined title, default is subscription's title
+  group_name VARCHAR default 'ungrouped',
+  added_ts TIMESTAMP DEFAULT now(),
+  UNIQUE (user_id, rss_link_id)
+);
+
+----
+create table multi_rss_domains (
   domain varchar UNIQUE,
 )
 ----
-create table rss_xml (
+create table rss_xmls (
   id INTEGER PRIMARY KEY auto_increment,
-  add_ts TIMESTAMP default now(),
+  added_ts TIMESTAMP default now(),
   last_modified TIMESTAMP,
-  etag VARCHAR,
   length INTEGER,
   content CLOB,
-  rss_link_id INTEGER REFERENCES rss_link
+  rss_link_id INTEGER REFERENCES rss_links
     ON UPDATE CASCADE ON DELETE SET NULL
 )
 ----
---seeds
-insert into crawler_link (url, domain) values
+CREATE TABLE feeds
+(
+  id INTEGER PRIMARY KEY auto_increment,
+  author VARCHAR,
+  title VARCHAR,
+  summary VARCHAR,              -- TODO change bo clob
+  alternate VARCHAR,
+  updated_ts TIMESTAMP,
+  published_ts TIMESTAMP,
+  rss_link_id INTEGER
+             REFERENCES rss_links ON UPDATE CASCADE ON DELETE CASCADE,
+  rss_xml_id INTEGER
+             REFERENCES rss_xmls ON UPDATE CASCADE ON DELETE CASCADE,
+);
+----
+CREATE TABLE comments
+(
+  id INTEGER PRIMARY KEY auto_increment,
+  content VARCHAR,
+  user_id INTEGER NOT NULL
+          REFERENCES users ON UPDATE CASCADE ON DELETE CASCADE,
+  feed_id INTEGER NOT NULL
+          REFERENCES feeds  ON UPDATE CASCADE ON DELETE CASCADE,
+  added_ts TIMESTAMP  DEFAULT now(),
+);
+---
+CREATE TABLE feedcategory
+(
+    id INTEGER PRIMARY KEY auto_increment,
+    type VARCHAR, -- possible val: tag, freader(system type),
+    text VARCHAR, -- freader-> stared, read
+    user_id INTEGER NOT NULL
+            REFERENCES users ON UPDATE CASCADE ON DELETE CASCADE,
+    feed_id INTEGER NOT NULL
+            REFERENCES feeds ON UPDATE CASCADE ON DELETE CASCADE,
+    added_ts TIMESTAMP DEFAULT now(),
+    UNIQUE(type, text, user_id, feed_id)
+);
+
+----
+insert into crawler_links (url, domain) values --seeds
 ('http://blog.jquery.com/', 'http://blog.jquery.com'),
 ('http://blogs.oracle.com/', 'http://blogs.oracle.com'),
 ('http://blog.sina.com.cn/', 'http://blog.sina.com.cn'),
@@ -63,12 +131,10 @@ insert into crawler_link (url, domain) values
 ('http://briancarper.net/', 'http://briancarper.net'),
 ('http://channel9.msdn.com/', 'http://channel9.msdn.com'),
 ('http://clj-me.cgrand.net/', 'http://clj-me.cgrand.net'),
-('http://clojure-libraries.appspot.com/', 'http://clojure-libraries.appspot.com'),
 ('http://data-sorcery.org/', 'http://data-sorcery.org'),
 ('http://ejohn.org/', 'http://ejohn.org'),
 ('http://emacs-fu.blogspot.com/', 'http://emacs-fu.blogspot.com'),
 ('http://emacsblog.org/', 'http://emacsblog.org'),
-('http://googlewebtoolkit.blogspot.com', 'http://googlewebtoolkit.blogspot.com'),
 ('http://norvig.com', 'http://norvig.com'),
 ('http://planet.clojure.in/', 'http://planet.clojure.in'),
 ('http://testdrivenwebsites.com/', 'http://testdrivenwebsites.com'),
@@ -84,13 +150,13 @@ insert into crawler_link (url, domain) values
 ('http://xianguo.com/hot', 'http://xianguo.com')
 
 ----
-insert into rss_link (url) values
+insert into rss_links (url) values
 ('http://feeds.feedburner.com/ruanyifeng'),
 ('http://blog.sina.com.cn/rss/kaifulee.xml'),
 ('http://cemerick.com/feed/'),
 
 ----
-insert into multi_rss_domain (domain) values
+insert into multi_rss_domains (domain) values
 ('http://blog.sina.com.cn'),
 ('http://blogs.oracle.com'),
 ('http://xianguo.com'),

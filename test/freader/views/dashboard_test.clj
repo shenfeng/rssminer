@@ -1,7 +1,7 @@
 (ns freader.views.dashboard-test
   (:use clojure.test
         (clojure.data [json :only [read-json]])
-        (freader [test-common :only [test-app h2-fixture tracep]])))
+        (freader [test-common :only [test-app h2-fixture]])))
 
 (use-fixtures :each h2-fixture)
 
@@ -13,6 +13,7 @@
     (is (empty? (-> stats :crawled_links)))
     (are [k] (-> stats k)
          :total_count
+         :rss_links
          :pending_links
          :crawled_count
          :crawled_links)))

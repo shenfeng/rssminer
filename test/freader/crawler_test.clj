@@ -1,6 +1,6 @@
 (ns freader.crawler-test
   (:use clojure.test
-        (freader [test-common :only [h2-fixture tracep mocking]])
+        (freader [test-common :only [h2-fixture mocking]])
         freader.crawler
         [clojure.java.io :only [resource]])
   (:require [freader.db.crawler :as db]

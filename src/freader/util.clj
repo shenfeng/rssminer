@@ -1,5 +1,6 @@
 (ns freader.util
-  (:use (clojure.data [json :only [json-str Write-JSON]]))
+  (:use (clojure.data [json :only [json-str Write-JSON]])
+        [clojure.pprint :only [pprint]])
   (:require [freader.http :as http]
             [clojure.string :as str]
             [net.cgrand.enlive-html :as html])
@@ -64,20 +65,32 @@
   (let [stats (map
                (fn [[k v]]
                  (str "var _" (str/upper-case (name k))
-                      "_ = " (json-str v) "); ")) data)
+                      "_ = " (json-str v) "; ")) data)
         js (concat '("<script>") stats '("</script>"))]
     (apply str js)))
 
 (defn download-favicon [url]
   (let [icon-url (str (http/extract-host url) "/favicon.ico")]
-   (try
-     (let [resp (http/get icon-url)
-           img (Base64/encodeBase64String
-                (IOUtils/toByteArray (:body resp)))
-           code (if-let [type (:Content-Type resp)]
-                  (str "data:" type ";base64,")
-                  "data:image/x-icon;base64,")]
-       (str code img))
-     (catch Exception e
-       (prn "ERROR GET " icon-url ": " (.getMessage e) "\n")))))
+    (try
+      (let [resp (http/get icon-url)
+            img (Base64/encodeBase64String
+                 (IOUtils/toByteArray ^InputStream (:body resp)))
+            code (if-let [type (:Content-Type resp)]
+                   (str "data:" type ";base64,")
+                   "data:image/x-icon;base64,")]
+        (str code img))
+      (catch Exception e
+        (prn "ERROR GET " icon-url ": " (.getMessage e) "\n")))))
 
+(defn trace
+  ([value] (trace nil value))
+  ([name value]
+     (println (str "TRACE" (when name (str " " name)) ": " value))
+     value))
+
+(defn tracep
+  ([value] (tracep nil value))
+  ([name value]
+     (println (str "TRACE" (when name (str " " name)) ":"))
+     (pprint value)
+     value))

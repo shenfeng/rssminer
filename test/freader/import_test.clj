@@ -2,10 +2,10 @@
   (:use clojure.test
         clojure.contrib.mock
         freader.import
-        [freader.test-common :only [auth-app postgresql-fixture]]
+        [freader.test-common :only [auth-app h2-fixture]]
         [freader.handlers.subscriptions :only [add-subscription*]]))
 
-(use-fixtures :each postgresql-fixture)
+(use-fixtures :each h2-fixture)
 
 (def opml (java.io.File. "test/opml.xml"))
 (def n 52) ;; opml.xml has 52 subscriptions

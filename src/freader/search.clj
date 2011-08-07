@@ -59,14 +59,14 @@
           (index m-index)
           (termvector m-termvector)))
 
-(defn- create-document [{:keys [id subscription_id author title summary]}]
+(defn- create-document [{:keys [id rss_link_id author title summary]}]
   (let [^Document document (Document.)
         author (or author "")
         title (or title "")
         summary (or summary "")]
     (doto document
       (.add (create-numericfield :feed_id id))
-      (.add (create-numericfield :subscription_id subscription_id))
+      (.add (create-numericfield :rss_link_id rss_link_id))
       (.add (create-field :author author))
       (.add (create-field :title title :store :yes))
       (.add (create-field :summary summary)))))
@@ -82,7 +82,7 @@
         fget (fn [field]
                (.get doc (name field)))]
     {:id (fget :feed_id)
-     :subscription_id (fget :subscription_id)
+     :rss_link_id (fget :rss_link_id)
      :title (fget :title)}))
 
 (defn- search* [term n]

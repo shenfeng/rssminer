@@ -1,10 +1,9 @@
 #!/bin/sh
 
-READLINK=readlink
-if which greadlink > /dev/null; then
-    READLINK=greadlink
-fi
-ABSOLUTE_PATH=$(${READLINK} -f $0)
+ABSOLUTE_PATH=$(readlink -f $0)
 HOME="${ABSOLUTE_PATH%/*/*}"
-cd "${HOME}" && java -Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8 -server -cp "lib/*:src/" clojure.main scripts/setup_database.clj $@
+cd "${HOME}" && java -Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8 \
+    -server -cp "classes:lib/*:src/" clojure.main \
+    -e "(require 'freader.setup-database)(freader.setup-database/setup)" \
+    /dev/null $@
 

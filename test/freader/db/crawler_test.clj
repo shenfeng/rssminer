@@ -1,7 +1,7 @@
 (ns freader.db.crawler-test
   (:use clojure.test
         freader.db.crawler
-        (freader [test-common :only [h2-fixture tracep]])))
+        (freader [test-common :only [h2-fixture]])))
 
 (use-fixtures :each h2-fixture)
 

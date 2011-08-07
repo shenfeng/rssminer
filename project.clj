@@ -2,12 +2,11 @@
   :description "A feed reader written in clojure"
   :dependencies [[org.clojure/clojure "1.2.1"]
                  [org.clojure/data.json "0.1.1"]
-                 [org.clojure/java.jdbc "0.0.5"]
+                 [org.clojure/java.jdbc "0.0.6"]
                  [org.clojure/tools.cli "0.1.0"]
                  [org.clojure/tools.logging "0.2.0"]
                  [commons-codec/commons-codec "1.5"]
                  [com.h2database/h2 "1.3.158"]
-                 [commons-dbcp/commons-dbcp "1.4"]
                  [log4j/log4j "1.2.16"]
                  [commons-io/commons-io "2.0.1"]
                  [javax.mail/mail "1.4.4"]
@@ -16,7 +15,6 @@
                  [enlive "1.0.0"]
                  [org.apache.lucene/lucene-core "3.2.0"]
                  [net.java.dev.rome/rome "1.0.0"]
-                 [postgresql/postgresql "9.0-801.jdbc4"]
                  [ring/ring-core "0.3.11"]
                  [org.signaut/ring-jetty7-adapter "0.3.11"]]
   :dev-resources-path "/usr/lib/jvm/java-6-openjdk/lib/tools.jar:/usr/lib/jvm/java-6-openjdk/src.zip"

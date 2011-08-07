@@ -1,9 +1,9 @@
 (ns freader.db.user-test
   (:use clojure.test
         freader.db.user
-        (freader [test-common :only [postgresql-fixture]])))
+        (freader [test-common :only [app-fixture]])))
 
-(use-fixtures :each postgresql-fixture)
+(use-fixtures :each app-fixture)
 
 (deftest test-create-authenticate-user
   (let [user (create-user {:email "test@test.com"

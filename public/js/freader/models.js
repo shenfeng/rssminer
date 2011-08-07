@@ -113,7 +113,7 @@ window.$(function(){
       name: 'SubscriptonList',
       model: Subscription,
       comparator: function (subscription) {
-        return subscription.get('title').toLowerCase();
+        return (subscription.get('title') || '').toLowerCase();
       }
     });
 

@@ -1,10 +1,9 @@
-(ns setup-database
-  (:use (freader [database :only [use-psql-database!
-                                  close-global-psql-factory]]
+(ns freader.setup-database
+  (:use (freader [database :only [use-h2-database! close-global-h2-factory
+                                  import-h2-schema!]]
                  [search :only [use-index-writer! close-global-index-writer!]]
                  [routes :only [app]])
-        (freader.db [user :only [create-user]]
-                    [util :only [get-con exec-stats exec-prepared-sqlfile]])
+        (freader.db [user :only [create-user]])
         [sandbar.stateful-session :only [session-get]]
         [clojure.data.json :only [json-str]]))
 
@@ -26,24 +25,17 @@
             "http://www.ubuntugeek.com/feed/"])
 
 (defn setup []
-  (let [db-name "freader"]
-    (with-open [con (get-con "postgres")]
-      (exec-stats con
-                  (str "DROP DATABASE IF EXISTS " db-name)
-                  (str "CREATE DATABASE " db-name)))
-    (exec-prepared-sqlfile db-name)
+  (let [db-path "/tmp/freader"]
+    (use-h2-database! db-path)
+    (import-h2-schema!)
     (use-index-writer! "/tmp/feeds-index")
-    (use-psql-database! db-name)
     (let [user (create-user {:name "feng"
                              :password "123456"
                              :email "shenedu@gmail.com"})]
-      (binding [session-get (fn [arg]
-                              (if (= arg :user) user arg))]
+      (binding [session-get #(if (= % :user) user %)]
         (doseq [link links]
           (apply (app) [{:uri "/api/subscriptions/add"
                          :request-method :post
                          :body (json-str {:link link})}]))))
-    (close-global-psql-factory)
+    (close-global-h2-factory)
     (close-global-index-writer!)))
-
-(setup)

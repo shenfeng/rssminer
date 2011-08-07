@@ -17,15 +17,15 @@
                                 & {:keys [group-name title]}]
   (let [us (db/fetch-user-subscription
             {:user_id user-id
-             :subscription_id (:id subscription)})]
+             :rss_link_id (:id subscription)})]
     (if us
       {:status 409                      ;readd is not allowed
        :message "Already subscribed"}
-      (let [us (db/insert :user_subscription
+      (let [us (db/insert :user_subscriptions
                           {:user_id user-id
                            :group_name (or group-name ungroup)
                            :title (or title (:title subscription))
-                           :subscription_id (:id subscription)})
+                           :rss_link_id (:id subscription)})
             count (db/fetch-feeds-count-by-id (:id subscription))]
         (add-subscription-ret us subscription count)))))
 
@@ -33,18 +33,18 @@
   (if-let [feeds (parse (:body (download-feed-source link)))]
     (let [favicon (download-favicon link)
           ;; 1. save feedsource
-          subscription (db/insert :subscriptions
-                                  {:link link
+          subscription (db/insert :rss_links
+                                  {:url link
                                    :user_id user-id
                                    :favicon favicon
                                    :description (:description feeds)
                                    :title (:title feeds)})
           ;; 2. assoc feedsource with user
-          us (db/insert :user_subscription
+          us (db/insert :user_subscriptions
                         {:user_id user-id
                          :group_name (or group-name ungroup)
                          :title (or title (:title subscription))
-                         :subscription_id (:id subscription)})]
+                         :rss_link_id (:id subscription)})]
       (db/save-feeds subscription feeds user-id) ;; 3. save feeds
       ;; 5. return data
       (add-subscription-ret us subscription (count feeds)))
@@ -53,7 +53,7 @@
      :message "Bad feedlink"}))
 
 (defn add-subscription* [link user-id & options]
-  (let [sub (db/fetch-subscription {:link link})]
+  (let [sub (db/fetch-subscription {:url link})]
     (if sub
       ;; we have the subscription
       (apply add-exists-subscription sub user-id options)
@@ -94,9 +94,7 @@
 (defn customize-subscription [req]
   (let [user-id (:id *user*)
         subscription-id (-> req :params :id Integer.)]
-    (assoc
-        (db/update-user-subscription user-id subscription-id *json-body*)
-      :id subscription-id)))
+    (db/update-user-subscription user-id subscription-id *json-body*)))
 
 (defn unsubscribe [req]
   (let [user-id (:id *user*)

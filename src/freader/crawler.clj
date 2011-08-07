@@ -30,7 +30,6 @@
         md5 (when html (md5-sum html))]
     (db/update-crawler-link {:id id
                              :last_md5 md5
-                             :last_status status
                              :last_modified
                              (when-let [lm (:last_modified headers)]
                                (parse-timestamp lm))

@@ -11,32 +11,31 @@
         <span>Total <%=total_count%></span>
         <span>Crawled <%=crawled_count%></span>
       </div>
-      <% if(pending_links.length > 0) { %>
-      <h2>Pending Links</h2>
-      <table id="pending-links">
-        <tr>
-          <th> url </th>
-          <th> last check </th>
-          <th> check interval </th>
-          <th> last status </th>
-          <th> referer </th>
-        </tr>
-        <% _.each(pending_links, function(link) { %>
-        <tr>
-          <td><%= link.url%></td>
-          <td><%= _.timesince(link.check_ts)%></td>
-          <td><%= _.interval(link.check_interval)%></td>
-          <td><%= link.last_status%></td>
-          <td><%= link.referer%></td>
-        </tr>
-        <%}); %>
-      </table>
-      <%} %>
 
-      <% if(crawled_links.length > 0) { %>
-      <h2>Crawled Links</h2>
+      <% if(rss_links.length > 0) { %>
+      <h2>Rss Links</h2>
       <div id="crawler-links" class="clearfix">
         <table id="crawled-links">
+          <tr>
+            <th> url </th>
+            <th> title </th>
+            <th> add_ts </th>
+            <th> referer </th>
+          </tr>
+          <% _.each(rss_links, function(link) { %>
+          <tr>
+            <td><%= link.url%></td>
+            <td><%= link.title%></td>
+            <td><%= _.timesince(link.add_ts)%></td>
+            <td><%= link.referer%></td>
+          </tr>
+          <%}); %>
+        </table>
+        <%} %>
+
+        <% if(pending_links.length > 0) { %>
+        <h2>Pending Links</h2>
+        <table id="pending-links">
           <tr>
             <th> url </th>
             <th> last check </th>
@@ -44,7 +43,7 @@
             <th> last status </th>
             <th> referer </th>
           </tr>
-          <% _.each(crawled_links, function(link) { %>
+          <% _.each(pending_links, function(link) { %>
           <tr>
             <td><%= link.url%></td>
             <td><%= _.timesince(link.check_ts)%></td>
@@ -55,7 +54,30 @@
           <%}); %>
         </table>
         <%} %>
-      </div>
+
+        <% if(crawled_links.length > 0) { %>
+        <h2>Crawled Links</h2>
+        <div id="crawler-links" class="clearfix">
+          <table id="crawled-links">
+            <tr>
+              <th> url </th>
+              <th> last check </th>
+              <th> check interval </th>
+              <th> last status </th>
+              <th> referer </th>
+            </tr>
+            <% _.each(crawled_links, function(link) { %>
+            <tr>
+              <td><%= link.url%></td>
+              <td><%= _.timesince(link.check_ts)%></td>
+              <td><%= _.interval(link.check_interval)%></td>
+              <td><%= link.last_status%></td>
+              <td><%= link.referer%></td>
+            </tr>
+            <%}); %>
+          </table>
+          <%} %>
+        </div>
     </script>
   </head>
   <body>

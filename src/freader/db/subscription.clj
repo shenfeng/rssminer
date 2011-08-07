@@ -1,57 +1,58 @@
 (ns freader.db.subscription
-  (:use [freader.db.util :only [exec-query select-sql-params
-                                insert-sql-params]]
+  (:use [freader.db.util :only [select-sql-params h2-insert-and-return
+                                h2-query with-h2]]
+        [clojure.java.jdbc :only [delete-rows update-values]]
+        [freader.util :only [tracep]]
         [freader.search :only [index-feeds]]))
 
 (defn insert [table data]
-  (first
-   (exec-query (insert-sql-params table data))))
+  (h2-insert-and-return table data))
 
 (defn fetch-subscription [map]
   (first
-   (exec-query (select-sql-params :subscriptions map))))
+   (h2-query (select-sql-params :rss_links map))))
 
 (defn fetch-feeds-count-by-id [subscription-id]
-  (-> (exec-query ["SELECT COUNT(*) as count
-                FROM feeds WHERE subscription_id = ?" subscription-id])
+  (-> (h2-query ["SELECT COUNT(*) as count
+                FROM feeds WHERE rss_xml_id = ?" subscription-id])
       first :count))
 
 (defn fetch-user-subscription [map]
   (first
-   (exec-query
-    (select-sql-params :user_subscription map))))
+   (h2-query
+    (select-sql-params :user_subscriptions map))))
 
 (defn fetch-categories [user-id feed-id]
-  (exec-query ["SELECT type, text, added_ts FROM feedcategory
+  (h2-query ["SELECT type, text, added_ts FROM feedcategory
                 WHERE user_id = ? AND
                       feed_id =?" user-id user-id]))
 
 (defn fetch-comments [user-id feed-id]
-  (exec-query ["SELECT id, content, added_ts FROM comments
+  (h2-query ["SELECT id, content, added_ts FROM comments
                 WHERE user_id = ? AND
                       feed_id = ? " user-id feed-id]))
 (defn fetch-feeds
   ([subscription-id limit offset]
-     (exec-query ["SELECT
+     (h2-query ["SELECT
                         id, author, title, summary, alternate, published_ts
                    FROM feeds
-                   WHERE subscription_id = ? LIMIT ? OFFSET ?"
-                  subscription-id limit offset])))
+                   WHERE rss_link_id = ? LIMIT ? OFFSET ?"
+                subscription-id limit offset])))
 
 (defn fetch-overview [user-id]
-  (exec-query ["
+  (h2-query ["
 SELECT
    us.group_name, s.id, us.title, s.favicon,
-   (SELECT COUNT(*) FROM feeds WHERE feeds.subscription_id = s.id) AS total_count,
+   (SELECT COUNT(*) FROM feeds WHERE feeds.rss_link_id = s.id) AS total_count,
    (SELECT COUNT(*) FROM feeds
-    WHERE  feeds.subscription_id = s.id AND
+    WHERE  feeds.rss_link_id = s.id AND
            feeds.id NOT IN (SELECT feed_id FROM feedcategory
                              WHERE user_id = ? AND
                                   'type' = 'freader' AND
                                    text = 'read' )) AS unread_count
 FROM
-   user_subscription AS us
-   JOIN subscriptions AS s ON s.id = us.subscription_id
+   user_subscriptions AS us
+   JOIN rss_links AS s ON s.id = us.rss_link_id
 WHERE us.user_id = ?" user-id user-id]))
 
 
@@ -81,7 +82,7 @@ WHERE us.user_id = ?" user-id user-id]))
   (doseq [feed (:entries feeds)]
     (let [saved-feed
           (insert :feeds
-                  {:subscription_id (:id subscription)
+                  {:rss_link_id (:id subscription)
                    :author (:author feed)
                    :title (:title feed)
                    :summary (-> feed :description :value)
@@ -96,17 +97,13 @@ WHERE us.user_id = ?" user-id user-id]))
                  :type "tag"
                  :text (:name c)})))))
 
-(defn update-user-subscription [user-id subscription-id data]
-  (first
-   (exec-query ["UPDATE user_subscription
-               SET group_name = ?, title = ?
-               WHERE user_id = ? AND subscription_id = ?
-               RETURNING group_name, title"
-                (:group_name data) (:title data) user-id subscription-id])))
+(defn update-user-subscription [user-id rss-link-id data]
+  (with-h2
+    (update-values :user_subscriptions
+                   ["user_id = ? AND rss_link_id = ?" user-id rss-link-id]
+                   (select-keys data [:group_name :title]))))
 
-(defn delete-user-subscription [user-id subscription-id]
-  (first
-   (exec-query ["DELETE FROM user_subscription
-                 WHERE user_id = ? AND
-                 subscription_id = ? RETURNING *"
-                user-id subscription-id])))
+(defn delete-user-subscription [user-id rss-link-id]
+  (with-h2
+    (delete-rows :user_subscriptions
+                 ["user_id = ? AND rss_link_id = ?" user-id rss-link-id])))

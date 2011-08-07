@@ -56,7 +56,7 @@
                      (try ;; easier for js to understand if this is an 500
                        (handler req)
                        (catch Exception e
-                         (error e "error api request" req)
+                         (error e "api error\n Request: " req)
                          {:status 500
                           :message "Opps, an error occured"})))
           status (:status resp-obj)]

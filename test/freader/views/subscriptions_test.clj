@@ -1,10 +1,11 @@
 (ns freader.views.subscriptions-test
   (:use clojure.test
         [clojure.data.json :only [read-json json-str]]
-        [freader.db.util :only [exec-query select-sql-params]]
+        [freader.db.util :only [h2-query select-sql-params]]
         (freader [test-common :only [auth-app auth-app2 app-fixture
                                      mock-download-feed-source]]
-                 [util :only [download-favicon download-feed-source]])))
+                 [util :only [download-favicon tracep
+                              download-feed-source]])))
 
 (use-fixtures :each app-fixture
               (fn [f] (binding [download-feed-source mock-download-feed-source
@@ -13,23 +14,27 @@
 
 (def add-req {:uri "/api/subscriptions/add"
               :request-method :post
-              :body (json-str {:link "http://link-to-scottgu's rss"})})
+              :body (json-str {:link "http://link-to-scottgu/rss"})})
 
 (defn- prepare []
-  (let [resp (auth-app add-req)
-        subscription (-> resp :body read-json)]
-    [resp subscription]))
+  (binding [download-feed-source mock-download-feed-source
+            download-favicon (fn [link] "icon")]
+    (let [resp (auth-app add-req)
+          subscription (-> resp :body read-json)]
+      [resp subscription])))
 
 (deftest test-add-feedsource
-  (let [[subscribe-resp subscription] (prepare)
+  (let [c (count
+           (h2-query ["select * from rss_links"]))
+        [subscribe-resp subscription] (prepare)
         subscribe-again (auth-app add-req)
         another-resp (auth-app2 add-req)]
     (is (= 200 (:status subscribe-resp)))
     (is (= 409 (:status subscribe-again)))
     (is (= 200 (:status another-resp)))
-    ;; make sure only one subscription is added
-    (is (= 1 (count
-              (exec-query ["select * from subscriptions"]))))
+    ;;    make sure only one subscription is added
+    (is (= 1 (- (count
+                 (h2-query ["select * from rss_links"])) c)))
     (are [key] (-> subscription key)
          :total_count
          :id
@@ -83,12 +88,9 @@
                                 :request-method :get}) :body read-json)]
     (is (= 200 (:status resp)))
     (is (= new-title
-           (-> resp :body read-json :title)
            (-> overview first :subscriptions first :title)))
     (is (= new-group
-           (-> resp :body read-json :group_name)
-           (-> overview first :group_name)))
-    (is (= (:id subscription) (-> resp :body read-json :id)))))
+           (-> overview first :group_name)))))
 
 (deftest test-delete-user-subscription
   (let [[_ subscription] (prepare)
