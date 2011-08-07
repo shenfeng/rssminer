@@ -3,12 +3,11 @@
         [clojure.data.json :only [read-json json-str]]
         [freader.db.util :only [h2-query select-sql-params]]
         (freader [test-common :only [auth-app auth-app2 app-fixture
-                                     mock-download-feed-source]]
-                 [util :only [download-favicon tracep
-                              download-feed-source]])))
+                                     mock-download-rss]]
+                 [http :only [download-rss download-favicon]])))
 
 (use-fixtures :each app-fixture
-              (fn [f] (binding [download-feed-source mock-download-feed-source
+              (fn [f] (binding [download-rss mock-download-rss
                                download-favicon (fn [link] "icon")]
                        (f))))
 
@@ -17,15 +16,12 @@
               :body (json-str {:link "http://link-to-scottgu/rss"})})
 
 (defn- prepare []
-  (binding [download-feed-source mock-download-feed-source
-            download-favicon (fn [link] "icon")]
-    (let [resp (auth-app add-req)
-          subscription (-> resp :body read-json)]
-      [resp subscription])))
+  (let [resp (auth-app add-req)
+        subscription (-> resp :body read-json)]
+    [resp subscription]))
 
 (deftest test-add-feedsource
-  (let [c (count
-           (h2-query ["select * from rss_links"]))
+  (let [c (count (h2-query ["select * from rss_links"]))
         [subscribe-resp subscription] (prepare)
         subscribe-again (auth-app add-req)
         another-resp (auth-app2 add-req)]
@@ -33,8 +29,7 @@
     (is (= 409 (:status subscribe-again)))
     (is (= 200 (:status another-resp)))
     ;;    make sure only one subscription is added
-    (is (= 1 (- (count
-                 (h2-query ["select * from rss_links"])) c)))
+    (is (= 1 (- (count (h2-query ["select * from rss_links"])) c)))
     (are [key] (-> subscription key)
          :total_count
          :id

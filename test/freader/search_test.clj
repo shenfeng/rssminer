@@ -1,12 +1,12 @@
 (ns freader.search-test
   (:use clojure.test
         [clojure.data.json :only [read-json json-str]]
-        (freader [test-common :only [auth-app mock-download-feed-source
+        (freader [test-common :only [auth-app mock-download-rss
                                      app-fixture]]
-                 [util :only [download-favicon download-feed-source]])))
+                 [http :only [download-favicon download-rss]])))
 
 (defn- prepare [f]
-  (binding [download-feed-source mock-download-feed-source
+  (binding [download-rss mock-download-rss
             download-favicon (fn [link] "icon")]
     (auth-app {:uri "/api/subscriptions/add"
                :request-method :post

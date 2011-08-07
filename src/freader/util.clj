@@ -4,12 +4,10 @@
   (:require [freader.http :as http]
             [clojure.string :as str]
             [net.cgrand.enlive-html :as html])
-  (:import org.apache.commons.io.IOUtils
-           org.apache.commons.codec.binary.Base64
-           java.util.Date
+  (:import java.util.Date
            java.sql.Timestamp
            [java.net URI]
-           [java.io InputStream StringWriter PrintWriter StringReader]
+           [java.io StringWriter PrintWriter StringReader]
            [java.security NoSuchAlgorithmException MessageDigest]))
 
 (defn md5-sum
@@ -54,13 +52,6 @@
                  :headers {"Content-Type" "application/json; charset=utf-8"}
                  :body (json-str body)})
 
-(defn download-feed-source  [url]
-  (try
-    (update-in (http/get url) [:body]   ;convert to string
-               (fn [in] (slurp in)))
-    (catch Exception e
-      (prn "ERROR GET " url ": " (.getMessage e) "\n"))))
-
 (defn serialize-to-js [data]
   (let [stats (map
                (fn [[k v]]
@@ -68,19 +59,6 @@
                       "_ = " (json-str v) "; ")) data)
         js (concat '("<script>") stats '("</script>"))]
     (apply str js)))
-
-(defn download-favicon [url]
-  (let [icon-url (str (http/extract-host url) "/favicon.ico")]
-    (try
-      (let [resp (http/get icon-url)
-            img (Base64/encodeBase64String
-                 (IOUtils/toByteArray ^InputStream (:body resp)))
-            code (if-let [type (:Content-Type resp)]
-                   (str "data:" type ";base64,")
-                   "data:image/x-icon;base64,")]
-        (str code img))
-      (catch Exception e
-        (prn "ERROR GET " icon-url ": " (.getMessage e) "\n")))))
 
 (defn trace
   ([value] (trace nil value))

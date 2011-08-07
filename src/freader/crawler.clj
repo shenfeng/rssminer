@@ -1,7 +1,7 @@
 (ns freader.crawler
   (:use [freader.util :only [extract-links md5-sum]]
         [freader.db.util :only [parse-timestamp]]
-        [clojure.tools.logging :only [info error]])
+        [clojure.tools.logging :only [info]])
   (:require [freader.db.crawler :as db]
             [freader.http :as http]
             [freader.config :as conf])

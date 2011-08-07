@@ -1,6 +1,6 @@
 (ns freader.handlers.subscriptions
   (:use (freader [middleware :only [*user* *json-body*]]
-                 [util :only [download-favicon download-feed-source]]
+                 [http :only [download-favicon download-rss]]
                  [parser :only [parse]]
                  [config :only [ungroup]]))
   (:require [freader.db.subscription :as db]))
@@ -30,7 +30,7 @@
         (add-subscription-ret us subscription count)))))
 
 (defn- create-subscripton [link user-id & {:keys [group-name title]}]
-  (if-let [feeds (parse (:body (download-feed-source link)))]
+  (if-let [feeds (parse (:body (download-rss link)))]
     (let [favicon (download-favicon link)
           ;; 1. save feedsource
           subscription (db/insert :rss_links

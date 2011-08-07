@@ -9,7 +9,6 @@
 
 (def links [
             ;; "http://blog.raek.se/feed/"
-            "http://blog.raynes.me/?feed=rss2"
             "http://feeds.feedburner.com/ruanyifeng"
             "http://blog.sina.com.cn/rss/kaifulee.xml"
             "http://cemerick.com/feed/"

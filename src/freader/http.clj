@@ -1,10 +1,14 @@
 (ns freader.http
+  (:use [clojure.tools.logging :only [info error]])
   (:refer-clojure :exclude [get])
   (:require [clojure.string :as str])
   (:import [java.net URI URL Proxy Proxy$Type InetSocketAddress
             HttpURLConnection SocketException ConnectException
             UnknownHostException]
-           [java.util.zip InflaterInputStream GZIPInputStream]))
+           [java.util.zip InflaterInputStream GZIPInputStream]
+           java.io.InputStream
+           org.apache.commons.io.IOUtils
+           org.apache.commons.codec.binary.Base64))
 
 (def ^{:private true}
   socks-proxy (Proxy. Proxy$Type/SOCKS
@@ -103,6 +107,7 @@
            {:status 451
             :headers {}})
          (catch Exception e
+           (error e (:url req))
            (throw e)))))
 
 (defn- assoc-if [map & kvs]
@@ -123,3 +128,23 @@
   (request* (assoc-if {:url url}
                       :User-Agent user-agent
                       :If-Modified-Since last-modified)))
+
+(defn download-favicon [url]
+  (let [icon-url (str (extract-host url) "/favicon.ico")]
+    (try
+      (let [{:keys [body Content-Type]} (get icon-url)
+            img (when body (Base64/encodeBase64String
+                            (IOUtils/toByteArray ^InputStream body)))
+            code (if Content-Type
+                   (str "data:" Content-Type ";base64,")
+                   "data:image/x-icon;base64,")]
+        (when img (str code img)))
+      (catch Exception e
+        (error e icon-url)))))
+
+(defn download-rss  [url]
+  (try
+    (update-in (get url) [:body]   ;convert to string
+               (fn [in] (slurp in)))
+    (catch Exception e
+      (error e url))))

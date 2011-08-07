@@ -69,7 +69,7 @@
 
 (def test-rss-str (slurp "test/test-rss.xml"))
 
-(defn mock-download-feed-source [& args]
+(defn mock-download-rss [& args]
   {:body test-rss-str})
 
 (def test-app
