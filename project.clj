@@ -23,8 +23,7 @@
   :repositories {"java.net" "http://download.java.net/maven/2/"}
   :warn-on-reflection true
   :aot [freader.main]
+  :jvm-opts ["-XX:+UseCompressedOops"]
   ;; :jvm-opts ["-agentlib:hprof=cpu=samples,format=b,file=/tmp/profile.txt"]
   ;; :jvm-opts ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n"]
-  :dev-dependencies [[swank-clojure "1.4.0-SNAPSHOT"]
-                     [clojure-source "1.2.1"]
-                     [org.clojure.contrib/mock "1.3.0-alpha4"]])
+  :dev-dependencies [[clojure-source "1.2.1"]])

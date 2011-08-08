@@ -1,6 +1,5 @@
 (ns freader.import-test
   (:use clojure.test
-        clojure.contrib.mock
         freader.import
         [freader.test-common :only [auth-app h2-fixture]]
         [freader.handlers.subscriptions :only [add-subscription*]]))
@@ -20,12 +19,12 @@
          :type)))
 
 (deftest test-ompl-import
-  (expect [add-subscription* (times n)]
-          (let [resp (auth-app
-                      {:uri "/api/import/opml-import"
-                       :request-method :post
-                       :params {"file" {:filename (.getName opml)
-                                        :size (.length opml)
-                                        :content-type "text/xml"
-                                        :tempfile opml}}})]
-            (is (= 200 (:status resp))))))
+  (binding [add-subscription* (fn [& args])]
+    (let [resp (auth-app
+                {:uri "/api/import/opml-import"
+                 :request-method :post
+                 :params {"file" {:filename (.getName opml)
+                                  :size (.length opml)
+                                  :content-type "text/xml"
+                                  :tempfile opml}}})]
+      (is (= 200 (:status resp))))))
