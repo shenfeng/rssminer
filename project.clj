@@ -26,4 +26,5 @@
   :jvm-opts ["-XX:+UseCompressedOops"]
   ;; :jvm-opts ["-agentlib:hprof=cpu=samples,format=b,file=/tmp/profile.txt"]
   ;; :jvm-opts ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n"]
-  :dev-dependencies [[clojure-source "1.2.1"]])
+  :dev-dependencies [[clojure-source "1.2.1"]
+                     [swank-clojure "1.3.2"]])

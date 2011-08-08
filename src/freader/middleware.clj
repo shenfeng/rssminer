@@ -79,9 +79,9 @@
                        (reduce
                         (fn [totalTime file]
                           (+ totalTime
-                             (.lastModified file))) 0 (file-seq dir)))
+                             (.lastModified ^File file))) 0 (file-seq dir)))
           map-fn (fn [e]
-                   (let [file (File. (key e))]
+                   (let [file (File. ^String (key e))]
                      {file {:ns (val e)
                             :mtime (read-mtime file)}}))
           data (atom
@@ -91,9 +91,8 @@
         (doseq [d @data]
           (let [file (key d)
                 clj-ns (-> d val :ns)
-                last-mtime (-> d val :mtime)
                 mtime (read-mtime file)]
-            (when (> mtime last-mtime)
+            (when (> mtime (-> d val :mtime))
               (doseq [ns-sym clj-ns]
                 (info file "changed, reload" ns-sym)
                 (require :reload ns-sym)

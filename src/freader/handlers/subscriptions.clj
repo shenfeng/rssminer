@@ -2,6 +2,7 @@
   (:use (freader [middleware :only [*user* *json-body*]]
                  [http :only [download-favicon download-rss]]
                  [parser :only [parse]]
+                 [util :only [to-int]]
                  [config :only [ungroup]]))
   (:require [freader.db.subscription :as db]))
 
@@ -66,12 +67,11 @@
     (add-subscription* link user-id)))
 
 (defn get-subscription [req]
-  (let [{:keys [id limit offset]
-         :or {limit 20 offset 0}} (:params req)
-         id (Integer. id)
-         limit (Integer. limit)
-         offset (Integer. offset)
-         user-id (:id *user*)]
+  (let [{:keys [id limit offset] :or {limit 20 offset 0}} (:params req)
+        id (to-int id)
+        limit (to-int limit)
+        offset (to-int offset)
+        user-id (:id *user*)]
     (db/fetch-feeds-by-subscription-id user-id id limit offset)))
 
 (defn get-overview* []
@@ -93,10 +93,10 @@
 
 (defn customize-subscription [req]
   (let [user-id (:id *user*)
-        subscription-id (-> req :params :id Integer.)]
+        subscription-id (-> req :params :id to-int)]
     (db/update-user-subscription user-id subscription-id *json-body*)))
 
 (defn unsubscribe [req]
   (let [user-id (:id *user*)
-        subscription-id (-> req :params :id Integer.)]
+        subscription-id (-> req :params :id to-int)]
     (db/delete-user-subscription user-id subscription-id)))

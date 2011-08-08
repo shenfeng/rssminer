@@ -62,7 +62,7 @@
   (fn [req]
     (let [resp (client req)]
       (if (#{301 302 307} (:status resp))
-        (let [url (get-in resp [:headers :Location])]
+        (let [url (get-in resp [:headers :location])]
           (client (assoc req :url url)))
         resp))))
 
@@ -73,7 +73,7 @@
       (let [resp (client
                   (assoc-in req
                             [:headers :Accept-Encoding] "gzip, deflate"))]
-        (case (get-in resp [:headers :Content-Encoding])
+        (case (get-in resp [:headers :content-encoding])
           "gzip"
           (update-in resp [:body]
                      (fn [in]
@@ -105,10 +105,7 @@
             :headers {}})
          (catch UnknownHostException e
            {:status 451
-            :headers {}})
-         (catch Exception e
-           (error e (:url req))
-           (throw e)))))
+            :headers {}}))))
 
 (defn- assoc-if [map & kvs]
   "like assoc, but drop false value"

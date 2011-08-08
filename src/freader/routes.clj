@@ -30,14 +30,13 @@
                    (str
                     (str/replace
                      (str/replace (str clj-ns) #"-" "_")
-                     #"\." "/") ".clj"))
-      src-path (fn [clj-ns]
-                 {(str "src/" (ns-to-path clj-ns)) [(.getName clj-ns)]})
-      src-ns-map (conj
-                  (map src-path all-rss-ns)
-                  {"src/templates" views-ns})]
+                     #"\." "/") ".clj"))]
   (def reload-meta
-    (apply merge src-ns-map)))
+    (apply merge (conj
+                  (map (fn [clj-ns]
+                         {(str "src/" (ns-to-path clj-ns))
+                          [(.getName clj-ns)]}) all-rss-ns)
+                  {"src/templates" views-ns}))))
 
 (defroutes api-routes
   (context "/dashboard" []

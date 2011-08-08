@@ -2,11 +2,12 @@
   (:use clojure.test
         freader.import
         [freader.test-common :only [auth-app h2-fixture]]
-        [freader.handlers.subscriptions :only [add-subscription*]]))
+        [freader.handlers.subscriptions :only [add-subscription*]])
+  (:import java.io.File))
 
 (use-fixtures :each h2-fixture)
 
-(def opml (java.io.File. "test/opml.xml"))
+(def ^File opml (File. "test/opml.xml"))
 (def n 52) ;; opml.xml has 52 subscriptions
 
 (deftest test-parse-opml

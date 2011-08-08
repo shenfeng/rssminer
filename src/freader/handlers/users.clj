@@ -4,10 +4,11 @@
          [sandbar.stateful-session :only [session-put!]])
   (:require [freader.db.user :as db]
             [freader.views.users :as view])
-  (:import [java.util Locale Calendar TimeZone Date]))
+  (:import [java.util Locale Calendar TimeZone Date]
+           java.text.SimpleDateFormat))
 
 (defn- get-expire "get string for http expire header" [days]
-  (let [f (make-http-format)
+  (let [^SimpleDateFormat f (make-http-format)
         c (doto (Calendar/getInstance)
             (.add Calendar/DAY_OF_YEAR days))
         d (.getTime c)]

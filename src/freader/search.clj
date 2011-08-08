@@ -36,7 +36,7 @@
     (.close @indexer)
     (reset! indexer nil)))
 
-(defn use-index-writer! [path]
+(defn use-index-writer! [^String path]
   "It will close previous indexer"
   (close-global-index-writer!)
   (let [conf (doto (IndexWriterConfig. version (create-analyzer))

@@ -60,6 +60,10 @@
         js (concat '("<script>") stats '("</script>"))]
     (apply str js)))
 
+(definline to-int [s]
+  `(if (integer? ~s) ~s
+       (Integer/parseInt ~s)))
+
 (defn trace
   ([value] (trace nil value))
   ([name value]
