@@ -11,6 +11,7 @@
         stats (-> resp :body read-json)]
     (is (= 200 (:status resp)))
     (is (empty? (-> stats :crawled_links)))
+    (is (seq (-> stats :pending_links)))
     (are [k] (-> stats k)
          :total_count
          :rss_links

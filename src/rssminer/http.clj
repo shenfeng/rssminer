@@ -1,12 +1,14 @@
 (ns rssminer.http
-  (:use [clojure.tools.logging :only [info error]])
+  (:use [clojure.tools.logging :only [info error]]
+        [rssminer.util :only [assoc-if]])
   (:refer-clojure :exclude [get])
-  (:require [clojure.string :as str])
+  (:require [clojure.string :as str]
+            [net.cgrand.enlive-html :as html])
   (:import [java.net URI URL Proxy Proxy$Type InetSocketAddress
             HttpURLConnection SocketException ConnectException
             UnknownHostException]
            [java.util.zip InflaterInputStream GZIPInputStream]
-           java.io.InputStream
+           [java.io InputStream StringReader]
            org.apache.commons.io.IOUtils
            org.apache.commons.codec.binary.Base64))
 
@@ -107,12 +109,6 @@
            {:status 451
             :headers {}}))))
 
-(defn- assoc-if [map & kvs]
-  "like assoc, but drop false value"
-  (let [kvs (apply concat
-                   (filter #(second %) (partition 2 kvs)))]
-    (if (seq kvs) (apply assoc map kvs) map)))
-
 (def request* (-> request
                   wrap-compression
                   wrap-proxy
@@ -145,3 +141,20 @@
                (fn [in] (slurp in)))
     (catch Exception e
       (error e url))))
+
+(defn resolve-url [base link]
+  (let [base (URI. (if (= base (extract-host base))
+                     (str base "/")
+                     base))
+        link (URI. link)]
+    (str (.resolve base link))))
+
+(defn extract-links [base html]
+  (let [resource (html/html-resource (StringReader. html))
+        links (html/select resource [:a])
+        f (fn [a] {:href (resolve-url base (-> a :attrs :href))
+                  :title (html/text a)})]
+    {:rss (map #(select-keys (:attrs %) [:href :title])
+               (html/select resource
+                            [(html/attr= :type "application/rss+xml")]))
+     :links (map f links)}))

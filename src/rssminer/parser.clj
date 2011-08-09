@@ -1,7 +1,8 @@
 (ns rssminer.parser
-  (import [com.sun.syndication.io SyndFeedInput]
-          java.sql.Timestamp
-          java.util.Date))
+  (:use [rssminer.time :only [to-ts]]
+        [clojure.tools.logging :only [error]])
+  (:import [com.sun.syndication.io SyndFeedInput]
+           java.util.Date))
 
 (defn- rss-bean?
   [e]
@@ -30,14 +31,14 @@
      (list-like? target)
      (map decode-bean target)
      :else (if (instance? Date target)
-             (Timestamp. (.getTime target))
-             target))))
+             (to-ts target) target))))
 
 (defn parse [str]
   (try
     (let [input (java.io.StringReader. str)
           feed (.build (SyndFeedInput.) input)]
       (decode-bean feed))
-    (catch Exception e)))
+    (catch Exception e
+      (error e))))
 
 

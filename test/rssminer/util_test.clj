@@ -1,9 +1,7 @@
 (ns rssminer.util-test
   (:use rssminer.util
         clojure.data.json
-        clojure.pprint
-        clojure.test
-        [clojure.java.io :only [resource]])
+        clojure.test)
   (:import java.util.Date))
 
 (deftest test-md5-sum
@@ -12,20 +10,7 @@
 (deftest test-write-json
   (is (json-str {:date (Date.)})))
 
-(deftest test-resolve-url
-  (is (= "http://a.com/c.html"
-         (resolve-url "http://a.com/index?a=b" "c.html")))
-  (is (= "http://a.com/rss.html"
-         (resolve-url "http://a.com" "rss.html")))
-  (is (= "http://a.com/c.html"
-         (resolve-url "http://a.com/b.html" "c.html")))
-  (is (= "http://a.com/a/c.html"
-         (resolve-url "http://a.com/a/b/" "../c.html")))
-  (is (= "http://c.com/c.html"
-         (resolve-url "http://a.com" "http://c.com/c.html"))))
+(deftest test-assoc-if
+  (is (= 3 (-> (assoc-if {} :a 1 :b 2 :c 3) keys count)))
+  (is (= 2 (-> (assoc-if {} :a 1 :b 2 :c nil) keys count))))
 
-(deftest test-extract-links
-  (let [html (slurp (resource "page.html"))
-        links (extract-links "http://a.com/" html)]
-    (is (= 10 (-> links :links count)))
-    (is (= 1 (-> links :rss count)))))

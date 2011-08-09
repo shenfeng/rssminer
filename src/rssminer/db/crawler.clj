@@ -1,21 +1,21 @@
 (ns rssminer.db.crawler
   (:use [rssminer.database :only [h2-db-factory]]
         [rssminer.http :only [extract-host]]
+        [rssminer.time :only [now-seconds]]
         [rssminer.db.util :only [h2-query]]
         [clojure.java.jdbc :only [with-connection with-query-results
-                                  insert-record update-values]])
-  (:import java.util.Date))
+                                  insert-record update-values]]))
 
 (defn fetch-crawler-links
   "Returns nil when no more"
   ([] (fetch-crawler-links 5))
   ([limit]
      (h2-query
-      ["SELECT id, url, last_md5, check_interval,
-        DATEDIFF('SECOND', last_check_ts, NOW()) AS interval
+      ["SELECT id, url, last_md5, check_interval
         FROM crawler_links
-        WHERE DATEDIFF('SECOND', last_check_ts, NOW()) > check_interval
-        ORDER BY interval LIMIT ? " limit])))
+        WHERE next_check_ts < ?
+        ORDER BY next_check_ts DESC LIMIT ? "
+       (now-seconds) limit])))
 
 (defn insert-crawler-links
   "Save links to crawler_link, return generated ids of inserted ones"
@@ -38,21 +38,18 @@
                   (catch Exception e)))))]
     (filter identity (doall (map f links)))))
 
-(defn update-crawler-link [link]
+(defn update-crawler-link [id data]
   (with-connection @h2-db-factory
-    (update-values :crawler_links ["id = ?" (:id link)]
-                   (assoc (dissoc link :id)
-                     :last_check_ts (Date.)))))
+    (update-values :crawler_links ["id = ?" id] data)))
 
 (defn fetch-rss-links
   ([] (fetch-rss-links 10))
   ([limit]
      (h2-query
-      ["SELECT id, url, check_interval,
-       DATEDIFF('SECOND', last_check_ts, NOW()) AS interval
+      ["SELECT id, url, last_md5, check_interval
        FROM rss_links
-       WHERE DATEDIFF('SECOND', last_check_ts, NOW()) > check_interval
-       ORDER BY interval LIMIT ? " limit])))
+       WHERE next_check_ts < ?
+       ORDER BY next_check_ts DESC LIMIT ?" (now-seconds) limit])))
 
 (defn insert-rss-link
   "Silently ignore duplicate link"
@@ -62,10 +59,7 @@
          ;; ignore voilate of uniqe constraint
          (catch Exception e))))
 
-(defn update-rss-link [link]
-  "Will take care of update last check timestamp"
+(defn update-rss-link [id data]
   (with-connection @h2-db-factory
-    (update-values :rss_links ["id = ?" (:id link)]
-                   (assoc (dissoc link :id)
-                     :last_check_ts (Date.)))))
+    (update-values :rss_links ["id = ?" id] data)))
 

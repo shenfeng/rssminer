@@ -1,6 +1,7 @@
 (ns rssminer.crawler
-  (:use [rssminer.util :only [extract-links md5-sum]]
+  (:use [rssminer.util :only [md5-sum assoc-if]]
         [rssminer.db.util :only [parse-timestamp]]
+        [rssminer.time :only [now-seconds]]
         [clojure.tools.logging :only [info]])
   (:require [rssminer.db.crawler :as db]
             [rssminer.http :as http]
@@ -15,7 +16,7 @@
 (def ^Queue queue (LinkedList.))
 
 (defn- extract-and-save-links [referer html]
-  (let [{:keys [rss links]} (extract-links (:url referer) html)]
+  (let [{:keys [rss links]} (http/extract-links (:url referer) html)]
     (doseq [{:keys [href title]} rss]
       (db/insert-rss-link {:url href
                            :title title
@@ -24,17 +25,18 @@
      referer (filter #(.startsWith ^String (:href %) "http://") links))))
 
 (defn crawl-link
-  [{:keys [id url last-md5 last_http_status] :as referer}]
+  [{:keys [id url last_md5 check_interval] :as referer}]
   (let [{:keys [status headers body] :as resp} (http/get url)
         html (when body (slurp body))
         md5 (when html (md5-sum html))]
-    (db/update-crawler-link {:id id
-                             :last_md5 md5
-                             :last_modified
-                             (when-let [lm (:last_modified headers)]
-                               (parse-timestamp lm))
-                             :server (:server headers)})
-    (when (and html (not= md5 last-md5))
+    (db/update-crawler-link
+     id (assoc-if {}
+                  :next_check_ts
+                  (+ (now-seconds) check_interval)
+                  :last_md5 md5
+                  :last_modified (:last_modified headers)
+                  :server (:server headers)))
+    (when (and html (not= md5 last_md5))
       (extract-and-save-links referer html))))
 
 (defn get-next-link []

@@ -1,7 +1,8 @@
 (ns rssminer.db.crawler-test
   (:use clojure.test
         rssminer.db.crawler
-        (rssminer [test-common :only [h2-fixture]])))
+        (rssminer [test-common :only [h2-fixture]]
+                  [time :only [now-seconds]])))
 
 (use-fixtures :each h2-fixture)
 
@@ -23,9 +24,7 @@
 (deftest test-update-crawler-link
   (let [links (fetch-crawler-links 3)
         updates (doall (map #(update-crawler-link
-                              (assoc {}
-                                :id (:id %)
-                                :server "Apache")) links))]
+                              (:id %) {:server "Apache"}) links))]
     (is (every? #(= 1 %) (flatten updates)))))
 
 (deftest test-insert-rss-link
@@ -37,8 +36,8 @@
 (deftest test-update-rss-link
   (let [links (fetch-rss-links 1000)
         updates (doall (map #(update-rss-link
-                              (assoc {}
-                                :id (:id %)
-                                :server "Apache")) links))]
+                              (:id %) {:server "Apache"
+                                       :next_check_ts
+                                       (+ 1000 (now-seconds))}) links))]
     (is (empty? (fetch-rss-links 100)))
     (is (every? #(= 1 %) (flatten updates)))))

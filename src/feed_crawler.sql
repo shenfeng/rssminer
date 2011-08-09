@@ -20,8 +20,8 @@ create table crawler_links (
   url VARCHAR UNIQUE,
   title VARCHAR,
   added_ts TIMESTAMP default now(),
-  domain VARCHAR,        --assume one domain, one rss, do not crawler
-  last_check_ts TIMESTAMP default DATE'1980-1-1',
+  domain VARCHAR,         --assume one domain, one rss, do not crawler
+  next_check_ts INTEGER default 1,
   last_modified VARCHAR,
   last_md5 VARCHAR,
   check_interval INTEGER default 60 * 60 * 24 * 10, -- in seconds, ten days
@@ -31,9 +31,6 @@ create table crawler_links (
 )
 
 ----
-create index idx_crawler_link_domain on crawler_links(domain)
-----
-
 create table rss_links (
   id INTEGER PRIMARY KEY auto_increment,
   url VARCHAR UNIQUE,
@@ -41,7 +38,7 @@ create table rss_links (
   description VARCHAR,
   alternate VARCHAR,            -- usually, the site's link
   added_ts TIMESTAMP default now(),
-  last_check_ts TIMESTAMP default DATE'1970-1-1',
+  next_check_ts INTEGER default 1,
   check_interval INTEGER default 60 * 60 * 24, -- in seconds, one day
   last_modified VARCHAR,                -- from http response header
   last_md5 VARCHAR,                     -- used to check if changed
@@ -53,7 +50,12 @@ create table rss_links (
   crawler_link_id INTEGER  REFERENCES crawler_links
      ON UPDATE CASCADE ON DELETE SET NULL,
 )
-
+----
+create index idx_cl_domain on crawler_links(domain)
+----
+create index idx_cl_next_check_ts on crawler_links(next_check_ts)
+----
+create index idx_rl_next_check_ts on rss_links(next_check_ts)
 ----
 CREATE TABLE user_subscriptions
 (
