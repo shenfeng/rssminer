@@ -1,6 +1,6 @@
-SELECT 
+SELECT
      s.link,  author , LENGTH(f.alternate) as link_length, LENGTH(summary) as summary_length
-FROM 
+FROM
      feeds AS f
      JOIN subscriptions AS s
      ON s.id = f.subscription_id;
@@ -8,15 +8,15 @@ FROM
 SELECT title, LENGTH(favicon), added_ts, user_id FROM subscriptions;
 
 SELECT
-   us.group_name, s.id, s.title, s.favicon, 
+   us.group_name, s.id, s.title, s.favicon,
    (SELECT COUNT(*) FROM feeds WHERE feeds.subscription_id = s.id) AS total_count,
    (SELECT COUNT(*) FROM feeds
     WHERE  feeds.subscription_id = s.id AND
            feeds.id NOT IN (SELECT feed_id FROM feedcategory
                              WHERE user_id = 1 AND
-                                  'type' = 'freader' AND
+                                  'type' = 'rssminer' AND
                                    text = 'read' )) AS unread_count
-FROM 
+FROM
    user_subscription AS us
    JOIN subscriptions AS s ON s.id = us.subscription_id
 WHERE us.user_id = 1

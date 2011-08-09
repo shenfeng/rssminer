@@ -34,23 +34,23 @@ end
 
 task :deps => ['bin/closure-compiler.jar', "bin/htmlcompressor.jar"]
 
-freader_jss = FileList['public/js/lib/jquery.js',
+rssminer_jss = FileList['public/js/lib/jquery.js',
                        'public/js/lib/jquery-ui-1.8.13.custom.js',
                        'public/js/lib/underscore.js',
                        'public/js/lib/backbone.js',
                        'public/js/lib/mustache.js',
-                       'public/js/freader/tmpls.js',
-                       'public/js/freader/util.js',
-                       'public/js/freader/models.js',
-                       'public/js/freader/views.js',
-                       'public/js/freader/magic.js',
-                       'public/js/freader/application.js']
+                       'public/js/rssminer/tmpls.js',
+                       'public/js/rssminer/util.js',
+                       'public/js/rssminer/models.js',
+                       'public/js/rssminer/views.js',
+                       'public/js/rssminer/magic.js',
+                       'public/js/rssminer/application.js']
 
 desc "Clean generated files"
 task :clean  do
-  rm_rf 'public/js/freader/tmpls.js'
+  rm_rf 'public/js/rssminer/tmpls.js'
   rm_rf 'src/templates'
-  sh 'rm public/js/freader*min.js || exit 0'
+  sh 'rm public/js/rssminer*min.js || exit 0'
   sh 'rm public/css/*.css || exit 0'
 end
 
@@ -91,16 +91,16 @@ namespace :js do
       name = File.basename(f,".tpl")
       data += "tmpls." + name + " = '" + text + "';\n"
     end
-    data += "window.Freader = window.$.extend(window.Freader, {tmpls: tmpls})})();\n"
-    File.open("public/js/freader/tmpls.js", 'w') {|f| f.write(data)}
+    data += "window.Rssminer = window.$.extend(window.Rssminer, {tmpls: tmpls})})();\n"
+    File.open("public/js/rssminer/tmpls.js", 'w') {|f| f.write(data)}
   end
 
   desc 'Combine all js into one, minify it using google closure'
   task :minify => [:tmpls, :deps] do
-    target = "public/js/freader-#{version}-min.js"
+    target = "public/js/rssminer-#{version}-min.js"
 
     source_arg = ''
-    freader_jss.each do |js|
+    rssminer_jss.each do |js|
       source_arg += " --js #{js} "
     end
 

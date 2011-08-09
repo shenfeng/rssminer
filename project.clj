@@ -1,4 +1,4 @@
-(defproject freader "1.0.0"
+(defproject rssminer "1.0.0"
   :description "A feed reader written in clojure"
   :dependencies [[org.clojure/clojure "1.2.1"]
                  [org.clojure/data.json "0.1.1"]
@@ -22,7 +22,7 @@
   :java-source-path "src/java"
   :repositories {"java.net" "http://download.java.net/maven/2/"}
   :warn-on-reflection true
-  :aot [freader.main]
+  :aot [rssminer.main]
   :jvm-opts ["-XX:+UseCompressedOops"]
   ;; :jvm-opts ["-agentlib:hprof=cpu=samples,format=b,file=/tmp/profile.txt"]
   ;; :jvm-opts ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n"]

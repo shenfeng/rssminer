@@ -5,6 +5,6 @@ HOME="${ABSOLUTE_PATH%/*/*}"
 cd "${HOME}" && java -Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8 \
     -XX:+UseCompressedOops \
     -server -cp "classes:lib/*:src/" clojure.main \
-    -e "(require 'freader.main)(apply freader.main/main *command-line-args*)" \
+    -e "(require 'rssminer.main)(apply rssminer.main/main *command-line-args*)" \
     /dev/null $@
 
