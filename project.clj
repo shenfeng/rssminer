@@ -5,10 +5,8 @@
                  [org.clojure/java.jdbc "0.0.6"]
                  [org.clojure/tools.cli "0.1.0"]
                  [org.clojure/tools.logging "0.2.0"]
-                 [commons-codec/commons-codec "1.5"]
                  [com.h2database/h2 "1.3.158"]
                  [log4j/log4j "1.2.16"]
-                 [commons-io/commons-io "2.0.1"]
                  [javax.mail/mail "1.4.4"]
                  [org.apache.commons/commons-email "1.2"]
                  [compojure "0.6.5"]
@@ -16,7 +14,7 @@
                  [org.apache.lucene/lucene-core "3.2.0"]
                  [net.java.dev.rome/rome "1.0.0"]
                  [ring/ring-core "0.3.11"]
-                 [ring-netty-adapter/ring-netty-adapter "0.0.1"]]
+                 [ring-netty-adapter "0.0.1"]]
   :dev-resources-path "/usr/lib/jvm/java-6-openjdk/lib/tools.jar:/usr/lib/jvm/java-6-openjdk/src.zip"
   :exclusions [javax.activation/activation]
   :java-source-path "src/java"
