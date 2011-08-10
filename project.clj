@@ -16,7 +16,7 @@
                  [org.apache.lucene/lucene-core "3.2.0"]
                  [net.java.dev.rome/rome "1.0.0"]
                  [ring/ring-core "0.3.11"]
-                 [org.signaut/ring-jetty7-adapter "0.3.11"]]
+                 [ring-netty-adapter/ring-netty-adapter "0.0.1"]]
   :dev-resources-path "/usr/lib/jvm/java-6-openjdk/lib/tools.jar:/usr/lib/jvm/java-6-openjdk/src.zip"
   :exclusions [javax.activation/activation]
   :java-source-path "src/java"

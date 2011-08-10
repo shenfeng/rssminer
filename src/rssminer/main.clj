@@ -1,18 +1,19 @@
 (ns rssminer.main
   (:use [clojure.tools.cli :only [cli optional required]]
-        [ring.adapter.jetty7 :only [run-jetty]]
+        [ring.adapter.netty :only [run-netty]]
         (rssminer [database :only [use-h2-database!]]
-                 [search :only [use-index-writer!]]
-                 [routes :only [app]]
-                 [crawler :only [start-crawler]]
-                 [config :only [env-profile]])))
+                  [search :only [use-index-writer!]]
+                  [routes :only [app]]
+                  [crawler :only [start-crawler]]
+                  [config :only [env-profile]])))
 
 (defonce server (atom nil))
 (defonce crawler (atom nil))
 
 (defn stop-server []
   (when-not (nil? @server)
-    (.stop @server)
+    ;; (.stop @server)
+    (@server)
     (reset! server nil))
   (when-not (nil? @crawler)
     (@crawler :shutdown-wait)
@@ -24,8 +25,9 @@
   (reset! env-profile profile)
   (use-index-writer! index-path)
   (use-h2-database! db-path)
+  (reset! server (run-netty (app) {:port port :join? false}))
   ;; (reset! crawler (start-crawler))
-  (reset! server (run-jetty (app) {:port port :join? false}))
+  ;; (reset! server (run-jetty (app) {:port port :join? false}))
   )
 
 (defn main [& args]
