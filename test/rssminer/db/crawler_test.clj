@@ -11,13 +11,13 @@
 
 (deftest test-insert-crawler-links
   (let [saved (fetch-crawler-links 5)
-        newly [{:href "http://a.com/a"}
-               {:href "http://b.com/b"}
-               {:href "http://a.com/ab"}]]
+        newly [{:url "http://a.com/a"}
+               {:url "http://b.com/b"}
+               {:url "http://a.com/ab"}]]
     (is (= 0 (count (insert-crawler-links
                      (first saved)
                      (map #(assoc {}
-                             :href (:url %)
+                             :url (:url %)
                              :title "sample a text") saved)))))
     (is (= 2 (count (insert-crawler-links (first saved) newly))))))
 

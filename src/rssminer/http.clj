@@ -152,9 +152,11 @@
 (defn extract-links [base html]
   (let [resource (html/html-resource (StringReader. html))
         links (html/select resource [:a])
-        f (fn [a] {:href (resolve-url base (-> a :attrs :href))
+        f (fn [a] {:url (resolve-url base (-> a :attrs :href))
                   :title (html/text a)})]
-    {:rss (map #(select-keys (:attrs %) [:href :title])
+    {:rss (map (fn [i]
+                 {:title (-> i :attrs :ttile)
+                  :url (resolve-url base (-> i :attrs :href))})
                (html/select resource
                             [(html/attr= :type "application/rss+xml")]))
      :links (map f links)}))

@@ -17,12 +17,12 @@
 
 (defn- extract-and-save-links [referer html]
   (let [{:keys [rss links]} (http/extract-links (:url referer) html)]
-    (doseq [{:keys [href title]} rss]
-      (db/insert-rss-link {:url href
+    (doseq [{:keys [url title]} rss]
+      (db/insert-rss-link {:url url
                            :title title
                            :crawler_link_id (:id referer)}))
     (db/insert-crawler-links
-     referer (filter #(.startsWith ^String (:href %) "http://") links))))
+     referer (filter #(.startsWith ^String (:url %) "http://") links))))
 
 (defn crawl-link
   [{:keys [id url last_md5 check_interval] :as referer}]
