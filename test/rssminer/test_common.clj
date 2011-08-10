@@ -3,8 +3,8 @@
         [clojure.test :only [join-fixtures]]
         [clojure.java.jdbc :only [print-sql-exception-chain]]
         (rssminer [database :only [import-h2-schema! use-h2-database!]]
-                 [search :only [use-index-writer!
-                                close-global-index-writer!]])
+                  [search :only [use-index-writer!
+                                 close-global-index-writer!]])
         (rssminer.db [user :only [create-user]])
         [sandbar.stateful-session :only [session-get]])
   (:require [clojure.string :as str])

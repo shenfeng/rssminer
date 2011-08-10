@@ -23,14 +23,14 @@
   (let [multi-domains (set
                        (map :domain
                             (h2-query ["select * from multi_rss_domains"])))
-        f (fn [{:keys [href title]}]
-            (let [domain (extract-host href)]
+        f (fn [{:keys [url title]}]
+            (let [domain (extract-host url)]
               (when (or (multi-domains domain)
                         (nil? (h2-query ["SELECT domain FROM crawler_links
                                           WHERE domain = ?" domain])))
                 (try
                   (with-connection @h2-db-factory
-                    (insert-record :crawler_links {:url href
+                    (insert-record :crawler_links {:url url
                                                    :title title
                                                    :domain domain
                                                    :referer_id (:id referer)}))
