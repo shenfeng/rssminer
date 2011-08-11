@@ -11,9 +11,9 @@
 
 (deftest test-insert-crawler-links
   (let [saved (fetch-crawler-links 5)
-        newly [{:url "http://a.com/a"}
-               {:url "http://b.com/b"}
-               {:url "http://a.com/ab"}]]
+        newly [{:url "http://a.com/a" :domain "http://a.com"}
+               {:url "http://b.com/b" :domain "http://b.com"}
+               {:url "http://a.com/ab" :domain "http://a.com"}]]
     (is (= 0 (count (insert-crawler-links
                      (first saved)
                      (map #(assoc {}

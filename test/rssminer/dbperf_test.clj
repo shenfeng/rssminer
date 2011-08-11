@@ -1,7 +1,8 @@
 (ns rssminer.dbperf-test
   (:use (rssminer [database :only [import-h2-schema! use-h2-database!]])
+        [clojure.tools.cli :only [cli optional required]]
         [rssminer.db.util :only [h2-query]]
-        [clojure.tools.logging :only [info]])
+        [rssminer.util :only [to-int]])
   (:require [clojure.string :as str]
             [rssminer.http :as http]
             [rssminer.db.crawler :as db]
@@ -16,22 +17,18 @@
          {:url url
           :title line
           :domain (http/extract-host url)
-          :next_check_ts (+ (rand-int 3000)
+          :next_check_ts (+ (rand-int 10000)
                             (time/now-seconds))})
        (cycle lines)
-       (map (fn [[a b c d]] (str "http://" a "." b "." (rand-int 50)
+       (map (fn [[a b c d]] (str "http://" a "." b "." (rand-int 500)
                                 ".com/" c "/" d))
             (partition 4 (cycle words)))))
 
-(defn do-insert [& {:keys [n]}]
-  (.delete (java.io.File. "/tmp/h2_perf.trace.db"))
-  (.delete (java.io.File. "/tmp/h2_perf.h2.db"))
-  (use-h2-database! "/tmp/h2_perf")
-  ;; (use-h2-database!
-  ;;  "/tmp/h2_perf;TRACE_LEVEL_FILE=2;TRACE_MAX_FILE_SIZE=1000")
+(defn do-insert [& {:keys [n path]}]
+  (.delete (java.io.File. (str path ".h2.db")))
+  (use-h2-database! path)
   (import-h2-schema!)
-  (let [refer (first (gen-rss-links))
-        n (or n 100)]
+  (let [refer (first (gen-rss-links))]
     (doseq [rss (partition 10 (take n (gen-rss-links)))]
       (db/insert-crawler-links refer rss))))
 
@@ -41,17 +38,41 @@
      {:time (- (System/currentTimeMillis) start#)
       :result ret#}))
 
-(defn benchmark []
-  (doseq [n (take 3 (iterate (fn [n] (* n 5)) 1000))]
-    (let [r (my-time (do-insert :n n))]
-      (info "time" (str (:time r) "ms")
-            n "insert"
-            (-> ["select count (*) as count from crawler_links"] h2-query
-                first :count)))
+(defn benchmark [{:keys [init times step path]}]
+  (doseq [n (take times (iterate (fn [n] (* n step)) init))]
+    (let [r (my-time (do-insert :n n :path path))
+          inserted (-> ["select count (*) as count from crawler_links"]
+                       h2-query first :count)
+          time (:time r)]
+      (println "\n-----" (java.util.Date.) "-----")
+      (println  n "items, inserted" inserted
+                (str "in " time "ms,")
+                (format "%.2f per ms" (/ (double inserted) time))))
     (dotimes [i 5]
       (let [c (+ (* i 10) 80)
             r (my-time (db/fetch-crawler-links c))]
-        (info  "time" (str (:time r) "ms") c
-               "fetched"
-               (count (:result r)))))
-    (info "\n")))
+        (println "candidate"
+                 (str (-> ["select count (*) as count from crawler_links
+                             where next_check_ts < ?"
+                           (time/now-seconds)] h2-query  first :count) ",")
+                 "fetched"
+                 (count (:result r))
+                 (str "in " (:time r) "ms"))))))
+
+(defn main [& args]
+  "benchmark database"
+  (benchmark
+   (cli args
+        (optional ["-i" "--init" "start" :default "10000"] to-int)
+        (optional ["-s" "--step" "step" :default "5"] to-int)
+        (optional ["-c" "--times" "step count" :default "3"] to-int)
+        (optional ["-p" "--path" "tmp db path"
+                   :default "/tmp/h2_bench"]))))
+
+
+
+
+
+
+
+

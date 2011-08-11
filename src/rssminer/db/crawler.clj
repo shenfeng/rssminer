@@ -5,7 +5,6 @@
         [rssminer.db.util :only [h2-query]]
         [clojure.java.jdbc :only [with-connection with-query-results
                                   insert-record update-values]]))
-
 (defn fetch-crawler-links
   "Returns nil when no more"
   ([] (fetch-crawler-links 5))
@@ -14,7 +13,7 @@
       ["SELECT id, url, last_md5, check_interval
         FROM crawler_links
         WHERE next_check_ts < ?
-        ORDER BY next_check_ts DESC LIMIT ? "
+        ORDER BY next_check_ts LIMIT ? "
        (now-seconds) limit])))
 
 (defn insert-crawler-links
@@ -23,19 +22,16 @@
   (let [multi-domains (set
                        (map :domain
                             (h2-query ["select * from multi_rss_domains"])))
-        f (fn [{:keys [url title]}]
-            (let [domain (extract-host url)]
-              (when (or (multi-domains domain)
-                        (nil? (h2-query ["SELECT domain FROM crawler_links
+        f (fn [{:keys [domain] :as link}]
+            (when (or (multi-domains domain)
+                      (nil? (h2-query ["SELECT domain FROM crawler_links
                                           WHERE domain = ?" domain])))
-                (try
-                  (with-connection @h2-db-factory
-                    (insert-record :crawler_links {:url url
-                                                   :title title
-                                                   :domain domain
-                                                   :referer_id (:id referer)}))
-                  ;; ignore voilation of uniqe constraint
-                  (catch Exception e)))))]
+              (try
+                (with-connection @h2-db-factory
+                  (insert-record :crawler_links
+                                 (assoc link :referer_id (:id referer))))
+                ;; ignore voilation of uniqe constraint
+                (catch Exception e))))]
     (filter identity (doall (map f links)))))
 
 (defn update-crawler-link [id data]
