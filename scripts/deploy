@@ -6,7 +6,7 @@ set -e
 # deploy  ALL = NOPASSWD: /bin/cp, /bin/mkdir, /sbin/restart, /bin/readlink, /bin/chown, /sbin/start, /usr/sbin/service, /bin/ln
 
 READLINK=readlink
-FRONTEND_HOST="reader.shenfeng.me"
+FRONTEND_HOST="rss-miner.com"
 ABSOLUTE_PATH=$(${READLINK} -f $0)
 RSSMINER_HOME="${ABSOLUTE_PATH%/*/*}"
 DEPLOYMENT_USER="deploy"
@@ -28,6 +28,7 @@ rsync --rsh='ssh' -vr --delete --delete-excluded \
 remote_run "sudo cp ${TARGET_DIR}/deploy/rssminer.conf /etc/init/"
 remote_run "sudo cp ${TARGET_DIR}/deploy/rssminer /etc/nginx/sites-available"
 remote_run "sudo cp ${TARGET_DIR}/deploy/gzip.conf /etc/nginx/conf.d"
+remote_run "cd ${TARGET_DIR} && sudo cp deploy/log4j.xml src"
 remote_run "cd /etc/nginx/sites-enabled  && sudo ln -f -s /etc/nginx/sites-available/rssminer"
 
 remote_run "sudo service nginx restart"

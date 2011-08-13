@@ -6,21 +6,19 @@
                          [multipart-params :only [wrap-multipart-params]]
                          [file :only [wrap-file]]
                          [session :only [wrap-session]])
-        (rssminer [middleware :only (wrap-auth
-                                    wrap-cache-header
-                                    wrap-failsafe
-                                    wrap-request-logging
-                                    wrap-reload-in-dev
-                                    JPOST JPUT JDELETE JGET)]
-                 [import :only [opml-import]]
-                 [search :only [search]])
+        (rssminer [middleware :only [wrap-auth wrap-cache-header
+                                     wrap-reload-in-dev wrap-failsafe
+                                     wrap-request-logging-in-dev
+                                     JPOST JPUT JDELETE JGET]]
+                  [import :only [opml-import]]
+                  [search :only [search]])
         [sandbar.stateful-session :only [wrap-stateful-session]])
   (:require [clojure.string :as str]
             [compojure.route :as route]
             (rssminer.handlers [feedreader :as rssminer]
-                              [subscriptions :as subscription]
-                              [users :as user]
-                              [dashboard :as dashboard])))
+                               [subscriptions :as subscription]
+                               [users :as user]
+                               [dashboard :as dashboard])))
 
 (let [views-ns '[rssminer.views.feedreader
                  rssminer.views.layouts]
@@ -80,7 +78,7 @@
                  wrap-auth
                  wrap-stateful-session
                  wrap-cache-header
-                 wrap-request-logging
+                 wrap-request-logging-in-dev
                  wrap-keyword-params
                  wrap-multipart-params
                  wrap-params

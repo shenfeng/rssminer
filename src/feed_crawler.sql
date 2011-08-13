@@ -114,8 +114,8 @@ CREATE TABLE comments
 CREATE TABLE feedcategory
 (
     id INTEGER PRIMARY KEY auto_increment,
-    type VARCHAR, -- possible val: tag, freader(system type),
-    text VARCHAR, -- freader-> stared, read
+    type VARCHAR, -- possible val: tag, rssminer(system type),
+    text VARCHAR, -- rssminer-> stared, read
     user_id INTEGER NOT NULL
             REFERENCES users ON UPDATE CASCADE ON DELETE CASCADE,
     feed_id INTEGER NOT NULL

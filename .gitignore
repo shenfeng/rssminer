@@ -10,8 +10,8 @@ bin/
 .settings
 public/css/
 src/templates/
-public/js/freader/tmpls.js
-public/js/freader*min.js
+public/js/rssminer/tmpls.js
+public/js/rssminer*min.js
 .idea/
 .emacs.desktop*
 /tags

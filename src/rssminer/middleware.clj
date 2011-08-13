@@ -2,9 +2,9 @@
   (:use [rssminer.util :only [json-response]]
         [ring.util.response :only [redirect]]
         [sandbar.stateful-session :only [session-get]]
-        [clojure.tools.logging :only [info error]]
+        [clojure.tools.logging :only [debug error]]
         [compojure.core :only [GET POST DELETE PUT]])
-  (:require [rssminer.config :as config]
+  (:require [rssminer.config :as conf]
             [clojure.data.json :as json])
   (:import java.io.File))
 
@@ -64,17 +64,19 @@
         (json-response status (dissoc resp-obj :status))
         (json-response 200 resp-obj)))))
 
-(defn wrap-request-logging [handler]
-  (fn [{:keys [request-method uri] :as req}]
-    (let [start (System/currentTimeMillis)
-          resp (handler req)
-          finish (System/currentTimeMillis)]
-      (info (name request-method) (:status resp) uri
-            (str (- finish start) "ms"))
-      resp)))
+(defn wrap-request-logging-in-dev [handler]
+  (if (conf/in-dev?)
+    (fn [{:keys [request-method uri] :as req}]
+      (let [start (System/currentTimeMillis)
+            resp (handler req)
+            finish (System/currentTimeMillis)]
+        (debug (name request-method) (:status resp) uri
+               (str (- finish start) "ms"))
+        resp))
+    handler))
 
 (defn wrap-reload-in-dev [handler reload-meta]
-  (if (config/in-dev?)
+  (if (conf/in-dev?)
     (let [read-mtime (fn [dir]
                        (reduce
                         (fn [totalTime file]
@@ -94,7 +96,7 @@
                 mtime (read-mtime file)]
             (when (> mtime (-> d val :mtime))
               (doseq [ns-sym clj-ns]
-                (info file "changed, reload" ns-sym)
+                (debug file "changed, reload" ns-sym)
                 (require :reload ns-sym)
                 (swap! data assoc file {:ns clj-ns
                                         :mtime mtime})))))

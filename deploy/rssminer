@@ -1,11 +1,11 @@
 server {
     listen 443 default ssl;
     keepalive_timeout    70;
-    ssl_certificate      conf.d/freader.crt;
-    ssl_certificate_key  conf.d/freader.key;
-    server_name  reader.shenfeng.me;
+    ssl_certificate      conf.d/rssminer.crt;
+    ssl_certificate_key  conf.d/rssminer.key;
+    server_name  rss-miner.com;
     location ~* \.(ico|css|js|gif|jpe?g|png)(\?.+)?$ {
-        root    /var/www/freader/public;
+        root    /var/www/rssminer/public;
         add_header Expires "Thu, 31 Dec 2037 23:55:55 GMT";
         add_header Cache-Control "public, max-age=315360000";
         access_log off;
@@ -13,12 +13,18 @@ server {
     location / {
         proxy_pass  http://127.0.0.1:8100/;
         proxy_set_header Host $http_host;
-        access_log  /var/log/freader/freader.access.log;
+        access_log  /var/log/rssminer/access.log;
     }
 }
 
 server {
       listen 80;
+      server_name rss-miner.com;
+      rewrite ^/(.*) https://rss-miner.com/$1 permanent;
+}
+
+server {
+      listen 80;
       server_name reader.shenfeng.me;
-      rewrite ^/(.*) https://reader.shenfeng.me/$1 permanent;
+      rewrite ^/(.*) https://rss-miner.com/$1 permanent;
 }

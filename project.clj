@@ -14,7 +14,7 @@
                  [org.apache.lucene/lucene-core "3.2.0"]
                  [net.java.dev.rome/rome "1.0.0"]
                  [ring/ring-core "0.3.11"]
-                 [ring-netty-adapter "0.0.1"]]
+                 [me.shenfeng/ring-netty-adapter "0.0.1-SNAPSHOT"]]
   :dev-resources-path "/usr/lib/jvm/java-6-openjdk/lib/tools.jar:/usr/lib/jvm/java-6-openjdk/src.zip"
   :exclusions [javax.activation/activation]
   :java-source-path "src/java"
@@ -25,4 +25,4 @@
   ;; :jvm-opts ["-agentlib:hprof=cpu=samples,format=b,file=/tmp/profile.txt"]
   ;; :jvm-opts ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n"]
   :dev-dependencies [[clojure-source "1.2.1"]
-                     [swank-clojure "1.3.2"]])
+                     [swank-clojure "1.4.0-SNAPSHOT"]])

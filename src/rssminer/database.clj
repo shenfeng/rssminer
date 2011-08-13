@@ -2,8 +2,7 @@
   (:use [clojure.java.jdbc :only [with-connection do-commands]]
         [clojure.java.io :only [resource]]
         [clojure.java.jdbc :only [with-connection do-commands]])
-  (:require [rssminer.config :as conf]
-            [clojure.string :as str])
+  (:require [clojure.string :as str])
   (:import org.h2.jdbcx.JdbcConnectionPool))
 
 (defonce h2-db-factory  (atom {:factory nil

@@ -8,8 +8,7 @@
             [rssminer.config :as conf])
   (:import crawler.CrawlerThreadFactory
            [java.util Queue LinkedList Date]
-           [java.util.concurrent Executors ExecutorService
-            TimeUnit ThreadFactory]))
+           [java.util.concurrent Executors ExecutorService TimeUnit ]))
 
 (def running? (atom false))
 (def fetch-size 100)

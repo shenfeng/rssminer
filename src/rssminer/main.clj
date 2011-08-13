@@ -12,7 +12,6 @@
 
 (defn stop-server []
   (when-not (nil? @server)
-    ;; (.stop @server)
     (@server)
     (reset! server nil))
   (when-not (nil? @crawler)
@@ -23,22 +22,19 @@
   {:pre [(#{:prod :dev} profile)]}
   (stop-server)
   (reset! env-profile profile)
+  (reset! server (run-netty (app) {:port port}))
   (use-index-writer! index-path)
-  (use-h2-database! db-path)
-  (reset! server (run-netty (app) {:port port :join? false}))
-  ;; (reset! crawler (start-crawler))
-  ;; (reset! server (run-jetty (app) {:port port :join? false}))
-  )
+  (use-h2-database! db-path))
 
 (defn main [& args]
   "Start rssminer server"
   (start-server
    (cli args
-        (optional ["-p" "--port" "Port to listen (READER_PORT || 8100)"]
-                  #(Integer.
-                    (or % (get (System/getenv) "READER_PORT" "8100"))))
+        (optional ["-p" "--port" "Port to listen" :default "8100"]
+                  #(Integer/parseInt %))
         (optional ["--profile" "profile (dev || prod)" :default "dev"]
                   keyword)
-        (optional ["--db-path" "H2 Database path" :default "/tmp/rssminer"])
+        (optional ["--db-path" "H2 Database path"
+                   :default "/dev/shm/rssminer"])
         (optional ["--index-path" "Path to store lucene index"
-                   :default "/tmp/feeds-index"]))))
+                   :default "/dev/shm/rssminer-index"]))))
