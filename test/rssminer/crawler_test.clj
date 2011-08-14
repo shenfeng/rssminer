@@ -6,12 +6,10 @@
   (:require [rssminer.db.crawler :as db]
             [rssminer.http :as http]))
 
-(def headers {:last_modified "Sat, 23 Jul 2011 01:40:16 GMT"
-              :server "Apache"})
-
 (defn- mock-http-get [& args]
   {:status 200
-   :headers headers
+   :headers {:last_modified "Sat, 23 Jul 2011 01:40:16 GMT"
+             :server "Apache"}
    :body (resource "page.html")})
 
 (use-fixtures :each h2-fixture
@@ -32,7 +30,7 @@
 (deftest test-start-crawler
   (let [rss (db/fetch-rss-links 1000)]
     (mocking (var http/get) mock-http-get
-             (let [crawler  (start-crawler)]
+             (let [crawler (start-crawler :threads 2)]
                (crawler :wait)))
     (is (nil? (db/fetch-crawler-links 2000)))
     (is (= 1 (- (count (db/fetch-rss-links 1000)) (count rss))))))

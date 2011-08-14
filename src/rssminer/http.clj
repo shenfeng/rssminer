@@ -1,5 +1,5 @@
 (ns rssminer.http
-  (:use [clojure.tools.logging :only [info error]]
+  (:use [clojure.tools.logging :only [info error debug trace]]
         [rssminer.util :only [assoc-if]])
   (:refer-clojure :exclude [get])
   (:require [clojure.string :as str]
@@ -25,6 +25,24 @@
         schema (.getScheme uri)
         host (.getHost uri)]
     (str schema "://" host port)))
+
+(defn clean-url [^String host]
+  (when host
+    (let [^URI uri (URI. host)
+          path (.getRawPath uri)]
+      (str (extract-host host) path))))
+
+(defn resolve-url [base link]
+  (try
+    (when (not (or (str/blank? link)
+                   (re-find #"(?i)^\s*(javascript|mailto|#)" link)))
+      (let [base (URI. (if (= base (extract-host base))
+                         (str base "/")
+                         base))
+            link (URI. (str/trim link))]
+        (str/trim (str (.resolve base link)))))
+    (catch Exception e
+      (trace e (str "base: " base "; " "link: " link)))))
 
 (defonce reseted-hosts (atom #{}))
 
@@ -79,11 +97,11 @@
           "gzip"
           (update-in resp [:body]
                      (fn [in]
-                       (GZIPInputStream. in)))
+                       (when in (GZIPInputStream. in))))
           "deflate"
           (update-in resp [:body]
                      (fn [in]
-                       (InflaterInputStream. in)))
+                       (when in (InflaterInputStream. in))))
           resp)))))
 
 (defn wrap-proxy [client]
@@ -102,11 +120,15 @@
 (defn wrap-exception [client]
   (fn [req]
     (try (client req)
-         (catch ConnectException e
+         (catch ConnectException _
            {:status 450
             :headers {}})
-         (catch UnknownHostException e
+         (catch UnknownHostException _
            {:status 451
+            :headers {}})
+         (catch Exception e
+           (debug e "wrap-exception" (:url req))
+           {:status 452
             :headers {}}))))
 
 (def request* (-> request
@@ -120,6 +142,7 @@
           :or {user-agent "Mozilla/5.0 (X11; Linux x86_64)"}}]
   (request* (assoc-if {:url url}
                       :User-Agent user-agent
+                      :Accept "*/*"
                       :If-Modified-Since last-modified)))
 
 (defn download-favicon [url]
@@ -133,30 +156,26 @@
                    "data:image/x-icon;base64,")]
         (when img (str code img)))
       (catch Exception e
-        (error e icon-url)))))
+        (error e "download-favicon" icon-url)))))
 
 (defn download-rss  [url]
   (try
-    (update-in (get url) [:body]   ;convert to string
+    (update-in (get url) [:body]        ;convert to string
                (fn [in] (slurp in)))
     (catch Exception e
-      (error e url))))
-
-(defn resolve-url [base link]
-  (let [base (URI. (if (= base (extract-host base))
-                     (str base "/")
-                     base))
-        link (URI. link)]
-    (str (.resolve base link))))
+      (error e "download-rss" url))))
 
 (defn extract-links [base html]
   (let [resource (html/html-resource (StringReader. html))
         links (html/select resource [:a])
-        f (fn [a] {:url (resolve-url base (-> a :attrs :href))
-                  :title (html/text a)})]
+        f #(when-let [url (-> (resolve-url base (-> % :attrs :href))
+                              clean-url)]
+             {:url url
+              :title (html/text %)
+              :domain (extract-host url)})]
     {:rss (map (fn [i]
-                 {:title (-> i :attrs :ttile)
+                 {:title (-> i :attrs :title)
                   :url (resolve-url base (-> i :attrs :href))})
                (html/select resource
                             [(html/attr= :type "application/rss+xml")]))
-     :links (map f links)}))
+     :links (filter identity (map f links))}))

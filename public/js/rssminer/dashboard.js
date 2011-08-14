@@ -1,12 +1,15 @@
 $(function(){
   var reader = window.Rssminer,
+      tmpl = reader.tmpls,
       ajax = reader.ajax;
 
   var update = function () {
-    var f = _.template($("#template").html());
+    var t_rss = _.template(tmpl.rsslinks),
+        t_crawler = _.template(tmpl.crawlerlinks);
     ajax.get("/api/dashboard/crawler").done(function (data) {
-      var html = f(data);
-      $("#page-wrap").empty().append(html);
+      $("#page-wrap").empty()
+        .append(t_rss(data))
+        .append(t_crawler(data));
     });
   };
   update();

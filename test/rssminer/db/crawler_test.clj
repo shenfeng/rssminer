@@ -11,15 +11,19 @@
 
 (deftest test-insert-crawler-links
   (let [saved (fetch-crawler-links 5)
+        refer-id (-> saved first :id)
         newly [{:url "http://a.com/a" :domain "http://a.com"}
                {:url "http://b.com/b" :domain "http://b.com"}
                {:url "http://a.com/ab" :domain "http://a.com"}]]
     (is (= 0 (count (insert-crawler-links
-                     (first saved)
                      (map #(assoc {}
                              :url (:url %)
+                             :referer_id refer-id
+                             :next_check_ts (rand-int 1000000)
                              :title "sample a text") saved)))))
-    (is (= 2 (count (insert-crawler-links (first saved) newly))))))
+    (is (= 2 (count (insert-crawler-links
+                     (map #(assoc % :referer_id refer-id
+                                  :next_check_ts (rand-int 1000)) newly)))))))
 
 (deftest test-update-crawler-link
   (let [links (fetch-crawler-links 3)

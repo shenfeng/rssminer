@@ -1,6 +1,5 @@
 (ns rssminer.db.crawler
   (:use [rssminer.database :only [h2-db-factory]]
-        [rssminer.http :only [extract-host]]
         [rssminer.time :only [now-seconds]]
         [rssminer.db.util :only [h2-query]]
         [clojure.java.jdbc :only [with-connection with-query-results
@@ -18,18 +17,17 @@
 
 (defn insert-crawler-links
   "Save links to crawler_link, return generated ids of inserted ones"
-  [referer links]
+  [links]
   (let [multi-domains (set
                        (map :domain
-                            (h2-query ["select * from multi_rss_domains"])))
+                            (h2-query ["SELECT * FROM multi_rss_domains"])))
         f (fn [{:keys [domain] :as link}]
             (when (or (multi-domains domain)
                       (nil? (h2-query ["SELECT domain FROM crawler_links
                                           WHERE domain = ?" domain])))
               (try
                 (with-connection @h2-db-factory
-                  (insert-record :crawler_links
-                                 (assoc link :referer_id (:id referer))))
+                  (insert-record :crawler_links link))
                 ;; ignore voilation of uniqe constraint
                 (catch Exception e))))]
     (filter identity (doall (map f links)))))

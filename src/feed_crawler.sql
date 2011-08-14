@@ -21,7 +21,8 @@ create table crawler_links (
   title VARCHAR,
   added_ts TIMESTAMP default now(),
   domain VARCHAR,         --assume one domain, one rss, do not crawler
-  next_check_ts INTEGER default 1,
+  next_check_ts INTEGER default 10,
+  last_status INTEGER,
   last_modified VARCHAR,
   last_md5 VARCHAR,
   check_interval INTEGER default 60 * 60 * 24 * 10, -- in seconds, ten days
@@ -150,16 +151,8 @@ insert into crawler_links (url, domain) values --seeds
 ('http://tech2ipo.com/', 'http://tech2ipo.com'),
 ('http://www.dbanotes.net/', 'http://www.dbanotes.net'),
 ('http://xianguo.com/hot', 'http://xianguo.com')
-
-----
-insert into rss_links (url) values
-('http://feeds.feedburner.com/ruanyifeng'),
-('http://blog.sina.com.cn/rss/kaifulee.xml'),
-('http://cemerick.com/feed/'),
-
 ----
 insert into multi_rss_domains (domain) values
-('http://blog.sina.com.cn'),
 ('http://blogs.oracle.com'),
 ('http://xianguo.com'),
 ('http://www.ibm.com')

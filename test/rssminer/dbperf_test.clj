@@ -1,8 +1,7 @@
 (ns rssminer.dbperf-test
   (:use (rssminer [database :only [import-h2-schema! use-h2-database!]])
         [clojure.tools.cli :only [cli optional required]]
-        [rssminer.db.util :only [h2-query]]
-        [rssminer.util :only [to-int]])
+        [rssminer.db.util :only [h2-query]])
   (:require [clojure.string :as str]
             [rssminer.http :as http]
             [rssminer.db.crawler :as db]
@@ -63,9 +62,12 @@
   "benchmark database"
   (benchmark
    (cli args
-        (optional ["-i" "--init" "start" :default "10000"] to-int)
-        (optional ["-s" "--step" "step" :default "5"] to-int)
-        (optional ["-c" "--times" "step count" :default "3"] to-int)
+        (optional ["-i" "--init" "start" :default "10000"]
+                  #(Integer/parseInt %))
+        (optional ["-s" "--step" "step" :default "5"]
+                  #(Integer/parseInt %))
+        (optional ["-c" "--times" "step count" :default "3"]
+                  #(Integer/parseInt %))
         (optional ["-p" "--path" "tmp db path"
                    :default "/tmp/h2_bench"]))))
 

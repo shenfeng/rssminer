@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class CrawlerThreadFactory implements ThreadFactory {
 	final AtomicInteger threadNumber = new AtomicInteger(1);
-	final String prefix = "crawler-worker-";
+	final String prefix = "crawler-";
 
 	@Override
 	public Thread newThread(Runnable r) {

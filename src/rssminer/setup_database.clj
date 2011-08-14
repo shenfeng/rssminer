@@ -9,8 +9,7 @@
         [sandbar.stateful-session :only [session-get]]
         [clojure.data.json :only [json-str]]))
 
-(def links [
-            ;; "http://blog.raek.se/feed/"
+(def links ["http://blog.raek.se/feed/"
             "http://feeds.feedburner.com/ruanyifeng"
             "http://blog.sina.com.cn/rss/kaifulee.xml"
             "http://cemerick.com/feed/"

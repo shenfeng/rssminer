@@ -31,7 +31,7 @@
      (list-like? target)
      (map decode-bean target)
      :else (if (instance? Date target)
-             (to-ts target) target))))
+             (to-ts ^Date target) target))))
 
 (defn parse [str]
   (try

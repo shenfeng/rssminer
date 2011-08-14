@@ -14,8 +14,11 @@ def get_dir(path)
 end
 
 version = Time.now.strftime("%Y%m%d%H%M") # timestamp
+soycompiler = "SoyToJsSrcCompiler.jar"
+cscompiler = "closure-compiler.jar"
+htmlcompressor = "htmlcompressor.jar"
 
-file 'bin/closure-compiler.jar' do
+file "bin/#{cscompiler}" do
   mkdir_p 'bin'
   rm_rf '/tmp/closure-compiler.zip'
   sh 'wget http://closure-compiler.googlecode.com/files/compiler-latest.zip' +
@@ -23,16 +26,28 @@ file 'bin/closure-compiler.jar' do
   rm_rf '/tmp/compiler.jar'
   sh 'unzip /tmp/closure-compiler.zip compiler.jar -d /tmp'
   rm_rf '/tmp/closure-compiler.zip'
-  mv '/tmp/compiler.jar', 'bin/closure-compiler.jar'
+  mv '/tmp/compiler.jar', "bin/#{cscompiler}"
 end
 
-file "bin/htmlcompressor.jar" do
+file "bin/#{soycompiler}" do
+  file = 'closure-templates-for-javascript-latest.zip'
+  mkdir_p 'bin'
+  rm_rf "/tmp/#{file}"
+  rm_rf "/tmp/#{soycompiler}"
+  sh "wget http://closure-templates.googlecode.com/files/#{file} -O /tmp/#{file}"
+  sh "unzip /tmp/#{file} #{soycompiler} -d /tmp"
+  mv "/tmp/#{soycompiler}", "bin/#{soycompiler}"
+end
+
+file "bin/#{htmlcompressor}" do
   mkdir_p 'bin'
   sh 'wget http://htmlcompressor.googlecode.com/files/htmlcompressor-1.3.1.jar' +
-    ' -O bin/htmlcompressor.jar'
+    " -O bin/#{htmlcompressor}"
 end
 
-task :deps => ['bin/closure-compiler.jar', "bin/htmlcompressor.jar"]
+task :deps => ["bin/#{cscompiler}",
+               "bin/#{htmlcompressor}",
+               "bin/#{soycompiler}"]
 
 rssminer_jss = FileList['public/js/lib/jquery.js',
                        'public/js/lib/jquery-ui-1.8.13.custom.js',
@@ -104,7 +119,7 @@ namespace :js do
       source_arg += " --js #{js} "
     end
 
-    sh 'java -jar bin/closure-compiler.jar --warning_level QUIET' +
+    sh "java -jar bin/#{cscompiler} --warning_level QUIET" +
       " --js_output_file '#{target}' #{source_arg}"
   end
 end
@@ -125,7 +140,7 @@ html_triples = html_srcs.map {|f| [f, "src/#{f}", get_dir("src/#{f}")]}
 html_triples.each do |src, tgt, dir|
   directory dir
   file tgt => [src, dir] do
-    sh "java -jar bin/htmlcompressor.jar --charset utf8 #{src} -o #{tgt}"
+    sh "java -jar bin/#{htmlcompressor} --charset utf8 #{src} -o #{tgt}"
     sh "sed -i \"s/{VERSION}/#{version}/g\" #{tgt}"
   end
 end
