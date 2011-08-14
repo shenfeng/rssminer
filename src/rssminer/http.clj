@@ -61,7 +61,9 @@
 (defn request [{:keys [url headers proxy?]}]
   (let [proxy (if proxy? socks-proxy no-proxy)
         ^HttpURLConnection
-        con (.. (URL. url) (openConnection proxy))]
+        con (doto (.. (URL. url) (openConnection proxy))
+              (.setReadTimeout 3500)
+              (.setConnectTimeout 3500))]
     (doseq [header headers]
       (.setRequestProperty con (name (key header)) (val header)))
     ;; 0 is status line
