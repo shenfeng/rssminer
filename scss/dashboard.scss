@@ -8,18 +8,57 @@ $page-width: 960px;
 #page-wrap {
     /* width: $page-width; */
     margin: 0 auto;
+    padding: 0 1em;
 }
 
-#crawler-links table {
-    td {
-        padding: 2px 5px;
+.code {
+    font-family: Consolas, Inconsolata, monospace;
+}
+
+#nav {
+    position: fixed;
+    top: 0px;
+    right: 10px;
+    margin-top: 1em;
+    li {
+        display: inline-block;
+        background: #aaa;
+        padding: 6px 8px;
+        margin: 2px;
+        @include border-radius(4px);
     }
 }
 
-#pending-links {
-    /* float: left; */
+#stats {
+    margin-left: 2em;
+    width: 300px;
 }
 
-#crawled-links {
-    /* float: right; */
+#tables table {
+    width: 100%;
+    margin-top: 1em;
+    caption {
+        font-size: 20px;
+        padding: 4px;
+        font-weight: bold;
+    }
+    th { padding: 5px; background: whiteSmoke; text-transform: capitalize; }
+    tr:nth-child(even) {
+        background: #F5FAFF;
+    }
+
+    td {
+        padding: 2.5px 3px;
+        border-left: 1px solid #EEE;
+    }
+    .url {
+        width: 35%;
+    }
+    .title {
+        width: 23%;
+    }
+    .added_ts { width: 12%;}
+    .referer {
+        width: 25%;
+    }
 }

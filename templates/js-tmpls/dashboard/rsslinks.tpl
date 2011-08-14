@@ -1,23 +1,21 @@
-<div id="stats">
-  <span>Total <%=total_count%></span>
-  <span>Crawled <%=crawled_count%></span>
-</div>
 <% if(rss_links.length > 0) { %>
- <h2>Rss Links</h2>
- <table id="crawled-links">
-   <tr>
-     <th> url </th>
-     <th> title </th>
-     <th> add_ts </th>
-     <th> referer </th>
-   </tr>
-   <% _.each(rss_links, function(link) { %>
-   <tr>
-     <td><%= link.url%></td>
-     <td><%= link.title%></td>
-     <td><%= _.timesince(link.added_ts)%></td>
-     <td><%= link.referer%></td>
-   </tr>
-   <%}); %>
- </table>
+<table id="crawled-links">
+  <caption>Rss Links</caption>
+  <tr>
+    <th class="id"> ID </th>
+    <th class="url code"> url </th>
+    <th class="title"> title </th>
+    <th class="added_ts"> added time </th>
+    <th class="referer code"> referer </th>
+  </tr>
+  <% _.each(rss_links, function(link) { %>
+  <tr>
+    <td class="id"><%= link.id%></td>
+    <td class="url code"><%= link.url%></td>
+    <td class="title"><%= link.title%></td>
+    <td class="added_ts"><%= _.timesince(link.added_ts)%></td>
+    <td class="refer code"><%= link.referer%></td>
+  </tr>
+  <%}); %>
+</table>
 <%} %>

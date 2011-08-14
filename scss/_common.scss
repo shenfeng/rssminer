@@ -1,3 +1,4 @@
+@import "css3";
 #header {
     padding: 0.5em;
     text-indent: 1em;
@@ -26,10 +27,29 @@
 
 .lfloat { float: left; }
 .rfloat { float: right; }
+
 body {
     font-family: sans-serif;
     color: #222;
     margin: 0;
     padding: 0;
     line-height: 1.231;
+}
+
+#notification {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    z-index: 1000;
+    font-weight: bold;
+    font-size: 13px;
+    overflow: hidden;
+    p {
+        @include border-radius(4px);
+        padding: 5px;
+        margin: 0;
+    }
+    .message { background: yellow;  }
+    .error { background: #FDD };
+    visibility: hidden;
 }

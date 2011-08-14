@@ -14,8 +14,6 @@
 (defonce crawler (atom nil))
 
 (defn stop-server []
-  (close-global-h2-factory!)
-  (close-global-index-writer!)
   (when-not (nil? @crawler)
     (info "shutdown link crawler....")
     (@crawler :shutdown)
@@ -23,7 +21,9 @@
   (when-not (nil? @server)
     (info "shutdown netty server....")
     (@server)
-    (reset! server nil)))
+    (reset! server nil))
+  (close-global-h2-factory!)
+  (close-global-index-writer!))
 
 (defn start-server
   [{:keys [port index-path profile db-path trace run-crawler]}]

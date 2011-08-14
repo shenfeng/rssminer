@@ -30,6 +30,7 @@ window.$(function(){
       }
       return interval + " seconds";
     },
+
     timesince: function(date) {
       var seconds = Math.floor((new Date() - date) / 1000);
       return _.interval(seconds) + ' ago';

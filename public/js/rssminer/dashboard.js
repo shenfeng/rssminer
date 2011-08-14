@@ -1,16 +1,34 @@
 $(function(){
   var reader = window.Rssminer,
-      tmpl = reader.tmpls,
+      backbone = window.Backbone,
+      tmpls = reader.tmpls,
       ajax = reader.ajax;
 
-  var update = function () {
-    var t_rss = _.template(tmpl.rsslinks),
-        t_crawler = _.template(tmpl.crawlerlinks);
-    ajax.get("/api/dashboard/crawler").done(function (data) {
-      $("#page-wrap").empty()
-        .append(t_rss(data))
-        .append(t_crawler(data));
-    });
-  };
-  update();
+  var Router = backbone.Router.extend(function () {
+    function makeAlive (url, tmpl, data) {
+      ajax.get(url).done(function (data) {
+        $("#tables").empty()
+          .append(_.template(tmpls['stats'], data))
+          .append(_.template(tmpl, data));
+      });
+    }
+
+    function handler (path, page) {
+      path = path || "rsslinks";
+      page = path || 1;
+      makeAlive("/api/dashboard/" + path , tmpls[path]);
+    };
+
+    return  {
+      initialize: function () {
+        backbone.history.start();
+      },
+      routes: {
+        ":path": handler,
+        ":path/:page": handler
+      }
+    };
+  });
+
+  new Router();
 });

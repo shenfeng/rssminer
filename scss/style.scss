@@ -43,24 +43,6 @@
     color: #E0EAF1;
 }
 
-#notification {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    z-index: 1000;
-    font-weight: bold;
-    font-size: 13px;
-    overflow: hidden;
-    p {
-        @include border-radius(4px);
-        padding: 5px;
-        margin: 0;
-    }
-    .message { background: yellow;  }
-    .error { background: #FDD };
-    visibility: hidden;
-}
-
 #search-input {
     float: right;
     padding: 3px 4px;
