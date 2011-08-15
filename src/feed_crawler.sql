@@ -73,11 +73,21 @@ CREATE TABLE user_subscriptions
 
 ----
 create table multi_rss_domains (
+  id INTEGER PRIMARY KEY auto_increment,
   domain VARCHAR UNIQUE,
+  added_ts TIMESTAMP DEFAULT now(),
 )
 ----
 create table black_domain_pattens (
+   id INTEGER PRIMARY KEY auto_increment,
    patten VARCHAR UNIQUE,
+   added_ts TIMESTAMP DEFAULT now(),
+)
+----
+create table reseted_domain_pattens (
+   id INTEGER PRIMARY KEY auto_increment,
+   patten VARCHAR UNIQUE,
+   added_ts TIMESTAMP DEFAULT now(),
 )
 ----
 create table rss_xmls (
@@ -167,4 +177,7 @@ insert into black_domain_pattens (patten) values
 ('\.skyrock\.com'),
 ('\.livejournal\.com'),
 ('http://\w{10,}\d{5,}')
-
+----
+insert into reseted_domain_pattens (patten) values
+('\.blogspot\.com'),
+('facebook\.com'),

@@ -22,7 +22,8 @@
 
 (defn get-black-domain-pattens [req]
   (assoc (get-stats)
-    :black_domain_pattens (map str @conf/black-domain-pattens)))
+    :black_domain_pattens (map str @conf/black-domain-pattens)
+    :reseted_domain_pattens (map str @conf/reseted-hosts)))
 
 (defn add-black-domain-patten [req]
   (let [patten (:patten *json-body*)]

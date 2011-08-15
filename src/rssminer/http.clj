@@ -41,15 +41,6 @@
     (catch Exception e
       (trace e (str "base: " base "; " "link: " link)))))
 
-(defonce reseted-hosts (atom #{}))
-
-(defn- reseted-url?
-  "If the given url is reseted"
-  [url] (@reseted-hosts (extract-host url)))
-
-(defn- add-reseted-url [url]
-  (swap! reseted-hosts conj (extract-host url)))
-
 (defn reset-e?
   "Is the given SocketException is caused by connection reset"
   [^SocketException e]
@@ -105,14 +96,14 @@
 
 (defn wrap-proxy [client]
   (fn [{:keys [url] :as req}]
-    (if (reseted-url? url)
+    (if (conf/reseted-url? url)
       (client (assoc req :proxy? true))
       (try
         (client req)
         (catch SocketException e
           (if (and (reset-e? e) (not (:proxy? req)))
             (do
-              (add-reseted-url url)
+              (conf/add-reseted-domain (extract-host url))
               (client (assoc req :proxy? true)))
             (throw e)))))))
 

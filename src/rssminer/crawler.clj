@@ -11,19 +11,18 @@
            [java.util.concurrent Executors ExecutorService TimeUnit ]))
 
 (def running? (atom false))
-(def fetch-size 100)
+
 (def ^Queue queue (LinkedList.))
-(defn- rand-ts [] (rand-int 1000000))
 
 (defn- extract-and-save-links [referer html]
   (let [{:keys [rss links]} (http/extract-links (:url referer) html)]
     (doseq [{:keys [url title]} rss]
       (db/insert-rss-link {:url url
                            :title title
-                           :next_check_ts (rand-ts)
+                           :next_check_ts (conf/rand-ts)
                            :crawler_link_id (:id referer)}))
     (db/insert-crawler-links (map #(assoc %
-                                     :next_check_ts (rand-ts)
+                                     :next_check_ts (conf/rand-ts)
                                      :referer_id (:id referer)) links))))
 
 (defn crawl-link
@@ -47,7 +46,7 @@
   (locking queue
     (if (.peek queue) ;; has element?
       (.poll queue)   ;; retrieves and removes
-      (let [links (db/fetch-crawler-links fetch-size)]
+      (let [links (db/fetch-crawler-links conf/fetch-size)]
         (trace "fetch" (count links) "crawler links from h2")
         (when (seq links)
           (doseq [link links]
