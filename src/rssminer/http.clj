@@ -31,8 +31,8 @@
 
 (defn resolve-url [base link]
   (try
-    (when (not (or (str/blank? link)
-                   (re-find #"(?i)^\s*(javascript|mailto|#)" link)))
+    (when-not (or (str/blank? link)
+                  (re-find #"(?i)^\s*(javascript|mailto|#)" link))
       (let [base (URI. (if (= base (extract-host base))
                          (str base "/")
                          base))

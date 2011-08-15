@@ -1,18 +1,19 @@
 #!/bin/bash
 
-rm -f /tmp/h2-1.3.158.jar
-cp /home/feng/.m2/repository/com/h2database/h2/1.3.158/h2-1.3.158.jar /tmp
+version=1.3.159
+rm -f /tmp/h2-${version}.jar
+cp /home/feng/.m2/repository/com/h2database/h2/${version}/h2-${version}.jar /tmp
 
 if [ $# != 0 ]
 then
     rm -f /tmp/rssminer.trace.sql
-    cd /tmp && java -cp /tmp/h2-1.3.158.jar org.h2.tools.ConvertTraceFile \
+    cd /tmp && java -cp /tmp/h2-${version}.jar org.h2.tools.ConvertTraceFile \
         -traceFile /dev/shm/rssminer.trace.db \
         -script /tmp/rssminer.trace.sql
     tail -n 100 /tmp/rssminer.trace.sql |grep "\-\-"
 else
     rm -f /tmp/rssminer.h2.db
     cp /dev/shm/rssminer.h2.db /tmp
-    rlwrap java -cp /tmp/h2-1.3.158.jar org.h2.tools.Shell \
+    rlwrap java -cp /tmp/h2-${version}.jar org.h2.tools.Shell \
         -url jdbc:h2:/tmp/rssminer -user sa -password sa
 fi
