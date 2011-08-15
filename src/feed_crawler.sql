@@ -73,7 +73,11 @@ CREATE TABLE user_subscriptions
 
 ----
 create table multi_rss_domains (
-  domain varchar UNIQUE,
+  domain VARCHAR UNIQUE,
+)
+----
+create table black_domain_pattens (
+   patten VARCHAR UNIQUE,
 )
 ----
 create table rss_xmls (
@@ -156,3 +160,11 @@ insert into multi_rss_domains (domain) values
 ('http://blogs.oracle.com'),
 ('http://xianguo.com'),
 ('http://www.ibm.com')
+----
+insert into black_domain_pattens (patten) values
+('\.tumblr\.com'),
+('\.deviantart\.com'),
+('\.skyrock\.com'),
+('\.livejournal\.com'),
+('http://\w{10,}\d{5,}')
+

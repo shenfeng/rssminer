@@ -40,7 +40,9 @@
   (context "/dashboard" []
            (JGET "/rsslinks" [] dashboard/get-rsslinks)
            (JGET "/pending" [] dashboard/get-crawler-pending)
-           (JGET "/crawled" [] dashboard/get-crawled))
+           (JGET "/crawled" [] dashboard/get-crawled)
+           (JGET "/black" [] dashboard/get-black-domain-pattens)
+           (JPOST "/black" [] dashboard/add-black-domain-patten))
   (context "/subscriptions" []
            (JGET "/overview" [] subscription/get-overview)
            (JPOST "/add" [] subscription/add-subscription)

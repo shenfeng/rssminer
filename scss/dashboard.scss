@@ -28,6 +28,21 @@ $page-width: 960px;
         @include border-radius(4px);
     }
 }
+#black-pattens {
+    width: 500px;
+    margin: 0 auto;
+    ul { padding: 0; }
+    ul li {
+        padding: 3px;
+        list-style: none;
+    }
+}
+
+input#add-patten {
+    margin-top: 1em;
+    width: 300px;
+    padding: 4px 6px;
+}
 
 #stats {
     margin-left: 2em;

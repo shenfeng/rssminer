@@ -2,7 +2,11 @@
   (:refer-clojure :exclude [get])
   (:use rssminer.http
         [clojure.java.io :only [resource]]
+        [rssminer.config :only [add-black-domain-patten]]
+        (rssminer [test-common :only [h2-fixture]])
         clojure.test))
+
+(use-fixtures :each h2-fixture)
 
 (deftest test-extract-host
   (is (= (extract-host "http://192.168.1.11:8000/#change,83")
@@ -43,5 +47,12 @@
 
 (deftest test-clean-url
   (is (= "http://a.cn/c.php"
-       (clean-url "http://a.cn/c.php?t=blog&k=%C1%F4%D1%A7"))))
+         (clean-url "http://a.cn/c.php?t=blog&k=%C1%F4%D1%A7")))
+  (is (nil? (clean-url "http://alohaitsluisa.tumblr.com/rss")))
+  (add-black-domain-patten "a\\.cn")
+  (is (nil? (clean-url "http://a.cn/c.php?t=blog&k=%C1%F4%D1%A7")))
+  (is (nil? (clean-url "http://img.com/a.png")))
+  (is (nil? (clean-url "http://img.com/a.JS")))
+  (is (nil? (clean-url "http://jidikuabaoxiao06208392.founders-lawyer.com")))
+  (is (nil? (clean-url "http://guangzhoufuzhuangsheyin04106333.sh-kbt.com"))))
 

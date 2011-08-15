@@ -10,13 +10,13 @@
 
 (defn close-global-h2-factory! []
   (if-let [ds (:ds @h2-db-factory)]
-    (.dispose ds)
+    (.dispose ^JdbcConnectionPool ds)
     (reset! h2-db-factory nil)))
 
 (defn use-h2-database! [file & {:keys [trace]}]
   (close-global-h2-factory!)
   (let [url (str "jdbc:h2:" file
-                 (when trace ";TRACE_LEVEL_FILE=2;TRACE_MAX_FILE_SIZE=1000"))
+                 (when trace ";TRACE_LEVEL_FILE=2;TRACE_MAX_FILE_SIZE=3000"))
         ds (JdbcConnectionPool/create url "sa" "sa")
         f (fn [& args]  (.getConnection ds))]
     (reset! h2-db-factory {:factory f

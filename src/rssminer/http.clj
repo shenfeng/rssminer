@@ -3,20 +3,14 @@
         [rssminer.util :only [assoc-if]])
   (:refer-clojure :exclude [get])
   (:require [clojure.string :as str]
+            [rssminer.config :as conf]
             [net.cgrand.enlive-html :as html])
-  (:import [java.net URI URL Proxy Proxy$Type InetSocketAddress
-            HttpURLConnection SocketException ConnectException
-            UnknownHostException]
+  (:import [java.net URI URL HttpURLConnection SocketException
+            ConnectException UnknownHostException SocketTimeoutException]
            [java.util.zip InflaterInputStream GZIPInputStream]
            [java.io InputStream StringReader]
            org.apache.commons.io.IOUtils
            org.apache.commons.codec.binary.Base64))
-
-(def ^{:private true}
-  socks-proxy (Proxy. Proxy$Type/SOCKS
-                      (InetSocketAddress. "localhost" 3128)))
-
-(def ^{:private true}  no-proxy Proxy/NO_PROXY)
 
 (defn extract-host [^String host]
   (let [^URI uri (URI. host)
@@ -28,9 +22,12 @@
 
 (defn clean-url [^String host]
   (when host
-    (let [^URI uri (URI. host)
-          path (.getRawPath uri)]
-      (str (extract-host host) path))))
+    (let [path (-> host URI. .getRawPath)
+          host (extract-host host)
+          url (str host path)]
+      (when-not (or (conf/black-domain? host)
+                    (re-find #"(?i)(jpg|png|gif|css|js|jpeg)$" url))
+        url))))
 
 (defn resolve-url [base link]
   (try
@@ -59,7 +56,7 @@
   (= "Connection reset" (.getMessage e)))
 
 (defn request [{:keys [url headers proxy?]}]
-  (let [proxy (if proxy? socks-proxy no-proxy)
+  (let [proxy (if proxy? conf/socks-proxy conf/no-proxy)
         ^HttpURLConnection
         con (doto (.. (URL. url) (openConnection proxy))
               (.setReadTimeout 3500)
@@ -128,6 +125,9 @@
          (catch UnknownHostException _
            {:status 451
             :headers {}})
+         (catch SocketTimeoutException _
+           {:status 460
+            :headers {}})
          (catch Exception e
            (debug e "wrap-exception" (:url req))
            {:status 452
@@ -180,4 +180,4 @@
                   :url (resolve-url base (-> i :attrs :href))})
                (html/select resource
                             [(html/attr= :type "application/rss+xml")]))
-     :links (filter identity (map f links))}))
+     :links (doall (filter identity (map f links)))}))

@@ -1,5 +1,5 @@
 (ns rssminer.setup-database
-  (:use (rssminer [database :only [use-h2-database! close-global-h2-factory
+  (:use (rssminer [database :only [use-h2-database! close-global-h2-factory!
                                    import-h2-schema!]]
                   [search :only [use-index-writer!
                                  close-global-index-writer!]]
@@ -35,7 +35,7 @@
         (apply (app) [{:uri "/api/subscriptions/add"
                        :request-method :post
                        :body (json-str {:link link})}]))))
-  (close-global-h2-factory)
+  (close-global-h2-factory!)
   (close-global-index-writer!))
 
 (defn main [& args]

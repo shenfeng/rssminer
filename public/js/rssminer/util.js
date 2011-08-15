@@ -68,7 +68,7 @@ window.$(function(){
         count++;
       }
       // auto hide in 10s
-      _.delay(_.bind(hide, this, msg), 10000);
+      _.delay(_.bind(hide, this, msg), 100000);
     }
 
     function hide (msg){

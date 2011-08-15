@@ -1,6 +1,6 @@
 (ns rssminer.views.dashboard-test
   (:use clojure.test
-        (clojure.data [json :only [read-json]])
+        (clojure.data [json :only [read-json json-str]])
         (rssminer [test-common :only [test-app h2-fixture]])))
 
 (use-fixtures :each h2-fixture)
@@ -29,4 +29,18 @@
         stats (-> resp :body read-json)]
     (is (= 200 (:status resp)))
     (is (empty? (-> stats :crawled_links)))))
+
+(deftest test-get-black-patten
+  (let [resp (test-app {:uri "/api/dashboard/black"
+                        :request-method :get})
+        stats (-> resp :body read-json)]
+    (is (= 200 (:status resp)))))
+
+(deftest test-add-black-patten
+  (let [resp (test-app {:uri "/api/dashboard/black"
+                        :request-method :post
+                        :body (json-str {:patten "test"})})
+        body (-> resp :body read-json)]
+    (is (= 200 (:status resp)))
+    (is (some #(= "test" %) body))))
 

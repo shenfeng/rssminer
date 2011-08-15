@@ -1,9 +1,9 @@
 (ns rssminer.handlers.subscriptions
   (:use (rssminer [middleware :only [*user* *json-body*]]
-                 [http :only [download-favicon download-rss]]
-                 [parser :only [parse]]
-                 [util :only [to-int]]
-                 [config :only [ungroup]]))
+                  [http :only [download-favicon download-rss]]
+                  [parser :only [parse]]
+                  [util :only [to-int]]
+                  [config :only [ungroup]]))
   (:require [rssminer.db.subscription :as db]))
 
 (defn- add-subscription-ret [us subscription count]

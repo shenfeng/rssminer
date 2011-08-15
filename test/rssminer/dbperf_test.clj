@@ -26,7 +26,7 @@
 (defn do-insert [& {:keys [n path]}]
   (.delete (java.io.File. (str path ".h2.db")))
   (use-h2-database! path)
-  (import-h2-schema!)
+  (import-h2-schema! :trace false)
   (let [refer (first (gen-rss-links))]
     (doseq [rss (partition 10 (take n (gen-rss-links)))]
       (db/insert-crawler-links refer rss))))

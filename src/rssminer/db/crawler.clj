@@ -57,3 +57,11 @@
   (with-connection @h2-db-factory
     (update-values :rss_links ["id = ?" id] data)))
 
+(defn fetch-black-domain-pattens []
+  (map #(re-pattern (:patten %))
+       (h2-query ["select patten from black_domain_pattens"])))
+
+(defn insert-black-domain-patten [patten]
+  (with-connection @h2-db-factory
+    (insert-record :black_domain_pattens
+                   {:patten patten})))
