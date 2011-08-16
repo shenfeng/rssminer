@@ -147,7 +147,7 @@
             code (if Content-Type
                    (str "data:" Content-Type ";base64,")
                    "data:image/x-icon;base64,")]
-        (when img (str code img)))
+        (when img (StringReader. (str code img))))
       (catch Exception e
         (error e "download-favicon" icon-url)))))
 

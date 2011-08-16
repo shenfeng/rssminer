@@ -3,8 +3,8 @@
         [clojure.data.json :only [read-json json-str]]
         [rssminer.db.util :only [h2-query select-sql-params]]
         (rssminer [test-common :only [auth-app auth-app2 app-fixture
-                                     mock-download-rss]]
-                 [http :only [download-rss download-favicon]])))
+                                      mock-download-rss]]
+                  [http :only [download-rss download-favicon]])))
 
 (use-fixtures :each app-fixture
               (fn [f] (binding [download-rss mock-download-rss

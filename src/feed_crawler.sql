@@ -20,7 +20,7 @@ create table crawler_links (
   url VARCHAR UNIQUE,
   title VARCHAR,
   added_ts TIMESTAMP default now(),
-  domain VARCHAR,         --assume one domain, one rss, do not crawler
+  domain VARCHAR,               --assume one domain, one rss
   next_check_ts INTEGER default 10,
   last_status INTEGER,
   last_modified VARCHAR,
@@ -41,15 +41,25 @@ create table rss_links (
   added_ts TIMESTAMP default now(),
   next_check_ts INTEGER default 1,
   check_interval INTEGER default 60 * 60 * 24, -- in seconds, one day
-  last_modified VARCHAR,                -- from http response header
-  last_md5 VARCHAR,                     -- used to check if changed
-  favicon VARCHAR,             -- base64 encoded, TODO, change to cblob
-  server VARCHAR,              -- from http response header
+  last_modified VARCHAR,      -- from http response header
+  last_md5 VARCHAR,           -- used to check if changed
+  favicon CLOB,               -- base64 encoded
+  server VARCHAR,             -- from http response header
   subscription_count INTEGER default 0, -- how much user subscribed
   user_id INTEGER REFERENCES users      -- who first add it
      ON UPDATE CASCADE ON DELETE SET NULL,
   crawler_link_id INTEGER  REFERENCES crawler_links
      ON UPDATE CASCADE ON DELETE SET NULL,
+)
+----
+create table rss_xmls (
+  id INTEGER PRIMARY KEY auto_increment,
+  added_ts TIMESTAMP default now(),
+  last_modified TIMESTAMP,
+  length INTEGER,
+  content CLOB,
+  rss_link_id INTEGER REFERENCES rss_links
+    ON UPDATE CASCADE ON DELETE SET NULL
 )
 ----
 create index idx_cl_domain on crawler_links(domain)
@@ -70,42 +80,13 @@ CREATE TABLE user_subscriptions
   added_ts TIMESTAMP DEFAULT now(),
   UNIQUE (user_id, rss_link_id)
 );
-
-----
-create table multi_rss_domains (
-  id INTEGER PRIMARY KEY auto_increment,
-  domain VARCHAR UNIQUE,
-  added_ts TIMESTAMP DEFAULT now(),
-)
-----
-create table black_domain_pattens (
-   id INTEGER PRIMARY KEY auto_increment,
-   patten VARCHAR UNIQUE,
-   added_ts TIMESTAMP DEFAULT now(),
-)
-----
-create table reseted_domain_pattens (
-   id INTEGER PRIMARY KEY auto_increment,
-   patten VARCHAR UNIQUE,
-   added_ts TIMESTAMP DEFAULT now(),
-)
-----
-create table rss_xmls (
-  id INTEGER PRIMARY KEY auto_increment,
-  added_ts TIMESTAMP default now(),
-  last_modified TIMESTAMP,
-  length INTEGER,
-  content CLOB,
-  rss_link_id INTEGER REFERENCES rss_links
-    ON UPDATE CASCADE ON DELETE SET NULL
-)
 ----
 CREATE TABLE feeds
 (
   id INTEGER PRIMARY KEY auto_increment,
   author VARCHAR,
   title VARCHAR,
-  summary VARCHAR,              -- TODO change bo clob
+  summary CLOB,
   alternate VARCHAR,
   updated_ts TIMESTAMP,
   published_ts TIMESTAMP,
@@ -138,7 +119,24 @@ CREATE TABLE feedcategory
     added_ts TIMESTAMP DEFAULT now(),
     UNIQUE(type, text, user_id, feed_id)
 );
-
+----
+create table multi_rss_domains (
+  id INTEGER PRIMARY KEY auto_increment,
+  domain VARCHAR UNIQUE,
+  added_ts TIMESTAMP DEFAULT now(),
+)
+----
+create table black_domain_pattens (
+   id INTEGER PRIMARY KEY auto_increment,
+   patten VARCHAR UNIQUE,
+   ADDED_ts TIMESTAMP DEFAULT now(),
+)
+----
+create table reseted_domain_pattens (
+   id INTEGER PRIMARY KEY auto_increment,
+   patten VARCHAR UNIQUE,
+   added_ts TIMESTAMP DEFAULT now(),
+)
 ----
 insert into crawler_links (url, domain) values --seeds
 ('http://blog.jquery.com/', 'http://blog.jquery.com'),
