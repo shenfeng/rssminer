@@ -1,6 +1,7 @@
 (ns rssminer.db.crawler
   (:use [rssminer.database :only [h2-db-factory]]
         [rssminer.time :only [now-seconds]]
+        [rssminer.util :only [ignore-error]]
         [rssminer.db.util :only [h2-query]]
         [clojure.java.jdbc :only [with-connection with-query-results
                                   insert-record update-values]]))
@@ -25,11 +26,9 @@
             (when (or (multi-domains domain)
                       (nil? (h2-query ["SELECT domain FROM crawler_links
                                           WHERE domain = ?" domain])))
-              (try
-                (with-connection @h2-db-factory
-                  (insert-record :crawler_links link))
-                ;; ignore voilation of uniqe constraint
-                (catch Exception e))))]
+              (ignore-error ;; ignore voilation of uniqe constraint
+               (with-connection @h2-db-factory
+                 (insert-record :crawler_links link)))))]
     (filter identity (doall (map f links)))))
 
 (defn update-crawler-link [id data]
@@ -48,10 +47,9 @@
 (defn insert-rss-link
   "Silently ignore duplicate link"
   [link]
-  (with-connection @h2-db-factory
-    (try (insert-record :rss_links link)
-         ;; ignore voilate of uniqe constraint
-         (catch Exception e))))
+  (ignore-error ;; ignore voilate of uniqe constraint
+   (with-connection @h2-db-factory
+     (insert-record :rss_links link))))
 
 (defn update-rss-link [id data]
   (with-connection @h2-db-factory

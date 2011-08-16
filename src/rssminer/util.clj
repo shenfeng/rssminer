@@ -41,6 +41,10 @@
         js (concat '("<script>") stats '("</script>"))]
     (apply str js)))
 
+(defmacro ignore-error [& body]
+  `(try ~@body
+        (catch Exception _#)))
+
 (defn assoc-if [map & kvs]
   "like assoc, but drop false value"
   (let [kvs (apply concat
