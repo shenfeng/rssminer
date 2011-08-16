@@ -23,34 +23,26 @@
 
 (defn rand-ts [] (rand-int 1000000))
 
+(def ignored-url-patten #"(?i)(jpg|png|gif|css|js|jpeg|pdf)$")
 
-(def black-domain-pattens (atom nil))
+(def non-url-patten #"(?i)^\s*(javascript|mailto|#)")
 
-(defn- init-domain-patterns []
-  (when (nil? @black-domain-pattens)
-    (reset! black-domain-pattens
-            (db/fetch-black-domain-pattens))))
+(def black-domain-pattens (atom
+                           (delay (db/fetch-black-domain-pattens))))
 
 (defn black-domain? [host]
-  (init-domain-patterns)
-  (some #(re-find % host) @black-domain-pattens))
+  (some #(re-find % host) @@black-domain-pattens))
 
 (defn add-black-domain-patten [patten]
   (db/insert-black-domain-patten patten)
-  (swap! black-domain-pattens conj (re-pattern patten)))
+  (reset! black-domain-pattens (delay (db/fetch-black-domain-pattens))))
 
-
-(def reseted-hosts (atom nil))
-
-(defn- init-reseted-hosts []
-  (when (nil? @reseted-hosts)
-    (reset! reseted-hosts
-            (db/fetch-reseted-domain-pattens))))
+(def reseted-hosts (atom
+                    (delay (db/fetch-reseted-domain-pattens))))
 
 (defn reseted-url? [url]
-  (init-reseted-hosts)
-  (some #(re-find % url) @reseted-hosts))
+  (some #(re-find % url) @@reseted-hosts))
 
 (defn add-reseted-domain [domain]
   (db/insert-reseted-domain-patten domain)
-  (swap! reseted-hosts conj (re-pattern domain)))
+  (reset! reseted-hosts (delay (db/fetch-reseted-domain-pattens))))

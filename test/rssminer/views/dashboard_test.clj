@@ -35,8 +35,8 @@
                         :request-method :get})
         pattens (-> resp :body read-json)]
     (is (= 200 (:status resp)))
-    (is (:black_domain_pattens pattens))
-    (is (:reseted_domain_pattens pattens))))
+    (is (> (count (:black_domain_pattens pattens)) 0))
+    (is (> (count (:reseted_domain_pattens pattens)) 0))))
 
 (deftest test-add-black-patten
   (let [resp (test-app {:uri "/api/dashboard/black"

@@ -22,11 +22,11 @@
 
 (defn get-black-domain-pattens [req]
   (assoc (get-stats)
-    :black_domain_pattens (map str @conf/black-domain-pattens)
-    :reseted_domain_pattens (map str @conf/reseted-hosts)))
+    :black_domain_pattens (map str @@conf/black-domain-pattens)
+    :reseted_domain_pattens (map str @@conf/reseted-hosts)))
 
 (defn add-black-domain-patten [req]
   (let [patten (:patten *json-body*)]
     (when (> (count patten) 2)
       (conf/add-black-domain-patten patten)
-      (map str @conf/black-domain-pattens))))
+      (map str @@conf/black-domain-pattens))))

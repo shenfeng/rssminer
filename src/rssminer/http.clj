@@ -26,13 +26,13 @@
           host (extract-host host)
           url (str host path)]
       (when-not (or (conf/black-domain? host)
-                    (re-find #"(?i)(jpg|png|gif|css|js|jpeg)$" url))
+                    (re-find conf/ignored-url-patten url))
         url))))
 
 (defn resolve-url [base link]
   (try
     (when-not (or (str/blank? link)
-                  (re-find #"(?i)^\s*(javascript|mailto|#)" link))
+                  (re-find conf/non-url-patten link))
       (let [base (URI. (if (= base (extract-host base))
                          (str base "/")
                          base))
