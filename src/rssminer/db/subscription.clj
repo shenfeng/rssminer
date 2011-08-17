@@ -78,11 +78,12 @@ WHERE us.user_id = ?" user-id user-id]))
         :continuation (when (= limit (count feeds)) (+ offset limit))
         :items items})))
 
-(defn save-feeds [subscription feeds user-id]
+(defn save-feeds [xml subscription feeds user-id]
   (doseq [feed (:entries feeds)]
     (let [saved-feed
           (insert :feeds
                   {:rss_link_id (:id subscription)
+                   :rss_xml_id (:id xml)
                    :author (:author feed)
                    :title (:title feed)
                    :summary (-> feed :description :value)

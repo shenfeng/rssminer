@@ -4,7 +4,8 @@
                   [parser :only [parse]]
                   [util :only [to-int if-lets]]
                   [config :only [ungroup]]))
-  (:require [rssminer.db.subscription :as db]))
+  (:require [rssminer.db.subscription :as db])
+  (:import java.io.StringReader))
 
 (defn- add-subscription-ret [us subscription count]
   {:group_name (:group_name us)
@@ -33,6 +34,9 @@
   (if-lets [rss (download-rss link)
             feeds (parse (:body rss))]
            (let [favicon (download-favicon link)
+                 xml (db/insert :rss_xmls
+                                {:content (StringReader. (:body rss))
+                                 :length (count (:body rss))})
                  ;; 1. save feedsource
                  subscription (db/insert :rss_links
                                          {:url link
@@ -46,7 +50,7 @@
                                 :group_name (or group-name ungroup)
                                 :title (or title (:title subscription))
                                 :rss_link_id (:id subscription)})]
-             (db/save-feeds subscription feeds user-id) ;; 3. save feeds
+             (db/save-feeds xml subscription feeds user-id) ;; 3. save feeds
              ;; 5. return data
              (add-subscription-ret us subscription (count feeds)))
            ;; fetch feeds error
