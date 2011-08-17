@@ -55,6 +55,24 @@
   `(if (integer? ~s) ~s
        (Integer/parseInt ~s)))
 
+(defmacro when-lets [bindings & body]
+  (if (empty? bindings)
+    `(do ~@body)
+    `(when-let [~@(take 2 bindings)]
+       (when-lets [~@(drop 2 bindings)]
+                  ~@body))))
+
+(defmacro if-lets
+  ([bindings then]
+     `(if-lets ~bindings ~then nil))
+  ([bindings then else]
+     (if (empty? bindings)
+       `~then
+       `(if-let [~@(take 2 bindings)]
+          (if-lets [~@(drop 2 bindings)]
+                   ~then ~else)
+          ~else))))
+
 (defn trace
   ([value] (trace nil value))
   ([name value]
