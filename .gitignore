@@ -10,6 +10,7 @@ bin/
 .settings
 public/css/
 src/templates/
+public/cl
 public/js/rssminer/tmpls.js
 public/js/rssminer*min.js
 .idea/

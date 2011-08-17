@@ -39,6 +39,14 @@ file "bin/#{soycompiler}" do
   mv "/tmp/#{soycompiler}", "bin/#{soycompiler}"
 end
 
+file "public/cl" do
+  mkdir_p "public/cl"
+  sh "wget http://closure-library.googlecode.com/files/closure-library-20110323-r790.zip" +
+    " -O /tmp/cl.zip"
+  sh "unzip -d public/cl /tmp/cl.zip"
+  rm_rf "/tmp/cl.zip"
+end
+
 file "bin/#{htmlcompressor}" do
   mkdir_p 'bin'
   sh 'wget http://htmlcompressor.googlecode.com/files/htmlcompressor-1.3.1.jar' +
@@ -47,7 +55,8 @@ end
 
 task :deps => ["bin/#{cscompiler}",
                "bin/#{htmlcompressor}",
-               "bin/#{soycompiler}"]
+               "bin/#{soycompiler}",
+               "public/cl"]
 
 rssminer_jss = FileList['public/js/lib/jquery.js',
                        'public/js/lib/jquery-ui-1.8.13.custom.js',
