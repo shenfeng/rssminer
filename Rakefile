@@ -66,7 +66,7 @@ task :clean  do
   rm_rf 'public/js/rssminer/tmpls.js'
   rm_rf 'src/templates'
   sh 'rm public/js/rssminer*min.js || exit 0'
-  sh 'rm public/css/*.css || exit 0'
+  rm_rf "public/css"
 end
 
 desc "Prepare for development"
@@ -127,6 +127,7 @@ end
 scss = FileList['scss/**/*.scss'].exclude('scss/**/_*.scss')
 desc 'Compile scss, compress generated css'
 task :css_compile do
+  mkdir_p "public/css"
   scss.each do |source|
     target = source.sub(/scss$/, 'css').sub(/^scss/, 'public/css')
     sh "sass -t compressed --cache-location /tmp #{source} #{target}"
