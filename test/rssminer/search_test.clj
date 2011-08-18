@@ -1,12 +1,12 @@
 (ns rssminer.search-test
   (:use clojure.test
         [clojure.data.json :only [read-json json-str]]
-        (rssminer [test-common :only [auth-app mock-download-rss
-                                     app-fixture]]
+        (rssminer [test-common :only [auth-app app-fixture]]
                  [http :only [download-favicon download-rss]])))
 
 (defn- prepare [f]
-  (binding [download-rss mock-download-rss
+  (binding [download-rss (fn [& args]
+                           {:body (slurp "test/scottgu-atom.xml")})
             download-favicon (fn [link] "icon")]
     (auth-app {:uri "/api/subscriptions/add"
                :request-method :post
@@ -20,4 +20,4 @@
                         :request-method :get
                         :params {"term" "mvc"}})]
     (is (= 200 (:status resp)))
-    (is (> (-> resp :body read-json count) 1))))
+    (is (= (-> resp :body read-json count) 1))))

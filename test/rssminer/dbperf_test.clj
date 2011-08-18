@@ -7,9 +7,9 @@
             [rssminer.db.crawler :as db]
             [rssminer.time :as time]))
 
-(def lines (str/split (slurp "test/test-rss.xml") #"\n"))
+(def lines (str/split (slurp "test/scottgu-atom.xml") #"\n"))
 (def words (filter (complement str/blank?)
-                   (str/split (slurp "test/test-rss.xml") #"\W")))
+                   (str/split (slurp "test/scottgu-atom.xml") #"\W")))
 
 (defn gen-rss-links []
   (map (fn [line url]

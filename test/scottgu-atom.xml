@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xml-stylesheet type="text/xsl" href="http://weblogs.asp.net/utility/FeedStylesheets/atom.xsl" media="screen"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+	<title type="html">ScottGu's Blog </title>
+	<subtitle type="html">Scottgu's desc</subtitle>
+	<id>http://weblogs.asp.net/scottgu/atom.aspx</id>
+	<link rel="alternate" type="text/html"
+		href="http://weblogs.asp.net/scottgu/default.aspx" />
+	<link rel="self" type="application/atom+xml" href="http://weblogs.asp.net/scottgu/atom.aspx" />
+	<generator uri="http://communityserver.org" version="3.0.20510.895">Community
+		Server</generator>
+	<updated>2011-03-06T20:53:26Z</updated>
+	<entry>
+		<title>June 26th Links: ASP.NET, ASP.NET MVC, .NET and NuGet</title>
+		<link rel="alternate" type="text/html"
+			href="http://weblogs.asp.net/scottgu/archive/2011/06/26/june-26th-links-asp-net-asp-net-mvc-net-and-nuget.aspx" />
+		<id>http://weblogs.asp.net/scottgu/archive/2011/06/26/june-26th-links-asp-net-asp-net-mvc-net-and-nuget.aspx
+		</id>
+		<published>2011-06-27T04:59:17Z</published>
+		<updated>2011-06-27T04:59:17Z</updated>
+		<content type="html">&lt;p&gt;Here is the latest in my &lt;a
+			href="http://weblogs.asp.net/scottgu/archive/2011/03/06/march-6th-links-asp-net-asp-net-mvc-jquery-ef-net.aspx"
+			target="_blank"&gt;link-listing series&lt;/a&gt;.&amp;#160; Also
+			check out my &lt;a
+			href="http://weblogs.asp.net/scottgu/archive/2010/12/31/links-to-my-best-of-2010-posts.aspx"
+			target="_blank"&gt;Best of 2010 Summary&lt;/a&gt; for links to 100+
+			other posts I’ve done in the last year.&lt;/p&gt;
+			&lt;p&gt;&lt;em&gt;[I am also now using Twitter for quick updates and
+			to share links. Follow me at: &lt;a href="http://twitter.com/scottgu"
+			target="_blank"&gt;twitter.com/scottgu&lt;/a&gt;]&lt;/em&gt;&lt;/p&gt;
+			&lt;h2&gt;&lt;u&gt;ASP.NET&lt;/u&gt;&lt;/h2&gt; &lt;ul&gt; &lt;li&gt;
+			&lt;p&gt;&lt;a
+			href="http://www.hanselman.com/blog/IntroducingSystemWebProvidersASPNETUniversalProvidersForSessionMembershipRolesAndUserProfileOnSQLCompactAndSQLAzure.aspx"
+			target="_blank"&gt;Introducing new ASP.NET Universal
+			Providers&lt;/a&gt;: Great post from Scott Hanselman on the new
+			System.Web.Providers we are working on.&amp;#160; This release
+			delivers new ASP.NET Membership, Role Management, Session, Profile
+			providers that work with SQL Server, SQL CE and SQL Azure.&lt;/p&gt;
+			&lt;/li&gt; &lt;/ul&gt; &lt;ul&gt; &lt;li&gt; &lt;p&gt;&lt;a
+			href="http://dotnetslackers.com/articles/aspnet/CSS-Sprites-and-the-ASP-NET-Sprite-and-Image-Optimization-Library.aspx"
+			target="_blank"&gt;CSS Sprites and the ASP.NET Sprite and Image
+			Optimization Library:&lt;/a&gt; Great post from Scott Mitchell that
+			talks about a free library for ASP.NET that you can use to optimize
+			your CSS and images to reduce HTTP requests and speed up your
+			site.&lt;/p&gt; &lt;/li&gt; &lt;/ul&gt; &lt;ul&gt; &lt;li&gt;
+			&lt;p&gt;&lt;a
+			href="http://www.hanselman.com/blog/AnnouncingTheWebStandardsUpdateHTML5SupportForTheVisualStudio2010Editor.aspx"
+			target="_blank"&gt;Better HTML5 Support for the VS 2010
+			Editor&lt;/a&gt;: Another great post from Scott Hanselman on an
+			update several people on my team did that enables richer HTML5
+			editing support within Visual Studio 2010.&lt;/p&gt; &lt;/li&gt;
+			&lt;/ul&gt; &lt;ul&gt; &lt;li&gt; &lt;p&gt;&lt;a
+			href="http://stephenwalther.com/blog/archive/2011/05/23/install-the-ajax-control-toolkit-from-nuget.aspx"
+			target="_blank"&gt;Install the Ajax Control Toolkit from
+			NuGet:&lt;/a&gt; Nice post by Stephen Walther on how you can now use
+			NuGet to install the Ajax Control Toolkit within your
+			applications.&amp;#160; This makes it much easier to reference and
+			use.&lt;/p&gt; &lt;/li&gt; &lt;/ul&gt; &lt;ul&gt; &lt;li&gt;
+			&lt;p&gt;&lt;a
+			href="http://stephenwalther.com/blog/archive/2011/05/09/may-2011-release-of-the-ajax-control-toolkit.aspx"
+			target="_blank"&gt;May 2011 Release of the Ajax Control
+			Toolkit&lt;/a&gt;: Another great post from Stephen Walther that talks
+			about the May release of the Ajax Control Toolkit. It includes a
+			bunch of nice enhancements and fixes.&lt;/p&gt; &lt;/li&gt;
+			&lt;/ul&gt; &lt;ul&gt; &lt;li&gt; &lt;p&gt;&lt;a
+			href="http://blog.paulbetts.org/index.php/2011/06/06/new-release-sassandcoffee-0-9-now-not-glacially-slow/"
+			target="_blank"&gt;SassAndCoffee 0.9 Released&lt;/a&gt;: Paul Betts
+			blogs about the latest release of his SassAndCoffee extension
+			(available via NuGet). It enables you to easily use Sass and
+			Coffeescript within your ASP.NET applications (both MVC and
+			Webforms).&lt;/p&gt; &lt;/li&gt; &lt;/ul&gt;
+			&lt;h2&gt;&lt;u&gt;ASP.NET MVC&lt;/u&gt;&lt;/h2&gt; &lt;ul&gt;
+			&lt;li&gt; &lt;p&gt;&lt;a
+			href="http://code.google.com/p/mvc-mini-profiler/"
+			target="_blank"&gt;ASP.NET MVC Mini-Profiler&lt;/a&gt;: The folks at
+			StackOverflow.com (a great site built with ASP.NET MVC) have released
+			a nice (free) profiler they’ve built that enables you to easily
+			profile your ASP.NET MVC 3 sites and tune them for
+			performance.&amp;#160; &lt;/p&gt; &lt;/li&gt; &lt;/ul&gt; &lt;ul&gt;
+			&lt;li&gt; &lt;p&gt;&lt;a
+			href="http://www.hanselman.com/blog/GlobalizationInternationalizationAndLocalizationInASPNETMVC3JavaScriptAndJQueryPart1.aspx"
+			target="_blank"&gt;Globalization, Internationalization and
+			Localization in ASP.NET MVC 3:&lt;/a&gt; Great post from Scott
+			Hanselman on how to enable internationalization, globalization and
+			localization support within your ASP.NET MVC 3 and jQuery
+			solutions.&lt;/p&gt; &lt;/li&gt; &lt;/ul&gt; &lt;ul&gt; &lt;li&gt;
+			&lt;p&gt;&lt;a
+			href="http://blog.davidebbo.com/2011/06/precompile-your-mvc-views-using.html"
+			target="_blank"&gt;Precompile your MVC Razor Views&lt;/a&gt;: Great
+			post from David Ebbo that discusses a new Razor Generator tool that
+			enables you to pre-compile your razor view templates as assemblies –
+			which enables a bunch of cool scenarios.&lt;/p&gt; &lt;/li&gt;
+			&lt;/ul&gt; &lt;ul&gt; &lt;li&gt; &lt;p&gt;&lt;a
+			href="http://blog.davidebbo.com/2011/06/unit-test-your-mvc-views-using-razor.html"
+			target="_blank"&gt;Unit Testing Razor Views&lt;/a&gt;: Nice post from
+			David Ebbo that shows how to use his new Razor Generator to enable
+			unit testing of razor view templates with ASP.NET MVC.&lt;/p&gt;
+			&lt;/li&gt; &lt;/ul&gt; &lt;ul&gt; &lt;li&gt; &lt;p&gt;&lt;a
+			href="http://haacked.com/archive/2011/05/25/bin-deploying-asp-net-mvc-3.aspx"
+			target="_blank"&gt;Bin Deploying ASP.NET MVC 3&lt;/a&gt;: Nice post
+			by Phil Haack that covers a cool feature added to VS 2010 SP1 that
+			makes it really easy to \bin deploy ASP.NET MVC and Razor within your
+			application. This enables you to easily deploy the app to servers
+			that don’t have ASP.NET MVC 3 installed.&lt;/p&gt; &lt;/li&gt;
+			&lt;/ul&gt; &lt;h2&gt;&lt;u&gt;.NET&lt;/u&gt;&lt;/h2&gt; &lt;ul&gt;
+			&lt;li&gt; &lt;p&gt;&lt;a
+			href="http://weblogs.asp.net/manavi/archive/2011/04/24/associations-in-ef-4-1-code-first-part-4-table-splitting.aspx"
+			target="_blank"&gt;Table Splitting with EF 4.1 Code First&lt;/a&gt;:
+			Great post from Morteza Manavi that discusses how to split up a
+			single database table across multiple EF entity classes.&amp;#160;
+			This shows off some of the power behind EF 4.1 and is very useful
+			when working with legacy database schemas.&lt;/p&gt; &lt;/li&gt;
+			&lt;/ul&gt; &lt;ul&gt; &lt;li&gt; &lt;p&gt;&lt;a
+			href="http://geekswithblogs.net/BlackRabbitCoder/archive/2011/06/16/c.net-fundamentals-choosing-the-right-collection-class.aspx"
+			target="_blank"&gt;Choosing the Right Collection Class&lt;/a&gt;:
+			Nice post from James Michael Hare that talks about the different
+			collection class options available within .NET.&amp;#160; A nice
+			overview for people who haven’t looked at all of the support now
+			built into the framework.&lt;/p&gt; &lt;/li&gt; &lt;/ul&gt;
+			&lt;ul&gt; &lt;li&gt; &lt;p&gt;&lt;a
+			href="http://geekswithblogs.net/BlackRabbitCoder/archive/2011/06/02/c.net-little-wonders-empty-defaultifempty-and-count.aspx"
+			target="_blank"&gt;Little Wonders: Empty(), DefaultIfEmpty() and
+			Count() helper methods&lt;/a&gt;: Another in James Michael Hare’s
+			excellent series on .NET/C# “Little Wonders”.&amp;#160; This post
+			covers some of the great helper methods now built-into .NET that make
+			coding even easier.&lt;/p&gt; &lt;/li&gt; &lt;/ul&gt;
+			&lt;h2&gt;&lt;u&gt;NuGet&lt;/u&gt;&lt;/h2&gt; &lt;ul&gt; &lt;li&gt;
+			&lt;p&gt;&lt;a
+			href="http://docs.nuget.org/docs/release-notes/nuget-1.4"
+			target="_blank"&gt;NuGet 1.4 Released&lt;/a&gt;: Learn all about the
+			latest release of NuGet – which includes a bunch of cool new
+			capabilities.&amp;#160; It takes only seconds to update to it – go
+			for it!&lt;/p&gt; &lt;/li&gt; &lt;/ul&gt; &lt;ul&gt; &lt;li&gt;
+			&lt;p&gt;&lt;a
+			href="http://channel9.msdn.com/Events/DevDays/DevDays-2011-Netherlands/Devdays027"
+			target="_blank"&gt;NuGet in Depth:&lt;/a&gt; Nice presentation from
+			Scott Hanselman all about NuGet and some of the investments we are
+			making to enable a better open source ecosystem within .NET.
+			&lt;/p&gt; &lt;/li&gt; &lt;/ul&gt; &lt;ul&gt; &lt;li&gt;
+			&lt;p&gt;&lt;a
+			href="http://www.hanselman.com/blog/NuGetForTheEnterpriseNuGetInAContinuousIntegrationAutomatedBuildSystem.aspx"
+			target="_blank"&gt;NuGet for the Enterprise – NuGet in a Continuous
+			Integration Automated Build System&lt;/a&gt;: Great post from Scott
+			Hanselman on how to integrate NuGet within enterprise build
+			environments and enable it with CI solutions.&lt;/p&gt; &lt;/li&gt;
+			&lt;/ul&gt; &lt;p&gt;Hope this helps,&lt;/p&gt;
+			&lt;p&gt;Scott&lt;/p&gt;&lt;img
+			src="http://weblogs.asp.net/aggbug.aspx?PostID=7842730" width="1"
+			height="1"&gt;</content>
+		<author>
+			<name>ScottGu</name>
+			<uri>http://weblogs.asp.net/members/ScottGu.aspx</uri>
+		</author>
+		<category term="ASP.NET"
+			scheme="http://weblogs.asp.net/scottgu/archive/tags/ASP.NET/default.aspx" />
+		<category term=".NET"
+			scheme="http://weblogs.asp.net/scottgu/archive/tags/.NET/default.aspx" />
+		<category term="Link Listing"
+			scheme="http://weblogs.asp.net/scottgu/archive/tags/Link+Listing/default.aspx" />
+		<category term="MVC"
+			scheme="http://weblogs.asp.net/scottgu/archive/tags/MVC/default.aspx" />
+	</entry>
+</feed>

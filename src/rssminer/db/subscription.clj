@@ -34,7 +34,7 @@
 (defn fetch-feeds
   ([subscription-id limit offset]
      (h2-query ["SELECT
-                        id, author, title, summary, alternate, published_ts
+                        id, author, title, summary, link, published_ts
                    FROM feeds
                    WHERE rss_link_id = ? LIMIT ? OFFSET ?"
                 subscription-id limit offset])))
@@ -86,9 +86,10 @@ WHERE us.user_id = ?" user-id user-id]))
                    :rss_xml_id (:id xml)
                    :author (:author feed)
                    :title (:title feed)
-                   :summary (-> feed :description :value)
-                   :alternate (:link feed)
-                   :published_ts (:publishedDate feed)})
+                   :guid (:guid feed)
+                   :summary (:summary feed)
+                   :link (:link feed)
+                   :published_ts (:published_ts feed)})
           categories (:categories feed)]
       (index-feeds (list saved-feed))
       (doseq [c categories]
@@ -96,7 +97,7 @@ WHERE us.user_id = ?" user-id user-id]))
                 {:user_id user-id
                  :feed_id (:id saved-feed)
                  :type "tag"
-                 :text (:name c)})))))
+                 :text c})))))
 
 (defn update-user-subscription [user-id rss-link-id data]
   (with-h2

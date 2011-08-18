@@ -67,10 +67,5 @@
        (finally
         (alter-var-root ~var (fn [n#] @old#))))))
 
-(def test-rss-str (slurp "test/test-rss.xml"))
-
-(defn mock-download-rss [& args]
-  {:body test-rss-str})
-
 (def test-app
   (app))

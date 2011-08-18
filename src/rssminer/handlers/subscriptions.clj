@@ -1,7 +1,7 @@
 (ns rssminer.handlers.subscriptions
   (:use (rssminer [middleware :only [*user* *json-body*]]
                   [http :only [download-favicon download-rss]]
-                  [parser :only [parse]]
+                  [parser :only [parse-feed]]
                   [util :only [to-int if-lets]]
                   [config :only [ungroup]]))
   (:require [rssminer.db.subscription :as db])
@@ -32,7 +32,7 @@
 
 (defn- create-subscripton [link user-id & {:keys [group-name title]}]
   (if-lets [rss (download-rss link)
-            feeds (parse (:body rss))]
+            feeds (parse-feed (:body rss))]
            (let [favicon (download-favicon link)
                  xml (db/insert :rss_xmls
                                 {:content (StringReader. (:body rss))

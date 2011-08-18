@@ -11,6 +11,7 @@
 /deploy/exclude.txt
 /lib/dev
 /project.clj
+/public/cl
 /public/js/rssminer
 /public/js/lib
 /public/js/*.html

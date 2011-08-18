@@ -87,7 +87,8 @@ CREATE TABLE feeds
   author VARCHAR,
   title VARCHAR,
   summary CLOB,
-  alternate VARCHAR,
+  guid VARCHAR,
+  link VARCHAR,
   updated_ts TIMESTAMP,
   published_ts TIMESTAMP,
   rss_link_id INTEGER

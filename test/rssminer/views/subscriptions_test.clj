@@ -2,12 +2,13 @@
   (:use clojure.test
         [clojure.data.json :only [read-json json-str]]
         [rssminer.db.util :only [h2-query select-sql-params]]
-        (rssminer [test-common :only [auth-app auth-app2 app-fixture
-                                      mock-download-rss]]
+        (rssminer [test-common :only [auth-app auth-app2 app-fixture]]
                   [http :only [download-rss download-favicon]])))
 
 (use-fixtures :each app-fixture
-              (fn [f] (binding [download-rss mock-download-rss
+              (fn [f] (binding [download-rss
+                               (fn [& args]
+                                 {:body (slurp "test/ppurl-rss.xml")})
                                download-favicon (fn [link] "icon")]
                        (f))))
 
@@ -51,7 +52,7 @@
          :comments
          :id
          :title)
-    (is (= 13 (count (:items fetched-feeds))))))
+    (is (= 1 (count (:items fetched-feeds))))))
 
 (deftest test-get-overview
   (let [[subscribe-resp] (prepare)
