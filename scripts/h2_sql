@@ -12,8 +12,7 @@ then
         -script /tmp/rssminer.trace.sql
     tail -n 100 /tmp/rssminer.trace.sql |grep "\-\-"
 else
-    rm -f /tmp/rssminer.h2.db
-    cp /dev/shm/rssminer.h2.db /tmp
     rlwrap java -cp /tmp/h2-${version}.jar org.h2.tools.Shell \
-        -url jdbc:h2:/tmp/rssminer -user sa -password sa
+        -url "jdbc:h2:/dev/shm/rssminer;AUTO_SERVER=TRUE" \
+        -user sa -password sa
 fi

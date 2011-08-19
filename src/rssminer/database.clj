@@ -3,7 +3,8 @@
         [clojure.java.io :only [resource]]
         [clojure.java.jdbc :only [with-connection do-commands]])
   (:require [clojure.string :as str])
-  (:import org.h2.jdbcx.JdbcConnectionPool))
+  (:import org.h2.jdbcx.JdbcConnectionPool
+           org.h2.tools.Server))
 
 (defonce h2-db-factory  (atom {:factory nil
                                :ds nil}))
@@ -13,10 +14,11 @@
     (.dispose ^JdbcConnectionPool ds)
     (reset! h2-db-factory nil)))
 
-(defn use-h2-database! [file & {:keys [trace]}]
+(defn use-h2-database! [db-path & {:keys [trace auto-server]}]
   (close-global-h2-factory!)
-  (let [url (str "jdbc:h2:" file
-                 (when trace ";TRACE_LEVEL_FILE=2;TRACE_MAX_FILE_SIZE=4000"))
+  (let [url (str "jdbc:h2:" db-path
+                 (when trace ";TRACE_LEVEL_FILE=2;TRACE_MAX_FILE_SIZE=4000")
+                 (when auto-server ";AUTO_SERVER=TRUE"))
         ds (JdbcConnectionPool/create url "sa" "sa")
         f (fn [& args]  (.getConnection ds))]
     (reset! h2-db-factory {:factory f
