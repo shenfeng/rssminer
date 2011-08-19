@@ -6,7 +6,7 @@
     <link rel="icon" type="image/png" href="/imgs/16px-feed-icon.png"/>
     <title>RSS Miner - mine rss for you</title>
     <!--[if lt IE 9]>
-        <script src="/js/modernizr.js?{VERSION}"></script> <![endif]-->
+    <script src="/js/modernizr.js?{VERSION}"></script> <![endif]-->
     <link rel="stylesheet" href="/css/style.css?{VERSION}">
   </head>
   <body>
@@ -40,6 +40,18 @@
     <script src="/js/rssminer/views.js" data-profile="dev"></script>
     <script src="/js/rssminer/magic.js" data-profile="dev"></script>
     <script src="/js/rssminer/application.js" data-profile="dev"></script>
-    <script src="/js/rssminer-{VERSION}-min.js" data-profile="prod"></script>
+    <script src="/js/rssminer-{VERSION}-min.js"
+            data-profile="prod"></script>
+    <script type="text/javascript" data-profile="prod">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-16852768-4']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
   </body>
 </html>

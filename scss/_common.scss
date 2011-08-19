@@ -1,12 +1,11 @@
 @import "css3";
 #header {
-    padding: 0.5em;
+    padding: 0.8em 0.5em 0em 0.5em;
     text-indent: 1em;
-    font-size: 20px;
+    font-size: 18px;
     text-shadow: 1px 1px 0px #E0E0E0;
     h1 { margin: 4px 0 }
     a { color: #303030; text-decoration: none;}
-    .sub { font-style: italic;  font-size: 14px;  }
 }
 
 /* Hide for both screenreaders and browsers:
@@ -29,11 +28,10 @@
 .rfloat { float: right; }
 
 body {
-    font-family: sans-serif;
+    font: 400 16px/1.5 "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue",sans-serif;
     color: #222;
     margin: 0;
     padding: 0;
-    line-height: 1.231;
 }
 
 #notification {
