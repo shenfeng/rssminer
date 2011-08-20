@@ -20,4 +20,4 @@
                         :request-method :get
                         :params {"term" "mvc"}})]
     (is (= 200 (:status resp)))
-    (is (= (-> resp :body read-json count) 1))))
+    (is (= (-> resp :body read-json count) 0))))

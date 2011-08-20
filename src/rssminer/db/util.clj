@@ -37,9 +37,12 @@
                          x))
                 rs))))
 
+(defn h2-insert [table record]
+  (id-k (with-h2
+          (insert-record table record))))
+
 (defn h2-insert-and-return [table record]
-  (let [id (id-k (with-h2
-                   (insert-record table record)))]
+  (let [id (h2-insert table record)]
     (first (h2-query (select-sql-params table {:id id})))))
 
 (defn parse-timestamp [str]

@@ -3,30 +3,32 @@
                   [http :only [download-favicon download-rss]]
                   [parser :only [parse-feed]]
                   [util :only [to-int if-lets]]
-                  [config :only [ungroup]]))
-  (:require [rssminer.db.subscription :as db])
+                  [config :only [ungroup]])
+        [rssminer.db.util :only [h2-insert h2-insert-and-return]])
+  (:require [rssminer.db.subscription :as db]
+            [rssminer.db.feed :as fdb])
   (:import java.io.StringReader))
 
-(defn- add-subscription-ret [us subscription count]
-  {:group_name (:group_name us)
+(defn- add-subscription-ret [subscription rss count]
+  {:group_name (:group_name subscription)
    :id (:id subscription)
    :total_count count
    :unread_count count
-   :title (:title us)
-   :favicon (:favicon subscription)})
+   :title (:title subscription)
+   :favicon (:favicon rss)})
 
 (defn- add-exists-subscription [subscription user-id
                                 & {:keys [group-name title]}]
-  (if-let [us (db/fetch-user-subscription
+  (if-let [us (db/fetch-subscription
                {:user_id user-id
                 :rss_link_id (:id subscription)})]
     {:status 409                        ;readd is not allowed
      :message "Already subscribed"}
-    (let [us (db/insert :user_subscriptions
-                        {:user_id user-id
-                         :group_name (or group-name ungroup)
-                         :title (or title (:title subscription))
-                         :rss_link_id (:id subscription)})
+    (let [us (h2-insert-and-return :user_subscription
+                                   {:user_id user-id
+                                    :group_name (or group-name ungroup)
+                                    :title (or title (:title subscription))
+                                    :rss_link_id (:id subscription)})
           count (db/fetch-feeds-count-by-id (:id subscription))]
       (add-subscription-ret us subscription count))))
 
@@ -34,31 +36,29 @@
   (if-lets [rss (download-rss link)
             feeds (parse-feed (:body rss))]
            (let [favicon (download-favicon link)
-                 xml (db/insert :rss_xmls
-                                {:content (StringReader. (:body rss))
-                                 :length (count (:body rss))})
+                 _ (fdb/insert-rss-xml (:body rss))
                  ;; 1. save feedsource
-                 subscription (db/insert :rss_links
-                                         {:url link
-                                          :user_id user-id
-                                          :favicon favicon
-                                          :description (:description feeds)
-                                          :title (:title feeds)})
+                 rss (h2-insert-and-return :rss_links
+                                          {:url link
+                                           :user_id user-id
+                                           :favicon favicon
+                                           :description (:description feeds)
+                                           :title (:title feeds)})
                  ;; 2. assoc feedsource with user
-                 us (db/insert :user_subscriptions
-                               {:user_id user-id
-                                :group_name (or group-name ungroup)
-                                :title (or title (:title subscription))
-                                :rss_link_id (:id subscription)})]
-             (db/save-feeds xml subscription feeds user-id) ;; 3. save feeds
+                 us (h2-insert-and-return :user_subscription
+                                          {:user_id user-id
+                                           :group_name (or group-name ungroup)
+                                           :title (or title (:title rss))
+                                           :rss_link_id (:id rss)})]
+             (fdb/save-feeds rss feeds user-id) ;; 3. save feeds
              ;; 5. return data
-             (add-subscription-ret us subscription (count feeds)))
+             (add-subscription-ret us rss (-> feeds :entries count)))
            ;; fetch feeds error
            {:status 460
             :message "Bad feedlink"}))
 
 (defn add-subscription* [link user-id & options]
-  (if-let [sub (db/fetch-subscription {:url link})]
+  (if-let [sub (db/fetch-rss-link {:url link})]
     ;; we have the subscription
     (apply add-exists-subscription sub user-id options)
     ;; first time subscription
@@ -71,11 +71,11 @@
 
 (defn get-subscription [req]
   (let [{:keys [id limit offset] :or {limit 20 offset 0}} (:params req)
-        id (to-int id)
-        limit (to-int limit)
-        offset (to-int offset)
-        user-id (:id *user*)]
-    (db/fetch-feeds-by-subscription-id user-id id limit offset)))
+        rss-id (:rss_link_id (db/fetch-subscription {:id (to-int id)}))]
+    (when rss-id (fdb/fetch-feeds-for-user (:id *user*)
+                                           rss-id
+                                           (to-int limit)
+                                           (to-int offset)))))
 
 (defn get-overview* []
   (let [user-id (:id *user*)
@@ -95,11 +95,9 @@
   (get-overview*))
 
 (defn customize-subscription [req]
-  (let [user-id (:id *user*)
-        subscription-id (-> req :params :id to-int)]
-    (db/update-user-subscription user-id subscription-id *json-body*)))
+  (let [user-id (:id *user*)]
+    (db/update-subscription user-id (-> req :params :id to-int) *json-body*)))
 
 (defn unsubscribe [req]
-  (let [user-id (:id *user*)
-        subscription-id (-> req :params :id to-int)]
-    (db/delete-user-subscription user-id subscription-id)))
+  (let [user-id (:id *user*)]
+    (db/delete-subscription user-id (-> req :params :id to-int))))

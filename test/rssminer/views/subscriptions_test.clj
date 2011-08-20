@@ -40,19 +40,17 @@
 
 (deftest test-get-subscription
   (let [[_ subscription] (prepare)
-        resp (auth-app {:uri (str "/api/subscriptions/"
-                                  (:id subscription))
+        resp (auth-app {:uri (str "/api/subscriptions/" (:id subscription))
                         :request-method :get
-                        :params {"limit" "13"
-                                 "offset" "0"}})
+                        :params {"limit" "13" "offset" "0"}})
         fetched-feeds (-> resp :body read-json)]
     (is (= 200 (:status resp)))
-    (are [key] (-> fetched-feeds :items first key)
-         :categories
+    (are [key] (-> fetched-feeds first key)
+         :tags
          :comments
          :id
          :title)
-    (is (= 1 (count (:items fetched-feeds))))))
+    (is (= 1 (count fetched-feeds)))))
 
 (deftest test-get-overview
   (let [[subscribe-resp] (prepare)

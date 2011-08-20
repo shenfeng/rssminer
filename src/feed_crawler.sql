@@ -62,13 +62,7 @@ create table rss_xmls (
     ON UPDATE CASCADE ON DELETE SET NULL
 )
 ----
-create index idx_cl_domain on crawler_links(domain)
-----
-create index idx_cl_next_check_ts on crawler_links(next_check_ts)
-----
-create index idx_rl_next_check_ts on rss_links(next_check_ts)
-----
-CREATE TABLE user_subscriptions
+CREATE TABLE user_subscription
 (
   id INTEGER PRIMARY KEY auto_increment,
   user_id INTEGER NOT NULL
@@ -76,7 +70,7 @@ CREATE TABLE user_subscriptions
   rss_link_id INTEGER NOT NULL
        REFERENCES rss_links  ON UPDATE CASCADE ON DELETE CASCADE,
   title VARCHAR, --user defined title, default is subscription's title
-  group_name VARCHAR default 'ungrouped',
+  group_name VARCHAR,
   added_ts TIMESTAMP DEFAULT now(),
   UNIQUE (user_id, rss_link_id)
 );
@@ -85,16 +79,14 @@ CREATE TABLE feeds
 (
   id INTEGER PRIMARY KEY auto_increment,
   author VARCHAR,
+  link VARCHAR,
   title VARCHAR,
   summary CLOB,
-  guid VARCHAR,
-  link VARCHAR,
+  guid VARCHAR UNIQUE,
   updated_ts TIMESTAMP,
   published_ts TIMESTAMP,
   rss_link_id INTEGER
-             REFERENCES rss_links ON UPDATE CASCADE ON DELETE CASCADE,
-  rss_xml_id INTEGER
-             REFERENCES rss_xmls ON UPDATE CASCADE ON DELETE CASCADE,
+             REFERENCES rss_links ON UPDATE CASCADE ON DELETE CASCADE
 );
 ----
 CREATE TABLE comments
@@ -108,18 +100,25 @@ CREATE TABLE comments
   added_ts TIMESTAMP  DEFAULT now(),
 );
 ---
-CREATE TABLE feedcategory
+CREATE TABLE feed_tag
 (
     id INTEGER PRIMARY KEY auto_increment,
-    type VARCHAR, -- possible val: tag, rssminer(system type),
-    text VARCHAR, -- rssminer-> stared, read
-    user_id INTEGER NOT NULL
+    tag VARCHAR,
+    user_id INTEGER             --  by feed author is null
             REFERENCES users ON UPDATE CASCADE ON DELETE CASCADE,
     feed_id INTEGER NOT NULL
             REFERENCES feeds ON UPDATE CASCADE ON DELETE CASCADE,
-    added_ts TIMESTAMP DEFAULT now(),
-    UNIQUE(type, text, user_id, feed_id)
+    UNIQUE(tag, user_id, feed_id)
 );
+
+----
+create index idx_cl_domain on crawler_links(domain)
+----
+create index idx_cl_next_check_ts on crawler_links(next_check_ts)
+----
+create index idx_rl_next_check_ts on rss_links(next_check_ts)
+----
+create index idx_ft_tag on feed_tag(tag)
 ----
 create table multi_rss_domains (
   id INTEGER PRIMARY KEY auto_increment,
