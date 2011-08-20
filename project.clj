@@ -17,7 +17,6 @@
                  [me.shenfeng/ring-netty-adapter "0.0.1-SNAPSHOT"]]
   :dev-resources-path "/usr/lib/jvm/java-6-openjdk/lib/tools.jar:/usr/lib/jvm/java-6-openjdk/src.zip"
   :exclusions [javax.activation/activation]
-  :java-source-path "src/java"
   :repositories {"java.net" "http://download.java.net/maven/2/"}
   :warn-on-reflection true
   :aot [rssminer.main]

@@ -16,8 +16,6 @@ TARGET_DIR="/var/www/rssminer"
 function remote_run {
     ssh "${SSH_TARGET}" "$1"
 }
-rm -rf classes
-lein javac
 # Create the directory if this is the first deployment.
 remote_run "sudo mkdir -p ${TARGET_DIR} && sudo chown deploy ${TARGET_DIR}"
 

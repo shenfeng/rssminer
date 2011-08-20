@@ -4,6 +4,7 @@
   (:require [clojure.string :as str])
   (:import java.util.Date
            java.sql.Timestamp
+           java.util.concurrent.ThreadFactory
            [java.net URI]
            [java.io StringWriter PrintWriter]
            [java.security NoSuchAlgorithmException MessageDigest]))
@@ -85,3 +86,10 @@
      (println (str "TRACE" (when name (str " " name)) ":"))
      (pprint value)
      value))
+
+(defn threadfactory [prefix]
+  (let [id (atom 0)]
+    (reify ThreadFactory
+      (newThread [this runnable]
+        (doto (Thread. runnable (str prefix "-" (swap! id inc)))
+          (.setDaemon true))))))

@@ -1,13 +1,12 @@
 (ns rssminer.crawler
-  (:use [rssminer.util :only [md5-sum assoc-if tracep]]
+  (:use [rssminer.util :only [md5-sum assoc-if threadfactory]]
         [rssminer.db.util :only [parse-timestamp]]
         [rssminer.time :only [now-seconds]]
         [clojure.tools.logging :only [info error trace]])
   (:require [rssminer.db.crawler :as db]
             [rssminer.http :as http]
             [rssminer.config :as conf])
-  (:import crawler.CrawlerThreadFactory
-           [java.util Queue LinkedList Date]
+  (:import [java.util Queue LinkedList Date]
            [java.util.concurrent Executors ExecutorService TimeUnit ]))
 
 (def running? (atom false))
@@ -56,7 +55,7 @@
 (defn start-crawler [& {:keys [threads]}]
   (let [threads (or threads conf/crawler-threads-count)
         ^ExecutorService exec (Executors/newFixedThreadPool
-                               threads (CrawlerThreadFactory.))
+                               threads (threadfactory "crawler"))
         ^Runnable task #(loop [link (get-next-link)]
                           (trace "link:" (:url link))
                           (when (and link @running?)
