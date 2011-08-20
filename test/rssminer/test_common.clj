@@ -45,7 +45,7 @@
   (close-global-index-writer!))
 
 (defn h2-fixture [test-fn]
-  (let [ file (str "mem:crawler_test")]
+  (let [file (str "mem:rssminer_test")]
     (try
       (use-h2-database! file)
       (import-h2-schema!)

@@ -1,5 +1,6 @@
 (ns rssminer.config
-  (:use [rssminer.db.config :as db])
+  (:use [rssminer.db.config :as db]
+        [rssminer.time :only [now-seconds]])
   (:import [java.net Proxy Proxy$Type InetSocketAddress]))
 
 (defonce env-profile (atom :dev))
@@ -18,6 +19,15 @@
 (def ungroup "ungrouped")
 
 (def crawler-threads-count 10)
+
+(def fetcher-threads-count 10)
+
+(defn next-check [last-interval success?]
+  (let [interval (if success?
+                   (max 5400 (int (/ last-interval 1.2)))
+                   (min (int (* last-interval 1.2)) (* 3600 24 20)))]
+    {:check_interval interval
+     :next_check_ts (+ (now-seconds) interval)}))
 
 (def fetch-size 150)
 

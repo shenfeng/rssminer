@@ -22,11 +22,9 @@ create table crawler_links (
   added_ts TIMESTAMP default now(),
   domain VARCHAR,               --assume one domain, one rss
   next_check_ts INTEGER default 10,
-  last_status INTEGER,
   last_modified VARCHAR,
   last_md5 VARCHAR,
   check_interval INTEGER default 60 * 60 * 24 * 10, -- in seconds, ten days
-  server VARCHAR,
   referer_id INTEGER REFERENCES crawler_links
       ON UPDATE CASCADE ON DELETE SET NULL,
 )
@@ -44,7 +42,6 @@ create table rss_links (
   last_modified VARCHAR,      -- from http response header
   last_md5 VARCHAR,           -- used to check if changed
   favicon CLOB,               -- base64 encoded
-  server VARCHAR,             -- from http response header
   subscription_count INTEGER default 0, -- how much user subscribed
   user_id INTEGER REFERENCES users      -- who first add it
      ON UPDATE CASCADE ON DELETE SET NULL,

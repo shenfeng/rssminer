@@ -7,15 +7,6 @@
                                   insert-record update-values]])
   (:import java.io.StringReader))
 
-(defn fetch-rss-links
-  "Returns nil when no more"
-  ([] (fetch-rss-links 5))
-  ([limit] (h2-query
-            ["SELECT id, url, last_md5, check_interval, last_modified
-              FROM crawler_links
-              WHERE next_check_ts < ?
-              ORDER BY next_check_ts LIMIT ?" (now-seconds) limit])))
-
 (defn fetch-tags [user-id feed-id]
   (map :tag (h2-query ["SELECT tag FROM feed_tag
               WHERE user_id = ? AND
@@ -32,13 +23,13 @@
                                         :user_id user-id
                                         :tag t}))))
 
-(defn save-feeds [subscription feeds user-id]
+(defn save-feeds [feeds rss-id user-id]
   (doseq [feed (:entries feeds)]
     (let [feed-id
           (id-k (with-h2
                   (insert-record :feeds
                                  (dissoc (assoc feed
-                                           :rss_link_id (:id subscription))
+                                           :rss_link_id rss-id)
                                          :categories))))]
       (insert-tags feed-id user-id (:categories feed)))))
 

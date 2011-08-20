@@ -2,7 +2,7 @@
   (:use (rssminer [middleware :only [*user* *json-body*]]
                   [http :only [download-favicon download-rss]]
                   [parser :only [parse-feed]]
-                  [util :only [to-int if-lets]]
+                  [util :only [to-int if-lets md5-sum]]
                   [config :only [ungroup]])
         [rssminer.db.util :only [h2-insert h2-insert-and-return]])
   (:require [rssminer.db.subscription :as db]
@@ -33,24 +33,24 @@
       (add-subscription-ret us subscription count))))
 
 (defn- create-subscripton [link user-id & {:keys [group-name title]}]
-  (if-lets [rss (download-rss link)
-            feeds (parse-feed (:body rss))]
-           (let [favicon (download-favicon link)
-                 _ (fdb/insert-rss-xml (:body rss))
-                 ;; 1. save feedsource
-                 rss (h2-insert-and-return :rss_links
-                                          {:url link
-                                           :user_id user-id
-                                           :favicon favicon
-                                           :description (:description feeds)
-                                           :title (:title feeds)})
-                 ;; 2. assoc feedsource with user
+  (if-lets [{:keys [status headers body]} (download-rss link)
+            feeds (parse-feed body)]
+           (let [rss (h2-insert-and-return
+                      :rss_links
+                      {:url link
+                       :last_modified (:last_modified headers)
+                       :last_md5 (md5-sum body)
+                       :user_id user-id
+                       :favicon (download-favicon link)
+                       :description (:description feeds)
+                       :title (:title feeds)})
                  us (h2-insert-and-return :user_subscription
                                           {:user_id user-id
                                            :group_name (or group-name ungroup)
                                            :title (or title (:title rss))
                                            :rss_link_id (:id rss)})]
-             (fdb/save-feeds rss feeds user-id) ;; 3. save feeds
+             (fdb/insert-rss-xml body)
+             (fdb/save-feeds feeds (:id rss) user-id) ;; 3. save feeds
              ;; 5. return data
              (add-subscription-ret us rss (-> feeds :entries count)))
            ;; fetch feeds error

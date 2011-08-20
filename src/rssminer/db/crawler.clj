@@ -54,3 +54,12 @@
 (defn update-rss-link [id data]
   (with-connection @h2-db-factory
     (update-values :rss_links ["id = ?" id] data)))
+
+(defn fetch-rss-links
+  "Returns nil when no more"
+  ([] (fetch-rss-links 5))
+  ([limit] (h2-query
+            ["SELECT id, url, last_md5, check_interval, last_modified
+              FROM rss_links
+              WHERE next_check_ts < ?
+              ORDER BY next_check_ts LIMIT ?" (now-seconds) limit])))

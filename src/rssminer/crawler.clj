@@ -30,14 +30,12 @@
         html (when body (try (slurp body)
                              (catch Exception e
                                (error e url))))
-        md5 (when html (md5-sum html))]
-    (db/update-crawler-link
-     id (assoc-if {}
-                  :next_check_ts (+ (now-seconds) check_interval)
-                  :last_md5 md5
-                  :last_status status
-                  :last_modified (:last_modified headers)
-                  :server (:server headers)))
+        md5 (when html (md5-sum html))
+        next-check (conf/next-check check_interval md5)]
+    (trace status url)
+    (db/update-crawler-link id (assoc-if next-check
+                                :last_md5 md5
+                                :last_modified (:last_modified headers)))
     (when (and html (not= md5 last_md5))
       (extract-and-save-links referer html))))
 
@@ -57,11 +55,10 @@
         ^ExecutorService exec (Executors/newFixedThreadPool
                                threads (threadfactory "crawler"))
         ^Runnable task #(loop [link (get-next-link)]
-                          (trace "link:" (:url link))
                           (when (and link @running?)
                             (try (crawl-link link)
                                  (catch Exception e
-                                   (error e "start-crawler" (:url link))))
+                                   (error e "link" (:url link))))
                             (recur (get-next-link))))
         shutdown #(do (.shutdownNow exec) (reset! running? false))
         wait #(.awaitTermination exec Integer/MAX_VALUE TimeUnit/MINUTES)]

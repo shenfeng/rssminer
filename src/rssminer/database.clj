@@ -26,7 +26,7 @@
 
 (defn import-h2-schema! []
   (let [stats (filter (complement str/blank?)
-                      (str/split (slurp (resource "feed_crawler.sql"))
+                      (str/split (slurp (resource "rssminer.sql"))
                                  #"\s*----*\s*"))]
     (with-connection @h2-db-factory
       (apply do-commands (cons "DROP ALL OBJECTS" stats)))))
