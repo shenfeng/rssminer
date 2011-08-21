@@ -21,11 +21,13 @@
       <div id="tables">
       </div>
     </div>
-    <script src="/js/lib/jquery.js"></script>
-    <script src="/js/lib/underscore.js"></script>
-    <script src="/js/lib/backbone.js" ></script>
-    <script src="/js/rssminer/util.js"></script>
-    <script src="/js/rssminer/tmpls.js"></script>
-    <script src="/js/rssminer/dashboard.js"></script>
+    <script src="/js/lib/jquery.js" data-profile="dev"></script>
+    <script src="/js/lib/underscore.js" data-profile="dev"></script>
+    <script src="/js/lib/backbone.js" data-profile="dev" ></script>
+    <script src="/js/rssminer/util.js" data-profile="dev"></script>
+    <script src="/js/rssminer/tmpls.js" data-profile="dev"></script>
+    <script src="/js/rssminer/dashboard.js" data-profile="dev"></script>
+    <script src="/js/dashboard-{VERSION}-min.js"
+            data-profile="prod"></script>
   </body>
 </html>

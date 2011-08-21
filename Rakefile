@@ -1,5 +1,10 @@
 task :default => :test
 
+version = Time.now.strftime("%Y%m%d%H%M") # timestamp
+soycompiler = "SoyToJsSrcCompiler.jar"
+jscompiler = "closure-compiler.jar"
+htmlcompressor = "htmlcompressor.jar"
+
 def get_file_as_string(filename)
   data = ''
   f = File.open(filename, "r")
@@ -13,38 +18,49 @@ def get_dir(path)
   File.split(path)[0]
 end
 
-version = Time.now.strftime("%Y%m%d%H%M") # timestamp
-soycompiler = "SoyToJsSrcCompiler.jar"
-cscompiler = "closure-compiler.jar"
-htmlcompressor = "htmlcompressor.jar"
+def gen_jstempls(folder)
+  print "Generating #{folder}-tmpls.js, please wait....\n"
+  html_tmpls = FileList["src/templates/tmpls/#{folder}/**/*.*"]
+  data = "(function(){var tmpls = {};"
+  html_tmpls.each do |f|
+    text = get_file_as_string(f).gsub(/\s+/," ")
+    name = File.basename(f,".tpl")
+    data += "tmpls." + name + " = '" + text + "';\n"
+  end
+  data += "window.Rssminer = window.$.extend(window.Rssminer, {tmpls: tmpls})})();\n"
+  File.open("public/js/rssminer/#{folder}-tmpls.js", 'w') {|f| f.write(data)}
+end
 
-file "bin/#{cscompiler}" do
+def minify_js(name, jss)
+  target = "public/js/#{name}-#{version}-min.js"
+
+  source_arg = ''
+  jss.each do |js|
+    source_arg += " --js #{js} "
+  end
+
+  sh "java -jar bin/#{jscompiler} --warning_level QUIET" +
+    " --js_output_file '#{target}' #{source_arg}"
+end
+
+file "bin/#{jscompiler}" do
   mkdir_p 'bin'
-  rm_rf '/tmp/closure-compiler.zip'
   sh 'wget http://closure-compiler.googlecode.com/files/compiler-latest.zip' +
     ' -O /tmp/closure-compiler.zip'
   rm_rf '/tmp/compiler.jar'
   sh 'unzip /tmp/closure-compiler.zip compiler.jar -d /tmp'
   rm_rf '/tmp/closure-compiler.zip'
-  mv '/tmp/compiler.jar', "bin/#{cscompiler}"
+  mv '/tmp/compiler.jar', "bin/#{jscompiler}"
 end
 
 file "bin/#{soycompiler}" do
   file = 'closure-templates-for-javascript-latest.zip'
   mkdir_p 'bin'
-  rm_rf "/tmp/#{file}"
-  rm_rf "/tmp/#{soycompiler}"
   sh "wget http://closure-templates.googlecode.com/files/#{file} -O /tmp/#{file}"
   sh "unzip /tmp/#{file} #{soycompiler} -d /tmp"
+  rm_rf "/tmp/#{soycompiler}"
+  rm_rf "/tmp/#{file}"
   mv "/tmp/#{soycompiler}", "bin/#{soycompiler}"
-end
-
-file "public/cl" do
-  mkdir_p "public/cl"
-  sh "wget http://closure-library.googlecode.com/files/closure-library-20110323-r790.zip" +
-    " -O /tmp/cl.zip"
-  sh "unzip -d public/cl /tmp/cl.zip"
-  rm_rf "/tmp/cl.zip"
 end
 
 file "bin/#{htmlcompressor}" do
@@ -53,28 +69,36 @@ file "bin/#{htmlcompressor}" do
     " -O bin/#{htmlcompressor}"
 end
 
-task :deps => ["bin/#{cscompiler}",
+task :deps => ["bin/#{jscompiler}",
                "bin/#{htmlcompressor}",
-               "bin/#{soycompiler}",
-               "public/cl"]
+               "bin/#{soycompiler}"]
 
 rssminer_jss = FileList['public/js/lib/jquery.js',
-                       'public/js/lib/jquery-ui-1.8.13.custom.js',
-                       'public/js/lib/underscore.js',
-                       'public/js/lib/backbone.js',
-                       'public/js/lib/mustache.js',
-                       'public/js/rssminer/tmpls.js',
-                       'public/js/rssminer/util.js',
-                       'public/js/rssminer/models.js',
-                       'public/js/rssminer/views.js',
-                       'public/js/rssminer/magic.js',
-                       'public/js/rssminer/application.js']
+                        'public/js/lib/jquery-ui-1.8.13.custom.js',
+                        'public/js/lib/underscore.js',
+                        'public/js/lib/backbone.js',
+                        'public/js/lib/mustache.js',
+                        'public/js/rssminer/rssminer-tmpls.js',
+                        'public/js/rssminer/util.js',
+                        'public/js/rssminer/models.js',
+                        'public/js/rssminer/views.js',
+                        'public/js/rssminer/magic.js',
+                        'public/js/rssminer/application.js']
+
+dashboard_jss = FileList['public/js/lib/jquery.js',
+                         'public/js/lib/underscore.js',
+                         'public/js/lib/backbone.js',
+                         'public/js/rssminer/dashboard-tmpls.js',
+                         'public/js/rssminer/util.js',
+                         'public/js/rssminer/dashboard.js']
 
 desc "Clean generated files"
 task :clean  do
   rm_rf 'public/js/rssminer/tmpls.js'
   rm_rf 'src/templates'
   sh 'rm public/js/rssminer*min.js || exit 0'
+  sh 'rm public/js/dashboard*min.js || exit 0'
+  sh "rm public/js/rssminer/*-tmpls.js || exit 0 "
   rm_rf "public/css"
 end
 
@@ -105,18 +129,11 @@ task :test => :prepare do
 end
 
 namespace :js do
+
   desc "Generate template js resouces"
   task :tmpls => :html_compress do
-    print "Generating tmpls.js, please wait....\n"
-    html_tmpls = FileList['src/templates/js-tmpls/**/*.*']
-    data = "(function(){var tmpls = {};"
-    html_tmpls.each do |f|
-      text = get_file_as_string(f).gsub(/\s+/," ")
-      name = File.basename(f,".tpl")
-      data += "tmpls." + name + " = '" + text + "';\n"
-    end
-    data += "window.Rssminer = window.$.extend(window.Rssminer, {tmpls: tmpls})})();\n"
-    File.open("public/js/rssminer/tmpls.js", 'w') {|f| f.write(data)}
+    gen_jstempls("dashboard");
+    gen_jstempls("rssminer");
   end
 
   desc 'Combine all js into one, minify it using google closure'
@@ -128,8 +145,19 @@ namespace :js do
       source_arg += " --js #{js} "
     end
 
-    sh "java -jar bin/#{cscompiler} --warning_level QUIET" +
+    sh "java -jar bin/#{jscompiler} --warning_level QUIET" +
       " --js_output_file '#{target}' #{source_arg}"
+
+    target = "public/js/dashboard-#{version}-min.js"
+
+    source_arg = ''
+    dashboard_jss.each do |js|
+      source_arg += " --js #{js} "
+    end
+
+    sh "java -jar bin/#{jscompiler} --warning_level QUIET" +
+      " --js_output_file '#{target}' #{source_arg}"
+
   end
 end
 

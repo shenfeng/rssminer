@@ -11,8 +11,8 @@ bin/
 public/css/
 src/templates/
 public/cl
-public/js/rssminer/tmpls.js
-public/js/rssminer*min.js
+public/js/rssminer/*tmpls.js
+public/js/*min.js
 .idea/
 .emacs.desktop*
 /tags

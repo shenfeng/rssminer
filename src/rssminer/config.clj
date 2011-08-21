@@ -18,9 +18,9 @@
 
 (def ungroup "ungrouped")
 
-(def crawler-threads-count 10)
+(def crawler-threads-count 5)
 
-(def fetcher-threads-count 10)
+(def fetcher-threads-count 5)
 
 (defn next-check [last-interval success?]
   (let [interval (if success?
