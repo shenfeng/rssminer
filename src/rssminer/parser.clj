@@ -1,6 +1,7 @@
 (ns rssminer.parser
   (:use [rssminer.time :only [to-ts]]
         clojure.pprint
+        [rssminer.util :only [assoc-if]]
         [clojure.tools.logging :only [error]])
   (:require [clojure.string :as str])
   (:import [com.sun.syndication.io SyndFeedInput]
@@ -32,6 +33,20 @@
 (definline trim [^String s]
   `(when ~s (str/trim ~s)))
 
+(defn- parse-entry [e]
+  (assoc-if {}
+            :author (-> e :author trim)
+            :title (-> e :title trim)
+            :summary (or
+                      (-> e :contents first :value trim)
+                      (-> e :description :value trim))
+            :link (-> e :link trim)
+            :guid (-> e :uri trim)
+            :categories (set (map #(-> % :name trim str/lower-case)
+                                  (:categories e)))
+            :updated_ts (:updatedDate e)
+            :published_ts (:publishedDate e)))
+
 (defn parse-feed [str]
   (try
     (let [feed (->> str StringReader. (.build (SyndFeedInput.)) decode-bean)]
@@ -40,21 +55,6 @@
        :language (-> feed :link trim)
        :published_ts (:publishedDate feed)
        :description (-> feed :description trim)
-       :entries (map
-                 (fn [e]
-                   {:author (-> e :author trim)
-                    :title (-> e :title trim)
-                    :summary (or
-                              (-> e :contents first :value trim)
-                              (-> e :description :value trim))
-                    :link (-> e :link trim)
-                    :guid (-> e :uri trim)
-                    :categories (map #(-> % :name trim str/lower-case)
-                                     (:categories e))
-                    :updated_ts (:updatedDate e)
-                    :published_ts (:publishedDate e)})
-                 (:entries feed))})
+       :entries (map parse-entry (:entries feed))})
     (catch Exception e
       (error e "parse rss error"))))
-
-

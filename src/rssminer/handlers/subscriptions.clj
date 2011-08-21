@@ -4,7 +4,8 @@
                   [parser :only [parse-feed]]
                   [util :only [to-int if-lets md5-sum]]
                   [config :only [ungroup]])
-        [rssminer.db.util :only [h2-insert h2-insert-and-return]])
+        [rssminer.db.util :only [h2-insert h2-insert-and-return]]
+        [clojure.tools.logging :only [info]])
   (:require [rssminer.db.subscription :as db]
             [rssminer.db.feed :as fdb])
   (:import java.io.StringReader))
@@ -49,11 +50,11 @@
                                            :group_name (or group-name ungroup)
                                            :title (or title (:title rss))
                                            :rss_link_id (:id rss)})]
+             (info (str "user#" user-id) "add"
+                   (str "(" (-> feeds :entries count) ")" link))
              (fdb/insert-rss-xml body)
              (fdb/save-feeds feeds (:id rss) user-id) ;; 3. save feeds
-             ;; 5. return data
              (add-subscription-ret us rss (-> feeds :entries count)))
-           ;; fetch feeds error
            {:status 460
             :message "Bad feedlink"}))
 

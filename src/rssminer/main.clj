@@ -29,11 +29,11 @@
   [{:keys [port index-path profile db-path h2-trace run-crawler auto-server]}]
   {:pre [(#{:prod :dev} profile)]}
   (stop-server)
+  (use-h2-database! db-path :trace h2-trace :auto-server auto-server)
   (reset! env-profile profile)
   (reset! server (run-netty (app) {:port port}))
   (info "netty server start at port" port)
   (use-index-writer! index-path)
-  (use-h2-database! db-path :trace h2-trace :auto-server auto-server)
   (when run-crawler
     (reset! crawler (start-crawler))
     (info "link crawler started")))

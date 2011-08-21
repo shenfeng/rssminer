@@ -28,7 +28,7 @@
   (import-h2-schema!)
   (use-index-writer! index-path)
   (let [user (create-user {:name "feng"
-                           :password "123456"
+                           :password password
                            :email "shenedu@gmail.com"})]
     (binding [session-get #(if (= % :user) user %)]
       (doseq [link links]

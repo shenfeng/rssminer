@@ -154,7 +154,7 @@
 (defn download-rss  [url]
   (try
     (update-in (get url) [:body]        ;convert to string
-               (fn [in] (slurp in)))
+               (fn [in] (when in (slurp in))))
     (catch Exception e
       (error e "download-rss" url))))
 
