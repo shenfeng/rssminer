@@ -2,6 +2,7 @@
   (:use clojure.test
         [clojure.data.json :only [read-json json-str]]
         [rssminer.db.util :only [h2-query select-sql-params]]
+        [rssminer.time :only [now-seconds]]
         (rssminer [test-common :only [auth-app auth-app2 app-fixture]]
                   [http :only [download-rss download-favicon]])))
 
@@ -31,6 +32,10 @@
     (is (= 200 (:status another-resp)))
     ;;    make sure only one subscription is added
     (is (= 1 (- (count (h2-query ["select * from rss_links"])) c)))
+    (let [rss (first (h2-query
+                      ["select * from rss_links order by id desc"]))]
+      (is (> (:next_check_ts rss) (now-seconds)))
+      (is (:last_md5 rss)))
     (are [key] (-> subscription key)
          :total_count
          :id

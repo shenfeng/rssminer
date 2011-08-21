@@ -1,6 +1,7 @@
 (ns rssminer.handlers.subscriptions
   (:use (rssminer [middleware :only [*user* *json-body*]]
                   [http :only [download-favicon download-rss]]
+                  [time :only [now-seconds]]
                   [parser :only [parse-feed]]
                   [util :only [to-int if-lets md5-sum]]
                   [config :only [ungroup]])
@@ -40,6 +41,7 @@
                       :rss_links
                       {:url link
                        :last_modified (:last-modified headers)
+                       :next_check_ts (+ (now-seconds) (* 3600 24))
                        :last_md5 (md5-sum body)
                        :user_id user-id
                        :favicon (download-favicon link)
