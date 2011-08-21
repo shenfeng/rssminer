@@ -1,6 +1,8 @@
 (ns rssminer.views.feedreader-test
   (use clojure.test
-       [rssminer.test-common :only [test-app]]))
+       [rssminer.test-common :only [test-app auth-app app-fixture]]))
+
+(use-fixtures :each app-fixture)
 
 (deftest test-index-page
   (let [resp (test-app {:uri "/"
@@ -14,6 +16,11 @@
     (is (= "no-cache" ((:headers resp) "Cache-Control")))
     (is (= "text/html; charset=utf-8" ((:headers resp) "Content-Type")))
     (is (= 200 (:status js-resp)))
+    (is (= 200 (:status resp)))))
+
+(deftest test-get-reader-page
+  (let [resp (auth-app {:uri "/app"
+                            :request-method :get})]
     (is (= 200 (:status resp)))))
 
 (deftest test-dashboar-page

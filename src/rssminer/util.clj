@@ -34,6 +34,9 @@
                  :headers {"Content-Type" "application/json; charset=utf-8"}
                  :body (json-str body)})
 
+(defn session-get [req key] ;; for test code easy mock
+  (-> req :session key))
+
 (defn serialize-to-js [data]
   (let [stats (map
                (fn [[k v]]

@@ -4,9 +4,9 @@
         [clojure.java.jdbc :only [print-sql-exception-chain]]
         (rssminer [database :only [import-h2-schema! use-h2-database!]]
                   [search :only [use-index-writer!
-                                 close-global-index-writer!]])
-        (rssminer.db [user :only [create-user]])
-        [sandbar.stateful-session :only [session-get]])
+                                 close-global-index-writer!]]
+                  [util :only [session-get]])
+        (rssminer.db [user :only [create-user]]))
   (:require [clojure.string :as str])
   (:import java.io.File
            java.sql.SQLException))
@@ -29,14 +29,16 @@
 
 (def auth-app
   (fn [& args]
-    (binding [session-get #(if (=  % :user) *user1*
-                               %)]
+    (binding [session-get (fn [req key]
+                            (if (= key :user) *user1*
+                                (throw (Exception. "session-get error"))))]
       (apply (app) args))))
 
 (def auth-app2
   (fn [& args]
-    (binding [session-get #(if (=  % :user) *user2*
-                               %)]
+    (binding [session-get (fn [req key]
+                            (if (= key :user) *user2*
+                                (throw (Exception. "session-get error"))))]
       (apply (app) args))))
 
 (defn lucene-fixture [test-fn]

@@ -1,9 +1,8 @@
 (ns rssminer.handlers.subscriptions
-  (:use (rssminer [middleware :only [*user* *json-body*]]
-                  [http :only [download-favicon download-rss]]
+  (:use (rssminer [http :only [download-favicon download-rss]]
                   [time :only [now-seconds]]
                   [parser :only [parse-feed]]
-                  [util :only [to-int if-lets md5-sum]]
+                  [util :only [to-int if-lets md5-sum session-get]]
                   [config :only [ungroup]])
         [rssminer.db.util :only [h2-insert h2-insert-and-return]]
         [clojure.tools.logging :only [info]])
@@ -68,21 +67,20 @@
     (apply create-subscripton link user-id options)))
 
 (defn add-subscription [req]
-  (let [link (:link *json-body*)
-        user-id (:id *user*)]
+  (let [link (:link (:body req))
+        user-id (:id (session-get req :user))]
     (add-subscription* link user-id)))
 
 (defn get-subscription [req]
   (let [{:keys [id limit offset] :or {limit 20 offset 0}} (:params req)
         rss-id (:rss_link_id (db/fetch-subscription {:id (to-int id)}))]
-    (when rss-id (fdb/fetch-feeds-for-user (:id *user*)
+    (when rss-id (fdb/fetch-feeds-for-user (:id (session-get req :user))
                                            rss-id
                                            (to-int limit)
                                            (to-int offset)))))
 
-(defn get-overview* []
-  (let [user-id (:id *user*)
-        overview (db/fetch-overview user-id)
+(defn get-overview* [user-id]
+  (let [overview (db/fetch-overview user-id)
         map (reduce
              (fn [m item]
                (let [group-name (:group_name item)
@@ -95,12 +93,12 @@
                       :subscriptions v})))
 
 (defn get-overview [req]
-  (get-overview*))
+  (get-overview* (:id (session-get req :user))))
 
 (defn customize-subscription [req]
-  (let [user-id (:id *user*)]
-    (db/update-subscription user-id (-> req :params :id to-int) *json-body*)))
+  (let [user-id (:id (session-get req :user))]
+    (db/update-subscription user-id (-> req :params :id to-int) (:body req))))
 
 (defn unsubscribe [req]
-  (let [user-id (:id *user*)]
+  (let [user-id (:id (session-get req :user))]
     (db/delete-subscription user-id (-> req :params :id to-int))))

@@ -1,7 +1,6 @@
 (ns rssminer.handlers.users
   (:use  [ring.util.response :only [redirect]]
-         [ring.middleware.file-info :only [make-http-format]]
-         [sandbar.stateful-session :only [session-put!]])
+         [ring.middleware.file-info :only [make-http-format]])
   (:require [rssminer.db.user :as db]
             [rssminer.views.users :as view])
   (:import [java.util Locale Calendar TimeZone Date]
@@ -22,8 +21,8 @@
         user (db/authenticate email password)
         return-url (or return-url "/app")]
     (if user
-      (let [resp (redirect return-url)]
-        (session-put! :user user)
+      (let [resp (assoc (redirect return-url)
+                   :session {:user user})]
         (if persistent
           (assoc resp
             :session-cookie-attrs {:expires (get-expire 15)})
@@ -37,5 +36,5 @@
   (let [{:keys [email password]} (:params req)
         user (db/create-user {:email email
                               :password password})]
-    (session-put! :user user)
-    (redirect "/app")))
+    (assoc (redirect "/app")
+      :session {:user user})))

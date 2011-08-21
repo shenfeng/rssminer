@@ -1,6 +1,6 @@
 (ns rssminer.import
   (:use [rssminer.handlers.subscriptions :only [add-subscription*]]
-        [rssminer.middleware :only [*user*]])
+        [rssminer.util :only [session-get]])
   (:require [clojure.xml :as xml]))
 
 (defn parse-xml [s]
@@ -36,7 +36,7 @@
 (defn opml-import [req]
   (let [file (-> req :params :file :tempfile)]
     (if (and file (> (.length file) 10))
-      (let [user-id (:id *user*)
+      (let [user-id (:id (session-get req :user))
             subs (parse-opml (slurp file))]
         (map #(add-subscription* (:link %) user-id
                                  :group_name (:group_name %)

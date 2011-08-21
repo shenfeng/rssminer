@@ -1,5 +1,4 @@
 (ns rssminer.handlers.dashboard
-  (:use  [rssminer.middleware :only [*json-body*]])
   (:require [rssminer.db.dashboard :as db]
             [rssminer.config :as conf]))
 
@@ -26,7 +25,7 @@
     :reseted_domain_pattens (map str @@conf/reseted-hosts)))
 
 (defn add-black-domain-patten [req]
-  (let [patten (:patten *json-body*)]
+  (let [patten (:patten (:body req))]
     (when (> (count patten) 2)
       (conf/add-black-domain-patten patten)
       (map str @@conf/black-domain-pattens))))

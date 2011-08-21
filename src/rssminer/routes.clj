@@ -3,6 +3,7 @@
         (ring.middleware [keyword-params :only [wrap-keyword-params]]
                          [file-info :only [wrap-file-info]]
                          [params :only [wrap-params]]
+                         [session :only [wrap-session]]
                          [multipart-params :only [wrap-multipart-params]]
                          [file :only [wrap-file]]
                          [session :only [wrap-session]])
@@ -11,8 +12,7 @@
                                      wrap-request-logging-in-dev
                                      JPOST JPUT JDELETE JGET]]
                   [import :only [opml-import]]
-                  [search :only [search]])
-        [sandbar.stateful-session :only [wrap-stateful-session]])
+                  [search :only [search]]))
   (:require [clojure.string :as str]
             [compojure.route :as route]
             (rssminer.handlers [feedreader :as rssminer]
@@ -80,7 +80,7 @@
 ;;; the last one get the response
 (defn app [] (-> #'all-routes
                  wrap-auth
-                 wrap-stateful-session
+                 wrap-session
                  wrap-cache-header
                  wrap-request-logging-in-dev
                  wrap-keyword-params

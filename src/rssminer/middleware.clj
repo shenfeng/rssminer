@@ -1,23 +1,18 @@
 (ns rssminer.middleware
-  (:use [rssminer.util :only [json-response]]
+  (:use [rssminer.util :only [json-response session-get]]
         [ring.util.response :only [redirect]]
-        [sandbar.stateful-session :only [session-get]]
         [clojure.tools.logging :only [debug error]]
         [compojure.core :only [GET POST DELETE PUT]])
   (:require [rssminer.config :as conf]
             [clojure.data.json :as json])
   (:import java.io.File))
 
-(def ^{:dynamic true} *user* nil)
-(def ^{:dynamic true} *json-body* nil)
-
 (defn wrap-auth [handler]
   (fn [req]
-    (let [user (session-get :user)]
+    (let [user (session-get req :user)]
       (if (and (not user) (= (:uri req) "/app"))
         (redirect "/login")
-        (binding [*user* user]
-          (handler req))))))
+        (handler req)))))
 
 (defn wrap-cache-header
   "set no-cache header." [handler]
@@ -51,14 +46,13 @@
                                              (slurp body))]
                             (when (seq body-str)
                               (json/read-json body-str))))
-          ;; binding for easy access
-          resp-obj (binding [*json-body* json-req-body]
-                     (try ;; easier for js to understand if this is an 500
-                       (handler req)
-                       (catch Exception e
-                         (error e "api error\n Request: " req)
-                         {:status 500
-                          :message "Opps, an error occured"})))
+          resp-obj (try ;; easier for js to understand if this is an 500
+                     (handler (assoc req
+                                :body json-req-body))
+                     (catch Exception e
+                       (error e "api error\n Request: " req)
+                       {:status 500
+                        :message "Opps, an error occured"}))
           status (:status resp-obj)]
       (if (number? status)
         (json-response status (dissoc resp-obj :status))
