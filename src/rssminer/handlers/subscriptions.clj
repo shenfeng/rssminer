@@ -39,7 +39,7 @@
            (let [rss (h2-insert-and-return
                       :rss_links
                       {:url link
-                       :last_modified (:last_modified headers)
+                       :last_modified (:last-modified headers)
                        :last_md5 (md5-sum body)
                        :user_id user-id
                        :favicon (download-favicon link)

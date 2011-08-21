@@ -48,13 +48,15 @@
             :published_ts (:publishedDate e)))
 
 (defn parse-feed [str]
-  (try
-    (let [feed (->> str StringReader. (.build (SyndFeedInput.)) decode-bean)]
-      {:title (-> feed :title trim)
-       :link (-> feed :link trim)
-       :language (-> feed :link trim)
-       :published_ts (:publishedDate feed)
-       :description (-> feed :description trim)
-       :entries (map parse-entry (:entries feed))})
-    (catch Exception e
-      (error e "parse rss error"))))
+  (when str
+    (try
+      (let [feed (->> str StringReader.
+                      (.build (SyndFeedInput.)) decode-bean)]
+        {:title (-> feed :title trim)
+         :link (-> feed :link trim)
+         :language (-> feed :link trim)
+         :published_ts (:publishedDate feed)
+         :description (-> feed :description trim)
+         :entries (map parse-entry (:entries feed))})
+      (catch Exception e
+        (error e "parse rss error")))))

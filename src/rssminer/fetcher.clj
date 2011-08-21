@@ -1,9 +1,9 @@
 (ns rssminer.fetcher
   (:use [rssminer.util :only [md5-sum assoc-if threadfactory]]
         [clojure.tools.logging :only [info error trace]]
+        [rssminer.db.crawler :only [update-rss-link fetch-rss-links]]
         [rssminer.parser :only [parse-feed]])
   (:require [rssminer.db.feed :as db]
-            [rssminer.db.crawler :as cdb]
             [rssminer.http :as http]
             [rssminer.config :as conf])
   (:import [java.util Queue LinkedList Date]
@@ -25,26 +25,27 @@
                              (catch Exception e
                                (error e url))))
         md5 (when html (md5-sum html))
+        feeds (when html (parse-feed html))
         next-check (conf/next-check check_interval
                                     (and (= 200 status) (not= md5 last_md5)))]
-    (trace status url)
-    (db/update-rss-link id (assoc-if next-check
-                                     :last_md5 md5
-                                     :last_modified (:last_modified headers)))
-    (when html (extract-and-save-feeds html id))))
+    (trace status url (str "(" (-> feeds :entries count) " feeds)"))
+    (update-rss-link id (assoc-if next-check
+                                  :last_md5 md5
+                                  :last_modified (:last_modified headers)))
+    (when feeds (db/save-feeds feeds id nil))))
 
 (defn get-next-link []
   (locking queue
     (if (.peek queue) ;; has element?
       (.poll queue)   ;; retrieves and removes
-      (let [links (cdb/fetch-rss-links conf/fetch-size)]
+      (let [links (fetch-rss-links conf/fetch-size)]
         (trace "fetch" (count links) "rss links from h2")
         (when (seq links)
           (doseq [link links]
             (.offer queue link))
           (get-next-link))))))
 
-(defn fetcher-crawler [& {:keys [threads]}]
+(defn start-fetcher [& {:keys [threads]}]
   (let [threads (or threads conf/crawler-threads-count)
         ^ExecutorService exec (Executors/newFixedThreadPool
                                threads (threadfactory "fetcher"))
