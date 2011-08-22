@@ -109,13 +109,13 @@ CREATE TABLE feed_tag
 );
 
 ----
-create index idx_cl_domain on crawler_links(domain)
+create index idx_domain on crawler_links(domain)
 ----
-create index idx_cl_next_check_ts on crawler_links(next_check_ts)
+create index idx_next_check_ts on crawler_links(next_check_ts)
 ----
-create index idx_rl_next_check_ts on rss_links(next_check_ts)
+create index idx_next_check_ts on rss_links(next_check_ts)
 ----
-create index idx_ft_tag on feed_tag(tag)
+create index idx_tag on feed_tag(tag)
 ----
 create table multi_rss_domains (
   id INTEGER PRIMARY KEY auto_increment,

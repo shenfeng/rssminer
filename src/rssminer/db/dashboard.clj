@@ -44,6 +44,7 @@
    ["SELECT id,  url, title, added_ts,
     (SELECT url FROM crawler_links c
          WHERE c.id = crawler_link_id ) AS referer
-     FROM rss_links ORDER BY added_ts DESC LIMIT ? OFFSET ?"
-    limit offset]))
+    FROM rss_links WHERE id > (SELECT MAX(id) FROM rss_links) - ?
+    ORDER BY id DESC LIMIT ? OFFSET ?"
+    (+ limit offset) limit offset]))
 
