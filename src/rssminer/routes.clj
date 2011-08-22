@@ -64,8 +64,6 @@
   (GET "/" [] rssminer/landing-page)
   (GET "/app" [] rssminer/index-page)
   (GET "/dashboard" [] rssminer/dashboard-page)
-  (GET "/demo" [] rssminer/demo-page)
-  (GET "/expe" [] rssminer/expe-page)
   (context "/login" []
            (GET "/" [] user/show-login-page)
            (POST "/" [] user/login))

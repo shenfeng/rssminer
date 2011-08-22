@@ -111,9 +111,9 @@ CREATE TABLE feed_tag
 ----
 create index idx_domain on crawler_links(domain)
 ----
-create index idx_next_check_ts on crawler_links(next_check_ts)
+create index idx_link_check_ts on crawler_links(next_check_ts)
 ----
-create index idx_next_check_ts on rss_links(next_check_ts)
+create index idx_rss_check_ts on rss_links(next_check_ts)
 ----
 create index idx_tag on feed_tag(tag)
 ----
