@@ -4,7 +4,7 @@
     <li class="entry">
       <div class="collapsed">
         <div class="entry-main">
-          <h4>{{title}}</h4> -
+          <h4><a href="{{link}}" target="_blank">{{title}}</a></h4> -
           <span class="snippet">{{snippet}}</span>
         </div>
       </div>
