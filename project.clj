@@ -20,7 +20,9 @@
   :repositories {"java.net" "http://download.java.net/maven/2/"}
   :warn-on-reflection true
   :aot [rssminer.main]
-  :jvm-opts ["-XX:+UseCompressedOops"]
+  :jvm-opts ["-XX:+UseCompressedOops"
+             "-XX:+TieredCompilation"
+             "-XX:+UseCompressedStrings"]
   ;; :jvm-opts ["-agentlib:hprof=cpu=samples,format=b,file=/tmp/profile.txt"]
   ;; :jvm-opts ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n"]
   :dev-dependencies [[clojure-source "1.2.1"]

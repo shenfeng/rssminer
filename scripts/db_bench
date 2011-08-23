@@ -3,8 +3,8 @@
 ABSOLUTE_PATH=$(readlink -f $0)
 HOME="${ABSOLUTE_PATH%/*/*}"
 cd "${HOME}" && java -Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8 \
-    -XX:+UseCompressedOops \
-    -server -cp "classes:lib/*:src:test" clojure.main \
+    -XX:+UseCompressedOops -XX:+TieredCompilation\
+    -cp "classes:lib/*:src:test" clojure.main \
     -e "(require 'rssminer.dbperf-test)(apply  rssminer.dbperf-test/main *command-line-args*)" \
     /dev/null $@
 
