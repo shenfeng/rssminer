@@ -31,7 +31,8 @@ def gen_jstempls(folder)
   File.open("public/js/rssminer/#{folder}-tmpls.js", 'w') {|f| f.write(data)}
 end
 
-def minify_js(name, jss)
+def minify_js(name, jss, version)
+  jscompiler = "closure-compiler.jar"
   target = "public/js/#{name}-#{version}-min.js"
 
   source_arg = ''
@@ -92,6 +93,13 @@ dashboard_jss = FileList['public/js/lib/jquery.js',
                          'public/js/rssminer/util.js',
                          'public/js/rssminer/dashboard.js']
 
+browse_jss = FileList['public/js/lib/jquery.js',
+                      'public/js/lib/underscore.js',
+                      'public/js/lib/mustache.js',
+                      'public/js/rssminer/rssminer-tmpls.js',
+                      'public/js/rssminer/util.js',
+                      'public/js/rssminer/browse.js']
+
 desc "Clean generated files"
 task :clean  do
   rm_rf 'public/js/rssminer/tmpls.js'
@@ -138,26 +146,9 @@ namespace :js do
 
   desc 'Combine all js into one, minify it using google closure'
   task :minify => [:tmpls, :deps] do
-    target = "public/js/rssminer-#{version}-min.js"
-
-    source_arg = ''
-    rssminer_jss.each do |js|
-      source_arg += " --js #{js} "
-    end
-
-    sh "java -jar bin/#{jscompiler} --warning_level QUIET" +
-      " --js_output_file '#{target}' #{source_arg}"
-
-    target = "public/js/dashboard-#{version}-min.js"
-
-    source_arg = ''
-    dashboard_jss.each do |js|
-      source_arg += " --js #{js} "
-    end
-
-    sh "java -jar bin/#{jscompiler} --warning_level QUIET" +
-      " --js_output_file '#{target}' #{source_arg}"
-
+    minify_js("rssminer", rssminer_jss, version);
+    minify_js("dashboard", dashboard_jss, version);
+    minify_js("browse", browse_jss, version);
   end
 end
 

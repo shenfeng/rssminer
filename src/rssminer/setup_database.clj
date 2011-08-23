@@ -3,10 +3,10 @@
                                    import-h2-schema!]]
                   [search :only [use-index-writer!
                                  close-global-index-writer!]]
+                  [util :only [session-get]]
                   [routes :only [app]])
         (rssminer.db [user :only [create-user]])
         [clojure.tools.cli :only [cli optional required]]
-        [sandbar.stateful-session :only [session-get]]
         [clojure.data.json :only [json-str]]))
 
 (def links ["http://blog.raek.se/feed/"
@@ -30,7 +30,8 @@
   (let [user (create-user {:name "feng"
                            :password password
                            :email "shenedu@gmail.com"})]
-    (binding [session-get #(if (= % :user) user %)]
+    (binding [session-get (fn [req key]
+                            (when (= key :user) user))]
       (doseq [link links]
         (apply (app) [{:uri "/api/subscriptions/add"
                        :request-method :post

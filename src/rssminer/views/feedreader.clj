@@ -9,3 +9,6 @@
 (deftemplate landing-page "templates/landing.html" [] )
 
 (deftemplate dashboard-page "templates/dashboard.html" [] )
+
+(deftemplate browse-feed "templates/browse.html" [data]
+  [:head] (html/append (html/html-snippet (serialize-to-js data))))

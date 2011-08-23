@@ -189,7 +189,7 @@ window.$(function(){
         dfd.resolve(sub);
       } else {
         sub.fetch().done(function(data) { // fetch from server
-          sub.set(data);                  // cache in memory
+          sub.set({items: data});  // cache in memory
           dfd.resolve(sub);
         });
       }
