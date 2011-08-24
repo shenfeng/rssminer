@@ -1,21 +1,14 @@
 (ns rssminer.fetcher
-  (:use [rssminer.util :only [md5-sum assoc-if threadfactory]]
-        [clojure.tools.logging :only [info error trace]]
+  (:use [rssminer.util :only [md5-sum assoc-if start-tasks]]
+        [clojure.tools.logging :only [error trace]]
         [rssminer.db.crawler :only [update-rss-link fetch-rss-links]]
         [rssminer.parser :only [parse-feed]])
   (:require [rssminer.db.feed :as db]
             [rssminer.http :as http]
             [rssminer.config :as conf])
-  (:import [java.util Queue LinkedList Date]
-           [java.util.concurrent Executors ExecutorService TimeUnit ]))
-
-(def running? (atom false))
+  (:import [java.util Queue LinkedList]))
 
 (def ^Queue queue (LinkedList.))
-
-(defn extract-and-save-feeds [html rss-id]
-  (if-let [feeds (parse-feed html)]
-    (db/save-feeds rss-id feeds nil)))
 
 (defn fetch-rss
   [{:keys [id url check_interval last_modified last_md5] :as link}]
@@ -46,23 +39,5 @@
           (get-next-link))))))
 
 (defn start-fetcher [& {:keys [threads]}]
-  (let [threads (or threads conf/crawler-threads-count)
-        ^ExecutorService exec (Executors/newFixedThreadPool
-                               threads (threadfactory "fetcher"))
-        ^Runnable task #(loop [link (get-next-link)]
-                          (when (and link @running?)
-                            (try (fetch-rss link)
-                                 (catch Exception e
-                                   (error e "fetcher" (:url link))))
-                            (recur (get-next-link))))
-        shutdown #(do (.shutdownNow exec) (reset! running? false))
-        wait #(.awaitTermination exec Integer/MAX_VALUE TimeUnit/MINUTES)]
-    (reset! running? true)
-    (dotimes [_ threads]
-      (.submit exec task))
-    (.shutdown exec)
-    (fn [op]
-      (case op
-        :wait (wait)
-        :shutdown (shutdown)
-        :shutdown-wait (do (shutdown) (wait))))))
+  (start-tasks get-next-link fetch-rss "fetcher"
+                 (or threads conf/crawler-threads-count)))

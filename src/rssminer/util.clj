@@ -1,11 +1,13 @@
 (ns rssminer.util
   (:use (clojure.data [json :only [json-str Write-JSON]])
+        [clojure.tools.logging :only [error]]
         [clojure.pprint :only [pprint]])
   (:require [clojure.string :as str])
   (:import java.util.Date
            java.sql.Timestamp
            java.util.concurrent.ThreadFactory
-           [java.net URI]
+           java.net.URI
+           [java.util.concurrent Executors TimeUnit ]
            [java.io StringWriter PrintWriter]
            [java.security NoSuchAlgorithmException MessageDigest]))
 
@@ -90,9 +92,28 @@
      (pprint value)
      value))
 
-(defn threadfactory [prefix]
+(defn- threadfactory [prefix]
   (let [id (atom 0)]
     (reify ThreadFactory
       (newThread [this runnable]
         (doto (Thread. runnable (str prefix "-" (swap! id inc)))
           (.setDaemon true))))))
+
+(defn start-tasks [next-task do-task prefix threads]
+  (let [running? (atom true)
+        exec (Executors/newFixedThreadPool threads (threadfactory prefix))
+        ^Runnable worker #(loop [task (next-task)]
+                            (when (and task @running?)
+                              (try (do-task task)
+                                   (catch Exception e
+                                     (error e "fetcher" task)))
+                              (recur (next-task))))
+        shutdown #(do (reset! running? false) (.shutdownNow exec))
+        wait #(.awaitTermination exec Integer/MAX_VALUE TimeUnit/MINUTES)]
+    (dotimes [_ threads]
+      (.submit exec worker))
+    (.shutdown exec)
+    (fn [op] (case op
+              :wait (wait)
+              :shutdown (shutdown)
+              :shutdown-wait (do (shutdown) (wait))))))

@@ -1,15 +1,12 @@
 (ns rssminer.crawler
-  (:use [rssminer.util :only [md5-sum assoc-if threadfactory]]
+  (:use [rssminer.util :only [md5-sum assoc-if start-tasks]]
         [rssminer.db.util :only [parse-timestamp]]
         [rssminer.time :only [now-seconds]]
         [clojure.tools.logging :only [info error trace]])
   (:require [rssminer.db.crawler :as db]
             [rssminer.http :as http]
             [rssminer.config :as conf])
-  (:import [java.util Queue LinkedList Date]
-           [java.util.concurrent Executors ExecutorService TimeUnit ]))
-
-(def running? (atom false))
+  (:import [java.util Queue LinkedList Date]))
 
 (def ^Queue queue (LinkedList.))
 
@@ -51,23 +48,5 @@
           (get-next-link))))))
 
 (defn start-crawler [& {:keys [threads]}]
-  (let [threads (or threads conf/crawler-threads-count)
-        ^ExecutorService exec (Executors/newFixedThreadPool
-                               threads (threadfactory "crawler"))
-        ^Runnable task #(loop [link (get-next-link)]
-                          (when (and link @running?)
-                            (try (crawl-link link)
-                                 (catch Exception e
-                                   (error e "link" (:url link))))
-                            (recur (get-next-link))))
-        shutdown #(do (.shutdownNow exec) (reset! running? false))
-        wait #(.awaitTermination exec Integer/MAX_VALUE TimeUnit/MINUTES)]
-    (reset! running? true)
-    (dotimes [_ threads]
-      (.submit exec task))
-    (.shutdown exec)
-    (fn [op]
-      (case op
-        :wait (wait)
-        :shutdown (shutdown)
-        :shutdown-wait (do (shutdown) (wait))))))
+  (start-tasks get-next-link crawl-link "crawler"
+               (or threads conf/crawler-threads-count)))
