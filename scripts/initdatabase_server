@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -e
+
+DEPLOYMENT_USER="deploy"
+FRONTEND_HOST="rssminer.net"
+SSH_TARGET="${DEPLOYMENT_USER}@${FRONTEND_HOST}"
+DIR="/var/rssminer"
+DB_PATH="/var/rssminer/rssminer"
+INDEX_PATH="/var/rssminer/index"
+
+function remote_run {
+    ssh "${SSH_TARGET}" "$1"
+}
+
+remote_run "sudo mkdir -p ${DIR} && sudo chown -R deploy ${DIR}"
+remote_run "sudo stop rssminer || exit 0"
+remote_run "/var/www/rssminer/scripts/setup_database --db-path ${DB_PATH} -p 123455 --index-path ${INDEX_PATH}"
+remote_run "sudo start rssminer"

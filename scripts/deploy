@@ -3,7 +3,7 @@
 set -e
 
 READLINK=readlink
-FRONTEND_HOST="rss-miner.com"
+FRONTEND_HOST="rssminer.net"
 ABSOLUTE_PATH=$(${READLINK} -f $0)
 RSSMINER_HOME="${ABSOLUTE_PATH%/*/*}"
 DEPLOYMENT_USER="deploy"
