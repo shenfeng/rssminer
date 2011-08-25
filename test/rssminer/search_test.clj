@@ -2,7 +2,7 @@
   (:use clojure.test
         [clojure.data.json :only [read-json json-str]]
         (rssminer [test-common :only [auth-app app-fixture]]
-                 [http :only [download-favicon download-rss]])))
+                  [http :only [download-favicon download-rss]])))
 
 (defn- prepare [f]
   (binding [download-rss (fn [& args]
@@ -20,4 +20,4 @@
                         :request-method :get
                         :params {"term" "mvc"}})]
     (is (= 200 (:status resp)))
-    (is (= (-> resp :body read-json count) 0))))
+    (is (= (-> resp :body read-json count) 1))))

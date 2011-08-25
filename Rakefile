@@ -133,7 +133,7 @@ end
 
 desc "Run unit test"
 task :test => :prepare do
-  sh 'lein test'
+  sh 'lein javac && lein test'
 end
 
 namespace :js do

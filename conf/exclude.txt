@@ -8,7 +8,6 @@
 /.git
 /bin
 /build
-/classes
 /conf/exclude.txt
 /lib/dev
 /project.clj

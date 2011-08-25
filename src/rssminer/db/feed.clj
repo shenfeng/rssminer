@@ -1,6 +1,7 @@
 (ns rssminer.db.feed
   (:use [rssminer.database :only [h2-db-factory]]
         [rssminer.db.util :only [h2-query id-k with-h2 h2-insert]]
+        [rssminer.search :only [index-feed]]
         [clojure.tools.logging :only [info]]
         [clojure.java.jdbc :only [with-connection with-query-results
                                   insert-record update-values]])
@@ -26,11 +27,10 @@
   (doseq [feed (:entries feeds)]
     (when (:guid feed)
       (try                              ; guid is uniqe
-        (let [feed-id (id-k (with-h2
-                              (insert-record :feeds
-                                             (dissoc (assoc feed
-                                                       :rss_link_id rss-id)
-                                                     :categories))))]
+        (let [feed (dissoc (assoc feed :rss_link_id rss-id) :categories)
+              feed-id (id-k (with-h2
+                              (insert-record :feeds feed)))]
+          (index-feed (assoc feed :id feed-id))
           (insert-tags feed-id user-id (:categories feed)))
         (catch Exception e
           (info "update" (:guid feed))
