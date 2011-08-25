@@ -57,11 +57,11 @@ end
 file "bin/#{soycompiler}" do
   file = 'closure-templates-for-javascript-latest.zip'
   mkdir_p 'bin'
+  rm_rf "/tmp/#{soycompiler}"
   sh "wget http://closure-templates.googlecode.com/files/#{file} -O /tmp/#{file}"
   sh "unzip /tmp/#{file} #{soycompiler} -d /tmp"
-  rm_rf "/tmp/#{soycompiler}"
-  rm_rf "/tmp/#{file}"
   mv "/tmp/#{soycompiler}", "bin/#{soycompiler}"
+  rm_rf "/tmp/#{file}"
 end
 
 file "bin/#{htmlcompressor}" do
