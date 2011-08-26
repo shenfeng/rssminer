@@ -1,6 +1,7 @@
 (ns rssminer.views.layouts
   (:require net.cgrand.enlive-html
-            rssminer.config))
+            rssminer.config
+            [clojure.string :as str]))
 
 (def ^{:private true} profile-specific
   '([(net.cgrand.enlive-html/attr= :data-profile "dev")]
@@ -16,8 +17,11 @@
 
 (defmacro template [source args & forms]
   (let [with-profile (concat profile-specific forms)]
-    `(comp #(apply str %) (net.cgrand.enlive-html/template
-                           ~source ~args ~@with-profile))))
+    `(comp (fn [b#]
+             {:body (filter (complement str/blank?) b#)
+              :headers {"Content-Type" "text/html; charset=utf-8"}})
+           (net.cgrand.enlive-html/template
+            ~source ~args ~@with-profile))))
 
 (defmacro deftemplate [name source args & forms]
   `(def ~name (template ~source ~args ~@forms)))
