@@ -14,8 +14,9 @@
 
 (defn stop-crawler []
   (when-not (nil? @crawler)
-    (info "shutdown link crawler....")
+    (info "shutdowning link crawler....")
     (@crawler :shutdown)
+    (info "crawler is shutdowned")
     (reset! crawler nil)))
 
 (defn- extract-and-save-links [referer html]

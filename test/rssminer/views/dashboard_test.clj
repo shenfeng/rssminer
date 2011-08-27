@@ -34,11 +34,12 @@
     (is (> (count (:black_domains settings)) 0))
     (is (> (count (:reseted_domains settings)) 0))))
 
-(deftest test-add-modify-settings
-  (let [resp (test-app {:uri "/api/dashboard/settings"
-                        :request-method :post
-                        :body (json-str {:patten "test"})})
-        body (-> resp :body read-json)]
-    (is (= 200 (:status resp)))
-    (is (some #(= "test" %) body))))
+(comment
+  (deftest test-add-modify-settings
+    (let [resp (test-app {:uri "/api/dashboard/settings"
+                          :request-method :post
+                          :body (json-str {:patten "test"})})
+          body (-> resp :body read-json)]
+      (is (= 200 (:status resp)))
+      (is (some #(= "test" %) body)))))
 

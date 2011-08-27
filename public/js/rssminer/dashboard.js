@@ -1,6 +1,6 @@
 $(function(){
   var backbone = window.Backbone,
-      oc = window.OC_Backbone,
+      OC = window.OC_Backbone,
       tmpls = window.Rssminer.tmpls,
       $ = window.$,
       to_html = window.Mustache.to_html;
@@ -16,9 +16,10 @@ $(function(){
     }
   });
 
-  var Settings = oc.Model.extend({
-    black_domains: oc.Collection,
-    reseted_domains: oc.Collection,
+  var Settings = OC.Model.extend({
+    id: 'feeds_count',          // revent isNew return true;
+    black_domains: OC.Collection,
+    reseted_domains: OC.Collection,
     url: "/api/dashboard/settings"
   });
 
@@ -28,16 +29,22 @@ $(function(){
       return function (e) {
         var patten = $(e.currentTarget).val();
         if(patten && e.which === 13) {
-          this.model.get(name).add({patten: patten});
+          var model = this.model;
+          model.snapshot();
+          model.get(name).add({patten: patten});
+          model.savediff();
         }
       };
     }
     function startStopService (name) {
       return function () {
-        var running = this.model.get(name),
+        var  model = this.model,
+            running = model.get(name),
             attr = {};
         attr[name] = !running;
-        this.model.set(attr);
+        model.snapshot();
+        model.set(attr);
+        model.savediff();
       };
     }
     return {

@@ -133,34 +133,7 @@
       options = options || {};
       var sync = (this.sync || Backbone.sync),
           that = this;
-      var ajax = sync.call(this,'sync', this, options);
-      ajax.done(function(diff, status, xhr) {
-        that.applydiff(diff);
-      });
-      return ajax;
-    },
-
-    applydiff : function (diff) {
-      // `add(+)`, `delete(-)` is handled by Colleciton
-      var attrs = {};
-      switch(diff._op) {
-      case '!':                 // modify
-        var data = diff._data, val;
-        for( var attr in data ) {
-          val = data[attr];
-          if(_.isArray(val) || isObject(val)) { // a collection/model
-            var m = this.get(attr);
-            if(m) {
-              m.applydiff(val);
-            }
-          } else {
-            attrs[attr] = val;
-          }
-        }
-        break;
-      }
-      delete this._snapshotAttributes;
-      this.set(attrs);          // will trigger change event properly
+      return sync.call(this,'sync', this, options);
     },
 
     // take a snapshot the model's state, later used to compute diff
@@ -227,41 +200,6 @@
     // get model's idAttrubute
     _getModelIDAttribute : function() {
       return this.model.prototype.idAttribute;
-    },
-
-    applydiff : function(diff) {
-      var that = this,
-          hasRemove = false,
-          idAttribute = this._getModelIDAttribute();
-      _.each(diff, function(ele) {
-        var op = ele._op, data = ele._data || {},
-            id = data[idAttribute];
-        if(id) {
-          switch(op) {
-          case '-':
-            hasRemove = true;
-            // not really remove, because it has been removed
-            // TODO fix it: if client request remove, but server refused
-            // client should deal it properly
-            that.remove(that.get(id));
-            break;
-          case '+':
-            that.add(data);
-            break;
-          case '!':
-            that.get(id).applydiff(data);
-            break;
-          }
-        }
-      });
-      // remove any new model. we've added it in `+`
-      this.remove(this.select(function(model) {
-        return model.isNew();
-      }));
-      delete this._snapshotModels;
-      if(hasRemove && that.parent) { // TODO fix this
-        that.parent.trigger('change');
-      }
     },
 
     _diff : function() {

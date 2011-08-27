@@ -14,8 +14,9 @@
 
 (defn stop-fetcher []
   (when-not (nil? @fetcher)
-    (info "shutdown rss fetcher....")
+    (info "shutdowning rss fetcher....")
     (@fetcher :shutdown)
+    (info "fetch is shutdowned")
     (reset! fetcher nil)))
 
 (defn fetch-rss

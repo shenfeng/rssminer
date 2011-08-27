@@ -23,13 +23,23 @@
      :feeds_count (db/feeds-count)
      :fetcher_running (not (nil? @fetcher))
      :crawler_running (not (nil? @crawler))
-     :black_domains (map (fn [p] {:patten (str p)})
-                                @@conf/black-domain-pattens)
-     :reseted_domains (map (fn [p] {:patten (str p)})
-                                  @@conf/reseted-hosts)}))
+     :black_domains (map (fn [p id] {:patten (str p)
+                                    :id id})
+                         @@conf/black-domain-pattens
+                         (range))
+     :reseted_domains (map (fn [p id] {:patten (str p)
+                                      :id id})
+                           @@conf/reseted-hosts
+                           (range))}))
 
 (defn settings [req]
-  (let [patten (:patten (:body req))]
-    (when (> (count patten) 2)
-      (conf/add-black-domain-patten patten)
-      (map str @@conf/black-domain-pattens))))
+  (let [data (-> req :body :_data)]
+    (when (false? (:crawler_running data))
+      (stop-crawler))
+    (when (true? (:crawler_running data))
+      (start-crawler))
+    (when (false? (:fetcher_running data))
+      (stop-fetcher))
+    (when (true? (:fetcher_running data))
+      (start-fetcher))
+    nil))
