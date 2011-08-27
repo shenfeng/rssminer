@@ -10,11 +10,7 @@
                         :request-method :get})
         stats (-> resp :body read-json)]
     (is (= 200 (:status resp)))
-    (is (empty?  (-> stats :rss_links)))
-    (are [k] (-> stats k)
-         :total_count
-         :rss_links_cout
-         :crawled_count)))
+    (is (empty?  (-> stats :rss_links)))))
 
 (deftest test-get-pending
   (let [resp (test-app {:uri "/api/dashboard/pending"
@@ -30,16 +26,16 @@
     (is (= 200 (:status resp)))
     (is (empty? (-> stats :crawled_links)))))
 
-(deftest test-get-black-patten
-  (let [resp (test-app {:uri "/api/dashboard/black"
+(deftest test-get-settings
+  (let [resp (test-app {:uri "/api/dashboard/settings"
                         :request-method :get})
-        pattens (-> resp :body read-json)]
+        settings (-> resp :body read-json)]
     (is (= 200 (:status resp)))
-    (is (> (count (:black_domain_pattens pattens)) 0))
-    (is (> (count (:reseted_domain_pattens pattens)) 0))))
+    (is (> (count (:black_domain_pattens settings)) 0))
+    (is (> (count (:reseted_domain_pattens settings)) 0))))
 
-(deftest test-add-black-patten
-  (let [resp (test-app {:uri "/api/dashboard/black"
+(deftest test-add-modify-settings
+  (let [resp (test-app {:uri "/api/dashboard/settings"
                         :request-method :post
                         :body (json-str {:patten "test"})})
         body (-> resp :body read-json)]

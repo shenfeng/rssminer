@@ -59,4 +59,5 @@
   (stop-crawler)
   (reset! crawler (start-tasks get-next-link crawl-link "crawler"
                                (or threads conf/crawler-threads-count)))
-  (info "link crawler started"))
+  (info "link crawler started")
+  @crawler)

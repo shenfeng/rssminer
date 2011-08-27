@@ -15,8 +15,8 @@
                         :request-method :get})
         body (apply str (:body resp))]
     (is (= 200 (:status resp)))
-    (is (re-find #"name=.*email" (:body resp)))
-    (is (re-find #"name=.*password" (:body resp)))))
+    (is (re-find #"name=.*email" body))
+    (is (re-find #"name=.*password" body))))
 
 (deftest test-signup-login-process
   (let [params {"email" "test@test.com"

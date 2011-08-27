@@ -47,6 +47,8 @@
           (get-next-link))))))
 
 (defn start-fetcher [& {:keys [threads]}]
-  (start-tasks get-next-link fetch-rss "fetcher"
-               (or threads conf/crawler-threads-count))
-  (info "rss fetcher started"))
+  (stop-fetcher)
+  (reset! fetcher (start-tasks get-next-link fetch-rss "fetcher"
+                                (or threads conf/crawler-threads-count)))
+  (info "rss fetcher started")
+  @fetcher)
