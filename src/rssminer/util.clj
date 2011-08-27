@@ -1,6 +1,6 @@
 (ns rssminer.util
   (:use (clojure.data [json :only [json-str Write-JSON]])
-        [clojure.tools.logging :only [error]]
+        [clojure.tools.logging :only [error info]]
         [clojure.pprint :only [pprint]])
   (:require [clojure.string :as str])
   (:import java.util.Date
@@ -103,11 +103,12 @@
   (let [running? (atom true)
         exec (Executors/newFixedThreadPool threads (threadfactory prefix))
         ^Runnable worker #(loop [task (next-task)]
-                            (when (and task @running?)
-                              (try (do-task task)
-                                   (catch Exception e
-                                     (error e "fetcher" task)))
-                              (recur (next-task))))
+                            (if (and task @running?)
+                              (do (try (do-task task)
+                                       (catch Exception e
+                                         (error e prefix task)))
+                                  (recur (next-task)))
+                              (info prefix "thread die peacefully")))
         shutdown #(do (reset! running? false) (.shutdownNow exec))
         wait #(.awaitTermination exec Integer/MAX_VALUE TimeUnit/MINUTES)]
     (dotimes [_ threads]

@@ -18,7 +18,7 @@
 
 (def ungroup "ungrouped")
 
-(def crawler-threads-count 5)
+(def crawler-threads-count 8)
 
 (def fetcher-threads-count 2)
 
