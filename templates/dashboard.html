@@ -9,23 +9,21 @@
   </head>
   <body>
     <div id="page-wrap">
-      <div id="notification">
-        <p class="message"></p>
-      </div>
       <ul id="nav">
-        <li><a href="#rsslinks/1">RSS Links</a></li>
-        <li><a href="#pending/1">Crawler Pending</a></li>
-        <li><a href="#crawled/1">Crawled</a></li>
-        <li><a href="#black/1">Black List</a></li>
+        <li class="settings"><a href="#settings/1">Settings</a></li>
+        <li class="rsslinks"><a href="#rsslinks/1">RSS Links</a></li>
+        <li class="pending"><a href="#pending/1">Pending</a></li>
+        <li class="crawled"><a href="#crawled/1">Crawled</a></li>
       </ul>
-      <div id="tables">
+      <div id="content">
       </div>
     </div>
     <script src="/js/lib/jquery.js" data-profile="dev"></script>
     <script src="/js/lib/underscore.js" data-profile="dev"></script>
     <script src="/js/lib/backbone.js" data-profile="dev" ></script>
-    <script src="/js/rssminer/util.js" data-profile="dev"></script>
+    <script src="/js/lib/mustache.js" data-profile="dev"></script>
     <script src="/js/rssminer/dashboard-tmpls.js" data-profile="dev"></script>
+    <script src="/js/rssminer/util.js" data-profile="dev"></script>
     <script src="/js/rssminer/dashboard.js" data-profile="dev"></script>
     <script src="/js/dashboard-{VERSION}-min.js"
             data-profile="prod"></script>

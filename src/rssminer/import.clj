@@ -34,7 +34,7 @@
                         :type (attr sub :type)}) subs))) outlines)))
 
 (defn opml-import [req]
-  (let [file (-> req :params :file :tempfile)]
+  (let [^java.io.File file (-> req :params :file :tempfile)]
     (if (and file (> (.length file) 10))
       (let [user-id (:id (session-get req :user))
             subs (parse-opml (slurp file))]

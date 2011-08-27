@@ -18,7 +18,8 @@
             (rssminer.handlers [feedreader :as rssminer]
                                [subscriptions :as subscription]
                                [users :as user]
-                               [dashboard :as dashboard])))
+                               [dashboard :as dashboard]))
+  (:import clojure.lang.Namespace))
 
 (let [views-ns '[rssminer.views.feedreader
                  rssminer.views.layouts]
@@ -33,7 +34,7 @@
     (apply merge (conj
                   (map (fn [clj-ns]
                          {(str "src/" (ns-to-path clj-ns))
-                          [(.getName clj-ns)]}) all-rss-ns)
+                          [(.getName ^Namespace clj-ns)]}) all-rss-ns)
                   {"src/templates" views-ns}))))
 
 (defroutes api-routes
@@ -41,8 +42,8 @@
            (JGET "/rsslinks" [] dashboard/get-rsslinks)
            (JGET "/pending" [] dashboard/get-crawler-pending)
            (JGET "/crawled" [] dashboard/get-crawled)
-           (JGET "/black" [] dashboard/get-black-domain-pattens)
-           (JPOST "/black" [] dashboard/add-black-domain-patten))
+           (JGET "/settings" [] dashboard/get-settings)
+           (JPOST "/settings" [] dashboard/settings))
   (context "/subscriptions" []
            (JGET "/overview" [] subscription/get-overview)
            (JPOST "/add" [] subscription/add-subscription)
@@ -64,7 +65,8 @@
   (GET "/" [] rssminer/landing-page)
   (GET "/app" [] rssminer/index-page)
   (GET "/browse" [] rssminer/browse-feed)
-  (GET "/dashboard" [] rssminer/dashboard-page)
+  (context "/dashboard" []
+           (GET "/" [] rssminer/dashboard-page))
   (context "/login" []
            (GET "/" [] user/show-login-page)
            (POST "/" [] user/login))

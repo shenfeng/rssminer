@@ -7,26 +7,22 @@
                   [search :only [use-index-writer!
                                  close-global-index-writer!]]
                   [routes :only [app]]
-                  [crawler :only [start-crawler]]
+                  [fetcher :only [start-fetcher stop-fetcher]]
+                  [crawler :only [start-crawler stop-crawler]]
                   [config :only [env-profile]])))
 
 (defonce server (atom nil))
-(defonce crawler (atom nil))
 
 (defn stop-server []
-  (when-not (nil? @crawler)
-    (info "shutdown link crawler....")
-    (@crawler :shutdown)
-    (reset! crawler nil))
+  (stop-crawler)
+  (stop-fetcher)
   (when-not (nil? @server)
     (info "shutdown netty server....")
-    (@server)
-    (reset! server nil))
-  (close-global-h2-factory!)
-  (close-global-index-writer!))
+    (@server)))
 
 (defn start-server
-  [{:keys [port index-path profile db-path h2-trace run-crawler auto-server]}]
+  [{:keys [port index-path profile db-path h2-trace
+           run-crawler auto-server run-fetcher]}]
   {:pre [(#{:prod :dev} profile)]}
   (stop-server)
   (use-h2-database! db-path :trace h2-trace :auto-server auto-server)
@@ -34,9 +30,8 @@
   (reset! server (run-netty (app) {:port port}))
   (info "netty server start at port" port)
   (use-index-writer! index-path)
-  (when run-crawler
-    (reset! crawler (start-crawler))
-    (info "link crawler started")))
+  (when run-crawler (start-crawler))
+  (when run-fetcher (start-fetcher)))
 
 (defn main [& args]
   "Start rssminer server"
@@ -52,6 +47,8 @@
         (optional ["--h2-trace" "Enable H2 trace" :default "true"]
                   #(Boolean/parseBoolean %))
         (optional ["--run-crawler" "Start rss crawler" :default "false"]
+                  #(Boolean/parseBoolean %))
+        (optional ["--run-fetcher" "Start rss crawler" :default "false"]
                   #(Boolean/parseBoolean %))
         (optional ["--index-path" "Path to store lucene index"
                    :default "/dev/shm/rssminer-index"]))))

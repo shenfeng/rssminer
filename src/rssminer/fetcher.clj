@@ -1,6 +1,6 @@
 (ns rssminer.fetcher
   (:use [rssminer.util :only [md5-sum assoc-if start-tasks]]
-        [clojure.tools.logging :only [error trace]]
+        [clojure.tools.logging :only [error info trace]]
         [rssminer.db.crawler :only [update-rss-link fetch-rss-links]]
         [rssminer.parser :only [parse-feed]])
   (:require [rssminer.db.feed :as db]
@@ -9,6 +9,14 @@
   (:import [java.util Queue LinkedList]))
 
 (def ^Queue queue (LinkedList.))
+
+(defonce fetcher (atom nil))
+
+(defn stop-fetcher []
+  (when-not (nil? @fetcher)
+    (info "shutdown rss fetcher....")
+    (@fetcher :shutdown)
+    (reset! fetcher nil)))
 
 (defn fetch-rss
   [{:keys [id url check_interval last_modified last_md5] :as link}]
@@ -40,4 +48,5 @@
 
 (defn start-fetcher [& {:keys [threads]}]
   (start-tasks get-next-link fetch-rss "fetcher"
-                 (or threads conf/crawler-threads-count)))
+               (or threads conf/crawler-threads-count))
+  (info "rss fetcher started"))

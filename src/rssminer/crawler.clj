@@ -6,9 +6,17 @@
   (:require [rssminer.db.crawler :as db]
             [rssminer.http :as http]
             [rssminer.config :as conf])
-  (:import [java.util Queue LinkedList Date]))
+  (:import [java.util Queue LinkedList]))
 
 (def ^Queue queue (LinkedList.))
+
+(defonce crawler (atom nil))
+
+(defn stop-crawler []
+  (when-not (nil? @crawler)
+    (info "shutdown link crawler....")
+    (@crawler :shutdown)
+    (reset! crawler nil)))
 
 (defn- extract-and-save-links [referer html]
   (let [{:keys [rss links]} (http/extract-links (:url referer) html)]
@@ -48,5 +56,7 @@
           (get-next-link))))))
 
 (defn start-crawler [& {:keys [threads]}]
-  (start-tasks get-next-link crawl-link "crawler"
-               (or threads conf/crawler-threads-count)))
+  (stop-crawler)
+  (reset! crawler (start-tasks get-next-link crawl-link "crawler"
+                               (or threads conf/crawler-threads-count)))
+  (info "link crawler started"))

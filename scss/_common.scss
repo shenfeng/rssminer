@@ -27,12 +27,6 @@
 .lfloat { float: left; }
 .rfloat { float: right; }
 
-body {
-    font: 400 14px/1.5 "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue",sans-serif;
-    color: #222;
-    margin: 0;
-    padding: 0;
-}
 
 #notification {
     position: absolute;
@@ -50,4 +44,8 @@ body {
     .message { background: yellow;  }
     .error { background: #FDD };
     visibility: hidden;
+}
+
+.code {
+    font-family: Consolas, Inconsolata, monospace;
 }

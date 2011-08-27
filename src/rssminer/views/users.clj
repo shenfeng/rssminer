@@ -6,8 +6,8 @@
          "templates/user/login.html" [html/root] [return-url]
          [:input#return-url] (html/set-attr :value return-url))]
   (defn login-page [return-url]
-    (apply str (layout (s return-url)))))
+    (layout (s return-url))))
 
 (let [s (snippet "templates/user/signup.html" [html/root] [])]
   (defn signup-page []
-    (apply str (layout (s)))))
+    (layout (s))))

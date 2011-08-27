@@ -1,6 +1,4 @@
-// notification depend on dom
-window.$(function(){
-
+(function(){
   var mustache = window.Mustache,
       $ = window.$,
       _ = window._,
@@ -37,33 +35,33 @@ window.$(function(){
     }
   });
 
-  if(mustache) {
-    mustache.registerHelper('ymdate', function(context, block){
-      var d = new Date(context),
-          m = d.getMonth() + 1,
-          day = d.getDay();
-      return [d.getFullYear(),
-              m < 10 ? '0' + m : m,
-              day < 10 ? '0' + day : day].join('/');
-    });
-  }
+  mustache.registerHelper('ymdate', function(context, block){
+    var d = new Date(context),
+        m = d.getMonth() + 1,
+        day = d.getDay();
+    return [d.getFullYear(),
+            m < 10 ? '0' + m : m,
+            day < 10 ? '0' + day : day].join('/');
+  });
 
-  var notif = (function(){
-    var $nofity = $('#notification'),
+  var notif = (function() {
+    var $nofity = $('<div id="notification"><p></p></div>')
+          .prependTo($('body')),
         $p = $('p', $nofity),
         message,
-        count = 0;
+        count = 0,
+        MSG = 'message',
+        ERROR = 'error';
 
     function msg(a, r, msg){
       if(message !== msg){
         count = 1;
         message = msg;
-        $p.html(msg);
-        $nofity.removeClass(r).addClass(a)
-          .css({
-            marginLeft: -$p.width()/2,
-            visibility: 'visible'
-          });
+        $p.html(msg).removeClass(r).addClass(a);
+        $nofity.css({
+          marginLeft: -$p.width()/2,
+          visibility: 'visible'
+        });
       } else {
         count++;
       }
@@ -83,8 +81,8 @@ window.$(function(){
       }
     }
     return {
-      msg: _.bind(msg, null, 'message', 'error'),
-      error: _.bind(msg, null, 'error', 'message'),
+      msg: _.bind(msg, null, MSG, ERROR),
+      error: _.bind(msg, null, ERROR, MSG),
       hide: hide
     };
   })();
@@ -140,4 +138,4 @@ window.$(function(){
       removeClass: function (c) { return $('.' + c).removeClass(c); }
     }
   });
-});
+})();

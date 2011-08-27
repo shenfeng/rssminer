@@ -1,30 +1,32 @@
 (ns rssminer.handlers.dashboard
+  (:use [rssminer.fetcher :only [start-fetcher stop-fetcher fetcher]]
+        [rssminer.crawler :only [start-crawler stop-crawler crawler]])
   (:require [rssminer.db.dashboard :as db]
             [rssminer.config :as conf]))
 
-(defn- get-stats []
-  {:total_count (db/get-total-count)
-   :crawled_count (db/get-crawled-count)
-   :rss_links_cout (db/get-rss-links-count)})
-
 (defn get-rsslinks [req]
-  (assoc (get-stats)
-    :rss_links (or (db/get-rss-links) [])))
+  {:rss_links (or (db/get-rss-links) [])})
 
 (defn get-crawler-pending [req]
-  (assoc (get-stats)
-    :pending_links (or (db/get-pending-links) [])))
+  {:pending_links (or (db/get-pending-links) [])})
 
 (defn get-crawled [req]
-  (assoc (get-stats)
-    :crawled_links (or (db/get-crawled-links) [])))
+  {:crawled_links (or (db/get-crawled-links) [])})
 
-(defn get-black-domain-pattens [req]
-  (assoc (get-stats)
-    :black_domain_pattens (map str @@conf/black-domain-pattens)
-    :reseted_domain_pattens (map str @@conf/reseted-hosts)))
+(defn get-settings [req]
+  (let [total (db/crawler-links-count)
+        crawled (db/crawled-count)]
+    {:crawler_links_count total
+     :crawled_count crawled
+     :pending_count (- total crawled)
+     :rss_links_cout (db/rss-links-count)
+     :feeds_count (db/feeds-count)
+     :fetcher_runing (not (nil? @fetcher))
+     :crawler_runing (not (nil? @crawler))
+     :black_domain_pattens (map str @@conf/black-domain-pattens)
+     :reseted_domain_pattens (map str @@conf/reseted-hosts)}))
 
-(defn add-black-domain-patten [req]
+(defn settings [req]
   (let [patten (:patten (:body req))]
     (when (> (count patten) 2)
       (conf/add-black-domain-patten patten)
