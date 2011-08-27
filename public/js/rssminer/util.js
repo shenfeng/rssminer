@@ -129,6 +129,7 @@
   // export
   window.Rssminer = $.extend(window.Rssminer, {
     ajax: ajax,
+    notif: notif,
     util: {
       snippet: snippet,
       // one dom ele is within another dom, or they are just the same

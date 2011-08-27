@@ -21,10 +21,12 @@
      :pending_count (- total crawled)
      :rss_links_cout (db/rss-links-count)
      :feeds_count (db/feeds-count)
-     :fetcher_runing (not (nil? @fetcher))
-     :crawler_runing (not (nil? @crawler))
-     :black_domain_pattens (map str @@conf/black-domain-pattens)
-     :reseted_domain_pattens (map str @@conf/reseted-hosts)}))
+     :fetcher_running (not (nil? @fetcher))
+     :crawler_running (not (nil? @crawler))
+     :black_domains (map (fn [p] {:patten (str p)})
+                                @@conf/black-domain-pattens)
+     :reseted_domains (map (fn [p] {:patten (str p)})
+                                  @@conf/reseted-hosts)}))
 
 (defn settings [req]
   (let [patten (:patten (:body req))]

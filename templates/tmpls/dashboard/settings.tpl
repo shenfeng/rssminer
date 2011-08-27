@@ -1,23 +1,23 @@
 <div class="section">
   <h3>server control</h3>
   <table>
-    <tr>
+    <tr class="crawler">
       <td>Cralwer</td>
-      <td>{{crawler_runing}} </td>
+      <td>{{crawler_running}} </td>
       <td>
         <button>
-          {{#crawler_runing}}stop {{/crawler_runing}}
-            {{^crawler_runing}}start {{/crawler_runing}}
+          {{#crawler_running}}stop {{/crawler_running}}
+            {{^crawler_running}}start {{/crawler_running}}
         </button>
       </td>
     </tr>
-    <tr>
+    <tr class="fetcher">
       <td>Fetcher</td>
-      <td>{{fetcher_runing}} </td>
+      <td>{{fetcher_running}} </td>
       <td>
         <button>
-          {{#fetcher_runing}}stop {{/fetcher_runing}}
-            {{^fetcher_runing}}start {{/fetcher_runing}}
+          {{#fetcher_running}}stop {{/fetcher_running}}
+            {{^fetcher_running}}start {{/fetcher_running}}
         </button>
       </td>
     </tr>
@@ -50,23 +50,23 @@
   </table>
 </div>
 
-<div class="section">
+<div class="section" id="black-domains">
   <h3>black domain</h3>
-  <input id="add-patten"/>
+  <input />
   <ul>
-    {{#black_domain_pattens}}
-      <li>{{.}}</li>
-    {{/black_domain_pattens}}
+    {{#black_domains}}
+      <li>{{patten}}</li>
+    {{/black_domains}}
   </ul>
 </div>
 
-<div class="section">
+<div class="section" id="reseted-domains">
   <h3>reseted domain</h3>
   <input/>
   <ul>
-    {{#reseted_domain_pattens}}
-      <li>{{.}}</li>
-    {{/reseted_domain_pattens}}
+    {{#reseted_domains}}
+      <li>{{patten}}</li>
+    {{/reseted_domains}}
   </ul>
 </div>
 

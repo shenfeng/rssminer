@@ -31,8 +31,8 @@
                         :request-method :get})
         settings (-> resp :body read-json)]
     (is (= 200 (:status resp)))
-    (is (> (count (:black_domain_pattens settings)) 0))
-    (is (> (count (:reseted_domain_pattens settings)) 0))))
+    (is (> (count (:black_domains settings)) 0))
+    (is (> (count (:reseted_domains settings)) 0))))
 
 (deftest test-add-modify-settings
   (let [resp (test-app {:uri "/api/dashboard/settings"

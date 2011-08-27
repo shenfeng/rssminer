@@ -16,7 +16,7 @@ function remote_run {
 # Create the directory if this is the first deployment.
 remote_run "sudo mkdir -p ${TARGET_DIR} && sudo chown deploy ${TARGET_DIR}"
 
-rm classes && lein javac
+rm classes -rf && lein javac
 
 rsync --rsh='ssh' -vr --delete --delete-excluded \
     --exclude-from conf/exclude.txt \

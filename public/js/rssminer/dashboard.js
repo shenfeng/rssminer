@@ -1,49 +1,99 @@
 $(function(){
-  var reader = window.Rssminer,
-      backbone = window.Backbone,
-      tmpls = reader.tmpls,
-      to_html = window.Mustache.to_html,
-      ajax = reader.ajax;
+  var backbone = window.Backbone,
+      oc = window.OC_Backbone,
+      tmpls = window.Rssminer.tmpls,
+      $ = window.$,
+      to_html = window.Mustache.to_html;
 
-  var Router = backbone.Router.extend(function () {
+  var CommonView = backbone.View.extend({
+    id: 'content',
+    initialize: function() {
+      this.model.bind('change', this.render, this);
+    },
+    render: function() {
+      $(this.el).html(to_html(this.options.tmpl, this.model.toJSON()));
+      return this;
+    }
+  });
 
-    function makeAlive (url, tmpl, callback) {
-      ajax.get(url).done(function (data) {
-        $("#content").empty().append(to_html(tmpl, data));
-        if(typeof callback === 'function') {
-          callback();
+  var Settings = oc.Model.extend({
+    black_domains: oc.Collection,
+    reseted_domains: oc.Collection,
+    url: "/api/dashboard/settings"
+  });
+
+
+  var SettingsView = CommonView.extend(function () {
+    function addDomainPatten (name) {
+      return function (e) {
+        var patten = $(e.currentTarget).val();
+        if(patten && e.which === 13) {
+          this.model.get(name).add({patten: patten});
+        }
+      };
+    }
+    function startStopService (name) {
+      return function () {
+        var running = this.model.get(name),
+            attr = {};
+        attr[name] = !running;
+        this.model.set(attr);
+      };
+    }
+    return {
+      events: {
+        "keypress #black-domains input": addDomainPatten('black_domains'),
+        "keypress #reseted-domains input": addDomainPatten('reseted_domains'),
+        "click .crawler button" : startStopService('crawler_running'),
+        "click .fetcher button" : startStopService('fetcher_running')
+      }
+    };
+  });
+
+  var Router = window.Backbone.Router.extend(function () {
+
+    function common (path) {
+      $("#nav li").removeClass('active')
+        .filter('.' + path).addClass('active');
+    }
+
+    function showSettings () {
+      common('settings');
+      var settings = new Settings();
+      settings.fetch({
+        success: function () {
+          var view = new SettingsView({
+            model: settings,
+            tmpl: tmpls.settings
+          });
+          $("#content").replaceWith(view.render().el);
         }
       });
     }
 
-    function handler (path, page) {
-      path = path || "settings";
-      page = path || 1;
-      var callback = function () {
-        $("#nav li").removeClass('active')
-          .filter('.' + path).addClass('active');
-        if(path === 'black') {
-          var $input = $("#add-patten");
-          $input.keyup(function (e) {
-            if(e.which === 13) {
-              var patten = $input.val();
-              ajax.jpost("/api/dashboard/black",
-                         {patten: patten}).done(function (data) {
-              });
-            }
+    function showInfo (path) {
+      common(path);
+      var model = new backbone.Model();
+      model.fetch({
+        url: "/api/dashboard/" + path,
+        success: function () {
+          var view = new CommonView({
+            model: model,
+            tmpl: tmpls[path]
           });
+          $("#content").replaceWith(view.render().el);
         }
-      };
-      makeAlive("/api/dashboard/" + path , tmpls[path], callback);
-    };
+      });
+    }
 
     return  {
       initialize: function () {
         backbone.history.start();
       },
       routes: {
-        ":path": handler,
-        ":path/:page": handler
+        "": showSettings,
+        "settings/:page":showSettings,
+        ":path/:page":showInfo
       }
     };
   });

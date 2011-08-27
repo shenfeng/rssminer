@@ -92,6 +92,7 @@ dashboard_jss = FileList['public/js/lib/jquery.js',
                          'public/js/lib/mustache.js',
                          'public/js/rssminer/dashboard-tmpls.js',
                          'public/js/rssminer/util.js',
+                         'public/js/lib/onycloud-backbone.js',
                          'public/js/rssminer/dashboard.js']
 
 browse_jss = FileList['public/js/lib/jquery.js',
