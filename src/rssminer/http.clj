@@ -39,7 +39,7 @@
             link (URI. (str/trim link))]
         (str/trim (str (.resolve base link)))))
     (catch Exception e
-      (trace e (str "base: " base "; " "link: " link)))))
+      (trace e))))
 
 (defn reset-e?
   "Is the given SocketException is caused by connection reset"
