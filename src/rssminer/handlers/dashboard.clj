@@ -15,11 +15,15 @@
 
 (defn get-settings [req]
   (let [total (db/crawler-links-count)
-        crawled (db/crawled-count)]
+        crawled (db/crawled-count)
+        rss (db/rss-links-count)
+        finished (db/finished-count)]
     {:crawler_links_count total
      :crawled_count crawled
      :pending_count (- total crawled)
-     :rss_links_cout (db/rss-links-count)
+     :rss_links_cout rss
+     :rss_finished finished
+     :rss_pending (- rss finished)
      :feeds_count (db/feeds-count)
      :fetcher_running (not (nil? @fetcher))
      :crawler_running (not (nil? @crawler))

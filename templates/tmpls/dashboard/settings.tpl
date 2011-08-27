@@ -28,12 +28,20 @@
   <h3>statistics</h3>
   <table>
     <tr>
-      <td> Feed: </td>
+      <td>Feed:</td>
       <td>{{feeds_count}} </td>
     </tr>
     <tr>
-      <td> Rss: </td>
+      <td>Rss:</td>
       <td>{{rss_links_cout}} </td>
+    </tr>
+    <tr>
+      <td>Rss Fetched:</td>
+      <td>{{rss_finished}}</td>
+    </tr>
+    <tr>
+      <td>Rss Pending: </td>
+      <td>{{rss_pending}}</td>
     </tr>
     <tr>
       <td> Links: </td>

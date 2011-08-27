@@ -1,5 +1,5 @@
 <table id="rss-links">
-  <caption>Rss Links</caption>
+  <caption>Newly added Rss Links</caption>
   <tr>
     <th class="id"> ID </th>
     <th class="url code"> url </th>
