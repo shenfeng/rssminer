@@ -76,6 +76,7 @@ $(function(){
           $("#content").replaceWith(view.render().el);
         }
       });
+      setTimeout(showSettings, 5000);
     }
 
     function showInfo (path) {
