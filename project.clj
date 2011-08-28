@@ -24,7 +24,9 @@
   :aot [rssminer.main]
   :jvm-opts ["-XX:+UseCompressedOops"
              "-XX:+TieredCompilation"
-             "-XX:+UseCompressedStrings"]
+             "-XX:+UseCompressedStrings"
+             "-Xmx386m"
+             "-Xms386m"]
   ;; :jvm-opts ["-agentlib:hprof=cpu=samples,format=b,file=/tmp/profile.txt"]
   ;; :jvm-opts ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n"]
   :dev-dependencies [[clojure-source "1.2.1"]
