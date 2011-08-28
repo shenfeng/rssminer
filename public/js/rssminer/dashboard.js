@@ -52,7 +52,8 @@ $(function(){
         "keypress #black-domains input": addDomainPatten('black_domains'),
         "keypress #reseted-domains input": addDomainPatten('reseted_domains'),
         "click .crawler button" : startStopService('crawler_running'),
-        "click .fetcher button" : startStopService('fetcher_running')
+        "click .fetcher button" : startStopService('fetcher_running'),
+        "click .index button" : startStopService('commit_index')
       }
     };
   });

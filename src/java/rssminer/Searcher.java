@@ -77,6 +77,13 @@ public class Searcher {
         return "Searcher@" + path;
     }
 
+    public void commit() throws CorruptIndexException, IOException {
+        long start = System.currentTimeMillis();
+        indexer.commit();
+        long duration = System.currentTimeMillis() - start;
+        logger.info("commit index, taked " + duration + "ms");
+    }
+
     public void close() throws CorruptIndexException, IOException {
         Runtime.getRuntime().removeShutdownHook(shutDownHook);
         synchronized (indexer) {

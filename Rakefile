@@ -1,9 +1,9 @@
 task :default => :test
 
 version = Time.now.strftime("%Y%m%d%H%M") # timestamp
-soycompiler = "SoyToJsSrcCompiler.jar"
 jscompiler = "closure-compiler.jar"
 htmlcompressor = "htmlcompressor.jar"
+luke = "lukeall-3.3.0.jar"
 
 def get_file_as_string(filename)
   data = ''
@@ -54,25 +54,20 @@ file "bin/#{jscompiler}" do
   mv '/tmp/compiler.jar', "bin/#{jscompiler}"
 end
 
-file "bin/#{soycompiler}" do
-  file = 'closure-templates-for-javascript-latest.zip'
-  mkdir_p 'bin'
-  rm_rf "/tmp/#{soycompiler}"
-  sh "wget http://closure-templates.googlecode.com/files/#{file} -O /tmp/#{file}"
-  sh "unzip /tmp/#{file} #{soycompiler} -d /tmp"
-  mv "/tmp/#{soycompiler}", "bin/#{soycompiler}"
-  rm_rf "/tmp/#{file}"
-end
-
 file "bin/#{htmlcompressor}" do
   mkdir_p 'bin'
   sh 'wget http://htmlcompressor.googlecode.com/files/htmlcompressor-1.3.1.jar' +
     " -O bin/#{htmlcompressor}"
 end
 
+file "bin/#{luke}" do
+  mkdir_p 'bin'
+  sh "wget http://luke.googlecode.com/files/#{luke} -O bin/#{luke}"
+end
+
 task :deps => ["bin/#{jscompiler}",
-               "bin/#{htmlcompressor}",
-               "bin/#{soycompiler}"]
+               "bin/#{luke}",
+               "bin/#{htmlcompressor}"]
 
 rssminer_jss = FileList['public/js/lib/jquery.js',
                         'public/js/lib/jquery-ui-1.8.13.custom.js',

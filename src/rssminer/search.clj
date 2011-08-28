@@ -16,9 +16,13 @@
     (info "use index path" path)
     (reset! indexer (Searcher. path))))
 
+(defn commit []
+  (.commit ^Searcher @indexer))
+
 (defn index-feed [{:keys [id rss_link_id author title summary] :as feed}]
   (.index ^Searcher @indexer id rss_link_id author title summary))
 
 (defn search [req]
-  (.searchForTitle ^Searcher @indexer
-                   (-> req :params :term) 10))
+  (let [{:keys [term limit] :or {:limit "10"}} (-> req :params)]
+    (.searchForTitle ^Searcher @indexer
+                     term (Integer/parseInt limit))))

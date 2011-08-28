@@ -21,6 +21,13 @@
         </button>
       </td>
     </tr>
+    <tr class="index">
+      <td>index</td>
+      <td>{{commit_index}} </td>
+      <td>
+        <button>Commit</button>
+      </td>
+    </tr>
   </table>
 </div>
 

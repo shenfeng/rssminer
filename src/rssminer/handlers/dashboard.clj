@@ -1,6 +1,7 @@
 (ns rssminer.handlers.dashboard
   (:use [rssminer.fetcher :only [start-fetcher stop-fetcher fetcher]]
-        [rssminer.crawler :only [start-crawler stop-crawler crawler]])
+        [rssminer.crawler :only [start-crawler stop-crawler crawler]]
+        [rssminer.search :only [commit]])
   (:require [rssminer.db.dashboard :as db]
             [rssminer.config :as conf]))
 
@@ -22,6 +23,7 @@
      :crawled_count crawled
      :pending_count (- total crawled)
      :rss_links_cout rss
+     :commit_index false
      :rss_finished finished
      :rss_pending (- rss finished)
      :feeds_count (db/feeds-count)
@@ -46,4 +48,6 @@
       (stop-fetcher))
     (when (true? (:fetcher_running data))
       (start-fetcher))
+    (when (true? (:commit_index data))
+      (commit))
     nil))
