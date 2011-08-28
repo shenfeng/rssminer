@@ -3,6 +3,7 @@ package rssminer;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -29,6 +30,7 @@ import org.apache.lucene.util.Version;
 public class Searcher {
     static final Version V = Version.LUCENE_33;
     static final Analyzer analyzer = new StandardAnalyzer(V);
+    static final Logger logger = Logger.getLogger(Searcher.class);
     static final String FEED_ID = "feedId";
     static final String AUTHOR = "author";
     static final String TITLE = "title";
@@ -38,9 +40,27 @@ public class Searcher {
     static String[] FIELDS = new String[] { AUTHOR, TITLE, SUMMARY };
 
     private IndexWriter indexer = null;
+    private final String path;
+    private Thread shutDownHook = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            try {
+                synchronized (indexer) {
+                    if (indexer != null) {
+                        logger.info("jvm shutdown, close Searcher@" + path);
+                        indexer.close();
+                        indexer = null;
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("shutdownHook", e);
+            }
+        }
+    });
 
-    public Searcher(final String path) throws IOException {
+    public Searcher(String path) throws IOException {
         final IndexWriterConfig cfg = new IndexWriterConfig(V, analyzer);
+        this.path = path;
         cfg.setOpenMode(OpenMode.CREATE_OR_APPEND);
         Directory dir = null;
         if (path == "RAM") {
@@ -49,12 +69,22 @@ public class Searcher {
             dir = FSDirectory.open(new File(path));
         }
         indexer = new IndexWriter(dir, cfg);
+        Runtime.getRuntime().addShutdownHook(shutDownHook);
+    }
+
+    @Override
+    public String toString() {
+        return "Searcher@" + path;
     }
 
     public void close() throws CorruptIndexException, IOException {
-        if (indexer != null) {
-            indexer.close();
-            indexer = null;
+        Runtime.getRuntime().removeShutdownHook(shutDownHook);
+        synchronized (indexer) {
+            if (indexer != null) {
+                logger.info("close Searcher@" + path);
+                indexer.close();
+                indexer = null;
+            }
         }
     }
 

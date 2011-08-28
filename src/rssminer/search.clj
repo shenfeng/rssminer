@@ -1,4 +1,5 @@
 (ns rssminer.search
+  (:use [clojure.tools.logging :only [info]])
   (:import rssminer.Searcher))
 
 (defonce indexer (atom nil))
@@ -12,6 +13,7 @@
   "It will close previous indexer"
   (close-global-index-writer!)
   (let [path (if (= path :RAM) "RAM" path)]
+    (info "use index path" path)
     (reset! indexer (Searcher. path))))
 
 (defn index-feed [{:keys [id rss_link_id author title summary] :as feed}]
