@@ -20,7 +20,7 @@
 
 (def crawler-threads-count 15)
 
-(def fetcher-threads-count 1)
+(def fetcher-threads-count 2)
 
 (defn next-check [last-interval success?]
   (let [interval (if success?
