@@ -22,10 +22,11 @@
 (defn- extract-and-save-links [referer html]
   (let [{:keys [rss links]} (http/extract-links (:url referer) html)]
     (doseq [{:keys [url title]} rss]
-      (db/insert-rss-link {:url url
-                           :title title
-                           :next_check_ts (conf/rand-ts)
-                           :crawler_link_id (:id referer)}))
+      (when-not (re-find #"(?i)\bcomments" title)
+        (db/insert-rss-link {:url url
+                             :title title
+                             :next_check_ts (conf/rand-ts)
+                             :crawler_link_id (:id referer)})))
     (db/insert-crawler-links (map #(assoc %
                                      :next_check_ts (conf/rand-ts)
                                      :referer_id (:id referer)) links))))
