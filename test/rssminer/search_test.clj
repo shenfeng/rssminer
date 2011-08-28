@@ -16,7 +16,7 @@
 (use-fixtures :each app-fixture prepare)
 
 (deftest test-search
-  (let [s #(auth-app {:uri "/api/feeds/search"
+  (let [s #(auth-app {:uri "/api/feeds/search-ac-source"
                       :request-method :get
                       :params {"term" %}})]
     (testing "search summary"
