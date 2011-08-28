@@ -81,14 +81,14 @@ public class Searcher {
         long start = System.currentTimeMillis();
         indexer.commit();
         long duration = System.currentTimeMillis() - start;
-        logger.info("commit index, taked " + duration + "ms");
+        logger.debug("commit index, taked " + duration + "ms");
     }
 
     public void close() throws CorruptIndexException, IOException {
         Runtime.getRuntime().removeShutdownHook(shutDownHook);
         synchronized (indexer) {
             if (indexer != null) {
-                logger.info("close Searcher@" + path);
+                logger.debug("close Searcher@" + path);
                 indexer.close();
                 indexer = null;
             }

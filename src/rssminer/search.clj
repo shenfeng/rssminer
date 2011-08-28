@@ -1,5 +1,5 @@
 (ns rssminer.search
-  (:use [clojure.tools.logging :only [info]]
+  (:use [clojure.tools.logging :only [info debug]]
         [rssminer.util :only [extract-text]])
   (:import rssminer.Searcher))
 
@@ -14,7 +14,7 @@
   "It will close previous indexer"
   (close-global-index-writer!)
   (let [path (if (= path :RAM) "RAM" path)]
-    (info "use index path" path)
+    (debug "use index path" path)
     (reset! indexer (Searcher. path))))
 
 (defn commit []

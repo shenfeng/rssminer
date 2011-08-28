@@ -7,7 +7,7 @@
              value="%d{yy/MM/dd HH:mm:ss,SSS} [%t] %4p %c{1} - %m%n" />
 		</layout>
 		<filter class="org.apache.log4j.varia.LevelRangeFilter">
-			<param name="levelMin" value="debug" />
+			<param name="levelMin" value="info" />
 		</filter>
 	</appender>
 

@@ -1,6 +1,7 @@
 (ns rssminer.database
   (:use [clojure.java.jdbc :only [with-connection do-commands]]
         [clojure.java.io :only [resource]]
+        [clojure.tools.logging :only [debug trace info]]
         [clojure.java.jdbc :only [with-connection do-commands]])
   (:require [clojure.string :as str])
   (:import org.h2.jdbcx.JdbcConnectionPool
@@ -21,6 +22,7 @@
                  (when auto-server ";AUTO_SERVER=TRUE"))
         ds (JdbcConnectionPool/create url "sa" "sa")
         f (fn [& args]  (.getConnection ds))]
+    (debug "use h2 database" url)
     (reset! h2-db-factory {:factory f
                            :ds ds})))
 

@@ -32,7 +32,7 @@
                               (insert-record :feeds feed)))]
           (index-feed (assoc feed :id feed-id))
           (insert-tags feed-id user-id (:categories feed)))
-        (catch Exception e
+        (catch RuntimeException e
           (info "update" (:guid feed))
           (with-connection @h2-db-factory
             (update-values :feeds ["guid=?" (:guid feed)]
