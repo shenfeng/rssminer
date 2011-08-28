@@ -1,7 +1,7 @@
-@import "common";
+@import "variable";
 @import "css3";
-
-$page-width: 960px;
+@import "reset";
+@import "common";
 
 #header {
     .content {
@@ -29,8 +29,6 @@ $page-width: 960px;
 }
 
 #main {
-    width: $page-width;
-    margin: 0 auto;
     .lfloat {
         padding: 1em 0;
         width: 585px;

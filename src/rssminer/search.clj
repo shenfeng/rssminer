@@ -25,7 +25,14 @@
   (.index ^Searcher @indexer id rss_link_id author title
           (extract-text summary) categories))
 
+(defn search* [term limit]
+  (map #(dissoc (bean %) :class)
+       (.search ^Searcher @indexer term limit)))
+
 (defn search [req]
+  )
+
+(defn search-ac-title [req]
   (let [{:keys [term limit] :or {limit "10"}} (-> req :params)]
     (.searchForTitle ^Searcher @indexer
                      term (Integer/parseInt limit))))

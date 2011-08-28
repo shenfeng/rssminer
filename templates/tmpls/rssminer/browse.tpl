@@ -1,25 +1,25 @@
-<div id="content">
-  <ul id="entries">
+<div class="lfloat">
+  <ul class="feeds">
     {{#feeds}}
-    <li class="entry">
-      <div class="collapsed">
-        <div class="entry-main">
-          <h4><a href="{{link}}" target="_blank">{{title}}</a></h4> -
-          <span class="snippet">{{snippet}}</span>
-        </div>
-      </div>
-      <div class="entry-container">
-        <div class="entry-main">
-          <h2 class="entry-title">{{title}}</h2>
-          <span class="entry-author">{{author}}</span>
-          <div class="entry-body">
-            {{{summary}}}
-          </div>
-        </div>
-        <div class="entry-comments">
-        </div>
-      </div>
-    </li>
+      <li>
+        <h3>{{title}}</h3>
+        <p class="author">{{author}}</p>
+        <p class="snippet">{{snippet}}</p>
+        <ul class="categories">
+          {{#categories}}
+            <li>{{.}}</li>
+          {{/categories}}
+        </ul>
+      </li>
     {{/feeds}}
   </ul>
 </div>
+
+<div class="rfloat">
+  <ul class="tags">
+    {{#tags}}
+      <li>{{.}}</li>
+    {{/tags}}
+  </ul>
+</div>
+

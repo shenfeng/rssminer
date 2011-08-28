@@ -18,7 +18,9 @@
   (stop-fetcher)
   (when-not (nil? @server)
     (info "shutdown netty server....")
-    (@server)))
+    (@server))
+  (close-global-h2-factory!)
+  (close-global-index-writer!))
 
 (defn start-server
   [{:keys [port index-path profile db-path h2-trace

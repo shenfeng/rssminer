@@ -56,3 +56,8 @@
 (defn add-reseted-domain [domain]
   (db/insert-reseted-domain-patten domain)
   (reset! reseted-hosts (delay (db/fetch-reseted-domain-pattens))))
+
+(def popular-tags ["java" "solaris" "netbeans" "opensource" "security" "emacs"
+                   "jdk" "science" "community" "enterprise" "linux" "clojure"
+                   "virtualization" "uncategorized" "database" "performance"
+                   "mysql" "web" "ruby" "php" "software" "vim"])

@@ -32,7 +32,7 @@ import clojure.lang.Seqable;
 
 public class Searcher {
     static final Version V = Version.LUCENE_33;
-    static final int LENGTH = 225;
+    static final int LENGTH = 280;
     static final Analyzer analyzer = new StandardAnalyzer(V);
     static final Logger logger = Logger.getLogger(Searcher.class);
     static final String FEED_ID = "feedId";
@@ -144,14 +144,14 @@ public class Searcher {
         }
 
         if (categories != null) {
-            String c = null;
+            String c = "";
             ISeq seq = categories.seq();
             while (seq != null) {
                 c += (seq.first().toString() + ", ");
                 seq = seq.next();
             }
 
-            if (c != null) {
+            if (c != "") {
                 Field ca = new Field(CATEGORIES, c, Store.YES, Index.ANALYZED);
                 doc.add(ca);
             }
@@ -160,7 +160,7 @@ public class Searcher {
         indexer.addDocument(doc);
     }
 
-    public String[] searchForTitle(final String term, final int n)
+    public String[] searchForTitle(String term, int n)
             throws CorruptIndexException, IOException, ParseException {
         IndexSearcher searcher = new IndexSearcher(IndexReader.open(indexer,
                 true));
@@ -171,6 +171,28 @@ public class Searcher {
         String[] results = new String[length];
         for (int i = 0; i < length; i++) {
             results[i] = searcher.doc(docs.scoreDocs[i].doc).get(TITLE);
+        }
+        return results;
+    }
+
+    public Feed[] search(String term, int count)
+            throws CorruptIndexException, IOException, ParseException {
+        IndexSearcher searcher = new IndexSearcher(IndexReader.open(indexer,
+                true));
+        QueryParser parser = new QueryParser(V, SUMMARY, analyzer);
+        Query query = parser.parse(term);
+        TopDocs docs = searcher.search(query, count);
+        final int len = docs.scoreDocs.length;
+        Feed[] results = new Feed[len];
+        for (int i = 0; i < len; i++) {
+            Feed f = new Feed();
+            Document doc = searcher.doc(docs.scoreDocs[i].doc);
+            f.setTitle(doc.get(TITLE));
+            f.setAuthor(doc.get(AUTHOR));
+            f.setCategories(doc.get(CATEGORIES));
+            f.setSnippet(doc.get(SNIPPET));
+            f.setFeedid(doc.get(FEED_ID));
+            results[i] = f;
         }
         return results;
     }
