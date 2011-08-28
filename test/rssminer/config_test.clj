@@ -8,7 +8,6 @@
 
 (deftest test-reseted-url
   (is (reseted-url? "emacs-fu.blogspot.com/"))
-  (is (reseted-url? "http://facebook.com"))
   (is (not (reseted-url? "http://google.com")))
   (add-reseted-domain "http://google.com")
   (is (reseted-url? "http://google.com")))

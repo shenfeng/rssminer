@@ -16,8 +16,18 @@
 (use-fixtures :each app-fixture prepare)
 
 (deftest test-search
-  (let [resp (auth-app {:uri "/api/feeds/search"
-                        :request-method :get
-                        :params {"term" "mvc"}})]
-    (is (= 200 (:status resp)))
-    (is (= (-> resp :body read-json count) 1))))
+  (let [s #(auth-app {:uri "/api/feeds/search"
+                      :request-method :get
+                      :params {"term" %}})]
+    (testing "search summary"
+      (let [resp (s "onsummary")]
+        (is (= 200 (:status resp)))
+        (is (= (-> resp :body read-json count) 1))))
+    (testing "search category"
+      (let [resp (s "acategory")]
+        (is (= 200 (:status resp)))
+        (is (= (-> resp :body read-json count) 1))))
+    (testing "search author"
+      (let [resp (s "aScottGu")]
+        (is (= 200 (:status resp)))
+        (is (= (-> resp :body read-json count) 1))))))

@@ -141,19 +141,19 @@
 			href="http://www.hanselman.com/blog/NuGetForTheEnterpriseNuGetInAContinuousIntegrationAutomatedBuildSystem.aspx"
 			target="_blank"&gt;NuGet for the Enterprise – NuGet in a Continuous
 			Integration Automated Build System&lt;/a&gt;: Great post from Scott
-			Hanselman on how to integrate NuGet within enterprise build
+			Hanselman on onsummary how to integrate NuGet within enterprise build
 			environments and enable it with CI solutions.&lt;/p&gt; &lt;/li&gt;
 			&lt;/ul&gt; &lt;p&gt;Hope this helps,&lt;/p&gt;
 			&lt;p&gt;Scott&lt;/p&gt;&lt;img
 			src="http://weblogs.asp.net/aggbug.aspx?PostID=7842730" width="1"
 			height="1"&gt;</content>
 		<author>
-			<name>ScottGu</name>
+			<name>aScottGu</name>
 			<uri>http://weblogs.asp.net/members/ScottGu.aspx</uri>
 		</author>
 		<category term="ASP.NET"
 			scheme="http://weblogs.asp.net/scottgu/archive/tags/ASP.NET/default.aspx" />
-		<category term=".NET"
+		<category term="acategory"
 			scheme="http://weblogs.asp.net/scottgu/archive/tags/.NET/default.aspx" />
 		<category term="Link Listing"
 			scheme="http://weblogs.asp.net/scottgu/archive/tags/Link+Listing/default.aspx" />

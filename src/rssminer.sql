@@ -119,8 +119,6 @@ create index idx_link_check_ts on crawler_links(next_check_ts)
 ----
 create index idx_rss_check_ts on rss_links(next_check_ts)
 ----
-create index idx_tag on feed_tag(tag)
-----
 create table multi_rss_domains (
   id INTEGER PRIMARY KEY auto_increment,
   domain VARCHAR UNIQUE,
@@ -178,5 +176,4 @@ insert into black_domain_pattens (patten) values
 ('http://\w{10,}\d{5,}')
 ----
 insert into reseted_domain_pattens (patten) values
-('\.blogspot\.com'),
-('facebook\.com'),
+('\.blogspot\.com')

@@ -27,8 +27,12 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 
+import clojure.lang.ISeq;
+import clojure.lang.Seqable;
+
 public class Searcher {
     static final Version V = Version.LUCENE_33;
+    static final int LENGTH = 225;
     static final Analyzer analyzer = new StandardAnalyzer(V);
     static final Logger logger = Logger.getLogger(Searcher.class);
     static final String FEED_ID = "feedId";
@@ -36,8 +40,22 @@ public class Searcher {
     static final String TITLE = "title";
     static final String RSS_ID = "rss_id";
     static final String SUMMARY = "summary";
+    static final String CATEGORIES = "categories";
+    static final String SNIPPET = "snippet";
 
-    static String[] FIELDS = new String[] { AUTHOR, TITLE, SUMMARY };
+    static String[] FIELDS = new String[] { AUTHOR, TITLE, SUMMARY,
+            CATEGORIES };
+
+    private static String genSnippet(String summary) {
+        if (summary.length() < LENGTH)
+            return summary;
+        else {
+            int len = LENGTH;
+            while (len < summary.length() && summary.charAt(len) != ' ')
+                ++len;
+            return summary.substring(0, len);
+        }
+    }
 
     private IndexWriter indexer = null;
     private final String path;
@@ -96,18 +114,19 @@ public class Searcher {
     }
 
     public void index(int feeId, int rssId, String author, String title,
-            String summary) throws CorruptIndexException, IOException {
+            String summary, Seqable categories) throws CorruptIndexException,
+            IOException {
         Document doc = new Document();
-        NumericField id = new NumericField(FEED_ID, Store.YES, false);
-        id.setIntValue(feeId);
-        doc.add(id);
+        NumericField fid = new NumericField(FEED_ID, Store.YES, false);
+        fid.setIntValue(feeId);
+        doc.add(fid);
 
-        NumericField _rssid = new NumericField(RSS_ID, Store.YES, false);
-        _rssid.setIntValue(rssId);
-        doc.add(_rssid);
+        NumericField rid = new NumericField(RSS_ID, Store.YES, false);
+        rid.setIntValue(rssId);
+        doc.add(rid);
 
         if (author != null) {
-            Field a = new Field(AUTHOR, author, Store.YES, Index.NO);
+            Field a = new Field(AUTHOR, author, Store.YES, Index.ANALYZED);
             doc.add(a);
         }
 
@@ -117,9 +136,27 @@ public class Searcher {
         }
 
         if (summary != null) {
-            Field s = new Field(SUMMARY, summary, Store.NO, Index.ANALYZED);
+            Field sum = new Field(SUMMARY, summary, Store.NO, Index.ANALYZED);
+            doc.add(sum);
+            Field s = new Field(SNIPPET, genSnippet(summary), Store.YES,
+                    Index.NO);
             doc.add(s);
         }
+
+        if (categories != null) {
+            String c = null;
+            ISeq seq = categories.seq();
+            while (seq != null) {
+                c += (seq.first().toString() + ", ");
+                seq = seq.next();
+            }
+
+            if (c != null) {
+                Field ca = new Field(CATEGORIES, c, Store.YES, Index.ANALYZED);
+                doc.add(ca);
+            }
+        }
+
         indexer.addDocument(doc);
     }
 

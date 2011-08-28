@@ -11,7 +11,7 @@
   (is (json-str {:date (Date.)})))
 
 (deftest test-extract-text
-  (is (= (extract-text "<a>text</a>") "text")) )
+  (is (= (extract-text "<a>text\n</a>") "text")) )
 
 (deftest test-assoc-if
   (is (= 3 (-> (assoc-if {} :a 1 :b 2 :c 3) keys count)))

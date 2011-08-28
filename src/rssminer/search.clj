@@ -20,9 +20,10 @@
 (defn commit []
   (.commit ^Searcher @indexer))
 
-(defn index-feed [{:keys [id rss_link_id author title summary] :as feed}]
+(defn index-feed
+  [{:keys [id rss_link_id author title summary] :as feed} categories]
   (.index ^Searcher @indexer id rss_link_id author title
-          (extract-text summary)))
+          (extract-text summary) categories))
 
 (defn search [req]
   (let [{:keys [term limit] :or {limit "10"}} (-> req :params)]

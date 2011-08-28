@@ -42,7 +42,7 @@
 (defn extract-text [html]
   (when html
     (str/replace html
-                 #"(?m)<[^<>]+>", "")))
+                 #"(?m)<[^<>]+>|\n", "")))
 
 (defn serialize-to-js [data]
   (let [stats (map

@@ -33,7 +33,7 @@
 
 (defn rand-ts [] (rand-int 1000000))
 
-(def ignored-url-patten #"(?i)(jpg|png|gif|css|js|jpeg|pdf)$")
+(def ignored-url-patten #"(?i)(jpg|png|gif|css|js|jpeg|pdf|mp3)$")
 
 (def non-url-patten #"(?i)^\s*(javascript|mailto|#)")
 

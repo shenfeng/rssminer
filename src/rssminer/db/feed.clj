@@ -2,6 +2,8 @@
   (:use [rssminer.database :only [h2-db-factory]]
         [rssminer.db.util :only [h2-query id-k with-h2 h2-insert]]
         [rssminer.search :only [index-feed]]
+        [rssminer.util :only [ignore-error]]
+        [clojure.string :only [blank?]]
         [clojure.tools.logging :only [info]]
         [clojure.java.jdbc :only [with-connection with-query-results
                                   insert-record update-values]])
@@ -19,23 +21,24 @@
 
 (defn insert-tags [feed-id user-id tags]
   (doseq [t tags]
-    (with-h2 (insert-record :feed_tag  {:feed_id feed-id
-                                        :user_id user-id
-                                        :tag t}))))
+    (ignore-error
+     (with-h2 (insert-record :feed_tag  {:feed_id feed-id
+                                         :user_id user-id
+                                         :tag t})))))
 
 (defn save-feeds [feeds rss-id user-id]
-  (doseq [feed (:entries feeds)]
-    (when (:guid feed)
-      (try                              ; guid is uniqe
+  (doseq [{:keys [guid categories] :as feed} (:entries feeds)]
+    (when (and guid (not (blank? guid)))
+      (try
         (let [feed (dissoc (assoc feed :rss_link_id rss-id) :categories)
               feed-id (id-k (with-h2
                               (insert-record :feeds feed)))]
-          (index-feed (assoc feed :id feed-id))
-          (insert-tags feed-id user-id (:categories feed)))
-        (catch RuntimeException e
-          (info "update" (:guid feed))
+          (index-feed (assoc feed :id feed-id) categories)
+          (insert-tags feed-id user-id categories))
+        (catch RuntimeException e       ;guid is uniqe
+          (info "update" guid)
           (with-connection @h2-db-factory
-            (update-values :feeds ["guid=?" (:guid feed)]
+            (update-values :feeds ["guid=?" guid]
                            (dissoc feed :categories))))))))
 
 (defn fetch-feeds [rss-link-id limit offset]

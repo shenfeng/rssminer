@@ -102,7 +102,7 @@
         (catch SocketException e
           (if (and (reset-e? e) (not (:proxy? req)))
             (do
-              (conf/add-reseted-domain (extract-host url))
+              (info url "is reseted")
               (client (assoc req :proxy? true)))
             (throw e)))))))
 
