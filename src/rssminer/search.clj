@@ -23,6 +23,6 @@
   (.index ^Searcher @indexer id rss_link_id author title summary))
 
 (defn search [req]
-  (let [{:keys [term limit] :or {:limit "10"}} (-> req :params)]
+  (let [{:keys [term limit] :or {limit "10"}} (-> req :params)]
     (.searchForTitle ^Searcher @indexer
                      term (Integer/parseInt limit))))
