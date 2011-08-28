@@ -39,6 +39,11 @@
 (defn session-get [req key] ;; for test code easy mock
   (-> req :session key))
 
+(defn extract-text [html]
+  (when html
+    (str/replace html
+                 #"(?m)<[^<>]+>", "")))
+
 (defn serialize-to-js [data]
   (let [stats (map
                (fn [[k v]]

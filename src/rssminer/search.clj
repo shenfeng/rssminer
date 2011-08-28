@@ -1,5 +1,6 @@
 (ns rssminer.search
-  (:use [clojure.tools.logging :only [info]])
+  (:use [clojure.tools.logging :only [info]]
+        [rssminer.util :only [extract-text]])
   (:import rssminer.Searcher))
 
 (defonce indexer (atom nil))
@@ -20,7 +21,8 @@
   (.commit ^Searcher @indexer))
 
 (defn index-feed [{:keys [id rss_link_id author title summary] :as feed}]
-  (.index ^Searcher @indexer id rss_link_id author title summary))
+  (.index ^Searcher @indexer id rss_link_id author title
+          (extract-text summary)))
 
 (defn search [req]
   (let [{:keys [term limit] :or {limit "10"}} (-> req :params)]

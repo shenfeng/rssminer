@@ -103,6 +103,7 @@ task :clean  do
   rm_rf 'src/templates'
   sh 'rm public/js/rssminer*min.js || exit 0'
   sh 'rm public/js/dashboard*min.js || exit 0'
+  sh 'rm public/js/browse*min.js || exit 0'
   sh "rm public/js/rssminer/*-tmpls.js || exit 0 "
   rm_rf "public/css"
 end
