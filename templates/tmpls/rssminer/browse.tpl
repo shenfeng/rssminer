@@ -1,24 +1,29 @@
-<div class="lfloat">
-  <ul class="feeds">
+<div class="lfloat" id="feeds">
+  <ul>
     {{#feeds}}
       <li>
         <h3>{{title}}</h3>
-        <p class="author">{{author}}</p>
+        <div class="clearfix">
+          <span class="author">
+            by <a href="/browse/author:{{author}}">{{author}}</a>
+          </span>
+          <ul class="tags rfloat">
+            {{#categories}}
+              <li><a href="/browse/tag:{{.}}">{{.}}</a></li>
+            {{/categories}}
+          </ul>
+        </div>
         <p class="snippet">{{snippet}}</p>
-        <ul class="categories">
-          {{#categories}}
-            <li>{{.}}</li>
-          {{/categories}}
-        </ul>
       </li>
     {{/feeds}}
   </ul>
 </div>
 
-<div class="rfloat">
-  <ul class="tags">
+<div class="rfloat" id="tags">
+  <p class="section-title">By Tag</p>
+  <ul id="tags">
     {{#tags}}
-      <li>{{.}}</li>
+      <li><a href="/browse/tag:{{.}}">{{.}}</a></li>
     {{/tags}}
   </ul>
 </div>

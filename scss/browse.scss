@@ -3,6 +3,35 @@
 @import "reset";
 @import "common";
 
-#main {
-    .lfloat {width: 585px;}
+#feeds {
+    width: $page-width - 260px - 20px;
+    > ul {
+        list-style: none;
+        padding: 0;
+    }
+    .tags {
+        list-style: none;
+        li {
+            display: inline-block;
+            padding: 3px;
+        }
+    }
+    .author {
+        margin-left: 20em;
+    }
+}
+
+#tags {
+    width: 260px;
+    > ul {
+        padding: 0 0 0 0.2em;
+        list-style: none;
+        li {
+            display: inline-block;
+            padding: 3px;
+        }
+    }
+}
+.section-title {
+    font-weight: bold;
 }

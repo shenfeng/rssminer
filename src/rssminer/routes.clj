@@ -64,7 +64,8 @@
 (defroutes all-routes
   (GET "/" [] rssminer/landing-page)
   (GET "/app" [] rssminer/index-page)
-  (GET "/browse" [] rssminer/browse-feed)
+  (context "/browse" []
+           (GET ["/:term" :term #".*"] [] rssminer/browse-feed))
   (context "/dashboard" []
            (GET "/" [] rssminer/dashboard-page))
   (context "/login" []

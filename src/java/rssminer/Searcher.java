@@ -40,11 +40,10 @@ public class Searcher {
     static final String TITLE = "title";
     static final String RSS_ID = "rss_id";
     static final String SUMMARY = "summary";
-    static final String CATEGORIES = "categories";
+    static final String TAG = "tag";
     static final String SNIPPET = "snippet";
 
-    static String[] FIELDS = new String[] { AUTHOR, TITLE, SUMMARY,
-            CATEGORIES };
+    static String[] FIELDS = new String[] { AUTHOR, TITLE, SUMMARY, TAG };
 
     private static String genSnippet(String summary) {
         if (summary.length() < LENGTH)
@@ -114,7 +113,7 @@ public class Searcher {
     }
 
     public void index(int feeId, int rssId, String author, String title,
-            String summary, Seqable categories) throws CorruptIndexException,
+            String summary, Seqable tags) throws CorruptIndexException,
             IOException {
         Document doc = new Document();
         NumericField fid = new NumericField(FEED_ID, Store.YES, false);
@@ -143,16 +142,16 @@ public class Searcher {
             doc.add(s);
         }
 
-        if (categories != null) {
-            String c = "";
-            ISeq seq = categories.seq();
+        if (tags != null) {
+            String t = "";
+            ISeq seq = tags.seq();
             while (seq != null) {
-                c += (seq.first().toString() + ", ");
+                t += (seq.first().toString() + ", ");
                 seq = seq.next();
             }
 
-            if (c != "") {
-                Field ca = new Field(CATEGORIES, c, Store.YES, Index.ANALYZED);
+            if (t != "") {
+                Field ca = new Field(TAG, t, Store.YES, Index.ANALYZED);
                 doc.add(ca);
             }
         }
@@ -189,7 +188,7 @@ public class Searcher {
             Document doc = searcher.doc(docs.scoreDocs[i].doc);
             f.setTitle(doc.get(TITLE));
             f.setAuthor(doc.get(AUTHOR));
-            f.setCategories(doc.get(CATEGORIES));
+            f.setCategories(doc.get(TAG));
             f.setSnippet(doc.get(SNIPPET));
             f.setFeedid(doc.get(FEED_ID));
             results[i] = f;
