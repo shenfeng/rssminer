@@ -40,7 +40,8 @@
 
 (deftest test-update-rss-link
   (let [newly (insert-rss-link {:url "http://a.com/feed.xml"})
+        c (count (fetch-rss-links 100))
         u (update-rss-link (id-k newly)
                            {:check_interval 100
-                            :next_check_ts (- (now-seconds) 1000)})]
-    (is (= 1 (count (fetch-rss-links 100))))))
+                            :next_check_ts (+ (now-seconds) 1000)})]
+    (is (= 1 (- c (count (fetch-rss-links 100)))))))

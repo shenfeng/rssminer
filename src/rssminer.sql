@@ -177,3 +177,26 @@ insert into black_domain_pattens (patten) values
 ----
 insert into reseted_domain_pattens (patten) values
 ('\.blogspot\.com')
+----
+insert into rss_links (url) values
+('http://blog.raek.se/feed/'),
+('http://feeds.feedburner.com/ruanyifeng'),
+('http://blog.sina.com.cn/rss/kaifulee.xml'),
+('http://cemerick.com/feed/'),
+('http://data-sorcery.org/feed/'),
+('http://norvig.com/rss-feed.xml'),
+('http://planet.clojure.in/atom.xml'),
+('http://techbehindtech.com/feed/'),
+('http://weblogs.asp.net/scottgu/atom.aspx'),
+('http://www.alistapart.com/rss.xml'),
+('http://www.ibm.com/developerworks/views/java/rss/libraryview.jsp'),
+('http://www.ubuntugeek.com/feed/'),
+('http://aria42.com/blog/?feed=rss2'),
+('http://philippeadjiman.com/blog/feed/rss/'),
+('http://blogs.oracle.com/briangoetz/feed/entries/rss'),
+('http://blogs.oracle.com/chegar/feed/entries/rss'),
+('http://clj-me.cgrand.net/feed/'),
+('http://emacs-fu.blogspot.com/feeds/posts/default?alt=rss'),
+('http://blog.higher-order.net/feed/'),
+('http://feeds2.feedburner.com/JohnResig'),
+('http://emacsblog.org/feed/'),

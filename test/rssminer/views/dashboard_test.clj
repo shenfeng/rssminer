@@ -10,7 +10,7 @@
                         :request-method :get})
         stats (-> resp :body read-json)]
     (is (= 200 (:status resp)))
-    (is (empty?  (-> stats :rss_links)))))
+    (is (seq (-> stats :rss_links)))))
 
 (deftest test-get-pending
   (let [resp (test-app {:uri "/api/dashboard/pending"

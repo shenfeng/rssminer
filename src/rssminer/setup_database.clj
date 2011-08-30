@@ -1,43 +1,23 @@
 (ns rssminer.setup-database
   (:use (rssminer [database :only [use-h2-database! close-global-h2-factory!
                                    import-h2-schema!]]
-                  [search :only [use-index-writer!
-                                 close-global-index-writer!]]
                   [util :only [session-get]]
                   [routes :only [app]])
         (rssminer.db [user :only [create-user]])
-        [clojure.tools.cli :only [cli optional required]]
-        [clojure.data.json :only [json-str]]))
-
-(def links ["http://blog.raek.se/feed/"
-            "http://feeds.feedburner.com/ruanyifeng"
-            "http://blog.sina.com.cn/rss/kaifulee.xml"
-            "http://cemerick.com/feed/"
-            "http://data-sorcery.org/feed/"
-            "http://norvig.com/rss-feed.xml"
-            "http://planet.clojure.in/atom.xml"
-            "http://techbehindtech.com/feed/"
-            "http://weblogs.asp.net/scottgu/atom.aspx"
-            "http://weblogs.asp.net/scottgu/rss.aspx"
-            "http://www.alistapart.com/rss.xml"
-            "http://www.ibm.com/developerworks/views/java/rss/libraryview.jsp"
-            "http://www.ubuntugeek.com/feed/"])
+        [clojure.tools.logging :only [info]]
+        [clojure.tools.cli :only [cli optional required]])
+  (:import java.io.File))
 
 (defn setup [{:keys [index-path db-path password]}]
+  (info "delete" db-path
+        (.delete (File. (str db-path ".h2.db"))))
+  (doall (map #(info "delete" % (.delete %))
+              (reverse (file-seq (File. index-path)))))
   (use-h2-database! db-path)
+  (info "import h2 schema, create user feng")
   (import-h2-schema!)
-  (use-index-writer! index-path)
-  (let [user (create-user {:name "feng"
-                           :password password
-                           :email "shenedu@gmail.com"})]
-    (binding [session-get (fn [req key]
-                            (when (= key :user) user))]
-      (doseq [link links]
-        (apply (app) [{:uri "/api/subscriptions/add"
-                       :request-method :post
-                       :body (json-str {:link link})}]))))
-  (close-global-h2-factory!)
-  (close-global-index-writer!))
+  (create-user {:name "feng" :password password :email "shenedu@gmail.com"})
+  (close-global-h2-factory!))
 
 (defn main [& args]
   "Setup rssminer database"

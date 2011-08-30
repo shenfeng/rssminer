@@ -3,8 +3,15 @@
 @import "reset";
 @import "common";
 
+$right-width: 320px;
+
+#main {
+    width: $page-width;
+    margin: 0 auto;
+}
+
 #feeds {
-    width: $page-width - 260px - 20px;
+    width: $page-width - $right-width - 20px;
     > ul {
         list-style: none;
         padding: 0;
@@ -21,17 +28,29 @@
     }
 }
 
-#tags {
-    width: 260px;
-    > ul {
-        padding: 0 0 0 0.2em;
-        list-style: none;
-        li {
-            display: inline-block;
-            padding: 3px;
-        }
+#right-side {
+    width: $right-width;
+}
+
+#tags ul{
+    padding: 0 0 0 0.2em;
+    list-style: none;
+    li {
+        display: inline-block;
+        padding: 3px;
     }
 }
+
 .section-title {
     font-weight: bold;
+}
+
+#similar ul {
+    padding: 0 0 0 0.2em;
+    list-style: none;
+    li {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
 }

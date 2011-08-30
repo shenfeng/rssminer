@@ -22,6 +22,7 @@ import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.similar.MoreLikeThis;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
@@ -75,7 +76,7 @@ public class Searcher {
         }
     });
 
-    public Searcher(String path) throws IOException {
+    public Searcher(String path, boolean debug) throws IOException {
         final IndexWriterConfig cfg = new IndexWriterConfig(V, analyzer);
         this.path = path;
         cfg.setOpenMode(OpenMode.CREATE_OR_APPEND);
@@ -87,6 +88,9 @@ public class Searcher {
         }
         indexer = new IndexWriter(dir, cfg);
         Runtime.getRuntime().addShutdownHook(shutDownHook);
+        if (debug) {
+            // indexer.setInfoStream(System.out);
+        }
     }
 
     @Override
@@ -174,19 +178,17 @@ public class Searcher {
         return results;
     }
 
-    public Feed[] search(String term, int count)
-            throws CorruptIndexException, IOException, ParseException {
-        IndexSearcher searcher = new IndexSearcher(IndexReader.open(indexer,
-                true));
-        QueryParser parser = new QueryParser(V, SUMMARY, analyzer);
-        Query query = parser.parse(term);
-        TopDocs docs = searcher.search(query, count);
+    private Feed[] searchQuery(IndexSearcher searcher, Query q, int count)
+            throws IOException {
+        TopDocs docs = searcher.search(q, count);
         final int len = docs.scoreDocs.length;
         Feed[] results = new Feed[len];
         for (int i = 0; i < len; i++) {
             Feed f = new Feed();
-            Document doc = searcher.doc(docs.scoreDocs[i].doc);
+            int docid = docs.scoreDocs[i].doc;
+            Document doc = searcher.doc(docid);
             f.setTitle(doc.get(TITLE));
+            f.setDocId(docid);
             f.setAuthor(doc.get(AUTHOR));
             f.setCategories(doc.get(TAG));
             f.setSnippet(doc.get(SNIPPET));
@@ -194,5 +196,25 @@ public class Searcher {
             results[i] = f;
         }
         return results;
+    }
+
+    public Feed[] search(String term, int count)
+            throws CorruptIndexException, IOException, ParseException {
+        IndexSearcher searcher = new IndexSearcher(IndexReader.open(indexer,
+                true));
+        QueryParser parser = new QueryParser(V, SUMMARY, analyzer);
+        Query query = parser.parse(term);
+        return searchQuery(searcher, query, count);
+    }
+
+    public Feed[] likeThis(int docID, int count)
+            throws CorruptIndexException, IOException {
+        IndexReader reader = IndexReader.open(indexer, true);
+        MoreLikeThis likeThis = new MoreLikeThis(reader);
+        likeThis.setFieldNames(FIELDS);
+        likeThis.setMinTermFreq(1);
+        likeThis.setMinDocFreq(3);
+        Query like = likeThis.like(docID);
+        return searchQuery(new IndexSearcher(reader), like, count);
     }
 }
