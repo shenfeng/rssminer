@@ -129,7 +129,7 @@
                   wrap-redirects
                   wrap-exception))
 
-(defn get
+(defn ^:dynamic get
   [url & {:keys [last-modified user-agent]
           :or {user-agent "Mozilla/5.0 (X11; Linux x86_64)"}}]
   (if (conf/black-domain? (extract-host url))
@@ -140,7 +140,7 @@
                         :Accept "*/*"
                         :If-Modified-Since last-modified))))
 
-(defn download-favicon [url]
+(defn ^:dynamic download-favicon [url]
   (let [icon-url (str (extract-host url) "/favicon.ico")]
     (try
       (let [{:keys [body Content-Type]} (get icon-url)
@@ -153,7 +153,7 @@
       (catch Exception e
         (error e "download-favicon" icon-url)))))
 
-(defn download-rss  [url]
+(defn ^:dynamic download-rss  [url]
   (try
     (update-in (get url) [:body]        ;convert to string
                (fn [in] (when in (slurp in))))

@@ -1,6 +1,6 @@
 (defproject rssminer "1.0.0"
   :description "A feed reader written in clojure"
-  :dependencies [[org.clojure/clojure "1.2.1"]
+  :dependencies [[clojure "1.3.0-beta2"]
                  [org.clojure/data.json "0.1.1"]
                  [org.clojure/java.jdbc "0.0.6"]
                  [org.clojure/tools.cli "0.1.0"]
@@ -16,7 +16,7 @@
                  [net.java.dev.rome/rome "1.0.0"]
                  [ring/ring-core "0.3.11"]
                  [me.shenfeng/ring-netty-adapter "0.0.1-SNAPSHOT"]]
-  :dev-resources-path "/usr/lib/jvm/java-6-openjdk/lib/tools.jar:/usr/lib/jvm/java-6-openjdk/src.zip"
+  :dev-resources-path "/usr/lib/jvm/jdk1.7.0/lib/tools.jar:/usr/lib/jvm/jdk1.7.0/src.zip"
   :exclusions [javax.activation/activation]
   :repositories {"java.net" "http://download.java.net/maven/2/"}
   :warn-on-reflection true
@@ -26,9 +26,10 @@
   :jvm-opts ["-XX:+UseCompressedOops"
              "-XX:+TieredCompilation"
              "-XX:+UseCompressedStrings"
-             "-Xmx386m"
-             "-Xms386m"]
+             "-Xmx512m"
+             "-Xms512m"]
   ;; :jvm-opts ["-agentlib:hprof=cpu=samples,format=b,file=/tmp/profile.txt"]
   ;; :jvm-opts ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n"]
-  :dev-dependencies [[clojure-source "1.2.1"]
-                     [swank-clojure "1.4.0-SNAPSHOT"]])
+  :dev-dependencies [[clojure "1.3.0-beta2"]
+                     [swank-clojure "1.4.0-SNAPSHOT"]
+                     [junit/junit "4.8.2"]])

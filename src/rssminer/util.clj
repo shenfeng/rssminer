@@ -36,7 +36,7 @@
                  :headers {"Content-Type" "application/json; charset=utf-8"}
                  :body (json-str body)})
 
-(defn session-get [req key] ;; for test code easy mock
+(defn ^:dynamic session-get [req key] ;; for test code easy mock
   (-> req :session key))
 
 (defn extract-text [html]

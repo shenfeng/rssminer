@@ -11,8 +11,8 @@
   (:import java.io.File
            java.sql.SQLException))
 
-(def ^{:dynamic true} *user1* nil)
-(def ^{:dynamic true} *user2* nil)
+(def user1 nil)
+(def user2 nil)
 
 (def test-user {:name "feng"
                 :password "123456"
@@ -23,21 +23,21 @@
                  :email "feng@gmail.com"})
 
 (defn user-fixture [test-fn]
-  (def *user1* (create-user test-user))
-  (def *user2* (create-user test-user2))
+  (def user1 (create-user test-user))
+  (def user2 (create-user test-user2))
   (test-fn))
 
 (def auth-app
   (fn [& args]
     (binding [session-get (fn [req key]
-                            (if (= key :user) *user1*
+                            (if (= key :user) user1
                                 (throw (Exception. "session-get error"))))]
       (apply (app) args))))
 
 (def auth-app2
   (fn [& args]
     (binding [session-get (fn [req key]
-                            (if (= key :user) *user2*
+                            (if (= key :user) user2
                                 (throw (Exception. "session-get error"))))]
       (apply (app) args))))
 
