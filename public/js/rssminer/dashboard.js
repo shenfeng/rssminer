@@ -16,13 +16,57 @@ $(function(){
     }
   });
 
+  function prepare_data (data) {
+    var ret = [];
+    for(var i = 0; i < data.length; ++i) {
+      ret.push([i, data[i]]);
+    }
+    return ret;
+  }
+
+  function init_plot_data () {
+    var d = localStorage.getItem('plot_data');
+    if(d) {
+      return JSON.parse(d);
+    } else {
+      d = [];
+      for(var i = 0; i < 100; ++i) {
+        d.push(0);
+      }
+      localStorage.setItem('plot_data', JSON.stringify(d));
+      return d;
+    }
+  }
+
+  var prev, data = init_plot_data(),
+      options = {
+        // series: { shadowSize: 0 }, // drawing is faster without shadows
+        yaxis: { min: 0, max: 800 },
+        xaxis: { min: 0, max: 100 }
+      };
+
+
+  var plot = $.plot($("#plot"), [prepare_data], options);
+
   var Settings = OC.Model.extend({
     id: 'feeds_count',          // revent isNew return true;
     black_domains: OC.Collection,
     reseted_domains: OC.Collection,
-    url: "/api/dashboard/settings"
+    url: "/api/dashboard/settings",
+    parse: function (resp) {
+      if(prev) {
+        resp.feeds_count_delta = resp.feeds_count - prev.feeds_count;
+        resp.rss_finished_delta = resp.rss_finished - prev.rss_finished;
+        resp.rss_pending_delta = resp.rss_pending - prev.rss_pending;
+        resp.crawled_count_delta = resp.crawled_count - prev.crawled_count;
+        resp.pending_count_delta = resp.pending_count - prev.pending_count;
+        data.splice(0,1);
+        data.push(resp.crawled_count_delta);
+      }
+      prev = resp;
+      return resp;
+    }
   });
-
 
   var SettingsView = CommonView.extend(function () {
     function addDomainPatten (name) {
@@ -75,9 +119,12 @@ $(function(){
             tmpl: tmpls.settings
           });
           $("#content").replaceWith(view.render().el);
+          plot.setData([prepare_data(data)]);
+          plot.draw();
+          localStorage.setItem('plot_data', JSON.stringify(data));
+          setTimeout(showSettings, 6000);
         }
       });
-      setTimeout(showSettings, 5000);
     }
 
     function showInfo (path) {

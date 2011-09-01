@@ -27,7 +27,8 @@
                              :title title
                              :next_check_ts (conf/rand-ts)
                              :crawler_link_id (:id referer)})))
-    (db/insert-crawler-links (map #(assoc %
+    (db/insert-crawler-links referer
+                             (map #(assoc %
                                      :next_check_ts (conf/rand-ts)
                                      :referer_id (:id referer)) links))))
 
@@ -36,7 +37,7 @@
   (let [{:keys [status headers body] :as resp} (http/get url)
         html (when body (try (slurp body)
                              (catch Exception e
-                               (error e url))))
+                               (error url e))))
         md5 (when html (md5-sum html))
         next-check (conf/next-check check_interval md5)]
     (trace status url)

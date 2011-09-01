@@ -20,7 +20,7 @@
 
 (def crawler-threads-count 15)
 
-(def fetcher-threads-count 2)
+(def fetcher-threads-count 3)
 
 (defn next-check [last-interval success?]
   (let [interval (if success?
@@ -41,7 +41,8 @@
                            (delay (db/fetch-black-domain-pattens))))
 
 (defn black-domain? [host]
-  (some #(re-find % host) @@black-domain-pattens))
+  (or (some #(re-find % host) @@black-domain-pattens)
+      (not (re-find #"(com|net|me)$" host))))
 
 (defn add-black-domain-patten [patten]
   (db/insert-black-domain-patten patten)

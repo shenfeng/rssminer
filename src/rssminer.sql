@@ -2,11 +2,13 @@
 
 -- select datediff('SECOND', add_ts, now()) - check_interval as t from rss_link order by t limit 1
 
-SET COMPRESS_LOB  DEFLATE;
+SET COMPRESS_LOB DEFLATE;
 ----
-SET LOCK_TIMEOUT 120000;
+SET DEFAULT_LOCK_TIMEOUT 120000;
 ----
-SET CACHE_SIZE 65536;
+SET CACHE_SIZE 94208;
+----
+set WRITE_DELAY 3000;           -- default 500ms
 ----
 CREATE TABLE users
 (
@@ -163,17 +165,18 @@ insert into crawler_links (url, domain) values --seeds
 ('http://www.dbanotes.net/', 'http://www.dbanotes.net'),
 ('http://xianguo.com/hot', 'http://xianguo.com')
 ----
-insert into multi_rss_domains (domain) values
-('http://blogs.oracle.com'),
-('http://xianguo.com'),
-('http://www.ibm.com')
+-- insert into multi_rss_domains (domain) values
+-- ('http://blogs.oracle.com'),
+-- ('http://www.ibm.com')
 ----
 insert into black_domain_pattens (patten) values
-('\.tumblr\.com'),
-('\.deviantart\.com'),
-('\.skyrock\.com'),
-('\.livejournal\.com'),
-('http://\w{10,}\d{5,}')
+('news\.|forum|bbs\.|sports\.|wap\.|house|blogcu'),
+('skyrock|tumblr|deviantart|taobao|canalblog|livejournal'),
+('blshe|linkinpark|shop|soufun|over-blog|backpage|https'),
+('\.a-\w+.com'),
+('sex|girl|horny|naughty|penetrationista|suckmehere'),
+('adult|live|cam|pussy|joyfeeds'),
+('\d{3,}'),
 ----
 insert into reseted_domain_pattens (patten) values
 ('\.blogspot\.com')
@@ -200,3 +203,6 @@ insert into rss_links (url) values
 ('http://blog.higher-order.net/feed/'),
 ('http://feeds2.feedburner.com/JohnResig'),
 ('http://emacsblog.org/feed/'),
+('http://bartoszmilewski.wordpress.com/feed/'),
+('http://blogs.oracle.com/alexismp/feed/entries/rss'),
+

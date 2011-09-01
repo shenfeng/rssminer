@@ -17,8 +17,8 @@
 
 (defn use-h2-database! [db-path & {:keys [trace auto-server]}]
   (close-global-h2-factory!)
-  (let [url (str "jdbc:h2:" db-path
-                 (when trace ";TRACE_LEVEL_FILE=2;TRACE_MAX_FILE_SIZE=4000")
+  (let [url (str "jdbc:h2:" db-path ";MVCC=true"
+                 (when trace ";TRACE_LEVEL_FILE=2;TRACE_MAX_FILE_SIZE=1000")
                  (when auto-server ";AUTO_SERVER=TRUE"))
         ds (JdbcConnectionPool/create url "sa" "sa")
         f (fn [& args]  (.getConnection ds))]

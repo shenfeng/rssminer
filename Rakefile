@@ -82,6 +82,7 @@ rssminer_jss = FileList['public/js/lib/jquery.js',
                         'public/js/rssminer/application.js']
 
 dashboard_jss = FileList['public/js/lib/jquery.js',
+                         'public/js/lib/jquery.flot.js',
                          'public/js/lib/underscore.js',
                          'public/js/lib/backbone.js',
                          'public/js/lib/mustache.js',

@@ -43,14 +43,14 @@
                   #(Integer/parseInt %))
         (optional ["--profile" "dev or prod" :default "dev"] keyword)
         (optional ["--db-path" "H2 Database file path"
-                   :default "/dev/shm/rssminer"])
+                   :default "/media/1082B19F82B189AC/rssminer/rssminer"])
         (optional ["--auto-server" "H2 Database Automatic Mixed Mode"
                    :default "true"] #(Boolean/parseBoolean %))
-        (optional ["--h2-trace" "Enable H2 trace" :default "true"]
+        (optional ["--h2-trace" "Enable H2 trace" :default "false"]
                   #(Boolean/parseBoolean %))
         (optional ["--run-crawler" "Start rss crawler" :default "false"]
                   #(Boolean/parseBoolean %))
         (optional ["--run-fetcher" "Start rss crawler" :default "false"]
                   #(Boolean/parseBoolean %))
         (optional ["--index-path" "Path to store lucene index"
-                   :default "/dev/shm/rssminer-index"]))))
+                   :default "/media/1082B19F82B189AC/rssminer/index"]))))

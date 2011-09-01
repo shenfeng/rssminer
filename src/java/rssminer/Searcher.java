@@ -131,11 +131,13 @@ public class Searcher {
         if (author != null) {
             Field a = new Field(AUTHOR, author, Store.YES, Index.ANALYZED);
             doc.add(a);
+            doc.setBoost(1.2f);
         }
 
         if (title != null) {
             Field t = new Field(TITLE, title, Store.YES, Index.ANALYZED);
             doc.add(t);
+            doc.setBoost(1.5f);
         }
 
         if (summary != null) {
@@ -147,16 +149,13 @@ public class Searcher {
         }
 
         if (tags != null) {
-            String t = "";
             ISeq seq = tags.seq();
             while (seq != null) {
-                t += (seq.first().toString() + ", ");
+                Field f = new Field(TAG, seq.first().toString(), Store.NO,
+                        Index.NOT_ANALYZED);
+                f.setBoost(1.5f);
+                doc.add(f);
                 seq = seq.next();
-            }
-
-            if (t != "") {
-                Field ca = new Field(TAG, t, Store.YES, Index.ANALYZED);
-                doc.add(ca);
             }
         }
 

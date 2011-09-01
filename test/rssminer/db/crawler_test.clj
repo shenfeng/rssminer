@@ -3,7 +3,8 @@
         rssminer.db.crawler
         [rssminer.db.util :only [id-k]]
         (rssminer [test-common :only [h2-fixture]]
-                  [time :only [now-seconds]])))
+                  [time :only [now-seconds]]
+                  [http :only [extract-host]])))
 
 (use-fixtures :each h2-fixture)
 
@@ -17,14 +18,18 @@
                {:url "http://b.com/b" :domain "http://b.com"}
                {:url "http://a.com/ab" :domain "http://a.com"}]]
     (is (= 0 (count (insert-crawler-links
+                     (first saved)
                      (map #(assoc {}
                              :url (:url %)
+                             :domain (extract-host (:url %))
                              :referer_id refer-id
                              :next_check_ts (rand-int 1000000)
                              :title "sample a text") saved)))))
     (is (= 2 (count (insert-crawler-links
-                     (map #(assoc % :referer_id refer-id
-                                  :next_check_ts (rand-int 1000)) newly)))))))
+                     (first saved)
+                     (map #(assoc %
+                             :referer_id refer-id
+                             :next_check_ts (rand-int 1000)) newly)))))))
 
 (deftest test-update-crawler-link
   (let [links (fetch-crawler-links 3)

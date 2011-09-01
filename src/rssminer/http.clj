@@ -119,7 +119,7 @@
            {:status 460
             :headers {}})
          (catch Exception e
-           (debug e "wrap-exception" (:url req))
+           (error (:url req) e)
            {:status 452
             :headers {}}))))
 
@@ -132,10 +132,13 @@
 (defn get
   [url & {:keys [last-modified user-agent]
           :or {user-agent "Mozilla/5.0 (X11; Linux x86_64)"}}]
-  (request* (assoc-if {:url url}
-                      :User-Agent user-agent
-                      :Accept "*/*"
-                      :If-Modified-Since last-modified)))
+  (if (conf/black-domain? (extract-host url))
+    {:status 480
+     :headers {}}
+    (request* (assoc-if {:url url}
+                        :User-Agent user-agent
+                        :Accept "*/*"
+                        :If-Modified-Since last-modified))))
 
 (defn download-favicon [url]
   (let [icon-url (str (extract-host url) "/favicon.ico")]

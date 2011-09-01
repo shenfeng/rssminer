@@ -28,10 +28,16 @@
     }
 }
 
+#plot {
+    width: 800px;
+    height: 200px;
+    margin: 3em auto 0 auto;
+}
+
 #content {
     .section {
         float: left;
-        width: 300px;
+        width: 320px;
         padding: 4px 5px;
         h3 {  text-transform: capitalize;  }
         ul {
@@ -45,7 +51,6 @@
 }
 
 #content {
-    padding-top: 4em;
     table {
         width: 100%;
         margin-top: 1em;
