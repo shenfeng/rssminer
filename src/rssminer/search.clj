@@ -1,8 +1,11 @@
 (ns rssminer.search
   (:use [clojure.tools.logging :only [info debug]]
         [rssminer.util :only [extract-text to-int]]
-        [rssminer.config :only [in-dev?]])
-  (:import rssminer.Searcher))
+        [rssminer.config :only [in-dev?]]
+        [rssminer.db.util :only [with-h2 h2-query]]
+        [clojure.java.jdbc :only [with-query-results]])
+  (:import rssminer.Searcher
+           java.sql.Clob))
 
 (defonce indexer (atom nil))
 
@@ -18,20 +21,14 @@
     (debug "use index path" path)
     (reset! indexer (Searcher. path (in-dev?)))))
 
-(defn commit []
-  (.commit ^Searcher @indexer))
-
 (defn index-feed
-  [{:keys [id rss_link_id author title summary] :as feed} categories]
-  (.index ^Searcher @indexer id rss_link_id author title
-          (extract-text summary) categories))
+  [{:keys [id author title summary]} tags]
+  (.index ^Searcher @indexer id author title
+          (extract-text summary) tags))
 
 (defn search* [term limit]
   (map #(dissoc (bean %) :class)
        (.search ^Searcher @indexer term limit)))
-
-(defn search [req]
-  )
 
 (defn more-lik-this [req]
   (let [{:keys [id limit] :or {limit 10}} (-> req :params)]
@@ -43,3 +40,14 @@
   (let [{:keys [term limit] :or {limit "10"}} (-> req :params)]
     (.searchForTitle ^Searcher @indexer
                      term (Integer/parseInt limit))))
+
+(defn rebuild-index []
+  (.clear ^Searcher @indexer)
+  (with-h2
+    (with-query-results rs ["select * from feeds"]
+      (doseq [feed rs]
+        (index-feed (update-in feed [:summary]
+                               #(slurp (.getCharacterStream ^Clob %)))
+                    (map :tag (h2-query
+                               ["SELECT tag FROM feed_tag
+                                 WHERE feed_id = ?" (:id feed)])))))))

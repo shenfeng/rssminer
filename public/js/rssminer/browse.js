@@ -5,12 +5,13 @@ $(function(){
       _ = window._;
 
   var feeds = _.map(window._FEEDS_, function (f) {
-    var c = _.map(f.categories.split(','), function (t) {
-      if(c) {
-        if(c.indexOf(' ') != -1) {
-          return '"' + c +'"';
+    var c = _.map(f.categories.trim().split(','), function (t) {
+      t = $.trim(t);
+      if(t) {
+        if(t.indexOf(' ') != -1) {
+          return '"' + t +'"';
         } else {
-          return c;
+          return t;
         }
       }
     });

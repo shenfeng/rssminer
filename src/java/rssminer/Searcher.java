@@ -39,12 +39,11 @@ public class Searcher {
     static final String FEED_ID = "feedId";
     static final String AUTHOR = "author";
     static final String TITLE = "title";
-    static final String RSS_ID = "rss_id";
-    static final String SUMMARY = "summary";
+    static final String CONTENT = "content";
     static final String TAG = "tag";
     static final String SNIPPET = "snippet";
 
-    static String[] FIELDS = new String[] { AUTHOR, TITLE, SUMMARY, TAG };
+    static String[] FIELDS = new String[] { AUTHOR, TITLE, CONTENT, TAG };
 
     private static String genSnippet(String summary) {
         if (summary.length() < LENGTH)
@@ -98,11 +97,9 @@ public class Searcher {
         return "Searcher@" + path;
     }
 
-    public void commit() throws CorruptIndexException, IOException {
-        long start = System.currentTimeMillis();
+    public void clear() throws IOException {
+        indexer.deleteAll();
         indexer.commit();
-        long duration = System.currentTimeMillis() - start;
-        logger.debug("commit index, taked " + duration + "ms");
     }
 
     public void close() throws CorruptIndexException, IOException {
@@ -116,17 +113,12 @@ public class Searcher {
         }
     }
 
-    public void index(int feeId, int rssId, String author, String title,
-            String summary, Seqable tags) throws CorruptIndexException,
-            IOException {
+    public void index(int feeId, String author, String title, String content,
+            Seqable tags) throws CorruptIndexException, IOException {
         Document doc = new Document();
         NumericField fid = new NumericField(FEED_ID, Store.YES, false);
         fid.setIntValue(feeId);
         doc.add(fid);
-
-        NumericField rid = new NumericField(RSS_ID, Store.YES, false);
-        rid.setIntValue(rssId);
-        doc.add(rid);
 
         if (author != null) {
             Field a = new Field(AUTHOR, author, Store.YES, Index.ANALYZED);
@@ -140,22 +132,27 @@ public class Searcher {
             doc.setBoost(1.5f);
         }
 
-        if (summary != null) {
-            Field sum = new Field(SUMMARY, summary, Store.NO, Index.ANALYZED);
-            doc.add(sum);
-            Field s = new Field(SNIPPET, genSnippet(summary), Store.YES,
+        if (content != null) {
+            Field c = new Field(CONTENT, content, Store.NO, Index.ANALYZED);
+            doc.add(c);
+            Field s = new Field(SNIPPET, genSnippet(content), Store.YES,
                     Index.NO);
             doc.add(s);
         }
 
-        if (tags != null) {
+        if (tags != null && tags.seq() != null) {
             ISeq seq = tags.seq();
+            StringBuilder sb = new StringBuilder(seq.count() * 10);
             while (seq != null) {
-                Field f = new Field(TAG, seq.first().toString(), Store.NO,
-                        Index.NOT_ANALYZED);
+                sb.append(seq.first()).append(", ");
+                seq = seq.next();
+            }
+
+            String t = sb.toString();
+            if (t.length() > 0) {
+                Field f = new Field(TAG, t, Store.YES, Index.ANALYZED);
                 f.setBoost(1.5f);
                 doc.add(f);
-                seq = seq.next();
             }
         }
 
@@ -200,15 +197,15 @@ public class Searcher {
     public Feed[] search(String term, int count)
             throws CorruptIndexException, IOException, ParseException {
         IndexSearcher searcher = new IndexSearcher(IndexReader.open(indexer,
-                true));
-        QueryParser parser = new QueryParser(V, SUMMARY, analyzer);
+                false));
+        QueryParser parser = new QueryParser(V, CONTENT, analyzer);
         Query query = parser.parse(term);
         return searchQuery(searcher, query, count);
     }
 
     public Feed[] likeThis(int docID, int count)
             throws CorruptIndexException, IOException {
-        IndexReader reader = IndexReader.open(indexer, true);
+        IndexReader reader = IndexReader.open(indexer, false);
         MoreLikeThis likeThis = new MoreLikeThis(reader);
         likeThis.setFieldNames(FIELDS);
         likeThis.setMinTermFreq(1);

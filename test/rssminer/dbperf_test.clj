@@ -71,10 +71,19 @@
         (optional ["-p" "--path" "tmp db path"
                    :default "/tmp/h2_bench"]))))
 
+(defn sql []
+  (str "select id, author, summary, link,guid  from feeds where id in ("
+       (str/join ", " (map (fn [& n] (rand-int 673670)) (range 1 15)))
+       " )"))
 
+(defn f []  (let [start (System/currentTimeMillis)]
+              (h2-query [ (sql) ])
+              (let [time (- (System/currentTimeMillis) start)]
+                (println (.getName (Thread/currentThread))
+                         time "ms")
+                time)))
 
-
-
-
-
+(defn run [n]
+  (let [r (doall (apply pcalls (repeat n f)))]
+    (println (int (/ (reduce + r) (count r))))))
 

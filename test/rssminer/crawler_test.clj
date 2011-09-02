@@ -21,7 +21,7 @@
         rss (db/fetch-rss-links 1000)
         links (db/fetch-crawler-links 1000)]
     (crawl-link link)
-    (is (> (count (db/fetch-crawler-links 1000)) (count links)))
+    (is (> (count links) (count (db/fetch-crawler-links 1000))))
     (is (= 1 (- (count (db/fetch-rss-links 1000)) (count rss))))))
 
 (deftest test-get-next-link

@@ -1,6 +1,6 @@
 (defproject rssminer "1.0.0"
   :description "A feed reader written in clojure"
-  :dependencies [[clojure "1.3.0-beta2"]
+  :dependencies [[clojure "1.2.1"]
                  [org.clojure/data.json "0.1.1"]
                  [org.clojure/java.jdbc "0.0.6"]
                  [org.clojure/tools.cli "0.1.0"]
@@ -30,6 +30,5 @@
              "-Xms512m"]
   ;; :jvm-opts ["-agentlib:hprof=cpu=samples,format=b,file=/tmp/profile.txt"]
   ;; :jvm-opts ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n"]
-  :dev-dependencies [[clojure "1.3.0-beta2"]
-                     [swank-clojure "1.4.0-SNAPSHOT"]
+  :dev-dependencies [[swank-clojure "1.4.0-SNAPSHOT"]
                      [junit/junit "4.8.2"]])

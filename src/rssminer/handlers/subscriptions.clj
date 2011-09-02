@@ -59,7 +59,7 @@
            {:status 460
             :message "Bad feedlink"}))
 
-(defn ^:dynamic  add-subscription* [link user-id & options]
+(defn ^{:dynamic true}  add-subscription* [link user-id & options]
   (if-let [sub (db/fetch-rss-link {:url link})]
     ;; we have the subscription
     (apply add-exists-subscription sub user-id options)

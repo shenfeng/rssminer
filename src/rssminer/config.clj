@@ -58,7 +58,6 @@
   (db/insert-reseted-domain-patten domain)
   (reset! reseted-hosts (delay (db/fetch-reseted-domain-pattens))))
 
-(def popular-tags ["clojure" "web" "compojure" "jquery" "java" "emacs"
-                   "jdk" "science" "community" "enterprise" "linux"
-                   "virtualization" "uncategorized" "database" "performance"
-                   "mysql" "web" "ruby" "php" "software" "vim"])
+(def popular-tags ["clojure" "compojure" "jquery" "jdk" "linux"
+                   "database" "performance"  "java" "emacs"
+                   "web" "python" "vim"])

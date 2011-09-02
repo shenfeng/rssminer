@@ -26,7 +26,7 @@
 (defn get-crawled-links
   [& {:keys [limit offset] :or {limit 40 offset 0}}]
   (h2-query
-   ["SELECT id, url, title, check_interval,
+   ["SELECT id, url, check_interval,
      next_check_ts AS check_ts, added_ts,
      (SELECT url FROM crawler_links c
              WHERE c.id = cl.referer_id ) AS referer
@@ -38,7 +38,7 @@
 (defn get-pending-links
   [& {:keys [limit offset] :or {limit 40 offset 0}}]
   (h2-query
-   ["SELECT id, url, title, check_interval,
+   ["SELECT id, url, check_interval,
      next_check_ts AS check_ts, added_ts,
      (SELECT url FROM crawler_links c
              WHERE c.id = cl.referer_id ) AS referer

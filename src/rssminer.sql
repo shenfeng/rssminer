@@ -6,7 +6,7 @@ SET COMPRESS_LOB DEFLATE;
 ----
 SET DEFAULT_LOCK_TIMEOUT 120000;
 ----
-SET CACHE_SIZE 94208;
+SET CACHE_SIZE 32768;
 ----
 set WRITE_DELAY 3000;           -- default 500ms
 ----
@@ -24,7 +24,6 @@ CREATE TABLE users
 create table crawler_links (
   id INTEGER PRIMARY KEY auto_increment,
   url VARCHAR UNIQUE,
-  title VARCHAR,
   added_ts TIMESTAMP default now(),
   domain VARCHAR,               --assume one domain, one rss
   next_check_ts INTEGER default 10,
