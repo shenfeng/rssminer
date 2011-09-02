@@ -13,6 +13,7 @@
                  [enlive "1.0.0"]
                  [org.apache.lucene/lucene-core "3.3.0"]
                  [org.apache.lucene/lucene-queries "3.3.0"]
+                 [org.apache.lucene/lucene-spellchecker "3.3.0"]
                  [net.java.dev.rome/rome "1.0.0"]
                  [ring/ring-core "0.3.11"]
                  [me.shenfeng/ring-netty-adapter "0.0.1-SNAPSHOT"]]
@@ -26,6 +27,7 @@
   :jvm-opts ["-XX:+UseCompressedOops"
              "-XX:+TieredCompilation"
              "-XX:+UseCompressedStrings"
+             "-XX:-UseLoopPredicate"
              "-Xmx512m"
              "-Xms512m"]
   ;; :jvm-opts ["-agentlib:hprof=cpu=samples,format=b,file=/tmp/profile.txt"]

@@ -1,15 +1,17 @@
 package rssminer;
 
+import static java.lang.Character.isLetter;
+
 import java.io.File;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.Field.TermVector;
 import org.apache.lucene.document.NumericField;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
@@ -34,7 +36,7 @@ import clojure.lang.Seqable;
 public class Searcher {
     static final Version V = Version.LUCENE_33;
     static final int LENGTH = 280;
-    static final Analyzer analyzer = new StandardAnalyzer(V);
+    static final Analyzer analyzer = new PorterStopAnalyzer(V);
     static final Logger logger = Logger.getLogger(Searcher.class);
     static final String FEED_ID = "feedId";
     static final String AUTHOR = "author";
@@ -42,7 +44,6 @@ public class Searcher {
     static final String CONTENT = "content";
     static final String TAG = "tag";
     static final String SNIPPET = "snippet";
-
     static String[] FIELDS = new String[] { AUTHOR, TITLE, CONTENT, TAG };
 
     private static String genSnippet(String summary) {
@@ -50,7 +51,7 @@ public class Searcher {
             return summary;
         else {
             int len = LENGTH;
-            while (len < summary.length() && summary.charAt(len) != ' ')
+            while (len < summary.length() && isLetter(summary.charAt(len)))
                 ++len;
             return summary.substring(0, len);
         }
@@ -88,7 +89,7 @@ public class Searcher {
         indexer = new IndexWriter(dir, cfg);
         Runtime.getRuntime().addShutdownHook(shutDownHook);
         if (debug) {
-            // indexer.setInfoStream(System.out);
+            indexer.setInfoStream(System.out);
         }
     }
 
@@ -127,13 +128,15 @@ public class Searcher {
         }
 
         if (title != null) {
-            Field t = new Field(TITLE, title, Store.YES, Index.ANALYZED);
+            Field t = new Field(TITLE, title, Store.YES, Index.ANALYZED,
+                    TermVector.YES);
             doc.add(t);
             doc.setBoost(1.5f);
         }
 
         if (content != null) {
-            Field c = new Field(CONTENT, content, Store.NO, Index.ANALYZED);
+            Field c = new Field(CONTENT, content, Store.NO, Index.ANALYZED,
+                    TermVector.YES);
             doc.add(c);
             Field s = new Field(SNIPPET, genSnippet(content), Store.YES,
                     Index.NO);
@@ -150,7 +153,8 @@ public class Searcher {
 
             String t = sb.toString();
             if (t.length() > 0) {
-                Field f = new Field(TAG, t, Store.YES, Index.ANALYZED);
+                Field f = new Field(TAG, t, Store.YES, Index.ANALYZED,
+                        TermVector.YES);
                 f.setBoost(1.5f);
                 doc.add(f);
             }

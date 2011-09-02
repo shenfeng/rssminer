@@ -204,4 +204,5 @@ insert into rss_links (url) values
 ('http://emacsblog.org/feed/'),
 ('http://bartoszmilewski.wordpress.com/feed/'),
 ('http://blogs.oracle.com/alexismp/feed/entries/rss'),
+('http://sujitpal.blogspot.com/feeds/posts/default'),
 
