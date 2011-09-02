@@ -1,7 +1,6 @@
 (ns rssminer.search
   (:use [clojure.tools.logging :only [info debug]]
         [rssminer.util :only [extract-text to-int]]
-        [rssminer.config :only [in-dev?]]
         [rssminer.db.util :only [with-h2 h2-query]]
         [clojure.java.jdbc :only [with-query-results]])
   (:import rssminer.Searcher
@@ -19,7 +18,11 @@
   (close-global-index-writer!)
   (let [path (if (= path :RAM) "RAM" path)]
     (debug "use index path" path)
-    (reset! indexer (Searcher. path (in-dev?)))))
+    (reset! indexer (Searcher. path))))
+
+(defn toggle-infostream [toggle]
+  (when-not (nil? @indexer)
+    (.toggleInfoStream ^Searcher @indexer toggle)))
 
 (defn index-feed
   [{:keys [id author title summary]} tags]
@@ -42,6 +45,7 @@
                      term (Integer/parseInt limit))))
 
 (defn rebuild-index []
+  (toggle-infostream true)
   (.clear ^Searcher @indexer)
   (with-h2
     (with-query-results rs ["select * from feeds"]
@@ -50,4 +54,5 @@
                                #(slurp (.getCharacterStream ^Clob %)))
                     (map :tag (h2-query
                                ["SELECT tag FROM feed_tag
-                                 WHERE feed_id = ?" (:id feed)])))))))
+                                 WHERE feed_id = ?" (:id feed)]))))))
+  (toggle-infostream false))

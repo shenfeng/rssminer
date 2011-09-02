@@ -54,9 +54,10 @@ public class TermVectorPerformance {
             Term term = terms.term();
             int c = terms.docFreq();
             max = max > c ? max : c;
-            System.out.printf("%18s", term.text());
-            if (++i % 8 == 0)
-                System.out.println();
+            // System.out.printf("%18s", term.text());
+            if (++i % 8 == 0) {
+                // System.out.println();
+            }
             // System.out.println(reader.docFreq(term) + "\t" +
             // terms.docFreq());
         }
@@ -84,7 +85,7 @@ public class TermVectorPerformance {
                     String text = terms[j];
                     t.createTerm(text);
                     int freq = reader.docFreq(t);
-                    int f = frequencies[j];
+                    // int f = frequencies[j];
 
                     // System.out.println(freq + "\t" + f + "\t" + text);
                     map.put(text, freq);

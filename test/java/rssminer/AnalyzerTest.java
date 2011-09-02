@@ -2,6 +2,8 @@ package rssminer;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -9,9 +11,25 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.util.Version;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class AnalyzerTest {
+
+    private List<String> getTerms(Analyzer analyzer, String content)
+            throws IOException {
+        List<String> tokens = new ArrayList<String>();
+        TokenStream stream = analyzer.tokenStream(field, new StringReader(
+                content));
+        stream.reset();
+
+        CharTermAttribute termAtt = stream
+                .addAttribute(CharTermAttribute.class);
+        while (stream.incrementToken()) {
+            tokens.add(termAtt.toString());
+        }
+        return tokens;
+    }
 
     private void printTerms(Analyzer analyzer, String content)
             throws IOException {
@@ -37,6 +55,10 @@ public class AnalyzerTest {
     public void testPorterStopAnalyzer() throws IOException {
         Analyzer analyzer = new PorterStopAnalyzer(Version.LUCENE_33);
         String content = "against Lazy cats took catty 以下 1111.1 ";
+        List<String> terms = getTerms(analyzer, content);
+        Assert.assertTrue(!terms.contains("against"));
+        Assert.assertTrue(!terms.contains("1111.1"));
+        Assert.assertTrue(terms.contains("lazi"));
 
         printTerms(analyzer, content);
     }
@@ -45,6 +67,19 @@ public class AnalyzerTest {
     public void testStandardAnalyzer() throws IOException {
         Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_33);
         String content = "The Quick brown fox jumped over the lazy dog 以下新闻由机器每5分钟自动选取更新";
+        printTerms(analyzer, content);
+    }
+
+    @Test
+    public void testKStemStopAnalyzer() throws IOException {
+        Analyzer analyzer = new KStemStopAnalyzer(Version.LUCENE_33);
+        String content = "against Lazy cats took catty 以下 1111.1 ";
+
+        List<String> terms = getTerms(analyzer, content);
+        Assert.assertTrue(!terms.contains("against"));
+        Assert.assertTrue(!terms.contains("1111.1"));
+        Assert.assertTrue(terms.contains("lazy"));
+
         printTerms(analyzer, content);
     }
 }

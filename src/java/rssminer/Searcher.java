@@ -36,7 +36,7 @@ import clojure.lang.Seqable;
 public class Searcher {
     static final Version V = Version.LUCENE_33;
     static final int LENGTH = 280;
-    static final Analyzer analyzer = new PorterStopAnalyzer(V);
+    static final Analyzer analyzer = new KStemStopAnalyzer(V);
     static final Logger logger = Logger.getLogger(Searcher.class);
     static final String FEED_ID = "feedId";
     static final String AUTHOR = "author";
@@ -76,7 +76,15 @@ public class Searcher {
         }
     });
 
-    public Searcher(String path, boolean debug) throws IOException {
+    public void toggleInfoStream(boolean toggle) throws IOException {
+        if (toggle) {
+            indexer.setInfoStream(System.out);
+        } else {
+            indexer.setInfoStream(null);
+        }
+    }
+
+    public Searcher(String path) throws IOException {
         final IndexWriterConfig cfg = new IndexWriterConfig(V, analyzer);
         this.path = path;
         cfg.setOpenMode(OpenMode.CREATE_OR_APPEND);
@@ -88,9 +96,6 @@ public class Searcher {
         }
         indexer = new IndexWriter(dir, cfg);
         Runtime.getRuntime().addShutdownHook(shutDownHook);
-        if (debug) {
-            indexer.setInfoStream(System.out);
-        }
     }
 
     @Override

@@ -1,22 +1,16 @@
 package rssminer;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.CharArraySet;
 import org.apache.lucene.analysis.FilteringTokenFilter;
-import org.apache.lucene.analysis.LowerCaseFilter;
-import org.apache.lucene.analysis.PorterStemFilter;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.standard.StandardFilter;
-import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.Version;
 
-class StopFilter extends FilteringTokenFilter {
+public class StopFilter extends FilteringTokenFilter {
     public static final CharArraySet STOP_WORDS_SET;
 
     static {
@@ -134,23 +128,5 @@ class StopFilter extends FilteringTokenFilter {
         return !STOP_WORDS_SET
                 .contains(termAtt.buffer(), 0, termAtt.length())
                 && hasLetter(termAtt.buffer(), termAtt.length());
-    }
-}
-
-public class PorterStopAnalyzer extends Analyzer {
-
-    private final Version v;
-
-    public PorterStopAnalyzer(Version v) {
-        this.v = v;
-    }
-
-    public TokenStream tokenStream(String fieldName, Reader reader) {
-
-        final StandardTokenizer src = new StandardTokenizer(v, reader);
-        TokenStream tok = new StandardFilter(v, src);
-        tok = new LowerCaseFilter(v, tok);
-        tok = new StopFilter(tok);
-        return new PorterStemFilter(tok);
     }
 }
