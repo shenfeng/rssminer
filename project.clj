@@ -10,12 +10,12 @@
                  [javax.mail/mail "1.4.4"]
                  [org.apache.commons/commons-email "1.2"]
                  [compojure "0.6.5"]
-                 [enlive "1.0.0"]
                  [org.apache.lucene/lucene-core "3.3.0"]
                  [org.apache.lucene/lucene-queries "3.3.0"]
-                 [org.apache.lucene/lucene-spellchecker "3.3.0"]
+                 [org.apache.lucene/lucene-analyzers "3.3.0"]
                  [net.java.dev.rome/rome "1.0.0"]
                  [ring/ring-core "0.3.11"]
+                 [me.shenfeng/enlive "1.2.0-SNAPSHOT"]
                  [me.shenfeng/ring-netty-adapter "0.0.1-SNAPSHOT"]]
   :dev-resources-path "/usr/lib/jvm/jdk1.7.0/lib/tools.jar:/usr/lib/jvm/jdk1.7.0/src.zip"
   :exclusions [javax.activation/activation]
@@ -33,4 +33,5 @@
   ;; :jvm-opts ["-agentlib:hprof=cpu=samples,format=b,file=/tmp/profile.txt"]
   ;; :jvm-opts ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n"]
   :dev-dependencies [[swank-clojure "1.4.0-SNAPSHOT"]
-                     [junit/junit "4.8.2"]])
+                     [junit/junit "4.8.2"]
+                     [org.apache.lucene/lucene-spellchecker "3.3.0"]])

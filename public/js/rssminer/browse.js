@@ -5,9 +5,10 @@ $(function(){
       _ = window._;
 
   var feeds = _.map(window._FEEDS_, function (f) {
+    f.categories = f.categories || '';
     var c = _.map(f.categories.trim().split(','), function (t) {
-      t = $.trim(t);
       if(t) {
+        t = $.trim(t);
         if(t.indexOf(' ') != -1) {
           return '"' + t +'"';
         } else {

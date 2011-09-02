@@ -1,15 +1,26 @@
 (ns rssminer.dbperf-test
   (:use (rssminer [database :only [import-h2-schema! use-h2-database!]])
         [clojure.tools.cli :only [cli optional required]]
+        [rssminer.util :only [extract-text]]
+        [rssminer.test-common]
         [rssminer.db.util :only [h2-query]])
   (:require [clojure.string :as str]
             [rssminer.http :as http]
+            [net.cgrand.enlive-html :as html]
             [rssminer.db.crawler :as db]
             [rssminer.time :as time]))
 
 (def lines (str/split (slurp "test/scottgu-atom.xml") #"\n"))
 (def words (filter (complement str/blank?)
                    (str/split (slurp "test/scottgu-atom.xml") #"\W")))
+
+(def html (slurp "templates/landing.html"))
+
+(defmacro tick [& body]
+  `(let [start# (System/currentTimeMillis)
+         r# (do ~@body)]
+     {:time (- (System/currentTimeMillis) start#)
+      :result r#}))
 
 (defn gen-rss-links []
   (map (fn [line url]
@@ -87,3 +98,7 @@
   (let [r (doall (apply pcalls (repeat n f)))]
     (println (int (/ (reduce + r) (count r))))))
 
+(defn bench-extract-text []
+  (let [n 5000
+        times (map (fn [& args] (:time (tick (extract-text html)))) (range n))]
+    (println "takes time " (/ (double (reduce + times)) n))))

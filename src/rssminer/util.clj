@@ -8,7 +8,7 @@
            java.util.concurrent.ThreadFactory
            java.net.URI
            [java.util.concurrent Executors TimeUnit ]
-           [java.io StringWriter PrintWriter]
+           [java.io StringWriter PrintWriter StringReader]
            [java.security NoSuchAlgorithmException MessageDigest]))
 
 (defn md5-sum
@@ -41,8 +41,7 @@
 
 (defn extract-text [html]
   (when html
-    (str/replace html
-                 #"(?m)<[^<>]+>|\n", "")))
+    (rssminer.Utils/extractText html)))
 
 (defn serialize-to-js [data]
   (let [stats (map
