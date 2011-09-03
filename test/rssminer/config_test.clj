@@ -50,3 +50,6 @@
   (add-black-domain-patten "google\\.com")
   (is (black-domain? "http://google.com")))
 
+(deftest test-muitl-domain
+  (is (multi-domain? "http://blogs.oracle.com"))
+  (is (not (multi-domain? "http://rssminer.net"))))

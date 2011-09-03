@@ -24,11 +24,11 @@ CREATE TABLE users
 create table crawler_links (
   id INTEGER PRIMARY KEY auto_increment,
   url VARCHAR UNIQUE,
+  domain VARCHAR UNIQUE,        --assume one domain, one rss
   added_ts TIMESTAMP default now(),
-  domain VARCHAR,               --assume one domain, one rss
+  title VARCHAR,
   next_check_ts INTEGER default 10,
   last_modified VARCHAR,
-  last_md5 VARCHAR,
   check_interval INTEGER default 60 * 60 * 24 * 10, -- in seconds, ten days
   referer_id INTEGER REFERENCES crawler_links
       ON UPDATE CASCADE ON DELETE SET NULL,
@@ -45,23 +45,12 @@ create table rss_links (
   next_check_ts INTEGER default 1,
   check_interval INTEGER default 60 * 60 * 24, -- in seconds, one day
   last_modified VARCHAR,      -- from http response header
-  last_md5 VARCHAR,           -- used to check if changed
   favicon CLOB,               -- base64 encoded
   subscription_count INTEGER default 0, -- how much user subscribed
   user_id INTEGER REFERENCES users      -- who first add it
      ON UPDATE CASCADE ON DELETE SET NULL,
   crawler_link_id INTEGER  REFERENCES crawler_links
      ON UPDATE CASCADE ON DELETE SET NULL,
-)
-----
-create table rss_xmls (
-  id INTEGER PRIMARY KEY auto_increment,
-  added_ts TIMESTAMP default now(),
-  last_modified TIMESTAMP,
-  length INTEGER,
-  content CLOB,
-  rss_link_id INTEGER REFERENCES rss_links
-    ON UPDATE CASCADE ON DELETE SET NULL
 )
 ----
 CREATE TABLE user_subscription
@@ -81,10 +70,9 @@ CREATE TABLE feeds
 (
   id INTEGER PRIMARY KEY auto_increment,
   author VARCHAR,
-  link VARCHAR,
+  link VARCHAR UNIQUE,
   title VARCHAR,
   summary CLOB,
-  guid VARCHAR UNIQUE,
   updated_ts TIMESTAMP,
   published_ts TIMESTAMP,
   rss_link_id INTEGER
@@ -110,11 +98,8 @@ CREATE TABLE feed_tag
             REFERENCES users ON UPDATE CASCADE ON DELETE CASCADE,
     feed_id INTEGER NOT NULL
             REFERENCES feeds ON UPDATE CASCADE ON DELETE CASCADE,
-    UNIQUE(tag, user_id, feed_id)
 );
 
-----
-create index idx_domain on crawler_links(domain)
 ----
 create index idx_link_check_ts on crawler_links(next_check_ts)
 ----
@@ -140,9 +125,6 @@ create table reseted_domain_pattens (
 ----
 insert into crawler_links (url, domain) values --seeds
 ('http://blog.jquery.com/', 'http://blog.jquery.com'),
-('http://blogs.oracle.com/', 'http://blogs.oracle.com'),
-('http://blog.sina.com.cn/', 'http://blog.sina.com.cn'),
-('http://blog.sina.com.cn/kaifulee', 'http://blog.sina.com.cn'),
 ('http://briancarper.net/', 'http://briancarper.net'),
 ('http://channel9.msdn.com/', 'http://channel9.msdn.com'),
 ('http://clj-me.cgrand.net/', 'http://clj-me.cgrand.net'),
@@ -164,45 +146,45 @@ insert into crawler_links (url, domain) values --seeds
 ('http://www.dbanotes.net/', 'http://www.dbanotes.net'),
 ('http://xianguo.com/hot', 'http://xianguo.com')
 ----
--- insert into multi_rss_domains (domain) values
--- ('http://blogs.oracle.com'),
--- ('http://www.ibm.com')
+insert into multi_rss_domains (domain) values
+('http://blogs.oracle.com'),
 ----
 insert into black_domain_pattens (patten) values
-('news\.|forum|bbs\.|sports\.|wap\.|house|blogcu'),
-('skyrock|tumblr|deviantart|taobao|canalblog|livejournal'),
-('blshe|linkinpark|shop|soufun|over-blog|backpage|https'),
-('\.a-\w+.com'),
-('sex|girl|horny|naughty|penetrationista|suckmehere'),
-('adult|live|cam|pussy|joyfeeds'),
 ('\d{3,}'),
+('\.a-\w+.com'),
+('over-blog|backpage|https'),
+('blshe|linkinpark|shop|soufun'),
+('skyrock|tumblr|deviantart|taobao'),
+('news\.|forum|bbs\.|sports\.|wap\.'),
+('canalblog|livejournal|blogcu|house'),
+('adult|live|cam|pussy|joyfeeds|sex|girl'),
+('horny|naughty|penetrationista|suckmehere'),
 ----
 insert into reseted_domain_pattens (patten) values
 ('\.blogspot\.com')
 ----
 insert into rss_links (url) values
+('http://aria42.com/blog/?feed=rss2'),
+('http://bartoszmilewski.wordpress.com/feed/'),
+('http://blog.higher-order.net/feed/'),
 ('http://blog.raek.se/feed/'),
-('http://feeds.feedburner.com/ruanyifeng'),
 ('http://blog.sina.com.cn/rss/kaifulee.xml'),
+('http://blogs.oracle.com/alexismp/feed/entries/rss'),
+('http://blogs.oracle.com/briangoetz/feed/entries/rss'),
+('http://blogs.oracle.com/chegar/feed/entries/rss'),
 ('http://cemerick.com/feed/'),
+('http://clj-me.cgrand.net/feed/'),
 ('http://data-sorcery.org/feed/'),
+('http://emacs-fu.blogspot.com/feeds/posts/default?alt=rss'),
+('http://emacsblog.org/feed/'),
+('http://feeds.feedburner.com/ruanyifeng'),
+('http://feeds2.feedburner.com/JohnResig'),
 ('http://norvig.com/rss-feed.xml'),
+('http://philippeadjiman.com/blog/feed/rss/'),
 ('http://planet.clojure.in/atom.xml'),
+('http://sujitpal.blogspot.com/feeds/posts/default'),
 ('http://techbehindtech.com/feed/'),
 ('http://weblogs.asp.net/scottgu/atom.aspx'),
 ('http://www.alistapart.com/rss.xml'),
 ('http://www.ibm.com/developerworks/views/java/rss/libraryview.jsp'),
 ('http://www.ubuntugeek.com/feed/'),
-('http://aria42.com/blog/?feed=rss2'),
-('http://philippeadjiman.com/blog/feed/rss/'),
-('http://blogs.oracle.com/briangoetz/feed/entries/rss'),
-('http://blogs.oracle.com/chegar/feed/entries/rss'),
-('http://clj-me.cgrand.net/feed/'),
-('http://emacs-fu.blogspot.com/feeds/posts/default?alt=rss'),
-('http://blog.higher-order.net/feed/'),
-('http://feeds2.feedburner.com/JohnResig'),
-('http://emacsblog.org/feed/'),
-('http://bartoszmilewski.wordpress.com/feed/'),
-('http://blogs.oracle.com/alexismp/feed/entries/rss'),
-('http://sujitpal.blogspot.com/feeds/posts/default'),
-

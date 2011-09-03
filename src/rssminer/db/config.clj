@@ -23,3 +23,8 @@
 (defn fetch-reseted-domain-pattens []
   (map #(re-pattern (:patten %))
        (h2-query ["select patten from reseted_domain_pattens"])))
+
+(defn fetch-multi-domains []
+  (map :domain
+       (h2-query ["SELECT * FROM multi_rss_domains"])))
+

@@ -1,5 +1,5 @@
 (ns rssminer.crawler
-  (:use [rssminer.util :only [md5-sum assoc-if start-tasks]]
+  (:use [rssminer.util :only [assoc-if start-tasks]]
         [rssminer.db.util :only [parse-timestamp]]
         [rssminer.time :only [now-seconds]]
         [clojure.tools.logging :only [info error trace]])
@@ -32,19 +32,23 @@
                                      :next_check_ts (conf/rand-ts)
                                      :referer_id (:id referer)) links))))
 
+(defn- extract-title [html]
+  (-> (re-seq #"(?im)<title>(.+)</title>" html)
+      first
+      second))
+
 (defn crawl-link
-  [{:keys [id url last_md5 check_interval] :as referer}]
+  [{:keys [id url check_interval] :as referer}]
   (let [{:keys [status headers body] :as resp} (http/get url)
         html (when body (try (slurp body)
                              (catch Exception e
                                (error url e))))
-        md5 (when html (md5-sum html))
-        next-check (conf/next-check check_interval md5)]
+        updated (assoc-if (conf/next-check check_interval html)
+                          :last_modified (:last-modified headers)
+                          :title (extract-title html))]
     (trace status url)
-    (db/update-crawler-link id (assoc-if next-check
-                                :last_md5 md5
-                                :last_modified (:last_modified headers)))
-    (when (and html (not= md5 last_md5))
+    (db/update-crawler-link id updated)
+    (when html
       (extract-and-save-links referer html))))
 
 (defn get-next-link []

@@ -2,7 +2,7 @@
   (:use (rssminer [http :only [download-favicon download-rss]]
                   [time :only [now-seconds]]
                   [parser :only [parse-feed]]
-                  [util :only [to-int if-lets md5-sum session-get]]
+                  [util :only [to-int if-lets session-get]]
                   [config :only [ungroup]])
         [rssminer.db.util :only [h2-insert h2-insert-and-return]]
         [clojure.tools.logging :only [info]])
@@ -41,7 +41,6 @@
                       {:url link
                        :last_modified (:last-modified headers)
                        :next_check_ts (+ (now-seconds) (* 3600 24))
-                       :last_md5 (md5-sum body)
                        :user_id user-id
                        :favicon (download-favicon link)
                        :description (:description feeds)
@@ -53,7 +52,6 @@
                                            :rss_link_id (:id rss)})]
              (info (str "user#" user-id) "add"
                    (str "(" (-> feeds :entries count) ")" link))
-             (fdb/insert-rss-xml body)
              (fdb/save-feeds feeds (:id rss) user-id) ;; 3. save feeds
              (add-subscription-ret us rss (-> feeds :entries count)))
            {:status 460

@@ -1,6 +1,7 @@
 (ns rssminer.crawler-test
   (:use clojure.test
         (rssminer [test-common :only [h2-fixture mocking]])
+        [rssminer.db.util :only [h2-query]]
         rssminer.crawler
         [clojure.java.io :only [resource]])
   (:require [rssminer.db.crawler :as db]
@@ -8,8 +9,7 @@
 
 (defn- mock-http-get [& args]
   {:status 200
-   :headers {:last_modified "Sat, 23 Jul 2011 01:40:16 GMT"
-             :server "Apache"}
+   :headers {:last-modified "Sat, 23 Jul 2011 01:40:16 GMT"}
    :body (resource "page.html")})
 
 (use-fixtures :each h2-fixture
@@ -21,16 +21,22 @@
         rss (db/fetch-rss-links 1000)
         links (db/fetch-crawler-links 1000)]
     (crawl-link link)
-    (is (> (count links) (count (db/fetch-crawler-links 1000))))
+    (is (> (count (h2-query ["select * from crawler_links"])) (count links)))
     (is (= 1 (- (count (db/fetch-rss-links 1000)) (count rss))))))
 
 (deftest test-get-next-link
   (is (get-next-link)))
 
 (deftest test-start-crawler
-  (let [rss (db/fetch-rss-links 1000)]
+  (let [rss (db/fetch-rss-links 1000)
+        links (h2-query ["select * from crawler_links"])]
     (mocking (var http/get) mock-http-get
-             (let [crawler (start-crawler :threads 2)]
+             (let [crawler (start-crawler :threads 1)]
                (crawler :wait)))
     (is (nil? (db/fetch-crawler-links 2000)))
+    (testing "properly added and updated"
+      (let [now (h2-query ["select * from crawler_links"])]
+        (is (every? #(and (:last_modified %)
+                          (:title %)) now))
+        (is (> (count now) (count links)))))
     (is (= 1 (- (count (db/fetch-rss-links 1000)) (count rss))))))

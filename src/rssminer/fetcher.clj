@@ -1,5 +1,5 @@
 (ns rssminer.fetcher
-  (:use [rssminer.util :only [md5-sum assoc-if start-tasks]]
+  (:use [rssminer.util :only [assoc-if start-tasks]]
         [clojure.tools.logging :only [error info trace]]
         [rssminer.db.crawler :only [update-rss-link fetch-rss-links]]
         [rssminer.parser :only [parse-feed]])
@@ -20,20 +20,20 @@
     (reset! fetcher nil)))
 
 (defn fetch-rss
-  [{:keys [id url check_interval last_modified last_md5] :as link}]
+  [{:keys [id url check_interval last_modified] :as link}]
   (let [{:keys [status headers body]} (http/get url
-                                                :last_modified last_modified)
+                                                :last-modified last_modified)
         html (when body (try (slurp body)
                              (catch Exception e
                                (error e url))))
-        md5 (when html (md5-sum html))
         feeds (when html (parse-feed html))
-        next-check (conf/next-check check_interval
-                                    (and (= 200 status) (not= md5 last_md5)))]
+        updated (assoc-if (conf/next-check check_interval html)
+                          :last_modified (:last-modified headers)
+                          :alternate (:link feeds)
+                          :description (:description feeds)
+                          :title (:title feeds))]
     (trace status url (str "(" (-> feeds :entries count) " feeds)"))
-    (update-rss-link id (assoc-if next-check
-                                  :last_md5 md5
-                                  :last_modified (:last_modified headers)))
+    (update-rss-link id updated)
     (when feeds (db/save-feeds feeds id nil))))
 
 (defn get-next-link []

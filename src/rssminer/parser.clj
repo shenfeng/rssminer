@@ -41,7 +41,7 @@
                       (-> e :contents first :value trim)
                       (-> e :description :value trim))
             :link (-> e :link trim)
-            :guid (-> e :uri trim)
+            ;; :guid (-> e :uri trim)
             :categories (set (map #(-> % :name trim str/lower-case)
                                   (:categories e)))
             :updated_ts (:updatedDate e)

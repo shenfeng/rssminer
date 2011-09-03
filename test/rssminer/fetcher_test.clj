@@ -9,8 +9,7 @@
 
 (defn- mock-http-get [& args]
   {:status 200
-   :headers {:last_modified "Sat, 23 Jul 2011 01:40:16 GMT"
-             :server "Apache"}
+   :headers {:last-modified "Sat, 23 Jul 2011 01:40:16 GMT"}
    :body (resource "scottgu-atom.xml")})
 
 (use-fixtures :each h2-fixture
@@ -25,10 +24,15 @@
     (is (= 1 (- c (count (db/fetch-rss-links 1000)))))
     (is (= (count (h2-query ["select * from feeds"])) 1))))
 
-(deftest test-start-fecher
+(deftest test-fecher
   (mocking (var http/get) mock-http-get
            (let [fetcher (start-fetcher :threads 2)]
              (fetcher :wait)))
+  (testing "everybody get the meta"
+    (is (every? #(and (:alternate %)
+                      (:title %)
+                      (:last_modified %))
+                (h2-query ["select * from rss_links"]))))
   (is (= (count (h2-query ["select * from feeds"])) 1)))
 
 

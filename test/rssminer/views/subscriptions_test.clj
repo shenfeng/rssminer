@@ -34,8 +34,7 @@
     (is (= 1 (- (count (h2-query ["select * from rss_links"])) c)))
     (let [rss (first (h2-query
                       ["select * from rss_links order by id desc"]))]
-      (is (> (:next_check_ts rss) (now-seconds)))
-      (is (:last_md5 rss)))
+      (is (> (:next_check_ts rss) (now-seconds))))
     (are [key] (-> subscription key)
          :total_count
          :id

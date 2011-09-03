@@ -64,3 +64,10 @@
 (def popular-tags ["clojure" "compojure" "jquery" "jdk" "linux"
                    "database" "performance"  "java" "emacs"
                    "web" "python" "vim"])
+
+(def multi-domains (atom
+                    (delay (set (db/fetch-multi-domains)))))
+
+(defn multi-domain? [domain]
+  (@@multi-domains domain))
+

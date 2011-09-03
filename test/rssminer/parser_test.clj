@@ -16,7 +16,6 @@
          :title
          :summary
          :link
-         :guid
          :published_ts)))
 
 (deftest test-scottgu-atom
@@ -32,6 +31,5 @@
          :title
          :summary
          :link
-         :guid
          :updated_ts
          :published_ts)))
