@@ -14,6 +14,9 @@
 (def socks-proxy (Proxy. Proxy$Type/SOCKS
                          (InetSocketAddress. "localhost" 3128)))
 
+(def rssminer-agent
+  "Mozilla/5.0 (compatible; Rssminer/1.0; +http://rssminer.net")
+
 (def no-proxy Proxy/NO_PROXY)
 
 (def ungroup "ungrouped")

@@ -67,31 +67,19 @@
        :headers resp-headers
        :body (when (= status 200) (.getInputStream con))})))
 
-(defn wrap-redirects [client]
+(defn wrap-decompression [client]
   (fn [req]
     (let [resp (client req)]
-      (if (#{301 302 307} (:status resp))
-        (let [url (get-in resp [:headers :location])]
-          (client (assoc req :url url)))
+      (case (get-in resp [:headers :content-encoding])
+        "gzip"
+        (update-in resp [:body]
+                   (fn [in]
+                     (when in (GZIPInputStream. in))))
+        "deflate"
+        (update-in resp [:body]
+                   (fn [in]
+                     (when in (InflaterInputStream. in))))
         resp))))
-
-(defn wrap-compression [client]
-  (fn [req]
-    (if (get-in req [:headers :Accept-Encoding])
-      (client req)
-      (let [resp (client
-                  (assoc-in req
-                            [:headers :Accept-Encoding] "gzip, deflate"))]
-        (case (get-in resp [:headers :content-encoding])
-          "gzip"
-          (update-in resp [:body]
-                     (fn [in]
-                       (when in (GZIPInputStream. in))))
-          "deflate"
-          (update-in resp [:body]
-                     (fn [in]
-                       (when in (InflaterInputStream. in))))
-          resp)))))
 
 (defn wrap-proxy [client]
   (fn [{:keys [url] :as req}]
@@ -124,21 +112,17 @@
             :headers {}}))))
 
 (def request* (-> request
-                  wrap-compression
+                  wrap-decompression
                   wrap-proxy
-                  wrap-redirects
                   wrap-exception))
 
 (defn ^{:dynamic true} get
-  [url & {:keys [last-modified user-agent]
-          :or {user-agent "Mozilla/5.0 (X11; Linux x86_64)"}}]
-  (if (conf/black-domain? (extract-host url))
-    {:status 480
-     :headers {}}
-    (request* (assoc-if {:url url}
-                        :User-Agent user-agent
-                        :Accept "*/*"
-                        :If-Modified-Since last-modified))))
+  [url & {:keys [last-modified]}]
+  (request* {:url url
+             :headers (assoc-if {:Connection "close"
+                                 :User-Agent conf/rssminer-agent
+                                 :Accept-Encoding "gzip, deflate"}
+                                :If-Modified-Since last-modified)}))
 
 (defn ^{:dynamic true} download-favicon [url]
   (let [icon-url (str (extract-host url) "/favicon.ico")]
