@@ -1,3 +1,5 @@
+<div id="plot">
+</div>
 <div class="section">
   <h3>server control</h3>
   <table>
@@ -28,9 +30,9 @@
   <h3>statistics</h3>
   <table>
     <tr>
-        <th></th>
-        <th>Count</th>
-        <th>Delta</th>
+      <th></th>
+      <th>Count</th>
+      <th>Delta</th>
     </tr>
     <tr>
       <td>Feed:</td>

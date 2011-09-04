@@ -4,44 +4,34 @@
       _ = window._,
       JSON = window.JSON;
 
-  _.mixin({
-    interval: function (seconds) {
-      var interval = Math.floor(seconds / 31536000);
-      if (interval > 1) {
-        return interval + " years";
-      }
-      interval = Math.floor(seconds / 2592000);
-      if (interval > 1) {
-        return interval + " months";
-      }
-      interval = Math.floor(seconds / 86400);
-      if (interval > 1) {
-        return interval + " days";
-      }
-      interval = Math.floor(seconds / 3600);
-      if (interval > 1) {
-        return interval + " hours";
-      }
-      interval = Math.floor(seconds / 60);
-      if (interval > 1) {
-        return interval + " minutes";
-      }
-      return interval + " seconds";
-    },
-
-    timesince: function(date) {
-      var seconds = Math.floor((new Date() - date) / 1000);
-      return _.interval(seconds) + ' ago';
-    }
-  });
-
-  mustache.registerHelper('ymdate', function(context, block){
-    var d = new Date(context),
+  function ymdate (date) {
+    var d = new Date(date),
         m = d.getMonth() + 1,
-        day = d.getDay();
+        day = d.getDate();
     return [d.getFullYear(),
             m < 10 ? '0' + m : m,
             day < 10 ? '0' + day : day].join('/');
+  }
+
+  mustache.registerHelper('ymdate', ymdate);
+  mustache.registerHelper('interval', function (date) {
+    var seconds = date - new Date().getTime() / 1000,
+        data = {
+          years: 31536000,
+          month : 2592000,
+          day: 86400,
+          hour: 3600,
+          minute: 60,
+          second: 1
+        };
+    for(var attr in data) {
+      var interval = Math.floor(seconds / data[attr]);
+      if(interval > 1)
+        return "in " + interval + " " +  attr + "s";
+      else if (interval < -1) {
+        return -interval + " " + attr + "s ago";
+      }
+    }
   });
 
   var notif = (function() {

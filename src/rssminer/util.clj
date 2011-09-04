@@ -23,7 +23,7 @@
         (throw (new RuntimeException e))))))
 
 (defn- write-json-date [^Date d ^PrintWriter out escape-unicode?]
-  (.print out (.getTime d)))
+  (.print out (int (/ (.getTime d) 1000))))
 
 (extend Date Write-JSON
         {:write-json write-json-date})

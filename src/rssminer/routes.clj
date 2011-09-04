@@ -39,11 +39,8 @@
 
 (defroutes api-routes
   (context "/dashboard" []
-           (JGET "/rsslinks" [] dashboard/get-rsslinks)
-           (JGET "/pending" [] dashboard/get-crawler-pending)
-           (JGET "/crawled" [] dashboard/get-crawled)
-           (JGET "/settings" [] dashboard/get-settings)
-           (JPOST "/settings" [] dashboard/settings))
+           (JGET "/" [] dashboard/get-data)
+           (JPOST "/" [] dashboard/settings))
   (context "/subscriptions" []
            (JGET "/overview" [] subscription/get-overview)
            (JPOST "/add" [] subscription/add-subscription)

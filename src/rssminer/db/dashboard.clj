@@ -24,10 +24,9 @@
       first :count))
 
 (defn get-crawled-links
-  [& {:keys [limit offset] :or {limit 40 offset 0}}]
+  [& {:keys [limit offset] :or {limit 30 offset 0}}]
   (h2-query
-   ["SELECT id, url, check_interval,
-     next_check_ts AS check_ts, added_ts,
+   ["SELECT id, url, title, check_interval, next_check_ts, added_ts,
      (SELECT url FROM crawler_links c
              WHERE c.id = cl.referer_id ) AS referer
      FROM crawler_links cl
@@ -36,10 +35,9 @@
     (now-seconds)  limit offset]))
 
 (defn get-pending-links
-  [& {:keys [limit offset] :or {limit 40 offset 0}}]
+  [& {:keys [limit offset] :or {limit 30 offset 0}}]
   (h2-query
-   ["SELECT id, url, check_interval,
-     next_check_ts AS check_ts, added_ts,
+   ["SELECT id, url, title, check_interval, next_check_ts, added_ts,
      (SELECT url FROM crawler_links c
              WHERE c.id = cl.referer_id ) AS referer
      FROM crawler_links cl
@@ -48,9 +46,9 @@
     (now-seconds) limit offset]))
 
 (defn get-rss-links
-  [& {:keys [limit offset] :or {limit 40 offset 0}}]
+  [& {:keys [limit offset] :or {limit 30 offset 0}}]
   (h2-query
-   ["SELECT id,  url, title, added_ts,
+   ["SELECT id, url, title, check_interval, next_check_ts, added_ts,
     (SELECT url FROM crawler_links c
          WHERE c.id = crawler_link_id ) AS referer
     FROM rss_links WHERE id > (SELECT MAX(id) FROM rss_links) - ?

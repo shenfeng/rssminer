@@ -38,30 +38,22 @@ $(function(){
     }
   }
 
-  var prev, data = init_plot_data(),
-      options = {
-        // series: { shadowSize: 0 }, // drawing is faster without shadows
-        yaxis: { min: 0, max: 800 },
-        xaxis: { min: 0, max: 100 }
-      };
-
-
-  var plot = $.plot($("#plot"), [prepare_data], options);
+  var prev, data = init_plot_data();
 
   var Settings = OC.Model.extend({
     id: 'feeds_count',          // revent isNew return true;
     black_domains: OC.Collection,
     reseted_domains: OC.Collection,
-    url: "/api/dashboard/settings",
+    url: "/api/dashboard/?q=settings",
     parse: function (resp) {
       if(prev) {
-        resp.feeds_count_delta = resp.feeds_count - prev.feeds_count;
-        resp.rss_finished_delta = resp.rss_finished - prev.rss_finished;
-        resp.rss_pending_delta = resp.rss_pending - prev.rss_pending;
-        resp.crawled_count_delta = resp.crawled_count - prev.crawled_count;
-        resp.pending_count_delta = resp.pending_count - prev.pending_count;
+        for(var attr in resp) {
+          if(_.isNumber(resp[attr])) {
+            resp[attr+"_delta"] = resp[attr] - prev[attr];
+          }
+        }
         data.splice(0,1);
-        data.push(resp.crawled_count_delta);
+        data.push(resp.feeds_count_delta);
       }
       prev = resp;
       return resp;
@@ -82,7 +74,7 @@ $(function(){
     }
     function startStopService (name) {
       return function () {
-        var  model = this.model,
+        var model = this.model,
             running = model.get(name),
             attr = {};
         attr[name] = !running;
@@ -103,7 +95,6 @@ $(function(){
   });
 
   var Router = window.Backbone.Router.extend(function () {
-
     function common (path) {
       $("#nav li").removeClass('active')
         .filter('.' + path).addClass('active');
@@ -119,10 +110,14 @@ $(function(){
             tmpl: tmpls.settings
           });
           $("#content").replaceWith(view.render().el);
-          plot.setData([prepare_data(data)]);
-          plot.draw();
+
+          var options = {
+            // series: { shadowSize: 0 }, // drawing is faster without shadows
+            yaxis: { min: 0, max: 800 },
+            xaxis: { min: 0, max: 100 }
+          };
+          $.plot($("#plot"), [prepare_data], options);
           localStorage.setItem('plot_data', JSON.stringify(data));
-          setTimeout(showSettings, 6000);
         }
       });
     }
@@ -130,12 +125,14 @@ $(function(){
     function showInfo (path) {
       common(path);
       var model = new backbone.Model();
+      var tmpl = "links";
+      if(path === 'settings') tmpl = 'settings';
       model.fetch({
-        url: "/api/dashboard/" + path,
+        url: "/api/dashboard/?q=" + path,
         success: function () {
           var view = new CommonView({
             model: model,
-            tmpl: tmpls[path]
+            tmpl: tmpls[tmpl]
           });
           $("#content").replaceWith(view.render().el);
         }
