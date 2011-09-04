@@ -1,7 +1,7 @@
 (ns rssminer.crawler
-  (:use [rssminer.util :only [assoc-if start-tasks]]
-        [rssminer.db.util :only [parse-timestamp]]
-        [rssminer.time :only [now-seconds]]
+  (:use [rssminer.db.util :only [parse-timestamp]]
+        (rssminer [time :only [now-seconds]]
+                  [util :only [assoc-if start-tasks]])
         [clojure.tools.logging :only [info error trace]])
   (:require [rssminer.db.crawler :as db]
             [rssminer.http :as http]

@@ -1,6 +1,6 @@
 (ns rssminer.handlers.dashboard
-  (:use [rssminer.fetcher :only [start-fetcher stop-fetcher fetcher]]
-        [rssminer.crawler :only [start-crawler stop-crawler crawler]])
+  (:use (rssminer [fetcher :only [start-fetcher stop-fetcher fetcher]]
+                  [crawler :only [start-crawler stop-crawler crawler]]))
   (:require [rssminer.db.dashboard :as db]
             [rssminer.config :as conf]))
 

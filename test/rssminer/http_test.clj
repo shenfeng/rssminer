@@ -1,7 +1,6 @@
 (ns rssminer.http-test
   (:refer-clojure :exclude [get])
   (:use rssminer.http
-        [clojure.java.io :only [resource]]
         [rssminer.config :only [add-black-domain-patten]]
         (rssminer [test-common :only [h2-fixture]])
         clojure.test))
@@ -35,7 +34,7 @@
          (resolve-url "http://a.com" "http://c.com/c.html"))))
 
 (deftest test-extract-links
-  (let [html (slurp (resource "page.html"))
+  (let [html (slurp "test/page.html")
         {:keys [rss links]} (extract-links "http://a.com/" html)]
     (is (> (count links) 0))
     (is (every? #(and (:url %)

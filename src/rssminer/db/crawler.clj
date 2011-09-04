@@ -1,10 +1,9 @@
 (ns rssminer.db.crawler
-  (:use [rssminer.database :only [h2-db-factory]]
-        [rssminer.time :only [now-seconds]]
-        [clojure.tools.logging :only [info]]
-        [rssminer.config :only [multi-domain?]]
-        [rssminer.util :only [ignore-error]]
-        [rssminer.db.util :only [h2-query]]
+  (:use [clojure.tools.logging :only [info]]
+        (rssminer [config :only [multi-domain?]]
+                  [time :only [now-seconds]]
+                  [util :only [ignore-error]])
+        [rssminer.db.util :only [h2-query with-h2]]
         [clojure.java.jdbc :only [with-connection with-query-results
                                   insert-record update-values]]))
 (defn fetch-crawler-links [limit]
@@ -16,7 +15,7 @@
 
 (defn- insert-crawler-link [link]
   (ignore-error ;; ignore voilation of uniqe constraint
-   (with-connection @h2-db-factory
+   (with-h2
      (insert-record :crawler_links link))))
 
 (defn insert-crawler-links
@@ -31,17 +30,17 @@
     (doall (filter identity (flatten (map f grouped))))))
 
 (defn update-crawler-link [id data]
-  (with-connection @h2-db-factory
+  (with-h2
     (update-values :crawler_links ["id = ?" id] data)))
 
 (defn insert-rss-link
   [link]
   (ignore-error ;; ignore voilate of uniqe constraint
-   (with-connection @h2-db-factory
+   (with-h2
      (insert-record :rss_links link))))
 
 (defn update-rss-link [id data]
-  (with-connection @h2-db-factory
+  (with-h2
     (update-values :rss_links ["id = ?" id] data)))
 
 (defn fetch-rss-links [limit]

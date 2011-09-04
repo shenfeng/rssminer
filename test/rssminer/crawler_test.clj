@@ -2,15 +2,14 @@
   (:use clojure.test
         (rssminer [test-common :only [h2-fixture mocking]])
         [rssminer.db.util :only [h2-query]]
-        rssminer.crawler
-        [clojure.java.io :only [resource]])
+        rssminer.crawler)
   (:require [rssminer.db.crawler :as db]
             [rssminer.http :as http]))
 
 (defn- mock-http-get [& args]
   {:status 200
    :headers {:last-modified "Sat, 23 Jul 2011 01:40:16 GMT"}
-   :body (resource "page.html")})
+   :body (java.io.FileInputStream. "test/page.html")})
 
 (use-fixtures :each h2-fixture
               (fn [f] (binding [http/get mock-http-get]

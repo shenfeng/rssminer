@@ -1,6 +1,5 @@
 (ns rssminer.config-test
   (:use rssminer.config
-        [clojure.java.io :only [resource]]
         (rssminer [test-common :only [h2-fixture]])
         clojure.test))
 

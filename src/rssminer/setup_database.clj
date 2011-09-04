@@ -1,11 +1,12 @@
 (ns rssminer.setup-database
   (:use (rssminer [database :only [use-h2-database! close-global-h2-factory!
                                    import-h2-schema!]]
-                  [util :only [session-get]]
-                  [routes :only [app]])
-        (rssminer.db [user :only [create-user]])
-        [clojure.tools.logging :only [info]]
-        [clojure.tools.cli :only [cli optional required]])
+                  [config :only [ungroup]])
+        (rssminer.db [user :only [create-user]]
+                     [util :only [h2-query with-h2]])
+        (clojure.tools [logging :only [info]]
+                       [cli :only [cli optional required]])
+        [clojure.java.jdbc :only [insert-record]])
   (:import java.io.File))
 
 (defn setup [{:keys [index-path db-path password]}]
@@ -16,7 +17,15 @@
   (use-h2-database! (str db-path ";PAGE_SIZE=8192"))
   (info "import h2 schema, create user feng")
   (import-h2-schema!)
-  (create-user {:name "feng" :password password :email "shenedu@gmail.com"})
+  (let [user (create-user {:name "feng"
+                           :password password
+                           :email "shenedu@gmail.com"})
+        rsses (h2-query ["select id from rss_links"])]
+    (doseq [rss rsses]
+      (with-h2
+        (insert-record :user_subscription {:user_id (:id user)
+                                           :rss_link_id (:id rss)
+                                           :group_name ungroup}))))
   (close-global-h2-factory!))
 
 (defn main [& args]

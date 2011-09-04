@@ -1,8 +1,8 @@
 (ns rssminer.fetcher
-  (:use [rssminer.util :only [assoc-if start-tasks]]
-        [clojure.tools.logging :only [error info trace]]
+  (:use [clojure.tools.logging :only [error info trace]]
         [rssminer.db.crawler :only [update-rss-link fetch-rss-links]]
-        [rssminer.parser :only [parse-feed]])
+        (rssminer [util :only [assoc-if start-tasks]]
+                  [parser :only [parse-feed]]))
   (:require [rssminer.db.feed :as db]
             [rssminer.http :as http]
             [rssminer.config :as conf])
@@ -30,6 +30,8 @@
         updated (assoc-if (conf/next-check check_interval html)
                           :last_modified (:last-modified headers)
                           :alternate (:link feeds)
+                          :favicon (when-not last_modified
+                                     (http/download-favicon url))
                           :description (:description feeds)
                           :title (:title feeds))]
     (trace status url (str "(" (-> feeds :entries count) " feeds)"))

@@ -1,6 +1,5 @@
 (ns rssminer.database
   (:use [clojure.java.jdbc :only [with-connection do-commands]]
-        [clojure.java.io :only [resource]]
         [clojure.tools.logging :only [debug info]]
         [clojure.java.jdbc :only [with-connection do-commands]])
   (:require [clojure.string :as str])
@@ -28,7 +27,7 @@
 
 (defn import-h2-schema! []
   (let [stats (filter (complement str/blank?)
-                      (str/split (slurp (resource "rssminer.sql"))
+                      (str/split (slurp "src/rssminer.sql")
                                  #"\s*----*\s*"))]
     (with-connection @h2-db-factory
       (apply do-commands (cons "DROP ALL OBJECTS" stats)))))
