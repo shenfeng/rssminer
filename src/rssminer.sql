@@ -6,7 +6,7 @@ SET COMPRESS_LOB DEFLATE;
 ----
 SET DEFAULT_LOCK_TIMEOUT 120000;
 ----
-SET CACHE_SIZE 32768;
+SET CACHE_SIZE 16384;
 ----
 set WRITE_DELAY 3000;           -- default 500ms
 ----
@@ -152,6 +152,7 @@ insert into multi_rss_domains (domain) values
 insert into black_domain_pattens (patten) values
 ('\d{3,}'),
 ('\.a-\w+.com'),
+('informer\.|typepad\.'),
 ('over-blog|backpage|https'),
 ('blshe|linkinpark|shop|soufun'),
 ('skyrock|tumblr|deviantart|taobao'),

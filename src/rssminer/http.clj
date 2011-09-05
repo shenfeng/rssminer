@@ -1,5 +1,5 @@
 (ns rssminer.http
-  (:use [clojure.tools.logging :only [info error debug trace]]
+  (:use [clojure.tools.logging :only [info error debug trace fatal]]
         [rssminer.util :only [assoc-if]])
   (:refer-clojure :exclude [get])
   (:require [clojure.string :as str]
@@ -51,6 +51,7 @@
         con (doto (.. (URL. url) (openConnection proxy))
               (.setReadTimeout 3500)
               (.setConnectTimeout 3500))]
+    (.setInstanceFollowRedirects con false)
     (doseq [header headers]
       (.setRequestProperty con (name (key header)) (val header)))
     ;; 0 is status line
@@ -81,6 +82,13 @@
                      (when in (InflaterInputStream. in))))
         resp))))
 
+(defn wrap-redirect [client]
+  (fn [req]
+    (let [resp (client req)]
+      (if (#{301 302 307} (:status resp))
+        (client (assoc req :url (get-in resp [:headers :location])))
+        resp))))
+
 (defn wrap-proxy [client]
   (fn [{:keys [url] :as req}]
     (if (conf/reseted-url? url)
@@ -109,11 +117,16 @@
          (catch Exception e
            (error (:url req) e)
            {:status 452
+            :headers {}})
+         (catch Error e
+           (fatal e (:url req))
+           {:status 452
             :headers {}}))))
 
 (def request* (-> request
                   wrap-decompression
                   wrap-proxy
+                  wrap-redirect
                   wrap-exception))
 
 (defn ^{:dynamic true} get

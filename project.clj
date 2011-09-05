@@ -28,8 +28,8 @@
              "-XX:+TieredCompilation"
              "-XX:+UseCompressedStrings"
              "-XX:-UseLoopPredicate"
-             "-Xmx512m"
-             "-Xms512m"]
+             "-Xmx320m"
+             "-Xms192m"]
   ;; :jvm-opts ["-agentlib:hprof=cpu=samples,format=b,file=/tmp/profile.txt"]
   ;; :jvm-opts ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n"]
   :dev-dependencies [[swank-clojure "1.4.0-SNAPSHOT"]

@@ -15,15 +15,16 @@
                          (InetSocketAddress. "localhost" 3128)))
 
 (def rssminer-agent
-  "Mozilla/5.0 (compatible; Rssminer/1.0; +http://rssminer.net")
+  "Mozilla/5.0 (compatible; Rssminer/1.0; +http://rssminer.net)")
 
 (def no-proxy Proxy/NO_PROXY)
 
 (def ungroup "ungrouped")
 
-(def crawler-threads-count 15)
+(def crawler-threads-count
+  (min 10 ( * (.. Runtime getRuntime availableProcessors) 6)))
 
-(def fetcher-threads-count 3)
+(def fetcher-threads-count 2)
 
 (defn next-check [last-interval success?]
   (let [interval (if success?
@@ -36,7 +37,8 @@
 
 (defn rand-ts [] (rand-int 1000000))
 
-(def ignored-url-patten #"(?i)(jpg|png|gif|css|js|jpeg|pdf|mp3|swf)$")
+(def ignored-url-patten
+ # "(?i)(jpg|png|gif|css|js|jpeg|pdf|mp3|swf|mp4|wmv|flv|rm|mov|zip|mkv)$")
 
 (def non-url-patten #"(?i)^\s*(javascript|mailto|#)")
 
