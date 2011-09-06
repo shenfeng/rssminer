@@ -21,7 +21,7 @@
                  (when auto-server ";AUTO_SERVER=TRUE"))
         ds (JdbcConnectionPool/create url "sa" "sa")
         f (fn [& args]  (.getConnection ds))]
-    (debug "use h2 database" url)
+    (info "use h2 database" url)
     (reset! h2-db-factory {:factory f
                            :ds ds})))
 

@@ -5,7 +5,6 @@ import static java.lang.Character.isLetter;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -29,6 +28,8 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import clojure.lang.ISeq;
 import clojure.lang.Seqable;
@@ -37,7 +38,7 @@ public class Searcher {
     static final Version V = Version.LUCENE_33;
     static final int LENGTH = 280;
     static final Analyzer analyzer = new KStemStopAnalyzer(V);
-    static final Logger logger = Logger.getLogger(Searcher.class);
+    static final Logger logger = LoggerFactory.getLogger(Searcher.class);
     static final String FEED_ID = "feedId";
     static final String AUTHOR = "author";
     static final String TITLE = "title";
@@ -112,7 +113,7 @@ public class Searcher {
         Runtime.getRuntime().removeShutdownHook(shutDownHook);
         synchronized (indexer) {
             if (indexer != null) {
-                logger.debug("close Searcher@" + path);
+                logger.info("close Searcher@" + path);
                 indexer.close();
                 indexer = null;
             }

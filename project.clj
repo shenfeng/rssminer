@@ -6,7 +6,7 @@
                  [org.clojure/tools.cli "0.1.0"]
                  [org.clojure/tools.logging "0.2.0"]
                  [com.h2database/h2 "1.3.159"]
-                 [log4j/log4j "1.2.16"]
+                 [ch.qos.logback/logback-classic "0.9.29"]
                  [javax.mail/mail "1.4.4"]
                  [org.apache.commons/commons-email "1.2"]
                  [compojure "0.6.5"]

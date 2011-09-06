@@ -1,5 +1,5 @@
 (ns rssminer.search
-  (:use [clojure.tools.logging :only [info debug]]
+  (:use [clojure.tools.logging :only [info]]
         [rssminer.util :only [extract-text to-int]]
         [rssminer.db.util :only [with-h2 h2-query]]
         [clojure.java.jdbc :only [with-query-results]])
@@ -17,7 +17,7 @@
   "It will close previous indexer"
   (close-global-index-writer!)
   (let [path (if (= path :RAM) "RAM" path)]
-    (debug "use index path" path)
+    (info "use index path" path)
     (reset! indexer (Searcher. path))))
 
 (defn toggle-infostream [toggle]

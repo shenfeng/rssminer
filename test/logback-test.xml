@@ -1,0 +1,29 @@
+<configuration scan="false">
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+		<file>/tmp/rssminer.log</file>
+		<encoder>
+			<pattern>%date [%thread] %-5level %logger - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="rssminer.database" level="OFF" />
+	<logger name="rssminer.Searcher" level="OFF" />
+	<logger name="rssminer.search" level="OFF" />
+
+	<logger name="rssminer" level="ALL">
+		<appender-ref ref="FILE" />
+	</logger>
+
+	<!-- <root level="ALL"> <appender-ref ref="FILE" /> </root> -->
+	<root level="ERROR">
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>

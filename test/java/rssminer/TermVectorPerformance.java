@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
@@ -19,10 +18,12 @@ import org.apache.lucene.util.Version;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TermVectorPerformance {
 
-    private static Logger logger = Logger
+    private static Logger logger = LoggerFactory
             .getLogger(TermVectorPerformance.class);
     private IndexReader reader;
 
@@ -61,7 +62,7 @@ public class TermVectorPerformance {
             // System.out.println(reader.docFreq(term) + "\t" +
             // terms.docFreq());
         }
-        logger.info(max);
+        logger.info(max + "");
     }
 
     @Test

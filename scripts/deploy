@@ -25,7 +25,6 @@ rsync --rsh='ssh' -vr --delete --delete-excluded \
 remote_run "sudo cp ${TARGET_DIR}/conf/rssminer.conf /etc/init/"
 remote_run "sudo cp ${TARGET_DIR}/conf/nginx/rssminer /etc/nginx/sites-available"
 remote_run "sudo cp ${TARGET_DIR}/conf/nginx/gzip.conf /etc/nginx/conf.d"
-remote_run "cd ${TARGET_DIR} && sudo cp conf/log4j_prod.xml src/log4j.xml"
 remote_run "cd /etc/nginx/sites-enabled  && sudo ln -f -s /etc/nginx/sites-available/rssminer"
 
 remote_run "sudo restart rssminer || sudo start rssminer"
