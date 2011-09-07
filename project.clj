@@ -15,6 +15,7 @@
                  [org.apache.lucene/lucene-analyzers "3.3.0"]
                  [net.java.dev.rome/rome "1.0.0"]
                  [ring/ring-core "0.3.11"]
+                 [me.shenfeng/netty-http "1.0.0-SNAPSHOT"]
                  [me.shenfeng/enlive "1.2.0-SNAPSHOT"]
                  [me.shenfeng/ring-netty-adapter "0.0.1-SNAPSHOT"]]
   :dev-resources-path "/usr/lib/jvm/jdk1.7.0/lib/tools.jar:/usr/lib/jvm/jdk1.7.0/src.zip"

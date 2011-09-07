@@ -1,11 +1,7 @@
 package rssminer;
 
-import static org.jboss.netty.util.CharsetUtil.UTF_8;
-
 import java.io.IOException;
 import java.io.StringReader;
-import java.net.URI;
-import java.nio.charset.Charset;
 
 import org.ccil.cowan.tagsoup.Parser;
 import org.xml.sax.Attributes;
@@ -14,48 +10,12 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class Utils {
-    private static final String CS = "charset=";
 
     private static final ThreadLocal<Parser> parser = new ThreadLocal<Parser>() {
         protected Parser initialValue() {
             return new Parser();
         }
     };
-
-    public static String getPath(URI uri) {
-        String path = uri.getPath();
-
-        if ("".equals(path))
-            path = "/";
-        return path + "?" + uri.getRawQuery();
-    }
-
-    public static String getHost(URI uri) {
-        String host = uri.getHost();
-        if (host == null)
-            return "localhost";
-        else
-            return host;
-    }
-
-    public static int getPort(URI uri) {
-        int port = uri.getPort();
-        if (port == -1) {
-            port = 80;
-        }
-        return port;
-    }
-
-    public static Charset parseCharset(String type) {
-        if (type != null) {
-            int i = type.indexOf(CS);
-            if (i != -1) {
-                String charset = type.substring(i + CS.length()).trim();
-                return Charset.forName(charset);
-            }
-        }
-        return UTF_8;
-    }
 
     public static String extractText(String html) throws IOException,
             SAXException {
