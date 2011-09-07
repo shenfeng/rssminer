@@ -11,5 +11,5 @@ public interface IHttpTask {
 
     Map<String, Object> getHeaders();
 
-    void doTask(HttpResponse response) throws Exception;
+    Object doTask(HttpResponse response) throws Exception;
 }

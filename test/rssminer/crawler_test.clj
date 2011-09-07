@@ -6,36 +6,25 @@
   (:require [rssminer.db.crawler :as db]
             [rssminer.http :as http]))
 
-(defn- mock-http-get [& args]
-  {:status 200
-   :headers {:last-modified "Sat, 23 Jul 2011 01:40:16 GMT"}
-   :body (java.io.FileInputStream. "test/page.html")})
+(use-fixtures :each h2-fixture)
 
-(use-fixtures :each h2-fixture
-              (fn [f] (binding [http/get mock-http-get]
-                       (f))))
-
-(deftest test-crawl-link
-  (let [link (first (db/fetch-crawler-links 1))
-        rss (db/fetch-rss-links 1000)
-        links (db/fetch-crawler-links 1000)]
-    (crawl-link link)
-    (is (> (count (h2-query ["select * from crawler_links"])) (count links)))
-    (is (= 1 (- (count (db/fetch-rss-links 1000)) (count rss))))))
+(deftest test-mk-provider
+  (let [provider ^rssminer.task.IHttpTaskProvder (mk-provider)
+        task (.nextTask provider)]
+    (is (.getUri task))
+    (is (empty? (.getHeaders task)))))
 
 (deftest test-get-next-link
-  (is (get-next-link)))
+  (is (get-next-link (java.util.LinkedList.))))
 
-(deftest test-start-crawler
-  (let [rss (db/fetch-rss-links 1000)
+(deftest test-extract-and-save-links
+  (let [html (slurp "test/page.html")
+        rss (h2-query ["select * from rss_links"])
         links (h2-query ["select * from crawler_links"])]
-    (mocking (var http/get) mock-http-get
-             (let [crawler (start-crawler :threads 1)]
-               (crawler :wait)))
-    (is (nil? (db/fetch-crawler-links 2000)))
-    (testing "properly added and updated"
-      (let [now (h2-query ["select * from crawler_links"])]
-        (is (every? #(and (:last_modified %)
-                          (:title %)) now))
-        (is (> (count now) (count links)))))
-    (is (= 1 (- (count (db/fetch-rss-links 1000)) (count rss))))))
+    (extract-and-save-links {:id 1 :url "http://me.me"} html)
+    (is (> (count (h2-query ["select * from rss_links"])) (count rss)))
+    (is (> (count (h2-query ["select * from crawler_links"]))
+           (count links)))))
+
+(deftest test-extract-title
+  (is (= "Peter Norvig" (extract-title (slurp "test/page.html")))))

@@ -1,7 +1,9 @@
 package rssminer.task;
 
-import java.net.URISyntaxException;
+import static java.lang.String.format;
+
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import me.shenfeng.http.AsyncHanlder;
 import me.shenfeng.http.HttpClient;
@@ -25,6 +27,7 @@ class Hander implements AsyncHanlder {
     public void onCompleted(HttpResponse response) {
         try {
             mTask.doTask(response);
+            logger.trace("{} {}", response.getStatus(), mTask.getUri());
             mRunner.markComplete(mTask, response);
         } catch (Exception e) {
             logger.error(mTask.getUri().toString(), e);
@@ -42,6 +45,8 @@ public class HttpTaskRunner {
     private final IHttpTaskProvder mSource;
     private final String mName;
     private final int mConcurrency;
+    private long startTime;
+    private AtomicInteger mCounter = new AtomicInteger(0);
     private volatile boolean mRunning;
     private Thread worker;
 
@@ -54,16 +59,28 @@ public class HttpTaskRunner {
         mName = name;
     }
 
-    public void start() throws URISyntaxException {
+    public void start() {
+        mRunning = true;
         worker = new Thread(runner, mName);
         worker.start();
         logger.info("starting {}", mName);
+        startTime = System.currentTimeMillis();
     }
 
     public void stop() {
         mRunning = false;
         worker.interrupt();
-        logger.info("stopping {}", mName);
+        double min = (double) (System.currentTimeMillis() - startTime) / 6000;
+        logger.info(format("%s, %.2f req/min, stoping", mName, getCounter()
+                / min));
+    }
+
+    public long getStartupTime() {
+        return startTime;
+    }
+
+    public int getCounter() {
+        return mCounter.get();
     }
 
     public boolean isRunning() {
@@ -72,6 +89,7 @@ public class HttpTaskRunner {
 
     void markComplete(IHttpTask task, HttpResponse response) {
         mSemaphore.release();
+        mCounter.incrementAndGet();
     }
 
     public String toString() {
@@ -85,7 +103,6 @@ public class HttpTaskRunner {
             while (mRunning && task != null) {
                 try {
                     mSemaphore.acquire();
-                    logger.trace("handle {}", task.getUri());
                     mClient.execGet(task.getUri(), task.getHeaders(),
                             new Hander(task, HttpTaskRunner.this));
                     task = mSource.nextTask();

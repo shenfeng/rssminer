@@ -9,6 +9,8 @@
             ConnectException UnknownHostException SocketTimeoutException]
            [java.util.zip InflaterInputStream GZIPInputStream]
            [java.io InputStream StringReader]
+           [me.shenfeng.http Utils HttpClient]
+           org.jboss.netty.handler.codec.http.HttpResponse
            org.apache.commons.io.IOUtils
            org.apache.commons.codec.binary.Base64))
 
@@ -28,6 +30,16 @@
       (when-not (or (conf/black-domain? host)
                     (re-find conf/ignored-url-patten url))
         url))))
+
+(defonce client (me.shenfeng.http.HttpClient.))
+
+(defn parse-response [^HttpResponse response]
+  (let [status (-> response .getStatus .getCode)
+        names (.getHeaderNames response)]
+    {:status status
+     :headers (reduce #(assoc %1 (-> %2 str/lower-case keyword)
+                              (.getHeader response %2)) {} names)
+     :body (when (= 200 status) (Utils/toString response))}))
 
 (defn resolve-url [base link]
   (try
