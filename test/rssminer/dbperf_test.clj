@@ -102,3 +102,11 @@
   (let [n 5000
         times (map (fn [& args] (:time (tick (extract-text html)))) (range n))]
     (println "takes time " (/ (double (reduce + times)) n))))
+
+(defn bench-dns []
+  (let [links (take 20 (reverse
+                        (rssminer.db.crawler/fetch-crawler-links 100)))]
+    (time (doseq [url links]
+            (let [host (-> url :url java.net.URI. .getHost)]
+              (try (time (java.net.InetAddress/getAllByName host))
+                   (catch Exception e)))))))

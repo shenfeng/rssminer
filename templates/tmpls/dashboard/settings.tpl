@@ -45,29 +45,9 @@
       <td>{{rss_links_count_delta}}</td>
     </tr>
     <tr>
-      <td>Rss Fetched:</td>
-      <td>{{rss_finished}}</td>
-      <td>{{rss_finished_delta}}</td>
-    </tr>
-    <tr>
-      <td>Rss Pending: </td>
-      <td>{{rss_pending}}</td>
-      <td>{{rss_pending_delta}}</td>
-    </tr>
-    <tr>
       <td> Links: </td>
       <td>{{crawler_links_count}}</td>
       <td>{{crawler_links_count_delta}}</td>
-    </tr>
-    <tr>
-      <td> Crawled: </td>
-      <td>{{crawled_count}}</td>
-      <td>{{crawled_count_delta}}</td>
-    </tr>
-    <tr>
-      <td> Pending: </td>
-      <td>{{pending_count}}</td>
-      <td>{{pending_count_delta}}</td>
     </tr>
   </table>
 </div>

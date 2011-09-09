@@ -1,7 +1,7 @@
 (ns rssminer.fetcher
   (:use [clojure.tools.logging :only [error info trace]]
         [rssminer.db.crawler :only [update-rss-link fetch-rss-links]]
-        (rssminer [util :only [assoc-if start-tasks]]
+        (rssminer [util :only [assoc-if start-tasks next-check]]
                   [parser :only [parse-feed]]))
   (:require [rssminer.db.feed :as db]
             [rssminer.http :as http]
@@ -21,13 +21,13 @@
 
 (defn fetch-rss
   [{:keys [id url check_interval last_modified] :as link}]
-  (let [{:keys [status headers body]} (http/get url
-                                                :last-modified last_modified)
+  (let [{:keys [status headers body] :as resp}
+        (http/get url :last-modified last_modified)
         html (when body (try (slurp body)
                              (catch Exception e
                                (error e url))))
         feeds (when html (parse-feed html))
-        updated (assoc-if (conf/next-check check_interval html)
+        updated (assoc-if (next-check check_interval resp)
                           :last_modified (:last-modified headers)
                           :alternate (:link feeds)
                           :favicon (when-not last_modified

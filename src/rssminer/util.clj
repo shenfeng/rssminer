@@ -1,6 +1,7 @@
 (ns rssminer.util
-  (:use (clojure.data [json :only [json-str Write-JSON]])
+  (:use [clojure.data.json :only [json-str Write-JSON]]
         [clojure.tools.logging :only [error info]]
+        [rssminer.time :only [now-seconds]]
         [clojure.pprint :only [pprint]])
   (:require [clojure.string :as str])
   (:import java.util.Date
@@ -122,3 +123,13 @@
               :wait (wait)
               :shutdown (shutdown)
               :shutdown-wait (do (shutdown) (wait))))))
+
+(defn next-check [last-interval {:keys [status headers]}]
+  (if-let [location (headers "Location")]
+    {:url location :domain nil :next_check_ts 1}
+    (let [interval (if (= 200 status)
+                     (max 5400 (int (/ last-interval 1.2)))
+                     (min (int (* last-interval 1.2)) (* 3600 24 20)))]
+      {:check_interval interval
+       :next_check_ts (+ (now-seconds) interval)})))
+

@@ -53,7 +53,7 @@ $(function(){
           }
         }
         data.splice(0,1);
-        data.push(resp.feeds_count_delta);
+        data.push(resp.crawler_counter_delta);
       }
       prev = resp;
       return resp;
@@ -113,11 +113,13 @@ $(function(){
 
           var options = {
             // series: { shadowSize: 0 }, // drawing is faster without shadows
-            yaxis: { min: 0, max: 800 },
+            yaxis: { min: 0, max: 280 },
             xaxis: { min: 0, max: 100 }
           };
-          $.plot($("#plot"), [prepare_data], options);
+          $.plot($("#plot"), [prepare_data(data)], options);
+
           localStorage.setItem('plot_data', JSON.stringify(data));
+          setTimeout(showSettings, 5000);
         }
       });
     }

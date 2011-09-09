@@ -1,8 +1,10 @@
 (ns rssminer.handlers.dashboard
   (:use (rssminer [fetcher :only [start-fetcher stop-fetcher fetcher]]
-                  [crawler :only [start-crawler stop-crawler crawler]]))
+                  [crawler :only [start-crawler stop-crawler
+                                  running? crawler-stat]]))
   (:require [rssminer.db.dashboard :as db]
-            [rssminer.config :as conf]))
+            [rssminer.config :as conf])
+  (:import [rssminer.task HttpTaskRunner]))
 
 (defn get-data [req]
   (case (-> req :params :q)
@@ -16,28 +18,18 @@
     {:caption "Cawled Links"
      :data (or (db/get-crawled-links) [])}
     "settings"
-    (let [total (db/crawler-links-count)
-          crawled (db/crawled-count)
-          rss (db/rss-links-count)
-          finished (db/finished-count)]
-      {:crawler_links_count total
-       :crawled_count crawled
-       :pending_count (- total crawled)
-       :rss_links_cout rss
-       :commit_index false
-       :rss_finished finished
-       :rss_pending (- rss finished)
-       :feeds_count (db/feeds-count)
-       :fetcher_running (not (nil? @fetcher))
-       :crawler_running (not (nil? @crawler))
-       :black_domains (map (fn [p id] {:patten (str p)
+    {:crawler_links_count (db/crawler-links-count)
+     :rss_links_cout (db/rss-links-count)
+     :feeds_count (db/feeds-count)
+     :crawler_running (running?)
+     :crawler (crawler-stat)
+     :fetcher_running (not (nil? @fetcher))
+     :black_domains (map (fn [p id] {:patten (str p)
+                                    :id id})
+                         @@conf/black-domain-pattens (range))
+     :reseted_domains (map (fn [p id] {:patten (str p)
                                       :id id})
-                           @@conf/black-domain-pattens
-                           (range))
-       :reseted_domains (map (fn [p id] {:patten (str p)
-                                        :id id})
-                             @@conf/reseted-hosts
-                             (range))})))
+                           @@conf/reseted-hosts (range))}))
 
 (defn settings [req]
   (let [data (-> req :body :_data)]
