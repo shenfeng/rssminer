@@ -105,7 +105,7 @@
 
 (defn bench-dns []
   (let [links (take 20 (reverse
-                        (rssminer.db.crawler/fetch-crawler-links 100)))]
+                        (rssminer.db.crawler/fetch-crawler-links (rand-int 500))))]
     (time (doseq [url links]
             (let [host (-> url :url java.net.URI. .getHost)]
               (try (time (java.net.InetAddress/getAllByName host))

@@ -13,8 +13,7 @@
             day < 10 ? '0' + day : day].join('/');
   }
 
-  mustache.registerHelper('ymdate', ymdate);
-  mustache.registerHelper('interval', function (date) {
+  function interval (date) {
     var seconds = date - new Date().getTime() / 1000,
         data = {
           years: 31536000,
@@ -32,7 +31,10 @@
         return -interval + " " + attr + "s ago";
       }
     }
-  });
+  };
+
+  mustache.registerHelper('ymdate', ymdate);
+  mustache.registerHelper('interval', interval);
 
   var notif = (function() {
     var $nofity = $('<div id="notification"><p></p></div>')

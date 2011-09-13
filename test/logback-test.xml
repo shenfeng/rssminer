@@ -23,7 +23,7 @@
 	</logger>
 
 	<!-- <root level="ALL"> <appender-ref ref="FILE" /> </root> -->
-	<root level="ERROR">
+	<root level="ALL">
 		<appender-ref ref="STDOUT" />
 	</root>
 </configuration>

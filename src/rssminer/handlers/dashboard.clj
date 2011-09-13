@@ -18,9 +18,9 @@
     {:caption "Cawled Links"
      :data (or (db/get-crawled-links) [])}
     "settings"
-    {:crawler_links_count (db/crawler-links-count)
-     :rss_links_cout (db/rss-links-count)
-     :feeds_count (db/feeds-count)
+    {:crawler_links (db/crawler-links-count)
+     :rss_links (db/rss-links-count)
+     :feeds (db/feeds-count)
      :crawler_running (running?)
      :crawler (crawler-stat)
      :fetcher_running (not (nil? @fetcher))

@@ -1,6 +1,7 @@
 $(function(){
   var backbone = window.Backbone,
       OC = window.OC_Backbone,
+      JSON = window.JSON,
       tmpls = window.Rssminer.tmpls,
       $ = window.$,
       to_html = window.Mustache.to_html;
@@ -16,36 +17,85 @@ $(function(){
     }
   });
 
-  function prepare_data (data) {
-    var ret = [];
-    for(var i = 0; i < data.length; ++i) {
-      ret.push([i, data[i]]);
-    }
-    return ret;
-  }
+  var stat = (function () {
+    var key = 'plot_data';
 
-  function init_plot_data () {
-    var d = localStorage.getItem('plot_data');
-    if(d) {
-      return JSON.parse(d);
-    } else {
-      d = [];
-      for(var i = 0; i < 100; ++i) {
-        d.push(0);
+    function read_plot_data () {
+      var d = window.localStorage.getItem(key);
+      if(d) {
+        return JSON.parse(d);
+      } else {
+        d = [];
+        for(var i = 0; i < 100; ++i) {
+          d.push(0);
+        }
+        return d;
       }
-      localStorage.setItem('plot_data', JSON.stringify(d));
-      return d;
     }
-  }
+    var prev, crawler = {}, data = read_plot_data(),
+        line_opts = {
+          yaxis: { min: 0, max: 200 },
+          xaxis: { min: 0, max: 100 }
+        }, pie_opts = {
+          series: {
+            pie: { show: true }
+          }
+        }, meta = {
+          server: {
+            1000: 'crawler_counter',
+            1200: 'crawler_queue',
+            1201: 'crawler_pending',
+            1210: 'crawler_worker',
+            1300: 'crawler_start'
+          },
+          http: {
+            170: '170 connection error',
+            171: '171 unkown host',
+            172: '172 connection timeout',
+            175: '175 connection reset',
+            180: '180 unknow error',
+            200: '200 ok',
+            301: '301 moved permanently',
+            302: '302 found',
+            304: '304 not modified',
+            400: '400 bad request',
+            401: '401 unauthorized',
+            402: '402 payment required',
+            403: '403 forbidden',
+            404: '404 not found',
+            471: '471 client abort',
+            500: '500 internal server error',
+            502: '502 bad gateway',
+            503: '503 service unavailable',
+            504: '504 gateway timeout',
+            513: '513 body too large',
+            520: '520 server timeout'
+          }
+        };
 
-  var prev, data = init_plot_data();
+    function prepare_data () {
+      var line = [];
+      for(var i = 0; i < data.length; ++i) {
+        line.push([i, data[i]]);
+      }
+      var pie = [];
+      _.each(meta.http, function (v, k) {
+        if(crawler && crawler[k]) {
+          pie.push({label: v, data: crawler[k]});
+        }
+      });
+      return {line: line, pie: pie};
+    }
 
-  var Settings = OC.Model.extend({
-    id: 'feeds_count',          // revent isNew return true;
-    black_domains: OC.Collection,
-    reseted_domains: OC.Collection,
-    url: "/api/dashboard/?q=settings",
-    parse: function (resp) {
+    function parse (resp) {
+      crawler = resp.crawler;
+      if(crawler) {
+        _.each(meta.server, function (v, k) {
+          resp[v] = crawler[k];
+        });
+        var e = new Date().getTime()/1000 - resp.crawler_start;
+        resp.crawler_speed = Math.floor(resp.crawler_counter / e * 60);
+      }
       if(prev) {
         for(var attr in resp) {
           if(_.isNumber(resp[attr])) {
@@ -57,6 +107,27 @@ $(function(){
       }
       prev = resp;
       return resp;
+    }
+
+    function plot () {
+      var d = prepare_data();
+      $.plot($("#line-chart"), [d.line], line_opts);
+      $.plot($("#crawler-pie"), d.pie , pie_opts);
+      window.localStorage.setItem(key, JSON.stringify(data));
+    }
+    return {
+      parse: parse,
+      plot: plot
+    };
+  })();
+
+  var Settings = OC.Model.extend({
+    id: 'feeds_count',          // revent isNew return true;
+    black_domains: OC.Collection,
+    reseted_domains: OC.Collection,
+    url: "/api/dashboard/?q=settings",
+    parse: function (resp) {
+      return stat.parse(resp);
     }
   });
 
@@ -110,15 +181,7 @@ $(function(){
             tmpl: tmpls.settings
           });
           $("#content").replaceWith(view.render().el);
-
-          var options = {
-            // series: { shadowSize: 0 }, // drawing is faster without shadows
-            yaxis: { min: 0, max: 280 },
-            xaxis: { min: 0, max: 100 }
-          };
-          $.plot($("#plot"), [prepare_data(data)], options);
-
-          localStorage.setItem('plot_data', JSON.stringify(data));
+          stat.plot();
           setTimeout(showSettings, 5000);
         }
       });

@@ -39,7 +39,7 @@
     {:status status
      :headers (reduce #(assoc %1 (-> %2 str/lower-case keyword)
                               (.getHeader response %2)) {} names)
-     :body (when (= 200 status) (Utils/toString response))}))
+     :body (when (= 200 status) (Utils/bodyString response))}))
 
 (defn resolve-url [base link]
   (try

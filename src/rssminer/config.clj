@@ -21,7 +21,7 @@
 
 (def ungroup "ungrouped")
 
-(def crawler-ops {:queue 100 :worker 2})
+(def crawler-queue 100)
 
 (def fetcher-threads-count 2)
 

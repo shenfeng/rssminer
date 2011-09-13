@@ -21,7 +21,7 @@
     (.stop ^HttpTaskRunner @crawler)))
 
 (defn crawler-stat []
-  (when (running?)
+  (when-not (nil? @crawler)
     (.getStat ^HttpTaskRunner @crawler)))
 
 (defn get-next-link [^Queue queue]
@@ -76,8 +76,7 @@
 
 (defn start-crawler [& {:keys [queue worker]}]
   (stop-crawler)
-  (let [queue (or queue (:queue conf/crawler-ops))
-        worker (or worker (:worker conf/crawler-ops))]
+  (let [queue (or queue conf/crawler-queue)]
     (reset! crawler (doto (HttpTaskRunner. (mk-provider) http/client
-                                           queue worker "Crawler")
+                                           queue "Crawler")
                       (.start)))))

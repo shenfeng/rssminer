@@ -28,29 +28,26 @@
     }
 }
 
-#plot {
-    width: 800px;
-    height: 200px;
-    margin: 3em auto 0 auto;
+#crawler-pie { height: 230px; width: 440px; }
+#line-chart { width: 600px; height: 230px; }
+#content {
+    > ul { padding: 0; list-style: none; }
+    margin-top: 5em;
 }
 
-#content {
-    margin-top: 3em;
-    .section {
-        float: left;
-        width: 450px;
-        padding: 4px 5px;
-        h3 {  text-transform: capitalize;  }
-        ul {
-            list-style: none;
-            padding: 0;
-            li { padding: 3px; }
-        }
+#charts li { display: inline-block; }
+
+li.section {
+    float: left;
+    min-width: 400px;
+    padding: 4px 5px;
+    h3 {  text-transform: capitalize;  }
+    ul {
+        list-style: none;
+        padding: 0;
+        li { padding: 3px; }
     }
-}
-
-#content {
-    table {
+    > table {
         width: 100%;
         margin-top: 1em;
         caption {
