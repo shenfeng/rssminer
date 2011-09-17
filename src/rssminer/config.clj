@@ -11,6 +11,17 @@
 (defn in-dev? []
   (= @env-profile :dev))
 
+(def netty-option {"receiveBufferSize" 16384
+                   "sendBufferSize" 32768
+                   "child.receiveBufferSize" 16384
+                   "child.sendBufferSize" 32768
+                   "reuseAddress" true
+                   "child.reuseAddress" true
+                   "tcpNoDelay" true
+                   "child.tcpNoDelay" true
+                   "child.keepAlive" false
+                   "child.connectTimeoutMillis" 4000})
+
 (def socks-proxy (Proxy. Proxy$Type/SOCKS
                          (InetSocketAddress. "localhost" 3128)))
 

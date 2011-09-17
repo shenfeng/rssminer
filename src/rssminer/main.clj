@@ -9,7 +9,7 @@
                   [routes :only [app]]
                   [fetcher :only [start-fetcher stop-fetcher]]
                   [crawler :only [start-crawler stop-crawler]]
-                  [config :only [env-profile]])))
+                  [config :only [env-profile netty-option]])))
 
 (defonce server (atom nil))
 
@@ -29,7 +29,8 @@
   (stop-server)
   (use-h2-database! db-path :trace h2-trace :auto-server auto-server)
   (reset! env-profile profile)
-  (reset! server (run-netty (app) {:port port}))
+  (reset! server (run-netty (app) {:port port
+                                   :netty netty-option}))
   (info "netty server start at port" port)
   (use-index-writer! index-path)
   (when run-crawler (start-crawler))

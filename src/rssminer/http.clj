@@ -34,7 +34,9 @@
 
 (defonce client (HttpClient. (doto (HttpClientConfig.)
                                (.setConnectionTimeOutInMs 6000)
-                               (.setRequestTimeoutInMs 30000))))
+                               (.setRequestTimeoutInMs 30000)
+                               (.setReceiveBuffer 32768)
+                               (.setSendBuffer 8192))))
 
 (defn parse-response [^HttpResponse response]
   (let [status (-> response .getStatus .getCode)
