@@ -34,7 +34,7 @@ $(function(){
     }
     var prev, crawler = {}, data = read_plot_data(),
         line_opts = {
-          yaxis: { min: 0, max: 200 },
+          yaxis: { min: 0, max: 400 },
           xaxis: { min: 0, max: 100 }
         }, pie_opts = {
           series: {

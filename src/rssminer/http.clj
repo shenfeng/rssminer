@@ -9,7 +9,8 @@
             ConnectException UnknownHostException SocketTimeoutException]
            [java.util.zip InflaterInputStream GZIPInputStream]
            [java.io InputStream StringReader]
-           [me.shenfeng.http Utils HttpClient]
+           me.shenfeng.Utils
+           [me.shenfeng.http HttpClient HttpClientConfig]
            org.jboss.netty.handler.codec.http.HttpResponse
            org.apache.commons.io.IOUtils
            org.apache.commons.codec.binary.Base64))
@@ -31,7 +32,9 @@
                     (re-find conf/ignored-url-patten url))
         url))))
 
-(defonce client (me.shenfeng.http.HttpClient.))
+(defonce client (HttpClient. (doto (HttpClientConfig.)
+                               (.setConnectionTimeOutInMs 6000)
+                               (.setRequestTimeoutInMs 30000))))
 
 (defn parse-response [^HttpResponse response]
   (let [status (-> response .getStatus .getCode)

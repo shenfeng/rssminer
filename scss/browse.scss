@@ -3,7 +3,7 @@
 @import "reset";
 @import "common";
 
-$right-width: 320px;
+$right-width: 330px;
 
 #main {
     width: $page-width;
@@ -12,11 +12,16 @@ $right-width: 320px;
 
 #feeds {
     width: $page-width - $right-width - 20px;
+    .feed > h3 {
+        margin: 0.3em 0;
+        font-size: 15px;
+    }
     > ul {
         list-style: none;
         padding: 0;
     }
     .tags {
+        margin-right: 0.8em;
         list-style: none;
         li {
             display: inline-block;

@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import me.shenfeng.ListenableFuture;
+import me.shenfeng.BlockingTransferQueue;
 import me.shenfeng.ListenableFuture.Listener;
 import me.shenfeng.http.HttpClient;
 import me.shenfeng.http.HttpResponseFuture;
@@ -30,7 +30,7 @@ public class HttpTaskRunner {
     private volatile boolean mRunning;
     private Thread mWorkerThread;
     private Thread mConsummerThread;
-    private final TransferQueue mQueue;
+    private final BlockingTransferQueue<HttpResponseFuture> mQueue;
     private final Map<Integer, Integer> mStat = new TreeMap<Integer, Integer>();
 
     private Runnable mWorker = new Runnable() {
@@ -42,8 +42,7 @@ public class HttpTaskRunner {
                             task.getUri(), task.getHeaders());
                     future.setAttachment(task);
                     future.addistener(new Listener<HttpResponse>() {
-                        public void run(ListenableFuture<HttpResponse> fu,
-                                HttpResponse result) {
+                        public void run(HttpResponse result) {
                             mQueue.done(future);
                         }
                     });
@@ -96,7 +95,7 @@ public class HttpTaskRunner {
         mSource = source;
         mClient = client;
         mQueueSize = queueSize;
-        mQueue = new TransferQueue(queueSize);
+        mQueue = new BlockingTransferQueue<HttpResponseFuture>(queueSize);
         mPrefix = prefix;
     }
 
