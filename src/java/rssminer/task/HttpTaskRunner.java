@@ -8,7 +8,6 @@ import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import me.shenfeng.BlockingTransferQueue;
-import me.shenfeng.ListenableFuture.Listener;
 import me.shenfeng.http.HttpClient;
 import me.shenfeng.http.HttpResponseFuture;
 
@@ -21,10 +20,9 @@ public class HttpTaskRunner {
     private static Logger logger = LoggerFactory
             .getLogger(HttpTaskRunner.class);
 
-    private final HttpClient mClient;
-    private final IHttpTaskProvder mSource;
+    private final HttpClient mHttp;
+    private final IHttpTaskProvder mProvider;
     private final String mPrefix;
-    private final int mQueueSize;
     private long startTime;
     private AtomicInteger mCounter = new AtomicInteger(0);
     private volatile boolean mRunning;
@@ -35,19 +33,19 @@ public class HttpTaskRunner {
 
     private Runnable mWorker = new Runnable() {
         public void run() {
-            IHttpTask task = mSource.nextTask();
+            IHttpTask task = mProvider.nextTask();
             try {
                 while (mRunning && task != null) {
-                    final HttpResponseFuture future = mClient.execGet(
+                    final HttpResponseFuture future = mHttp.execGet(
                             task.getUri(), task.getHeaders());
                     future.setAttachment(task);
-                    future.addistener(new Listener<HttpResponse>() {
-                        public void run(HttpResponse result) {
+                    future.addListener(new Runnable() {
+                        public void run() {
                             mQueue.done(future);
                         }
                     });
                     mQueue.put(future);
-                    task = mSource.nextTask();
+                    task = mProvider.nextTask();
                 }
             } catch (InterruptedException e) {
                 // ignore
@@ -92,10 +90,11 @@ public class HttpTaskRunner {
 
     public HttpTaskRunner(IHttpTaskProvder source, HttpClient client,
             int queueSize, String prefix) {
-        mSource = source;
-        mClient = client;
-        mQueueSize = queueSize;
+        mProvider = source;
+        mHttp = client;
         mQueue = new BlockingTransferQueue<HttpResponseFuture>(queueSize);
+        mStat.put(1200, queueSize);
+        mStat.put(1300, (int) (startTime / 1000));
         mPrefix = prefix;
     }
 
@@ -106,9 +105,7 @@ public class HttpTaskRunner {
 
     public Map<Integer, Integer> getStat() {
         mStat.put(1000, mCounter.get());
-        mStat.put(1200, mQueueSize);
         mStat.put(1201, mQueue.pendingSize());
-        mStat.put(1300, (int) (startTime / 1000));
         return mStat;
     }
 
@@ -125,7 +122,6 @@ public class HttpTaskRunner {
         mConsummerThread.start();
 
         startTime = currentTimeMillis();
-        mCounter.set(0);
         logger.info("starting {}", mPrefix);
     }
 
@@ -139,8 +135,7 @@ public class HttpTaskRunner {
     }
 
     public String toString() {
-        return format("%s, %d req, %s req/min, %d(%d)\n%s", mPrefix,
-                mCounter.get(), getRate(), mQueueSize, mQueue.pendingSize(),
-                mStat);
+        return format("%s, %d req, %s req/min, %d\n%s", mPrefix,
+                mCounter.get(), getRate(), mQueue.pendingSize(), mStat);
     }
 }

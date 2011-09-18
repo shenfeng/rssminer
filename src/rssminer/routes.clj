@@ -49,14 +49,14 @@
            (JPOST "/:id" [] subscription/customize-subscription)
            (JDELETE "/:id" [] subscription/unsubscribe))
   (context "/feeds" []
+           (JGET "/search-ac-source" [] search-ac-title)
            (context "/:feed-id" []
                     (JGET "/" [] feed/get-feed)
                     (JGET "/alike" [] more-lik-this)
                     (JPOST "/categories" [] "TODO")
                     (JDELETE "/categories" [] "TODO")
                     (JPOST "/comments" [] "TODO")
-                    (JDELETE "/comments/:comment-id" [] "TODO"))
-           (JGET "/search-ac-source" [] search-ac-title))
+                    (JDELETE "/comments/:comment-id" [] "TODO")))
   (JPOST "/import/opml-import" [] opml-import)
   (JGET "/export/opml-export" [] "TODO"))
 
