@@ -34,10 +34,10 @@
        (.search ^Searcher @indexer term limit)))
 
 (defn more-lik-this [req]
-  (let [{:keys [id limit] :or {limit 10}} (-> req :params)]
+  (let [{:keys [feed-id limit] :or {limit 10}} (-> req :params)]
     (map #(dissoc (bean %) :class)
          (.likeThis ^Searcher @indexer
-                    (to-int id) (to-int limit)))))
+                    (to-int feed-id) (to-int limit)))))
 
 (defn search-ac-title [req]
   (let [{:keys [term limit] :or {limit "10"}} (-> req :params)]

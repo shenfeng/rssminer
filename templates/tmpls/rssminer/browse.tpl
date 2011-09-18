@@ -22,13 +22,24 @@
   </ul>
 </div>
 
-<div class="rfloat" id="right-side">
+<div id="right-side">
   <div id="tags">
     <p class="section-title">By Tag</p>
     <ul>
+      <li><a href="/browse">All</a></li>
       {{#tags}}
         <li><a href="/browse/tag:{{.}}">{{.}}</a></li>
       {{/tags}}
+    </ul>
+  </div>
+  <div id="links">
+    <p class="section-title">Links</p>
+    <ul>
+      <li><a href="/">Landing</a></li>
+      <li><a href="http://shenfeng.me">Blog</a></li>
+      <li>
+        <a href="https://github.com/shenfeng/rssminer">Code</a>
+      </li>
     </ul>
   </div>
 </div>

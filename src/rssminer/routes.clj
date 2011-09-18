@@ -51,11 +51,11 @@
   (context "/feeds" []
            (context "/:feed-id" []
                     (JGET "/" [] feed/get-feed)
+                    (JGET "/alike" [] more-lik-this)
                     (JPOST "/categories" [] "TODO")
                     (JDELETE "/categories" [] "TODO")
                     (JPOST "/comments" [] "TODO")
                     (JDELETE "/comments/:comment-id" [] "TODO"))
-           (JGET "/likethis/:id" [] more-lik-this)
            (JGET "/search-ac-source" [] search-ac-title))
   (JPOST "/import/opml-import" [] opml-import)
   (JGET "/export/opml-export" [] "TODO"))

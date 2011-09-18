@@ -46,13 +46,15 @@ $(function(){
       $snippet.show();
       $summary.remove();
     }
-  });
-
-  $("#main").delegate(".related span", "click", function (e) {
-    var id = $(e.currentTarget).parents('.feed').attr('data-docid');
-    ajax.get('/api/feeds/likethis/' + id).done(function (data) {
-      var html = $("ul", to_html(tmpls.likethis, {feeds: data}));
-      $(e.currentTarget).parents(".related").append(html);
-    });
+  }).delegate(".related span", "hover", function (e) {
+    var $feed = $(e.currentTarget).parents('.feed'),
+        id = $feed.attr('data-docid'),
+        $ul = $(".related ul", $feed);
+    if($ul.length == 0) {
+      ajax.get('/api/feeds/' + id + "/alike").done(function (data) {
+        var html = to_html(tmpls.likethis, {feeds: data});
+        $(e.currentTarget).parents(".related").append(html);
+      });
+    }
   });
 });

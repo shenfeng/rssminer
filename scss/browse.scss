@@ -3,7 +3,7 @@
 @import "reset";
 @import "common";
 
-$right-width: 300px;
+$right-width: 240px;
 
 #main {
     width: $page-width;
@@ -20,16 +20,18 @@ div.related {
     position: relative;
     float: right;
     > ul {
-        width: 30em;
+        width: 25em;
         display: none;
         position: absolute;
         z-index: 101;
         background: #fff;
         list-style: none;
         padding: 0;
+        @include box-shadow(2px, 1px, 7px, #666);
         li {
             padding: 0.1em 0.2em;
-            width: 29em;
+            width: 25em;
+            cursor: pointer;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -69,6 +71,8 @@ div.related {
 
 #right-side {
     width: $right-width;
+    margin-left: $page-width - $right-width;
+    position: fixed;
 }
 
 #tags ul{
