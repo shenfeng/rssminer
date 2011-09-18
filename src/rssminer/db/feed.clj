@@ -25,6 +25,10 @@
                                          :user_id user-id
                                          :tag t})))))
 
+(defn fetch-feed [id]
+  (first (h2-query ["SELECT id, author, title, summary, link
+              FROM feeds WHERE id = ?" id])))
+
 (defn save-feeds [feeds rss-id user-id]
   (doseq [{:keys [link categories] :as feed} (:entries feeds)]
     (when (and link (not (blank? link)))

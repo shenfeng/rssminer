@@ -8,8 +8,8 @@
       (if (rssminer.config/in-dev?) identity
           (net.cgrand.enlive-html/substitute ""))
       [(net.cgrand.enlive-html/attr= :data-profile "prod")]
-      (if (rssminer.config/in-prod?) identity
-          (net.cgrand.enlive-html/substitute ""))))
+        (if (rssminer.config/in-prod?) identity
+            (net.cgrand.enlive-html/substitute ""))))
 
 (defmacro snippet [source selector args & forms]
   (let [with-profile (concat profile-specific forms)]

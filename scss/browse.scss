@@ -3,18 +3,52 @@
 @import "reset";
 @import "common";
 
-$right-width: 330px;
+$right-width: 300px;
 
 #main {
     width: $page-width;
     margin: 0 auto;
 }
 
+div.related {
+    &:hover ul { display: block; }
+    span {
+        display: inline-block;
+        padding: 0.2em;
+        &:hover { background: #ccc;  }
+    }
+    position: relative;
+    float: right;
+    > ul {
+        width: 30em;
+        display: none;
+        position: absolute;
+        z-index: 101;
+        background: #fff;
+        list-style: none;
+        padding: 0;
+        li {
+            padding: 0.1em 0.2em;
+            width: 29em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            &:hover {
+                background: #ccc;
+            }
+        }
+    }
+}
+
 #feeds {
     width: $page-width - $right-width - 20px;
     .feed > h3 {
-        margin: 0.3em 0;
+        margin: 0.2em 0;
+        padding: 0.1em 0.1em;
+        background: #eee;
+        cursor: pointer;
         font-size: 15px;
+        &:hover { background: #ddd; }
     }
     > ul {
         list-style: none;

@@ -18,7 +18,8 @@
             (rssminer.handlers [feedreader :as rssminer]
                                [subscriptions :as subscription]
                                [users :as user]
-                               [dashboard :as dashboard]))
+                               [dashboard :as dashboard]
+                               [feeds :as feed]))
   (:import clojure.lang.Namespace))
 
 (let [views-ns '[rssminer.views.feedreader
@@ -49,6 +50,7 @@
            (JDELETE "/:id" [] subscription/unsubscribe))
   (context "/feeds" []
            (context "/:feed-id" []
+                    (JGET "/" [] feed/get-feed)
                     (JPOST "/categories" [] "TODO")
                     (JDELETE "/categories" [] "TODO")
                     (JPOST "/comments" [] "TODO")

@@ -1,7 +1,10 @@
 <div class="lfloat" id="feeds">
   <ul>
     {{#feeds}}
-      <li class="feed" data-id={{docId}}>
+      <li class="feed" data-docid={{docId}} data-feedid={{feedid}}>
+        <div class="related">
+          <span>similar</span>
+        </div>
         <h3>{{title}}</h3>
         <div class="clearfix">
           <span class="author">

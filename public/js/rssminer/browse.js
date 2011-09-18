@@ -1,6 +1,7 @@
 $(function(){
   var $ = window.$,
       tmpls = window.Rssminer.tmpls,
+      ajax = window.Rssminer.ajax,
       to_html = window.Mustache.to_html,
       _ = window._;
 
@@ -31,12 +32,27 @@ $(function(){
 
   var html = to_html(tmpls.browse, {feeds: feeds,
                                     tags: window._TAGS_});
-  $("#main").append(html);
-  $("#main").delegate('.feed .snippet', 'click', function (e) {
-    var id = $(e.currentTarget).parents('.feed').attr('data-id');
-    $.getJSON('/api/feeds/likethis/' + id, function (data) {
-      $("#similar").remove();
-      $("#right-side").append(to_html(tmpls.likethis, {feeds: data}));
+  $("#main").append(html).delegate(".feed h3", "click", function (e) {
+    var $feed = $(e.currentTarget).parents('.feed'),
+        id = $feed.attr('data-feedid'),
+        $snippet = $(".snippet", $feed),
+        $summary = $(".summary", $feed);
+    if($summary.length == 0){
+      ajax.get("/api/feeds/" + id).done(function (data) {
+        $snippet.hide();
+        $feed.append($('<div class="summary"/>').append(data.summary));
+      });
+    } else {
+      $snippet.show();
+      $summary.remove();
+    }
+  });
+
+  $("#main").delegate(".related span", "click", function (e) {
+    var id = $(e.currentTarget).parents('.feed').attr('data-docid');
+    ajax.get('/api/feeds/likethis/' + id).done(function (data) {
+      var html = $("ul", to_html(tmpls.likethis, {feeds: data}));
+      $(e.currentTarget).parents(".related").append(html);
     });
   });
 });
