@@ -5,9 +5,11 @@ import static java.lang.System.currentTimeMillis;
 
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import me.shenfeng.BlockingTransferQueue;
 import me.shenfeng.http.HttpClient;
 import me.shenfeng.http.HttpResponseFuture;
 
@@ -28,7 +30,8 @@ public class HttpTaskRunner {
     private volatile boolean mRunning;
     private Thread mWorkerThread;
     private Thread mConsummerThread;
-    private final BlockingTransferQueue<HttpResponseFuture> mQueue;
+    private final Semaphore mSemaphore;
+    private final BlockingQueue<HttpResponseFuture> mDones;
     private final Map<Integer, Integer> mStat = new TreeMap<Integer, Integer>();
 
     private Runnable mWorker = new Runnable() {
@@ -36,19 +39,22 @@ public class HttpTaskRunner {
             IHttpTask task = mProvider.nextTask();
             try {
                 while (mRunning && task != null) {
+                    mSemaphore.acquire();
                     final HttpResponseFuture future = mHttp.execGet(
                             task.getUri(), task.getHeaders());
                     future.setAttachment(task);
                     future.addListener(new Runnable() {
                         public void run() {
-                            mQueue.done(future);
+                            mSemaphore.release();
+                            try {
+                                mDones.put(future);
+                            } catch (InterruptedException ignore) {
+                            }
                         }
                     });
-                    mQueue.put(future);
                     task = mProvider.nextTask();
                 }
-            } catch (InterruptedException e) {
-                // ignore
+            } catch (InterruptedException ignore) {
             }
             logger.info("{} producer is stopped", mPrefix);
             mRunning = false;
@@ -67,7 +73,7 @@ public class HttpTaskRunner {
         public void run() {
             try {
                 while (mRunning) {
-                    HttpResponseFuture future = mQueue.take();
+                    HttpResponseFuture future = mDones.take();
                     IHttpTask task = (IHttpTask) future.getAttachment();
                     try {
                         HttpResponse resp = future.get();
@@ -80,8 +86,7 @@ public class HttpTaskRunner {
                         mCounter.incrementAndGet();
                     }
                 }
-            } catch (InterruptedException e) {
-                // ignore
+            } catch (InterruptedException ignore) {
             }
             logger.info("{} consummer is stopped", mPrefix);
             mRunning = false;
@@ -91,8 +96,9 @@ public class HttpTaskRunner {
     public HttpTaskRunner(IHttpTaskProvder source, HttpClient client,
             int queueSize, String prefix) {
         mProvider = source;
+        mSemaphore = new Semaphore(queueSize);
+        mDones = new LinkedBlockingDeque<HttpResponseFuture>();
         mHttp = client;
-        mQueue = new BlockingTransferQueue<HttpResponseFuture>(queueSize);
         mStat.put(1200, queueSize);
         mStat.put(1300, (int) (startTime / 1000));
         mPrefix = prefix;
@@ -105,7 +111,6 @@ public class HttpTaskRunner {
 
     public Map<Integer, Integer> getStat() {
         mStat.put(1000, mCounter.get());
-        mStat.put(1201, mQueue.pendingSize());
         return mStat;
     }
 
@@ -135,7 +140,7 @@ public class HttpTaskRunner {
     }
 
     public String toString() {
-        return format("%s, %d req, %s req/min, %d\n%s", mPrefix,
-                mCounter.get(), getRate(), mQueue.pendingSize(), mStat);
+        return format("%s, %d req, %s req/min \n%s", mPrefix, mCounter.get(),
+                getRate(), mStat);
     }
 }
