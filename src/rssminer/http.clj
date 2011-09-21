@@ -3,13 +3,12 @@
         [rssminer.util :only [assoc-if]])
   (:refer-clojure :exclude [get])
   (:require [clojure.string :as str]
-            [rssminer.config :as conf]
-            [net.cgrand.enlive-html :as html])
+            [rssminer.config :as conf])
   (:import [java.net URI URL HttpURLConnection SocketException
             ConnectException UnknownHostException SocketTimeoutException]
            [java.util.zip InflaterInputStream GZIPInputStream]
            [java.io InputStream StringReader]
-           me.shenfeng.Utils
+           [rssminer Utils$Info Utils$Pair]
            [me.shenfeng.http HttpClient HttpClientConfig]
            org.jboss.netty.handler.codec.http.HttpResponse
            org.apache.commons.io.IOUtils
@@ -44,7 +43,7 @@
     {:status status
      :headers (reduce #(assoc %1 (-> %2 str/lower-case keyword)
                               (.getHeader response %2)) {} names)
-     :body (when (= 200 status) (Utils/bodyString response))}))
+     :body (when (= 200 status) (me.shenfeng.Utils/bodyString response))}))
 
 (defn resolve-url [base link]
   (try
@@ -175,16 +174,13 @@
       (error e "download-rss" url))))
 
 (defn extract-links [base html]
-  (let [resource (html/html-resource (StringReader. html))
-        links (html/select resource [:a])
-        f #(when-let [url (-> (resolve-url base (-> % :attrs :href))
+  (let [^Utils$Info info (rssminer.Utils/extractInfo html)
+        f #(when-let [url (-> (resolve-url base %)
                               clean-url)]
              {:url url
-              :title (html/text %)
               :domain (extract-host url)})]
-    {:rss (map (fn [i]
-                 {:title (-> i :attrs :title)
-                  :url (resolve-url base (-> i :attrs :href))})
-               (html/select resource
-                            [(html/attr= :type "application/rss+xml")]))
-     :links (doall (filter identity (map f links)))}))
+    {:rss (map (fn [^Utils$Pair r]
+                 {:title (.title r)
+                  :url (resolve-url base (.url r))}) (.rssLinks info))
+     :links (filter identity (map f (.links info)))
+     :title (.title info)}))

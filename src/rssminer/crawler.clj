@@ -34,23 +34,17 @@
               (.offer queue link))
             (get-next-link queue))))))
 
-(defn extract-and-save-links [referer html]
-  (let [{:keys [rss links]} (http/extract-links (:url referer) html)]
-    (doseq [{:keys [url title]} rss]
-      (when-not (and url (re-find #"(?i)\bcomments" (or title "")))
-        (db/insert-rss-link {:url url
-                             :title title
-                             :next_check_ts (conf/rand-ts)
-                             :crawler_link_id (:id referer)})))
-    (db/insert-crawler-links referer
-                             (map #(assoc %
-                                     :next_check_ts (conf/rand-ts)
-                                     :referer_id (:id referer)) links))))
-
-(defn extract-title [html]
-  (when html (-> (re-seq #"(?im)<title>(.+)</title>" html)
-                 first
-                 second)))
+(defn extract-and-save-links [referer links rss]
+  (doseq [{:keys [url title]} rss]
+    (when-not (and url (re-find #"(?i)\bcomments" (or title "")))
+      (db/insert-rss-link {:url url
+                           :title title
+                           :next_check_ts (conf/rand-ts)
+                           :crawler_link_id (:id referer)})))
+  (db/insert-crawler-links referer
+                           (map #(assoc %
+                                   :next_check_ts (conf/rand-ts)
+                                   :referer_id (:id referer)) links)))
 
 (defn- mk-task [{:keys [id url check_interval last_modified] :as link}]
   (reify IHttpTask
@@ -59,14 +53,15 @@
     (getHeaders [this]
       (if last_modified
         {"If-Modified-Since" last_modified} {}))
-    (doTask [this ^HttpResponse resp]
+    (doTask [this resp]
       (let [{:keys [status headers body] :as resp} (http/parse-response resp)
-            updated (assoc-if (next-check check_interval resp)
+            {:keys [title links rss]} (when body (http/extract-links body))
+            updated (assoc-if (next-check check_interval headers)
                               :last_modified (:last-modified headers)
-                              :title (extract-title body))]
+                              :title title)]
         (db/update-crawler-link id updated)
         (when body
-          (extract-and-save-links link body))))))
+          (extract-and-save-links link links rss))))))
 
 (defn mk-provider []
   (let [queue (LinkedList.)]

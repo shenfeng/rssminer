@@ -38,8 +38,9 @@
 
 (deftest test-extract-links
   (let [html (slurp "test/page.html")
-        {:keys [rss links]} (extract-links "http://a.com/" html)]
+        {:keys [rss links title]} (extract-links "http://a.com/" html)]
     (is (> (count links) 0))
+    (is (= title "Peter Norvig"))
     (is (every? #(and (:url %)
                       (:domain %)) links))
     (are [k] (-> rss first k)

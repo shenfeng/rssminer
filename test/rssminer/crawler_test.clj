@@ -18,13 +18,11 @@
   (is (get-next-link (java.util.LinkedList.))))
 
 (deftest test-extract-and-save-links
-  (let [html (slurp "test/page.html")
+  (let [info (http/extract-links "http://me.me" (slurp "test/page.html"))
         rss (h2-query ["select * from rss_links"])
         links (h2-query ["select * from crawler_links"])]
-    (extract-and-save-links {:id 1 :url "http://me.me"} html)
+    (extract-and-save-links {:id 1 :url "http://me.me"}
+                            (:links info) (:rss info))
     (is (> (count (h2-query ["select * from rss_links"])) (count rss)))
     (is (> (count (h2-query ["select * from crawler_links"]))
            (count links)))))
-
-(deftest test-extract-title
-  (is (= "Peter Norvig" (extract-title (slurp "test/page.html")))))
