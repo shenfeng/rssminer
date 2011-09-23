@@ -5,7 +5,7 @@
   (:require [rssminer.db.crawler :as db]
             [rssminer.http :as http]
             [rssminer.config :as conf])
-  (:import [java.util Queue LinkedList]
+  (:import java.util.LinkedList
            [rssminer.task HttpTaskRunner IHttpTask IHttpTaskProvder]
            org.jboss.netty.handler.codec.http.HttpResponse))
 
@@ -24,14 +24,12 @@
   (when-not (nil? @crawler)
     (.getStat ^HttpTaskRunner @crawler)))
 
-(defn get-next-link [^Queue queue]
+(defn get-next-link [^LinkedList queue]
   (locking queue
     (if (.peek queue) (.poll queue) ;; retrieves and removes
         (let [links (db/fetch-crawler-links conf/fetch-size)]
           (trace "fetch" (count links) "crawler links from h2")
-          (when (seq links)
-            (doseq [link links]
-              (.offer queue link))
+          (if (.addAll queue links)
             (get-next-link queue))))))
 
 (defn extract-and-save-links [referer links rss]
