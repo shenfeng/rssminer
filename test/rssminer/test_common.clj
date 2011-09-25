@@ -43,8 +43,7 @@
 
 (defn lucene-fixture [test-fn]
   (use-index-writer! :RAM)
-  (test-fn)
-  (close-global-index-writer!))
+  (test-fn))
 
 (defn h2-fixture [test-fn]
   (let [file (str "mem:rssminer_test")]

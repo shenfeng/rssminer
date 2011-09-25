@@ -5,8 +5,8 @@
         [rssminer.util :only [ignore-error]]
         [clojure.string :only [blank?]]
         [clojure.tools.logging :only [info]]
-        [clojure.java.jdbc :only [with-connection with-query-results
-                                  insert-record update-values]])
+        [clojure.java.jdbc :only [with-connection insert-record
+                                  update-values]])
   (:import java.io.StringReader))
 
 (defn fetch-tags [user-id feed-id]

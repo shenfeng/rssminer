@@ -44,15 +44,3 @@
     (.searchForTitle ^Searcher @indexer
                      term (Integer/parseInt limit))))
 
-(defn rebuild-index []
-  (toggle-infostream true)
-  (.clear ^Searcher @indexer)
-  (with-h2
-    (with-query-results rs ["select * from feeds"]
-      (doseq [feed rs]
-        (index-feed (update-in feed [:summary]
-                               #(slurp (.getCharacterStream ^Clob %)))
-                    (map :tag (h2-query
-                               ["SELECT tag FROM feed_tag
-                                 WHERE feed_id = ?" (:id feed)]))))))
-  (toggle-infostream false))

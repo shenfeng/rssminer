@@ -22,7 +22,7 @@
   :exclusions [javax.activation/activation]
   :repositories {"java.net" "http://download.java.net/maven/2/"}
   :warn-on-reflection true
-  :javac-options {:source "1.6" :target "1.6"}
+  :javac-options {:source "1.6" :target "1.6" :debug "true" :fork "true"}
   :java-source-path "src/java"
   :aot [rssminer.main]
   :jvm-opts ["-XX:+UseCompressedOops"
