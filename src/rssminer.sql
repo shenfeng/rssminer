@@ -99,6 +99,16 @@ CREATE TABLE feed_tag
     feed_id INTEGER NOT NULL
             REFERENCES feeds ON UPDATE CASCADE ON DELETE CASCADE,
 );
+---
+create table user_feed_pref
+(
+    user_id INTEGER NOT NULL
+            REFERENCES users ON UPDATE CASCADE ON DELETE CASCADE,
+    feed_id INTEGER NOT NULL
+            REFERENCES feeds ON UPDATE CASCADE ON DELETE CASCADE,
+    pref BOOLEAN,
+    UNIQUE(user_id, feed_id),
+)
 
 ----
 create index idx_link_check_ts on crawler_links(next_check_ts)

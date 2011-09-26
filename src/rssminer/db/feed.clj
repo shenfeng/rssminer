@@ -25,9 +25,15 @@
                                          :user_id user-id
                                          :tag t})))))
 
-(defn fetch-feed [id]
-  (first (h2-query ["SELECT id, author, title, summary, link
-              FROM feeds WHERE id = ?" id])))
+(defn insert-pref [user-id feed-id pref]
+  (with-h2
+    (try (insert-record :user_feed_pref {:user_id user-id
+                                         :feed_id feed-id
+                                         :pref pref})
+         (catch Exception e             ;unique key use_id & feed_id
+           (update-values :user_feed_pref
+                          ["user_id = ? AND feed_id = ?" user-id feed-id]
+                          {:pref pref})))))
 
 (defn save-feeds [feeds rss-id user-id]
   (doseq [{:keys [link categories] :as feed} (:entries feeds)]

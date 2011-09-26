@@ -6,46 +6,38 @@ $(function(){
       _ = window._;
 
   var feeds = _.map(window._FEEDS_, function (f) {
-    f.categories = f.categories || '';
-    var c = _.map(f.categories.trim().split(','), function (t) {
-      if(t) {
-        t = $.trim(t);
-        if(t.indexOf(' ') != -1) {
-          return '"' + t +'"';
-        } else {
-          return t;
-        }
+    f.likeClass = f.dislikeClass = 'vote';
+    if(f.pref === false) {
+      f.dislikeClass += ' selected';
+    } else if (f.pref === true) {
+      f.likeClass += ' selected';
+    }
+
+    f.tags = f.tags || '';
+    f.tags = _.map(f.tags.split(', '), function (t) {
+      if($.trim(t).indexOf(' ') != -1) {
+        return '"' + t + '"';
       }
+      return t;
     });
-    f.categories = _.select(c, function (t) {
-      return t && t.length > 0;
-    });
+
+    f.snippet = window.Rssminer.util.snippet(f.summary, 300);
+
     var author = f.author;
     if(author && author.indexOf(' ') != -1) {
       f.authorTag = '"' + author + '"';
     } else {
       f.authorTag = author;
     }
-
     return f;
   });
 
   var html = to_html(tmpls.browse, {feeds: feeds,
                                     tags: window._TAGS_});
   $("#main").append(html).delegate(".feed h3", "click", function (e) {
-    var $feed = $(e.currentTarget).parents('.feed'),
-        id = $feed.attr('data-feedid'),
-        $snippet = $(".snippet", $feed),
-        $summary = $(".summary", $feed);
-    if($summary.length == 0){
-      ajax.get("/api/feeds/" + id).done(function (data) {
-        $snippet.hide();
-        $feed.append($('<div class="summary"/>').append(data.summary));
-      });
-    } else {
-      $snippet.show();
-      $summary.remove();
-    }
+    var $feed = $(e.currentTarget).parents('.feed');
+    $(".snippet", $feed).toggle();
+    $(".summary", $feed).toggle();
   }).delegate(".related span", "hover", function (e) {
     var $feed = $(e.currentTarget).parents('.feed'),
         id = $feed.attr('data-docid'),
@@ -56,5 +48,14 @@ $(function(){
         $(e.currentTarget).parents(".related").append(html);
       });
     }
+  }).delegate("span.vote", "click", function (e) {
+    var $this = $(this),
+        $feed = $this.parents('.feed'),
+        id = $feed.attr('data-docid'),
+        like = $this.text() === 'good';
+    $.post('/api/feeds/' + id + '/pref', {pref: like}, function (resp, stats,xhr) {
+      $('.vote', $feed).removeClass('selected');
+      $this.addClass('selected');
+    });
   });
 });

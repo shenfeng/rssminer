@@ -12,7 +12,7 @@
                                      wrap-request-logging-in-dev
                                      JPOST JPUT JDELETE JGET]]
                   [import :only [opml-import]]
-                  [search :only [search-ac-title more-lik-this]]))
+                  [search :only [more-lik-this]]))
   (:require [clojure.string :as str]
             [compojure.route :as route]
             (rssminer.handlers [feedreader :as rssminer]
@@ -49,10 +49,9 @@
            (JPOST "/:id" [] subscription/customize-subscription)
            (JDELETE "/:id" [] subscription/unsubscribe))
   (context "/feeds" []
-           (JGET "/search-ac-source" [] search-ac-title)
            (context "/:feed-id" []
-                    (JGET "/" [] feed/get-feed)
                     (JGET "/alike" [] more-lik-this)
+                    (JPOST "/pref" [] feed/save-pref)
                     (JPOST "/categories" [] "TODO")
                     (JDELETE "/categories" [] "TODO")
                     (JPOST "/comments" [] "TODO")

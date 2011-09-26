@@ -10,15 +10,23 @@ $right-width: 240px;
     margin: 0 auto;
 }
 
+ul.controls {
+    list-style: none;
+    li {
+        float: right;
+        .selected {font-weight: bold; }
+        span {
+            display: inline-block;
+            padding: 0.2em 0.5em;
+            cursor: pointer;
+            &:hover { background: #ccc;  }
+        }
+    }
+}
+
 div.related {
     &:hover ul { display: block; }
-    span {
-        display: inline-block;
-        padding: 0.2em;
-        &:hover { background: #ccc;  }
-    }
     position: relative;
-    float: right;
     > ul {
         width: 25em;
         display: none;
@@ -55,6 +63,7 @@ div.related {
     > ul {
         list-style: none;
         padding: 0;
+        .summary { display: none; }
     }
     .tags {
         margin-right: 0.8em;

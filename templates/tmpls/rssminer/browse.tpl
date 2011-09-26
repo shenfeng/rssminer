@@ -1,22 +1,27 @@
 <div class="lfloat" id="feeds">
   <ul>
     {{#feeds}}
-      <li class="feed" data-docid={{docId}} data-feedid={{feedid}}>
-        <div class="related">
-          <span>similar</span>
-        </div>
+      <li class="feed" data-docid={{docid}} data-feedid={{id}}>
+        <ul class="controls">
+          <li>
+            <div class="related"><span>similar</span></div>
+          </li>
+          <li><span class="{{likeClass}}">good</span></li>
+          <li><span class="{{dislikeClass}}">bad</span></li>
+        </ul>
         <h3>{{title}}</h3>
         <div class="clearfix">
           <span class="author">
             by <a href="/browse/author:{{authorTag}}">{{author}}</a>
           </span>
           <ul class="tags rfloat">
-            {{#categories}}
+            {{#tags}}
               <li><a href="/browse/tag:{{.}}">{{.}}</a></li>
-            {{/categories}}
+            {{/tags}}
           </ul>
         </div>
         <p class="snippet">{{snippet}}</p>
+        <div class="summary">{{{summary}}}</div>
       </li>
     {{/feeds}}
   </ul>

@@ -1,9 +1,9 @@
 package rssminer;
 
-import static java.lang.Character.isLetter;
-
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
@@ -17,7 +17,6 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
-import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
@@ -35,41 +34,27 @@ import clojure.lang.ISeq;
 import clojure.lang.Seqable;
 
 public class Searcher {
+
     static final Version V = Version.LUCENE_33;
-    static final int LENGTH = 280;
     static final Analyzer analyzer = new KStemStopAnalyzer(V);
     static final Logger logger = LoggerFactory.getLogger(Searcher.class);
-    static final String FEED_ID = "feedId";
+    static final String FEED_ID = "id";
     static final String AUTHOR = "author";
     static final String TITLE = "title";
     static final String CONTENT = "content";
     static final String TAG = "tag";
-    static final String SNIPPET = "snippet";
+    static final String TAGS = "tags";
     static String[] FIELDS = new String[] { AUTHOR, TITLE, CONTENT, TAG };
-
-    private static String genSnippet(String summary) {
-        if (summary.length() < LENGTH)
-            return summary;
-        else {
-            int len = LENGTH;
-            while (len < summary.length() && isLetter(summary.charAt(len)))
-                ++len;
-            return summary.substring(0, len);
-        }
-    }
 
     private IndexWriter indexer = null;
     private final String path;
     private Thread shutDownHook = new Thread(new Runnable() {
-        @Override
         public void run() {
             try {
-                synchronized (indexer) {
-                    if (indexer != null) {
-                        logger.info("jvm shutdown, close Searcher@" + path);
-                        indexer.close();
-                        indexer = null;
-                    }
+                if (indexer != null) {
+                    logger.info("jvm shutdown, close Searcher@" + path);
+                    indexer.close();
+                    indexer = null;
                 }
             } catch (Exception e) {
                 logger.error("shutdownHook", e);
@@ -110,13 +95,11 @@ public class Searcher {
     }
 
     public void close() throws CorruptIndexException, IOException {
-        Runtime.getRuntime().removeShutdownHook(shutDownHook);
-        synchronized (indexer) {
-            if (indexer != null) {
-                logger.info("close Searcher@" + path);
-                indexer.close();
-                indexer = null;
-            }
+        if (indexer != null) {
+            logger.info("close Searcher@" + path);
+            indexer.close();
+            indexer = null;
+            Runtime.getRuntime().removeShutdownHook(shutDownHook);
         }
     }
 
@@ -127,40 +110,44 @@ public class Searcher {
         fid.setIntValue(feeId);
         doc.add(fid);
 
-        if (author != null) {
-            Field a = new Field(AUTHOR, author, Store.YES, Index.ANALYZED);
+        if (author != null && author.length() > 0) {
+            // TODO why NOT_ANALYZED searched nothing?
+            Field a = new Field(AUTHOR, author, Store.NO, Index.ANALYZED);
+            a.setBoost(1.2f);
             doc.add(a);
-            doc.setBoost(1.2f);
         }
 
         if (title != null) {
-            Field t = new Field(TITLE, title, Store.YES, Index.ANALYZED,
+            Field t = new Field(TITLE, title, Store.NO, Index.ANALYZED,
                     TermVector.YES);
+            t.setBoost(1.5f);
             doc.add(t);
-            doc.setBoost(1.5f);
         }
 
         if (content != null) {
             Field c = new Field(CONTENT, content, Store.NO, Index.ANALYZED,
                     TermVector.YES);
             doc.add(c);
-            Field s = new Field(SNIPPET, genSnippet(content), Store.YES,
-                    Index.NO);
-            doc.add(s);
         }
 
         if (tags != null && tags.seq() != null) {
             ISeq seq = tags.seq();
             StringBuilder sb = new StringBuilder(seq.count() * 10);
             while (seq != null) {
-                sb.append(seq.first()).append(", ");
+                String tag = seq.first().toString();
+                Field f = new Field(TAG, tag, Store.NO, Index.NOT_ANALYZED,
+                        TermVector.YES);
+                f.setBoost(1.3f);
+                doc.add(f);
+
+                sb.append(tag).append(", ");
                 seq = seq.next();
             }
 
-            String t = sb.toString();
-            if (t.length() > 0) {
-                Field f = new Field(TAG, t, Store.YES, Index.ANALYZED,
-                        TermVector.YES);
+            if (sb.length() > 1) {
+                // tags require an SQL query to lookup, so, cache in Luence
+                Field f = new Field(TAGS, sb.subSequence(0, sb.length() - 2)
+                        .toString(), Store.YES, Index.NO);
                 f.setBoost(1.5f);
                 doc.add(f);
             }
@@ -169,51 +156,29 @@ public class Searcher {
         indexer.addDocument(doc);
     }
 
-    public String[] searchForTitle(String term, int n)
-            throws CorruptIndexException, IOException, ParseException {
-        IndexSearcher searcher = new IndexSearcher(IndexReader.open(indexer,
-                true));
-        QueryParser parser = new MultiFieldQueryParser(V, FIELDS, analyzer);
-        Query query = parser.parse(term);
-        TopDocs docs = searcher.search(query, n);
-        final int length = docs.scoreDocs.length;
-        String[] results = new String[length];
-        for (int i = 0; i < length; i++) {
-            results[i] = searcher.doc(docs.scoreDocs[i].doc).get(TITLE);
-        }
-        return results;
-    }
-
-    private Feed[] searchQuery(IndexSearcher searcher, Query q, int count)
-            throws IOException {
+    private Map<String, Feed> doSearch(IndexSearcher searcher, Query q,
+            int count) throws IOException {
         TopDocs docs = searcher.search(q, count);
-        final int len = docs.scoreDocs.length;
-        Feed[] results = new Feed[len];
-        for (int i = 0; i < len; i++) {
-            Feed f = new Feed();
+        Map<String, Feed> map = new TreeMap<String, Feed>();
+        for (int i = 0; i < docs.scoreDocs.length; i++) {
             int docid = docs.scoreDocs[i].doc;
             Document doc = searcher.doc(docid);
-            f.setTitle(doc.get(TITLE));
-            f.setDocId(docid);
-            f.setAuthor(doc.get(AUTHOR));
-            f.setCategories(doc.get(TAG));
-            f.setSnippet(doc.get(SNIPPET));
-            f.setFeedid(doc.get(FEED_ID));
-            results[i] = f;
+            map.put(doc.get(FEED_ID),
+                    new Feed(docid, doc.get(TAGS), doc.get(FEED_ID)));
         }
-        return results;
+        return map;
     }
 
-    public Feed[] search(String term, int count)
+    public Map<String, Feed> search(String term, int count)
             throws CorruptIndexException, IOException, ParseException {
         IndexSearcher searcher = new IndexSearcher(IndexReader.open(indexer,
                 false));
         QueryParser parser = new QueryParser(V, CONTENT, analyzer);
         Query query = parser.parse(term);
-        return searchQuery(searcher, query, count);
+        return doSearch(searcher, query, count);
     }
 
-    public Feed[] likeThis(int docID, int count)
+    public Map<String, Feed> likeThis(int docID, int count)
             throws CorruptIndexException, IOException {
         IndexReader reader = IndexReader.open(indexer, false);
         MoreLikeThis likeThis = new MoreLikeThis(reader);
@@ -221,6 +186,19 @@ public class Searcher {
         likeThis.setMinTermFreq(1);
         likeThis.setMinDocFreq(3);
         Query like = likeThis.like(docID);
-        return searchQuery(new IndexSearcher(reader), like, count);
+        return doSearch(new IndexSearcher(reader), like, count);
     }
+
+    public static class Feed {
+        public final int docId;
+        public final String tags;
+        public final String id;
+
+        public Feed(int docId, String tags, String id) {
+            this.docId = docId;
+            this.tags = tags;
+            this.id = id;
+        }
+    }
+
 }

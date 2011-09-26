@@ -111,11 +111,11 @@
     };
   })();
 
-  function snippet(html){
+  function snippet(html, length){
     return html && html.replace(/<[^<>]+>/g, '')
       .replace(/\s+/g, ' ')
       .replace(/&[^&;]+;/g, '')
-      .slice(0, 200);
+      .slice(0, length || 200);
   }
 
   // export

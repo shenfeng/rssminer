@@ -1,7 +1,7 @@
 (ns rssminer.admin
   (:use (rssminer [database :only [use-h2-database! close-global-h2-factory!
                                    import-h2-schema!]]
-                  [search :only [toggle-infostream indexer index-feed]]
+                  [search :only [indexer index-feed]]
                   [config :only [ungroup]]
                   [util :only [ignore-error]])
         (rssminer.db [user :only [create-user]]
@@ -35,7 +35,7 @@
   (close-global-h2-factory!))
 
 (defn rebuild-index []
-  (toggle-infostream true)
+  (.toggleInfoStream ^Searcher @indexer true)
   (.clear ^Searcher @indexer)
   (with-h2
     (with-query-results rs ["select * from feeds"]
@@ -45,7 +45,7 @@
                     (map :tag (h2-query
                                ["SELECT tag FROM feed_tag
                                  WHERE feed_id = ?" (:id feed)]))))))
-  (toggle-infostream false))
+  (.toggleInfoStream ^Searcher @indexer false))
 
 (defn export-data []
   (let [feeds (h2-query ["SELECT id, title, author, link, summary

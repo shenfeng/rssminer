@@ -2,7 +2,8 @@
   (:use clojure.test
         [clojure.data.json :only [read-json json-str]]
         (rssminer [test-common :only [auth-app app-fixture]]
-                  [http :only [download-favicon download-rss]])))
+                  [http :only [download-favicon download-rss]]
+                  [search :only [search*]])))
 
 (defn- prepare [f]
   (binding [download-rss (fn [& args]
@@ -16,18 +17,12 @@
 (use-fixtures :each app-fixture prepare)
 
 (deftest test-search
-  (let [s #(auth-app {:uri "/api/feeds/search-ac-source"
-                      :request-method :get
-                      :params {"term" %}})]
-    (testing "search summary"
-      (let [resp (s "onsummary")]
-        (is (= 200 (:status resp)))
-        (is (= (-> resp :body read-json count) 1))))
-    (testing "search category"
-      (let [resp (s "acategory")]
-        (is (= 200 (:status resp)))
-        (is (= (-> resp :body read-json count) 1))))
-    (testing "search author"
-      (let [resp (s "aScottGu")]
-        (is (= 200 (:status resp)))
-        (is (= (-> resp :body read-json count) 1))))))
+  (testing "search summary"
+    (let [resp (search* "onsummary" 10)]
+      (is (= (count resp) 1))))
+  (testing "search category"
+    (let [resp (search* "tag:acategory" 10)]
+      (is (= (count resp) 1))))
+  (testing "search author"
+    (let [resp (search* "author:aScottGu" 10)]
+      (is (= (count resp) 1)))))
