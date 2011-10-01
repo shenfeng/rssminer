@@ -48,6 +48,7 @@
            (JGET "/:id" [] subscription/get-subscription)
            (JPOST "/:id" [] subscription/customize-subscription)
            (JDELETE "/:id" [] subscription/unsubscribe))
+  (JGET "/search" [] rssminer/search)
   (context "/feeds" []
            (context "/:feed-id" []
                     (JGET "/alike" [] more-lik-this)

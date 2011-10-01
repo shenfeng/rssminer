@@ -44,6 +44,10 @@
   (when html
     (rssminer.Utils/extractText html)))
 
+(defn gen-snippet [content]
+  (when content
+    (rssminer.Utils/genSnippet content 280)))
+
 (defn serialize-to-js [data]
   (let [stats (map
                (fn [[k v]]

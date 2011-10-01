@@ -1,9 +1,8 @@
 (ns rssminer.parser
   (:use [rssminer.time :only [to-ts]]
-        clojure.pprint
         [rssminer.util :only [assoc-if]]
         [clojure.tools.logging :only [error]])
-  (:require [clojure.string :as str])
+  (:require [clojure.string :as s])
   (:import [com.sun.syndication.io SyndFeedInput]
            java.util.Date
            java.io.StringReader))
@@ -31,7 +30,7 @@
              (to-ts ^Date target) target))))
 
 (definline trim [^String s]
-  `(when ~s (str/trim ~s)))
+  `(when ~s (s/trim ~s)))
 
 (defn- parse-entry [e]
   (assoc-if {}
@@ -42,8 +41,8 @@
                       (-> e :description :value trim))
             :link (-> e :link trim)
             ;; :guid (-> e :uri trim)
-            :categories (set (map #(-> % :name trim str/lower-case)
-                                  (:categories e)))
+            :tags (s/join "; " (seq (set (map #(-> % :name trim s/lower-case)
+                                                (:categories e)))))
             :updated_ts (:updatedDate e)
             :published_ts (:publishedDate e)))
 

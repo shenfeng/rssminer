@@ -30,9 +30,6 @@ import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import clojure.lang.ISeq;
-import clojure.lang.Seqable;
-
 public class Searcher {
 
     static final Version V = Version.LUCENE_33;
@@ -43,7 +40,6 @@ public class Searcher {
     static final String TITLE = "title";
     static final String CONTENT = "content";
     static final String TAG = "tag";
-    static final String TAGS = "tags";
     static String[] FIELDS = new String[] { AUTHOR, TITLE, CONTENT, TAG };
 
     private IndexWriter indexer = null;
@@ -104,7 +100,7 @@ public class Searcher {
     }
 
     public void index(int feeId, String author, String title, String content,
-            Seqable tags) throws CorruptIndexException, IOException {
+            String tags) throws CorruptIndexException, IOException {
         Document doc = new Document();
         NumericField fid = new NumericField(FEED_ID, Store.YES, false);
         fid.setIntValue(feeId);
@@ -130,25 +126,11 @@ public class Searcher {
             doc.add(c);
         }
 
-        if (tags != null && tags.seq() != null) {
-            ISeq seq = tags.seq();
-            StringBuilder sb = new StringBuilder(seq.count() * 10);
-            while (seq != null) {
-                String tag = seq.first().toString();
+        if (tags.length() > 0) {
+            for (String tag : tags.split("; ")) {
                 Field f = new Field(TAG, tag, Store.NO, Index.NOT_ANALYZED,
                         TermVector.YES);
                 f.setBoost(1.3f);
-                doc.add(f);
-
-                sb.append(tag).append(", ");
-                seq = seq.next();
-            }
-
-            if (sb.length() > 1) {
-                // tags require an SQL query to lookup, so, cache in Luence
-                Field f = new Field(TAGS, sb.subSequence(0, sb.length() - 2)
-                        .toString(), Store.YES, Index.NO);
-                f.setBoost(1.5f);
                 doc.add(f);
             }
         }
@@ -163,8 +145,7 @@ public class Searcher {
         for (int i = 0; i < docs.scoreDocs.length; i++) {
             int docid = docs.scoreDocs[i].doc;
             Document doc = searcher.doc(docid);
-            map.put(doc.get(FEED_ID),
-                    new Feed(docid, doc.get(TAGS), doc.get(FEED_ID)));
+            map.put(doc.get(FEED_ID), new Feed(docid, doc.get(FEED_ID)));
         }
         return map;
     }
@@ -191,14 +172,11 @@ public class Searcher {
 
     public static class Feed {
         public final int docId;
-        public final String tags;
         public final String id;
 
-        public Feed(int docId, String tags, String id) {
+        public Feed(int docId, String id) {
             this.docId = docId;
-            this.tags = tags;
             this.id = id;
         }
     }
-
 }

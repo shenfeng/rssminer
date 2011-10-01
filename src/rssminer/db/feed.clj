@@ -2,7 +2,7 @@
   (:use [rssminer.database :only [h2-db-factory]]
         [rssminer.db.util :only [h2-query id-k with-h2 h2-insert]]
         [rssminer.search :only [index-feed]]
-        [rssminer.util :only [ignore-error]]
+        [rssminer.util :only [ignore-error extract-text gen-snippet]]
         [clojure.string :only [blank?]]
         [clojure.tools.logging :only [info]]
         [clojure.java.jdbc :only [with-connection insert-record
@@ -36,19 +36,20 @@
                           {:pref pref})))))
 
 (defn save-feeds [feeds rss-id user-id]
-  (doseq [{:keys [link categories] :as feed} (:entries feeds)]
+  (doseq [{:keys [link] :as feed} (:entries feeds)]
     (when (and link (not (blank? link)))
       (try
-        (let [feed (dissoc (assoc feed :rss_link_id rss-id) :categories)
-              feed-id (id-k (with-h2
-                              (insert-record :feeds feed)))]
-          (index-feed (assoc feed :id feed-id) categories)
-          (insert-tags feed-id user-id categories))
+        (let [content (extract-text (:summary feed))
+              id (id-k (with-h2
+                         (insert-record :feeds
+                                        (assoc feed
+                                          :rss_link_id rss-id
+                                          :snippet (gen-snippet content)))))]
+          (index-feed id content feed))
         (catch RuntimeException e       ;link is uniqe
           (info "update" link)
           (with-connection @h2-db-factory
-            (update-values :feeds ["link=?" link]
-                           (dissoc feed :categories))))))))
+            (update-values :feeds ["link=?" link] feed)))))))
 
 (defn fetch-feeds [rss-link-id limit offset]
   (h2-query ["SELECT id, author, title, summary, link, published_ts

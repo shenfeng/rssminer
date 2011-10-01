@@ -3,7 +3,7 @@
                                    import-h2-schema!]]
                   [search :only [indexer index-feed]]
                   [config :only [ungroup]]
-                  [util :only [ignore-error]])
+                  [util :only [ignore-error gen-snippet extract-text]])
         (rssminer.db [user :only [create-user]]
                      [feed :only [insert-tags]]
                      [util :only [h2-query with-h2 id-k]])
@@ -11,6 +11,7 @@
                        [cli :only [cli optional required]])
         [clojure.java.jdbc :only [insert-record with-query-results
                                   insert-record]])
+  (:require [clojure.string :as str])
   (:import java.io.File
            java.sql.Clob
            rssminer.Searcher))
@@ -40,41 +41,31 @@
   (with-h2
     (with-query-results rs ["select * from feeds"]
       (doseq [feed rs]
-        (index-feed (update-in feed [:summary]
-                               #(slurp (.getCharacterStream ^Clob %)))
-                    (map :tag (h2-query
-                               ["SELECT tag FROM feed_tag
-                                 WHERE feed_id = ?" (:id feed)]))))))
+        (let [feed (update-in feed [:summary]
+                              #(slurp (.getCharacterStream ^Clob %)))]
+          (index-feed (:id feed) (-> feed :summary extract-text) feed)))))
   (.toggleInfoStream ^Searcher @indexer false))
 
 (defn export-data []
-  (let [feeds (h2-query ["SELECT id, title, author, link, summary
+  (let [feeds (h2-query
+               ["SELECT id, title, author, link, summary, snippet, tags
                           FROM feeds ORDER BY id LIMIT 2000"])
-        tags (group-by :feed_id (h2-query ["SELECT feed_id, tag FROM feed_tag
-                     WHERE feed_id < 2200"]))
-        with-tags (map #(assoc (dissoc % :id)
-                          :tags (map :tag (tags (:id %)))) feeds)]
+        links (h2-query ["SELECT domain, url, title FROM
+                              crawler_links LIMIT 20000"])
+        rss (h2-query ["SELECT title, url, description,
+                             alternate FROM rss_links LIMIT 100000"])]
     (spit "/tmp/rssminer_data"
-          (prn-str {:feeds with-tags
-                    :links (h2-query ["select domain, url, title from
-                              crawler_links limit 20000"])
-                    :rss (h2-query ["select title, url, description,
-                             alternate from rss_links limit
-                             100000"])}))))
+          (prn-str {:feeds feeds :links links :rss rss}))))
 
 (defn import-data []
   (let [{:keys [feeds links rss]} (read-string (slurp "/tmp/rssminer_data"))]
     (doseq [l links]
-      (ignore-error (with-h2
-                      (insert-record :crawler_links l))))
+      (ignore-error (with-h2 (insert-record :crawler_links l))))
     (doseq [r rss]
-      (ignore-error (with-h2
-                      (insert-record :rss_links r))))
+      (ignore-error (with-h2 (insert-record :rss_links r))))
     (doseq [feed feeds]
-      (let [id (id-k (with-h2 (ignore-error
-                               (insert-record :feeds
-                                              (dissoc feed :tags)))))]
-        (insert-tags id nil (:tags feed))))))
+      (with-h2 (ignore-error
+                (insert-record :feeds feed))))))
 
 (defn main [& args]
   "Setup rssminer database"

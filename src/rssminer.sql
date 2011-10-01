@@ -73,6 +73,8 @@ CREATE TABLE feeds
   link VARCHAR UNIQUE,
   title VARCHAR,
   summary CLOB,
+  snippet VARCHAR,
+  tags VARCHAR,                 -- tags by feed author(parsed)
   updated_ts TIMESTAMP,
   published_ts TIMESTAMP,
   rss_link_id INTEGER
@@ -94,7 +96,7 @@ CREATE TABLE feed_tag
 (
     id INTEGER PRIMARY KEY auto_increment,
     tag VARCHAR,
-    user_id INTEGER             --  by feed author is null
+    user_id INTEGER NOT NULL
             REFERENCES users ON UPDATE CASCADE ON DELETE CASCADE,
     feed_id INTEGER NOT NULL
             REFERENCES feeds ON UPDATE CASCADE ON DELETE CASCADE,

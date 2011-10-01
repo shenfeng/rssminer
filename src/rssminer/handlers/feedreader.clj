@@ -23,5 +23,11 @@
                                  (join " " (map #(str "tag:" %)
                                                 cfg/popular-tags)) 30)
                          :tags cfg/popular-tags})
-      (view/browse-feed {:feeds (search* term (to-int limit))
+      (view/browse-feed {:feeds (search* term (to-int limit)
+                                         :user-id (:id
+                                                   (session-get req :user)))
                          :tags cfg/popular-tags}))))
+
+(defn search [req]
+  (let [{:keys [term limit] :or {limit 20}} (:params req)]
+    (search* term (to-int limit) :user-id (:id (session-get req :user)))))
