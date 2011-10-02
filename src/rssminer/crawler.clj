@@ -1,12 +1,11 @@
 (ns rssminer.crawler
   (:use (rssminer [time :only [now-seconds]]
+                  [http :only [parse-response client extract-links]]
                   [util :only [assoc-if next-check]])
         [clojure.tools.logging :only [info error trace]])
   (:require [rssminer.db.crawler :as db]
-            [rssminer.http :as http]
             [rssminer.config :as conf])
-  (:import java.util.LinkedList
-           [rssminer.task HttpTaskRunner IHttpTask IHttpTaskProvder]
+  (:import [rssminer.task HttpTaskRunner IHttpTask IHttpTaskProvder]
            org.jboss.netty.handler.codec.http.HttpResponse))
 
 (defonce crawler (atom nil))
@@ -24,52 +23,48 @@
   (when-not (nil? @crawler)
     (.getStat ^HttpTaskRunner @crawler)))
 
-(defn get-next-link [^LinkedList queue]
-  (locking queue
-    (if (.peek queue) (.poll queue) ;; retrieves and removes
-        (let [links (db/fetch-crawler-links conf/fetch-size)]
-          (trace "fetch" (count links) "crawler links from h2")
-          (if (.addAll queue links)
-            (get-next-link queue))))))
+(defn- keep? [url title]                ; url can't be nil
+  (and url
+       (not (re-find #"(?i)\bcomments" url))
+       (not (re-find #"(?i)\bcomments" (or title "")))))
 
-(defn extract-and-save-links [referer links rss]
-  (doseq [{:keys [url title]} rss]
-    (when-not (and url (re-find #"(?i)\bcomments" (or title "")))
+(defn save-links [referer links rsses]
+  (doseq [{:keys [url title]} rsses]
+    (when (keep? url title)
       (db/insert-rss-link {:url url
                            :title title
-                           :next_check_ts (conf/rand-ts)
+                           :next_check_ts (rand-int 100000)
                            :crawler_link_id (:id referer)})))
   (db/insert-crawler-links referer
                            (map #(assoc %
-                                   :next_check_ts (conf/rand-ts)
+                                   :next_check_ts (rand-int 1000000)
                                    :referer_id (:id referer)) links)))
 
 (defn- mk-task [{:keys [id url check_interval last_modified] :as link}]
   (reify IHttpTask
-    (getUri [this]
-      (java.net.URI. url))
+    (getUri [this] (java.net.URI. url))
+    (getProxy [this] conf/no-proxy)
     (getHeaders [this]
       (if last_modified
         {"If-Modified-Since" last_modified} {}))
     (doTask [this resp]
-      (let [{:keys [status headers body] :as resp} (http/parse-response resp)
-            {:keys [title links rss]} (when body (http/extract-links body))
-            updated (assoc-if (next-check check_interval headers)
+      (let [{:keys [status headers body] :as resp} (parse-response resp)
+            {:keys [title links rss]} (when body (extract-links url body))
+            updated (assoc-if (next-check check_interval status headers)
                               :last_modified (:last-modified headers)
                               :title title)]
         (db/update-crawler-link id updated)
         (when body
-          (extract-and-save-links link links rss))))))
+          (save-links link links rss))))))
 
 (defn mk-provider []
-  (let [queue (LinkedList.)]
-    (reify IHttpTaskProvder
-      (nextTask [this]
-        (mk-task (get-next-link queue))))))
+  (reify IHttpTaskProvder
+    (getTasks [this]
+      (map mk-task (db/fetch-crawler-links conf/fetch-size)))))
 
-(defn start-crawler [& {:keys [queue worker]}]
+(defn start-crawler [& {:keys [queue]}]
   (stop-crawler)
   (let [queue (or queue conf/crawler-queue)]
-    (reset! crawler (doto (HttpTaskRunner. (mk-provider) http/client
-                                           queue "Crawler")
+    (reset! crawler (doto (HttpTaskRunner. (mk-provider) client
+                                           queue "Crawler" conf/http-proxy)
                       (.start)))))

@@ -1,6 +1,9 @@
 package rssminer.task;
 
+import java.util.List;
+
 public interface IHttpTaskProvder {
 
-    IHttpTask nextTask();
+    List<IHttpTask> getTasks();
+
 }

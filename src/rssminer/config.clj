@@ -25,6 +25,9 @@
 (def socks-proxy (Proxy. Proxy$Type/SOCKS
                          (InetSocketAddress. "localhost" 3128)))
 
+(def http-proxy (Proxy. Proxy$Type/HTTP
+                        (InetSocketAddress. "127.0.0.1" 3128)))
+
 (def rssminer-agent
   "Mozilla/5.0 (compatible; Rssminer/1.0; +http://rssminer.net)")
 
@@ -36,15 +39,11 @@
 
 (def fetcher-threads-count 2)
 
-(def fetch-size 150)
-
-(defn rand-ts [] (rand-int 1000000))
+(def fetch-size 100)
 
 (def ignored-url-patten
   (re-pattern (str "(?i)(jpg|png|gif|css|js|jpeg|pdf|"
                    "mp3|swf|mp4|wmv|flv|rm|mov|zip|mkv|rar)$")))
-
-(def non-url-patten #"(?i)^\s*(javascript|mailto|#)")
 
 (def black-domain-pattens (atom
                            (delay (db/fetch-black-domain-pattens))))

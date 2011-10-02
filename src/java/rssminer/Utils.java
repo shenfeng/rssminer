@@ -39,11 +39,12 @@ class InfoHandler extends DefaultHandler {
     }
 
     public Info getInfo() {
-        if (sb == null) {
-            return new Info(rsses, links, null);
-        } else {
-            return new Info(rsses, links, sb.toString());
-        }
+        return new Info(rsses, links, sb == null ? null : sb.toString());
+    }
+
+    private boolean ignore(String href) {
+        return href.length() == 0 || href.startsWith("#")
+                || href.startsWith("mailto") || href.startsWith("javascript");
     }
 
     public void startElement(String uri, String localName, String qName,
@@ -54,19 +55,17 @@ class InfoHandler extends DefaultHandler {
             if (index != -1) {
                 String href = attrs.getValue(HREF);
                 if (RSS.equalsIgnoreCase(attrs.getValue(index))
-                        && href != null) {
+                        && href != null && !ignore(href)) {
                     if (rsses == null)
                         rsses = new ArrayList<Pair>(1);
-                    rsses.add(new Pair(href, attrs.getValue(TITLE)));
+                    rsses.add(new Pair(href.trim(), attrs.getValue(TITLE)));
                 }
             }
         } else if (A.equalsIgnoreCase(qName)) {
             int index = attrs.getIndex(HREF);
             if (index != -1) {
                 String href = attrs.getValue(index).trim();
-                if (href.length() > 0
-                        && !(href.startsWith("mailto") || href
-                                .startsWith("javascript"))) {
+                if (!ignore(href)) {
                     if (links == null)
                         links = new LinkedList<String>();
                     links.add(href);
@@ -113,7 +112,7 @@ class TextHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String qName,
             Attributes atts) throws SAXException {
         if (localName.equalsIgnoreCase("script")
-                || localName.equalsIgnoreCase("link")) {
+                || localName.equalsIgnoreCase("style")) {
             keep = false;
         }
     }

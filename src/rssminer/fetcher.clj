@@ -27,7 +27,7 @@
                              (catch Exception e
                                (error e url))))
         feeds (when html (parse-feed html))
-        updated (assoc-if (next-check check_interval resp)
+        updated (assoc-if (next-check check_interval status headers)
                           :last_modified (:last-modified headers)
                           :alternate (:link feeds)
                           :favicon (when-not last_modified

@@ -1,5 +1,6 @@
 package rssminer.task;
 
+import java.net.Proxy;
 import java.net.URI;
 import java.util.Map;
 
@@ -12,4 +13,6 @@ public interface IHttpTask {
     Map<String, Object> getHeaders();
 
     Object doTask(HttpResponse response) throws Exception;
+
+    Proxy getProxy();
 }

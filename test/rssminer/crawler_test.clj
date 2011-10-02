@@ -10,19 +10,16 @@
 
 (deftest test-mk-provider
   (let [provider ^rssminer.task.IHttpTaskProvder (mk-provider)
-        task (.nextTask provider)]
+        task (first (.getTasks provider))]
     (is (.getUri task))
     (is (empty? (.getHeaders task)))))
-
-(deftest test-get-next-link
-  (is (get-next-link (java.util.LinkedList.))))
 
 (deftest test-extract-and-save-links
   (let [info (http/extract-links "http://me.me" (slurp "test/page.html"))
         rss (h2-query ["select * from rss_links"])
         links (h2-query ["select * from crawler_links"])]
-    (extract-and-save-links {:id 1 :url "http://me.me"}
-                            (:links info) (:rss info))
+    (save-links {:id 1 :url "http://me.me"}
+                (:links info) (:rss info))
     (is (> (count (h2-query ["select * from rss_links"])) (count rss)))
     (is (> (count (h2-query ["select * from crawler_links"]))
            (count links)))))

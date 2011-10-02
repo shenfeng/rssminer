@@ -44,8 +44,6 @@ $(function(){
           server: {
             1000: 'crawler_counter',
             1200: 'crawler_queue',
-            1201: 'crawler_pending',
-            1210: 'crawler_worker',
             1300: 'crawler_start'
           },
           http: {
@@ -55,6 +53,7 @@ $(function(){
             175: '175 connection reset',
             180: '180 unknow error',
             200: '200 ok',
+            275: '275 proxied ok',
             301: '301 moved permanently',
             302: '302 found',
             304: '304 not modified',

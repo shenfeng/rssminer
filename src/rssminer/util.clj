@@ -128,9 +128,9 @@
               :shutdown (shutdown)
               :shutdown-wait (do (shutdown) (wait))))))
 
-(defn next-check [last-interval {:keys [status headers]}]
+(defn next-check [last-interval status headers]
   (if-let [location (headers "Location")]
-    {:url location :domain nil :next_check_ts 1}
+    {:url location :domain nil :next_check_ts (rand-int 10000)}
     (let [interval (if (= 200 status)
                      (max 5400 (int (/ last-interval 1.2)))
                      (min (int (* last-interval 1.2)) (* 3600 24 20)))]

@@ -1,6 +1,6 @@
 (ns rssminer.http
   (:use [clojure.tools.logging :only [info error debug trace fatal]]
-        [rssminer.util :only [assoc-if]])
+        [rssminer.util :only [assoc-if ignore-error]])
   (:refer-clojure :exclude [get])
   (:require [clojure.string :as str]
             [rssminer.config :as conf])
@@ -32,6 +32,8 @@
         url))))
 
 (defonce client (HttpClient. (doto (HttpClientConfig.)
+                               (.setUseOwnDNS false)
+                               (.setUserAgent conf/rssminer-agent)
                                (.setConnectionTimeOutInMs 6000)
                                (.setRequestTimeoutInMs 30000)
                                (.setReceiveBuffer 32768)
@@ -46,15 +48,12 @@
      :body (when (= 200 status) (me.shenfeng.Utils/bodyString response))}))
 
 (defn resolve-url [base link]
-  (try
-    (when-not (or (str/blank? link)
-                  (re-find conf/non-url-patten link))
-      (let [base (URI. (if (= base (extract-host base))
-                         (str base "/")
-                         base))
-            link (URI. (str/trim link))]
-        (str/trim (str (.resolve base link)))))
-    (catch Exception e)))
+  (ignore-error
+   (let [base (URI. (if (= base (extract-host base))
+                      (str base "/")
+                      base))
+         link (URI. link)]
+     (str/trim (str (.resolve base link))))))
 
 (defn reset-e?
   "Is the given SocketException is caused by connection reset"

@@ -22,13 +22,9 @@
   (is (= "http://a.com/c.html?a=b"
          (resolve-url "http://a.com/index?a=b" "c.html?a=b")))
   (is (= "http://a.com/rss.html"
-         (resolve-url "http://a.com" "rss.html ")))
+         (resolve-url "http://a.com" "rss.html")))
   (is (= "http://a.com/c.html"
          (resolve-url "http://a.com/b.html" "c.html")))
-  (is (nil? (resolve-url "http://a.com" "Javascript:open()")))
-  (is (nil? (resolve-url "http://a.com" "mailTo:sb@a.com")))
-  (is (nil? (resolve-url "http://a.com" "#111")))
-  (is (nil? (resolve-url "http://a.com" " #111")))
   (is (nil? (resolve-url "http://a.com" " ")))
   (is (nil? (resolve-url "http://a.com" nil)))
   (is (= "http://a.com/a/c.html"

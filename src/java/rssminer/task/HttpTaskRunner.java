@@ -2,10 +2,15 @@ package rssminer.task;
 
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
+import static me.shenfeng.http.HttpClientConstant.CONNECTION_RESET;
 
+import java.net.Proxy;
+import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,7 +29,9 @@ public class HttpTaskRunner {
 
     private final HttpClient mHttp;
     private final IHttpTaskProvder mProvider;
-    private final String mPrefix;
+    private final String mName;
+    private final Proxy mProxy;
+    private final ConcurrentLinkedQueue<IHttpTask> mTaskQueue;
     private long startTime;
     private AtomicInteger mCounter = new AtomicInteger(0);
     private volatile boolean mRunning;
@@ -36,13 +43,21 @@ public class HttpTaskRunner {
 
     private Runnable mWorker = new Runnable() {
         public void run() {
-            IHttpTask task = mProvider.nextTask();
+            IHttpTask task = null;
             try {
-                while (mRunning && task != null) {
+                while (mRunning) {
+                    if (mTaskQueue.size() == 0) {
+                        List<IHttpTask> tasks = mProvider.getTasks();
+                        if (tasks == null || tasks.size() == 0)
+                            break;
+                        mTaskQueue.addAll(tasks);
+                    }
                     mSemaphore.acquire();
-                    final HttpResponseFuture future = mHttp.execGet(
-                            task.getUri(), task.getHeaders());
-                    future.setAttachment(task);
+                    task = mTaskQueue.poll();
+                    final HttpResponseFuture future = mHttp
+                            .execGet(task.getUri(), task.getHeaders(),
+                                    task.getProxy());
+                    future.setAttachment(task); // keep state
                     future.addListener(new Runnable() {
                         public void run() {
                             mSemaphore.release();
@@ -52,56 +67,86 @@ public class HttpTaskRunner {
                             }
                         }
                     });
-                    task = mProvider.nextTask();
                 }
             } catch (InterruptedException ignore) {
             }
-            logger.info("{} producer is stopped", mPrefix);
+            logger.info("{} producer is stopped", mName);
             mRunning = false;
         }
     };
 
+    private void recordStat(IHttpTask task, HttpResponse resp) {
+        int code = resp.getStatus().getCode();
+        if (code == 200 && task.getProxy() == mProxy)
+            code = 275;
+        Integer c = mStat.get(code);
+        if (c == null)
+            c = 0;
+        mStat.put(code, ++c);
+    }
+
     private Runnable mConsummer = new Runnable() {
-        private void recordStat(HttpResponse resp) {
-            Integer code = resp.getStatus().getCode();
-            Integer c = mStat.get(code);
-            if (c == null)
-                c = 0;
-            mStat.put(code, ++c);
+
+        void retryReseted(final IHttpTask orgin) {
+            mTaskQueue.offer(new IHttpTask() {
+                public URI getUri() {
+                    return orgin.getUri();
+                }
+
+                public Proxy getProxy() {
+                    return mProxy;
+                }
+
+                public Map<String, Object> getHeaders() {
+                    return orgin.getHeaders();
+                }
+
+                public Object doTask(HttpResponse response) throws Exception {
+                    return orgin.doTask(response);
+                }
+            });
         }
 
         public void run() {
-            try {
-                while (mRunning) {
+            // finish job at hand
+            while (!mDones.isEmpty() || mRunning) {
+                try {
                     HttpResponseFuture future = mDones.take();
                     IHttpTask task = (IHttpTask) future.getAttachment();
                     try {
                         HttpResponse resp = future.get();
-                        recordStat(resp);
+                        recordStat(task, resp);
                         logger.trace("{} {}", resp.getStatus(), task.getUri());
+                        if (resp == CONNECTION_RESET
+                                && task.getProxy() != mProxy) {
+                            retryReseted(task);
+                        }
                         task.doTask(resp);
+                    } catch (InterruptedException ignore) {
                     } catch (Exception e) {
                         logger.error(task.getUri().toString(), e);
                     } finally {
                         mCounter.incrementAndGet();
                     }
+                } catch (InterruptedException ignore) {
                 }
-            } catch (InterruptedException ignore) {
             }
-            logger.info("{} consummer is stopped", mPrefix);
+            logger.info("{} consummer has stopped", mName);
             mRunning = false;
         }
     };
 
     public HttpTaskRunner(IHttpTaskProvder source, HttpClient client,
-            int queueSize, String prefix) {
+            int queueSize, String name, Proxy proxy) {
         mProvider = source;
+        mProxy = proxy;
+        mTaskQueue = new ConcurrentLinkedQueue<IHttpTask>();
         mSemaphore = new Semaphore(queueSize);
         mDones = new LinkedBlockingDeque<HttpResponseFuture>();
         mHttp = client;
         mStat.put(1200, queueSize);
         mStat.put(1300, (int) (startTime / 1000));
-        mPrefix = prefix;
+        mName = name;
     }
 
     public String getRate() {
@@ -120,14 +165,14 @@ public class HttpTaskRunner {
 
     public void start() {
         mRunning = true;
-        mWorkerThread = new Thread(mWorker, mPrefix + " Workder");
+        mWorkerThread = new Thread(mWorker, mName + " Workder");
         mWorkerThread.start();
 
-        mConsummerThread = new Thread(mConsummer, mPrefix + " Consumer");
+        mConsummerThread = new Thread(mConsummer, mName + " Consumer");
         mConsummerThread.start();
 
         startTime = currentTimeMillis();
-        logger.info("starting {}", mPrefix);
+        logger.info("starting {}", mName);
     }
 
     public void stop() {
@@ -135,12 +180,12 @@ public class HttpTaskRunner {
             mRunning = false;
             mWorkerThread.interrupt();
             mConsummerThread.interrupt();
-            logger.info("{}, {} req/min, stoping", mPrefix, getRate());
+            logger.info("{}, {} req/min, stoping", mName, getRate());
         }
     }
 
     public String toString() {
-        return format("%s, %d req, %s req/min \n%s", mPrefix, mCounter.get(),
+        return format("%s, %d req, %s req/min \n%s", mName, mCounter.get(),
                 getRate(), mStat);
     }
 }
