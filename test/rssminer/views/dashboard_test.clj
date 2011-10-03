@@ -32,8 +32,7 @@
   (let [resp (make-req "settings")
         settings (-> resp :body read-json)]
     (is (= 200 (:status resp)))
-    (is (> (count (:black_domains settings)) 0))
-    (is (> (count (:reseted_domains settings)) 0))))
+    (is (> (count (:black_domains settings)) 0))))
 
 (comment
   (deftest test-add-modify-settings

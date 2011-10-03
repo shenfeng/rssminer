@@ -101,33 +101,6 @@
      (pprint value)
      value))
 
-(defn- threadfactory [prefix]
-  (let [id (atom 0)]
-    (reify ThreadFactory
-      (newThread [this runnable]
-        (doto (Thread. runnable (str prefix "-" (swap! id inc)))
-          (.setDaemon true))))))
-
-(defn start-tasks [next-task do-task prefix threads]
-  (let [running? (atom true)
-        exec (Executors/newFixedThreadPool threads (threadfactory prefix))
-        ^Runnable worker #(loop [task (next-task)]
-                            (if (and task @running?)
-                              (do (try (do-task task)
-                                       (catch Exception e
-                                         (error e prefix task)))
-                                  (recur (next-task)))
-                              (info prefix "thread die peacefully")))
-        shutdown #(do (reset! running? false) (.shutdownNow exec))
-        wait #(.awaitTermination exec Integer/MAX_VALUE TimeUnit/MINUTES)]
-    (dotimes [_ threads]
-      (.submit exec worker))
-    (.shutdown exec)
-    (fn [op] (case op
-              :wait (wait)
-              :shutdown (shutdown)
-              :shutdown-wait (do (shutdown) (wait))))))
-
 (defn next-check [last-interval status headers]
   (if-let [location (headers "Location")]
     {:url location :domain nil :next_check_ts (rand-int 10000)}

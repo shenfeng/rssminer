@@ -26,10 +26,7 @@
      :fetcher_running (not (nil? @fetcher))
      :black_domains (map (fn [p id] {:patten (str p)
                                     :id id})
-                         @@conf/black-domain-pattens (range))
-     :reseted_domains (map (fn [p id] {:patten (str p)
-                                      :id id})
-                           @@conf/reseted-hosts (range))}))
+                         @@conf/black-domain-pattens (range))}))
 
 (defn settings [req]
   (let [data (-> req :body :_data)]

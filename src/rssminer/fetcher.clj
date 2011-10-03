@@ -1,57 +1,54 @@
 (ns rssminer.fetcher
-  (:use [clojure.tools.logging :only [error info trace]]
+  (:use [clojure.tools.logging :only [trace]]
         [rssminer.db.crawler :only [update-rss-link fetch-rss-links]]
-        (rssminer [util :only [assoc-if start-tasks next-check]]
-                  [parser :only [parse-feed]]))
+        (rssminer [util :only [assoc-if next-check]]
+                  [parser :only [parse-feed]]
+                  [http :only [client parse-response]]))
   (:require [rssminer.db.feed :as db]
-            [rssminer.http :as http]
             [rssminer.config :as conf])
-  (:import [java.util Queue LinkedList]))
-
-(def ^Queue queue (LinkedList.))
+  (:import [rssminer.task HttpTaskRunner IHttpTask IHttpTaskProvder]))
 
 (defonce fetcher (atom nil))
 
-(defn stop-fetcher []
-  (when-not (nil? @fetcher)
-    (info "shutdowning rss fetcher....")
-    (@fetcher :shutdown)
-    (info "fetch is shutdowned")
-    (reset! fetcher nil)))
+(defn running? []
+  (if-not (nil? @fetcher)
+    (.isRunning ^HttpTaskRunner @fetcher)
+    false))
 
-(defn fetch-rss
-  [{:keys [id url check_interval last_modified] :as link}]
-  (let [{:keys [status headers body] :as resp}
-        (http/get url :last-modified last_modified)
-        html (when body (try (slurp body)
-                             (catch Exception e
-                               (error e url))))
-        feeds (when html (parse-feed html))
+(defn stop-fetcher []
+  (when (running?)
+    (.stop ^HttpTaskRunner @fetcher)))
+
+(defn handle-resp [{:keys [id url check_interval last_modified]}
+                   {:keys [status headers body]}]
+  (let [feeds (when body (parse-feed body))
         updated (assoc-if (next-check check_interval status headers)
                           :last_modified (:last-modified headers)
                           :alternate (:link feeds)
-                          :favicon (when-not last_modified
-                                     (http/download-favicon url))
                           :description (:description feeds)
                           :title (:title feeds))]
     (trace status url (str "(" (-> feeds :entries count) " feeds)"))
     (update-rss-link id updated)
     (when feeds (db/save-feeds feeds id nil))))
 
-(defn get-next-link []
-  (locking queue
-    (if (.peek queue) ;; has element?
-      (.poll queue)   ;; retrieves and removes
-      (let [links (fetch-rss-links conf/fetch-size)]
-        (trace "fetch" (count links) "rss links from h2")
-        (when (seq links)
-          (doseq [link links]
-            (.offer queue link))
-          (get-next-link))))))
+(defn- mk-task [{:keys [url last_modified] :as link}]
+  (reify IHttpTask
+    (getUri [this] (java.net.URI. url))
+    (getProxy [this] (if (conf/reseted-url? url)
+                       conf/http-proxy conf/no-proxy))
+    (getHeaders [this]
+      (if last_modified {"If-Modified-Since" last_modified} {}))
+    (doTask [this resp]
+      (handle-resp link (parse-response resp)))))
 
-(defn start-fetcher [& {:keys [threads]}]
+(defn mk-provider []
+  (reify IHttpTaskProvder
+    (getTasks [this]
+      (map mk-task (fetch-rss-links conf/fetch-size)))))
+
+(defn start-fetcher [& {:keys [queue]}]
   (stop-fetcher)
-  (reset! fetcher (start-tasks get-next-link fetch-rss "fetcher"
-                               (or threads conf/fetcher-threads-count)))
-  (info "rss fetcher started")
-  @fetcher)
+  (let [queue (or queue conf/fetcher-queue)]
+    (reset! fetcher (doto (HttpTaskRunner. (mk-provider) client
+                                           queue "Fetcher" conf/http-proxy)
+                      (.start)))))

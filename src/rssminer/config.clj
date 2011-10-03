@@ -22,9 +22,6 @@
                    "child.keepAlive" false
                    "child.connectTimeoutMillis" 4000})
 
-(def socks-proxy (Proxy. Proxy$Type/SOCKS
-                         (InetSocketAddress. "localhost" 3128)))
-
 (def http-proxy (Proxy. Proxy$Type/HTTP
                         (InetSocketAddress. "127.0.0.1" 3128)))
 
@@ -37,7 +34,7 @@
 
 (def crawler-queue 100)
 
-(def fetcher-threads-count 2)
+(def fetcher-queue 100)
 
 (def fetch-size 100)
 
@@ -56,15 +53,8 @@
   (db/insert-black-domain-patten patten)
   (reset! black-domain-pattens (delay (db/fetch-black-domain-pattens))))
 
-(def reseted-hosts (atom
-                    (delay (db/fetch-reseted-domain-pattens))))
-
 (defn reseted-url? [url]
-  (some #(re-find % url) @@reseted-hosts))
-
-(defn add-reseted-domain [domain]
-  (db/insert-reseted-domain-patten domain)
-  (reset! reseted-hosts (delay (db/fetch-reseted-domain-pattens))))
+  (some #(re-find % url) #{#"blogspot\.com"}))
 
 (def popular-tags ["clojure" "compojure" "jquery" "jdk" "linux"
                    "database" "performance"  "java" "emacs"

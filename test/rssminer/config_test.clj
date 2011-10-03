@@ -7,9 +7,7 @@
 
 (deftest test-reseted-url
   (is (reseted-url? "emacs-fu.blogspot.com/"))
-  (is (not (reseted-url? "http://google.com")))
-  (add-reseted-domain "http://google.com")
-  (is (reseted-url? "http://google.com")))
+  (is (not (reseted-url? "http://google.com"))))
 
 (deftest test-black-domain-patten
   (is (black-domain? "http://guangzhoufuzhuangsheyin04106333.sh-kbt.com"))

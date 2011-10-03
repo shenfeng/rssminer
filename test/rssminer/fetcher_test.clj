@@ -2,36 +2,23 @@
   (:use clojure.test
         rssminer.fetcher
         [rssminer.db.util :only [h2-query]]
-        [rssminer.test-common :only [h2-fixture mocking]])
-  (:require [rssminer.db.crawler :as db]
-            [rssminer.http :as http]))
+        [rssminer.test-common :only [h2-fixture]])
+  (:require [rssminer.db.crawler :as db]))
 
-(defn- mock-http-get [& args]
-  {:status 200
-   :headers {:last-modified "Sat, 23 Jul 2011 01:40:16 GMT"}
-   :body (java.io.FileInputStream. "test/scottgu-atom.xml")})
+(use-fixtures :each h2-fixture)
 
-(use-fixtures :each h2-fixture
-              (fn [f] (binding [http/get mock-http-get]
-                       (doseq [a (range 1 4)]
-                         (db/insert-rss-link {:url (str "http://a.com/" a)}))
-                       (f))))
+(deftest test-mk-provider
+  (let [provider ^rssminer.task.IHttpTaskProvder (mk-provider)
+        task (first (.getTasks provider))]
+    (is (.getUri task))
+    (is (empty? (.getHeaders task)))))
 
-(deftest test-fetch-rss
-  (let [c (count (db/fetch-rss-links 1000))]
-    (fetch-rss (get-next-link))
-    (is (= 1 (- c (count (db/fetch-rss-links 1000)))))
-    (is (= (count (h2-query ["select * from feeds"])) 1))))
-
-(deftest test-fecher
-  (mocking (var http/get) mock-http-get
-           (let [fetcher (start-fetcher :threads 2)]
-             (fetcher :wait)))
-  (testing "everybody get the meta"
-    (is (every? #(and (:alternate %)
-                      (:title %)
-                      (:last_modified %))
-                (h2-query ["select * from rss_links"]))))
-  (is (= (count (h2-query ["select * from feeds"])) 1)))
-
-
+(deftest test-handle-resp
+  (let [links (db/fetch-rss-links 10000)
+        feeds (h2-query ["select * from feeds"])]
+    (handle-resp (first links)
+                 {:status 200
+                  :headers {:last-modified "Sat, 23 Jul 2011 01:40:16 GMT"}
+                  :body (slurp "test/scottgu-atom.xml")})
+    (is (= (count (h2-query ["select * from feeds"])) 1))
+    (is (= 1 (- (count links) (count (db/fetch-rss-links 1000)))))))

@@ -5,8 +5,7 @@
         [clojure.tools.logging :only [info error trace]])
   (:require [rssminer.db.crawler :as db]
             [rssminer.config :as conf])
-  (:import [rssminer.task HttpTaskRunner IHttpTask IHttpTaskProvder]
-           org.jboss.netty.handler.codec.http.HttpResponse))
+  (:import [rssminer.task HttpTaskRunner IHttpTask IHttpTaskProvder]))
 
 (defonce crawler (atom nil))
 
@@ -40,22 +39,25 @@
                                    :next_check_ts (rand-int 1000000)
                                    :referer_id (:id referer)) links)))
 
-(defn- mk-task [{:keys [id url check_interval last_modified] :as link}]
+(defn handle-resp [{:keys [id url check_interval] :as link}
+                   {:keys [status headers body]}]
+  (let [{:keys [title links rss]} (when body (extract-links url body))
+        updated (assoc-if (next-check check_interval status headers)
+                          :last_modified (:last-modified headers)
+                          :title title)]
+    (db/update-crawler-link id updated)
+    (when body
+      (save-links link links rss))))
+
+(defn- mk-task [{:keys [url last_modified] :as link}]
   (reify IHttpTask
     (getUri [this] (java.net.URI. url))
-    (getProxy [this] conf/no-proxy)
+    (getProxy [this] (if (conf/reseted-url? url)
+                       conf/http-proxy conf/no-proxy))
     (getHeaders [this]
-      (if last_modified
-        {"If-Modified-Since" last_modified} {}))
+      (if last_modified {"If-Modified-Since" last_modified} {}))
     (doTask [this resp]
-      (let [{:keys [status headers body] :as resp} (parse-response resp)
-            {:keys [title links rss]} (when body (extract-links url body))
-            updated (assoc-if (next-check check_interval status headers)
-                              :last_modified (:last-modified headers)
-                              :title title)]
-        (db/update-crawler-link id updated)
-        (when body
-          (save-links link links rss))))))
+      (handle-resp link (parse-response resp)))))
 
 (defn mk-provider []
   (reify IHttpTaskProvder

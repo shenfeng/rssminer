@@ -14,16 +14,6 @@
      (insert-record :black_domain_pattens
                     {:patten patten}))))
 
-(defn insert-reseted-domain-patten [patten]
-  (ignore-error ;;ignore voilate of uniqe constraint
-   (with-connection @h2-db-factory
-     (insert-record :reseted_domain_pattens
-                    {:patten patten}))))
-
-(defn fetch-reseted-domain-pattens []
-  (map #(re-pattern (:patten %))
-       (h2-query ["select patten from reseted_domain_pattens"])))
-
 (defn fetch-multi-domains []
   (map :domain
        (h2-query ["SELECT * FROM multi_rss_domains"])))

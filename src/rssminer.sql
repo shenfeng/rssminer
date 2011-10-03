@@ -129,12 +129,6 @@ create table black_domain_pattens (
    ADDED_ts TIMESTAMP DEFAULT now(),
 )
 ----
-create table reseted_domain_pattens (
-   id INTEGER PRIMARY KEY auto_increment,
-   patten VARCHAR UNIQUE,
-   added_ts TIMESTAMP DEFAULT now(),
-)
-----
 insert into crawler_links (url, domain) values --seeds
 ('http://blog.jquery.com/', 'http://blog.jquery.com'),
 ('http://briancarper.net/', 'http://briancarper.net'),
@@ -172,9 +166,6 @@ insert into black_domain_pattens (patten) values
 ('canalblog|livejournal|blogcu|house'),
 ('adult|live|cam|pussy|joyfeeds|sex|girl'),
 ('horny|naughty|penetrationista|suckmehere'),
-----
-insert into reseted_domain_pattens (patten) values
-('\.blogspot\.com')
 ----
 insert into rss_links (url) values
 ('http://aria42.com/blog/?feed=rss2'),
