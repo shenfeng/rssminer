@@ -2,8 +2,7 @@
   (:refer-clojure :exclude [get])
   (:use rssminer.http
         clojure.test
-        (rssminer [test-common :only [h2-fixture]]
-                  [config :only [add-black-domain-patten]]))
+        (rssminer [test-common :only [h2-fixture]]))
   (:import [org.jboss.netty.handler.codec.http DefaultHttpResponse
             HttpResponse HttpVersion HttpResponseStatus]
            org.jboss.netty.buffer.ChannelBuffers))
@@ -48,8 +47,6 @@
   (is (= "http://a.com/c.php"
          (clean-url "http://a.com/c.php?t=blog&k=%C1%F4%D1%A7")))
   (is (nil? (clean-url "http://alohaitsluisa.tumblr.com/rss")))
-  (add-black-domain-patten "a\\.com")
-  (is (nil? (clean-url "http://a.com/c.php?t=blog&k=%C1%F4%D1%A7")))
   (is (nil? (clean-url "http://img.com/a.png")))
   (is (nil? (clean-url "http://img.com/a.JS")))
   (is (nil? (clean-url "http://jidikuabaoxiao06208392.founders-lawyer.com")))

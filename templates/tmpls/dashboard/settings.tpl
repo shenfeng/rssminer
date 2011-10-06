@@ -32,11 +32,6 @@
         <td>{{crawler_counter_delta}}</td>
       </tr>
       <tr>
-        <td>Crawler pending:</td>
-        <td>{{crawler_pending}}</td>
-        <td>{{crawler_pending_delta}}</td>
-      </tr>
-      <tr>
         <td>Crawler speed:</td>
         <td>{{crawler_speed}}</td>
         <td>{{crawler_speed_delta}}</td>
@@ -71,23 +66,6 @@
         </td>
       </tr>
     </table>
-  </li>
-  <li class="section">
-    <h3>black domain</h3> <input />
-    <ul>
-      {{#black_domains}}
-        <li>{{patten}}</li>
-      {{/black_domains}}
-    </ul>
-  </li>
-  <li class="section">
-    <h3>reseted domain</h3>
-    <input/>
-    <ul>
-      {{#reseted_domains}}
-        <li>{{patten}}</li>
-      {{/reseted_domains}}
-    </ul>
   </li>
 </ul>
 

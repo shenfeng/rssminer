@@ -6,6 +6,7 @@
             [rssminer.config :as conf])
   (:import java.net.URI
            [rssminer Utils$Info Utils$Pair]
+           me.shenfeng.Utils
            [me.shenfeng.http HttpClient HttpClientConfig]
            org.jboss.netty.handler.codec.http.HttpResponse
            org.apache.commons.codec.binary.Base64))
@@ -29,12 +30,14 @@
 
 (defonce ^{:tag HttpClient}
   client (HttpClient. (doto (HttpClientConfig.)
-                        (.setUseOwnDNS false)
+                        (.setMaxLength (* 1025 512)) ; 512k
+                        (.setWorkerThread 1)         ; 1 is ok
+                        (.setTimerInterval 3000) ; 3s check timeout
                         (.setUserAgent conf/rssminer-agent)
-                        (.setConnectionTimeOutInMs 6000)
-                        (.setRequestTimeoutInMs 30000)
-                        (.setReceiveBuffer 32768)
-                        (.setSendBuffer 8192))))
+                        (.setConnectionTimeOutInMs 12000) ;12s
+                        (.setRequestTimeoutInMs 30000)    ;30s
+                        (.setReceiveBuffer 32768)         ;32k
+                        (.setSendBuffer 8192))))          ;8k
 
 (defn parse-response [^HttpResponse response]
   (let [status (-> response .getStatus .getCode)
@@ -42,7 +45,7 @@
     {:status status
      :headers (reduce #(assoc %1 (-> %2 str/lower-case keyword)
                               (.getHeader response %2)) {} names)
-     :body (when (= 200 status) (me.shenfeng.Utils/bodyString response))}))
+     :body (when (= 200 status) (Utils/bodyStr response))}))
 
 (defn resolve-url [base link]
   (ignore-error

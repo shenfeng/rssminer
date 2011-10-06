@@ -8,8 +8,10 @@ a:hover { color: $link_hover_color; }
 small { font-size: 85%; }
 b, strong, th { font-weight: bold; }
 
+html { overflow-y: scroll; }
+
 body {
-    font: 400 14px/1.5 "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue",sans-serif;
+    font: 400 13px/1.231 Arial, Helvetica, sans-serif;
     color: #222;
     margin: 0;
     padding: 0;

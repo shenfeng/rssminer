@@ -2,9 +2,14 @@
 
 ABSOLUTE_PATH=$(readlink -f $0)
 HOME="${ABSOLUTE_PATH%/*/*}"
-cd "${HOME}" && java -Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8 \
+cd "${HOME}" && java \
+    -Dsun.jnu.encoding=UTF-8 \
+    -Dfile.encoding=UTF-8 \
     -Dsun.net.inetaddr.ttl=0 \
-    -XX:+UseCompressedOops -XX:+UseCompressedStrings -Xms256m -Xmx256m \
+    -Djava.net.preferIPv4Stack=true \
+    -XX:+UseCompressedOops \
+    -XX:+UseCompressedStrings \
+    -Xms386m -Xmx386m \
     -server -cp "classes:lib/*:src/" clojure.main \
     -e "(require 'rssminer.main)(apply rssminer.main/main *command-line-args*)" \
     /dev/null $@

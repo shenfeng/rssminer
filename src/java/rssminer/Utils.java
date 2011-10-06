@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.ccil.cowan.tagsoup.Parser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -39,7 +41,8 @@ class InfoHandler extends DefaultHandler {
     }
 
     public Info getInfo() {
-        return new Info(rsses, links, sb == null ? null : sb.toString());
+        String title = sb == null ? null : sb.toString().trim();
+        return new Info(rsses, links, title);
     }
 
     private boolean ignore(String href) {
@@ -119,8 +122,11 @@ class TextHandler extends DefaultHandler {
 }
 
 public class Utils {
+    final static Logger logger = LoggerFactory.getLogger(Utils.class);
 
     public static class Info {
+        static Info EMPTY = new Info(new ArrayList<Pair>(1),
+                new ArrayList<String>(1), null);
         public final List<String> links;
         public final List<Pair> rssLinks;
         public final String title;
@@ -161,11 +167,17 @@ public class Utils {
 
     public static Info extractInfo(String html) throws IOException,
             SAXException {
-        Parser p = parser.get();
-        InfoHandler h = new InfoHandler();
-        p.setContentHandler(h);
-        p.parse(new InputSource(new StringReader(html)));
-        return h.getInfo();
+        try {
+            Parser p = parser.get();
+            InfoHandler h = new InfoHandler();
+            p.setContentHandler(h);
+            p.parse(new InputSource(new StringReader(html)));
+            return h.getInfo();
+        } catch (IOException e) {
+            // Pushback buffer overflow, not html?
+            logger.trace(e.getMessage(), e);
+            return Info.EMPTY;
+        }
     }
 
     public static String extractText(String html) throws IOException,

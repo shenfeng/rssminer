@@ -3,84 +3,80 @@
 @import "reset";
 @import "common";
 
-$right-width: 240px;
+$right-width: 220px;
+$page-width: 1200px; // wider on brose page
 
-#main {
+#main, #search {
     width: $page-width;
     margin: 0 auto;
 }
 
-ul.controls {
-    list-style: none;
-    li {
-        float: right;
-        .selected {font-weight: bold; }
-        span {
-            display: inline-block;
-            padding: 0.2em 0.5em;
-            cursor: pointer;
-            &:hover { background: #ccc;  }
-        }
+#search {
+    width: $page-width;
+    margin: 1em auto;
+    display: none;
+    input {
+        margin-left: 300px;
+        padding: 0.3em 0.4em;
+        width: 400px;
     }
 }
 
-div.related {
-    &:hover ul { display: block; }
-    position: relative;
+#feeds {
+    width: $page-width - $right-width;
+    margin-left: $right-width;
     > ul {
-        width: 25em;
-        display: none;
-        position: absolute;
-        z-index: 101;
-        background: #fff;
         list-style: none;
         padding: 0;
-        @include box-shadow(2px, 1px, 7px, #666);
-        li {
-            padding: 0.1em 0.2em;
-            width: 25em;
+        li { padding-bottom: 12px; }
+    }
+    td.ctrls {
+        text-align: center;
+        span {
+            color: #eee;
+            display: block;
+            width: 30px;
+            height: 25px;
             cursor: pointer;
-            white-space: nowrap;
+            &.selected, &:hover { color: #aaa;  }
+        }
+        width: 30px;
+        vertical-align: top;
+    }
+    td.data {
+        .content {
+            font-size: 13.5px;
+            line-height: 1.35;
+            > .snippet { margin-top: 4px; }
+            > .summary { display: none; margin-top: 4px; }
+        }
+        > h3 {
+            margin: 0;
+            color: #1155CC;
+            padding: 0.3em 0.1em;
+            font-size: 16px;
+            cursor: pointer;
+            &:hover { background: #ddd; }
+        }
+        .meta {
+            font-size: 13px;
+            color: #555;
+            a { color: #999; }
+            height: 20px;
             overflow: hidden;
-            text-overflow: ellipsis;
-            &:hover {
-                background: #ccc;
+            .author { margin-left: 2em; }
+            ul.tags {
+                padding-left: 2em;
+                display: inline;
+                li { padding: 3px; display: inline-block; }
+                list-style: none;
             }
         }
     }
 }
 
-#feeds {
-    width: $page-width - $right-width - 20px;
-    .feed > h3 {
-        margin: 0.2em 0;
-        padding: 0.1em 0.1em;
-        background: #eee;
-        cursor: pointer;
-        font-size: 15px;
-        &:hover { background: #ddd; }
-    }
-    > ul {
-        list-style: none;
-        padding: 0;
-        .summary { display: none; }
-    }
-    .tags {
-        margin-right: 0.8em;
-        list-style: none;
-        li {
-            display: inline-block;
-            padding: 3px;
-        }
-    }
-    .author {
-        margin-left: 20em;
-    }
-}
-
-#right-side {
+#navs {
     width: $right-width;
-    margin-left: $page-width - $right-width;
     position: fixed;
 }
 
@@ -90,19 +86,5 @@ div.related {
     li {
         display: inline-block;
         padding: 3px;
-    }
-}
-
-.section-title {
-    font-weight: bold;
-}
-
-#similar ul {
-    padding: 0 0 0 0.2em;
-    list-style: none;
-    li {
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
     }
 }

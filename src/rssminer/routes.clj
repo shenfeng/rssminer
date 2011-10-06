@@ -11,8 +11,7 @@
                                      wrap-reload-in-dev wrap-failsafe
                                      wrap-request-logging-in-dev
                                      JPOST JPUT JDELETE JGET]]
-                  [import :only [opml-import]]
-                  [search :only [more-lik-this]]))
+                  [import :only [opml-import]]))
   (:require [clojure.string :as str]
             [compojure.route :as route]
             (rssminer.handlers [feedreader :as rssminer]
@@ -51,7 +50,6 @@
   (JGET "/search" [] rssminer/search)
   (context "/feeds" []
            (context "/:feed-id" []
-                    (JGET "/alike" [] more-lik-this)
                     (JPOST "/pref" [] feed/save-pref)
                     (JPOST "/categories" [] "TODO")
                     (JDELETE "/categories" [] "TODO")

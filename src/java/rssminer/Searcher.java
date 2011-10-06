@@ -152,22 +152,21 @@ public class Searcher {
 
     public Map<String, Feed> search(String term, int count)
             throws CorruptIndexException, IOException, ParseException {
-        IndexSearcher searcher = new IndexSearcher(IndexReader.open(indexer,
-                false));
-        QueryParser parser = new QueryParser(V, CONTENT, analyzer);
-        Query query = parser.parse(term);
-        return doSearch(searcher, query, count);
-    }
-
-    public Map<String, Feed> likeThis(int docID, int count)
-            throws CorruptIndexException, IOException {
         IndexReader reader = IndexReader.open(indexer, false);
-        MoreLikeThis likeThis = new MoreLikeThis(reader);
-        likeThis.setFieldNames(FIELDS);
-        likeThis.setMinTermFreq(1);
-        likeThis.setMinDocFreq(3);
-        Query like = likeThis.like(docID);
-        return doSearch(new IndexSearcher(reader), like, count);
+        IndexSearcher searcher = new IndexSearcher(reader);
+        if (term.startsWith("related:")) {
+            int docId = Integer.valueOf(term.substring("related:".length()));
+            MoreLikeThis likeThis = new MoreLikeThis(reader);
+            likeThis.setFieldNames(FIELDS);
+            likeThis.setMinTermFreq(1);
+            likeThis.setMinDocFreq(3);
+            Query like = likeThis.like(docId);
+            return doSearch(searcher, like, count);
+        } else {
+            QueryParser parser = new QueryParser(V, CONTENT, analyzer);
+            Query query = parser.parse(term);
+            return doSearch(searcher, query, count);
+        }
     }
 
     public static class Feed {

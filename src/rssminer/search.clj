@@ -39,9 +39,3 @@
 (defn search* [term limit & {:keys [user-id]}]
   (let [meta (.search ^Searcher @indexer term limit)]
     (fetch-feeds meta user-id)))
-
-(defn more-lik-this [req]
-  (let [{:keys [feed-id limit] :or {limit 10}} (-> req :params)
-        meta (.likeThis ^Searcher @indexer
-                        (to-int feed-id) (to-int limit))]
-    (fetch-feeds meta nil)))            ;nil intentionly

@@ -117,18 +117,6 @@ create index idx_link_check_ts on crawler_links(next_check_ts)
 ----
 create index idx_rss_check_ts on rss_links(next_check_ts)
 ----
-create table multi_rss_domains (
-  id INTEGER PRIMARY KEY auto_increment,
-  domain VARCHAR UNIQUE,
-  added_ts TIMESTAMP DEFAULT now(),
-)
-----
-create table black_domain_pattens (
-   id INTEGER PRIMARY KEY auto_increment,
-   patten VARCHAR UNIQUE,
-   ADDED_ts TIMESTAMP DEFAULT now(),
-)
-----
 insert into crawler_links (url, domain) values --seeds
 ('http://blog.jquery.com/', 'http://blog.jquery.com'),
 ('http://briancarper.net/', 'http://briancarper.net'),
@@ -151,21 +139,6 @@ insert into crawler_links (url, domain) values --seeds
 ('http://tech2ipo.com/', 'http://tech2ipo.com'),
 ('http://www.dbanotes.net/', 'http://www.dbanotes.net'),
 ('http://xianguo.com/hot', 'http://xianguo.com')
-----
-insert into multi_rss_domains (domain) values
-('http://blogs.oracle.com'),
-----
-insert into black_domain_pattens (patten) values
-('\d{3,}'),
-('\.a-\w+.com'),
-('informer\.|typepad\.'),
-('over-blog|backpage|https'),
-('blshe|linkinpark|shop|soufun'),
-('skyrock|tumblr|deviantart|taobao'),
-('news\.|forum|bbs\.|sports\.|wap\.'),
-('canalblog|livejournal|blogcu|house'),
-('adult|live|cam|pussy|joyfeeds|sex|girl'),
-('horny|naughty|penetrationista|suckmehere'),
 ----
 insert into rss_links (url) values
 ('http://aria42.com/blog/?feed=rss2'),

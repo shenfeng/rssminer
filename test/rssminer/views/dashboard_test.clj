@@ -31,8 +31,7 @@
 (deftest test-get-settings
   (let [resp (make-req "settings")
         settings (-> resp :body read-json)]
-    (is (= 200 (:status resp)))
-    (is (> (count (:black_domains settings)) 0))))
+    (is (= 200 (:status resp)))))
 
 (comment
   (deftest test-add-modify-settings

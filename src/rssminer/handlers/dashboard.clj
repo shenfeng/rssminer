@@ -1,9 +1,8 @@
 (ns rssminer.handlers.dashboard
-  (:use (rssminer [fetcher :only [start-fetcher stop-fetcher fetcher]]
-                  [crawler :only [start-crawler stop-crawler
-                                  running? crawler-stat]]))
   (:require [rssminer.db.dashboard :as db]
-            [rssminer.config :as conf])
+            (rssminer [config :as conf]
+                      [fetcher :as f]
+                      [crawler :as c]))
   (:import [rssminer.task HttpTaskRunner]))
 
 (defn get-data [req]
@@ -21,21 +20,19 @@
     {:crawler_links (db/crawler-links-count)
      :rss_links (db/rss-links-count)
      :feeds (db/feeds-count)
-     :crawler_running (running?)
-     :crawler (crawler-stat)
-     :fetcher_running (not (nil? @fetcher))
-     :black_domains (map (fn [p id] {:patten (str p)
-                                    :id id})
-                         @@conf/black-domain-pattens (range))}))
+     :crawler_running (c/running?)
+     :crawler (c/crawler-stat)
+     :fetcher (f/fetcher-stat)
+     :fetcher_running (f/running?)}))
 
 (defn settings [req]
   (let [data (-> req :body :_data)]
     (when (false? (:crawler_running data))
-      (stop-crawler))
+      (c/stop-crawler))
     (when (true? (:crawler_running data))
-      (start-crawler))
+      (c/start-crawler))
     (when (false? (:fetcher_running data))
-      (stop-fetcher))
+      (f/stop-fetcher))
     (when (true? (:fetcher_running data))
-      (start-fetcher))
+      (f/start-fetcher))
     nil))

@@ -5,7 +5,8 @@
         [clojure.tools.logging :only [info error trace]])
   (:require [rssminer.db.crawler :as db]
             [rssminer.config :as conf])
-  (:import [rssminer.task HttpTaskRunner IHttpTask IHttpTaskProvder]))
+  (:import [rssminer.task HttpTaskRunner IHttpTask IHttpTaskProvder
+            HttpTaskRunnerConf]))
 
 (defonce crawler (atom nil))
 
@@ -66,7 +67,12 @@
 
 (defn start-crawler [& {:keys [queue]}]
   (stop-crawler)
-  (let [queue (or queue conf/crawler-queue)]
-    (reset! crawler (doto (HttpTaskRunner. (mk-provider) client
-                                           queue "Crawler" conf/http-proxy)
+  (let [conf (doto (HttpTaskRunnerConf.)
+               (.setProvider (mk-provider))
+               (.setClient client)
+               (.setQueueSize (or queue conf/crawler-queue))
+               (.setName "Crawler")
+               (.setProxy conf/http-proxy)
+               (.setDnsPrefetch conf/dns-prefetch))]
+    (reset! crawler (doto (HttpTaskRunner. conf)
                       (.start)))))

@@ -44,6 +44,7 @@ $(function(){
           server: {
             1000: 'crawler_counter',
             1200: 'crawler_queue',
+            1250: 'queue_aval',
             1300: 'crawler_start'
           },
           http: {
@@ -92,7 +93,7 @@ $(function(){
         _.each(meta.server, function (v, k) {
           resp[v] = crawler[k];
         });
-        var e = new Date().getTime()/1000 - resp.crawler_start;
+        var e = new Date().getTime() / 1000 - resp.crawler_start;
         resp.crawler_speed = Math.floor(resp.crawler_counter / e * 60);
       }
       if(prev) {
@@ -131,17 +132,6 @@ $(function(){
   });
 
   var SettingsView = CommonView.extend(function () {
-    function addDomainPatten (name) {
-      return function (e) {
-        var patten = $(e.currentTarget).val();
-        if(patten && e.which === 13) {
-          var model = this.model;
-          model.snapshot();
-          model.get(name).add({patten: patten});
-          model.savediff();
-        }
-      };
-    }
     function startStopService (name) {
       return function () {
         var model = this.model,
@@ -155,11 +145,8 @@ $(function(){
     }
     return {
       events: {
-        "keypress #black-domains input": addDomainPatten('black_domains'),
-        "keypress #reseted-domains input": addDomainPatten('reseted_domains'),
         "click .crawler button" : startStopService('crawler_running'),
-        "click .fetcher button" : startStopService('fetcher_running'),
-        "click .index button" : startStopService('commit_index')
+        "click .fetcher button" : startStopService('fetcher_running')
       }
     };
   });
@@ -181,7 +168,7 @@ $(function(){
           });
           $("#content").replaceWith(view.render().el);
           stat.plot();
-          setTimeout(showSettings, 5000);
+          setTimeout(showSettings, 150000);
         }
       });
     }

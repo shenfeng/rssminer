@@ -6,7 +6,8 @@
                   [http :only [client parse-response]]))
   (:require [rssminer.db.feed :as db]
             [rssminer.config :as conf])
-  (:import [rssminer.task HttpTaskRunner IHttpTask IHttpTaskProvder]))
+  (:import [rssminer.task HttpTaskRunner IHttpTask IHttpTaskProvder
+            HttpTaskRunnerConf]))
 
 (defonce fetcher (atom nil))
 
@@ -18,6 +19,10 @@
 (defn stop-fetcher []
   (when (running?)
     (.stop ^HttpTaskRunner @fetcher)))
+
+(defn fetcher-stat []
+  (when-not (nil? @fetcher)
+    (.getStat ^HttpTaskRunner @fetcher)))
 
 (defn handle-resp [{:keys [id url check_interval last_modified]}
                    {:keys [status headers body]}]
@@ -48,7 +53,12 @@
 
 (defn start-fetcher [& {:keys [queue]}]
   (stop-fetcher)
-  (let [queue (or queue conf/fetcher-queue)]
-    (reset! fetcher (doto (HttpTaskRunner. (mk-provider) client
-                                           queue "Fetcher" conf/http-proxy)
+  (let [conf (doto (HttpTaskRunnerConf.)
+               (.setProvider (mk-provider))
+               (.setClient client)
+               (.setQueueSize (or queue conf/crawler-queue))
+               (.setName "Fetcher")
+               (.setProxy conf/http-proxy)
+               (.setDnsPrefetch conf/dns-prefetch))]
+    (reset! fetcher (doto (HttpTaskRunner. conf)
                       (.start)))))

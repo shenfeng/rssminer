@@ -28,6 +28,7 @@
   :aot [rssminer.main]
   :jvm-opts ["-XX:+UseCompressedOops"
              "-Dsun.net.inetaddr.ttl=0"
+             "-Djava.net.preferIPv4Stack=true"
              "-XX:+TieredCompilation"
              "-XX:+UseCompressedStrings"
              "-XX:-UseLoopPredicate"
@@ -37,4 +38,5 @@
   ;; :jvm-opts ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n"]
   :dev-dependencies [[swank-clojure "1.4.0-SNAPSHOT"]
                      [junit/junit "4.8.2"]
+                     [com.google.guava/guava "10.0"]
                      [org.apache.lucene/lucene-spellchecker "3.4.0"]])

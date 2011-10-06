@@ -23,27 +23,37 @@
 <div id="feeds">
   <ul>
     {{#feeds}}
-      <li class="feed" data-docid={{docid}} data-feedid={{id}}>
-        <ul class="controls">
-          <li>
-            <div class="related"><span>similar</span></div>
-          </li>
-          <li><span class="{{dislikeClass}}">down</span></li>
-          <li><span class="{{likeClass}}">up</span></li>
-        </ul>
-        <h3>{{title}}</h3>
-        <div class="clearfix">
-          <span class="author">
-            by <a href="/browse/author:{{authorTag}}">{{author}}</a>
-          </span>
-          <ul class="tags rfloat">
-            {{#tags}}
-              <li><a href="/browse/tag:{{.}}">{{.}}</a></li>
-            {{/tags}}
-          </ul>
-        </div>
-        <p class="snippet">{{snippet}}</p>
-        <div class="summary">{{{summary}}}</div>
+      <li class="feed" data-id={{id}}>
+        <table>
+          <tr>
+            <td class="ctrls">
+              <span class="vote-up {{like}}">▲</span>
+              <span class="vote-down {{dislike}}">▼</span>
+            </td>
+            <td class="data">
+              <h3>{{title}}</h3>
+              <div class="meta">
+                {{#author}}
+                  <span class="author">
+                    by <a href="/browse/author:{{authorTag}}">{{author}}</a>
+                  </span>
+                {{/author}}
+                <span class="related">
+                  <a href="/browse/related:{{docid}}">similar</a>
+                </span>
+                <ul class="tags">
+                  {{#tags}}
+                    <li><a href="/browse/tag:{{.}}">{{.}}</a></li>
+                  {{/tags}}
+                </ul>
+              </div>
+              <div class="content">
+                <p class="snippet">{{snippet}} ...</p>
+                <div class="summary"></div>
+              </div>
+            </td>
+          </tr>
+        </table>
       </li>
     {{/feeds}}
   </ul>
