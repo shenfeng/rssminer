@@ -33,7 +33,7 @@
     (when (keep? url title)
       (db/insert-rss-link {:url url
                            :title title
-                           :next_check_ts (rand-int 100000)
+                           :next_check_ts (rand-int 1000000)
                            :crawler_link_id (:id referer)})))
   (db/insert-crawler-links referer
                            (map #(assoc %
@@ -67,12 +67,12 @@
 
 (defn start-crawler [& {:keys [queue]}]
   (stop-crawler)
-  (let [conf (doto (HttpTaskRunnerConf.)
-               (.setProvider (mk-provider))
-               (.setClient client)
-               (.setQueueSize (or queue conf/crawler-queue))
-               (.setName "Crawler")
-               (.setProxy conf/http-proxy)
-               (.setDnsPrefetch conf/dns-prefetch))]
-    (reset! crawler (doto (HttpTaskRunner. conf)
-                      (.start)))))
+  (reset! crawler (doto (HttpTaskRunner.
+                         (doto (HttpTaskRunnerConf.)
+                           (.setProvider (mk-provider))
+                           (.setClient client)
+                           (.setQueueSize (or queue conf/crawler-queue))
+                           (.setName "Crawler")
+                           (.setProxy conf/http-proxy)
+                           (.setDnsPrefetch conf/dns-prefetch)))
+                    (.start))))

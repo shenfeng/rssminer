@@ -38,41 +38,48 @@
 
 (def fetch-size 100)
 
-(def ignored-url-patten
-  (re-pattern (str "(?i)(jpg|png|gif|css|js|jpeg|pdf|doc|wma|exe|jar"
-                   "mp3|swf|mp4|wmv|flv|rm|mov|zip|mkv|rar|apk)$")))
+(def ignored-url-extensions
+  '("jpg" "png" "gif" "css" "js" "jpeg"
+    "pdf" "doc" "wma" "exe" "jar" "mp3"
+    "swf" "mp4" "wmv" "flv" "rm" "mov"
+    "zip" "mkv" "rar" "apk"))
 
-(defn black-domain? [host]
-  (or (not (re-find #"(com|net|me)$" host))
-      (some #(re-find % host)
-            [#"\d{3,}"
-             #"\.a-\w+.com"
-             #"informer\.|typepad\."
-             #"over-blog|backpage|https"
-             ;; no value?
-             #"weatheradd|txooo|dqccc"
-             ;; unkown language
-             #"mihanblog|blogfa|xanga|blogsky|fotopages"
-             #"loxblog|geschichten|kostenlos|artelista"
-             #"(?i)parsiblog"
+(def accepted-top-domains '("com" "net" "me"))
 
-             #"polyvore"
+(def bad-domain-pattens '(#"\d{3,}"))
 
-             #"blshe|linkinpark|shop|soufun"
-             #"skyrock|tumblr|deviantart|taobao"
-             #"news\.|forum|bbs\.|sports\.|wap\."
-             #"canalblog|livejournal|blogcu|house"
-             ;; sex
-             #"adult|live|cam|pussy|joyfeeds|sex|girl|fuck"
-             #"horny|naughty|penetrationista|suckmehere|free"
-             #"kontakt|bilder|dicke|swinger|1euro|1buck"
-             #"thumblogger|usrealitysites|swinger|mature|xxx"
-             #"erotik|willig"
-             ;; su tao wang
-             #"niniweblog|china56ecn|centerblog|heshengtang"
-             #"wayongroup|pharmavantage|zhangxun|broadchemical"
-             #"ittong|cotion|inforice|suneternal|jiudaplc|suanti"
-             #"synua|cetc34|czlyyy"])))
+(def black-domain-strs
+  '( ;; no value?
+    "weatheradd." "txooo." "dqccc." "jaiku."
+    "informer." "typepad." "tumblr." "skyrock."
+
+    "bbs." "wap." "news." "forum" "sports." "shop." "taobao"
+
+    ;; intresting, but not for rss
+    "meetup.c"
+
+    ;; unknow language
+    "mihanblog." "blogfa." "xanga." "blogsky." "fotopages."
+    "loxblog." "geschichten." "kostenlos." "artelista."
+    "parsiblog." "blogcu."
+
+    "polyvore" "over-blog" "backpage"
+
+    "linkinpark" "soufun" "house" "canalblog" "livejournal"
+    ;; "blshe"
+
+    ;; sex
+    "adult" "live" "cam" "pussy" "joyfeeds" "sex" "girl" "fuck"
+    "horny" "naughty" "penetrationista" "suckmehere" "free"
+    "kontakt" "bilder" "dicke" "swinger" "1euro" "1buck"
+    "thumblogger" "usrealitysites" "swinger" "mature" "xxx"
+    "erotik" "willig"
+
+    ;; su tao wang. many sub domain, but useless
+    "niniweblog" "china56ecn" "centerblog" "heshengtang"
+    "wayongroup" "pharmavantage" "zhangxun" "broadchemical"
+    "ittong" "cotion" "inforice" "suneternal" "jiudaplc" "suanti"
+    "synua" "cetc34" "czlyyy"))
 
 (defn reseted-url? [url]
   (some #(re-find % url) [#"blogspot\.com"]))
@@ -82,4 +89,4 @@
                    "web" "python" "vim"])
 
 (defn multi-domain? [domain]
-  (#{"http://blogs.oracle.com"} domain))
+  (#{"blogs.oracle.com"} domain))

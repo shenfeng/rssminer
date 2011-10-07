@@ -5,28 +5,17 @@
   (:require [clojure.string :as str]
             [rssminer.config :as conf])
   (:import java.net.URI
-           [rssminer Utils$Info Utils$Pair]
+           [rssminer Utils$Info Utils$Pair Links Links$LinksConf]
            me.shenfeng.Utils
            [me.shenfeng.http HttpClient HttpClientConfig]
            org.jboss.netty.handler.codec.http.HttpResponse
            org.apache.commons.codec.binary.Base64))
 
-(defn extract-host [^String host]
-  (let [^URI uri (URI. host)
-        port (if (= -1 (.getPort uri)) ""
-                 (str ":" (.getPort uri)))
-        schema (.getScheme uri)
-        host (.getHost uri)]
-    (str schema "://" host port)))
-
-(defn clean-url [^String host]
-  (when host
-    (let [path (-> host URI. .getRawPath)
-          host (extract-host host)
-          url (str host path)]
-      (when-not (or (conf/black-domain? host)
-                    (re-find conf/ignored-url-patten url))
-        url))))
+(def ^Links link (Links. (doto (Links$LinksConf.)
+                           (.setIgnoredExtensions conf/ignored-url-extensions)
+                           (.setBadDomainPattens conf/bad-domain-pattens)
+                           (.setBlackDomainStr conf/black-domain-strs)
+                           (.setAcceptedTopDomains conf/accepted-top-domains))))
 
 (defonce ^{:tag HttpClient}
   client (HttpClient. (doto (HttpClientConfig.)
@@ -39,6 +28,17 @@
                         (.setReceiveBuffer 32768)         ;32k
                         (.setSendBuffer 8192))))          ;8k
 
+(defn ^URI clean-resolve [base part]
+  (.resoveAndClean link base part))
+
+(defn extract-host [^String host]
+  (let [^URI uri (URI. host)
+        port (if (= -1 (.getPort uri)) ""
+                 (str ":" (.getPort uri)))
+        schema (.getScheme uri)
+        host (.getHost uri)]
+    (str schema "://" host port)))
+
 (defn parse-response [^HttpResponse response]
   (let [status (-> response .getStatus .getCode)
         names (.getHeaderNames response)]
@@ -46,14 +46,6 @@
      :headers (reduce #(assoc %1 (-> %2 str/lower-case keyword)
                               (.getHeader response %2)) {} names)
      :body (when (= 200 status) (Utils/bodyStr response))}))
-
-(defn resolve-url [base link]
-  (ignore-error
-   (let [base (URI. (if (= base (extract-host base))
-                      (str base "/")
-                      base))
-         link (URI. link)]
-     (str/trim (str (.resolve base link))))))
 
 (defn ^{:dynamic true} get [url & {:keys [last-modified]}]
   (let [headers (if last-modified {"If-Modified-Since" last-modified} {})]
@@ -77,12 +69,11 @@
 
 (defn extract-links [base html]
   (let [^Utils$Info info (rssminer.Utils/extractInfo html)
-        f #(when-let [url (-> (resolve-url base %)
-                              clean-url)]
-             {:url url
-              :domain (extract-host url)})]
+        f #(when-let [url (clean-resolve base %)]
+             {:url (str url)
+              :domain (.getHost url)})]
     {:rss (map (fn [^Utils$Pair r]
                  {:title (.title r)
-                  :url (resolve-url base (.url r))}) (.rssLinks info))
+                  :url (str (clean-resolve base (.url r)))}) (.rssLinks info))
      :links (filter identity (map f (.links info)))
      :title (.title info)}))

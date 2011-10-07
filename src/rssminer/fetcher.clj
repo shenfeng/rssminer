@@ -53,12 +53,12 @@
 
 (defn start-fetcher [& {:keys [queue]}]
   (stop-fetcher)
-  (let [conf (doto (HttpTaskRunnerConf.)
-               (.setProvider (mk-provider))
-               (.setClient client)
-               (.setQueueSize (or queue conf/crawler-queue))
-               (.setName "Fetcher")
-               (.setProxy conf/http-proxy)
-               (.setDnsPrefetch conf/dns-prefetch))]
-    (reset! fetcher (doto (HttpTaskRunner. conf)
-                      (.start)))))
+  (reset! fetcher (doto (HttpTaskRunner.
+                         (doto (HttpTaskRunnerConf.)
+                           (.setProvider (mk-provider))
+                           (.setClient client)
+                           (.setQueueSize (or queue conf/crawler-queue))
+                           (.setName "Fetcher")
+                           (.setProxy conf/http-proxy)
+                           (.setDnsPrefetch conf/dns-prefetch)))
+                    (.start))))
