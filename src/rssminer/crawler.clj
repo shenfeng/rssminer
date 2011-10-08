@@ -1,6 +1,6 @@
 (ns rssminer.crawler
   (:use (rssminer [time :only [now-seconds]]
-                  [http :only [parse-response client extract-links]]
+                  [http :only [parse-response client extract-links links]]
                   [util :only [assoc-if next-check]])
         [clojure.tools.logging :only [info error trace]])
   (:require [rssminer.db.crawler :as db]
@@ -71,6 +71,7 @@
                          (doto (HttpTaskRunnerConf.)
                            (.setProvider (mk-provider))
                            (.setClient client)
+                           (.setLinks links)
                            (.setQueueSize (or queue conf/crawler-queue))
                            (.setName "Crawler")
                            (.setProxy conf/http-proxy)

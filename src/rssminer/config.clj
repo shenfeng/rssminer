@@ -3,11 +3,9 @@
 
 (defonce env-profile (atom :dev))
 
-(defn in-prod? []
-  (= @env-profile :prod))
+(defn in-prod? [] (= @env-profile :prod))
 
-(defn in-dev? []
-  (= @env-profile :dev))
+(defn in-dev? [] (= @env-profile :dev))
 
 (def netty-option {"receiveBufferSize" 16384
                    "sendBufferSize" 32768
@@ -51,7 +49,11 @@
 (def black-domain-strs
   '( ;; no value?
     "weatheradd." "txooo." "dqccc." "jaiku."
-    "informer." "typepad." "tumblr." "skyrock."
+    "informer." "tumblr." "skyrock."
+    "deviantart." "duowan." "dushifang." "daportfolio."
+    "newsvine." "5d6d."
+
+    "animepaper." "typepad." ;;nice UI
 
     "bbs." "wap." "news." "forum" "sports." "shop." "taobao"
 
@@ -61,19 +63,19 @@
     ;; unknow language
     "mihanblog." "blogfa." "xanga." "blogsky." "fotopages."
     "loxblog." "geschichten." "kostenlos." "artelista."
-    "parsiblog." "blogcu."
+    "parsiblog." "blogcu." "slmame."
 
     "polyvore" "over-blog" "backpage"
 
     "linkinpark" "soufun" "house" "canalblog" "livejournal"
-    ;; "blshe"
+    ;; "blshe", "hubpages"
 
     ;; sex
     "adult" "live" "cam" "pussy" "joyfeeds" "sex" "girl" "fuck"
     "horny" "naughty" "penetrationista" "suckmehere" "free"
     "kontakt" "bilder" "dicke" "swinger" "1euro" "1buck"
     "thumblogger" "usrealitysites" "swinger" "mature" "xxx"
-    "erotik" "willig"
+    "erotik" "willig" "porn"
 
     ;; su tao wang. many sub domain, but useless
     "niniweblog" "china56ecn" "centerblog" "heshengtang"

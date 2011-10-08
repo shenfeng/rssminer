@@ -20,6 +20,8 @@
   (testing "no value site"
     (is (black-domain? "http://shippingport.pa.us.weatheradd.com"))
     (is (black-domain? "http://morgaine.jaiku.com"))
+    (is (black-domain? "http://www.zzbbs.com"))
+    (is (black-domain? "http://tsuki-shika.deviantart.com"))
     (is (black-domain? "http://clojure.meetup.com")))
   (testing "filter sex site by keyword"
     (is (black-domain? "adultsexplay.com"))
@@ -76,8 +78,6 @@
          (str (clean-resolve "http://a.com" "rss.html"))))
   (is (= "http://a.com/c.html"
          (str (clean-resolve "http://a.com/b.html" "c.html"))))
-  (is (nil? (clean-resolve "http://a.com" " ")))
-  (is (nil? (clean-resolve "http://a.com" nil)))
   (is (= "http://a.com/a/c.html"
          (str (clean-resolve "http://a.com/a/b/" "../c.html"))))
   (is (= "http://c.com/c.html"

@@ -2,12 +2,16 @@ package rssminer.task;
 
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
-import static me.shenfeng.http.HttpClientConstant.CONNECTION_RESET;
+import static me.shenfeng.http.HttpClientConstant.BAD_URL;
+import static me.shenfeng.http.HttpClientConstant.CONN_RESET;
+import static me.shenfeng.http.HttpClientConstant.IGNORED_URL;
+import static me.shenfeng.http.HttpClientConstant.NULL_LOCATION;
 import static me.shenfeng.http.HttpClientConstant.UNKOWN_ERROR;
 import static org.jboss.netty.handler.codec.http.HttpHeaders.Names.LOCATION;
 
 import java.net.Proxy;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -26,6 +30,8 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import rssminer.Links;
+
 public class HttpTaskRunner {
 
     static Logger logger = LoggerFactory.getLogger(HttpTaskRunner.class);
@@ -41,6 +47,7 @@ public class HttpTaskRunner {
     private Thread mWorkerThread;
     private Thread mConsummerThread;
     private final Semaphore mConcurrent;
+    private final Links mLinkCheker;
     private final DnsPrefecher mDnsPrefecher;
     private final BlockingQueue<HttpResponseFuture> mDones;
     private final Map<Integer, Integer> mStat = new TreeMap<Integer, Integer>();
@@ -68,7 +75,7 @@ public class HttpTaskRunner {
                         break;
                     }
                     mConcurrent.acquire();
-                    IHttpTask t = mTaskQueue.poll();
+                    IHttpTask t = mTaskQueue.poll(); // can't be null
                     final HttpResponseFuture future = mHttp.execGet(
                             t.getUri(), t.getHeaders(), t.getProxy());
                     future.setAttachment(t); // keep state
@@ -89,17 +96,45 @@ public class HttpTaskRunner {
         }
     };
 
-    private void recordStat(IHttpTask task, HttpResponse resp) {
-        int code = resp.getStatus().getCode();
-        if (code == 200 && task.getProxy() == mProxy)
-            code = 275;
-        Integer c = mStat.get(code);
-        if (c == null)
-            c = 0;
-        mStat.put(code, ++c);
-    }
-
     private Runnable mConsummer = new Runnable() {
+
+        private void consumResponse(IHttpTask task, HttpResponse resp)
+                throws Exception {
+            if (resp == CONN_RESET && task.getProxy() != mProxy) {
+                mTaskQueue.offer(new RetryHttpTask(task, mProxy, null));
+            } else if (resp.getStatus().getCode() == 302) {
+                handle302(task, resp);
+            } else {
+                task.doTask(resp);
+            }
+        }
+
+        private void handle302(IHttpTask task, HttpResponse resp)
+                throws Exception {
+            try {
+                String l = resp.getHeader(LOCATION);
+                if (l == null) {
+                    task.doTask(NULL_LOCATION);
+                    return;
+                }
+                URI loc = new URI(l);
+                if (mLinkCheker.keep(loc)) {
+                    RetryHttpTask retry = new RetryHttpTask(task, null, loc);
+                    if (retry.retryTimes() < 4) {
+                        mTaskQueue.offer(retry);
+                    } else {
+                        task.doTask(UNKOWN_ERROR);
+                        logger.error("redirect 4 times: " + l);
+                    }
+                } else {
+                    task.doTask(IGNORED_URL);
+                }
+            } catch (URISyntaxException e) {
+                // uri syntax error || no Location
+                task.doTask(BAD_URL);
+            }
+        }
+
         public void run() {
             // finish job at hand
             while (!mDones.isEmpty() || mRunning) {
@@ -123,29 +158,6 @@ public class HttpTaskRunner {
             logger.info("{} consummer has stopped", mName);
             mRunning = false;
         }
-
-        private void consumResponse(IHttpTask task, HttpResponse resp)
-                throws Exception {
-            if (resp == CONNECTION_RESET && task.getProxy() != mProxy) {
-                mTaskQueue.offer(new RetryHttpTask(task, mProxy, null));
-            } else if (resp.getStatus().getCode() == 302) {
-                try {
-                    RetryHttpTask retry = new RetryHttpTask(task, null,
-                            new URI(resp.getHeader(LOCATION)));
-                    if (retry.retryTimes() < 4) {
-                        mTaskQueue.offer(retry);
-                    } else {
-                        task.doTask(UNKOWN_ERROR);
-                        logger.error("retry 4 times for {}", retry.getUri());
-                    }
-                } catch (Exception e) {
-                    // uri syntax error || no Location
-                    task.doTask(UNKOWN_ERROR);
-                }
-            } else {
-                task.doTask(resp);
-            }
-        }
     };
 
     public HttpTaskRunner(HttpTaskRunnerConf conf) {
@@ -158,6 +170,7 @@ public class HttpTaskRunner {
         // pace producer and consumer
         mDones = new ArrayBlockingQueue<HttpResponseFuture>(conf.queueSize);
         mHttp = conf.client;
+        mLinkCheker = conf.links;
         if (conf.dnsPrefetch) {
             mDnsPrefecher = DnsPrefecher.getInstance();
         } else {
@@ -179,6 +192,16 @@ public class HttpTaskRunner {
 
     public boolean isRunning() {
         return mRunning;
+    }
+
+    private void recordStat(IHttpTask task, HttpResponse resp) {
+        int code = resp.getStatus().getCode();
+        if (code == 200 && task.getProxy() == mProxy)
+            code = 275;
+        Integer c = mStat.get(code);
+        if (c == null)
+            c = 0;
+        mStat.put(code, ++c);
     }
 
     public void start() {

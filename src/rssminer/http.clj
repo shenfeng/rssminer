@@ -11,11 +11,12 @@
            org.jboss.netty.handler.codec.http.HttpResponse
            org.apache.commons.codec.binary.Base64))
 
-(def ^Links link (Links. (doto (Links$LinksConf.)
-                           (.setIgnoredExtensions conf/ignored-url-extensions)
-                           (.setBadDomainPattens conf/bad-domain-pattens)
-                           (.setBlackDomainStr conf/black-domain-strs)
-                           (.setAcceptedTopDomains conf/accepted-top-domains))))
+(def ^Links links
+  (Links. (doto (Links$LinksConf.)
+            (.setIgnoredExtensions conf/ignored-url-extensions)
+            (.setBadDomainPattens conf/bad-domain-pattens)
+            (.setBlackDomainStr conf/black-domain-strs)
+            (.setAcceptedTopDomains conf/accepted-top-domains))))
 
 (defonce ^{:tag HttpClient}
   client (HttpClient. (doto (HttpClientConfig.)
@@ -29,7 +30,7 @@
                         (.setSendBuffer 8192))))          ;8k
 
 (defn ^URI clean-resolve [base part]
-  (.resoveAndClean link base part))
+  (.resoveAndClean links base part))
 
 (defn extract-host [^String host]
   (let [^URI uri (URI. host)

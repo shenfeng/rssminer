@@ -53,56 +53,53 @@ public class Links {
         conf.acceptedTopDomains.toArray(mAcceptedTopDomains);
     }
 
+    public boolean keep(URI uri) {
+
+        if (uri.getScheme() == null || !uri.getScheme().startsWith("http"))
+            return false;
+
+        String host = uri.getHost();
+
+        boolean keep = false;
+        for (String topDomain : mAcceptedTopDomains) {
+            if (host.endsWith(topDomain)) {
+                keep = true;
+                break;
+            }
+        }
+
+        if (!keep)
+            return false;
+
+        String path = uri.getPath();
+        for (String extension : mIgnoredExtensions) {
+            if (path.endsWith(extension)) {
+                // in the black list, return early
+                return false;
+            }
+        }
+
+        for (String black : mBlackWords) {
+            if (host.contains(black)) {
+                return false;
+            }
+        }
+
+        for (Pattern bad : mBadDomainPattens) {
+            if (bad.matcher(host).find()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public URI resoveAndClean(String base, String part) {
-        try {
-            URI uri = new URI(base);
-            String host = uri.getHost();
 
-            boolean keep = false;
-            for (String topDomain : mAcceptedTopDomains) {
-                if (host.endsWith(topDomain)) {
-                    keep = true;
-                    break;
-                }
-            }
-
-            if (!keep)
-                return null;
-
-            for (String extension : mIgnoredExtensions) {
-                if (part.endsWith(extension)) {
-                    // in the black list, return early
-                    return null;
-                }
-            }
-
-            for (String black : mBlackWords) {
-                if (host.contains(black)) {
-                    return null;
-                }
-            }
-
-            for (Pattern bad : mBadDomainPattens) {
-                if (bad.matcher(host).find()) {
-                    return null;
-                }
-            }
-            // so far, everything seems OK;
-            URI result;
-
-            // like http://google.com
-            if (uri.getPath().length() == 0) {
-                result = uri.resolve("/" + part);
-            } else {
-                result = uri.resolve(part);
-            }
-
-            if (result.getScheme().equals("http") && result.getHost() != null) {
-                return result;
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
+        URI result = resolve(base, part);
+        if (result != null && keep(result)) {
+            return result;
+        } else {
             return null;
         }
     }

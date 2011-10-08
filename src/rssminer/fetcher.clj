@@ -3,7 +3,7 @@
         [rssminer.db.crawler :only [update-rss-link fetch-rss-links]]
         (rssminer [util :only [assoc-if next-check]]
                   [parser :only [parse-feed]]
-                  [http :only [client parse-response]]))
+                  [http :only [client parse-response links]]))
   (:require [rssminer.db.feed :as db]
             [rssminer.config :as conf])
   (:import [rssminer.task HttpTaskRunner IHttpTask IHttpTaskProvder
@@ -57,6 +57,7 @@
                          (doto (HttpTaskRunnerConf.)
                            (.setProvider (mk-provider))
                            (.setClient client)
+                           (.setLinks links)
                            (.setQueueSize (or queue conf/crawler-queue))
                            (.setName "Fetcher")
                            (.setProxy conf/http-proxy)
