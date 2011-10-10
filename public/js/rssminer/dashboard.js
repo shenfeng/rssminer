@@ -48,11 +48,15 @@ $(function(){
             1300: 'crawler_start'
           },
           http: {
+            150: '150 unknow error',
+            160: '160 unknow host',
             170: '170 connection error',
-            171: '171 unkown host',
             172: '172 connection timeout',
             175: '175 connection reset',
-            180: '180 unknow error',
+            181: '181 null location',
+            182: '182 bad url',
+            183: '183 ignored url',
+            190: '190 unknow content type',
             200: '200 ok',
             275: '275 proxied ok',
             301: '301 moved permanently',

@@ -28,7 +28,7 @@
 
 (def ungroup "ungrouped")
 
-(def crawler-queue 300)
+(def crawler-queue 250)
 
 (def fetcher-queue 100)
 
@@ -63,7 +63,8 @@
     ;; unknow language
     "mihanblog." "blogfa." "xanga." "blogsky." "fotopages."
     "loxblog." "geschichten." "kostenlos." "artelista."
-    "parsiblog." "blogcu." "slmame."
+    "parsiblog." "blogcu." "slmame." "exteen." "paginasamarillas."
+    "foroactivo." "hispavista." "promodj."
 
     "polyvore" "over-blog" "backpage"
 
@@ -71,8 +72,8 @@
     ;; "blshe", "hubpages"
 
     ;; sex
-    "adult" "live" "cam" "pussy" "joyfeeds" "sex" "girl" "fuck"
-    "horny" "naughty" "penetrationista" "suckmehere" "free"
+    "adult" "cam" "pussy" "joyfeeds" "sex" "girl" "fuck"
+    "horny" "naughty" "penetrationista" "suckmehere"
     "kontakt" "bilder" "dicke" "swinger" "1euro" "1buck"
     "thumblogger" "usrealitysites" "swinger" "mature" "xxx"
     "erotik" "willig" "porn"

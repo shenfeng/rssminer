@@ -20,14 +20,16 @@
 
 (defonce ^{:tag HttpClient}
   client (HttpClient. (doto (HttpClientConfig.)
-                        (.setMaxLength (* 1025 512)) ; 512k
-                        (.setWorkerThread 1)         ; 1 is ok
-                        (.setTimerInterval 3000) ; 3s check timeout
+                        (.setWorkerThread 1) ; 1 is ok
+                        (.setAcceptedContentTypes '("text"))
                         (.setUserAgent conf/rssminer-agent)
+                        (.setMaxLength (* 512 1024))   ; 512k
+                        (.setMaxChunkSize (* 32 1024)) ; tricky
+                        (.setTimerInterval 4000) ; 4s check timeout
                         (.setConnectionTimeOutInMs 12000) ;12s
-                        (.setRequestTimeoutInMs 30000)    ;30s
-                        (.setReceiveBuffer 32768)         ;32k
-                        (.setSendBuffer 8192))))          ;8k
+                        (.setRequestTimeoutInMs 40000)    ;40s
+                        (.setReceiveBuffer (* 32 1024))   ;32k
+                        (.setSendBuffer (* 8 1024)))))    ;8k
 
 (defn ^URI clean-resolve [base part]
   (.resoveAndClean links base part))

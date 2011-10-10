@@ -33,11 +33,11 @@
     (when (keep? url title)
       (db/insert-rss-link {:url url
                            :title title
-                           :next_check_ts (rand-int 1000000)
+                           :next_check_ts (rand-int 10000000)
                            :crawler_link_id (:id referer)})))
   (db/insert-crawler-links referer
                            (map #(assoc %
-                                   :next_check_ts (rand-int 1000000)
+                                   :next_check_ts (rand-int 10000000)
                                    :referer_id (:id referer)) links)))
 
 (defn handle-resp [{:keys [id url check_interval] :as link}

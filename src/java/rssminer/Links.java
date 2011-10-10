@@ -59,6 +59,8 @@ public class Links {
             return false;
 
         String host = uri.getHost();
+        if (host == null)
+            return false;
 
         boolean keep = false;
         for (String topDomain : mAcceptedTopDomains) {
