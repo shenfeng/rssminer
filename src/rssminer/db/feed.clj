@@ -1,8 +1,9 @@
 (ns rssminer.db.feed
-  (:use [rssminer.database :only [h2-db-factory]]
-        [rssminer.db.util :only [h2-query id-k with-h2 h2-insert]]
-        [rssminer.search :only [index-feed]]
-        [rssminer.util :only [ignore-error extract-text gen-snippet]]
+  (:use [rssminer.db.util :only [h2-query id-k with-h2 h2-insert]]
+        (rssminer [database :only [h2-db-factory]]
+                  [search :only [index-feed]]
+                  [time :only [now-seconds]]
+                  [util :only [ignore-error extract-text gen-snippet]])
         [clojure.string :only [blank?]]
         [clojure.tools.logging :only [info]]
         [clojure.java.jdbc :only [with-connection insert-record
@@ -70,3 +71,20 @@
              :comments (or (fetch-comments user-id (:id %)) [])
              :tags (or (fetch-tags user-id (:id %)) []))
           (fetch-feeds rss-id limit offset))))
+
+(defn update-rss-link [id data]
+  (with-h2
+    (update-values :rss_links ["id = ?" id] data)))
+
+(defn fetch-rss-links [limit]
+  "Returns nil when no more"
+  (h2-query ["SELECT id, url, check_interval, last_modified
+              FROM rss_links
+              WHERE next_check_ts < ?
+              ORDER BY next_check_ts LIMIT ?" (now-seconds) limit]))
+
+(defn insert-rss-link
+  [link]
+  (ignore-error ;; ignore voilate of uniqe constraint
+   (with-h2
+     (insert-record :rss_links link))))

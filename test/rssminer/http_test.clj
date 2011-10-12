@@ -13,7 +13,7 @@
          "https://github.com")))
 
 (defn- black-domain? [host]
-  (nil? (clean-resolve host "")))
+  (nil? (clean-resolve host "a")))
 
 (deftest test-black-domain-patten
   (is (black-domain? "http://guangzhoufuzhuangsheyin04106333.sh-kbt.com"))
@@ -67,6 +67,7 @@
   (is (black-domain? "www.917lc.com"))
   (is (black-domain? "http://housebbs.sina.com.cn"))
   (is (black-domain? "http://sports.dzwww.com"))
+  (is (black-domain? "http://forum.dev.sdo.com"))
   (is (not (black-domain? "http://google.com"))))
 
 (deftest test-clean-resolve
@@ -86,7 +87,7 @@
 (deftest test-extract-links
   (let [html (slurp "test/page.html")
         {:keys [rss links title]} (extract-links "http://a.com/" html)]
-    (is (> (count links) 0))
+    (is (= (count links) 9))
     (is (= title "Peter Norvig"))
     (is (every? #(and (:url %)
                       (:domain %)) links))

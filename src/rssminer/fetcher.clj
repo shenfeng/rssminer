@@ -1,6 +1,5 @@
 (ns rssminer.fetcher
   (:use [clojure.tools.logging :only [trace]]
-        [rssminer.db.crawler :only [update-rss-link fetch-rss-links]]
         (rssminer [util :only [assoc-if next-check]]
                   [parser :only [parse-feed]]
                   [http :only [client parse-response links]]))
@@ -33,7 +32,7 @@
                           :description (:description feeds)
                           :title (:title feeds))]
     (trace status url (str "(" (-> feeds :entries count) " feeds)"))
-    (update-rss-link id updated)
+    (db/update-rss-link id updated)
     (when feeds (db/save-feeds feeds id nil))))
 
 (defn- mk-task [{:keys [url last_modified] :as link}]
@@ -49,7 +48,7 @@
 (defn mk-provider []
   (reify IHttpTaskProvder
     (getTasks [this]
-      (map mk-task (fetch-rss-links conf/fetch-size)))))
+      (map mk-task (db/fetch-rss-links conf/fetch-size)))))
 
 (defn start-fetcher [& {:keys [queue]}]
   (stop-fetcher)

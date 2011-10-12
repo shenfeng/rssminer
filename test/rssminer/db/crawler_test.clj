@@ -1,7 +1,6 @@
 (ns rssminer.db.crawler-test
   (:use clojure.test
         rssminer.db.crawler
-        [rssminer.db.util :only [id-k]]
         (rssminer [test-common :only [h2-fixture]]
                   [time :only [now-seconds]]
                   [http :only [extract-host]])))
@@ -37,16 +36,4 @@
                               (:id %) {:next_check_ts 1}) links))]
     (is (every? #(= 1 %) (flatten updates)))))
 
-(deftest test-insert-rss-link
-  (let [links (fetch-rss-links 1000)
-        newly (insert-rss-link {:url "http://a.com/feed.xml"})]
-    (is (id-k newly))
-    (is (= 1 (- (count (fetch-rss-links 100)) (count links))))))
 
-(deftest test-update-rss-link
-  (let [newly (insert-rss-link {:url "http://a.com/feed.xml"})
-        c (count (fetch-rss-links 100))
-        u (update-rss-link (id-k newly)
-                           {:check_interval 100
-                            :next_check_ts (+ (now-seconds) 1000)})]
-    (is (= 1 (- c (count (fetch-rss-links 100)))))))

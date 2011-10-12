@@ -2,6 +2,7 @@
   (:use (rssminer [time :only [now-seconds]]
                   [http :only [parse-response client extract-links links]]
                   [util :only [assoc-if next-check]])
+        [rssminer.db.feed :only [insert-rss-link]]
         [clojure.tools.logging :only [info error trace]])
   (:require [rssminer.db.crawler :as db]
             [rssminer.config :as conf])
@@ -23,18 +24,12 @@
   (when-not (nil? @crawler)
     (.getStat ^HttpTaskRunner @crawler)))
 
-(defn- keep? [url title]                ; url can't be nil
-  (and url
-       (not (re-find #"(?i)\bcomments" url))
-       (not (re-find #"(?i)\bcomments" (or title "")))))
-
 (defn save-links [referer links rsses]
   (doseq [{:keys [url title]} rsses]
-    (when (keep? url title)
-      (db/insert-rss-link {:url url
-                           :title title
-                           :next_check_ts (rand-int 10000000)
-                           :crawler_link_id (:id referer)})))
+    (insert-rss-link {:url url
+                      :title title
+                      :next_check_ts (rand-int 10000000)
+                      :crawler_link_id (:id referer)}))
   (db/insert-crawler-links referer
                            (map #(assoc %
                                    :next_check_ts (rand-int 10000000)

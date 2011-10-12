@@ -4,6 +4,7 @@ import static java.lang.Character.isLetter;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,7 +20,14 @@ import org.xml.sax.helpers.DefaultHandler;
 import rssminer.Utils.Info;
 import rssminer.Utils.Pair;
 
-class InfoHandler extends DefaultHandler {
+class ExtractInfoHandler extends DefaultHandler {
+    private final String base;
+    private final Links linker;
+
+    public ExtractInfoHandler(String base, Links linker) {
+        this.base = base;
+        this.linker = linker;
+    }
 
     final static String A = "a";
     final static String HREF = "href";
@@ -29,7 +37,7 @@ class InfoHandler extends DefaultHandler {
     final static String TYPE = "type";
 
     private boolean inTitle = false;
-    List<String> links;
+    List<URI> links;
     List<Pair> rsses;
     StringBuilder sb;
 
@@ -40,14 +48,9 @@ class InfoHandler extends DefaultHandler {
         }
     }
 
-    public Info getInfo() {
+    public Info get() {
         String title = sb == null ? null : sb.toString().trim();
         return new Info(rsses, links, title);
-    }
-
-    private boolean ignore(String href) {
-        return href.length() == 0 || href.startsWith("#")
-                || href.startsWith("mailto") || href.startsWith("javascript");
     }
 
     public void startElement(String uri, String localName, String qName,
@@ -56,22 +59,25 @@ class InfoHandler extends DefaultHandler {
         if (LINK.equalsIgnoreCase(qName)) {
             int index = attrs.getIndex(TYPE);
             if (index != -1) {
-                String href = attrs.getValue(HREF);
-                if (RSS.equalsIgnoreCase(attrs.getValue(index))
-                        && href != null && !ignore(href)) {
-                    if (rsses == null)
-                        rsses = new ArrayList<Pair>(1);
-                    rsses.add(new Pair(href.trim(), attrs.getValue(TITLE)));
+                if (RSS.equalsIgnoreCase(attrs.getValue(index))) {
+                    Pair p = linker.resolveRss(base, attrs.getValue(HREF),
+                            attrs.getValue(TITLE));
+                    if (p != null) {
+                        if (rsses == null)
+                            rsses = new ArrayList<Pair>(1);
+                        rsses.add(p);
+                    }
                 }
             }
         } else if (A.equalsIgnoreCase(qName)) {
             int index = attrs.getIndex(HREF);
             if (index != -1) {
                 String href = attrs.getValue(index).trim();
-                if (!ignore(href)) {
+                URI u = linker.resoveAndClean(base, href);
+                if (u != null) {
                     if (links == null)
-                        links = new LinkedList<String>();
-                    links.add(href);
+                        links = new LinkedList<URI>();
+                    links.add(u);
                 }
             }
         } else if (TITLE.equalsIgnoreCase(qName)) {
@@ -83,7 +89,7 @@ class InfoHandler extends DefaultHandler {
     }
 }
 
-class TextHandler extends DefaultHandler {
+class ExtractTextHandler extends DefaultHandler {
     private int i, end;
     private boolean keep = true;
     private boolean prev = false, current = false;
@@ -125,13 +131,14 @@ public class Utils {
     final static Logger logger = LoggerFactory.getLogger(Utils.class);
 
     public static class Info {
-        static Info EMPTY = new Info(new ArrayList<Pair>(1),
-                new ArrayList<String>(1), null);
-        public final List<String> links;
+        static Info EMPTY = new Info(new ArrayList<Pair>(0),
+                new ArrayList<URI>(0), null);
+
+        public final List<URI> links;
         public final List<Pair> rssLinks;
         public final String title;
 
-        public Info(List<Pair> rssLinks, List<String> links, String title) {
+        public Info(List<Pair> rssLinks, List<URI> links, String title) {
             this.rssLinks = rssLinks;
             this.links = links;
             this.title = title;
@@ -148,7 +155,7 @@ public class Utils {
         }
     }
 
-    private static final ThreadLocal<Parser> parser = new ThreadLocal<Parser>() {
+    static final ThreadLocal<Parser> parser = new ThreadLocal<Parser>() {
         protected Parser initialValue() {
             return new Parser();
         }
@@ -165,14 +172,14 @@ public class Utils {
         }
     }
 
-    public static Info extractInfo(String html) throws IOException,
-            SAXException {
+    public static Info extract(String html, String base, Links linker)
+            throws IOException, SAXException {
         try {
             Parser p = parser.get();
-            InfoHandler h = new InfoHandler();
+            ExtractInfoHandler h = new ExtractInfoHandler(base, linker);
             p.setContentHandler(h);
             p.parse(new InputSource(new StringReader(html)));
-            return h.getInfo();
+            return h.get();
         } catch (IOException e) {
             // Pushback buffer overflow, not html?
             logger.trace(e.getMessage(), e);
@@ -183,7 +190,7 @@ public class Utils {
     public static String extractText(String html) throws IOException,
             SAXException {
         Parser p = parser.get();
-        TextHandler h = new TextHandler();
+        ExtractTextHandler h = new ExtractTextHandler();
         p.setContentHandler(h);
         p.parse(new InputSource(new StringReader(html)));
         return h.getText();

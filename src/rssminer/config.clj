@@ -46,6 +46,10 @@
 
 (def bad-domain-pattens '(#"\d{3,}"))
 
+(def bad-rss-title-pattens '(#"(?i)comment"))
+
+(def bad-rss-url-pattens '(#"(?i)\bcomment"))
+
 (def black-domain-strs
   '( ;; no value?
     "weatheradd." "txooo." "dqccc." "jaiku."

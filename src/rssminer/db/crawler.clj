@@ -33,19 +33,3 @@
   (with-h2
     (update-values :crawler_links ["id = ?" id] data)))
 
-(defn insert-rss-link
-  [link]
-  (ignore-error ;; ignore voilate of uniqe constraint
-   (with-h2
-     (insert-record :rss_links link))))
-
-(defn update-rss-link [id data]
-  (with-h2
-    (update-values :rss_links ["id = ?" id] data)))
-
-(defn fetch-rss-links [limit]
-  "Returns nil when no more"
-  (h2-query ["SELECT id, url, check_interval, last_modified
-              FROM rss_links
-              WHERE next_check_ts < ?
-              ORDER BY next_check_ts LIMIT ?" (now-seconds) limit]))

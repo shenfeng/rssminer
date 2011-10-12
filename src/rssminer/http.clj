@@ -16,7 +16,9 @@
             (.setIgnoredExtensions conf/ignored-url-extensions)
             (.setBadDomainPattens conf/bad-domain-pattens)
             (.setBlackDomainStr conf/black-domain-strs)
-            (.setAcceptedTopDomains conf/accepted-top-domains))))
+            (.setAcceptedTopDomains conf/accepted-top-domains)
+            (.setBadRssTitlePattens conf/bad-rss-title-pattens)
+            (.setBadRssUrlPattens conf/bad-rss-url-pattens))))
 
 (defonce ^{:tag HttpClient}
   client (HttpClient. (doto (HttpClientConfig.)
@@ -71,12 +73,11 @@
       (error e "download-rss" url))))
 
 (defn extract-links [base html]
-  (let [^Utils$Info info (rssminer.Utils/extractInfo html)
-        f #(when-let [url (clean-resolve base %)]
-             {:url (str url)
-              :domain (.getHost url)})]
+  (let [^Utils$Info info (rssminer.Utils/extract html base links)]
     {:rss (map (fn [^Utils$Pair r]
                  {:title (.title r)
-                  :url (str (clean-resolve base (.url r)))}) (.rssLinks info))
-     :links (filter identity (map f (.links info)))
+                  :url (.url r)}) (.rssLinks info))
+     :links (map (fn [^URI uri]
+                   {:url (str uri)
+                    :domain (.getHost uri)}) (.links info))
      :title (.title info)}))

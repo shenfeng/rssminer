@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import rssminer.Utils.Pair;
+
 /**
  * executed too often, it's better to be implemented for performance
  * 
@@ -11,33 +13,47 @@ import java.util.regex.Pattern;
  * 
  */
 public class Links {
-    public static class LinksConf {
-        List<String> ignoredExtensions;
-        List<Pattern> badDomainPattens;
-        List<String> blackDomainStr;
-        List<String> acceptedTopDomains;
 
-        public void setIgnoredExtensions(List<String> ignoredExtensions) {
-            this.ignoredExtensions = ignoredExtensions;
+    public static class LinksConf {
+        List<String> acceptedTopDomains;
+        List<Pattern> badDomainPattens;
+        List<Pattern> badRssTitlePattens;
+        List<Pattern> badRssUrlPattens;
+        List<String> blackDomainStr;
+        List<String> ignoredExtensions;
+
+        public void setAcceptedTopDomains(List<String> acceptedTopDomains) {
+            this.acceptedTopDomains = acceptedTopDomains;
         }
 
         public void setBadDomainPattens(List<Pattern> badDomainPattens) {
             this.badDomainPattens = badDomainPattens;
         }
 
+        public void setBadRssTitlePattens(List<Pattern> badRssTitlePattens) {
+            this.badRssTitlePattens = badRssTitlePattens;
+        }
+
+        public void setBadRssUrlPattens(List<Pattern> badRssUrlPattens) {
+            this.badRssUrlPattens = badRssUrlPattens;
+        }
+
         public void setBlackDomainStr(List<String> blackDomainStr) {
             this.blackDomainStr = blackDomainStr;
         }
 
-        public void setAcceptedTopDomains(List<String> acceptedTopDomains) {
-            this.acceptedTopDomains = acceptedTopDomains;
+        public void setIgnoredExtensions(List<String> ignoredExtensions) {
+            this.ignoredExtensions = ignoredExtensions;
         }
+
     }
 
-    final String[] mIgnoredExtensions;
-    final Pattern[] mBadDomainPattens;
-    final String[] mBlackWords;
     final String[] mAcceptedTopDomains;
+    final Pattern[] mBadDomainPattens;
+    final Pattern[] mBadRssTitlePattens;
+    final Pattern[] mBadRssUrlPattens;
+    final String[] mBlackWords;
+    final String[] mIgnoredExtensions;
 
     public Links(LinksConf conf) {
         mIgnoredExtensions = new String[conf.ignoredExtensions.size()];
@@ -51,6 +67,12 @@ public class Links {
 
         mAcceptedTopDomains = new String[conf.acceptedTopDomains.size()];
         conf.acceptedTopDomains.toArray(mAcceptedTopDomains);
+
+        mBadRssUrlPattens = new Pattern[conf.badRssUrlPattens.size()];
+        conf.badRssUrlPattens.toArray(mBadRssUrlPattens);
+
+        mBadRssTitlePattens = new Pattern[conf.badRssTitlePattens.size()];
+        conf.badRssTitlePattens.toArray(mBadRssTitlePattens);
     }
 
     public boolean keep(URI uri) {
@@ -96,16 +118,6 @@ public class Links {
         return true;
     }
 
-    public URI resoveAndClean(String base, String part) {
-
-        URI result = resolve(base, part);
-        if (result != null && keep(result)) {
-            return result;
-        } else {
-            return null;
-        }
-    }
-
     public URI resolve(String base, String part) {
         try {
             URI uri = new URI(base);
@@ -115,6 +127,42 @@ public class Links {
                 return uri.resolve(part);
             }
         } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Pair resolveRss(String base, String part, String title) {
+        if (part == null)
+            return null;
+        if (title != null) {
+            for (Pattern p : mBadRssTitlePattens) {
+                if (p.matcher(title).find()) {
+                    return null;
+                }
+            }
+        }
+
+        for (Pattern p : mBadRssUrlPattens) {
+            if (p.matcher(part).find()) {
+                return null;
+            }
+        }
+
+        URI uri = resolve(base, part);
+
+        return uri == null ? null : new Pair(uri.toString(), title);
+    }
+
+    public URI resoveAndClean(String base, String part) {
+
+        if (part.isEmpty() || part.startsWith("#")
+                || part.startsWith("mailto") || part.startsWith("javascript"))
+            return null;
+
+        URI result = resolve(base, part);
+        if (result != null && keep(result)) {
+            return result;
+        } else {
             return null;
         }
     }
