@@ -206,7 +206,7 @@ public class HttpTaskRunner {
 
     public void start() {
         mRunning = true;
-        mWorkerThread = new Thread(mWorker, mName + " Workder");
+        mWorkerThread = new Thread(mWorker, mName + " Worker");
         mWorkerThread.start();
 
         mConsummerThread = new Thread(mConsummer, mName + " Consumer");

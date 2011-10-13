@@ -13,7 +13,7 @@
          "https://github.com")))
 
 (defn- black-domain? [host]
-  (nil? (clean-resolve host "a")))
+  (nil? (clean-resolve host "")))
 
 (deftest test-black-domain-patten
   (is (black-domain? "http://guangzhoufuzhuangsheyin04106333.sh-kbt.com"))
@@ -73,6 +73,8 @@
 (deftest test-clean-resolve
   (is (= "http://a.com/c.html"
          (str (clean-resolve "http://a.com/index?a=b" "c.html"))))
+  (is (= "http://a.com/c.html"
+         (str (clean-resolve "http://a.com/index?a=b" "c.html#aaa"))))
   (is (= "http://a.com/c.html?a=b"
          (str (clean-resolve "http://a.com/index?a=b" "c.html?a=b"))))
   (is (= "http://a.com/rss.html"

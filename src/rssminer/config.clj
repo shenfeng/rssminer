@@ -55,7 +55,9 @@
     "weatheradd." "txooo." "dqccc." "jaiku."
     "informer." "tumblr." "skyrock."
     "deviantart." "duowan." "dushifang." "daportfolio."
-    "newsvine." "5d6d."
+    "newsvine." "5d6d." "kohit." "lyrics." "fileflash."
+    "pinkbike." "buzznet."
+    ;; glogster
 
     "animepaper." "typepad." ;;nice UI
 

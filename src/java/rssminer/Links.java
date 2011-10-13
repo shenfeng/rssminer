@@ -155,9 +155,14 @@ public class Links {
 
     public URI resoveAndClean(String base, String part) {
 
-        if (part.isEmpty() || part.startsWith("#")
-                || part.startsWith("mailto") || part.startsWith("javascript"))
+        if (part.startsWith("#") || part.startsWith("mailto")
+                || part.startsWith("javascript"))
             return null;
+
+        int idx = part.lastIndexOf('#');
+        if (idx != -1) {
+            part = part.substring(0, idx);
+        }
 
         URI result = resolve(base, part);
         if (result != null && keep(result)) {
