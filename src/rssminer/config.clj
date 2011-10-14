@@ -18,8 +18,8 @@
                    "child.keepAlive" false
                    "child.connectTimeoutMillis" 4000})
 
-(def http-proxy (Proxy. Proxy$Type/HTTP
-                        (InetSocketAddress. "127.0.0.1" 3128)))
+(def socks-proxy (Proxy. Proxy$Type/SOCKS
+                         (InetSocketAddress. "127.0.0.1" 3128)))
 
 (def no-proxy Proxy/NO_PROXY)
 
@@ -28,7 +28,7 @@
 
 (def ungroup "ungrouped")
 
-(def crawler-queue 250)
+(def crawler-queue 200)
 
 (def fetcher-queue 100)
 
@@ -42,7 +42,7 @@
     "swf" "mp4" "wmv" "flv" "rm" "mov"
     "zip" "mkv" "rar" "apk"))
 
-(def accepted-top-domains '("com" "net" "me"))
+(def accepted-top-domains '("com" "net" "me" "cn" "org"))
 
 (def bad-domain-pattens '(#"\d{3,}"))
 
@@ -56,7 +56,8 @@
     "informer." "tumblr." "skyrock."
     "deviantart." "duowan." "dushifang." "daportfolio."
     "newsvine." "5d6d." "kohit." "lyrics." "fileflash."
-    "pinkbike." "buzznet."
+    "pinkbike." "buzznet." "proboards." "restorm." "9che."
+    "soxsok." "insanejournal."
     ;; glogster
 
     "animepaper." "typepad." ;;nice UI
@@ -70,7 +71,8 @@
     "mihanblog." "blogfa." "xanga." "blogsky." "fotopages."
     "loxblog." "geschichten." "kostenlos." "artelista."
     "parsiblog." "blogcu." "slmame." "exteen." "paginasamarillas."
-    "foroactivo." "hispavista." "promodj."
+    "foroactivo." "hispavista." "promodj." "vuodatus." "seesaa."
+    "dtiblog." "fc2." "tistory."
 
     "polyvore" "over-blog" "backpage"
 

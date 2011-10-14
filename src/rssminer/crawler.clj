@@ -49,7 +49,7 @@
   (reify IHttpTask
     (getUri [this] (java.net.URI. url))
     (getProxy [this] (if (conf/reseted-url? url)
-                       conf/http-proxy conf/no-proxy))
+                       conf/socks-proxy conf/no-proxy))
     (getHeaders [this]
       (if last_modified {"If-Modified-Since" last_modified} {}))
     (doTask [this resp]
@@ -69,6 +69,6 @@
                            (.setLinks links)
                            (.setQueueSize (or queue conf/crawler-queue))
                            (.setName "Crawler")
-                           (.setProxy conf/http-proxy)
+                           (.setProxy conf/socks-proxy)
                            (.setDnsPrefetch conf/dns-prefetch)))
                     (.start))))

@@ -51,7 +51,7 @@
     (is (black-domain? "www.blogsky.com"))   ; not en, ch
     (is (black-domain? "www.xanga.com")))
   (is (black-domain? "http://antwerpen.paginamarkt.nl"))
-  (is (black-domain? "http://g.cn"))
+  (is (black-domain? "http://g.in"))
   (is (black-domain? "http://eroda.xin.taobao.com"))
   (is (black-domain? "http://wap.sohu.com"))
   (is (black-domain? "http://gdqc.house.inhe.net"))
