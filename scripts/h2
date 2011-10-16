@@ -50,7 +50,7 @@ case "$1" in
             DB_PATH=$2
         fi
         rlwrap java -cp $CP $SHELL \
-            -url "jdbc:h2:$DB_PATH;AUTO_SERVER=TRUE;MVCC=true" \
+            -url "jdbc:h2:$DB_PATH;FILE_LOCK=FS;MVCC=true" \
             -user sa
         ;;
     *)
