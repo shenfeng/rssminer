@@ -60,6 +60,9 @@
     "soxsok." "insanejournal." "filehungry." "malavida."
     "smartcode." "taotaocar" "sourceforge." "minitokyo."
     "easyrpg." "shufa." "keduo." "gov." "artician."
+
+    "superpokepets." "deadjournal." "dreamwidth." "sheezyart."
+    "nuclearscripts." "acidfiles."
     ;; glogster
 
     "tuchong." "wikia."
@@ -67,7 +70,7 @@
     "animepaper." "typepad." ;;nice UI
 
     "bbs." "wap." "news." "forum" "sports." "shop." "taobao"
-    "video." "alibaba." "mail."
+    "video." "alibaba." "mail." "convert"
 
     ;; intresting, but not for rss
     "meetup.c"
