@@ -1,7 +1,8 @@
 (ns rssminer.admin
   (:use (rssminer [database :only [use-h2-database! close-global-h2-factory!
                                    import-h2-schema!]]
-                  [search :only [indexer index-feed]]
+                  [search :only [indexer index-feed use-index-writer!]]
+                  [http :only [clean-resolve]]
                   [config :only [ungroup]]
                   [util :only [ignore-error gen-snippet extract-text]])
         (rssminer.db [user :only [create-user]]
@@ -10,13 +11,13 @@
         (clojure.tools [logging :only [info]]
                        [cli :only [cli optional required]])
         [clojure.java.jdbc :only [insert-record with-query-results
-                                  insert-record]])
+                                  insert-record delete-rows]])
   (:require [clojure.string :as str])
   (:import java.io.File
            java.sql.Clob
            rssminer.Searcher))
 
-(defn setup [{:keys [index-path db-path password]}]
+(defn setup-db [{:keys [index-path db-path password]}]
   (info "delete" db-path
         (.delete (File. (str db-path ".h2.db"))))
   (doall (map #(info "delete" % (.delete %))
@@ -46,7 +47,7 @@
           (index-feed (:id feed) (-> feed :summary extract-text) feed)))))
   (.toggleInfoStream ^Searcher @indexer false))
 
-(defn export-data []
+(defn export-data [{:keys [data-path] :or {data-path "/tmp/rssminer_data"}}]
   (let [feeds (h2-query
                ["SELECT id, title, author, link, summary, snippet, tags
                           FROM feeds ORDER BY id LIMIT 2000"])
@@ -54,11 +55,36 @@
                               crawler_links LIMIT 20000"])
         rss (h2-query ["SELECT title, url, description,
                              alternate FROM rss_links LIMIT 100000"])]
-    (spit "/tmp/rssminer_data"
+    (spit data-path
           (prn-str {:feeds feeds :links links :rss rss}))))
 
-(defn import-data []
-  (let [{:keys [feeds links rss]} (read-string (slurp "/tmp/rssminer_data"))]
+(defn clean-rss-links []
+  (let [rsses (h2-query ["select id, url from rss_links"])
+        c (atom 0)]
+    (doseq [{:keys [url id]} rsses]
+      (let [u (clean-resolve url "")]
+        (when (nil? u)
+          (swap! c inc)
+          (println "delete " id url)
+          (with-h2
+            (delete-rows :rss_links ["id = ?" id])))))
+    (println "count" @c)))
+
+(defn clean-crawler-links []
+  (let [rsses (h2-query ["select id, url from crawler_links"])
+        c (atom 0)]
+    (doseq [{:keys [id url]} rsses]
+      (let [u (clean-resolve url "")]
+        (when (nil? u)
+          (swap! c inc)
+          (println "delete " id url)
+          (ignore-error
+           (with-h2
+             (delete-rows :crawler_links ["id = ?" id]))))))
+    (println "count" @c)))
+
+(defn import-data [{:keys [data-path] :or {data-path "/tmp/rssminer_data"}}]
+  (let [{:keys [feeds links rss]} (read-string (slurp data-path))]
     (doseq [l links]
       (ignore-error (with-h2 (insert-record :crawler_links l))))
     (doseq [r rss]
@@ -67,12 +93,31 @@
       (with-h2 (ignore-error
                 (insert-record :feeds feed))))))
 
-(defn main [& args]
-  "Setup rssminer database"
-  (setup
-   (cli args
-        (required ["-p" "--password" "password"])
-        (optional ["--db-path" "H2 Database path"
-                   :default "/dev/shm/rssminer"])
-        (optional ["--index-path" "Path to store lucene index"
-                   :default "/dev/shm/rssminer-index"]))))
+(defn -main [& args]
+  "rssminer admin"
+  (let [options
+        (cli args
+             (required ["-c" "--command"
+                        "setup-db, clean-rss, clean-links, rebuild-index"]
+                       keyword)
+             (optional ["-p" "--password" "password"
+                        :default "123456"])
+             (optional ["--db-path" "H2 Database path"
+                        :default "/dev/shm/rssminer"])
+             (optional ["--data-path" "backup, restore data path"
+                        :default "/tmp/rssminer"])
+             (optional ["--index-path" "Path to store lucene index"
+                        :default "/dev/shm/index"]))]
+    (if (= :setup-db (:command options))
+      (setup-db options)
+      (do
+        (use-h2-database! (:db-path options))
+        (use-index-writer! (:index-path options))
+        (case (:command options)
+          :clean-rss
+          (clean-rss-links)
+          :clean-links
+          (clean-crawler-links)
+          :rebuild-index
+          (rebuild-index))))))
+
