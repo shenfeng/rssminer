@@ -1,0 +1,60 @@
+#!/bin/bash
+
+SCRIPT_FILE=h2
+VERSION=1.3.160
+rm -f /tmp/h2-${VERSION}.jar
+cp /home/feng/.m2/repository/com/h2database/h2/${VERSION}/h2-${VERSION}.jar /tmp
+
+CP=/tmp/h2-${VERSION}.jar
+SHELL=org.h2.tools.Shell
+SCRIPT=org.h2.tools.Script
+RUNSCRIPT=org.h2.tools.RunScript
+DB_PATH=/media/1082B19F82B189AC/rssminer/rssminer
+
+case "$1" in
+    backup)
+        if [ $# = 2 ]
+        then
+            DEST=$2
+        elif [ $# = 3 ]
+        then
+            DB_PATH=$2
+            DEST=$3
+        else
+            echo "h2 backup [$DB_PATH] dest-path"
+            exit 0
+        fi
+        java -cp $CP $SCRIPT \
+            -url "jdbc:h2:$DB_PATH;AUTO_SERVER=TRUE;MVCC=true" \
+            -user sa \
+            -script $DEST \
+            -options compression zip
+        ;;
+    restore)
+        if [ $# = 3 ]
+        then
+            SRC=$2
+            DEST=$3
+            java -cp $CP $RUNSCRIPT \
+                -url "jdbc:h2:$DEST" \
+                -user sa \
+                -script $SRC \
+                -options compression zip
+        else
+            echo "$SCRIPT_FILE restore src dest"
+        fi
+        ;;
+    shell)
+        if [ $# = 2 ]
+        then
+            DB_PATH=$2
+        fi
+        rlwrap java -cp $CP $SHELL \
+            -url "jdbc:h2:$DB_PATH;AUTO_SERVER=TRUE;MVCC=true" \
+            -user sa
+        ;;
+    *)
+        echo  -e "$SCRIPT_FILE shell \n   backup options \n   restore options \n"
+        ;;
+esac
+exit 0

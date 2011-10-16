@@ -44,26 +44,21 @@
   </li>
   <li class="section">
     <h3>server control</h3>
-    <table>
-      <tr class="crawler">
+    <table id="controls">
+      <tr data-sid="crawler">
         <td>Cralwer</td>
-        <td>{{crawler_running}} </td>
-        <td>
-          <button>
-            {{#crawler_running}}stop {{/crawler_running}}
-              {{^crawler_running}}start {{/crawler_running}}
-          </button>
-        </td>
+        <td class="status">{{crawler_running}}</td>
+        <td><button>toggle</button></td>
       </tr>
-      <tr class="fetcher">
+      <tr data-sid="fetcher">
         <td>Fetcher</td>
-        <td>{{fetcher_running}} </td>
-        <td>
-          <button>
-            {{#fetcher_running}}stop {{/fetcher_running}}
-              {{^fetcher_running}}start {{/fetcher_running}}
-          </button>
-        </td>
+        <td class="status">{{fetcher_running}}</td>
+        <td><button>toggle</button></td>
+      </tr>
+      <tr data-sid="h2">
+        <td>H2 server mode</td>
+        <td class="status">{{h2}}</td>
+        <td><button>toggle</button></td>
       </tr>
     </table>
   </li>

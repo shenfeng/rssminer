@@ -2,11 +2,12 @@
   (:require [rssminer.db.dashboard :as db]
             (rssminer [config :as conf]
                       [fetcher :as f]
-                      [crawler :as c]))
+                      [crawler :as c]
+                      [database :as d]))
   (:import [rssminer.task HttpTaskRunner]))
 
 (defn get-data [req]
-  (case (-> req :params :q)
+  (case (-> req :params :section)
     "rsslinks"
     {:caption "Newly added Rss Links"
      :data (or (db/get-rss-links) [])}
@@ -16,23 +17,29 @@
     "crawled"
     {:caption "Cawled Links"
      :data (or (db/get-crawled-links) [])}
-    "settings"
+    "stat"
     {:crawler_links (db/crawler-links-count)
      :rss_links (db/rss-links-count)
      :feeds (db/feeds-count)
-     :crawler_running (c/running?)
      :crawler (c/crawler-stat)
+     :crawler_running (c/running?)
      :fetcher (f/fetcher-stat)
-     :fetcher_running (f/running?)}))
+     :fetcher_running (f/running?)
+     :h2 (d/running?)}))
 
 (defn settings [req]
-  (let [data (-> req :body :_data)]
-    (when (false? (:crawler_running data))
-      (c/stop-crawler))
-    (when (true? (:crawler_running data))
-      (c/start-crawler))
-    (when (false? (:fetcher_running data))
-      (f/stop-fetcher))
-    (when (true? (:fetcher_running data))
-      (f/start-fetcher))
+  (let [{:keys [which command]} (:body req)]
+    (case which
+      "crawler"
+      (if (= "start" command)
+        (c/start-crawler)
+        (c/stop-crawler))
+      "fetcher"
+      (if (= "start" command)
+        (f/start-fetcher)
+        (f/stop-fetcher))
+      "h2"
+      (if (= "start" command)
+        (d/start-h2-server)
+        (d/stop-h2-server)))
     nil))

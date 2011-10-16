@@ -57,12 +57,17 @@
     "deviantart." "duowan." "dushifang." "daportfolio."
     "newsvine." "5d6d." "kohit." "lyrics." "fileflash."
     "pinkbike." "buzznet." "proboards." "restorm." "9che."
-    "soxsok." "insanejournal."
+    "soxsok." "insanejournal." "filehungry." "malavida."
+    "smartcode." "taotaocar" "sourceforge." "minitokyo."
+    "easyrpg." "shufa." "keduo." "gov." "artician."
     ;; glogster
+
+    "tuchong." "wikia."
 
     "animepaper." "typepad." ;;nice UI
 
     "bbs." "wap." "news." "forum" "sports." "shop." "taobao"
+    "video." "alibaba." "mail."
 
     ;; intresting, but not for rss
     "meetup.c"
@@ -72,7 +77,7 @@
     "loxblog." "geschichten." "kostenlos." "artelista."
     "parsiblog." "blogcu." "slmame." "exteen." "paginasamarillas."
     "foroactivo." "hispavista." "promodj." "vuodatus." "seesaa."
-    "dtiblog." "fc2." "tistory."
+    "dtiblog." "fc2." "tistory." "eklablog." "monbebeblog."
 
     "polyvore" "over-blog" "backpage"
 

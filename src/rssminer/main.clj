@@ -36,7 +36,7 @@
   (when run-crawler (start-crawler))
   (when run-fetcher (start-fetcher)))
 
-(defn main [& args]
+(defn -main [& args]
   "Start rssminer server"
   (start-server
    (cli args
@@ -44,9 +44,9 @@
                   #(Integer/parseInt %))
         (optional ["--profile" "dev or prod" :default "dev"] keyword)
         (optional ["--db-path" "H2 Database file path"
-                   :default "/media/1082B19F82B189AC/rssminer/rssminer"])
+                   :default "/var/rssminer/rssminer"])
         (optional ["--auto-server" "H2 Database Automatic Mixed Mode"
-                   :default "true"] #(Boolean/parseBoolean %))
+                   :default "false"] #(Boolean/parseBoolean %))
         (optional ["--h2-trace" "Enable H2 trace" :default "false"]
                   #(Boolean/parseBoolean %))
         (optional ["--run-crawler" "Start link crawler" :default "false"]
@@ -54,4 +54,4 @@
         (optional ["--run-fetcher" "Start rss fetcher" :default "false"]
                   #(Boolean/parseBoolean %))
         (optional ["--index-path" "Path to store lucene index"
-                   :default "/media/1082B19F82B189AC/rssminer/index"]))))
+                   :default "/var/rssminer/index"]))))

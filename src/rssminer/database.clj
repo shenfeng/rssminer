@@ -9,6 +9,21 @@
 (defonce h2-db-factory  (atom {:factory nil
                                :ds nil}))
 
+(defonce server (atom nil))
+
+(defn running? []
+  (not (nil? @server)))
+
+(defn start-h2-server []
+  (when-not (running?)
+    (reset! server (doto (Server.)
+                     (.runTool (into-array '("-tcp" "-tcpAllowOthers")))))))
+
+(defn stop-h2-server []
+  (when (running?)
+    (.shutdown ^Server @server)
+    (reset! server nil)))
+
 (defn close-global-h2-factory! []
   (if-let [ds (:ds @h2-db-factory)]
     (.dispose ^JdbcConnectionPool ds)
@@ -19,7 +34,7 @@
   (let [url (str "jdbc:h2:" db-path ";MVCC=true"
                  (when trace ";TRACE_LEVEL_FILE=2;TRACE_MAX_FILE_SIZE=1000")
                  (when auto-server ";AUTO_SERVER=TRUE"))
-        ds (JdbcConnectionPool/create url "sa" "sa")
+        ds (JdbcConnectionPool/create url "sa" "")
         f (fn [& args]  (.getConnection ds))]
     (info "use h2 database" url)
     (reset! h2-db-factory {:factory f

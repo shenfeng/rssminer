@@ -1,7 +1,7 @@
 $(function(){
   var backbone = window.Backbone,
-      OC = window.OC_Backbone,
       JSON = window.JSON,
+      ajax = window.Rssminer.ajax,
       tmpls = window.Rssminer.tmpls,
       $ = window.$,
       to_html = window.Mustache.to_html;
@@ -34,7 +34,7 @@ $(function(){
     }
     var prev, crawler = {}, data = read_plot_data(),
         line_opts = {
-          yaxis: { min: 0, max: 400 },
+          yaxis: { min: 0, max: 3500 },
           xaxis: { min: 0, max: 100 }
         }, pie_opts = {
           series: {
@@ -125,32 +125,24 @@ $(function(){
     };
   })();
 
-  var Settings = OC.Model.extend({
-    id: 'feeds_count',          // revent isNew return true;
-    black_domains: OC.Collection,
-    reseted_domains: OC.Collection,
-    url: "/api/dashboard/?q=settings",
+  var Settings = backbone.Model.extend({
+    url: "/api/dashboard/stat",
     parse: function (resp) {
       return stat.parse(resp);
     }
   });
 
   var SettingsView = CommonView.extend(function () {
-    function startStopService (name) {
-      return function () {
-        var model = this.model,
-            running = model.get(name),
-            attr = {};
-        attr[name] = !running;
-        model.snapshot();
-        model.set(attr);
-        model.savediff();
-      };
+    function toggleService (e) {
+      var $tr = $(e.currentTarget).parents('tr'),
+          section = $tr.attr('data-sid'),
+          status = $.trim($tr.find('.status').text()),
+          command = status  === 'false' ? 'start' : 'stop';
+      ajax.jpost("/api/dashboard", {which: section, command: command});
     }
     return {
       events: {
-        "click .crawler button" : startStopService('crawler_running'),
-        "click .fetcher button" : startStopService('fetcher_running')
+        "click #controls button": toggleService
       }
     };
   });
@@ -183,7 +175,7 @@ $(function(){
       var tmpl = "links";
       if(path === 'settings') tmpl = 'settings';
       model.fetch({
-        url: "/api/dashboard/?q=" + path,
+        url: "/api/dashboard/" + path,
         success: function () {
           var view = new CommonView({
             model: model,

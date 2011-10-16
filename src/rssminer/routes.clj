@@ -39,7 +39,7 @@
 
 (defroutes api-routes
   (context "/dashboard" []
-           (JGET "/" [] dashboard/get-data)
+           (JGET "/:section" [] dashboard/get-data)
            (JPOST "/" [] dashboard/settings))
   (context "/subscriptions" []
            (JGET "/overview" [] subscription/get-overview)
