@@ -18,7 +18,8 @@ $(function(){
   });
 
   var stat = (function () {
-    var key = 'plot_data';
+    var key = 'plot_data',
+        data_size = 150;
 
     function read_plot_data () {
       var d = window.localStorage.getItem(key);
@@ -26,16 +27,16 @@ $(function(){
         return JSON.parse(d);
       } else {
         d = [];
-        for(var i = 0; i < 100; ++i) {
-          d.push(0);
+        for(var i = 0; i < data_size; ++i) {
+          d.push([0, 0, 0, 0]);
         }
         return d;
       }
     }
-    var prev, crawler = {}, data = read_plot_data(),
+    var prev, crawler = {}, lines_data = read_plot_data(),
         line_opts = {
           yaxis: { min: 0, max: 3500 },
-          xaxis: { min: 0, max: 100 }
+          xaxis: { min: 0, max: data_size }
         }, pie_opts = {
           series: {
             pie: { show: true }
@@ -77,10 +78,14 @@ $(function(){
           }
         };
 
-    function prepare_data () {
-      var line = [];
-      for(var i = 0; i < data.length; ++i) {
-        line.push([i, data[i]]);
+    function prepare_data () {  // convert data to plot format
+      var lines = [];
+      for(var j = 0; j < lines_data[0].length; ++j) {
+        var line = [];
+        for(var i = 0; i < lines_data.length; ++i) {
+          line.push([i, lines_data[i][j]]);
+        }
+        lines.push(line);
       }
       var pie = [];
       _.each(meta.http, function (v, k) {
@@ -88,7 +93,7 @@ $(function(){
           pie.push({label: v, data: crawler[k]});
         }
       });
-      return {line: line, pie: pie};
+      return {lines: lines, pie: pie};
     }
 
     function parse (resp) {
@@ -106,8 +111,11 @@ $(function(){
             resp[attr+"_delta"] = resp[attr] - prev[attr];
           }
         }
-        data.splice(0,1);
-        data.push(resp.crawler_counter_delta);
+        lines_data.splice(0,1);
+        lines_data.push([resp.crawler_counter_delta, // crawler speed
+                         resp.crawler_links_delta,   // increase links
+                         resp.rss_links_delta,       // increase rss links
+                         resp.feeds_delta]);         // increase rss feed
       }
       prev = resp;
       return resp;
@@ -115,9 +123,9 @@ $(function(){
 
     function plot () {
       var d = prepare_data();
-      $.plot($("#line-chart"), [d.line], line_opts);
+      $.plot($("#line-chart"), d.lines, line_opts);
       $.plot($("#crawler-pie"), d.pie , pie_opts);
-      window.localStorage.setItem(key, JSON.stringify(data));
+      window.localStorage.setItem(key, JSON.stringify(lines_data));
     }
     return {
       parse: parse,
@@ -164,7 +172,7 @@ $(function(){
           });
           $("#content").replaceWith(view.render().el);
           stat.plot();
-          setTimeout(showSettings, 150000);
+          setTimeout(showSettings, 120000);
         }
       });
     }

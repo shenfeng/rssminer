@@ -33,7 +33,7 @@
       </tr>
       <tr>
         <td>Crawler speed:</td>
-        <td>{{crawler_speed}}</td>
+        <td>{{crawler_speed}} req/min</td>
         <td>{{crawler_speed_delta}}</td>
       </tr>
       <tr>
