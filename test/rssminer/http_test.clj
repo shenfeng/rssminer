@@ -68,7 +68,8 @@
   (is (black-domain? "http://housebbs.sina.com.cn"))
   (is (black-domain? "http://sports.dzwww.com"))
   (is (black-domain? "http://forum.dev.sdo.com"))
-  (is (not (black-domain? "http://google.com"))))
+  (is (black-domain? "http://google.com"))
+  (is (not (black-domain? "http://rssminer.net"))))
 
 (deftest test-clean-resolve
   (is (= "http://a.com/c.html"

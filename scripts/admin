@@ -9,6 +9,7 @@ cd "${HOME}" && java \
     -XX:+TieredCompilation \
     -XX:+UseCompressedOops \
     -XX:+UseCompressedStrings \
+    -Xms1560m -Xmx3g \
     -cp "classes:lib/*:src/" clojure.main \
     -m rssminer.admin $@
 

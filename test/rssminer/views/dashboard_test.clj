@@ -6,8 +6,7 @@
 (use-fixtures :each h2-fixture)
 
 (defn- make-req [q]
-  (test-app {:uri "/api/dashboard/"
-             :params {"q" q}
+  (test-app {:uri (str "/api/dashboard/" q)
              :request-method :get}))
 
 (deftest test-get-rsslinks-stats
@@ -29,7 +28,7 @@
     (is (empty? (-> stats :data)))))
 
 (deftest test-get-settings
-  (let [resp (make-req "settings")
+  (let [resp (make-req "stat")
         settings (-> resp :body read-json)]
     (is (= 200 (:status resp)))))
 

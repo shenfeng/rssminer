@@ -1,7 +1,7 @@
 (defproject rssminer "1.0.0"
   :description "A feed reader written in clojure"
   :dependencies [[clojure "1.3.0"]
-                 [org.clojure/data.json "0.1.1"]
+                 [org.clojure/data.json "0.1.2"]
                  [org.clojure/java.jdbc "0.0.7"]
                  [org.clojure/tools.cli "0.1.0"]
                  [org.clojure/tools.logging "0.2.3"]

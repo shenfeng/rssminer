@@ -60,10 +60,14 @@
     "soxsok." "insanejournal." "filehungry." "malavida."
     "smartcode." "taotaocar" "sourceforge." "minitokyo."
     "easyrpg." "shufa." "keduo." "gov." "artician."
+    "stonebuy." "pissedconsumer" "clickbank"
 
     "superpokepets." "deadjournal." "dreamwidth." "sheezyart."
-    "nuclearscripts." "acidfiles." "fyxm." "apponic." "stonebuy."
-    "51daifu."
+    "nuclearscripts." "acidfiles." "fyxm." "stonebuy."
+    "51daifu." "youboy." "cntrades."
+
+    ;; file download
+    "gratis." "apponic."
     ;; glogster
 
     "tuchong." "wikia."
@@ -72,7 +76,7 @@
 
     "bbs." "wap." "news." "forum" "sports." "shop." "taobao"
     "video." "alibaba." "mail." "convert" "game" "download"
-    "google" "flash"
+    "google" "flash" "community"
 
     ;; intresting, but not for rss
     "meetup.c"
@@ -83,6 +87,7 @@
     "parsiblog." "blogcu." "slmame." "exteen." "paginasamarillas."
     "foroactivo." "hispavista." "promodj." "vuodatus." "seesaa."
     "dtiblog." "fc2." "tistory." "eklablog." "monbebeblog."
+    "metroblog." "pixnet." "nifty." "cocolog" "bloxode"
 
     "polyvore" "over-blog" "backpage"
 
