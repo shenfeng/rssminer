@@ -62,7 +62,8 @@
     "easyrpg." "shufa." "keduo." "gov." "artician."
 
     "superpokepets." "deadjournal." "dreamwidth." "sheezyart."
-    "nuclearscripts." "acidfiles."
+    "nuclearscripts." "acidfiles." "fyxm." "apponic." "stonebuy."
+    "51daifu."
     ;; glogster
 
     "tuchong." "wikia."
@@ -70,7 +71,8 @@
     "animepaper." "typepad." ;;nice UI
 
     "bbs." "wap." "news." "forum" "sports." "shop." "taobao"
-    "video." "alibaba." "mail." "convert"
+    "video." "alibaba." "mail." "convert" "game" "download"
+    "google" "flash"
 
     ;; intresting, but not for rss
     "meetup.c"

@@ -6,14 +6,15 @@
                   [config :only [ungroup]]
                   [util :only [ignore-error gen-snippet extract-text]])
         (rssminer.db [user :only [create-user]]
-                     [feed :only [insert-tags]]
-                     [util :only [h2-query with-h2 id-k]])
+                     [feed :only [fetch-rss-links]]
+                     [util :only [h2-query with-h2]])
         (clojure.tools [logging :only [info]]
                        [cli :only [cli optional required]])
         [clojure.java.jdbc :only [insert-record with-query-results
                                   insert-record delete-rows]])
   (:require [clojure.string :as str])
   (:import java.io.File
+           java.net.URI
            java.sql.Clob
            rssminer.Searcher))
 
@@ -93,12 +94,21 @@
       (with-h2 (ignore-error
                 (insert-record :feeds feed))))))
 
+(defn calculate-frenquency [{:keys [limit size] :or {limit 5000 size 50}}]
+  (let [split #(str/split % #"\W")
+        fren (frequencies
+              (flatten
+               (map #(-> % :url URI. .getHost split)
+                    (fetch-rss-links limit))))
+        want (take size (reverse (sort-by val fren)))]
+    (clojure.pprint/pprint want)))
+
 (defn -main [& args]
   "rssminer admin"
   (let [options
         (cli args
              (required ["-c" "--command"
-                        "setup-db, clean-rss, clean-links, rebuild-index"]
+                        "init-db, clean-rss, clean-links, rebuild-index, cal"]
                        keyword)
              (optional ["-p" "--password" "password"
                         :default "123456"])
@@ -107,17 +117,23 @@
              (optional ["--data-path" "backup, restore data path"
                         :default "/tmp/rssminer"])
              (optional ["--index-path" "Path to store lucene index"
-                        :default "/dev/shm/index"]))]
+                        :default "/dev/shm/index"])
+             (optional ["--limit" "how much to calculate" :default "5000"]
+                       #(Integer/parseInt %))
+             (optional ["--size" "size to print" :default "50"]
+                       #(Integer/parseInt %)))]
     (if (= :setup-db (:command options))
       (setup-db options)
       (do
         (use-h2-database! (:db-path options))
-        (use-index-writer! (:index-path options))
         (case (:command options)
           :clean-rss
           (clean-rss-links)
           :clean-links
           (clean-crawler-links)
           :rebuild-index
-          (rebuild-index))))))
+          (do (use-index-writer! (:index-path options))
+              (rebuild-index))
+          :cal
+          (calculate-frenquency options))))))
 
