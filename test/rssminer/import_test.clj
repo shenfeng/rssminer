@@ -24,8 +24,8 @@
     (let [resp (auth-app
                 {:uri "/api/import/opml-import"
                  :request-method :post
-                 :params {"file" {:filename (.getName opml)
-                                  :size (.length opml)
-                                  :content-type "text/xml"
-                                  :tempfile opml}}})]
+                 :params {"file" {"filename" (.getName opml)
+                                  "size" (.length opml)
+                                  "content-type" "text/xml"
+                                  "tempfile" opml}}})]
       (is (= 200 (:status resp))))))
