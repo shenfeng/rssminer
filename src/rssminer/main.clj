@@ -1,4 +1,5 @@
 (ns rssminer.main
+  (:gen-class)
   (:use [clojure.tools.cli :only [cli optional required]]
         [ring.adapter.netty :only [run-netty]]
         [clojure.tools.logging :only [info]]
@@ -7,6 +8,7 @@
                   [search :only [use-index-writer!
                                  close-global-index-writer!]]
                   [routes :only [app]]
+                  [util :only [to-int to-boolean]]
                   [fetcher :only [start-fetcher stop-fetcher]]
                   [crawler :only [start-crawler stop-crawler]]
                   [config :only [env-profile netty-option]])))
@@ -23,13 +25,14 @@
   (close-global-index-writer!))
 
 (defn start-server
-  [{:keys [port index-path profile db-path h2-trace
+  [{:keys [port index-path profile db-path h2-trace worker
            run-crawler auto-server run-fetcher]}]
   {:pre [(#{:prod :dev} profile)]}
   (stop-server)
   (use-h2-database! db-path :trace h2-trace :auto-server auto-server)
   (reset! env-profile profile)
   (reset! server (run-netty (app) {:port port
+                                   :worker worker
                                    :netty netty-option}))
   (info "netty server start at port" port)
   (use-index-writer! index-path)
@@ -41,17 +44,19 @@
   (start-server
    (cli args
         (optional ["-p" "--port" "Port to listen" :default "8100"]
-                  #(Integer/parseInt %))
+                  to-int)
+        (optional ["--worker" "Http worker thread count" :default "1"]
+                  to-int)
         (optional ["--profile" "dev or prod" :default "dev"] keyword)
         (optional ["--db-path" "H2 Database file path"
-                   :default "/var/rssminer/rssminer"])
+                   :default "/dev/shm/rssminer"])
         (optional ["--auto-server" "H2 Database Automatic Mixed Mode"
-                   :default "false"] #(Boolean/parseBoolean %))
+                   :default "false"] to-boolean)
         (optional ["--h2-trace" "Enable H2 trace" :default "false"]
-                  #(Boolean/parseBoolean %))
+                  to-boolean)
         (optional ["--run-crawler" "Start link crawler" :default "false"]
-                  #(Boolean/parseBoolean %))
+                  to-boolean)
         (optional ["--run-fetcher" "Start rss fetcher" :default "false"]
-                  #(Boolean/parseBoolean %))
+                  to-boolean)
         (optional ["--index-path" "Path to store lucene index"
-                   :default "/var/rssminer/index"]))))
+                   :default "/dev/shm/index"]))))

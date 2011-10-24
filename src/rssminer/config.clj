@@ -67,7 +67,7 @@
     "51daifu." "youboy." "cntrades."
 
     ;; file download
-    "gratis." "apponic."
+    "gratis." "apponic." "suggestsoft."
     ;; glogster
 
     "tuchong." "wikia."
@@ -76,7 +76,7 @@
 
     "bbs." "wap." "news." "forum" "sports." "shop." "taobao"
     "video." "alibaba." "mail." "convert" "game" "download"
-    "google" "flash" "community"
+    "google" "flash" "community" "software"
 
     ;; intresting, but not for rss
     "meetup.c"

@@ -66,9 +66,9 @@
                    (filter #(second %) (partition 2 kvs)))]
     (if (seq kvs) (apply assoc map kvs) map)))
 
-(definline to-int [s]
-  `(if (integer? ~s) ~s
-       (Integer/parseInt ~s)))
+(defn to-int [s] (if (integer? s) s (Integer/parseInt s)))
+
+(defn to-boolean [s] (Boolean/parseBoolean s))
 
 (defmacro when-lets [bindings & body]
   (if (empty? bindings)

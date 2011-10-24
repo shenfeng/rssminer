@@ -1,0 +1,28 @@
+#! /bin/bash
+
+TARGET_DIR=/tmp/rssminer_tmp
+rm -rf $TARGET_DIR
+cp -r /home/feng/workspace/rssminer $TARGET_DIR
+
+cd $TARGET_DIR
+rm classes -r
+lein compile
+cp src/templates classes -r
+rm classes/templates/tmpls/ -r
+cd classes
+jar -cvf ../rssminer.jar *
+cd $TARGET_DIR
+
+java -Dsun.jnu.encoding=UTF-8 \
+    -Dfile.encoding=UTF-8 \
+    -Dsun.net.inetaddr.ttl=0 \
+    -Djava.net.preferIPv4Stack=true \
+    -XX:+UseCompressedOops \
+    -XX:+UseCompressedStrings \
+    -Xmx256m -Xms256m \
+    -cp rssminer.jar:lib/* rssminer.main \
+    --db-path /tmp/rssminer \
+    --index-path /tmp/index \
+    --profile prod \
+    --worker 4 \
+    --port 8101 \

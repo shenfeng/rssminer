@@ -122,7 +122,7 @@
                        #(Integer/parseInt %))
              (optional ["--size" "size to print" :default "50"]
                        #(Integer/parseInt %)))]
-    (if (= :setup-db (:command options))
+    (if (= :init-db (:command options))
       (setup-db options)
       (do
         (use-h2-database! (:db-path options))
