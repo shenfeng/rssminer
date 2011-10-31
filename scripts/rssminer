@@ -1,0 +1,118 @@
+#! /bin/bash
+### BEGIN INIT INFO
+# Provides:     rssminer
+# Required-Stop:    $network $local_fs
+# Should-Start:     $network $local_fs
+# Default-Start:    2 3 4 5
+# Default-Stop:     0 1 6
+# Short-Description:    rssminer, a web front end and backend
+# Description:      rssminer, a web front end and backend
+### END INIT INFO
+
+AS_USER="deploy"
+
+export JAVA_HOME=/usr/lib/jvm/java-6-sun
+PATH=$JAVA_HOME/bin:/bin:/usr/bin:/sbin:/usr/sbin
+
+APP_NAME="rssminer"
+APP_HOME="/var/www/rssminer"
+PID_DIR="/var/run/${APP_NAME}"
+LOG_DIR="/var/log/${APP_NAME}"
+
+DB_PATH=/var/rssminer/rssminer
+INDEX_PATH=/var/rssminer/index
+
+JAVA=`which java`
+
+JVM_ARGS="-Dsun.jnu.encoding=UTF-8 \
+    -Dfile.encoding=UTF-8 \
+    -Dsun.net.inetaddr.ttl=0 \
+    -Djava.net.preferIPv4Stack=true \
+    -XX:+UseCompressedOops \
+    -XX:+UseCompressedStrings \
+    -Xmx386m -Xms386m"
+
+JMX_OPTS="-Dcom.sun.management.jmxremote \
+     -Dcom.sun.management.jmxremote.port=22134 \
+     -Dcom.sun.management.jmxremote.authenticate=false \
+     -Dcom.sun.management.jmxremote.ssl=false"
+
+APP_ARGS="--db-path $DB_PATH \
+    --index-path $INDEX_PATH \
+    --profile prod \
+    --worker 1 \
+    --port 8100"
+
+
+CLASSPATH=$APP_HOME/lib/*:$APP_HOME/rssminer.jar
+JAVA_CONFIG="$JVM_ARGS -cp $CLASSPATH rssminer.main $APP_ARGS"
+
+daemon_args="--name $APP_NAME \
+    --user $AS_USER --pidfile $PID_DIR/pid \
+    --stdout=$LOG_DIR/output.log \
+    --stderr=$LOG_DIR/error.log \
+    --chdir $APP_HOME"
+
+function running() {
+    daemon $daemon_args --running
+}
+
+function mkdir_chown() {
+    mkdir -p $1
+    chown $AS_USER $1
+}
+
+mkdir_chown $PID_DIR
+mkdir_chown $LOG_DIR
+mkdir_chown $INDEX_PATH
+
+function start_server() {
+
+    if [ ! -e ${DB_PATH}.h2.db ]
+    then
+        echo "There is no database, please init ${DB_PATH}.h2.db"
+        exit 1
+    fi
+
+    if running; then
+        echo "$APP_NAME already running."
+        exit 0
+    fi
+    echo "Starting $APP_NAME"
+    daemon $daemon_args -- $JAVA $JAVA_CONFIG
+}
+
+case "$1" in
+    start)
+        start_server;
+        ;;
+    stop)
+        if ! running; then
+            echo "$APP_NAME not running."
+            exit 0
+        fi
+        echo "Stopping $APP_NAME"
+        daemon $daemon_args --stop
+        ;;
+    status)
+        if running; then
+            echo "$APP_NAME running"
+        else
+            echo "$APP_NAME not running"
+        fi
+        ;;
+    restart|force-reload)
+        while running
+        do
+            $0 stop
+            sleep 1;
+        done
+        $0 start
+        ;;
+    *)
+        echo "Usage: /etc/init.d/$APP_NAME {start|status|stop|restart|force-reload}" >&2
+        exit 1
+        ;;
+esac
+
+exit 0

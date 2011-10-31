@@ -2,10 +2,13 @@
 .git
 .gitignore
 .gitmodules
+.lein-failures
 .idea
 .project
 /.settings
 /.git
+/src
+/classes
 /bin
 /build
 /conf/exclude.txt
