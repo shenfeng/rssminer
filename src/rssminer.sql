@@ -12,7 +12,7 @@ set WRITE_DELAY 3000;           -- default 500ms
 ----
 CREATE TABLE users
 (
-  id serial PRIMARY KEY,
+  id INTEGER PRIMARY KEY auto_increment,
   email VARCHAR UNIQUE,
   name VARCHAR,
   password VARCHAR,
@@ -29,7 +29,7 @@ create table crawler_links (
   title VARCHAR,
   next_check_ts INTEGER default 10,
   last_modified VARCHAR,
-  check_interval INTEGER default 60 * 60 * 24 * 10, -- in seconds, ten days
+  check_interval INTEGER default 60 * 60 * 24 * 30, -- in seconds, 1 month
   referer_id INTEGER REFERENCES crawler_links
       ON UPDATE CASCADE ON DELETE SET NULL,
 )
@@ -43,9 +43,8 @@ create table rss_links (
   alternate VARCHAR,            -- usually, the site's link
   added_ts TIMESTAMP default now(),
   next_check_ts INTEGER default 1,
-  check_interval INTEGER default 60 * 60 * 24, -- in seconds, one day
-  last_modified VARCHAR,      -- from http response header
-  favicon CLOB,               -- base64 encoded
+  check_interval INTEGER default 60 * 60 * 24 * 5, -- in seconds, 5 days
+  last_modified VARCHAR,                -- from http response header
   subscription_count INTEGER default 0, -- how much user subscribed
   user_id INTEGER REFERENCES users      -- who first add it
      ON UPDATE CASCADE ON DELETE SET NULL,

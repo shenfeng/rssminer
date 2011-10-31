@@ -1,5 +1,5 @@
 (ns rssminer.handlers.subscriptions
-  (:use (rssminer [http :only [download-favicon download-rss]]
+  (:use (rssminer [http :only [download-rss]]
                   [time :only [now-seconds]]
                   [parser :only [parse-feed]]
                   [util :only [to-int if-lets session-get]]
@@ -15,8 +15,7 @@
    :id (:id subscription)
    :total_count count
    :unread_count count
-   :title (:title subscription)
-   :favicon (:favicon rss)})
+   :title (:title subscription)})
 
 (defn- add-exists-subscription [subscription user-id
                                 & {:keys [group-name title]}]
@@ -42,7 +41,6 @@
                        :last_modified (:last-modified headers)
                        :next_check_ts (+ (now-seconds) (* 3600 24))
                        :user_id user-id
-                       :favicon (download-favicon link)
                        :description (:description feeds)
                        :title (:title feeds)})
                  us (h2-insert-and-return :user_subscription

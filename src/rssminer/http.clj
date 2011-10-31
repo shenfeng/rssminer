@@ -56,15 +56,6 @@
   (let [headers (if last-modified {"If-Modified-Since" last-modified} {})]
     (parse-response (.get (.execGet client (URI. url) headers)))))
 
-(defn ^{:dynamic true} download-favicon [url]
-  (let [icon-url (str (extract-host url) "/favicon.ico")
-        resp ^HttpResponse (.get (.execGet client (URI. icon-url) {}))
-        ct (or (.getHeader resp "Content-Type") "image/x-icon")]
-    (if (= 200 (-> resp .getStatus .getCode))
-      (let [img  (Base64/encodeBase64String
-                  (-> resp .getContent .slice .array))]
-        (when img (str "data:" ct ";base64," img))))))
-
 (defn ^{:dynamic true} download-rss  [url]
   (try
     (update-in (get url) [:body]        ;convert to string

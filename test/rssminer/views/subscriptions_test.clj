@@ -4,13 +4,12 @@
         [rssminer.db.util :only [h2-query select-sql-params]]
         [rssminer.time :only [now-seconds]]
         (rssminer [test-common :only [auth-app auth-app2 app-fixture]]
-                  [http :only [download-rss download-favicon]])))
+                  [http :only [download-rss]])))
 
 (use-fixtures :each app-fixture
               (fn [f] (binding [download-rss
                                (fn [& args]
-                                 {:body (slurp "test/ppurl-rss.xml")})
-                               download-favicon (fn [link] "icon")]
+                                 {:body (slurp "test/ppurl-rss.xml")})]
                        (f))))
 
 (def add-req {:uri "/api/subscriptions/add"
@@ -39,7 +38,6 @@
          :total_count
          :id
          :unread_count
-         :favicon
          :title)))
 
 (deftest test-get-subscription
@@ -70,8 +68,7 @@
          :id
          :total_count
          :total_count
-         :title
-         :favicon)))
+         :title)))
 
 (deftest test-customize-subscription
   (let [[_ subscription] (prepare)

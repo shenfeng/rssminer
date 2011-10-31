@@ -23,7 +23,7 @@
         (.delete (File. (str db-path ".h2.db"))))
   (doall (map #(info "delete" % (.delete %))
               (reverse (file-seq (File. index-path)))))
-  (use-h2-database! (str db-path ";PAGE_SIZE=8192"))
+  (use-h2-database! db-path)
   (info "import h2 schema, create user feng")
   (import-h2-schema!)
   (let [user (create-user {:name "feng"

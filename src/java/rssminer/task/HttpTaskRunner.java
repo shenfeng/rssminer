@@ -226,7 +226,6 @@ public class HttpTaskRunner {
     }
 
     public String toString() {
-        getStat(); // re-compute
-        return format("%s: %s", mName, mStat);
+        return format("%s: %s", mName, getStat());
     }
 }

@@ -21,8 +21,7 @@
 
 (defn fetch-overview [user-id]
   (h2-query ["
-SELECT
-   us.group_name, s.id, s.title, s.favicon,
+   SELECT us.group_name, s.id, s.title,
    (SELECT COUNT(*) FROM feeds WHERE feeds.rss_link_id = s.id) AS total_count,
    (SELECT COUNT(*) FROM feeds
     WHERE  feeds.rss_link_id = s.id AND

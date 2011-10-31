@@ -30,7 +30,7 @@ JVM_ARGS="-Dsun.jnu.encoding=UTF-8 \
     -Djava.net.preferIPv4Stack=true \
     -XX:+UseCompressedOops \
     -XX:+UseCompressedStrings \
-    -Xmx386m -Xms386m"
+    -Xmx256m -Xms256m"
 
 JMX_OPTS="-Dcom.sun.management.jmxremote \
      -Dcom.sun.management.jmxremote.port=22134 \
