@@ -32,6 +32,7 @@
              "-Dsun.net.inetaddr.ttl=0"
              "-Djava.net.preferIPv4Stack=true"
              "-XX:+TieredCompilation"
+             "-XX:-DisableExplicitGC"
              "-XX:+UseCompressedStrings"
              "-XX:-UseLoopPredicate"
              "-Xmx512m"

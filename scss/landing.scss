@@ -54,14 +54,12 @@
 }
 
 #footer {
-    background-color: #888;
     .content {
         width: $page-width;
         margin: 0 auto;
         padding: 0.3em;
-        color: white;
     }
-    border-top: #CCC solid 1px;
+    border-top: #ddd solid 1px;
     ul {
         padding: 0;
         li {
@@ -75,7 +73,6 @@
                     @include border-radius(3px);
                     @include box-shadow(0, 1px, 0, rgba(0,0,0,.1));
                 }
-                color: white;
                 padding: 5px 10px;
                 text-decoration: none;
             }

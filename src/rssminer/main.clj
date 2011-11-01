@@ -49,7 +49,7 @@
                   to-int)
         (optional ["--profile" "dev or prod" :default "dev"] keyword)
         (optional ["--db-path" "H2 Database file path"
-                   :default "/dev/shm/rssminer"])
+                   :default "/media/disk/rssminer/rssminer"])
         (optional ["--auto-server" "H2 Database Automatic Mixed Mode"
                    :default "false"] to-boolean)
         (optional ["--h2-trace" "Enable H2 trace" :default "false"]
@@ -59,4 +59,4 @@
         (optional ["--run-fetcher" "Start rss fetcher" :default "false"]
                   to-boolean)
         (optional ["--index-path" "Path to store lucene index"
-                   :default "/dev/shm/index"]))))
+                   :default "media/disk/rssminer/index"]))))

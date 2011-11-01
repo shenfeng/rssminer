@@ -28,6 +28,7 @@ JVM_ARGS="-Dsun.jnu.encoding=UTF-8 \
     -Dfile.encoding=UTF-8 \
     -Dsun.net.inetaddr.ttl=0 \
     -Djava.net.preferIPv4Stack=true \
+    -XX:-DisableExplicitGC \
     -XX:+UseCompressedOops \
     -XX:+UseCompressedStrings \
     -Xmx256m -Xms256m"

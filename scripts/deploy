@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 set -e
 
@@ -13,8 +13,8 @@ cd classes
 jar -cf ../rssminer.jar *
 cd $RSSMINER_CODE_ROOT
 
-# FRONTEND_HOST="rssminer.net"
-FRONTEND_HOST="192.168.1.117"
+# FRONTEND_HOST="192.168.1.117"
+FRONTEND_HOST=rssminer.net
 DEPLOYMENT_USER="deploy"
 SSH_TARGET="${DEPLOYMENT_USER}@${FRONTEND_HOST}"
 TARGET_DIR="/var/www/rssminer"
