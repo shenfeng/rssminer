@@ -4,12 +4,12 @@
                   [search :only [indexer index-feed use-index-writer!]]
                   [http :only [clean-resolve]]
                   [config :only [ungroup]]
-                  [util :only [ignore-error gen-snippet extract-text]])
+                  [util :only [ignore-error gen-snippet extract-text to-int]])
         (rssminer.db [user :only [create-user]]
                      [feed :only [fetch-rss-links]]
                      [util :only [h2-query with-h2]])
         (clojure.tools [logging :only [info]]
-                       [cli :only [cli optional required]])
+                       [cli :only [cli]])
         [clojure.java.jdbc :only [insert-record with-query-results
                                   insert-record delete-rows]])
   (:require [clojure.string :as str])
@@ -99,30 +99,29 @@
         fren (frequencies
               (flatten
                (map #(-> % :url URI. .getHost split)
-                    (fetch-rss-links limit))))
-        want (take size (reverse (sort-by val fren)))]
+                    (fetch-rss-links (to-int limit)))))
+        want (take (to-int size) (reverse (sort-by val fren)))]
     (clojure.pprint/pprint want)))
 
 (defn -main [& args]
   "rssminer admin"
-  (let [options
+  (let [[options _ banner]
         (cli args
-             (required ["-c" "--command"
-                        "init-db, clean-rss, clean-links, rebuild-index, cal"]
-                       keyword)
-             (optional ["-p" "--password" "password"
-                        :default "123456"])
-             (optional ["--db-path" "H2 Database path"
-                        :default "/dev/shm/rssminer"])
-             (optional ["--data-path" "backup, restore data path"
-                        :default "/tmp/rssminer"])
-             (optional ["--index-path" "Path to store lucene index"
-                        :default "/dev/shm/index"])
-             (optional ["--limit" "how much to calculate" :default "5000"]
-                       #(Integer/parseInt %))
-             (optional ["--size" "size to print" :default "50"]
-                       #(Integer/parseInt %)))]
-    (if (= :init-db (:command options))
+             ["-c" "--command"
+              "init-db, clean-rss, clean-links, rebuild-index, cal"]
+             ["-p" "--password" "password" :default "123456"]
+             ["--db-path" "H2 Database path" :default "/dev/shm/rssminer"]
+             ["--data-path" "Backup, restore data path"
+              :default "/tmp/rssminer"]
+             ["--index-path" "Path to store lucene index"
+              :default "/dev/shm/index"]
+             ["--limit" "how much to calculate" :default "5000"]
+             ["--size" "size to print" :default "50"]
+             ["-h" "--[no-]help" "Print this help"])]
+    (when (:help options)
+      (println banner)
+      (System/exit 0))
+    (if (= :init-db (keyword (:command options)))
       (setup-db options)
       (do
         (use-h2-database! (:db-path options))

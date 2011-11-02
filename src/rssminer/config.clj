@@ -1,11 +1,11 @@
 (ns rssminer.config
   (:import [java.net Proxy Proxy$Type InetSocketAddress]))
 
-(defonce env-profile (atom :dev))
+(defonce rssminer-conf (atom {}))
 
-(defn in-prod? [] (= @env-profile :prod))
+(defn in-prod? [] (= (:profile @rssminer-conf) :prod))
 
-(defn in-dev? [] (= @env-profile :dev))
+(defn in-dev? [] (= (:profile @rssminer-conf) :dev))
 
 (def netty-option {"receiveBufferSize" 16384
                    "sendBufferSize" 32768
@@ -27,14 +27,6 @@
   "Mozilla/5.0 (compatible; Rssminer/1.0; +http://rssminer.net)")
 
 (def ungroup "ungrouped")
-
-(def crawler-queue 200)
-
-(def fetcher-queue 100)
-
-(def dns-prefetch true)
-
-(def fetch-size 100)
 
 (def ignored-url-extensions
   '("jpg" "png" "gif" "css" "js" "jpeg"

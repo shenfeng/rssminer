@@ -3,7 +3,7 @@
   :dependencies [[clojure "1.3.0"]
                  [org.clojure/data.json "0.1.2"]
                  [org.clojure/java.jdbc "0.1.0"]
-                 [org.clojure/tools.cli "0.1.0"]
+                 [org.clojure/tools.cli "0.2.0"]
                  [org.clojure/tools.logging "0.2.3"]
                  [com.h2database/h2 "1.3.161"]
                  [ch.qos.logback/logback-classic "0.9.30"]

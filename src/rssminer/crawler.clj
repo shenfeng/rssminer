@@ -1,11 +1,12 @@
 (ns rssminer.crawler
   (:use (rssminer [time :only [now-seconds]]
                   [http :only [parse-response client extract-links links]]
-                  [util :only [assoc-if next-check]])
+                  [util :only [assoc-if next-check]]
+                  [config :only [rssminer-conf socks-proxy no-proxy
+                                 reseted-url?]])
         [rssminer.db.feed :only [insert-rss-link]]
         [clojure.tools.logging :only [info error trace]])
-  (:require [rssminer.db.crawler :as db]
-            [rssminer.config :as conf])
+  (:require [rssminer.db.crawler :as db])
   (:import [rssminer.task HttpTaskRunner IHttpTask IHttpTaskProvder
             HttpTaskRunnerConf]))
 
@@ -48,8 +49,7 @@
 (defn- mk-task [{:keys [url last_modified] :as link}]
   (reify IHttpTask
     (getUri [this] (java.net.URI. url))
-    (getProxy [this] (if (conf/reseted-url? url)
-                       conf/socks-proxy conf/no-proxy))
+    (getProxy [this] (if (reseted-url? url) socks-proxy no-proxy))
     (getHeaders [this]
       (if last_modified {"If-Modified-Since" last_modified} {}))
     (doTask [this resp]
@@ -58,17 +58,18 @@
 (defn mk-provider []
   (reify IHttpTaskProvder
     (getTasks [this]
-      (map mk-task (db/fetch-crawler-links conf/fetch-size)))))
+      (map mk-task (db/fetch-crawler-links (:fetch-size @rssminer-conf))))))
 
-(defn start-crawler [& {:keys [queue]}]
+(defn start-crawler []
   (stop-crawler)
   (reset! crawler (doto (HttpTaskRunner.
                          (doto (HttpTaskRunnerConf.)
                            (.setProvider (mk-provider))
                            (.setClient client)
                            (.setLinks links)
-                           (.setQueueSize (or queue conf/crawler-queue))
+                           (.setQueueSize (:crawler-queue @rssminer-conf))
                            (.setName "Crawler")
-                           (.setProxy conf/socks-proxy)
-                           (.setDnsPrefetch conf/dns-prefetch)))
+                           (.setProxy (if (:proxy @rssminer-conf)
+                                        socks-proxy no-proxy))
+                           (.setDnsPrefetch (:dns-prefetch @rssminer-conf))))
                     (.start))))

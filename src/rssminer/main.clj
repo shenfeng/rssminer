@@ -1,6 +1,6 @@
 (ns rssminer.main
   (:gen-class)
-  (:use [clojure.tools.cli :only [cli optional required]]
+  (:use [clojure.tools.cli :only [cli]]
         [ring.adapter.netty :only [run-netty]]
         [clojure.tools.logging :only [info]]
         (rssminer [database :only [use-h2-database!
@@ -8,10 +8,10 @@
                   [search :only [use-index-writer!
                                  close-global-index-writer!]]
                   [routes :only [app]]
-                  [util :only [to-int to-boolean]]
+                  [util :only [to-int]]
                   [fetcher :only [start-fetcher stop-fetcher]]
                   [crawler :only [start-crawler stop-crawler]]
-                  [config :only [env-profile netty-option]])))
+                  [config :only [rssminer-conf netty-option]])))
 
 (defonce server (atom nil))
 
@@ -25,38 +25,45 @@
   (close-global-index-writer!))
 
 (defn start-server
-  [{:keys [port index-path profile db-path h2-trace worker
-           run-crawler auto-server run-fetcher]}]
-  {:pre [(#{:prod :dev} profile)]}
+  [{:keys [port index-path profile db-path h2-trace worker crawler-queue
+           fetcher-queue crawler fetcher proxy dns fetch-size]}]
   (stop-server)
-  (use-h2-database! db-path :trace h2-trace :auto-server auto-server)
-  (reset! env-profile profile)
-  (reset! server (run-netty (app) {:port port
-                                   :worker worker
+  (use-h2-database! db-path :trace h2-trace)
+  (swap! rssminer-conf assoc :profile (keyword profile)
+         :crawler-queue (to-int crawler-queue)
+         :fetcher-queue (to-int fetcher-queue)
+         :fetch-size (to-int fetch-size)
+         :dns-prefetch dns
+         :proxy proxy)
+  (reset! server (run-netty (app) {:port (to-int port)
+                                   :worker (to-int worker)
                                    :netty netty-option}))
   (info "netty server start at port" port)
   (use-index-writer! index-path)
-  (when run-crawler (start-crawler))
-  (when run-fetcher (start-fetcher)))
+  (when crawler (start-crawler))
+  (when fetcher (start-fetcher)))
 
 (defn -main [& args]
   "Start rssminer server"
-  (start-server
-   (cli args
-        (optional ["-p" "--port" "Port to listen" :default "8100"]
-                  to-int)
-        (optional ["--worker" "Http worker thread count" :default "1"]
-                  to-int)
-        (optional ["--profile" "dev or prod" :default "dev"] keyword)
-        (optional ["--db-path" "H2 Database file path"
-                   :default "/media/disk/rssminer/rssminer"])
-        (optional ["--auto-server" "H2 Database Automatic Mixed Mode"
-                   :default "false"] to-boolean)
-        (optional ["--h2-trace" "Enable H2 trace" :default "false"]
-                  to-boolean)
-        (optional ["--run-crawler" "Start link crawler" :default "false"]
-                  to-boolean)
-        (optional ["--run-fetcher" "Start rss fetcher" :default "false"]
-                  to-boolean)
-        (optional ["--index-path" "Path to store lucene index"
-                   :default "media/disk/rssminer/index"]))))
+  (let [[options _ banner]
+        (cli args
+             ["-p" "--port" "Port to listen" :default "8100"]
+             ["--worker" "Http worker count" :default "1"]
+             ["--crawler-queue" "queue size" :default "200"]
+             ["--fetcher-queue" "queue size" :default "100"]
+             ["--fetch-size" "Bulk fetch size" :default "100"]
+             ["--profile" "dev or prod" :default "dev"]
+             ["--db-path" "H2 Database file path"
+              :default "/media/disk/rssminer/rssminer"]
+             ["--index-path" "Path to store lucene index"
+              :default "/media/disk/rssminer/index"]
+             ["--[no-]h2-trace" "Enable H2 trace"]
+             ["--[no-]crawler" "Start link crawler"]
+             ["--[no-]fetcher" "Start rss fetcher"]
+             ["--[no-]dns" "Enable dns prefetch" :default true]
+             ["--[no-]proxy" "Enable Socks proxy" :default true]
+             ["-h" "--[no-]help" "Print this help"])]
+    (when (:help options)
+      (println banner)
+      (System/exit 0))
+    (start-server options)))

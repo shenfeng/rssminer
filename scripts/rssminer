@@ -31,7 +31,7 @@ JVM_ARGS="-Dsun.jnu.encoding=UTF-8 \
     -XX:-DisableExplicitGC \
     -XX:+UseCompressedOops \
     -XX:+UseCompressedStrings \
-    -Xmx256m -Xms256m"
+    -Xmx192m -Xms192m"
 
 JMX_OPTS="-Dcom.sun.management.jmxremote \
      -Dcom.sun.management.jmxremote.port=22134 \
@@ -41,6 +41,10 @@ JMX_OPTS="-Dcom.sun.management.jmxremote \
 APP_ARGS="--db-path $DB_PATH \
     --index-path $INDEX_PATH \
     --profile prod \
+    --no-proxy \
+    --no-dns \
+    --crawler-queue 50 \
+    --fetcher-queue 10 \
     --worker 1 \
     --port 8100"
 
