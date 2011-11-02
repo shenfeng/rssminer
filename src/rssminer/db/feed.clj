@@ -56,12 +56,12 @@
   (h2-query ["SELECT id, author, title, summary, link, published_ts
               FROM feeds
               WHERE rss_link_id = ? LIMIT ? OFFSET ?"
-             rss-link-id limit offset]))
+             rss-link-id limit offset] :convert))
 
 (defn fetch-latest-feed [limit]
   (h2-query ["SELECT id, author, title, summary, link FROM feeds
               WHERE id > (SELECT MAX(id) FROM feeds) - ?
-              ORDER BY id DESC LIMIT ?" (* 2 limit ) limit]))
+              ORDER BY id DESC LIMIT ?" (* 2 limit ) limit] :convert))
 
 (defn fetch-feeds-for-user
   ([user-id rss-id]

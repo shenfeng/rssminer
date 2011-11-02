@@ -7,7 +7,7 @@
   (:import java.text.SimpleDateFormat
            java.util.Locale
            java.sql.Clob
-           [java.sql Timestamp]))
+           java.sql.Timestamp))
 
 (def id-k (keyword "scope_identity()"))
 
@@ -29,13 +29,16 @@
   `(with-connection @h2-db-factory
      ~@body))
 
-(defn h2-query [query]
-  (with-h2
-    (with-query-results rs query
-      (postwalk (fn [x] (if (instance? Clob x)
-                         (slurp (.getCharacterStream ^Clob x))
-                         x))
-                rs))))
+(defn h2-query
+  ([query] (with-h2
+             (with-query-results rs query
+               (doall rs))))
+  ([query c] (with-h2
+               (with-query-results rs query
+                 (postwalk (fn [x] (if (instance? Clob x)
+                                    (slurp (.getCharacterStream ^Clob x))
+                                    x))
+                           rs)))))
 
 (defn h2-insert [table record]
   (id-k (with-h2
