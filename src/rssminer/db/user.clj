@@ -3,16 +3,15 @@
                                 h2-insert-and-return]]
         [rssminer.util :only [md5-sum]]))
 
-(defn create-user [user]
+(defn create-user [{:keys [email password] :as user}]
   (h2-insert-and-return :users
-                        (update-in user [:password]
-                                   #(md5-sum %))))
+                        (assoc user :password
+                               (md5-sum (str email "+" password)))))
 
 (defn find-user [attr]
   (first (h2-query (select-sql-params :users attr))))
 
 (defn authenticate [email plain-password]
   (if-let [user (find-user {:email email})]
-    (when (= (md5-sum plain-password) (:password user))
+    (when (= (md5-sum (str email "+" plain-password)) (:password user))
       user)))
-
