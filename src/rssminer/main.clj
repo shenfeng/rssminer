@@ -30,13 +30,13 @@
   (stop-server)
   (use-h2-database! db-path :trace h2-trace)
   (swap! rssminer-conf assoc :profile (keyword profile)
-         :crawler-queue (to-int crawler-queue)
-         :fetcher-queue (to-int fetcher-queue)
-         :fetch-size (to-int fetch-size)
+         :crawler-queue crawler-queue
+         :fetcher-queue fetcher-queue
+         :fetch-size fetch-size
          :dns-prefetch dns
          :proxy proxy)
-  (reset! server (run-netty (app) {:port (to-int port)
-                                   :worker (to-int worker)
+  (reset! server (run-netty (app) {:port port
+                                   :worker worker
                                    :netty netty-option}))
   (info "netty server start at port" port)
   (use-index-writer! index-path)
@@ -47,12 +47,12 @@
   "Start rssminer server"
   (let [[options _ banner]
         (cli args
-             ["-p" "--port" "Port to listen" :default "8100"]
-             ["--worker" "Http worker count" :default "1"]
-             ["--crawler-queue" "queue size" :default "200"]
-             ["--fetcher-queue" "queue size" :default "100"]
-             ["--fetch-size" "Bulk fetch size" :default "100"]
-             ["--profile" "dev or prod" :default "dev"]
+             ["-p" "--port" "Port to listen" :default 8100 :parse-fn to-int]
+             ["--worker" "Http worker count" :default 1 :parse-fn to-int]
+             ["--crawler-queue" "queue size" :default 200 :parse-fn to-int]
+             ["--fetcher-queue" "queue size" :default 100 :parse-fn to-int]
+             ["--fetch-size" "Bulk fetch size" :default 100 :parse-fn to-int]
+             ["--profile" "dev or prod" :default :dev :parse-fn keyword]
              ["--db-path" "H2 Database file path"
               :default "/media/disk/rssminer/rssminer"]
              ["--index-path" "Path to store lucene index"
@@ -62,8 +62,6 @@
              ["--[no-]fetcher" "Start rss fetcher"]
              ["--[no-]dns" "Enable dns prefetch" :default true]
              ["--[no-]proxy" "Enable Socks proxy" :default true]
-             ["-h" "--[no-]help" "Print this help"])]
-    (when (:help options)
-      (println banner)
-      (System/exit 0))
+             ["--[no-]help" "Print this help"])]
+    (when (:help options) (println banner) (System/exit 0))
     (start-server options)))

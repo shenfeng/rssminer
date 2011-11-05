@@ -1,7 +1,7 @@
 (ns rssminer.dbperf-test
   (:use (rssminer [database :only [import-h2-schema! use-h2-database!]])
-        [clojure.tools.cli :only [cli optional required]]
-        [rssminer.util :only [extract-text]]
+        [clojure.tools.cli :only [cli]]
+        [rssminer.util :only [extract-text to-int]]
         [rssminer.test-common]
         [rssminer.db.util :only [h2-query]])
   (:require [clojure.string :as str]
@@ -37,7 +37,7 @@
 (defn do-insert [& {:keys [n path]}]
   (.delete (java.io.File. (str path ".h2.db")))
   (use-h2-database! path)
-  (import-h2-schema! :trace false)
+  (import-h2-schema!)
   (let [refer (first (gen-rss-links))]
     (doseq [rss (partition 10 (take n (gen-rss-links)))]
       (db/insert-crawler-links refer rss))))
@@ -49,7 +49,8 @@
       :result ret#}))
 
 (defn benchmark [{:keys [init times step path]}]
-  (doseq [n (take times (iterate (fn [n] (* n step)) init))]
+  (doseq [n (take times
+                  (iterate (fn [n] (* n step)) init))]
     (let [r (my-time (do-insert :n n :path path))
           inserted (-> ["select count (*) as count from crawler_links"]
                        h2-query first :count)
@@ -72,15 +73,11 @@
 (defn main [& args]
   "benchmark database"
   (benchmark
-   (cli args
-        (optional ["-i" "--init" "start" :default "10000"]
-                  #(Integer/parseInt %))
-        (optional ["-s" "--step" "step" :default "5"]
-                  #(Integer/parseInt %))
-        (optional ["-c" "--times" "step count" :default "3"]
-                  #(Integer/parseInt %))
-        (optional ["-p" "--path" "tmp db path"
-                   :default "/tmp/h2_bench"]))))
+   (first (cli args
+               ["-i" "--init" "start" :default 10000 :parse-fn to-int]
+               ["-s" "--step" "step" :default 5 :parse-fn to-int]
+               ["-c" "--times" "step count":default 3 :parse-fn to-int]
+               ["-p" "--path" "tmp db path" :default "/tmp/h2_bench"]))))
 
 (defn sql []
   (str "select id, author, summary, link,guid  from feeds where id in ("
@@ -104,9 +101,12 @@
     (println "takes time " (/ (double (reduce + times)) n))))
 
 (defn bench-dns []
-  (let [links (take 20 (reverse
-                        (rssminer.db.crawler/fetch-crawler-links (rand-int 500))))]
+  (let [links (rssminer.db.crawler/fetch-crawler-links 50)]
     (time (doseq [url links]
-            (let [host (-> url :url java.net.URI. .getHost)]
-              (try (time (java.net.InetAddress/getAllByName host))
-                   (catch Exception e)))))))
+            (try
+              (let [host (-> url :url java.net.URI. .getHost)
+                    r (my-time (java.net.InetAddress/getAllByName host))]
+                (println (:time r) "ms, " (first (:result r))))
+              (catch Exception e
+                (println "errro")))))))
+

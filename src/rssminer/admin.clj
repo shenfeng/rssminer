@@ -99,8 +99,8 @@
         fren (frequencies
               (flatten
                (map #(-> % :url URI. .getHost split)
-                    (fetch-rss-links (to-int limit)))))
-        want (take (to-int size) (reverse (sort-by val fren)))]
+                    (fetch-rss-links limit))))
+        want (take size (reverse (sort-by val fren)))]
     (clojure.pprint/pprint want)))
 
 (defn -main [& args]
@@ -108,20 +108,20 @@
   (let [[options _ banner]
         (cli args
              ["-c" "--command"
-              "init-db, clean-rss, clean-links, rebuild-index, cal"]
+              "init-db, clean-rss, clean-links, rebuild-index, cal"
+              :parse-fn keyword]
              ["-p" "--password" "password" :default "123456"]
              ["--db-path" "H2 Database path" :default "/dev/shm/rssminer"]
              ["--data-path" "Backup, restore data path"
               :default "/tmp/rssminer"]
              ["--index-path" "Path to store lucene index"
               :default "/dev/shm/index"]
-             ["--limit" "how much to calculate" :default "5000"]
-             ["--size" "size to print" :default "50"]
-             ["-h" "--[no-]help" "Print this help"])]
-    (when (:help options)
-      (println banner)
-      (System/exit 0))
-    (if (= :init-db (keyword (:command options)))
+             ["--limit" "how much to calculate" :default 5000
+              :parse-fn to-int]
+             ["--size" "size to print" :default 50 :parse-fn to-int]
+             ["--[no-]help" "Print this help"])]
+    (when (:help options) (println banner) (System/exit 0))
+    (if (= :init-db (:command options))
       (setup-db options)
       (do
         (use-h2-database! (:db-path options))
