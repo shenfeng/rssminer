@@ -44,19 +44,6 @@ public class Searcher {
 
     private IndexWriter indexer = null;
     private final String path;
-    private Thread shutDownHook = new Thread(new Runnable() {
-        public void run() {
-            try {
-                if (indexer != null) {
-                    logger.info("jvm shutdown, close Searcher@" + path);
-                    indexer.close();
-                    indexer = null;
-                }
-            } catch (Exception e) {
-                logger.error("shutdownHook", e);
-            }
-        }
-    });
 
     public void toggleInfoStream(boolean toggle) throws IOException {
         if (toggle) {
@@ -77,7 +64,6 @@ public class Searcher {
             dir = FSDirectory.open(new File(path));
         }
         indexer = new IndexWriter(dir, cfg);
-        Runtime.getRuntime().addShutdownHook(shutDownHook);
     }
 
     @Override
@@ -95,7 +81,6 @@ public class Searcher {
             logger.info("close Searcher@" + path);
             indexer.close();
             indexer = null;
-            Runtime.getRuntime().removeShutdownHook(shutDownHook);
         }
     }
 

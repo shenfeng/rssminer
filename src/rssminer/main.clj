@@ -20,14 +20,18 @@
   (stop-fetcher)
   (when-not (nil? @server)
     (info "shutdown netty server....")
-    (@server))
+    (@server)
+    (reset! server nil))
   (close-global-h2-factory!)
   (close-global-index-writer!))
+
+(defonce shutdown-hook (Thread. stop-server))
 
 (defn start-server
   [{:keys [port index-path profile db-path h2-trace worker crawler-queue
            fetcher-queue crawler fetcher proxy dns fetch-size]}]
   (stop-server)
+  (.addShutdownHook (Runtime/getRuntime) shutdown-hook) ;only add once
   (use-h2-database! db-path :trace h2-trace)
   (swap! rssminer-conf assoc :profile (keyword profile)
          :crawler-queue crawler-queue

@@ -3,7 +3,7 @@ task :default => :test
 version = Time.now.strftime("%Y%m%d%H%M") # timestamp
 jscompiler = "closure-compiler.jar"
 htmlcompressor = "htmlcompressor.jar"
-luke = "lukeall-3.3.0.jar"
+luke = "lukeall-3.4.0_1.jar"
 
 def get_file_as_string(filename)
   data = ''
@@ -28,7 +28,7 @@ def gen_jstempls(folder)
     data += "tmpls." + name + " = '" + text + "';\n"
   end
   data += "window.Rssminer = window.$.extend(window.Rssminer, {tmpls: tmpls})})();\n"
-  File.open("public/js/rssminer/#{folder}-tmpls.js", 'w') {|f| f.write(data)}
+  File.open("public/js/gen/#{folder}-tmpls.js", 'w') {|f| f.write(data)}
 end
 
 def minify_js(name, jss, version)
@@ -74,7 +74,7 @@ rssminer_jss = FileList['public/js/lib/jquery.js',
                         'public/js/lib/underscore.js',
                         'public/js/lib/backbone.js',
                         'public/js/lib/mustache.js',
-                        'public/js/rssminer/rssminer-tmpls.js',
+                        'public/js/gen/rssminer-tmpls.js',
                         'public/js/rssminer/util.js',
                         'public/js/rssminer/models.js',
                         'public/js/rssminer/views.js',
@@ -87,26 +87,33 @@ dashboard_jss = FileList['public/js/lib/jquery.js',
                          'public/js/lib/underscore.js',
                          'public/js/lib/backbone.js',
                          'public/js/lib/mustache.js',
-                         'public/js/rssminer/dashboard-tmpls.js',
+                         'public/js/gen/dashboard-tmpls.js',
                          'public/js/rssminer/util.js',
                          'public/js/rssminer/dashboard.js']
 
 browse_jss = FileList['public/js/lib/jquery.js',
                       'public/js/lib/underscore.js',
                       'public/js/lib/mustache.js',
-                      'public/js/rssminer/rssminer-tmpls.js',
+                      'public/js/gen/rssminer-tmpls.js',
                       'public/js/rssminer/util.js',
                       'public/js/rssminer/browse.js']
+
+app_jss = FileList['public/js/lib/jquery.js',
+                   'public/js/lib/underscore.js',
+                   'public/js/lib/mustache.js',
+                   'public/js/gen/app-tmpls.js',
+                   'public/js/rssminer/util.js',
+                   'public/js/rssminer/app.js']
+
 
 desc "Clean generated files"
 task :clean  do
   rm_rf 'public/js/rssminer/tmpls.js'
   rm_rf 'src/templates'
-  sh 'rm public/js/rssminer*min.js || exit 0'
-  sh 'rm public/js/dashboard*min.js || exit 0'
-  sh 'rm public/js/browse*min.js || exit 0'
-  sh "rm public/js/rssminer/*-tmpls.js || exit 0 "
+  rm_rf 'public/js/gen'
   rm_rf "public/css"
+  rm_rf "classes"
+  sh 'rm -vf public/js/*min.js'
 end
 
 desc "Prepare for development"
@@ -136,11 +143,12 @@ task :test => :prepare do
 end
 
 namespace :js do
-
   desc "Generate template js resouces"
   task :tmpls => :html_compress do
+    mkdir_p "public/js/gen"
     gen_jstempls("dashboard");
     gen_jstempls("rssminer");
+    gen_jstempls("app");
   end
 
   desc 'Combine all js into one, minify it using google closure'
@@ -148,6 +156,7 @@ namespace :js do
     minify_js("rssminer", rssminer_jss, version);
     minify_js("dashboard", dashboard_jss, version);
     minify_js("browse", browse_jss, version);
+    minify_js("app", app_jss, version);
   end
 end
 

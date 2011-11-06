@@ -30,7 +30,7 @@
                 FROM TABLE(x int=?) T INNER JOIN feeds f ON T.x = f.id" ids])]
     (map #(let [^Searcher$Feed f (get meta (-> % :id str))]
             (assoc %
-              :docid (.docId f))) (h2-query sql))))
+              :docid (.docId f))) (h2-query sql :convert))))
 
 (defn index-feed
   [id content {:keys [author tags title]}]

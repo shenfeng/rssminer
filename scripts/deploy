@@ -5,7 +5,6 @@ set -e
 ABSOLUTE_PATH=$(readlink -f $0)
 RSSMINER_CODE_ROOT="${ABSOLUTE_PATH%/*/*}"
 
-rm classes -r
 lein compile
 cp src/templates classes -r
 rm classes/templates/tmpls/ -r
@@ -35,15 +34,13 @@ remote_run "sudo cp ${TARGET_DIR}/scripts/rssminer /etc/init.d/"
 remote_run "sudo chmod +x /etc/init.d/rssminer"
 remote_run "sudo /etc/init.d/rssminer restart"
 
-rm rssminer.jar
-exit 0
-
-remote_run "sudo cp ${TARGET_DIR}/conf/rssminer.conf /etc/init/"
 remote_run "sudo cp ${TARGET_DIR}/conf/nginx/rssminer /etc/nginx/sites-available"
 remote_run "sudo cp ${TARGET_DIR}/conf/nginx/gzip.conf /etc/nginx/conf.d"
 remote_run "cd /etc/nginx/sites-enabled  && sudo ln -f -s /etc/nginx/sites-available/rssminer"
-
-remote_run "sudo restart rssminer || sudo start rssminer"
 remote_run "sudo service nginx restart"
+
+rm rssminer.jar
+exit 0
+
 
 

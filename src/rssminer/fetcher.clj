@@ -57,7 +57,7 @@
                            (.setProvider (mk-provider))
                            (.setClient client)
                            (.setLinks links)
-                           (.setQueueSize (:fetche-queue @rssminer-conf))
+                           (.setQueueSize (:fetcher-queue @rssminer-conf))
                            (.setName "Fetcher")
                            (.setProxy (if (:proxy @rssminer-conf)
                                         socks-proxy no-proxy))

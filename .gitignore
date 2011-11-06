@@ -2,6 +2,7 @@ pom.xml
 *jar
 /lib/
 /classes/
+.lein-failures
 .lein-deps-sum
 .cake
 .project
@@ -12,6 +13,7 @@ public/css/
 src/templates/
 public/cl
 public/js/rssminer/*tmpls.js
+public/js/gen
 public/js/*min.js
 .idea/
 .emacs.desktop*

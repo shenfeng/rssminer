@@ -15,6 +15,7 @@
 /lib/dev
 /project.clj
 /public/js/rssminer
+/public/js/gen
 /public/js/lib
 /scss
 /src/templates/tmpls
