@@ -1,0 +1,140 @@
+@import "variable";
+@import "css3";
+@import "reset";
+@import "common";
+
+$color: #333;
+$date-color: #c8c8c8;
+$count-bg: #817d7d;
+$left-bg: #e1e4eb;
+$left-selected-bg: #f9fafc;
+$left-hover-bg: $left-selected-bg;
+$left-width: 230px; // left navgation
+$mid-bg: white;
+$mid-border-color: #cde7f8;
+$mid-selcted-bg: #e5e6e7;
+$mid-hover-bg: $mid-selcted-bg;
+$mid-width: 340px;
+$page-width: 1220px; // wider on app page
+$right-bg: #fefefe;
+$right-width: 650px;
+$site-bg: #b4b9bf;
+$tag-bg: #c1c1c1;
+$url-color: $date-color;
+
+html {
+    background: $site-bg;
+}
+
+#head {
+    height: 70px;
+    background: white;
+    .wrapper { width: $page-width; margin: 0 auto; position: relative; }
+}
+
+#search-input {
+    position: absolute;
+    top: 30px;
+    padding: 3px;
+    width: 300px;
+    right: 100px;
+}
+
+#main {
+    width: $page-width;
+    margin: 0 auto;
+    > div { float: left; }
+}
+
+#left {
+    width: $left-width;
+    background: $left-bg;
+    a { color: $color; }
+    > ul { list-style: none; padding: 0; margin: 0;}
+    div.item {
+        padding: 6px 0 6px 4px;
+        position: relative;
+        cursor: pointer;
+        &:hover { background: $left-hover-bg; }
+    }
+    span.count {
+        font-weight: normal;
+        font-size: 11px;
+        color: white;
+        position: absolute;
+        display: block;
+        top: 4px;
+        padding: 2px 4px;
+        @include border-radius(10px);
+        right: 10px;
+        background: $count-bg;
+    }
+    li.sub .item {
+        padding-left: 15px;
+    }
+    li.cat {
+        >.item { font-weight: bold; font-size: 12px; }
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+    }
+}
+
+#mid {
+    width: $mid-width;
+    background: $mid-bg;
+    > ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        li {
+            padding: 4px 0 4px 2px;
+            cursor: pointer;
+            border-bottom: 1px $mid-border-color solid;
+            h4 {
+                margin: 0;
+                font-weight: normal;
+                display: inline-block;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                width: 270px;
+            }
+            .date {
+                font-size: 11px;
+                color: $date-color;
+            }
+            &:hover {
+                background: $mid-hover-bg;
+                .vote { visibility: visible; }
+            }
+            .vote {
+                margin-left: 30px;
+                visibility: hidden;
+                span {
+                    cursor: pointer;
+                    width: 18px;
+                    display: inline-block;
+                    height: 18px;
+                    background: url(/imgs/vote.gif);
+                }
+                .down { background-position: -18px 0;}
+            }
+            .host { color: $url-color; }
+            .favicon { margin-left: 80px; }
+            p {
+                margin: 8px 0;
+                height: 32px;
+                overflow: hidden;
+            }
+        }
+    }
+}
+
+#right {
+    width: $right-width;
+    background: $right-bg;
+    .wrapper { padding: 0 .5em;}
+}

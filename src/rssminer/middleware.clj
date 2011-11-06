@@ -10,7 +10,7 @@
 (defn wrap-auth [handler]
   (fn [req]
     (let [user (session-get req :user)]
-      (if (and (not user) (= (:uri req) "/app"))
+      (if (and (not user) (= (:uri req) "/dashboard"))
         (redirect "/login")
         (handler req)))))
 

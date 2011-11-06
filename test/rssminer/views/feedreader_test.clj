@@ -8,11 +8,11 @@
   (let [resp (test-app {:uri "/"
                         :request-method :get})
         app-resp (test-app {:uri "/app"
-                        :request-method :get})
+                            :request-method :get})
         js-resp (test-app {:uri "/js/lib/jquery.js"
                            :request-method :get
                            :headers {}})]
-    (is (= 302 (:status app-resp)))
+    (is (= 200 (:status app-resp)))
     (is (= "no-cache" ((:headers resp) "Cache-Control")))
     (is (= "text/html; charset=utf-8" ((:headers resp) "Content-Type")))
     (is (= 200 (:status js-resp)))
@@ -20,10 +20,10 @@
 
 (deftest test-get-reader-page
   (let [resp (auth-app {:uri "/app"
-                            :request-method :get})]
+                        :request-method :get})]
     (is (= 200 (:status resp)))))
 
 (deftest test-dashboar-page
   (let [resp (test-app {:uri "/dashboard"
                         :request-method :get})]
-    (is (= 200 (:status resp)))))
+    (is (= 302 (:status resp)))))

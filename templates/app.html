@@ -1,5 +1,5 @@
 <!doctype html>
-<html style="overflow-y: scroll">
+<html>
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -11,17 +11,374 @@
           content="RSSMiner is an intelligent web-based rss reader. By
                    machine learning, RSSMiner highlight stories you
                    like, and help discover stories you may like.">
-    <link rel="stylesheet" href="/css/browse.css?{VERSION}">
+    <link rel="stylesheet" href="/css/app.css?{VERSION}">
   </head>
   <body>
     <div id="page-wrap">
-      <div id="header">
-        <div id="search">
-          <input id="rssminer-search"/>
+      <div id="head">
+        <div class="wrapper">
+          <img src="/imgs/logo.gif"/>
+          <input id="search-input">
         </div>
       </div>
       <div id="main" class="clearfix">
-
+        <div id="left">
+          <ul>
+            <li class="cat">
+              <div class="item">
+                <span class="text">ALL</span>
+                <span class="count">100</span>
+              </div>
+            </li>
+            <li class="cat">
+              <div class="item">
+                <a href="#">Recommand subscriptions</a>
+              </div>
+            </li>
+            <li class="cat">
+              <div class="item">
+                <span class="text">Recommand items</span>
+              </div>
+            </li>
+            <li class="cat">
+              <div class="item">By Time</div>
+              <ul>
+                <li class="sub">
+                  <div class="item">
+                    <span class="text">Last day</span>
+                    <span class="count">12</span>
+                  </div>
+                </li>
+                <li class="sub">
+                  <div class="item">
+                    <span class="text">Last week</span>
+                    <span class="count">99</span>
+                  </div>
+                </li>
+                <li class="sub">
+                  <div class="item">
+                    <span class="text">Last month</span>
+                    <span class="count">129</span>
+                  </div>
+                </li>
+              </ul>
+            </li>
+            <li class="cat">
+              <div class="item">By Tag</div>
+              <ul>
+                <li class="sub">
+                  <div class="item">
+                    <span class="text">Java</span>
+                    <span class="count">121</span>
+                  </div>
+                </li>
+                <li class="sub">
+                  <div class="item">
+                    <span class="text">mongodb</span>
+                    <span class="count">99</span>
+                  </div>
+                </li>
+                <li class="sub">
+                  <div class="item">
+                    <span class="text">社会</span>
+                    <span class="count">129</span>
+                  </div>
+                </li>
+                <li class="sub">
+                  <div class="item">
+                    <span class="text">Web</span>
+                    <span class="count">121</span>
+                  </div>
+                </li>
+                <li class="sub">
+                  <div class="item">
+                    <span class="text">瑞士银行</span>
+                    <span class="count">99</span>
+                  </div>
+                </li>
+                <li class="sub">
+                  <div class="item">
+                    <span class="text">Performance</span>
+                    <span class="count">129</span>
+                  </div>
+                </li>
+                <li class="sub">
+                  <div class="item">
+                    <span class="text">人物动态</span>
+                    <span class="count">11</span>
+                  </div>
+                </li>
+                <li class="sub">
+                  <div class="item">
+                    <span class="text">搜索引擎</span>
+                    <span class="count">29</span>
+                  </div>
+                </li>
+                <li class="sub">
+                  <div class="item">
+                    <span class="text">HTML5</span>
+                    <span class="count">12</span>
+                  </div>
+                </li>
+              </ul>
+            </li>
+            <li class="cat">
+              <div class="item">By subscription</div>
+              <ul>
+                <li class="sub">
+                  <div class="item">
+                    <span class="text">A List Apart</span>
+                    <span class="count">111</span>
+                  </div>
+                </li>
+                <li class="sub">
+                  <div class="item">
+                    <span class="text">M-x all-things-emacs</span>
+                    <span class="count">13</span>
+                  </div>
+                </li>
+                <li class="sub">
+                  <div class="item">
+                    <span class="text">John Rose @ Oracle</span>
+                    <span class="count">16</span>
+                  </div>
+                </li>
+                <li class="sub">
+                  <div class="item">
+                    <span class="text">Jquery for Designers</span>
+                    <span class="count">18</span>
+                  </div>
+                </li>
+                <li class="sub">
+                  <div class="item">
+                    <span class="text">李开复的博客</span>
+                    <span class="count">29</span>
+                  </div>
+                </li>
+                <li class="sub">
+                  <div class="item">
+                    <span class="text">王冉的Blog</span>
+                    <span class="count">12</span>
+                  </div>
+                </li>
+                <li class="sub">
+                  <div class="item">
+                    <span class="text">皮皮书屋</span>
+                    <span class="count">1211</span>
+                  </div>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <div id="mid">
+          <ul>
+            <li>
+              <h4>Expert SQL Server 2005 Integration Service</h4>
+              <span class="date">2011/11/11</span>
+              <div class="vote-host">
+                <span class="vote">
+                  <span class="up"></span>
+                  <span class="down"></span>
+                </span>
+                <img class="favicon" src="http://g.etfv.co/http://baidu.com"/>
+                <span class="host">www.ppurl.com</span>
+              </div>
+              <p class="snippet">
+                Sometimes text will have to be clipped. For instance
+                when it overflows the element’s box. When this
+                happens, you want to leave a visual “hint” to the user
+                that text has been clipped. This is were the
+                text-overflow-props come in.
+              </p>
+            </li>
+            <li>
+              <h4>湖南身亡村官重新尸检 1个月后公布结果</h4>
+              <span  class="date">2011/11/11</span>
+              <div class="vote-host">
+                <span class="vote">
+                  <span class="up"></span>
+                  <span class="down"></span>
+                </span>
+                <img class="favicon" src="http://g.etfv.co/http://baidu.com"/>
+                <span class="host">www.ppurl.com</span>
+              </div>
+              <p class="snippet">
+                游济安生前照片 遗体打捞出水照片 本报讯 （记者欧钦平）
+                在湖南省领导对“新化上访村官意外身亡”一事作出批示要求
+                “彻查”后，4日，娄底市和新化县政府再次启动游济安死因调
+                查核实工作
+              </p>
+            </li>
+            <li>
+              <h4>铁道部被曝向国家求援8千亿 财政发债各半</h4>
+              <span  class="date">2011/11/11</span>
+              <div class="vote-host">
+                <span class="vote">
+                  <span class="up"></span>
+                  <span class="down"></span>
+                </span>
+                <img class="favicon" src="http://g.etfv.co/http://baidu.com"/>
+                <span class="host">www.ppurl.com</span>
+              </div>
+              <p class="snippet">
+                日前，中国中铁隧道集团副总工程师王梦恕公开表示，据他了
+                解，全国范围内停工的铁路项目里程在1万公里以上，其中隧
+                道里程约占5400公里。 据铁路系统人士初步估算，停工的
+              </p>
+            </li>
+            <li>
+              <h4>Expert SQL Server 2005 Integration Service</h4>
+              <span  class="date">2011/11/11</span>
+              <div class="vote-host">
+                <span class="vote">
+                  <span class="up"></span>
+                  <span class="down"></span>
+                </span>
+                <img class="favicon" src="http://g.etfv.co/http://baidu.com"/>
+                <span class="host">www.ppurl.com</span>
+              </div>
+              <p class="snippet">
+                Sometimes text will have to be clipped. For instance
+                when it overflows the element’s box. When this
+                happens, you want to leave a visual “hint” to the user
+                that text has been clipped. This is were the
+                text-overflow-props come in.
+              </p>
+            </li>
+            <li>
+              <h4>Expert SQL Server 2005 Integration Service</h4>
+              <span class="date">2011/11/11</span>
+              <div class="vote-host">
+                <span class="vote">
+                  <span class="up"></span>
+                  <span class="down"></span>
+                </span>
+                <img class="favicon" src="http://g.etfv.co/http://baidu.com"/>
+                <span class="host">www.ppurl.com</span>
+              </div>
+              <p class="snippet">
+                Sometimes text will have to be clipped. For instance
+                when it overflows the element’s box. When this
+                happens, you want to leave a visual “hint” to the user
+                that text has been clipped. This is were the
+                text-overflow-props come in.
+              </p>
+            </li>
+            <li>
+              <h4>湖南身亡村官重新尸检 1个月后公布结果</h4>
+              <span  class="date">2011/11/11</span>
+              <div class="vote-host">
+                <span class="vote">
+                  <span class="up"></span>
+                  <span class="down"></span>
+                </span>
+                <img class="favicon" src="http://g.etfv.co/http://baidu.com"/>
+                <span class="host">www.ppurl.com</span>
+              </div>
+              <p class="snippet">
+                游济安生前照片 遗体打捞出水照片 本报讯 （记者欧钦平）
+                在湖南省领导对“新化上访村官意外身亡”一事作出批示要求
+                “彻查”后，4日，娄底市和新化县政府再次启动游济安死因调
+                查核实工作
+              </p>
+            </li>
+            <li>
+              <h4>铁道部被曝向国家求援8千亿 财政发债各半</h4>
+              <span  class="date">2011/11/11</span>
+              <div class="vote-host">
+                <span class="vote">
+                  <span class="up"></span>
+                  <span class="down"></span>
+                </span>
+                <img class="favicon" src="http://g.etfv.co/http://baidu.com"/>
+                <span class="host">www.ppurl.com</span>
+              </div>
+              <p class="snippet">
+                日前，中国中铁隧道集团副总工程师王梦恕公开表示，据他了
+                解，全国范围内停工的铁路项目里程在1万公里以上，其中隧
+                道里程约占5400公里。 据铁路系统人士初步估算，停工的
+              </p>
+            </li>
+            <li>
+              <h4>Expert SQL Server 2005 Integration Service</h4>
+              <span  class="date">2011/11/11</span>
+              <div class="vote-host">
+                <span class="vote">
+                  <span class="up"></span>
+                  <span class="down"></span>
+                </span>
+                <img class="favicon" src="http://g.etfv.co/http://baidu.com"/>
+                <span class="host">www.ppurl.com</span>
+              </div>
+              <p class="snippet">
+                Sometimes text will have to be clipped. For instance
+                when it overflows the element’s box. When this
+                happens, you want to leave a visual “hint” to the user
+                that text has been clipped. This is were the
+                text-overflow-props come in.
+              </p>
+            </li>
+            <li>
+              <h4>Expert SQL Server 2005 Integration Service</h4>
+              <span class="date">2011/11/11</span>
+              <div class="vote-host">
+                <span class="vote">
+                  <span class="up"></span>
+                  <span class="down"></span>
+                </span>
+                <img class="favicon" src="http://g.etfv.co/http://baidu.com"/>
+                <span class="host">www.ppurl.com</span>
+              </div>
+              <p class="snippet">
+                Sometimes text will have to be clipped. For instance
+                when it overflows the element’s box. When this
+                happens, you want to leave a visual “hint” to the user
+                that text has been clipped. This is were the
+                text-overflow-props come in.
+              </p>
+            </li>
+          </ul>
+        </div>
+        <div id="right">
+          <div class="wrapper">
+            <p>
+              　　1998年瑞士银行集团成立伊始，不过是一家在瑞士有绝对市场
+              份额、在欧洲有一定影响的金融机构，虽然客户遍及全球，但业务
+              范围主要局限在瑞士国内，在国际金融市场并没有太大的影响力和
+              发言权。而瑞士国内市场相对狭小、饱和度高，要谋求瑞士银行集
+              团未来的发展，向外扩张成为必然。欧洲本土虽然轻车熟路，也有
+              相当的业务基础，但经济不甚景气，各国银行业的集中度相当高，
+              进入前景不太明朗，瑞士银行采用了“守”的战略，只谋求巩固欧洲
+              这一片基本阵地。亚洲当时正遭受金融危机冲击，市场相对有限且
+              进入难度较大，瑞士银行集团将其摆在次要位置。美国金融市场庞
+              大，进入壁垒少而自由度高，所以，瑞士银行集团高层毫不犹豫选
+              择了美国市场。近几年的发展已经证明了这一区位发展战略的正确
+              性，经过几年拓展，美国成了瑞士银行集团利润的重要来源地，美
+              国市场对瑞士银行集团的利润贡献率都远远超过1/2。2004年来自
+              美洲（95%以上的业务在美国）市场的利润首次超过来自瑞士本土
+              的利润，达到38．91%，按照目前瑞士银行集团在美国市场的进展，
+              2005年这一比例肯定超过40%。有理由相信，美国市场对瑞士银行
+              集团的利润贡献率还会越来越大。
+            </p>
+            <p>　
+              瑞士银行集团无疑是全球最成功的银行之一，足可以与当今全
+              球最强大的花旗集团及汇丰控股媲美，这与它的市场选择、业务取舍、
+              团队精神、风险控制等因素密不可分。
+            </p>
+            <p>
+              　　2005年瑞士银行集团提出的发展战略作出了很好的注脚，即：
+              “同一个信念，同一个团队，同一个目标，同一个UBS(One
+              belief, One team, One fokus, now, One UBS)”。
+            </p>
+            <p>
+              　　从表面看，这只是瑞士银行集团的一个形象广告或品牌战略，
+              它决定放弃过去花重金获得的华宝和普惠等品牌，而使用统一的
+              UBS品牌。但是，对瑞士联合银行集团的发展历史进行分析，我
+              们会发现，“四个一工程”是瑞士联合银行集团的成功之道。
+            </p>
+          </div>
+        </div>
       </div>
     </div>
     <script src="/js/lib/jquery.js" data-profile="dev"></script>
