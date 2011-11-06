@@ -21,12 +21,13 @@
         user (db/authenticate email password)
         return-url (or return-url "/app")]
     (if user
-      (let [resp (assoc (redirect return-url)
-                   :session {:user user})]
-        (if persistent
-          (assoc resp
-            :session-cookie-attrs {:expires (get-expire 15)})
-          resp))
+      (assoc (redirect return-url)
+        :session {:user user}
+        :session-cookie-attrs (if persistent
+                                {:expires (get-expire 7)
+                                 :http-only true}
+                                {:http-only true}))
+
       (view/login-page return-url))))
 
 (defn show-signup-page [req]

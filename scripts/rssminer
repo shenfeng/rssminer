@@ -41,6 +41,7 @@ JMX_OPTS="-Dcom.sun.management.jmxremote \
 APP_ARGS="--db-path $DB_PATH \
     --index-path $INDEX_PATH \
     --profile prod \
+    --redis-host 127.0.0.1 \
     --no-proxy \
     --no-dns \
     --crawler-queue 50 \

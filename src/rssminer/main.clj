@@ -25,23 +25,26 @@
   (close-global-h2-factory!)
   (close-global-index-writer!))
 
-(defonce shutdown-hook (Thread. stop-server))
+(defonce shutdown-hook (Thread. ^Runnable stop-server))
 
 (defn start-server
   [{:keys [port index-path profile db-path h2-trace worker crawler-queue
-           fetcher-queue crawler fetcher proxy dns fetch-size]}]
+           fetcher-queue crawler fetcher proxy dns fetch-size redis-host]}]
   (stop-server)
-  (.addShutdownHook (Runtime/getRuntime) shutdown-hook) ;only add once
+  (.removeShutdownHook (Runtime/getRuntime) shutdown-hook)
+  (.addShutdownHook (Runtime/getRuntime) shutdown-hook)
   (use-h2-database! db-path :trace h2-trace)
   (swap! rssminer-conf assoc :profile (keyword profile)
          :crawler-queue crawler-queue
          :fetcher-queue fetcher-queue
          :fetch-size fetch-size
+         :redis-host redis-host
          :dns-prefetch dns
          :proxy proxy)
-  (reset! server (run-netty (app) {:port port
-                                   :worker worker
-                                   :netty netty-option}))
+  (reset! server
+          (run-netty (app :redis-host redis-host) {:port port
+                                                   :worker worker
+                                                   :netty netty-option}))
   (info "netty server start at port" port)
   (use-index-writer! index-path)
   (when crawler (start-crawler))
@@ -57,6 +60,8 @@
              ["--fetcher-queue" "queue size" :default 100 :parse-fn to-int]
              ["--fetch-size" "Bulk fetch size" :default 100 :parse-fn to-int]
              ["--profile" "dev or prod" :default :dev :parse-fn keyword]
+             ["--redis-host" "redis for session store"
+              :default "127.0.0.1"]
              ["--db-path" "H2 Database file path"
               :default "/media/disk/rssminer/rssminer"]
              ["--index-path" "Path to store lucene index"

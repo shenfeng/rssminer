@@ -11,7 +11,8 @@
                                      wrap-reload-in-dev wrap-failsafe
                                      wrap-request-logging-in-dev
                                      JPOST JPUT JDELETE JGET]]
-                  [import :only [opml-import]]))
+                  [import :only [opml-import]]
+                  [redis :only [redis-store]]))
   (:require [clojure.string :as str]
             [compojure.route :as route]
             (rssminer.handlers [feedreader :as rssminer]
@@ -77,13 +78,16 @@
 
 ;;; The last one in the list is the first one get the request,
 ;;; the last one get the response
-(defn app [] (-> #'all-routes
-                 wrap-auth
-                 wrap-session
-                 wrap-cache-header
-                 wrap-request-logging-in-dev
-                 wrap-keyword-params
-                 wrap-multipart-params
-                 wrap-params
-                 (wrap-reload-in-dev reload-meta)
-                 wrap-failsafe))
+(defn app [& {:keys [redis-host]}]
+  (-> #'all-routes
+      wrap-auth
+      (wrap-session
+       {:store (redis-store
+                (* 3600 24 7) (or redis-host "127.0.0.1"))})
+      wrap-cache-header
+      wrap-request-logging-in-dev
+      wrap-keyword-params
+      wrap-multipart-params
+      wrap-params
+      (wrap-reload-in-dev reload-meta)
+      wrap-failsafe))

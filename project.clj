@@ -12,6 +12,7 @@
                  [compojure "0.6.5"]
                  [enlive "1.0.0"]
                  [commons-io "2.1"]
+                 [redis.clients/jedis "2.0.0"]
                  [commons-codec "1.5"]
                  [org.apache.lucene/lucene-core "3.4.0"]
                  [org.apache.lucene/lucene-queries "3.4.0"]
