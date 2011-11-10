@@ -1,12 +1,6 @@
---rlwrap java -cp /tmp/h2-1.3.158.jar org.h2.tools.Shell -url jdbc:h2:/tmp/test/crawler_tmph92 -user sa -password sa
-
--- select datediff('SECOND', add_ts, now()) - check_interval as t from rss_link order by t limit 1
-
 SET COMPRESS_LOB DEFLATE;
 ----
 SET DEFAULT_LOCK_TIMEOUT 120000;
-----
-SET CACHE_SIZE 16384;
 ----
 set WRITE_DELAY 3000;           -- default 500ms
 ----
@@ -73,7 +67,6 @@ CREATE TABLE feeds
   title VARCHAR,
   summary CLOB,
   snippet VARCHAR,
-  tags VARCHAR,                 -- tags by feed author(parsed)
   updated_ts TIMESTAMP,
   published_ts TIMESTAMP,
   rss_link_id INTEGER
@@ -95,19 +88,21 @@ CREATE TABLE feed_tag
 (
     id INTEGER PRIMARY KEY auto_increment,
     tag VARCHAR,
-    user_id INTEGER NOT NULL
+    user_id INTEGER             -- null when given by feed author
             REFERENCES users ON UPDATE CASCADE ON DELETE CASCADE,
     feed_id INTEGER NOT NULL
             REFERENCES feeds ON UPDATE CASCADE ON DELETE CASCADE,
 );
 ---
-create table user_feed_pref
+create table user_feed
 (
     user_id INTEGER NOT NULL
             REFERENCES users ON UPDATE CASCADE ON DELETE CASCADE,
     feed_id INTEGER NOT NULL
             REFERENCES feeds ON UPDATE CASCADE ON DELETE CASCADE,
-    pref BOOLEAN,
+    read BOOLEAN default false,
+    pref BOOLEAN default null,
+    read_date INTEGER,
     UNIQUE(user_id, feed_id),
 )
 

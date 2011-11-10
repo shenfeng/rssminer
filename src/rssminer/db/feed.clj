@@ -19,6 +19,16 @@
   (h2-query ["SELECT id, content, added_ts FROM comments
               WHERE user_id = ? AND feed_id = ? " user-id feed-id]))
 
+(defn insert-pref [user-id feed-id pref]
+  (with-h2
+    (try (insert-record :user_feed {:user_id user-id
+                                    :feed_id feed-id
+                                    :pref pref})
+         (catch Exception e             ;unique key use_id & feed_id
+           (update-values :user_feed
+                          ["user_id = ? AND feed_id = ?" user-id feed-id]
+                          {:pref pref})))))
+
 (defn insert-tags [feed-id user-id tags]
   (doseq [t tags]
     (ignore-error
@@ -26,31 +36,26 @@
                                          :user_id user-id
                                          :tag t})))))
 
-(defn insert-pref [user-id feed-id pref]
-  (with-h2
-    (try (insert-record :user_feed_pref {:user_id user-id
-                                         :feed_id feed-id
-                                         :pref pref})
-         (catch Exception e             ;unique key use_id & feed_id
-           (update-values :user_feed_pref
-                          ["user_id = ? AND feed_id = ?" user-id feed-id]
-                          {:pref pref})))))
-
-(defn save-feeds [feeds rss-id user-id]
-  (doseq [{:keys [link] :as feed} (:entries feeds)]
+(defn save-feeds [feeds rss-id]
+  (doseq [{:keys [link tags] :as feed} (:entries feeds)]
     (when (and link (not (blank? link)))
       (try
         (let [content (extract-text (:summary feed))
+              snippet (gen-snippet content)
               id (id-k (with-h2
                          (insert-record :feeds
-                                        (assoc feed
+                                        (assoc (dissoc feed :tags)
                                           :rss_link_id rss-id
-                                          :snippet (gen-snippet content)))))]
+                                          :snippet snippet))))]
+          (doseq [t tags]
+            (ignore-error
+             (with-h2 (insert-record :feed_tag  {:feed_id id
+                                                 :tag t}))))
           (index-feed id content feed))
         (catch RuntimeException e       ;link is uniqe
           (info "update" link)
           (with-connection @h2-db-factory
-            (update-values :feeds ["link=?" link] feed)))))))
+            (update-values :feeds ["link=?" link] (dissoc feed :tags))))))))
 
 (defn fetch-feeds [rss-link-id limit offset]
   (h2-query ["SELECT id, author, title, summary, link, published_ts

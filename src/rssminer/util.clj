@@ -46,7 +46,7 @@
 
 (defn gen-snippet [content]
   (when content
-    (rssminer.Utils/genSnippet content 280)))
+    (rssminer.Utils/genSnippet content 230)))
 
 (defn serialize-to-js [data]
   (let [stats (map

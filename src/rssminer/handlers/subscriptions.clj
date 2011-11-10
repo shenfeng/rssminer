@@ -50,7 +50,7 @@
                                            :rss_link_id (:id rss)})]
              (info (str "user#" user-id) "add"
                    (str "(" (-> feeds :entries count) ")" link))
-             (fdb/save-feeds feeds (:id rss) user-id) ;; 3. save feeds
+             (fdb/save-feeds feeds (:id rss)) ;; 3. save feeds
              (add-subscription-ret us rss (-> feeds :entries count)))
            {:status 460
             :message "Bad feedlink"}))

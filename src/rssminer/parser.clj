@@ -40,9 +40,8 @@
                       (-> e :contents first :value trim)
                       (-> e :description :value trim))
             :link (-> e :link trim)
-            ;; :guid (-> e :uri trim)
-            :tags (s/join "; " (seq (set (map #(-> % :name trim s/lower-case)
-                                                (:categories e)))))
+            :tags (set (map #(-> % :name trim s/lower-case)
+                            (:categories e)))
             :updated_ts (:updatedDate e)
             :published_ts (:publishedDate e)))
 

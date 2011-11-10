@@ -6,8 +6,7 @@
   (:import org.h2.jdbcx.JdbcConnectionPool
            org.h2.tools.Server))
 
-(defonce h2-db-factory  (atom {:factory nil
-                               :ds nil}))
+(defonce h2-db-factory  (atom {:factory nil :ds nil}))
 
 (defonce server (atom nil))
 
@@ -31,7 +30,8 @@
 
 (defn use-h2-database! [db-path & {:keys [trace]}]
   (close-global-h2-factory!)
-  (let [url (str "jdbc:h2:" db-path ";FILE_LOCK=FS;MVCC=true"
+  (let [opts ";LOG=1;LOCK_MODE=3;CACHE_SIZE=16384;UNDO_LOG=1"
+        url (str "jdbc:h2:" db-path ";FILE_LOCK=FS;MVCC=true" opts
                  (when trace ";TRACE_LEVEL_FILE=2;TRACE_MAX_FILE_SIZE=1000"))
         ds (JdbcConnectionPool/create url "sa" "")
         f (fn [& args]  (.getConnection ds))]

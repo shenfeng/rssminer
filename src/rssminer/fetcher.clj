@@ -34,7 +34,7 @@
                           :title (:title feeds))]
     (trace status url (str "(" (-> feeds :entries count) " feeds)"))
     (db/update-rss-link id updated)
-    (when feeds (db/save-feeds feeds id nil))))
+    (when feeds (db/save-feeds feeds id))))
 
 (defn- mk-task [{:keys [url last_modified] :as link}]
   (reify IHttpTask

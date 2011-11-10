@@ -172,8 +172,10 @@ public class HttpTaskRunner {
         mHttp = conf.client;
         mLinkCheker = conf.links;
         if (conf.dnsPrefetch) {
+        	logger.info("dns prefetcher enabled");
             mDnsPrefecher = DnsPrefecher.getInstance();
         } else {
+        	logger.info("dns prefetcher disabled");
             mDnsPrefecher = null;
         }
         mStat.put(1200, conf.queueSize);

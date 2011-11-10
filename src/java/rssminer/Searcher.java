@@ -30,6 +30,9 @@ import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import clojure.lang.ISeq;
+import clojure.lang.Seqable;
+
 public class Searcher {
 
     static final Version V = Version.LUCENE_33;
@@ -85,7 +88,7 @@ public class Searcher {
     }
 
     public void index(int feeId, String author, String title, String content,
-            String tags) throws CorruptIndexException, IOException {
+            Seqable tags) throws CorruptIndexException, IOException {
         Document doc = new Document();
         NumericField fid = new NumericField(FEED_ID, Store.YES, false);
         fid.setIntValue(feeId);
@@ -110,13 +113,15 @@ public class Searcher {
                     TermVector.YES);
             doc.add(c);
         }
-
-        if (tags.length() > 0) {
-            for (String tag : tags.split("; ")) {
+        if (tags != null) {
+            ISeq seq = tags.seq();
+            while (seq != null) {
+                String tag = seq.first().toString();
                 Field f = new Field(TAG, tag, Store.NO, Index.NOT_ANALYZED,
                         TermVector.YES);
                 f.setBoost(1.3f);
                 doc.add(f);
+                seq = seq.next();
             }
         }
 

@@ -2,8 +2,7 @@
   (:use [rssminer.db.util :only [select-sql-params h2-insert-and-return
                                  h2-query with-h2]]
         [clojure.java.jdbc :only [delete-rows update-values]]
-        [rssminer.util :only [tracep]])
-  (:require [rssminer.db.feed :as fdb]))
+        [rssminer.util :only [tracep]]))
 
 (defn fetch-rss-link [map]
   (first

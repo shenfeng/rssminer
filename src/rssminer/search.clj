@@ -22,11 +22,11 @@
 (defn fetch-feeds [meta user-id]
   (let [ids (to-array (keys meta))
         sql (if user-id
-              ["SELECT id, author, title, summary, link, p.pref, tags, snippet
+              ["SELECT id, author, title, summary, link, p.pref, snippet
                 FROM TABLE(x int=?) T INNER JOIN feeds f ON T.x = f.id
                 LEFT JOIN user_feed_pref p
                      on p.feed_id = id and p.user_id = ?" ids user-id]
-              ["SELECT id, author, title, summary, link, tags, snippet
+              ["SELECT id, author, title, summary, link, snippet
                 FROM TABLE(x int=?) T INNER JOIN feeds f ON T.x = f.id" ids])]
     (map #(let [^Searcher$Feed f (get meta (-> % :id str))]
             (assoc %
