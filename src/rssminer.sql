@@ -10,7 +10,7 @@ CREATE TABLE users
   email VARCHAR UNIQUE,
   name VARCHAR,
   password VARCHAR,
-  authen_toekn VARCHAR,
+  authen_token VARCHAR,
   added_ts timestamp DEFAULT now()
 );
 
@@ -67,8 +67,8 @@ CREATE TABLE feeds
   title VARCHAR,
   summary CLOB,
   snippet VARCHAR,
-  updated_ts TIMESTAMP,
-  published_ts TIMESTAMP,
+  updated_ts INTEGER,
+  published_ts INTEGER,
   rss_link_id INTEGER
              REFERENCES rss_links ON UPDATE CASCADE ON DELETE CASCADE
 );

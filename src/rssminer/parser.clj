@@ -1,7 +1,6 @@
 (ns rssminer.parser
-  (:use [rssminer.time :only [to-ts]]
-        [rssminer.util :only [assoc-if]]
-        [clojure.tools.logging :only [error]])
+  (:use [rssminer.util :only [assoc-if]]
+        [clojure.tools.logging :only [error trace]])
   (:require [clojure.string :as s])
   (:import [com.sun.syndication.io SyndFeedInput]
            java.util.Date
@@ -27,7 +26,7 @@
                            [k d]))
      (list-like? target) (map decode-bean target)
      :else (if (instance? Date target)
-             (to-ts ^Date target) target))))
+             (quot (.getTime ^Date target) 1000) target))))
 
 (definline trim [^String s]
   `(when ~s (s/trim ~s)))
@@ -57,4 +56,4 @@
          :description (-> feed :description trim)
          :entries (map parse-entry (:entries feed))})
       (catch Exception e
-        (error e "parse rss error")))))
+        (trace e "parse rss error")))))

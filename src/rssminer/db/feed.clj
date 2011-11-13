@@ -5,7 +5,7 @@
                   [time :only [now-seconds]]
                   [util :only [ignore-error extract-text gen-snippet]])
         [clojure.string :only [blank?]]
-        [clojure.tools.logging :only [info]]
+        [clojure.tools.logging :only [info trace]]
         [clojure.java.jdbc :only [with-connection insert-record
                                   update-values]])
   (:import java.io.StringReader))
@@ -53,7 +53,7 @@
                                                  :tag t}))))
           (index-feed id content feed))
         (catch RuntimeException e       ;link is uniqe
-          (info "update" link)
+          (trace "update" link)
           (with-connection @h2-db-factory
             (update-values :feeds ["link=?" link] (dissoc feed :tags))))))))
 

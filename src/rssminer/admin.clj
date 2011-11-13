@@ -7,7 +7,7 @@
                   [util :only [ignore-error gen-snippet extract-text to-int]])
         (rssminer.db [user :only [create-user]]
                      [feed :only [fetch-rss-links]]
-                     [util :only [h2-query with-h2]])
+                     [util :only [h2-query with-h2 h2-insert]])
         (clojure.tools [logging :only [info]]
                        [cli :only [cli]])
         [clojure.java.jdbc :only [insert-record with-query-results
@@ -36,6 +36,18 @@
                                            :rss_link_id (:id rss)
                                            :group_name ungroup}))))
   (close-global-h2-factory!))
+
+
+(defn rand-subscribe []
+  (let [rrs (filter identity
+                    (map #(first (h2-query ["select id, title from rss_links
+                        where title is not NULL and id > ? limit 1" %]))
+                         (set (repeatedly 45 #(rand-int 10000)))))]
+    (doseq [r rrs]
+      (ignore-error (h2-insert :user_subscription
+                               {:user_id 1
+                                :rss_link_id (:id r)
+                                :title (:title r)})))))
 
 (defn rebuild-index []
   (.toggleInfoStream ^Searcher @indexer true)
