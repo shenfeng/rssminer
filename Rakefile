@@ -69,18 +69,6 @@ task :deps => ["bin/#{jscompiler}",
                "bin/#{luke}",
                "bin/#{htmlcompressor}"]
 
-rssminer_jss = FileList['public/js/lib/jquery.js',
-                        'public/js/lib/jquery-ui-1.8.13.custom.js',
-                        'public/js/lib/underscore.js',
-                        'public/js/lib/backbone.js',
-                        'public/js/lib/mustache.js',
-                        'public/js/gen/rssminer-tmpls.js',
-                        'public/js/rssminer/util.js',
-                        'public/js/rssminer/models.js',
-                        'public/js/rssminer/views.js',
-                        'public/js/rssminer/magic.js',
-                        'public/js/rssminer/application.js']
-
 dashboard_jss = FileList['public/js/lib/jquery.js',
                          'public/js/lib/jquery.flot.js',
                          'public/js/lib/jquery.flot.pie.js',
@@ -90,13 +78,6 @@ dashboard_jss = FileList['public/js/lib/jquery.js',
                          'public/js/gen/dashboard-tmpls.js',
                          'public/js/rssminer/util.js',
                          'public/js/rssminer/dashboard.js']
-
-browse_jss = FileList['public/js/lib/jquery.js',
-                      'public/js/lib/underscore.js',
-                      'public/js/lib/mustache.js',
-                      'public/js/gen/rssminer-tmpls.js',
-                      'public/js/rssminer/util.js',
-                      'public/js/rssminer/browse.js']
 
 app_jss = FileList['public/js/lib/jquery.js',
                    'public/js/lib/underscore.js',
@@ -147,15 +128,12 @@ namespace :js do
   task :tmpls => :html_compress do
     mkdir_p "public/js/gen"
     gen_jstempls("dashboard");
-    gen_jstempls("rssminer");
     gen_jstempls("app");
   end
 
   desc 'Combine all js into one, minify it using google closure'
   task :minify => [:tmpls, :deps] do
-    minify_js("rssminer", rssminer_jss, version);
     minify_js("dashboard", dashboard_jss, version);
-    minify_js("browse", browse_jss, version);
     minify_js("app", app_jss, version);
   end
 end

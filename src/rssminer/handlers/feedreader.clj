@@ -1,32 +1,46 @@
 (ns rssminer.handlers.feedreader
-  (:use [rssminer.handlers.subscriptions :only [get-overview*]]
-        [rssminer.util :only [session-get to-int]]
+  (:use [rssminer.util :only [session-get to-int]]
         [rssminer.search :only [search*]]
-        [clojure.string :only [blank? join]]
-        [rssminer.db.feed :only [fetch-latest-feed]])
+        [rssminer.db.feed :only [fetch-latest-feed fetch-unread-meta
+                                 fetch-unread-count-by-tag]]
+        [rssminer.db.subscription :only [fetch-subscriptions-by-user]])
   (:require [rssminer.views.feedreader :as view]
             [rssminer.config :as cfg]))
 
 (defn landing-page [req]
   (view/landing-page))
 
+(defn- compute-by-time [unread]
+  (let [[day week month] (rssminer.time/time-pairs)
+        k-day (str "d_" day)
+        k-week (str "w_" week)
+        k-month (str "m_" month)]
+    (persistent! (reduce (fn [m {:keys [published_ts] :as i}]
+                           (let [key (cond (> published_ts day) k-day
+                                           (> published_ts week) k-week
+                                           (> published_ts month) k-month
+                                           :else "older")]
+                             (assoc! m key (inc (get m key 0)))))
+                         (transient {}) unread))))
+
+(defn compute-by-sub [unread]
+  (persistent! (reduce (fn [m {:keys [rss_link_id] :as i}]
+                         (assoc! m rss_link_id
+                                 (inc (get m rss_link_id 0))))
+                       (transient {}) unread)))
+
 (defn index-page [req]
-  (view/index-page {:overview (get-overview* (:id (session-get req :user)))}))
+  (let [user-id (:id (session-get req :user))
+        unread (fetch-unread-meta user-id)]
+    (view/index-page {:by_sub (compute-by-sub unread)
+                      :by_time (compute-by-time unread)
+                      :by_tag (fetch-unread-count-by-tag
+                               (map :f_id unread))
+                      :subscriptions (fetch-subscriptions-by-user
+                                      user-id)})))
 
 (defn dashboard-page [req]
   (view/dashboard-page))
-
-(defn browse-feed [req]
-  (let [{:keys [term limit] :or {limit 20}} (:params req)]
-    (if (blank? term)
-      (view/browse-feed {:feeds (search*
-                                 (join " " (map #(str "tag:" %)
-                                                cfg/popular-tags)) 30)
-                         :tags cfg/popular-tags})
-      (view/browse-feed {:feeds (search* term (to-int limit)
-                                         :user-id (:id
-                                                   (session-get req :user)))
-                         :tags cfg/popular-tags}))))
 
 (defn search [req]
   (let [{:keys [term limit] :or {limit 20}} (:params req)]

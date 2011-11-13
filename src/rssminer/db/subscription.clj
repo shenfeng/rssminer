@@ -13,6 +13,10 @@
                 FROM feeds WHERE rss_link_id = ?" rss-id])
       first :count))
 
+(defn fetch-subscriptions-by-user [user-id]
+  (h2-query ["SELECT rss_link_id AS id, title
+             FROM user_subscription WHERE user_id = ?" user-id]))
+
 (defn fetch-subscription [map]
   (first
    (h2-query

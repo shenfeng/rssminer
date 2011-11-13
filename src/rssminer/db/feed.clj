@@ -63,6 +63,19 @@
               WHERE rss_link_id = ? LIMIT ? OFFSET ?"
              rss-link-id limit offset] :convert))
 
+(defn fetch-unread-meta [user-id]
+  (h2-query ["SELECT c.* FROM (
+       SELECT f.id as f_id, us.rss_link_id, f.published_ts FROM
+       feeds f JOIN user_subscription us ON us.rss_link_id = f.rss_link_id
+       WHERE us.user_id = ? ) AS c
+       LEFT OUTER JOIN user_feed uf ON uf.feed_id = c.f_id
+       WHERE (uf.read = FALSE OR uf.read IS NULL)" user-id]))
+
+(defn fetch-unread-count-by-tag [feed-ids]
+  (h2-query ["SELECT tag t, count(tag) c FROM
+              TABLE(x int=?) T INNER JOIN feed_tag ft ON T.x = ft.feed_id
+              GROUP BY tag" (into-array feed-ids)]))
+
 (defn fetch-latest-feed [limit]
   (h2-query ["SELECT id, author, title, summary, link FROM feeds
               WHERE id > (SELECT MAX(id) FROM feeds) - ?
