@@ -71,15 +71,10 @@
        LEFT OUTER JOIN user_feed uf ON uf.feed_id = c.f_id
        WHERE (uf.read = FALSE OR uf.read IS NULL)" user-id]))
 
-(defn fetch-unread-count-by-tag [feed-ids]
+(defn fetch-unread-group-by-tag [feed-ids]
   (h2-query ["SELECT tag t, count(tag) c FROM
               TABLE(x int=?) T INNER JOIN feed_tag ft ON T.x = ft.feed_id
               GROUP BY tag" (into-array feed-ids)]))
-
-(defn fetch-latest-feed [limit]
-  (h2-query ["SELECT id, author, title, summary, link FROM feeds
-              WHERE id > (SELECT MAX(id) FROM feeds) - ?
-              ORDER BY id DESC LIMIT ?" (* 2 limit ) limit] :convert))
 
 (defn fetch-feeds-for-user
   ([user-id rss-id]
@@ -94,7 +89,7 @@
   (with-h2
     (update-values :rss_links ["id = ?" id] data)))
 
-(defn fetch-rss-links [limit]
+(defn fetch-rss-links [limit]           ; for fetcher
   "Returns nil when no more"
   (h2-query ["SELECT id, url, check_interval, last_modified
               FROM rss_links
@@ -104,5 +99,4 @@
 (defn insert-rss-link
   [link]
   (ignore-error ;; ignore voilate of uniqe constraint
-   (with-h2
-     (insert-record :rss_links link))))
+   (with-h2 (insert-record :rss_links link))))

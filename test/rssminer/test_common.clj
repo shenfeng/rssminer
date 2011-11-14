@@ -1,11 +1,13 @@
 (ns rssminer.test-common
   (:use [rssminer.routes :only [app]]
         [clojure.test :only [join-fixtures]]
+        [clojure.data.json :only [json-str]]
         [clojure.java.jdbc :only [print-sql-exception-chain]]
         (rssminer [database :only [import-h2-schema! use-h2-database!]]
                   [search :only [use-index-writer!
                                  close-global-index-writer!]]
-                  [util :only [session-get]])
+                  [util :only [session-get]]
+                  [http :only [download-rss]])
         (rssminer.db [user :only [create-user]]))
   (:require [clojure.string :as str])
   (:import java.io.File
@@ -40,6 +42,15 @@
                             (if (= key :user) user2
                                 (throw (Exception. "session-get error"))))]
       (apply (app) args))))
+
+(defn mk-feeds-fixtrue [resource]
+  (fn [test-fn]
+    (binding [download-rss (fn [& args]
+                             {:body (slurp resource)})]
+      (auth-app {:uri "/api/subscriptions/add"
+                 :request-method :post
+                 :body (json-str {:link "http://link-to-scottgu's rss"})})
+      (test-fn))))
 
 (defn lucene-fixture [test-fn]
   (use-index-writer! :RAM)

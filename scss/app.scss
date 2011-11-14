@@ -28,7 +28,7 @@ html {
 
 #head {
     height: 70px;
-    background: white;
+    background: #eee;
     .wrapper { width: $page-width; margin: 0 auto; position: relative; }
 }
 
@@ -43,7 +43,7 @@ html {
 #main {
     width: $page-width;
     margin: 0 auto;
-    > div { float: left; }
+    > div { float: left; overflow: hidden;}
 }
 
 #left {
@@ -51,13 +51,12 @@ html {
     background: $left-bg;
     a { color: $color; }
     > ul { list-style: none; padding: 0; margin: 0;}
-    div.item {
+    .item {
         padding: 6px 0 6px 4px;
         position: relative;
-        cursor: pointer;
         &:hover { background: $left-hover-bg; }
     }
-    span.count {
+    .count {
         font-weight: normal;
         font-size: 11px;
         color: white;
@@ -71,9 +70,16 @@ html {
     }
     li.sub .item {
         padding-left: 15px;
+        .text {
+            display: inline-block;
+            max-width: 190px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     }
     li.cat {
-        >.item { font-weight: bold; font-size: 12px; }
+        >a .item, > .item { font-weight: bold; font-size: 12px; }
         ul {
             list-style: none;
             margin: 0;
@@ -83,7 +89,8 @@ html {
 }
 
 #mid {
-    width: $mid-width;
+    width: $mid-width - 2px;
+    border-right: 1px solid #888;
     background: $mid-bg;
     > ul {
         list-style: none;

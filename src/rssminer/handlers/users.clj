@@ -22,7 +22,7 @@
         return-url (or return-url "/app")]
     (if user
       (assoc (redirect return-url)
-        :session {:user user}
+        :session {:user (select-keys user [:id :email :name :added_ts])}
         :session-cookie-attrs (if persistent
                                 {:expires (get-expire 7)
                                  :http-only true}

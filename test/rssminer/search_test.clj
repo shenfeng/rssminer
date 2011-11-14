@@ -1,19 +1,9 @@
 (ns rssminer.search-test
   (:use clojure.test
-        [clojure.data.json :only [read-json json-str]]
-        (rssminer [test-common :only [auth-app app-fixture]]
-                  [http :only [download-rss]]
+        (rssminer [test-common :only [app-fixture mk-feeds-fixtrue]]
                   [search :only [search*]])))
 
-(defn- prepare [f]
-  (binding [download-rss (fn [& args]
-                           {:body (slurp "test/scottgu-atom.xml")})]
-    (auth-app {:uri "/api/subscriptions/add"
-               :request-method :post
-               :body (json-str {:link "http://link-to-scottgu's rss"})})
-    (f)))
-
-(use-fixtures :each app-fixture prepare)
+(use-fixtures :each app-fixture (mk-feeds-fixtrue "test/scottgu-atom.xml"))
 
 (deftest test-search
   (testing "search summary"
