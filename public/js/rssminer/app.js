@@ -35,16 +35,24 @@ window.$(function(){
         'click .vote span': function (e) {
         }
       });
+      backbone.history.start();
     }
 
     function index () {
+    }
 
+    function showTag (tag) {
+    }
+
+    function showSub (sub) {
     }
 
     return {
       initialize: initialize,
       routes: {
-        '': index
+        '': index,
+        'tag/:tag': showTag,
+        'sub/:sub': showSub
       }
     };
   });
