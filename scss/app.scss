@@ -52,9 +52,10 @@ html {
     a { color: $color; }
     > ul { list-style: none; padding: 0; margin: 0;}
     .item {
-        padding: 6px 0 6px 4px;
+        padding: 4px 0 4px 4px;
+        margin: 2px 0;
         position: relative;
-        &:hover { background: $left-hover-bg; }
+        &.selected, &:hover { background: $left-hover-bg; }
     }
     .count {
         font-weight: normal;
@@ -107,13 +108,13 @@ html {
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                width: 270px;
+                width: 268px;
             }
             .date {
                 font-size: 11px;
                 color: $date-color;
             }
-            &:hover {
+            &.selected, &:hover {
                 background: $mid-hover-bg;
                 .vote { visibility: visible; }
             }
@@ -129,8 +130,13 @@ html {
                 }
                 .down { background-position: -18px 0;}
             }
-            .host { color: $url-color; }
-            .favicon { margin-left: 80px; }
+            .vote-host {
+                height: 1.5em;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+            .host { color: $url-color; white-space: nowrap; overflow: hidden;}
+            .favicon { margin-left: 50px; }
             p {
                 margin: 8px 0;
                 height: 32px;

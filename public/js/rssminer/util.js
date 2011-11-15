@@ -2,6 +2,7 @@
   var mustache = window.Mustache,
       $ = window.$,
       _ = window._,
+      eventSplitter = /^(\S+)\s*(.*)$/,
       JSON = window.JSON;
 
   function ymdate (date) {
@@ -12,6 +13,11 @@
             m < 10 ? '0' + m : m,
             day < 10 ? '0' + day : day].join('/');
   }
+
+  var hostname = (function () {
+    var l = document.createElement("a");
+    return function (uri) { l.href = uri; return l.hostname; };
+  })();
 
   function interval (date) {
     var seconds = date - new Date().getTime() / 1000,
@@ -118,11 +124,27 @@
       .slice(0, length || 200);
   }
 
+  function delegateEvents($ele, events) {
+    for (var key in events) {
+      var method = events[key],
+          match = key.match(eventSplitter),
+          eventName = match[1],
+          selector = match[2];
+      if (selector === '') {
+        $ele.bind(eventName, method);
+      } else {
+        $ele.delegate(selector, eventName, method);
+      }
+    }
+  }
   // export
   window.Rssminer = $.extend(window.Rssminer, {
     ajax: ajax,
     notif: notif,
     util: {
+      delegateEvents: delegateEvents,
+      hostname: hostname,
+      ymdate: ymdate,
       snippet: snippet,
       // one dom ele is within another dom, or they are just the same
       within : function (child, parent) {

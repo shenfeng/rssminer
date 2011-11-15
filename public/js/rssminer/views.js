@@ -1,279 +1,54 @@
-window.$(function(){
-  var backbone = window.Backbone,
-      rssminer = window.Rssminer,
-      tmpls = rssminer.tmpls,
+(function () {
+  var rssminer = window.Rssminer,
       util = rssminer.util,
-      $ = window.$,
-      to_html = window.Mustache.to_html;
+      tmpls = rssminer.tmpls,
+      to_html = window.Mustache.to_html,
+      _ = window._,
+      $ = window.$;
 
-  var subscriptionadded = 'subscriptionadded';
+  function _compute_by_tag() {
+    var subs =  _.reduce(window._BY_TAG_, function (result, item, index) {
+      result.push({
+        href: "#tag/" + item.t,
+        c: item.c,
+        text: item.t
+      });
+      return result;
+    }, []);
+    subs =  _.sortBy(subs, function (item) { return -item.c; });
+    return { text: 'By Tag', has_sub: true, subs: subs };
+  }
 
-  // render a feed, toggle it
-  var FeedView = backbone.View.extend(function() {
-    return {
-      name: 'FeedView',
-      events : {
-
-      }
-    };
-  });
-
-  // render a list of Feedview
-  var SubscriptionView = backbone.View.extend(function(){
-    var model,
-        el,
-        that;
-
-    function toggleExpandFeed(e) {
-      var $entry = $(e.currentTarget).parents('.entry'),
-          offset = $entry.offset().top - $('.entry:first').offset().top;
-      $('.entry').not($entry).removeClass('expanded');
-      $entry.toggleClass('expanded');
-      $('#entries').scrollTop(offset);
-    }
-
-    function template(data) {
-      return to_html(tmpls.subscription, data);
-    }
-    function render() {
-      $(el).html(template(model.toJSON()));
-      return that;
-    }
-    return {
-      tagName: 'div',
-      id: 'content',
-      events: {
-        'click .collapsed .entry-main': toggleExpandFeed
-      },
-      render: render,
-      initialize: function() {
-        that = this;
-        model = that.model;
-        el = that.el;
-      }
-    };
-  });
-
-  // render add link, import opml
-  var AddSubscriptionView = backbone.View.extend(function(){
-    var that,
-        el,
-        subscriptionGroupList,
-        isFormShow = false;
-
-    function showForm(e) {
-      if(!isFormShow) {
-        that.$('.form').show();
-        that.$('input').focus();
-        $(document).bind('click', dismissForm);
-        isFormShow = true;
-      }
-    }
-
-    function dismissForm(e) {
-      // e => undefined, hide it,
-      // form is show && event is happenning outside el, hide it
-      if( !e || (isFormShow && !util.within(e.target, el))) {
-        that.$('.form').fadeOut();
-        isFormShow = false;
-        $(document).unbind('click', dismissForm);
-        e && e.stopPropagation();
-      }
-    }
-
-    function addOnEneter(e) {
-      if(e.which === 13) {
-        var $input = that.$('input'),
-            dfd = subscriptionGroupList.addSubscription($input.val());
-        $input.val('');
-        dismissForm();
-        dfd.done(function(sub) {
-          subscriptionGroupList.trigger(subscriptionadded, sub);
+  function render_nav() {
+    var count = _.reduce(_.values(window._BY_TIME_), function (memo, num) {
+      return memo + num;
+    }, 0),
+        subs = _.map(window._SUBS_, function (i) {
+          return { text: i.title, href: "#sub/" + i.id, c: _BY_SUB_[i.id] };
         });
-      }
-    }
+    subs = _.sortBy(subs, function (i) { return  _.isNumber(i.c) ? -i.c : 1; });
 
-    return {
-      tagName: 'div',
-      id: 'add-subscription',
-      initialize: function (options) {
-        that =this;
-        el = that.el;
-        subscriptionGroupList = options.subscriptionGroupList;
-        $(el).html(tmpls.add_subscription);
-      },
-      events: {
-        'click span': showForm,
-        'keypress input': addOnEneter
-      }
-    };
+    var navs = [{ text: 'All', href: '#all', c: count},
+                { text: 'Recommanded', has_sub: true,
+                  subs: [{text: 'Items', href: '#r/items'},
+                         {text: 'Subscriptions', href: '#r/subs'}]},
+                _compute_by_tag(),
+                { text: 'By Subscription',has_sub: true, subs: subs}];
+
+    return to_html(tmpls.nav, {navs: navs});
+  }
+
+  function render_mid () {
+    var feeds = _.map(window._FEEDS_, function (i) {
+      i.date = util.ymdate(i.published_ts * 1000);
+      i.host = util.hostname(i.link);
+      return i;
+    });
+    return to_html(tmpls.feeds, {feeds: feeds});
+  }
+
+  rssminer = $.extend(rssminer, {
+    render_nav: render_nav,
+    render_mid: render_mid
   });
-
-  var MenuView =backbone.View.extend(function() {
-    var subscription,
-        el,
-        that;
-
-    function optionHandler(e) {
-      // console.log(e);
-    }
-
-    return {
-      tagName: 'div',
-      id: 'options-menu',
-      remove: function (){
-        $(el).fadeOut('fast', function() {
-          $(el).remove();
-        });
-      },
-      initialize: function (options) {
-        that = this;
-        el = that.el;
-        subscription = that.model;
-      },
-      render: function(){
-        $(el).html(to_html(tmpls.menu, subscription.getMenuJSON()));
-        return that;
-      },
-      events: {
-        'click .option': optionHandler
-      }
-    };
-  });
-
-  // render left link sidebar, respond to click event
-  var NavView = backbone.View.extend(function() {
-    var model,
-        el,
-        that,
-        addSubscriptionView,
-        menuView,
-        isMenuShown = false,
-        currentMenuId,          // which subscription
-        refresh = false;
-
-    function template(data) {
-      return to_html(tmpls.nav_template, data);
-    }
-
-    function render() {
-      var $el = $(el);
-      // only refresh nav tree
-      if(refresh) {
-        $el.find('.nav-tree').replaceWith(template({data: model.toJSON()}));
-      } else {
-        $el.append(addSubscriptionView.render().el);
-        $el.append(template({data: model.toJSON()}));
-        // no need to init add subscription view anymore from now on
-        refresh = true;
-      }
-      return that;
-    }
-    // select and hight a given subscription in left navigation
-    function select(id){
-      util.removeClass('selected');
-      $('#subs-' + id).addClass('selected');
-    }
-
-    function toggleFolder(e) {
-      $(e.currentTarget).parents('.folder').toggleClass('collapsed');
-    }
-
-    function dissmissMenu(e) {
-      if(e && $(e.target).is('.icon')){
-        return;                 // this is handlered by toggleMenu
-      }
-      // e => undefined: dissmiss
-      if(!e || (isMenuShown && !util.within(e.target, menuView.el))) {
-        menuView && menuView.remove();
-        isMenuShown = false;
-        $(document).unbind('click', dissmissMenu);
-        e && e.stopPropagation();
-      }
-    }
-
-    function toggleMenu(e) {
-      var $icon =  $(e.currentTarget),
-          $a =$icon.parents('.sub').find('a'),
-          id = $a.attr('id').split('-')[1];
-
-      if(currentMenuId && currentMenuId !== id) { // differenct subscription
-        dissmissMenu();
-      }
-      // same subscription, is show, hide it
-      if( isMenuShown ) {
-        dissmissMenu();
-      } else {
-        // different subscription || first time open
-        model.getById(id, true).done(function(subscription) {
-          menuView = new MenuView({model: subscription});
-
-          var $menu = $(menuView.render().el),
-              top = ($icon.offset().top + $icon.height()) + 'px';
-
-          $('#container').append($menu);
-          $menu.css('top', top);
-          currentMenuId = id;
-          // dissmissMenu will be called after this toggleMenu returns
-          $(document).bind('click', dissmissMenu);
-          isMenuShown = true;
-        });
-      }
-    }
-
-    return {
-      tagName: 'nav',
-      render: render,
-      select: select,
-      events: {
-        'click .folder .toggle': toggleFolder,
-        'click .sub .icon': toggleMenu
-      },
-      initialize: function() {
-        that = this;
-        model = that.model;
-        el = that.el;
-        // get notified when new subscription added
-        model.bind(subscriptionadded, function(sub) {
-          render();             // refresh feed link ui
-          window.location.hash = "/subscription/" + sub.id;
-        });
-        addSubscriptionView = new AddSubscriptionView({
-          // needed to add subscription
-          subscriptionGroupList: model
-        });
-      }
-    };
-
-  });
-
-  // show keyboard help, respond to keyboard event
-  var KeyboardView = backbone.View.extend(function() {
-    var isHelpShow = false;
-
-    function showHelp() {
-      if(!isHelpShow){
-        // TODO show help
-        isHelpShow = true;
-      }
-    }
-
-    function hideHelp() {
-      if(isHelpShow) {
-        // TODO hide help
-        isHelpShow = false;
-      }
-    }
-
-    function bindEvent() {
-    }
-  });
-
-  window.Rssminer = $.extend(window.Rssminer, {
-    views : {
-      NavView: NavView,
-      SubscriptionView: SubscriptionView
-    }
-  });
-
-});
+})();

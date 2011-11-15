@@ -71,6 +71,15 @@
        LEFT OUTER JOIN user_feed uf ON uf.feed_id = c.f_id
        WHERE (uf.read = FALSE OR uf.read IS NULL)" user-id]))
 
+(defn fetch-unread [user-id limit offset]
+  (h2-query ["SELECT c.* FROM (
+       SELECT f.id, f.author, f.link, f.title, f.snippet,f.published_ts FROM
+       feeds f JOIN user_subscription us ON us.rss_link_id = f.rss_link_id
+       WHERE us.user_id = ? ) AS c
+       LEFT OUTER JOIN user_feed uf ON uf.feed_id = c.id
+       WHERE (uf.read = FALSE OR uf.read IS NULL)
+       LIMIT ? offset ?" user-id limit offset]))
+
 (defn fetch-unread-group-by-tag [feed-ids]
   (h2-query ["SELECT tag t, count(tag) c FROM
               TABLE(x int=?) T INNER JOIN feed_tag ft ON T.x = ft.feed_id
