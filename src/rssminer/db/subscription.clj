@@ -1,8 +1,7 @@
 (ns rssminer.db.subscription
   (:use [rssminer.db.util :only [select-sql-params h2-insert-and-return
                                  h2-query with-h2]]
-        [clojure.java.jdbc :only [delete-rows update-values]]
-        [rssminer.util :only [tracep]]))
+        [clojure.java.jdbc :only [delete-rows update-values]]))
 
 (defn fetch-rss-link [map]
   (first
@@ -21,20 +20,6 @@
   (first
    (h2-query
     (select-sql-params :user_subscription map))))
-
-(defn fetch-overview [user-id]
-  (h2-query ["
-   SELECT us.group_name, s.id, s.title,
-   (SELECT COUNT(*) FROM feeds WHERE feeds.rss_link_id = s.id) AS total_count,
-   (SELECT COUNT(*) FROM feeds
-    WHERE  feeds.rss_link_id = s.id AND
-           feeds.id NOT IN (SELECT feed_id FROM feed_tag
-                             WHERE user_id is null AND
-                                  tag = '_read')) AS unread_count
-FROM
-   user_subscription AS us
-   JOIN rss_links AS s ON s.id = us.rss_link_id
-WHERE us.user_id = ?" user-id]))
 
 (defn update-subscription [user-id id data]
   (with-h2

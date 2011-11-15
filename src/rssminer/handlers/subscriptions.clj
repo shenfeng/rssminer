@@ -75,22 +75,6 @@
                                            (to-int limit)
                                            (to-int offset)))))
 
-(defn get-overview* [user-id]
-  (let [overview (db/fetch-overview user-id)
-        map (reduce
-             (fn [m item]
-               (let [group-name (:group_name item)
-                     c (dissoc (into {} (seq item)) :group_name)
-                     items (m group-name)]
-                 (assoc m group-name
-                        (conj items c))))
-             {} overview)]
-    (for [[k v] map] {:group_name k
-                      :subscriptions v})))
-
-(defn get-overview [req]
-  (get-overview* (:id (session-get req :user))))
-
 (defn customize-subscription [req]
   (let [user-id (:id (session-get req :user))]
     (db/update-subscription user-id (-> req :params :id to-int) (:body req))))

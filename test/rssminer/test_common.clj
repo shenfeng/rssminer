@@ -47,7 +47,7 @@
   (fn [test-fn]
     (binding [download-rss (fn [& args]
                              {:body (slurp resource)})]
-      (auth-app {:uri "/api/subscriptions/add"
+      (auth-app {:uri "/api/subs/add"
                  :request-method :post
                  :body (json-str {:link "http://link-to-scottgu's rss"})})
       (test-fn))))

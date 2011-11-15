@@ -42,8 +42,7 @@
   (context "/dashboard" []
            (JGET "/:section" [] dashboard/get-data)
            (JPOST "/" [] dashboard/settings))
-  (context "/subscriptions" []
-           (JGET "/overview" [] subscription/get-overview)
+  (context "/subs" []
            (JPOST "/add" [] subscription/add-subscription)
            (JGET "/:id" [] subscription/get-subscription)
            (JPOST "/:id" [] subscription/customize-subscription)
@@ -52,8 +51,8 @@
   (context "/feeds" []
            (context "/:feed-id" []
                     (JPOST "/pref" [] feed/save-pref)
-                    (JPOST "/categories" [] "TODO")
-                    (JDELETE "/categories" [] "TODO")
+                    (JPOST "/tags" [] "TODO")
+                    (JDELETE "/tags" [] "TODO")
                     (JPOST "/comments" [] "TODO")
                     (JDELETE "/comments/:comment-id" [] "TODO")))
   (JPOST "/import/opml-import" [] opml-import)
