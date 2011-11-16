@@ -22,7 +22,9 @@
       {}
       (let [^Jedis j (.getResource db)]
         (try
-          (deserialize (.get j (.getBytes ^String key)))
+          (if-let [bs (.get j (.getBytes ^String key))]
+            (deserialize bs)
+            {})
           (finally
            (.returnResource db j))))))
   (write-session [_ key data]
