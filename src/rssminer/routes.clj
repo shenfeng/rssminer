@@ -44,17 +44,18 @@
            (JPOST "/" [] dashboard/settings))
   (context "/subs" []
            (JPOST "/add" [] subscription/add-subscription)
-           (JGET "/:id" [] subscription/get-subscription)
+           (JGET "/:rss-id" [] feed/get-by-subscription)
            (JPOST "/:id" [] subscription/customize-subscription)
            (JDELETE "/:id" [] subscription/unsubscribe))
+  (JGET ["/tag/:tag" :tag #".+"] [] feed/get-by-tag)
   (JGET "/search" [] rssminer/search)
-  (context "/feeds" []
-           (context "/:feed-id" []
-                    (JPOST "/pref" [] feed/save-pref)
-                    (JPOST "/tags" [] "TODO")
-                    (JDELETE "/tags" [] "TODO")
-                    (JPOST "/comments" [] "TODO")
-                    (JDELETE "/comments/:comment-id" [] "TODO")))
+  (context "/feeds/:feed-id" []
+           (JGET "/" [] feed/get-by-id)
+           (JPOST "/pref" [] feed/save-pref)
+           (JPOST "/tags" [] "TODO")
+           (JDELETE "/tags" [] "TODO")
+           (JPOST "/comments" [] "TODO")
+           (JDELETE "/comments/:comment-id" [] "TODO"))
   (JPOST "/import/opml-import" [] opml-import)
   (JGET "/export/opml-export" [] "TODO"))
 

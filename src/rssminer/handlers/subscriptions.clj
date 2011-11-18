@@ -67,14 +67,6 @@
         user-id (:id (session-get req :user))]
     (add-subscription* link user-id)))
 
-(defn get-subscription [req]
-  (let [{:keys [id limit offset] :or {limit 20 offset 0}} (:params req)
-        rss-id (:rss_link_id (db/fetch-subscription {:id (to-int id)}))]
-    (when rss-id (fdb/fetch-feeds-for-user (:id (session-get req :user))
-                                           rss-id
-                                           (to-int limit)
-                                           (to-int offset)))))
-
 (defn customize-subscription [req]
   (let [user-id (:id (session-get req :user))]
     (db/update-subscription user-id (-> req :params :id to-int) (:body req))))

@@ -16,7 +16,8 @@
         k-week (str "w_" week)
         k-month (str "m_" month)]
     (persistent! (reduce (fn [m {:keys [published_ts] :as i}]
-                           (let [key (cond (> published_ts day) k-day
+                           (let [published_ts (or published_ts (+ 1 month))
+                                 key (cond (> published_ts day) k-day
                                            (> published_ts week) k-week
                                            (> published_ts month) k-month
                                            :else "older")]
@@ -36,9 +37,10 @@
     (view/index-page {:user user
                       :by_sub (compute-by-sub unread)
                       :by_time (compute-by-time unread)
-                      :by_tag (fetch-unread-group-by-tag (map :f_id unread))
+                      :by_tag (fetch-unread-group-by-tag
+                               user-id (map :f_id unread))
                       :subs (fetch-subs-by-user user-id)
-                      :feeds (fetch-unread user-id 10 1)})))
+                      :feeds (fetch-unread user-id 7 1)})))
 
 (defn dashboard-page [req]
   (view/dashboard-page))

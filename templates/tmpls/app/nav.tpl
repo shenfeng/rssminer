@@ -10,7 +10,7 @@
       {{#has_sub}}
         <ul>
           {{#subs}}
-            <li class="sub">
+            <li class="{{cls}}">
               <a href="{{href}}">
                 <div class="item" title="{{text}}">
                   <span class="text">{{text}}</span>

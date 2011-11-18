@@ -165,10 +165,10 @@ var Mustache = function() {
           return "";
         case ">": // render partial
           return that.render_partial(name, context, partials);
-        case "{": // the triple mustache is unescaped
-          return that.find(name, context);
-        default: // escape the value
+        case "{": // the triple mustache is escaped
           return that.escape(that.find(name, context));
+        default: // is unescaped (modified by sf)
+          return that.find(name, context);
         }
       };
       var lines = template.split("\n");

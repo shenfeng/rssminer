@@ -9,26 +9,27 @@ $count-bg: #817d7d;
 $left-bg: #e1e4eb;
 $left-selected-bg: #f9fafc;
 $left-hover-bg: $left-selected-bg;
-$left-width: 230px; // left navgation
+
+$page-width: 1340px; // wider on app page
+$left-width: 240px; // left navgation
+$mid-width: 325px;
+$right-width: $page-width - $left-width - $mid-width;
+
 $mid-bg: white;
 $mid-border-color: #cde7f8;
 $mid-selcted-bg: #e5e6e7;
 $mid-hover-bg: $mid-selcted-bg;
-$mid-width: 340px;
-$page-width: 1220px; // wider on app page
-$right-bg: #fefefe;
-$right-width: 650px;
+$right-bg: #FAFAFA;
 $site-bg: #b4b9bf;
 $tag-bg: #c1c1c1;
 $url-color: $date-color;
 
-html {
-    background: $site-bg;
-}
+html { background: $site-bg; }
 
 #head {
     height: 70px;
     background: #eee;
+    @include linear-gradient(#323232, black);
     .wrapper { width: $page-width; margin: 0 auto; position: relative; }
 }
 
@@ -43,13 +44,14 @@ html {
 #main {
     width: $page-width;
     margin: 0 auto;
-    > div { float: left; overflow: hidden;}
+    > div { float: left; overflow: auto;}
 }
 
 #left {
     width: $left-width;
     background: $left-bg;
     a { color: $color; }
+    @include box-shadow(0px, 4px, 8px, #aaaaaa);
     > ul { list-style: none; padding: 0; margin: 0;}
     .item {
         padding: 4px 0 4px 4px;
@@ -91,8 +93,8 @@ html {
 
 #mid {
     width: $mid-width - 2px;
-    border-right: 1px solid #888;
     background: $mid-bg;
+    a { color: $color; }
     > ul {
         list-style: none;
         margin: 0;
@@ -108,7 +110,7 @@ html {
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                width: 268px;
+                width: 235px;
             }
             .date {
                 font-size: 11px;

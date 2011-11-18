@@ -14,7 +14,8 @@
 
 (defn fetch-subs-by-user [user-id]
   (h2-query ["SELECT rss_link_id AS id, title
-             FROM user_subscription WHERE user_id = ?" user-id]))
+             FROM user_subscription WHERE user_id = ?
+                  AND title IS NOT NULL" user-id]))
 
 (defn fetch-subscription [map]
   (first

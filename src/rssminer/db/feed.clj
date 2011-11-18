@@ -57,11 +57,22 @@
           (with-connection @h2-db-factory
             (update-values :feeds ["link=?" link] (dissoc feed :tags))))))))
 
-(defn fetch-feeds [rss-link-id limit offset]
-  (h2-query ["SELECT id, author, title, summary, link, published_ts
-              FROM feeds
-              WHERE rss_link_id = ? LIMIT ? OFFSET ?"
-             rss-link-id limit offset] :convert))
+(defn fetch-by-rssid [user-id rss-id limit offset]
+  (h2-query ["SELECT f.id, author, link, title, snippet,
+                     published_ts, uf.read
+              FROM feeds f LEFT OUTER JOIN user_feed uf ON uf.feed_id = f.id
+              WHERE rss_link_id = ? AND
+             (uf.user_id = ? or uf.user_id IS NULL) LIMIT ? OFFSET ?"
+             rss-id user-id limit offset] :convert))
+
+(defn fetch-by-id [user-id id]
+  (first (h2-query ["select * from feeds where id = ?" id] :convert)))
+
+(defn fetch-by-tag [user-id tag limit offset]
+  (h2-query ["SELECT f.id, author, link, title, snippet, published_ts
+              FROM feeds f JOIN feed_tag ft ON f.id = ft.feed_id
+              WHERE (ft.user_id IS NULL OR ft.user_id = ?)
+              AND ft.tag = ? LIMIT ? OFFSET ?" user-id tag limit offset]))
 
 (defn fetch-unread-meta [user-id]
   (h2-query ["SELECT c.* FROM (
@@ -80,19 +91,11 @@
        WHERE (uf.read = FALSE OR uf.read IS NULL)
        LIMIT ? offset ?" user-id limit offset]))
 
-(defn fetch-unread-group-by-tag [feed-ids]
+(defn fetch-unread-group-by-tag [user-id feed-ids]
   (h2-query ["SELECT tag t, count(tag) c FROM
               TABLE(x int=?) T INNER JOIN feed_tag ft ON T.x = ft.feed_id
-              GROUP BY tag" (into-array feed-ids)]))
-
-(defn fetch-feeds-for-user
-  ([user-id rss-id]
-     (fetch-feeds-for-user user-id rss-id 20 0))
-  ([user-id rss-id limit offset]
-     (map #(assoc %
-             :comments (or (fetch-comments user-id (:id %)) [])
-             :tags (or (fetch-tags user-id (:id %)) []))
-          (fetch-feeds rss-id limit offset))))
+              WHERE ft.user_id IS NULL OR ft.user_id = ?
+              GROUP BY tag" (into-array feed-ids) user-id]))
 
 (defn update-rss-link [id data]
   (with-h2
