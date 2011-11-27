@@ -16,7 +16,7 @@
 
   var hostname = (function () {
     var l = document.createElement("a");
-    return function (uri) { l.href = uri; return l.hostname; };
+    return function (uri) { l.href = uri; return 'http://' + l.hostname; };
   })();
 
   function interval (date) {

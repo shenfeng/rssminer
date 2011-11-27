@@ -37,8 +37,6 @@
     (view/index-page {:user user
                       :by_sub (compute-by-sub unread)
                       :by_time (compute-by-time unread)
-                      :by_tag (fetch-unread-group-by-tag
-                               user-id (map :f_id unread))
                       :subs (fetch-subs-by-user user-id)
                       :feeds (fetch-unread user-id 7 1)})))
 

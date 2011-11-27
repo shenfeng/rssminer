@@ -17,9 +17,6 @@
     subs = subs.sort(function (l, r) {
       return r.c - l.c;         // sort by count desc
     });
-    for(var i = 0; i < subs.length; ++i) {
-      subs[i].cls = i > 10 ? 'sub hidden' : 'sub'; // hide more than ten
-    }
     return { text: 'By Tag', has_sub: true, subs: subs };
   }
 
@@ -28,7 +25,11 @@
       return memo + num;
     }, 0),
         subs = _.map(window._SUBS_, function (i) {
-          return { text: i.title, href: "#subs/" + i.id, c: _BY_SUB_[i.id] };
+          return {
+            text: i.title,
+            hostname: util.hostname(i.url),
+            href: "#subs/" + i.id,
+            c: _BY_SUB_[i.id] };
         });
     subs = _.sortBy(subs, function (i) { return  _.isNumber(i.c) ? -i.c : 1; });
 
@@ -36,8 +37,7 @@
                 { text: 'Recommanded', has_sub: true,
                   subs: [{text: 'Items', href: '#r/items'},
                          {text: 'Subscriptions', href: '#r/subs'}]},
-                { text: 'By Subscription',has_sub: true, subs: subs},
-                _compute_by_tag()];
+                { text: 'Subscriptions',has_sub: true, subs: subs}];
 
     return to_html(tmpls.nav, {navs: navs});
   }

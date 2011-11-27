@@ -1,7 +1,7 @@
 <ul>
   {{#feeds}}
-    <li data-id="{{id}}">
-      <h4 title="{{title}} by {{author}}">
+    <li>
+      <h4 title="{{title}}">
         <a href="{{href}}">{{title}}</a>
       </h4>
       <span class="date">{{date}}</span>

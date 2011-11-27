@@ -13,9 +13,10 @@
       first :count))
 
 (defn fetch-subs-by-user [user-id]
-  (h2-query ["SELECT rss_link_id AS id, title
-             FROM user_subscription WHERE user_id = ?
-                  AND title IS NOT NULL" user-id]))
+  (h2-query ["SELECT us.rss_link_id AS id, l.title, l.url
+              FROM user_subscription us join rss_links l
+              ON l.id = us.rss_link_id WHERE us.user_id = ?
+              AND l.title IS NOT NULL" user-id]))
 
 (defn fetch-subscription [map]
   (first

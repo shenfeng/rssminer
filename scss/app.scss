@@ -16,7 +16,7 @@ $mid-width: 325px;
 $right-width: $page-width - $left-width - $mid-width;
 
 $mid-bg: white;
-$mid-border-color: #cde7f8;
+$mid-border-color: #EAF7FF;
 $mid-selcted-bg: #e5e6e7;
 $mid-hover-bg: $mid-selcted-bg;
 $right-bg: #FAFAFA;
@@ -52,7 +52,28 @@ html { background: $site-bg; }
     background: $left-bg;
     a { color: $color; }
     @include box-shadow(0px, 4px, 8px, #aaaaaa);
-    > ul { list-style: none; padding: 0; margin: 0;}
+    ul { list-style: none; padding: 0; margin: 0;}
+    ul.sub li {
+        position: relative;
+        .item {
+            padding-left: 25px;
+            .text {
+                display: inline-block;
+                max-width: 190px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+    img {
+        position: absolute;
+        width: 16px;
+        top: 5px;
+        left: 7px;
+        z-index: 1000;
+        height: 16px;
+    }
     .item {
         padding: 4px 0 4px 4px;
         margin: 2px 0;
@@ -68,26 +89,11 @@ html { background: $site-bg; }
         top: 4px;
         padding: 2px 4px;
         @include border-radius(10px);
-        right: 10px;
+        right: 3px;
         background: $count-bg;
-    }
-    li.sub .item {
-        padding-left: 15px;
-        .text {
-            display: inline-block;
-            max-width: 190px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
     }
     li.cat {
         >a .item, > .item { font-weight: bold; font-size: 12px; }
-        ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
     }
 }
 
@@ -100,21 +106,25 @@ html { background: $site-bg; }
         margin: 0;
         padding: 0;
         li {
-            padding: 4px 0 4px 2px;
+            padding: 6px 2px;
             cursor: pointer;
+            position: relative;
             border-bottom: 1px $mid-border-color solid;
             h4 {
                 margin: 0;
                 font-weight: normal;
-                display: inline-block;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                width: 235px;
+                width: 240px;
             }
             .date {
                 font-size: 11px;
                 color: $date-color;
+                position: absolute;
+                right: 3px;
+                top: 7px;
+                z-index: 1000;
             }
             &.selected, &:hover {
                 background: $mid-hover-bg;
@@ -136,11 +146,13 @@ html { background: $site-bg; }
                 height: 1.5em;
                 overflow: hidden;
                 white-space: nowrap;
+                display: none;
             }
             .host { color: $url-color; white-space: nowrap; overflow: hidden;}
             .favicon { margin-left: 50px; }
             p {
                 margin: 8px 0;
+                display: none;
                 height: 32px;
                 overflow: hidden;
             }
