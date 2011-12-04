@@ -13,6 +13,7 @@
 (defn- add-subscription-ret [subscription rss count]
   {:group_name (:group_name subscription)
    :id (:id subscription)
+   :rss_link_id (:id rss)
    :total_count count
    :unread_count count
    :title (:title subscription)})

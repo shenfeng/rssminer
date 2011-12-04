@@ -42,14 +42,13 @@
 
 (deftest test-get-subscription
   (let [[_ subscription] (prepare)
-        resp (auth-app {:uri (str "/api/subs/" (:id subscription))
+        resp (auth-app {:uri (str "/api/subs/" (:rss_link_id subscription))
                         :request-method :get
                         :params {"limit" "13" "offset" "0"}})
         fetched-feeds (-> resp :body read-json)]
     (is (= 200 (:status resp)))
     (are [key] (-> fetched-feeds first key)
-         :tags
-         :comments
+         :link
          :id
          :title)
     (is (= 1 (count fetched-feeds)))))

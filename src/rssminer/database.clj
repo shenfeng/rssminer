@@ -32,6 +32,7 @@
   (close-global-h2-factory!)
   (let [opts ";LOG=1;LOCK_MODE=3;CACHE_SIZE=16384;UNDO_LOG=1"
         url (str "jdbc:h2:" db-path ";FILE_LOCK=FS;MVCC=true" opts
+                 ";DB_CLOSE_ON_EXIT=FALSE"
                  (when trace ";TRACE_LEVEL_FILE=2;TRACE_MAX_FILE_SIZE=1000"))
         ds (JdbcConnectionPool/create url "sa" "")
         f (fn [& args]  (.getConnection ds))]
