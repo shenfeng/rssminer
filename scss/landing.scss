@@ -12,11 +12,14 @@
     background-image: -moz-linear-gradient(center bottom , #E9EAEF 10%, #F3F6F9 84%);
 }
 #signup-form {
+    td { font-size: 13px; padding: 2px;}
     td:first-child {
         text-align: right;
     }
+    input {
+    }
     #reg-email, #reg-password {
-        padding: 6px;
+        padding: 4px;
         width: 250px;
     }
 }
@@ -50,7 +53,6 @@
         margin: 12px auto;
         @include box-shadow(0, 0, 10px, #666);
     }
-    p { text-indent: 2em };
 }
 
 #footer {

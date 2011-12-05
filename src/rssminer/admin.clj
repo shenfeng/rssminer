@@ -123,11 +123,12 @@
               "init-db, clean-rss, clean-links, rebuild-index, cal"
               :parse-fn keyword]
              ["-p" "--password" "password" :default "123456"]
-             ["--db-path" "H2 Database path" :default "/dev/shm/rssminer"]
+             ["--db-path" "H2 Database path"
+              :default "/var/rssminer/rssminer"]
              ["--data-path" "Backup, restore data path"
               :default "/tmp/rssminer"]
              ["--index-path" "Path to store lucene index"
-              :default "/dev/shm/index"]
+              :default "/var/rssminer/index"]
              ["--limit" "how much to calculate" :default 5000
               :parse-fn to-int]
              ["--size" "size to print" :default 50 :parse-fn to-int]
