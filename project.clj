@@ -9,7 +9,7 @@
                  [ch.qos.logback/logback-classic "0.9.30"]
                  [javax.mail/mail "1.4.4"]
                  [org.apache.commons/commons-email "1.2"]
-                 [compojure "0.6.5"]
+                 [compojure "1.0.0-RC1"]
                  [enlive "1.0.0"]
                  [commons-io "2.1"]
                  [redis.clients/jedis "2.0.0"]
@@ -18,9 +18,9 @@
                  [org.apache.lucene/lucene-queries "3.5.0"]
                  [org.apache.lucene/lucene-analyzers "3.5.0"]
                  [net.java.dev.rome/rome "1.0.0"]
-                 [ring/ring-core "1.0.0-RC5"]
-                 [me.shenfeng/netty-http "1.0.0-SNAPSHOT"]
-                 [me.shenfeng/ring-netty-adapter "0.0.1-SNAPSHOT"]]
+                 [ring/ring-core "1.0.0"]
+                 [me.shenfeng/async-http-client "1.0.0"]
+                 [me.shenfeng/async-ring-adapter "1.0.0"]]
   :dev-resources-path "/usr/lib/jvm/java-6-sun/lib/tools.jar:/usr/lib/jvm/java-6-sun/lib/src.zip"
   :exclusions [javax.activation/activation]
   :repositories {"java.net" {:url "http://download.java.net/maven/2/"

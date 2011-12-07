@@ -1,6 +1,6 @@
 <ul>
   {{#feeds}}
-    <li>
+    <li id="feed-{{id}}">
       <h4 title="{{title}}">
         <a href="{{href}}">{{title}}</a>
       </h4>

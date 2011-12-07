@@ -1,5 +1,6 @@
 (ns rssminer.handlers.users
   (:use  [ring.util.response :only [redirect]]
+         [rssminer.time :only [now-seconds]]
          [ring.middleware.file-info :only [make-http-format]])
   (:require [rssminer.db.user :as db]
             [rssminer.views.users :as view])
@@ -36,6 +37,7 @@
 (defn signup [req]
   (let [{:keys [email password]} (:params req)
         user (db/create-user {:email email
+                              :added_ts (now-seconds)
                               :password password})]
     (assoc (redirect "/app")
       :session {:user user})))

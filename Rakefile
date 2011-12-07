@@ -27,7 +27,7 @@ def gen_jstempls(folder)
     name = File.basename(f,".tpl")
     data += "tmpls." + name + " = '" + text + "';\n"
   end
-  data += "window.Rssminer = window.$.extend(window.Rssminer, {tmpls: tmpls})})();\n"
+  data += "window.RM = {tmpls: tmpls}})();\n"
   File.open("public/js/gen/#{folder}-tmpls.js", 'w') {|f| f.write(data)}
 end
 
@@ -39,9 +39,10 @@ def minify_js(name, jss, version)
   jss.each do |js|
     source_arg += " --js #{js} "
   end
-
-  sh "java -jar bin/#{jscompiler} --warning_level QUIET" +
-    " --js_output_file '#{target}' #{source_arg}"
+  # ADVANCED_OPTIMIZATIONS SIMPLE_OPTIMIZATIONS
+  sh "java -jar bin/#{jscompiler} --warning_level QUIET " +
+     "--compilation_level SIMPLE_OPTIMIZATIONS " +
+     "--js_output_file '#{target}' #{source_arg}"
 end
 
 file "bin/#{jscompiler}" do
@@ -73,17 +74,19 @@ dashboard_jss = FileList['public/js/lib/jquery.js',
                          'public/js/lib/jquery.flot.js',
                          'public/js/lib/jquery.flot.pie.js',
                          'public/js/lib/underscore.js',
-                         'public/js/lib/backbone.js',
                          'public/js/lib/mustache.js',
                          'public/js/gen/dashboard-tmpls.js',
                          'public/js/rssminer/util.js',
+                         'public/js/rssminer/plot.js',
                          'public/js/rssminer/dashboard.js']
 
 app_jss = FileList['public/js/lib/jquery.js',
                    'public/js/lib/underscore.js',
+                   'public/js/lib/backbone.js',
                    'public/js/lib/mustache.js',
                    'public/js/gen/app-tmpls.js',
                    'public/js/rssminer/util.js',
+                   'public/js/rssminer/views.js',
                    'public/js/rssminer/app.js']
 
 
@@ -105,12 +108,12 @@ task :prepare_prod => [:css_compile, "js:minify"]
 
 desc "Run server in dev profile"
 task :run => :prepare do
-  sh 'scripts/run --profile dev'
+  sh 'lein javac && scripts/run --profile dev'
 end
 
 desc "Run server in production profile"
 task :run_prod => :prepare_prod do
-  sh 'scripts/run --profile prod'
+  sh 'lein javac && scripts/run --profile prod'
 end
 
 desc 'Deploy to production'

@@ -1,10 +1,7 @@
-window.$(function(){
+(function () {
   var backbone = window.Backbone,
-      rssminer = window.Rssminer,
-      ajax = rssminer.ajax,
-      utils = rssminer.util,
-      _ = window._,
-      $ = window.$;
+      ajax = RM.ajax,
+      utils = RM.util;
 
   function layout() {
     $("#main, #main>div").height($(window).height() - $('#head').height());
@@ -12,93 +9,86 @@ window.$(function(){
 
   $(window).resize(_.debounce(layout, 100));
 
-  var Router = backbone.Router.extend(function() {
-    var $left = $("#left"),
-        $mid = $("#mid"),
-        $right = $("#right .wrapper"),
-        rerender_nav = function () {
-          $left.empty().append(rssminer.render_nav());
-        },
-        rerender_mid = function () {
-          $mid.empty().append(rssminer.render_mid());
-        };
+  var reseted = ["wordpress", "blogspot"],
+      $left_nav = $("#left"),
+      $mid = $("#mid"),
+      $right = $("#right .wrapper");
 
-    function initialize () {
-      layout();
-      rerender_nav();
-      rerender_mid();
-      utils.delegateEvents($left, {
-        'click a': function () {
-          $('.selected', $left).removeClass('selected');
-          $('.item', this).addClass('selected');
-        }
-      });
+  function rerender_nav (id) {
+    $left_nav.empty().append(RM.render_nav());
+  }
 
-      utils.delegateEvents($mid, {
-        'click li': function (e) {
-          $('.selected', $mid).removeClass('selected');
-          $(this).addClass('selected');
-        },
-        'click .vote span': function (e) {
-        }
-      });
-      backbone.history.start();
+  function add_selected_cls (context, id) {
+    $('.selected', context).removeClass('selected');
+    $("#" + id).addClass('selected');
+  }
+
+  function rerender_mid (sub_id) {
+    $mid.empty().append(RM.render_mid());
+    if(sub_id) {
+      add_selected_cls($left_nav, "sub-" + sub_id);
     }
+  }
 
-    function index () {
+  function initialize () {
+    layout();
+    rerender_nav();
+    backbone.history.start();
+  }
+
+  function index () { }
+
+  function showSub (id) {
+    ajax.get("/api/subs/" + id, function (data) {
+      if(data) {
+        _FEEDS_ = data;
+        rerender_mid(id);
+      }
+    });
+  }
+
+  function rewrite_img_src (index, img) {
+    var $img = $(img),
+        src = $img.attr('src'),
+        hostname = utils.hostname(src);
+    for(var i = 0; i < reseted.length; i++) {
+      if(hostname.indexOf(reseted[i]) != -1) {
+        $img.attr('src', '/p/' + src); // rewrite reseted images
+        break;
+      }
     }
+  }
 
-    function showTag (tag) {
-      ajax.get("/api/tag/" + tag).done(function (data) {
-        if(data) {
-          _FEEDS_ = data;
-          rerender_mid();
-          var t = _.find($(".text", $left), function (item) {
-            return $.trim($(item).text()) === tag;
-          });
-          if(t) {
-            $(t).parent().addClass('selected');
-          }
-        }
-      });
+  function add_target_blank (index, a) {
+    $(a).attr("target", "_blank");
+  }
+
+  function showFeed (sub_id, feed_id) {
+    if(!$("#sub-" + sub_id).hasClass('selected')) {
+      showSub(sub_id);
     }
+    ajax.get("/api/feeds/" + feed_id, function (data) {
+      if(data) {
+        var $html = $(RM.render_right(data));
+        $("img", $html).each(rewrite_img_src);
+        $("a", $html).each(add_target_blank);
+        $right.html($html);
+        add_selected_cls($mid, "feed-" + feed_id);
+        $("#right").scrollTop(0);
+      }
+    });
+  }
 
-    function showSub (id) {
-      ajax.get("/api/subs/" + id).done(function (data) {
-        if(data) {
-          _FEEDS_ = data;
-          rerender_mid();
-        }
-      });
-    }
-
-    function showFeed (id) {
-      ajax.get("/api/feeds/" + id).done(function (data) {
-        if(data) {
-          $right.html(rssminer.render_right(data));
-        }
-      });
-    }
-
+  var Router = backbone.Router.extend(function () {
     return {
       initialize: initialize,
       routes: {
         '': index,
-        'all': index,
-        'all/:id' : showFeed,
-        'tag/:tag': showTag,
-        'subs/:s_id': showSub,
-        'subs/:s_id/:f_id': function (sub_id, feed_id) {
-          showSub(sub_id);
-          showFeed(feed_id);
-        },
-        'tag/:tag/:id': function (tag, id) {
-          showTag(tag);
-          showFeed(id);
-        }
-      }
-    };
+        'subs/:id': showSub,
+        'subs/:sub_id/:feed_id':showFeed
+      }};
   });
 
   new Router();
-});
+
+})();

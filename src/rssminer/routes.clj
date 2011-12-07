@@ -7,6 +7,7 @@
                          [multipart-params :only [wrap-multipart-params]]
                          [file :only [wrap-file]]
                          [session :only [wrap-session]])
+        [rssminer.handlers.proxy :only [handle-proxy]]
         (rssminer [middleware :only [wrap-auth wrap-cache-header
                                      wrap-reload-in-dev wrap-failsafe
                                      wrap-request-logging-in-dev
@@ -61,6 +62,7 @@
 
 (defroutes all-routes
   (GET "/" [] rssminer/landing-page)
+  (GET ["/p/:u" :u #".+"] []  handle-proxy)
   (GET "/app" [] rssminer/index-page)
   (context "/dashboard" []
            (GET "/" [] rssminer/dashboard-page))

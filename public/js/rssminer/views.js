@@ -1,10 +1,7 @@
 (function () {
-  var rssminer = window.Rssminer,
-      util = rssminer.util,
-      tmpls = rssminer.tmpls,
-      to_html = window.Mustache.to_html,
-      _ = window._,
-      $ = window.$;
+  var util = RM.util,
+      tmpls = RM.tmpls,
+      to_html = Mustache.to_html;
 
   function _compute_by_tag() {
     var subs = _.map(window._BY_TAG_, function (item) {
@@ -27,6 +24,7 @@
         subs = _.map(window._SUBS_, function (i) {
           return {
             text: i.title,
+            id: i.id,
             hostname: util.hostname(i.url),
             href: "#subs/" + i.id,
             c: _BY_SUB_[i.id] };
@@ -57,10 +55,11 @@
     return to_html(tmpls.feeds, {feeds: feeds});
   }
 
-  rssminer = $.extend(rssminer, {
+  window.RM = _.extend(window.RM, {
     render_nav: render_nav,
     render_mid: render_mid,
     render_right: function (data) {
+      data.published_ts = util.ymdate(data.published_ts * 1000);
       return to_html(tmpls.feed, data);
     }
   });

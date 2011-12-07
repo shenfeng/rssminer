@@ -15,7 +15,7 @@
                     <img src="http://favicon.xydudu.com/fav/{{hostname}}"/>
                   {{/hostname}}
                   <a href="{{href}}">
-                    <div class="item" title="{{text}}">
+                    <div class="item" title="{{text}}" id="sub-{{id}}">
                       <span class="text">{{text}}</span>
                       {{#c}}
                         <span class="count">{{c}}</span>

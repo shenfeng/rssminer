@@ -9,13 +9,9 @@
   </head>
   <body>
     <div id="page-wrap">
-      <ul id="nav">
-        <li class="settings"><a href="#settings/1">Settings</a></li>
-        <li class="rsslinks"><a href="#rsslinks/1">RSS Links</a></li>
-        <li class="pending"><a href="#pending/1">Pending</a></li>
-        <li class="crawled"><a href="#crawled/1">Crawled</a></li>
-      </ul>
-
+      <label for="interval">Auto refresh interval(s)</label>
+      <input id="interval" value="20"/>
+      <button id="refresh-now">Refresh</button>
       <div id="content">
       </div>
     </div>
@@ -23,10 +19,10 @@
     <script src="/js/lib/jquery.flot.js" data-profile="dev"></script>
     <script src="/js/lib/jquery.flot.pie.js" data-profile="dev"></script>
     <script src="/js/lib/underscore.js" data-profile="dev"></script>
-    <script src="/js/lib/backbone.js" data-profile="dev" ></script>
     <script src="/js/lib/mustache.js" data-profile="dev"></script>
     <script src="/js/gen/dashboard-tmpls.js" data-profile="dev"></script>
     <script src="/js/rssminer/util.js" data-profile="dev"></script>
+    <script src="/js/rssminer/plot.js" data-profile="dev"></script>
     <script src="/js/rssminer/dashboard.js" data-profile="dev"></script>
     <script src="/js/dashboard-{VERSION}-min.js"
             data-profile="prod"></script>

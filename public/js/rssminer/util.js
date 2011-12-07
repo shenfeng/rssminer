@@ -1,9 +1,5 @@
 (function(){
-  var mustache = window.Mustache,
-      $ = window.$,
-      _ = window._,
-      eventSplitter = /^(\S+)\s*(.*)$/,
-      JSON = window.JSON;
+  var eventSplitter = /^(\S+)\s*(.*)$/;
 
   function ymdate (date) {
     var d = new Date(date),
@@ -22,7 +18,7 @@
   function interval (date) {
     var seconds = date - new Date().getTime() / 1000,
         data = {
-          years: 31536000,
+          year: 31536000,
           month : 2592000,
           day: 86400,
           hour: 3600,
@@ -30,17 +26,14 @@
           second: 1
         };
     for(var attr in data) {
-      var interval = Math.floor(seconds / data[attr]);
-      if(interval > 1)
-        return "in " + interval + " " +  attr + "s";
-      else if (interval < -1) {
-        return -interval + " " + attr + "s ago";
+      var i = Math.floor(seconds / data[attr]);
+      if(i > 1)
+        return "in " + i + " " +  attr + "s";
+      else if (i < -1) {
+        return -i + " " + attr + "s ago";
       }
     }
   };
-
-  mustache.registerHelper('ymdate', ymdate);
-  mustache.registerHelper('interval', interval);
 
   var notif = (function() {
     var $nofity = $('<div id="notification"><p></p></div>')
@@ -87,29 +80,34 @@
 
   var ajax = (function(){
     var loading = 'Loading...';
-    function handler(ajax){
-      return ajax.success(function (){
-        notif.hide(loading);
-      }).error(function (xhr, status, code){
-        notif.error($.parseJSON(xhr.responseText).message);
-      });
-    };
-    function get(url){
-      notif.msg(loading);
-      return handler($.ajax({
-        url: url
-      }));
-    }
-    function jpost(url, data){
-      notif.msg(loading);
-      var ajax = $.ajax({
+
+    function handler (url, method, success) {
+      return {
+        type: method,
         url: url,
-        type: 'POST',
-        datatype: 'json',
-        contentType: 'application/json',
-        data: JSON.stringify(data)
-      });
-      return handler(ajax);
+        success: function () {
+          notif.hide(loading);
+          if(typeof success === 'function') {
+            success.apply(null, arguments);
+          }
+        },
+        error: function (xhr) {
+          notif.error(JSON.parse(xhr.responseText).message);
+        }
+      };
+    }
+
+    function get(url, success){
+      notif.msg(loading);
+      return $.ajax(handler(url, 'GET', success));
+    }
+    function jpost(url, data, success){
+      notif.msg(loading);
+      var o = handler(url, 'POST', success);
+      o.dateType = 'json';
+      o.data = JSON.stringify(data);
+      o.contentType = 'application/json';
+      return $.ajax(o);
     }
     return {
       get: get,
@@ -138,7 +136,7 @@
     }
   }
   // export
-  window.Rssminer = $.extend(window.Rssminer, {
+  window.RM = $.extend(window.RM, {
     ajax: ajax,
     notif: notif,
     util: {

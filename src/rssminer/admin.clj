@@ -3,6 +3,7 @@
                                    import-h2-schema!]]
                   [search :only [indexer index-feed use-index-writer!]]
                   [http :only [clean-resolve]]
+                  [time :only [now-seconds]]
                   [config :only [ungroup]]
                   [util :only [ignore-error gen-snippet extract-text to-int]])
         (rssminer.db [user :only [create-user]]
@@ -28,6 +29,7 @@
   (import-h2-schema!)
   (let [user (create-user {:name "feng"
                            :password password
+                           :added_ts (now-seconds)
                            :email "shenedu@gmail.com"})
         rsses (h2-query ["select id from rss_links"])]
     (doseq [rss rsses]

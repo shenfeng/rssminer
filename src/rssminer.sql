@@ -11,7 +11,7 @@ CREATE TABLE users
   name VARCHAR,
   password VARCHAR,
   authen_token VARCHAR,
-  added_ts timestamp DEFAULT now()
+  added_ts INTEGER              -- interger is easier to serialize
 );
 
 ----
