@@ -12,7 +12,7 @@
                                      wrap-reload-in-dev wrap-failsafe
                                      wrap-request-logging-in-dev
                                      JPOST JPUT JDELETE JGET]]
-                  [import :only [opml-import]]
+                  [import :only [opml-import oauth2callback]]
                   [redis :only [redis-store]]))
   (:require [clojure.string :as str]
             [compojure.route :as route]
@@ -63,6 +63,7 @@
 (defroutes all-routes
   (GET "/" [] rssminer/landing-page)
   (GET ["/p/:u" :u #".+"] []  handle-proxy)
+  (GET "/oauth2callback" [] oauth2callback)
   (GET "/app" [] rssminer/index-page)
   (context "/dashboard" []
            (GET "/" [] rssminer/dashboard-page))

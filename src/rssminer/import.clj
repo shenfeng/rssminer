@@ -1,45 +1,39 @@
 (ns rssminer.import
   (:use [rssminer.handlers.subscriptions :only [add-subscription*]]
-        [rssminer.util :only [session-get]])
-  (:require [clojure.xml :as xml]))
+        [clojure.data.json :only [read-json]]
+        (rssminer [util :only [session-get]]
+                  [http :only [client parse-response]]))
+  (:import java.net.URI
+           rssminer.importer.Parser))
 
-(defn parse-xml [s]
-  (xml/parse
-   (new org.xml.sax.InputSource
-        (new java.io.StringReader s))))
+(def oauth2 {"redirect_uri" "http://localhost:9090/oauth2callback"
+             "client_secret" "gQ-exryYQvjEW9OV_lqeh-uQ"
+             "client_id" "1062014352023.apps.googleusercontent.com"
+             "grant_type" "authorization_code"})
 
-(defn- value [a]
-  (cond (empty? a) nil
-        (or (seq? a) (vector? a)) (if (= 1 (count a))
-                                    (value (first a)) a)
-        :else a))
-
-(defn- path [x tag]
-  (let [r (map :content (filter #(= tag (:tag %)) x))]
-    (value r)))
-
-(defn- attr [x attr]
-  (-> x :attrs attr))
-
-(defn parse-opml [str]
-  (let [d (:content (parse-xml str))
-        outlines (path d :body)]
-    (mapcat (fn [outline]
-              (let [subs (:content outline)
-                    group-name (attr outline :title)]
-                (map (fn [sub]
-                       {:title (attr sub :title)
-                        :link (attr sub :xmlUrl)
-                        :group_name group-name
-                        :type (attr sub :type)}) subs))) outlines)))
+(def scope "https://www.google.com/reader/api/")
+(def token-ep (URI. "https://accounts.google.com/o/oauth2/token"))
+(def list-dp (URI. "https://www.google.com/reader/api/0/subscription/list"))
 
 (defn opml-import [req]
   (let [^java.io.File file (-> req :params :file :tempfile)]
     (if (and file (> (.length file) 10))
       (let [user-id (:id (session-get req :user))
-            subs (parse-opml (slurp file))]
-        (map #(add-subscription* (:link %) user-id
-                                 :group_name (:group_name %)
+            subs (map bean (Parser/parseOPML (slurp file)))]
+        (map #(add-subscription* (:url %) user-id
+                                 :category (:category %)
                                  :title (:title %)) subs))
       {:status 400
        :message "Please choose a file"})))
+
+(defn oauth2callback [req]
+  (let [code (-> req :params :code)
+        resp (-> client (.execPost token-ep {} (assoc oauth2 "code" code))
+                 .get parse-response)]
+    (if (= 200 (:status resp))
+      (let [{:keys [access_token refresh_token]} (read-json (:body resp))
+            data (-> client (.execGet list-dp {"Authorization"
+                                               (str "OAuth " access_token)})
+                     .get parse-response)]
+        (if (= 200 (:status data))
+          (map bean (Parser/parseGReaderSubs (:body data))))))))

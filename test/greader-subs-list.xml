@@ -1,0 +1,1179 @@
+<object>
+	<list name="subscriptions">
+		<object>
+			<string name="id">feed/http://www.alistapart.com/rss.xml</string>
+			<string name="title">A List Apart</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/clojure
+					</string>
+					<string name="label">clojure</string>
+				</object>
+			</list>
+			<string name="sortid">DCCD24CA</string>
+			<number name="firstitemmsec">1298369261366</number>
+			<string name="htmlUrl">http://www.alistapart.com/articles/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://blogs.oracle.com/alanb/feed/entries/rss
+			</string>
+			<string name="title">Alan Bateman</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/java</string>
+					<string name="label">java</string>
+				</object>
+			</list>
+			<string name="sortid">871DC583</string>
+			<number name="firstitemmsec">1305916120977</number>
+			<string name="htmlUrl">http://blogs.oracle.com/alanb/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://android-developers.blogspot.com/atom.xml
+			</string>
+			<string name="title">Android Developers Blog</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/android
+					</string>
+					<string name="label">android</string>
+				</object>
+			</list>
+			<string name="sortid">44D504DD</string>
+			<number name="firstitemmsec">1281017227537</number>
+			<string name="htmlUrl">http://android-developers.blogspot.com/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://www.androidres.com/index.php/feed/
+			</string>
+			<string name="title">Android Resource | 资源 资讯 教程</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/android
+					</string>
+					<string name="label">android</string>
+				</object>
+			</list>
+			<string name="sortid">18CCDFA1</string>
+			<number name="firstitemmsec">1256067795678</number>
+			<string name="htmlUrl">http://www.androidres.com</string>
+		</object>
+		<object>
+			<string name="id">feed/http://www.asp.net/learn/videos/rss.ashx
+			</string>
+			<string name="title">ASP.NET</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Microsfot Vedio
+					</string>
+					<string name="label">Microsfot Vedio</string>
+				</object>
+			</list>
+			<string name="sortid">008ED07A</string>
+			<number name="firstitemmsec">1216936554669</number>
+			<string name="htmlUrl">http://www.asp.net</string>
+		</object>
+		<object>
+			<string name="id">feed/http://feeds.feedburner.com/sohtanaka
+			</string>
+			<string name="title">Blog of Soh Tanaka</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/css-tricks
+					</string>
+					<string name="label">css-tricks</string>
+				</object>
+			</list>
+			<string name="sortid">10669DB5</string>
+			<number name="firstitemmsec">1238780139903</number>
+			<string name="htmlUrl">http://www.sohtanaka.com</string>
+		</object>
+		<object>
+			<string name="id">feed/http://blogs.oracle.com/briangoetz/feed/entries/rss
+			</string>
+			<string name="title">Brian Goetz's Oracle Blog</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/java</string>
+					<string name="label">java</string>
+				</object>
+			</list>
+			<string name="sortid">E7122C73</string>
+			<number name="firstitemmsec">1307452605491</number>
+			<string name="htmlUrl">http://blogs.oracle.com/briangoetz/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://briancarper.net/feed</string>
+			<string name="title">briancarper.net (λ)</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/clojure
+					</string>
+					<string name="label">clojure</string>
+				</object>
+			</list>
+			<string name="sortid">A21F8F59</string>
+			<number name="firstitemmsec">1281465952667</number>
+			<string name="htmlUrl">http://briancarper.net</string>
+		</object>
+		<object>
+			<string name="id">feed/http://cemerick.com/feed/</string>
+			<string name="title">cemerick</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/clojure
+					</string>
+					<string name="label">clojure</string>
+				</object>
+			</list>
+			<string name="sortid">5D0BDB31</string>
+			<number name="firstitemmsec">1303228090634</number>
+			<string name="htmlUrl">http://cemerick.com</string>
+		</object>
+		<object>
+			<string name="id">feed/http://blog.mikemccandless.com/feeds/posts/default
+			</string>
+			<string name="title">Changing Bits</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/java</string>
+					<string name="label">java</string>
+				</object>
+			</list>
+			<string name="sortid">BD4500C6</string>
+			<number name="firstitemmsec">1305982853005</number>
+			<string name="htmlUrl">http://blog.mikemccandless.com/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://channel9.msdn.com/Feeds/RSS/</string>
+			<string name="title">Channel 9</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Microsfot Vedio
+					</string>
+					<string name="label">Microsfot Vedio</string>
+				</object>
+			</list>
+			<string name="sortid">C5BDA6FD</string>
+			<number name="firstitemmsec">1239221074557</number>
+			<string name="htmlUrl">http://channel9.msdn.com/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://blogs.oracle.com/chegar/feed/entries/rss
+			</string>
+			<string name="title">Chris Hegarty : Weblog</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/java</string>
+					<string name="label">java</string>
+				</object>
+			</list>
+			<string name="sortid">44B304C4</string>
+			<number name="firstitemmsec">1312249272939</number>
+			<string name="htmlUrl">http://blogs.oracle.com/chegar/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://clj-me.cgrand.net/feed/</string>
+			<string name="title">Clojure and me</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/clojure
+					</string>
+					<string name="label">clojure</string>
+				</object>
+			</list>
+			<string name="sortid">25819A09</string>
+			<number name="firstitemmsec">1263656751572</number>
+			<string name="htmlUrl">http://clj-me.cgrand.net</string>
+		</object>
+		<object>
+			<string name="id">feed/http://groups.google.com/group/clojure-dev/feed/rss_v2_0_topics.xml?num=50
+			</string>
+			<string name="title">Clojure Dev Google Group</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/clojure
+					</string>
+					<string name="label">clojure</string>
+				</object>
+			</list>
+			<string name="sortid">ABED171E</string>
+			<number name="firstitemmsec">1319513747580</number>
+			<string name="htmlUrl">http://groups.google.com/group/clojure-dev
+			</string>
+		</object>
+		<object>
+			<string name="id">feed/http://clojure-libraries.appspot.com/feed
+			</string>
+			<string name="title">Clojure Libraries (Recent Changes)</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/clojure
+					</string>
+					<string name="label">clojure</string>
+				</object>
+			</list>
+			<string name="sortid">04821B5C</string>
+			<number name="firstitemmsec">1307948350905</number>
+			<string name="htmlUrl">http://clojure-libraries.appspot.com</string>
+		</object>
+		<object>
+			<string name="id">feed/http://silverlight.net/blogs/community/rss.aspx
+			</string>
+			<string name="title">Community Silverlight content</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Microsfot Vedio
+					</string>
+					<string name="label">Microsfot Vedio</string>
+				</object>
+			</list>
+			<string name="sortid">F04BE8E4</string>
+			<number name="firstitemmsec">1224021074173</number>
+			<string name="htmlUrl">http://blogs.silverlight.net/blogs/community/default.aspx
+			</string>
+		</object>
+		<object>
+			<string name="id">feed/http://webcast.berkeley.edu/media/common/rss/Computer_Science_162_Fall_2008_Video__webcast.rss
+			</string>
+			<string name="title">Computer Science 162|Fall 2008|UC Berkeley
+			</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/study</string>
+					<string name="label">study</string>
+				</object>
+			</list>
+			<string name="sortid">D4A90405</string>
+			<number name="firstitemmsec">1223519286483</number>
+			<string name="htmlUrl">http://webcast.berkeley.edu</string>
+		</object>
+		<object>
+			<string name="id">feed/http://feeds.feedburner.com/CssTricks
+			</string>
+			<string name="title">CSS-Tricks</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/css-tricks
+					</string>
+					<string name="label">css-tricks</string>
+				</object>
+			</list>
+			<string name="sortid">945E31BC</string>
+			<number name="firstitemmsec">1223037936066</number>
+			<string name="htmlUrl">http://css-tricks.com</string>
+		</object>
+		<object>
+			<string name="id">feed/http://feeds.feedburner.com/CSS-Tricks-Screencasts
+			</string>
+			<string name="title">CSS-Tricks Screencasts</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/css-tricks
+					</string>
+					<string name="label">css-tricks</string>
+				</object>
+			</list>
+			<string name="sortid">123B85E4</string>
+			<number name="firstitemmsec">1222881762138</number>
+			<string name="htmlUrl">http://css-tricks.com/video-screencasts/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://weblogs.asp.net/dwahlin/rss.aspx
+			</string>
+			<string name="title">Dan Wahlin&amp;#39;s WebLog</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Microsfot Vedio
+					</string>
+					<string name="label">Microsfot Vedio</string>
+				</object>
+			</list>
+			<string name="sortid">960976E6</string>
+			<number name="firstitemmsec">1220858646246</number>
+			<string name="htmlUrl">http://weblogs.asp.net/dwahlin/default.aspx
+			</string>
+		</object>
+		<object>
+			<string name="id">feed/http://incanter.wordpress.com/feed/</string>
+			<string name="title">Data Sorcery with Clojure</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/clojure
+					</string>
+					<string name="label">clojure</string>
+				</object>
+			</list>
+			<string name="sortid">4B76DEF3</string>
+			<number name="firstitemmsec">1269495062331</number>
+			<string name="htmlUrl">http://data-sorcery.org</string>
+		</object>
+		<object>
+			<string name="id">feed/http://disclojure.org/feed/</string>
+			<string name="title">disclojure: all things clojure</string>
+			<list name="categories" />
+			<string name="sortid">FA2F5DD7</string>
+			<number name="firstitemmsec">1319781664845</number>
+			<string name="htmlUrl">http://disclojure.org</string>
+		</object>
+		<object>
+			<string name="id">feed/http://emacs-fu.blogspot.com/feeds/posts/default?alt=rss
+			</string>
+			<string name="title">emacs-fu</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/emacs</string>
+					<string name="label">emacs</string>
+				</object>
+			</list>
+			<string name="sortid">62B1AAE8</string>
+			<number name="firstitemmsec">1293725660705</number>
+			<string name="htmlUrl">http://emacs-fu.blogspot.com/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://feeds.feedburner.com/freevideolectures/pFSS
+			</string>
+			<string name="title">freevideolectures.com</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/study</string>
+					<string name="label">study</string>
+				</object>
+			</list>
+			<string name="sortid">B0DFCDF1</string>
+			<number name="firstitemmsec">1242007070065</number>
+			<string name="htmlUrl">http://freevideolectures.com</string>
+		</object>
+		<object>
+			<string name="id">feed/http://www.gwtapps.com/?feed=rss2</string>
+			<string name="title">Google Web Toolkit Applications</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Blogs</string>
+					<string name="label">Blogs</string>
+				</object>
+			</list>
+			<string name="sortid">BA31FE3D</string>
+			<number name="firstitemmsec">1195696048931</number>
+			<string name="htmlUrl">http://www.gwtapps.com</string>
+		</object>
+		<object>
+			<string name="id">feed/http://googlewebtoolkit.blogspot.com/atom.xml
+			</string>
+			<string name="title">Google Web Toolkit Blog</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Blogs</string>
+					<string name="label">Blogs</string>
+				</object>
+			</list>
+			<string name="sortid">5B42549B</string>
+			<number name="firstitemmsec">1300456572812</number>
+			<string name="htmlUrl">http://googlewebtoolkit.blogspot.com/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://blog.higher-order.net/feed/</string>
+			<string name="title">Higher-Order</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/clojure
+					</string>
+					<string name="label">clojure</string>
+				</object>
+			</list>
+			<string name="sortid">6D5CB54D</string>
+			<number name="firstitemmsec">1273436584456</number>
+			<string name="htmlUrl">http://blog.higher-order.net</string>
+		</object>
+		<object>
+			<string name="id">feed/http://www.microsoft.com/feeds/msdn/en-us/videos/native.xml
+			</string>
+			<string name="title">How Do I Videos - Native Coding</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Microsfot Vedio
+					</string>
+					<string name="label">Microsfot Vedio</string>
+				</object>
+			</list>
+			<string name="sortid">B3EF085A</string>
+			<number name="firstitemmsec">1217469606155</number>
+			<string name="htmlUrl">http://msdn.microsoft.com/visualc/bb496952.aspx
+			</string>
+		</object>
+		<object>
+			<string name="id">feed/http://www.microsoft.com/feeds/msdn/en-us/videos/vsto.xml
+			</string>
+			<string name="title">How Do I Videos - Visual Studio Tools for Office
+			</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Microsfot Vedio
+					</string>
+					<string name="label">Microsfot Vedio</string>
+				</object>
+			</list>
+			<string name="sortid">366EF349</string>
+			<number name="firstitemmsec">1213766968837</number>
+			<string name="htmlUrl">http://msdn.microsoft.com/office/bb496949.aspx
+			</string>
+		</object>
+		<object>
+			<string name="id">feed/http://www-128.ibm.com/developerworks/views/java/rss/libraryview.jsp
+			</string>
+			<string name="title">IBM developerWorks : Java technology</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/java</string>
+					<string name="label">java</string>
+				</object>
+			</list>
+			<string name="sortid">BD3AA53F</string>
+			<number name="firstitemmsec">1303822357571</number>
+			<string name="htmlUrl">http://www.ibm.com/developerworks/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://feeds.igvita.com/igvita</string>
+			<string name="title">igvita.com</string>
+			<list name="categories" />
+			<string name="sortid">E416E1D4</string>
+			<number name="firstitemmsec">1302195175713</number>
+			<string name="htmlUrl">http://www.igvita.com</string>
+		</object>
+		<object>
+			<string name="id">feed/http://jaubourg.net/rss.xml</string>
+			<string name="title">j@ubourg</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/JavaScript
+					</string>
+					<string name="label">JavaScript</string>
+				</object>
+			</list>
+			<string name="sortid">2285A599</string>
+			<number name="firstitemmsec">1294039605350</number>
+			<string name="htmlUrl">http://jaubourg.net</string>
+		</object>
+		<object>
+			<string name="id">feed/http://feeds2.feedburner.com/JamesPadolsey
+			</string>
+			<string name="title">James Padolsey</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/JavaScript
+					</string>
+					<string name="label">JavaScript</string>
+				</object>
+			</list>
+			<string name="sortid">129A9AEA</string>
+			<number name="firstitemmsec">1240400860077</number>
+			<string name="htmlUrl">http://james.padolsey.com</string>
+		</object>
+		<object>
+			<string name="id">feed/http://kohlerm.blogspot.com/feeds/posts/default
+			</string>
+			<string name="title">Java Performance blog</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/java</string>
+					<string name="label">java</string>
+				</object>
+			</list>
+			<string name="sortid">C86EA5CD</string>
+			<number name="firstitemmsec">1237850755757</number>
+			<string name="htmlUrl">http://kohlerm.blogspot.com/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://philippeadjiman.com/blog/feed/rss/
+			</string>
+			<string name="title">Java. Internet. Algorithms. Ideas.</string>
+			<list name="categories" />
+			<string name="sortid">D8153271</string>
+			<number name="firstitemmsec">1258393383230</number>
+			<string name="htmlUrl">http://philippeadjiman.com/blog</string>
+		</object>
+		<object>
+			<string name="id">feed/http://www.javalobby.org/forumRSS/18032.xml
+			</string>
+			<string name="title">Javalobby - The heart of the Java developer
+				community
+			</string>
+			<list name="categories" />
+			<string name="sortid">40275B72</string>
+			<number name="firstitemmsec">1323176944537</number>
+			<string name="htmlUrl">http://java.dzone.com/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://feeds.feedburner.com/JeffsSqlServerWeblog
+			</string>
+			<string name="title">Jeff's SQL Server Blog</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/sql</string>
+					<string name="label">sql</string>
+				</object>
+			</list>
+			<string name="sortid">CFF6E9C9</string>
+			<number name="firstitemmsec">1212680428644</number>
+			<string name="htmlUrl">http://weblogs.sqlteam.com/jeffs/Default.aspx
+			</string>
+		</object>
+		<object>
+			<string name="id">feed/http://feeds.feedburner.com/JesseLiberty-SilverlightGeek
+			</string>
+			<string name="title">Jesse Liberty - Silverlight Geek</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Microsfot Vedio
+					</string>
+					<string name="label">Microsfot Vedio</string>
+				</object>
+			</list>
+			<string name="sortid">4C4268F2</string>
+			<number name="firstitemmsec">1223995323591</number>
+			<string name="htmlUrl">http://jesseliberty.com</string>
+		</object>
+		<object>
+			<string name="id">feed/http://feeds2.feedburner.com/JohnResig
+			</string>
+			<string name="title">John Resig</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/JavaScript
+					</string>
+					<string name="label">JavaScript</string>
+				</object>
+			</list>
+			<string name="sortid">17F77A4D</string>
+			<number name="firstitemmsec">1232770673394</number>
+			<string name="htmlUrl">http://ejohn.org</string>
+		</object>
+		<object>
+			<string name="id">feed/http://blogs.oracle.com/jrose/feed/entries/rss
+			</string>
+			<string name="title">John Rose @ Oracle</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/java</string>
+					<string name="label">java</string>
+				</object>
+			</list>
+			<string name="sortid">E2627A0E</string>
+			<number name="firstitemmsec">1305834640930</number>
+			<string name="htmlUrl">http://blogs.oracle.com/jrose/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://blogs.oracle.com/darcy/feed/entries/rss
+			</string>
+			<string name="title">Joseph D. Darcy's Oracle Weblog</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/java</string>
+					<string name="label">java</string>
+				</object>
+			</list>
+			<string name="sortid">2633D118</string>
+			<number name="firstitemmsec">1304759198966</number>
+			<string name="htmlUrl">http://blogs.oracle.com/darcy/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://jquery.com/blog/feed/</string>
+			<string name="title">jQuery Blog</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/JavaScript
+					</string>
+					<string name="label">JavaScript</string>
+				</object>
+			</list>
+			<string name="sortid">9201C025</string>
+			<number name="firstitemmsec">1214493113591</number>
+			<string name="htmlUrl">http://blog.jquery.com</string>
+		</object>
+		<object>
+			<string name="id">feed/http://feeds.feedburner.com/JqueryForDesigners
+			</string>
+			<string name="title">jQuery for Designers</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/JavaScript
+					</string>
+					<string name="label">JavaScript</string>
+				</object>
+			</list>
+			<string name="sortid">E48857F2</string>
+			<number name="firstitemmsec">1202127502432</number>
+			<string name="htmlUrl">http://jqueryfordesigners.com</string>
+		</object>
+		<object>
+			<string name="id">feed/http://feeds.feedburner.com/KatzGotYourTongue
+			</string>
+			<string name="title">Katz Got Your Tongue?</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Blogs</string>
+					<string name="label">Blogs</string>
+				</object>
+			</list>
+			<string name="sortid">12FDCE89</string>
+			<number name="firstitemmsec">1282402491520</number>
+			<string name="htmlUrl">http://yehudakatz.com/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://www.javaworld.com/index.xml</string>
+			<string name="title">Latest headlines from JavaWorld</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/java</string>
+					<string name="label">java</string>
+				</object>
+				<object>
+					<string name="id">user/05365107613467754314/label/linux</string>
+					<string name="label">linux</string>
+				</object>
+			</list>
+			<string name="sortid">A518448E</string>
+			<number name="firstitemmsec">1239787935885</number>
+			<string name="htmlUrl">http://www.javaworld.com/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://pipes.yahoo.com/pipes/pipe.run?_id=3PHwctj52xGg02vB6kjTQA&amp;_render=rss
+			</string>
+			<string name="title">Lisp/Scheme/Emacs Pipe</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/clojure
+					</string>
+					<string name="label">clojure</string>
+				</object>
+			</list>
+			<string name="sortid">9E2980DB</string>
+			<number name="firstitemmsec">1310685073834</number>
+			<string name="htmlUrl">http://pipes.yahoo.com/pipes/pipe.info?_id=3PHwctj52xGg02vB6kjTQA
+			</string>
+		</object>
+		<object>
+			<string name="id">feed/http://emacsblog.org/feed/</string>
+			<string name="title">M-x all-things-emacs</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/emacs</string>
+					<string name="label">emacs</string>
+				</object>
+			</list>
+			<string name="sortid">755731AE</string>
+			<number name="firstitemmsec">1205527141784</number>
+			<string name="htmlUrl">http://emacsblog.org</string>
+		</object>
+		<object>
+			<string name="id">feed/http://www.masteringemacs.org/feed/</string>
+			<string name="title">Mastering Emacs</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/emacs</string>
+					<string name="label">emacs</string>
+				</object>
+			</list>
+			<string name="sortid">CA33AEDC</string>
+			<number name="firstitemmsec">1298577296814</number>
+			<string name="htmlUrl">http://www.masteringemacs.org</string>
+		</object>
+		<object>
+			<string name="id">feed/http://blogs.oracle.com/michaelmcm/feed/entries/rss
+			</string>
+			<string name="title">Michael McMahon's weblog</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/java</string>
+					<string name="label">java</string>
+				</object>
+			</list>
+			<string name="sortid">BD48B7E4</string>
+			<number name="firstitemmsec">1312249015685</number>
+			<string name="htmlUrl">http://blogs.oracle.com/michaelmcm/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://videos.visitmix.com/MIX09/RSS
+			</string>
+			<string name="title">MIX09 - MIX Videos</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Microsfot Vedio
+					</string>
+					<string name="label">Microsfot Vedio</string>
+				</object>
+			</list>
+			<string name="sortid">807E7D4C</string>
+			<number name="firstitemmsec">1237724474144</number>
+			<string name="htmlUrl">http://channel9.msdn.com/Events/MIX/MIX09
+			</string>
+		</object>
+		<object>
+			<string name="id">feed/http://www.moandroid.com/?feed=rss2</string>
+			<string name="title">mo-Android</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/android
+					</string>
+					<string name="label">android</string>
+				</object>
+			</list>
+			<string name="sortid">B4D38D6E</string>
+			<number name="firstitemmsec">1271821590787</number>
+			<string name="htmlUrl">http://www.moandroid.com</string>
+		</object>
+		<object>
+			<string name="id">feed/http://www.javaworld.com/news-reviews/index.xml
+			</string>
+			<string name="title">News &amp; Views</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/java</string>
+					<string name="label">java</string>
+				</object>
+			</list>
+			<string name="sortid">A9FB322D</string>
+			<number name="firstitemmsec">1239277910805</number>
+			<string name="htmlUrl">http://www.javaworld.com/news-reviews/index.xml
+			</string>
+		</object>
+		<object>
+			<string name="id">feed/http://feeds.cyberciti.biz/Nixcraft-LinuxFreebsdSolarisTipsTricks
+			</string>
+			<string name="title">nixCraft</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/linux</string>
+					<string name="label">linux</string>
+				</object>
+			</list>
+			<string name="sortid">815F9346</string>
+			<number name="firstitemmsec">1294235664796</number>
+			<string name="htmlUrl">http://www.cyberciti.biz/tips</string>
+		</object>
+		<object>
+			<string name="id">feed/http://europe.nokia.com/EUROPE_NOKIA_COM_3/Get_Support/RSS/nsu_news.xml
+			</string>
+			<string name="title">Nokia Software Update News:</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Blogs</string>
+					<string name="label">Blogs</string>
+				</object>
+			</list>
+			<string name="sortid">67BBA2BF</string>
+			<number name="firstitemmsec">1233574186498</number>
+			<string name="htmlUrl">http://europe.nokia.com/A4577225</string>
+		</object>
+		<object>
+			<string name="id">feed/http://feeds.feedburner.com/Selenium
+			</string>
+			<string name="title">Official Selenium Blog</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Blogs</string>
+					<string name="label">Blogs</string>
+				</object>
+			</list>
+			<string name="sortid">325F5166</string>
+			<number name="firstitemmsec">1297712385436</number>
+			<string name="htmlUrl">http://seleniumhq.wordpress.com</string>
+		</object>
+		<object>
+			<string name="id">feed/http://parleys.libsyn.com/rss</string>
+			<string name="title">Parleys.com</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/java</string>
+					<string name="label">java</string>
+				</object>
+			</list>
+			<string name="sortid">F7BE1BB5</string>
+			<number name="firstitemmsec">1236174246290</number>
+			<string name="htmlUrl">http://www.parleys.com</string>
+		</object>
+		<object>
+			<string name="id">feed/http://norvig.com/rss-feed.xml</string>
+			<string name="title">Peter Norvig</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Blogs</string>
+					<string name="label">Blogs</string>
+				</object>
+			</list>
+			<string name="sortid">E83C8BFB</string>
+			<number name="firstitemmsec">1225477330991</number>
+			<string name="htmlUrl">http://www.norvig.com</string>
+		</object>
+		<object>
+			<string name="id">feed/http://planet.clojure.in/atom.xml</string>
+			<string name="title">Planet Clojure</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/clojure
+					</string>
+					<string name="label">clojure</string>
+				</object>
+			</list>
+			<string name="sortid">2F343A39</string>
+			<number name="firstitemmsec">1307687103447</number>
+			<string name="htmlUrl">http://planet.clojure.in/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://blog.raek.se/feed/</string>
+			<string name="title">raek's blog</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/clojure
+					</string>
+					<string name="label">clojure</string>
+				</object>
+			</list>
+			<string name="sortid">44EE1834</string>
+			<number name="firstitemmsec">1295899017635</number>
+			<string name="htmlUrl">http://blog.raek.se</string>
+		</object>
+		<object>
+			<string name="id">feed/http://blogs.geekdojo.net/richard/rss.aspx
+			</string>
+			<string name="title">Richard's C# blog</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Microsfot Vedio
+					</string>
+					<string name="label">Microsfot Vedio</string>
+				</object>
+			</list>
+			<string name="sortid">FDA5763B</string>
+			<number name="firstitemmsec">1143057616559</number>
+			<string name="htmlUrl">http://blogs.geekdojo.net/richard/default.aspx
+			</string>
+		</object>
+		<object>
+			<string name="id">feed/http://weblogs.asp.net/scottgu/rss.aspx
+			</string>
+			<string name="title">ScottGu's Blog</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Blogs</string>
+					<string name="label">Blogs</string>
+				</object>
+			</list>
+			<string name="sortid">9331291E</string>
+			<number name="firstitemmsec">1208412145607</number>
+			<string name="htmlUrl">http://weblogs.asp.net/scottgu/default.aspx
+			</string>
+		</object>
+		<object>
+			<string name="id">feed/http://visitmix.com/blogs/2008Sessions/RSS/
+			</string>
+			<string name="title">Sessions at Mix08</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Microsfot Vedio
+					</string>
+					<string name="label">Microsfot Vedio</string>
+				</object>
+			</list>
+			<string name="sortid">9B04011C</string>
+			<number name="firstitemmsec">1206855060439</number>
+			<string name="htmlUrl">http://channel9.msdn.com/Blogs/2008Sessions
+			</string>
+		</object>
+		<object>
+			<string name="id">feed/http://feeds2.feedburner.com/SoftwareIsHard
+			</string>
+			<string name="title">Software is hard</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/JavaScript
+					</string>
+					<string name="label">JavaScript</string>
+				</object>
+			</list>
+			<string name="sortid">494F76B3</string>
+			<number name="firstitemmsec">1233928869782</number>
+			<string name="htmlUrl">http://www.softwareishard.com/blog</string>
+		</object>
+		<object>
+			<string name="id">feed/http://feeds.feedburner.com/Interface21TeamBlog
+			</string>
+			<string name="title">SpringSource Team Blog</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/java</string>
+					<string name="label">java</string>
+				</object>
+			</list>
+			<string name="sortid">E3B8EBD8</string>
+			<number name="firstitemmsec">1241650479694</number>
+			<string name="htmlUrl">http://blog.springsource.org</string>
+		</object>
+		<object>
+			<string name="id">feed/http://sqlblog.com/blogs/MainFeed.aspx
+			</string>
+			<string name="title">SQLblog.com - The SQL Server blog spot on the web
+			</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/sql</string>
+					<string name="label">sql</string>
+				</object>
+			</list>
+			<string name="sortid">ED3EC675</string>
+			<number name="firstitemmsec">1243784655447</number>
+			<string name="htmlUrl">http://sqlblog.com/blogs/default.aspx</string>
+		</object>
+		<object>
+			<string name="id">feed/http://aria42.com/blog/?feed=rss2</string>
+			<string name="title">Stuff Aria Likes</string>
+			<list name="categories" />
+			<string name="sortid">6A9B3309</string>
+			<number name="firstitemmsec">1284935621769</number>
+			<string name="htmlUrl">http://aria42.com/blog</string>
+		</object>
+		<object>
+			<string name="id">feed/http://code.google.com/feeds/p/selenium/svnchanges/basic
+			</string>
+			<string name="title">Subversion commits to project selenium on Google
+				Code
+			</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/java</string>
+					<string name="label">java</string>
+				</object>
+			</list>
+			<string name="sortid">831CF623</string>
+			<number name="firstitemmsec">1306785109330</number>
+			<string name="htmlUrl">http://code.google.com/p/selenium/source/list
+			</string>
+		</object>
+		<object>
+			<string name="id">feed/http://testdrivenwebsites.com/feed/</string>
+			<string name="title">Test Driven Websites (TDD and BDD in RoR and JS)
+			</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/JavaScript
+					</string>
+					<string name="label">JavaScript</string>
+				</object>
+			</list>
+			<string name="sortid">F607189E</string>
+			<number name="firstitemmsec">1277143935395</number>
+			<string name="htmlUrl">http://testdrivenwebsites.com</string>
+		</object>
+		<object>
+			<string name="id">feed/http://blogs.oracle.com/wetmore/feed/entries/rss
+			</string>
+			<string name="title">The 6.625' View</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/java</string>
+					<string name="label">java</string>
+				</object>
+			</list>
+			<string name="sortid">51B1BE64</string>
+			<number name="firstitemmsec">1312249309578</number>
+			<string name="htmlUrl">http://blogs.oracle.com/wetmore/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://blogs.oracle.com/abuckley/en_US/feed/entries/rss
+			</string>
+			<string name="title">The Analytic Tradition</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/java</string>
+					<string name="label">java</string>
+				</object>
+			</list>
+			<string name="sortid">AEB69D65</string>
+			<number name="firstitemmsec">1305777103650</number>
+			<string name="htmlUrl">http://blogs.oracle.com/abuckley/en_US/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://www.scalabledevelopment.com/ftp/ASPNETPodcast-WMV.xml
+			</string>
+			<string name="title">The ASP.NET Podcast by Wallace B. McClure and
+				Paul Glavich, but mostly Wally - WMV Downloads
+			</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Microsfot Vedio
+					</string>
+					<string name="label">Microsfot Vedio</string>
+				</object>
+			</list>
+			<string name="sortid">7BA66E60</string>
+			<number name="firstitemmsec">1210330784434</number>
+			<string name="htmlUrl">http://weblogs.asp.net/wallym</string>
+		</object>
+		<object>
+			<string name="id">feed/http://feeds.feedburner.com/github</string>
+			<string name="title">The GitHub Blog</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Blogs</string>
+					<string name="label">Blogs</string>
+				</object>
+			</list>
+			<string name="sortid">C3C220BD</string>
+			<number name="firstitemmsec">1307573049965</number>
+			<string name="htmlUrl">http://github.com/blog.atom</string>
+		</object>
+		<object>
+			<string name="id">feed/http://www.glenstampoultzis.net/blog/feed/
+			</string>
+			<string name="title">The Occasional Blogger</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/clojure
+					</string>
+					<string name="label">clojure</string>
+				</object>
+			</list>
+			<string name="sortid">D86DCF59</string>
+			<number name="firstitemmsec">1271443874751</number>
+			<string name="htmlUrl">http://www.glenstampoultzis.net/blog</string>
+		</object>
+		<object>
+			<string name="id">feed/http://feeds.feedburner.com/SqlteamcomWeblogs
+			</string>
+			<string name="title">The SQLTeam.com Weblogs</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/sql</string>
+					<string name="label">sql</string>
+				</object>
+			</list>
+			<string name="sortid">33F08F40</string>
+			<number name="firstitemmsec">1243415081191</number>
+			<string name="htmlUrl">http://weblogs.sqlteam.com/mainfeed2.aspx
+			</string>
+		</object>
+		<object>
+			<string name="id">feed/http://timepedia.blogspot.com/feeds/posts/default
+			</string>
+			<string name="title">Timefire</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Blogs</string>
+					<string name="label">Blogs</string>
+				</object>
+			</list>
+			<string name="sortid">9980FB72</string>
+			<number name="firstitemmsec">1238715113600</number>
+			<string name="htmlUrl">http://timepedia.blogspot.com/</string>
+		</object>
+		<object>
+			<string name="id">feed/http://turbomanage.wordpress.com/feed/
+			</string>
+			<string name="title">TurboManage</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Blogs</string>
+					<string name="label">Blogs</string>
+				</object>
+			</list>
+			<string name="sortid">CA1234A8</string>
+			<number name="firstitemmsec">1300476342096</number>
+			<string name="htmlUrl">http://turbomanage.wordpress.com</string>
+		</object>
+		<object>
+			<string name="id">feed/http://www.ubuntugeek.com/feed/</string>
+			<string name="title">Ubuntu Geek</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/linux</string>
+					<string name="label">linux</string>
+				</object>
+			</list>
+			<string name="sortid">A0D48A63</string>
+			<number name="firstitemmsec">1306813477439</number>
+			<string name="htmlUrl">http://www.ubuntugeek.com</string>
+		</object>
+		<object>
+			<string name="id">feed/http://www.microsoft.com/feeds/msdn/en-us/videos/vstudio.xml
+			</string>
+			<string name="title">Visual Studio</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Microsfot Vedio
+					</string>
+					<string name="label">Microsfot Vedio</string>
+				</object>
+			</list>
+			<string name="sortid">6C350BE1</string>
+			<number name="firstitemmsec">1211957773989</number>
+			<string name="htmlUrl">http://msdn.microsoft.com/vstudio/bb507746.aspx
+			</string>
+		</object>
+		<object>
+			<string name="id">feed/http://www.williamhua.com/feed/</string>
+			<string name="title">William Hua的Blog</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/android
+					</string>
+					<string name="label">android</string>
+				</object>
+			</list>
+			<string name="sortid">5117E07A</string>
+			<number name="firstitemmsec">1248803734891</number>
+			<string name="htmlUrl">http://www.williamhua.com</string>
+		</object>
+		<object>
+			<string name="id">feed/http://windowsclient.net/blogs/MainFeed.aspx?GroupID=11&amp;Type=AllBlogs
+			</string>
+			<string name="title">WPF</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Microsfot Vedio
+					</string>
+					<string name="label">Microsfot Vedio</string>
+				</object>
+			</list>
+			<string name="sortid">8B787A78</string>
+			<number name="firstitemmsec">1218153108731</number>
+			<string name="htmlUrl">http://windowsclient.net/learn/videos.aspx
+			</string>
+		</object>
+		<object>
+			<string name="id">feed/http://blog.sina.com.cn/rss/kaifulee.xml
+			</string>
+			<string name="title">李开复的博客</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Blogs</string>
+					<string name="label">Blogs</string>
+				</object>
+			</list>
+			<string name="sortid">452D63C4</string>
+			<number name="firstitemmsec">1257499451471</number>
+			<string name="htmlUrl">http://blog.sina.com.cn/kaifulee</string>
+		</object>
+		<object>
+			<string name="id">feed/http://blog.sina.com.cn/rss/wangran.xml
+			</string>
+			<string name="title">王冉的Blog</string>
+			<list name="categories">
+				<object>
+					<string name="id">user/05365107613467754314/label/Blogs</string>
+					<string name="label">Blogs</string>
+				</object>
+			</list>
+			<string name="sortid">F9869E1B</string>
+			<number name="firstitemmsec">1254825487885</number>
+			<string name="htmlUrl">http://blog.sina.com.cn/wangran</string>
+		</object>
+		<object>
+			<string name="id">feed/http://www.ppurl.com/feed</string>
+			<string name="title">皮皮书屋</string>
+			<list name="categories" />
+			<string name="sortid">BEA3A3EE</string>
+			<number name="firstitemmsec">1313473365564</number>
+			<string name="htmlUrl">http://www.ppurl.com</string>
+		</object>
+	</list>
+</object>
