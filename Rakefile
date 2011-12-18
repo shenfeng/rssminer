@@ -27,7 +27,7 @@ def gen_jstempls(folder)
     name = File.basename(f,".tpl")
     data += "tmpls." + name + " = '" + text + "';\n"
   end
-  data += "window.RM = {tmpls: tmpls}})();\n"
+  data += "window.RM = {tmpls: tmpls};})();\n"
   File.open("public/js/gen/#{folder}-tmpls.js", 'w') {|f| f.write(data)}
 end
 
@@ -132,6 +132,7 @@ namespace :js do
     mkdir_p "public/js/gen"
     gen_jstempls("dashboard");
     gen_jstempls("app");
+    gen_jstempls("mockup");
   end
 
   desc 'Combine all js into one, minify it using google closure'
@@ -170,7 +171,7 @@ namespace :watch do
   desc 'Watch css, html'
   task :all => [:deps, :css_compile, "js:tmpls"] do
     t1 = Thread.new do
-      sh 'while inotifywait -e modify scss/; do rake css_compile; done'
+      sh 'while inotifywait -r -e modify scss/; do rake css_compile; done'
     end
     t2 = Thread.new do
       sh 'while inotifywait -r -e modify templates/; do rake js:tmpls; done'

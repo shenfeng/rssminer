@@ -54,7 +54,7 @@
   "Start rssminer server"
   (let [[options _ banner]
         (cli args
-             ["-p" "--port" "Port to listen" :default 8100 :parse-fn to-int]
+             ["-p" "--port" "Port to listen" :default 9090 :parse-fn to-int]
              ["--worker" "Http worker count" :default 1 :parse-fn to-int]
              ["--crawler-queue" "queue size" :default 200 :parse-fn to-int]
              ["--fetcher-queue" "queue size" :default 100 :parse-fn to-int]

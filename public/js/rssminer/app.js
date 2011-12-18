@@ -34,6 +34,19 @@
     layout();
     rerender_nav();
     backbone.history.start();
+    utils.delegateEvents($right, {
+      'click #controls li': function (e) {
+        var $this = $(this),
+            text = $.trim($this.text()).toLowerCase();
+        $('#tabs .tab').removeClass('selected');
+        if(text === 'rss') {
+          $("#tabs .tab:first").addClass('selected');
+        } else {
+          $("#tabs .tab:nth(1)").addClass('selected');
+        }
+
+      }
+    });
   }
 
   function index () { }

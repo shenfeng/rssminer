@@ -1,0 +1,125 @@
+@import "css3";
+
+$nav_width: 240px;
+$footer_height: 190px;
+
+.unread-like { background-color: #559F4D; color: #ffffff; }
+.unread-neutral { background-color: #F9C72A; color: #303030; }
+.unread-dislike { background-color: #CC2A2E; color: #ffffff; }
+
+.unread {
+    &.like .indicator { background: #559F4D; }
+    &.neutral .indicator { background: #F9C72A; }
+    &.dislike .indicator { background: #CC2A2E; }
+}
+.read {
+    color: #777;
+    .indicator { background: #ccc; }
+}
+
+.resizer { cursor: s-resize; }
+
+html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+
+#content { margin-left: $nav_width; height: 100%; }
+
+#reading-area {
+    overflow: auto;
+    > div { padding: 3px 4px; }
+}
+
+.count {
+    position: absolute;
+    right: 2px;
+    top: 7px;
+    span { padding: 5px 2px 1px 2px; }
+}
+
+#navigation {
+    float: left;
+    height: 100%;
+    width: $nav_width;
+    border-right: 2px #deceaa solid;
+    background: #eee;
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-size: 11px;
+    font-family: monospace;
+    a { text-decoration: none; }
+    ul { list-style: none; padding: 0; margin: 0; }
+    .folder, .item {
+        padding: 2px 4px;
+        cursor: pointer;
+        &:hover { background: gray; }
+    }
+    .item {
+        padding: 7px 0 3px 2em;
+        padding-left: 2em;
+        position: relative;
+        img { left: 2em; }
+    }
+    img { position: absolute; top: 4px; }
+    .folder {
+        padding: 3px;
+        position: relative;
+        span { padding: 4px 0 0 20px; display: inline-block; }
+        img { left: 3px; }
+    }
+    .title {
+        white-space: nowrap;
+        overflow: hidden;
+        padding-left: 20px;
+    }
+}
+
+#feed-list {
+    font-family: monospace;
+    ul {
+        margin: 0;
+        padding: 0;
+        li {
+            position: relative;
+            padding: 2px;
+            cursor: pointer;
+            border-bottom: 1px solid #ccc;
+            &:hover { background: gray; }
+            .indicator {
+                margin: 4px;
+                height: 5px;
+                width: 5px;
+                display: inline-block;
+                @include border-radius(2px);
+            }
+            .date {
+                position: absolute;
+                right: 3em;
+            }
+        }
+    }
+    height: $footer_height - 22px;
+    overflow: auto;
+}
+
+#footer {
+    height: $footer_height;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+}
+
+
+#reading-chooser {
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    border-bottom: 2px solid #bbb;
+    border-top: 1px solid #bbb;
+    li {
+        &:hover { background: #bbb; }
+        cursor: pointer;
+        background: #ccc;
+        display: inline-block;
+    }
+}
