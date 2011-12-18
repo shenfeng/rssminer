@@ -48,15 +48,10 @@
            (JGET "/:rss-id" [] feed/get-by-subscription)
            (JPOST "/:id" [] subscription/customize-subscription)
            (JDELETE "/:id" [] subscription/unsubscribe))
-  (JGET ["/tag/:tag" :tag #".+"] [] feed/get-by-tag)
   (JGET "/search" [] rssminer/search)
   (context "/feeds/:feed-id" []
            (JGET "/" [] feed/get-by-id)
-           (JPOST "/pref" [] feed/save-pref)
-           (JPOST "/tags" [] "TODO")
-           (JDELETE "/tags" [] "TODO")
-           (JPOST "/comments" [] "TODO")
-           (JDELETE "/comments/:comment-id" [] "TODO"))
+           (JPOST "/pref" [] feed/save-pref))
   (JPOST "/import/opml-import" [] opml-import)
   (JGET "/export/opml-export" [] "TODO"))
 

@@ -1,7 +1,5 @@
 package rssminer;
 
-import static java.lang.Character.isLetter;
-
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
@@ -160,17 +158,6 @@ public class Utils {
             return new Parser();
         }
     };
-
-    public static String genSnippet(String content, final int length) {
-        if (content.length() < length)
-            return content;
-        else {
-            int len = length;
-            while (len < content.length() && isLetter(content.charAt(len)))
-                ++len;
-            return content.substring(0, len);
-        }
-    }
 
     public static Info extract(String html, String base, Links linker)
             throws IOException, SAXException {

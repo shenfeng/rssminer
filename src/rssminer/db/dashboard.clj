@@ -48,9 +48,7 @@
 (defn get-rss-links
   [& {:keys [limit offset] :or {limit 30 offset 0}}]
   (h2-query
-   ["SELECT id, url, title, check_interval, next_check_ts, added_ts,
-    (SELECT url FROM crawler_links c
-         WHERE c.id = crawler_link_id ) AS referer
+   ["SELECT id, url, title, check_interval, next_check_ts, added_ts
     FROM rss_links WHERE id > (SELECT MAX(id) FROM rss_links) - ?
     ORDER BY id DESC LIMIT ? OFFSET ?"
     (+ limit offset) limit offset]))

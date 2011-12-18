@@ -5,7 +5,7 @@
                   [http :only [clean-resolve]]
                   [time :only [now-seconds]]
                   [config :only [ungroup]]
-                  [util :only [ignore-error gen-snippet extract-text to-int]])
+                  [util :only [ignore-error to-int]])
         (rssminer.db [user :only [create-user]]
                      [feed :only [fetch-rss-links]]
                      [util :only [h2-query with-h2 h2-insert]])
@@ -59,12 +59,12 @@
       (doseq [feed rs]
         (let [feed (update-in feed [:summary]
                               #(slurp (.getCharacterStream ^Clob %)))]
-          (index-feed (:id feed) (-> feed :summary extract-text) feed)))))
+          (index-feed (:id feed) feed)))))
   (.toggleInfoStream ^Searcher @indexer false))
 
 (defn export-data [{:keys [data-path] :or {data-path "/tmp/rssminer_data"}}]
   (let [feeds (h2-query
-               ["SELECT id, title, author, link, summary, snippet, tags
+               ["SELECT id, title, author, link, summary, tags
                           FROM feeds ORDER BY id LIMIT 2000"])
         links (h2-query ["SELECT domain, url, title FROM
                               crawler_links LIMIT 20000"])

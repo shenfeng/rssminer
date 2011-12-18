@@ -42,8 +42,6 @@ create table rss_links (
   subscription_count INTEGER default 0, -- how much user subscribed
   user_id INTEGER REFERENCES users      -- who first add it
      ON UPDATE CASCADE ON DELETE SET NULL,
-  crawler_link_id INTEGER  REFERENCES crawler_links
-     ON UPDATE CASCADE ON DELETE SET NULL,
 )
 ----
 CREATE TABLE user_subscription
@@ -66,32 +64,11 @@ CREATE TABLE feeds
   link VARCHAR UNIQUE,
   title VARCHAR,
   summary CLOB,
-  snippet VARCHAR,
+  tags VARCHAR,
   updated_ts INTEGER,
   published_ts INTEGER,
   rss_link_id INTEGER
              REFERENCES rss_links ON UPDATE CASCADE ON DELETE CASCADE
-);
-----
-CREATE TABLE comments
-(
-  id INTEGER PRIMARY KEY auto_increment,
-  content VARCHAR,
-  user_id INTEGER NOT NULL
-          REFERENCES users ON UPDATE CASCADE ON DELETE CASCADE,
-  feed_id INTEGER NOT NULL
-          REFERENCES feeds  ON UPDATE CASCADE ON DELETE CASCADE,
-  added_ts TIMESTAMP  DEFAULT now(),
-);
----
-CREATE TABLE feed_tag
-(
-    id INTEGER PRIMARY KEY auto_increment,
-    tag VARCHAR,
-    user_id INTEGER             -- null when given by feed author
-            REFERENCES users ON UPDATE CASCADE ON DELETE CASCADE,
-    feed_id INTEGER NOT NULL
-            REFERENCES feeds ON UPDATE CASCADE ON DELETE CASCADE,
 );
 ---
 create table user_feed

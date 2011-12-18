@@ -29,8 +29,7 @@
   (doseq [{:keys [url title]} rsses]
     (insert-rss-link {:url url
                       :title title
-                      :next_check_ts (rand-int 10000000)
-                      :crawler_link_id (:id referer)}))
+                      :next_check_ts (rand-int 10000000)}))
   (db/insert-crawler-links referer
                            (map #(assoc %
                                    :next_check_ts (rand-int 10000000)

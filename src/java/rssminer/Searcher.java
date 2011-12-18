@@ -29,9 +29,7 @@ import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import clojure.lang.ISeq;
-import clojure.lang.Seqable;
+import org.xml.sax.SAXException;
 
 public class Searcher {
 
@@ -87,8 +85,8 @@ public class Searcher {
         }
     }
 
-    public void index(int feeId, String author, String title, String content,
-            Seqable tags) throws CorruptIndexException, IOException {
+    public void index(int feeId, String author, String title, String summary,
+            String tags) throws CorruptIndexException, IOException {
         Document doc = new Document();
         NumericField fid = new NumericField(FEED_ID, Store.YES, false);
         fid.setIntValue(feeId);
@@ -108,20 +106,22 @@ public class Searcher {
             doc.add(t);
         }
 
-        if (content != null) {
-            Field c = new Field(CONTENT, content, Store.NO, Index.ANALYZED,
-                    TermVector.YES);
-            doc.add(c);
+        if (summary != null) {
+            try {
+                String content = Utils.extractText(summary);
+                Field c = new Field(CONTENT, content, Store.NO,
+                        Index.ANALYZED, TermVector.YES);
+                doc.add(c);
+            } catch (SAXException ignore) {
+            }
         }
         if (tags != null) {
-            ISeq seq = tags.seq();
-            while (seq != null) {
-                String tag = seq.first().toString();
+            String[] ts = tags.split(", ");
+            for (String tag : ts) {
                 Field f = new Field(TAG, tag, Store.NO, Index.NOT_ANALYZED,
                         TermVector.YES);
                 f.setBoost(1.3f);
                 doc.add(f);
-                seq = seq.next();
             }
         }
 

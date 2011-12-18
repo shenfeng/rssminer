@@ -3,21 +3,11 @@
         (rssminer [database :only [h2-db-factory]]
                   [search :only [index-feed]]
                   [time :only [now-seconds]]
-                  [util :only [ignore-error extract-text gen-snippet]])
+                  [util :only [ignore-error]])
         [clojure.string :only [blank?]]
         [clojure.tools.logging :only [info trace]]
         [clojure.java.jdbc :only [with-connection insert-record
-                                  update-values]])
-  (:import java.io.StringReader))
-
-(defn fetch-tags [user-id feed-id]
-  (map :tag (h2-query ["SELECT tag FROM feed_tag
-                        WHERE user_id = ? AND feed_id =?"
-                       user-id feed-id])))
-
-(defn fetch-comments [user-id feed-id]
-  (h2-query ["SELECT id, content, added_ts FROM comments
-              WHERE user_id = ? AND feed_id = ? " user-id feed-id]))
+                                  update-values]]))
 
 (defn insert-pref [user-id feed-id pref]
   (with-h2
@@ -29,36 +19,22 @@
                           ["user_id = ? AND feed_id = ?" user-id feed-id]
                           {:pref pref})))))
 
-(defn insert-tags [feed-id user-id tags]
-  (doseq [t tags]
-    (ignore-error
-     (with-h2 (insert-record :feed_tag  {:feed_id feed-id
-                                         :user_id user-id
-                                         :tag t})))))
-
 (defn save-feeds [feeds rss-id]
-  (doseq [{:keys [link tags] :as feed} (:entries feeds)]
+  (doseq [{:keys [link] :as feed} (:entries feeds)]
     (when (and link (not (blank? link)))
       (try
-        (let [content (extract-text (:summary feed))
-              snippet (gen-snippet content)
-              id (id-k (with-h2
+        (let [id (id-k (with-h2
                          (insert-record :feeds
                                         (assoc (dissoc feed :tags)
-                                          :rss_link_id rss-id
-                                          :snippet snippet))))]
-          (doseq [t tags]
-            (ignore-error
-             (with-h2 (insert-record :feed_tag  {:feed_id id
-                                                 :tag t}))))
-          (index-feed id content feed))
+                                          :rss_link_id rss-id))))]
+          (index-feed id feed))
         (catch RuntimeException e       ;link is uniqe
           (trace "update" link)
           (with-connection @h2-db-factory
             (update-values :feeds ["link=?" link] (dissoc feed :tags))))))))
 
 (defn fetch-by-rssid [user-id rss-id limit offset]
-  (h2-query ["SELECT f.id, author, link, title, snippet,
+  (h2-query ["SELECT f.id, author, link, title, tags,
                      published_ts, uf.read
               FROM feeds f LEFT OUTER JOIN user_feed uf ON uf.feed_id = f.id
               WHERE rss_link_id = ? AND
@@ -67,12 +43,6 @@
 
 (defn fetch-by-id [user-id id]
   (first (h2-query ["select * from feeds where id = ?" id] :convert)))
-
-(defn fetch-by-tag [user-id tag limit offset]
-  (h2-query ["SELECT f.id, author, link, title, snippet, published_ts
-              FROM feeds f JOIN feed_tag ft ON f.id = ft.feed_id
-              WHERE (ft.user_id IS NULL OR ft.user_id = ?)
-              AND ft.tag = ? LIMIT ? OFFSET ?" user-id tag limit offset]))
 
 (defn fetch-unread-meta [user-id]
   (h2-query ["SELECT c.* FROM (
@@ -84,18 +54,12 @@
 
 (defn fetch-unread [user-id limit offset]
   (h2-query ["SELECT c.* FROM (
-       SELECT f.id, f.author, f.link, f.title, f.snippet,f.published_ts FROM
+       SELECT f.id, f.author, f.link, f.title, f.tags,f.published_ts FROM
        feeds f JOIN user_subscription us ON us.rss_link_id = f.rss_link_id
        WHERE us.user_id = ? ) AS c
        LEFT OUTER JOIN user_feed uf ON uf.feed_id = c.id
        WHERE (uf.read = FALSE OR uf.read IS NULL)
        LIMIT ? offset ?" user-id limit offset]))
-
-(defn fetch-unread-group-by-tag [user-id feed-ids]
-  (h2-query ["SELECT tag t, count(tag) c FROM
-              TABLE(x int=?) T INNER JOIN feed_tag ft ON T.x = ft.feed_id
-              WHERE ft.user_id IS NULL OR ft.user_id = ?
-              GROUP BY tag" (into-array feed-ids) user-id]))
 
 (defn update-rss-link [id data]
   (with-h2

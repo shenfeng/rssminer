@@ -8,12 +8,6 @@
     (db/insert-pref user-id feed-id
                     (Boolean/parseBoolean pref))))
 
-(defn get-by-tag [req]
-  (let [{:keys [tag limit offset] :or {limit 20 offset 0}} (:params req)]
-    (db/fetch-by-tag (:id (session-get req :user)) tag
-                     (to-int limit)
-                     (to-int offset))))
-
 (defn get-by-subscription [req]
   (let [{:keys [rss-id limit offset] :or {limit 30 offset 0}} (:params req)]
     (db/fetch-by-rssid (:id (session-get req :user))

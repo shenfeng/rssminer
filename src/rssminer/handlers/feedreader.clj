@@ -1,8 +1,7 @@
 (ns rssminer.handlers.feedreader
   (:use [rssminer.util :only [session-get to-int]]
         [rssminer.search :only [search*]]
-        [rssminer.db.feed :only [fetch-unread-meta fetch-unread-group-by-tag
-                                 fetch-unread]]
+        [rssminer.db.feed :only [fetch-unread-meta fetch-unread]]
         [rssminer.db.subscription :only [fetch-subs-by-user]])
   (:require [rssminer.views.feedreader :as view]
             [rssminer.config :as cfg]))
