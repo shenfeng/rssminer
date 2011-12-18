@@ -48,7 +48,6 @@ html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
     a { text-decoration: none; }
     ul { list-style: none; padding: 0; margin: 0; }
     .folder, .item {
-        padding: 2px 4px;
         cursor: pointer;
         &:hover { background: gray; }
     }
@@ -60,9 +59,9 @@ html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
     }
     img { position: absolute; top: 4px; }
     .folder {
-        padding: 3px;
+        padding: 0px 0 3px;
         position: relative;
-        span { padding: 4px 0 0 20px; display: inline-block; }
+        span { padding: 7px 0 0 22px; display: inline-block; }
         img { left: 3px; }
     }
     .title {

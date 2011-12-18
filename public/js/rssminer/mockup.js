@@ -3,8 +3,8 @@
   function layout () {
     var width = $(window).width(),
         height = $(window).height(),
-        nav_width = $('#navigation').outerWidth(),
-        list_height = $('#footer').outerHeight();
+        nav_width = $('#navigation').width(),
+        list_height = $('#footer').height();
 
     $("#reading-area").height(height - list_height).width(width - nav_width);
   }

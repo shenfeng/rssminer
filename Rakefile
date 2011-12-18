@@ -41,8 +41,8 @@ def minify_js(name, jss, version)
   end
   # ADVANCED_OPTIMIZATIONS SIMPLE_OPTIMIZATIONS
   sh "java -jar bin/#{jscompiler} --warning_level QUIET " +
-     "--compilation_level SIMPLE_OPTIMIZATIONS " +
-     "--js_output_file '#{target}' #{source_arg}"
+    "--compilation_level SIMPLE_OPTIMIZATIONS " +
+    "--js_output_file '#{target}' #{source_arg}"
 end
 
 file "bin/#{jscompiler}" do
@@ -79,6 +79,13 @@ dashboard_jss = FileList['public/js/lib/jquery.js',
                          'public/js/rssminer/util.js',
                          'public/js/rssminer/plot.js',
                          'public/js/rssminer/dashboard.js']
+
+mockup_jss = FileList['public/js/lib/zepto.js',
+                      'public/js/lib/event.js',
+                      'public/js/lib/underscore.js',
+                      'public/js/lib/mustache.js',
+                      'public/js/gen/mockup-tmpls.js',
+                      'public/js/rssminer/mockup.js']
 
 app_jss = FileList['public/js/lib/jquery.js',
                    'public/js/lib/underscore.js',
@@ -139,6 +146,7 @@ namespace :js do
   task :minify => [:tmpls, :deps] do
     minify_js("dashboard", dashboard_jss, version);
     minify_js("app", app_jss, version);
+    minify_js("mockup", mockup_jss, version);
   end
 end
 
