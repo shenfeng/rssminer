@@ -43,8 +43,8 @@ html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
     background: #eee;
     overflow-x: hidden;
     overflow-y: auto;
-    font-size: 11px;
-    font-family: monospace;
+    font-size: 12px;
+    font-family: Consolas, monospace;
     a { text-decoration: none; }
     ul { list-style: none; padding: 0; margin: 0; }
     .folder, .item {
@@ -52,7 +52,7 @@ html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
         &:hover { background: gray; }
     }
     .item {
-        padding: 7px 0 3px 2em;
+        padding: 6px 0 4px 2em;
         padding-left: 2em;
         position: relative;
         img { left: 2em; }
@@ -72,7 +72,8 @@ html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
 }
 
 #feed-list {
-    font-family: monospace;
+    font-family: Consolas, monospace;
+    font-size: 13px;
     ul {
         margin: 0;
         padding: 0;
