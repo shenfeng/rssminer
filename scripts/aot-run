@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/bash -x
 
 TARGET_DIR=/tmp/rssminer_tmp
 rm -rf $TARGET_DIR
@@ -10,7 +10,7 @@ lein compile
 cp src/templates classes -r
 rm classes/templates/tmpls/ -r
 cd classes
-jar -cvf ../rssminer.jar *
+jar -cf ../rssminer.jar *
 cd $TARGET_DIR
 
 java -Dsun.jnu.encoding=UTF-8 \
@@ -21,8 +21,8 @@ java -Dsun.jnu.encoding=UTF-8 \
     -XX:+UseCompressedStrings \
     -Xmx256m -Xms256m \
     -cp rssminer.jar:lib/* rssminer.main \
-    --db-path /tmp/rssminer \
-    --index-path /tmp/index \
+    --db-path /var/rssminer/rssminer \
+    --index-path /var/rssminer/index \
     --profile prod \
-    --worker 4 \
+    --worker 1 \
     --port 8101 \

@@ -70,7 +70,7 @@ CREATE TABLE feeds
   rss_link_id INTEGER
              REFERENCES rss_links ON UPDATE CASCADE ON DELETE CASCADE
 );
----
+----
 create table user_feed
 (
     user_id INTEGER NOT NULL
@@ -82,7 +82,12 @@ create table user_feed
     read_date INTEGER,
     UNIQUE(user_id, feed_id),
 )
-
+----
+create table favicon
+(
+     hostname VARCHAR primary key,
+     favicon BINARY
+)
 ----
 create index idx_link_check_ts on crawler_links(next_check_ts)
 ----

@@ -14,31 +14,31 @@
   layout();
 
   function img_path (host) {
-    return 'http://favicon.xydudu.com/fav/http://' + host;
+    return 'http://rssminer.net/fav?h=' + encodeURIComponent(host);
   }
 
   var subs = [{
     tag: 'java',
     list : [ {
-      img: 'http://favicon.xydudu.com/fav/http://blog.raek.se',
+      img:  img_path('blog.raek.se'),
       title: 'Higher-Order',
       like: 5,
       neutral: 7
     },{
-      img: 'http://favicon.xydudu.com/fav/http://www.google.com',
+      img: img_path('www.google.com'),
       title: 'Stuff Aria Likes',
       like: 3,
       neutral: 9,
       dislike: 3
     },{
-      img: 'http://favicon.xydudu.com/fav/http://www.baidu.com',
+      img: img_path('www.newsblur.com'),
       title: 'raek\'s blog',
       like: 13
     },{
-      img: 'http://favicon.xydudu.com/fav/http://shenfeng.me',
+      img: img_path('shenfeng.me'),
       title: 'The NewsBlur Blog'
     },{
-      img: 'http://favicon.xydudu.com/fav/http://http://www.ibm.com',
+      img: img_path('ibm.com'),
       title: 'IBM developerWorks : Java technology',
       like: 5,
       neutral: 1
@@ -46,7 +46,7 @@
   },{
     tag: 'Photoblogs',
     list: [{
-      img: img_path('findicons.com'),
+      img: img_path('ifeng.com'),
       title: 'Brian Goetz\'s Oracle Blog',
       like: 41,
       neutral: 12
@@ -56,22 +56,22 @@
       like: 8,
       neutral: 93
     },{
-      img: img_path('stackoverflow.com'),
+      img: img_path('www.etao.com'),
       title: 'Planet Clojure',
       like: 5,
       neutral: 23
     },{
-      img: img_path('data-sorcery.org'),
+      img: img_path('www.360.cn'),
       title: 'Planet Clojure',
       like: 7,
       neutral: 45
     },{
-      img: img_path('norvig.com'),
+      img: img_path('www.360buy.com'),
       title: 'the impossible cool.',
       like: 17,
       neutral: 18
     },{
-      img: img_path('techbehindtech.com'),
+      img: img_path('www.taobao.com'),
       title: 'Rands In Repose',
       like: 13,
       neutral: 7
@@ -79,7 +79,7 @@
   }, {
     tag: 'javascript',
     list: [{
-      img: img_path('yahoo.com'),
+      img: img_path('www.yahoo.com'),
       title:  'James Padolsey',
       like: 18,
       neutral: 18
@@ -94,7 +94,7 @@
       like: 8,
       dislike: 1
     }, {
-      img: img_path('www.voanews.com'),
+      img: img_path('www.qq.com'),
       title:  'Volunteers of America',
       like: 21,
       neutral: 9
@@ -106,7 +106,7 @@
   }, {
     tag: 'linux',
     list : [ {
-      img: img_path('www.webmd.com'),
+      img: img_path('news.baidu.com'),
       title: 'Higher-Order',
       like: 5,
       neutral: 7
@@ -117,14 +117,14 @@
       neutral: 9,
       dislike: 3
     },{
-      img: img_path('sina.com.cn'),
+      img: img_path('www.weather.com.cn'),
       title: 'raek\'s blog',
       like: 13
     },{
-      img: img_path('163.com'),
+      img: img_path('www.163.com'),
       title: 'The NewsBlur Blog'
     },{
-      img: img_path('sohu.com'),
+      img: img_path('www.sohu.com'),
       title: 'IBM developerWorks : Java technology',
       like: 5,
       neutral: 1

@@ -19,7 +19,7 @@
                  [org.apache.lucene/lucene-analyzers "3.5.0"]
                  [net.java.dev.rome/rome "1.0.0"]
                  [ring/ring-core "1.0.0"]
-                 [me.shenfeng/async-http-client "1.0.0"]
+                 [me.shenfeng/async-http-client "1.0.1"]
                  [me.shenfeng/async-ring-adapter "1.0.0"]]
   :dev-resources-path "/usr/lib/jvm/java-6-sun/lib/tools.jar:/usr/lib/jvm/java-6-sun/lib/src.zip"
   :exclusions [javax.activation/activation]
