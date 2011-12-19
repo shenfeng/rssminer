@@ -15,8 +15,21 @@
     </div>
 
     <div id="content">
-      <div id="reading-area">
-        <div>
+      <div id="reading-area" class="show-iframe">
+        <div class="feed">
+          <h3>An Exercise in Species Barcoding</h3>
+          <div class="feed-info">
+            by<span class="author">john canlidy</span>at
+            <span class="time">2011/11/1 10:34</span>
+            <span class="vote">
+              <span class="up"></span>
+              <span class="down"></span>
+            </span>
+            <ul class="tags">
+              <li>google</li>
+              <li>search</li>
+            </ul>
+          </div>
           <p>Lorem ipsum dolor sit amet, consectetuer adipiscing
             elit. Pellentesque in tellus. In pharetra consequat
             augue. In congue. Curabitur pellentesque iaculis eros. Proin
@@ -123,29 +136,31 @@
             dolor, eget molestie tellus dui nec dolor. Mauris sit amet
             ligula. Morbi sit amet sapien mollis neque ultricies
             placerat.</p>
+        </div>
+        <div class="iframe">
+          <iframe src="http://weblogs.asp.net/scottgu/archive/2011/12/02/new-css-editor-improvements-in-visual-studio-asp-net-4-5-series.aspx"></iframe>
         </div>
       </div>
 
       <div id="footer">
         <div id="reading-chooser" class="resizer">
           <ul>
-            <li>ORIGINAL</li>
+            <li class="iframe">ORIGINAL</li>
             <li>FEED</li>
           </ul>
         </div>
         <div id="feed-list">
-          <ul>
+          <ul class="feeds">
           </ul>
         </div>
       </div>
-
     </div>
-
     <script src="/js/lib/zepto.js"></script>
     <script src="/js/lib/event.js"></script>
     <script src="/js/lib/underscore.js"></script>
     <script src="/js/lib/mustache.js"></script>
     <script src="/js/gen/mockup-tmpls.js"></script>
+    <script src="/js/rssminer/util.js"></script>
     <script src="/js/rssminer/mockup.js"></script>
   </body>
 </html>

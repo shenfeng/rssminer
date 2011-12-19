@@ -133,55 +133,68 @@
   var html = Mustache.to_html(RM.tmpls.nav, {subs: subs});
   $("#navigation ul").empty().append(html);
 
+  var ymdate = RM.util.ymdate;
 
   var feeds = [{
     cls: 'unread like',
+    tags: ['java', 'program'],
+    author: 'Steve',
     title: 'Strachey\'s Checkers program from 1966',
-    date: new Date()
+    date: ymdate(new Date())
   }, {
     cls: 'unread like',
+    author: 'feng',
+    tags: ['apps', 'tech'],
     title: 'Introduction to Artificial Intelligence',
-    date: new Date()
+    date: ymdate(new Date())
   }, {
     cls: 'unread neutral',
     title: 'Dance Photography',
-    date: new Date()
+    date: ymdate(new Date())
   }, {
+    tags: ['google', 'search engine'],
     cls: 'unread dislike',
     title: 'An Exercise in Species Barcoding',
-    date: new Date()
+    date: ymdate(new Date())
   }, {
     cls: 'unread dislike',
     title: 'Stomple: JMS via WebSockets',
-    date: new Date()
+    date: ymdate(new Date())
   }, {
+    tags: ['win7', 'windows'],
     cls: 'read dislike',
     title: 'Stomple RC1: Combining WebSockets and Reliable Messaging',
-    date: new Date()
+    date: ymdate(new Date())
   }, {
+    tags: ['nginx', 'linux'],
     cls: 'read like',
+    author: 'Novig',
     title: 'Conj-labs Clojure lessons part i',
-    date: new Date()
+    date: ymdate(new Date())
   }, {
+    tags: ['asp.net', 'mvc'],
     cls: 'read like',
     title: 'Clojure without the parentheses: looks a bit like ruby :)',
-    date: new Date()
+    date: ymdate(new Date())
   }, {
     cls: 'read like',
     title: 'ASP.NET 4.5 Series',
-    date: new Date()
+    date: ymdate(new Date())
   }, {
+    tags: ['google', 'search engine'],
     cls: 'unread dislike',
     title: 'Let’s get this blog started again…',
-    date: new Date()
+    date: ymdate(new Date())
   }, {
+    tags: ['java', 'async'],
     cls: 'unread neutral',
     title: 'June 26th Links: ASP.NET, ASP.NET MVC, .NET and NuGet',
-    date: new Date()
+    date: ymdate(new Date())
   }, {
+    tags: ['web', 'html5'],
     cls: 'read like',
     title: 'Free “Guathon” all day event in London on June 6th',
-    date: new Date()
+    date: ymdate(new Date())
   }];
 
   html = Mustache.to_html(RM.tmpls.list, {feeds: feeds});
@@ -219,5 +232,18 @@
       }
     });
   })();
+
+  var $chooser = $('#reading-chooser li');
+  $chooser.click(function () {
+    $chooser.removeClass('selected');
+    var $this = $(this);
+
+    $this.addClass('selected');
+    if($this.hasClass('iframe')) {
+      $('#reading-area').addClass('show-iframe');
+    } else {
+      $('#reading-area').removeClass('show-iframe');
+    }
+  });
 
 })();

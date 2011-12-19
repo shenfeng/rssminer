@@ -58,7 +58,7 @@
 
 (defroutes all-routes
   (GET "/" [] rssminer/landing-page)
-  (GET ["/p/:u" :u #".+"] []  handle-proxy)
+  (GET "/p" []  handle-proxy)
   (GET "/fav" [] get-favicon)
   (GET "/oauth2callback" [] oauth2callback)
   (GET "/app" [] rssminer/index-page)
