@@ -1,6 +1,5 @@
 (function () {
-  var backbone = window.Backbone,
-      ajax = RM.ajax,
+  var ajax = RM.ajax,
       utils = RM.util;
 
   function layout() {
@@ -30,24 +29,6 @@
     }
   }
 
-  function initialize () {
-    layout();
-    rerender_nav();
-    backbone.history.start();
-    utils.delegateEvents($right, {
-      'click #controls li': function (e) {
-        var $this = $(this),
-            text = $.trim($this.text()).toLowerCase();
-        $('#tabs .tab').removeClass('selected');
-        if(text === 'rss') {
-          $("#tabs .tab:first").addClass('selected');
-        } else {
-          $("#tabs .tab:nth(1)").addClass('selected');
-        }
-
-      }
-    });
-  }
 
   function index () { }
 
@@ -92,16 +73,26 @@
     });
   }
 
-  var Router = backbone.Router.extend(function () {
-    return {
-      initialize: initialize,
-      routes: {
-        '': index,
-        'subs/:id': showSub,
-        'subs/:sub_id/:feed_id':showFeed
-      }};
-  });
-
-  new Router();
+  (function () {                        // init
+    layout();
+    rerender_nav();
+    utils.hashRouter({
+      '': index,
+      'subs/:id': showSub,
+      'subs/:sub_id/:feed_id':showFeed
+    });
+    utils.delegateEvents($right, {
+      'click #controls li': function (e) {
+        var $this = $(this),
+            text = $.trim($this.text()).toLowerCase();
+        $('#tabs .tab').removeClass('selected');
+        if(text === 'rss') {
+          $("#tabs .tab:first").addClass('selected');
+        } else {
+          $("#tabs .tab:nth(1)").addClass('selected');
+        }
+      }
+    });
+  })();
 
 })();

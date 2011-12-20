@@ -89,7 +89,6 @@ mockup_jss = FileList['public/js/lib/zepto.js',
 
 app_jss = FileList['public/js/lib/jquery.js',
                    'public/js/lib/underscore.js',
-                   'public/js/lib/backbone.js',
                    'public/js/lib/mustache.js',
                    'public/js/gen/app-tmpls.js',
                    'public/js/rssminer/util.js',
