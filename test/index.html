@@ -1,0 +1,304 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+
+    <title>Firebug</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
+    <link rel="stylesheet" type="text/css" media="screen,projection" href="/styles/screen.css?v2">
+
+    <!--[if gte IE 7]>
+        <link rel="stylesheet" type="text/css" media="screen,projection" href="/styles/screen.css?v2">
+        <![endif]-->
+
+    <!--[if lte IE 6]>
+        <link rel="stylesheet" type="text/css" media="screen,projection" href="/styles/ie.css?v1">
+        <![endif]-->
+
+    <script type="text/javascript" src="/js/main.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.0/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.mousewheel-3.0.2.js"></script>
+    <script type="text/javascript" src="/js/fancybox.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+      $('a.view').fancybox({
+      'transitionIn' : 'elastic',
+      'transitionOut' : 'elastic',
+      'autoScale' : false,
+      'centerOnScroll' : true
+      });
+      $('a.lightbox').fancybox({
+      'transitionIn' : 'elastic',
+      'transitionOut' : 'elastic',
+      'hideOnContentClick' : true
+      });
+      $('a#whatsnew-show').click(function() {
+      $('#whatsnew15').toggle('slow');
+      return false;
+      });
+      });
+    </script>
+
+  </head>
+
+  <body id="home">
+    <div id="wrap" class="group">
+
+      <div id="header" class="group">
+
+        <ul id="nav">
+          <li><a href="/whatisfirebug">What is Firebug?</a>
+            <span>Introduction and Features</span></li>
+          <li><a href="http://getfirebug.com/wiki/">Documentation</a>
+            <span>FAQ and Wiki</span></li>
+          <li><a href="/community">Community</a><span>Discussion forums and lists</span></li>
+          <li><a href="/getinvolved">Get Involved</a><span>Hack the code, create extensions</span></li>
+        </ul>
+
+        <div id="logo-install" class="group">
+
+          <div id="logo">
+            <a href="/"></a>
+            <h1>Firebug</h1>
+            <h2>Web Development Evolved.</h2>
+          </div>
+
+          <!-- Do not display the install button on downloads page. -->
+
+          <div id="install" class="group">
+
+            <p><a onclick="window.location.href='https://getfirebug.com/downloads/'; return false;" href="https://getfirebug.com/downloads">Install Firebug</a>
+              <span>100% free and open source</span></p>
+
+            <ul>
+              <li><a href="/downloads">Other Versions</a></li>
+              <li><a href="/firebuglite">Firebug Lite</a></li>
+              <li><a href="http://getfirebug.com/wiki/index.php/Firebug_Extensions">Extensions</a></li>
+            </ul>
+          </div>
+
+
+        </div> <!-- /END logo-install -->
+
+
+        <div id="promo" class="group">
+
+          <div id="boasting">
+            <h2>The most popular and powerful web development tool</h2>
+            <ul>
+              <li>Inspect <span class="caps">HTML</span> and modify style and layout in real-time</li>
+              <li>Use the most advanced JavaScript debugger available for any browser</li>
+              <li>Accurately analyze network usage and performance</li>
+              <li>Extend Firebug and add features to make Firebug even more powerful</li>
+              <li>Get the information you need to get it done with Firebug.</li>
+            </ul>
+            <p class="moreinfo"><a href="/whatisfirebug">More Features &raquo;</a></p>
+          </div>
+
+          <div id="screencast">
+            <a href="#screencast-view" class="view"><img src="/perch/resources/intro2fb.png" alt="Screencast" /></a><h3>Introduction to Firebug</h3>
+            <p>Firebug pyroentomologist Rob Campbell gives a quick introduction to Firebug.<br><a href="#screencast-view" class="view">Watch now&nbsp;&raquo;</a></p>
+            <br/>
+            <p class="moreinfo"><a href="/screencasts">More Screencasts »</a></p>
+          </div>
+
+          <div style="display:none;">
+            <div id="screencast-view"><video width="601" height="339" poster="/img/screencast.jpg" controls>
+                <source src="video/Intro2FB.ogv" type="video/ogg" />
+                <source src="video/Intro2FB.mp4" type="video/mp4" /><!--[if gt IE 6]>
+                                                                        <object width="601" height="339" classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B"><!
+                                                                                                                                                                 [endif]--><!--[if !IE]><!-->
+                <object width="601" height="339" type="video/quicktime" data="video/Intro2FB.mp4">
+                  <!--<![endif]-->
+                  <param name="src" value="video/Intro2FB.mp4" />
+                  <param name="showlogo" value="false" />
+                  <object width="601" height="339" type="application/x-shockwave-flash"
+                          data="http://vimeo.com/moogaloop.swf?clip_id=8580584&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=0&amp;show_portrait=0&amp;color=ffffff&amp;fullscreen=1">
+                    <param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=8580584&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=0&amp;show_portrait=0&amp;color=ffffff&amp;fullscreen=1" />
+                    <img src="/img/screencast.jpg" width="601" height="339" alt="Introduction to Firebug"
+                         title="Introduction to Firebug - please download video below" />
+                  </object><!--[if gt IE 6]><!--></object><!--<![endif]-->
+              </video>
+              <p>Download Video: <a href="video/Intro2FB.mp4">High Quality “MP4”</a> | <a href="video/Intro2FB.ogv">High Quality “OGG”</a></p></div>
+          </div>
+
+        </div> <!-- END promo -->
+
+        <div class="bigfirebug"></div>
+
+
+      </div> <!-- /END header -->
+
+      <div id="features-wrap">
+
+        <div id="features" class="group">
+
+          <div class="feature1 group">
+            <dl>
+              <dt><a href="/html"><img src="img/icons/inspect.png" width="32" height="32"><span>Inspect</span></a></dt>
+              <dd>Pinpoint an element in a webpage with ease and precision.</dd>
+            </dl>
+            <dl>
+              <dt><a href="/logging"><img src="img/icons/log.png" width="32" height="32"><span>Log</span></a></dt>
+              <dd>Send messages to the console direct from your webpage through Javascript.</dd>
+            </dl>
+            <dl>
+              <dt><a href="/javascript"><img src="img/icons/profile.png" width="32" height="32"><span>Profile</span></a></dt>
+              <dd>Measure your Javascript performance in the Console's Profiler.</dd>
+            </dl>
+          </div>
+
+          <div class="feature2">
+            <dl>
+              <dt><a href="/errors"><img src="img/icons/debug.png" width="32" height="32"><span>Debug</span></a></dt>
+              <dd>Step-by-step interactive debugging in a visual environment.</dd>
+            </dl>
+            <dl>
+              <dt><a href="/network"><img src="img/icons/analyze.png" width="32" height="32"><span>Analyze</span></a></dt>
+              <dd>Look at detailed measurements of your site's network activity.</dd>
+            </dl>
+            <dl>
+              <dt><a href="/layout"><img src="img/icons/layout.png" width="32" height="32"><span>Layout</span></a></dt>
+              <dd>Tweak and position HTML elements with CSS and the Layout panels.</dd>
+            </dl>
+          </div>
+
+        </div> <!-- /END features -->
+
+      </div> <!-- /END features-wrap -->
+
+      <div id="secondary" class="group">
+
+        <div id="contentarea" class="group">
+
+          <div id="content" class="group">
+            <h2 class="heading">Recent news</h2>
+            <div id="blog">
+
+
+              <div class="post">
+                <h2><a href="http://blog.getfirebug.com/2011/12/16/firebug-1-9b4/" rel="bookmark" title="Permanent Link to Firebug 1.9b4">Firebug 1.9b4</a></h2>
+                <div class="postDate">16 December 2011 | 3:18 pm  </div>
+
+                <div class="entry">
+                  <p><a href="http://releases.mozilla.org/pub/mozilla.org/addons/1843/firebug-1.9.0b4-fx.xpi">Firebug 1.9b4</a> has been released (compatible with <strong>Firefox 5-11.0a1</strong>).</p>
+                  <p><strong>Firebug 1.9b4</strong> fixes <a href="http://code.google.com/p/fbug/issues/list?can=1&amp;q=label:fixed-1.9-b4&amp;colspec=ID+Type+Status+Owner+Test+Summary+Reporter&amp;cells=tiles">8 issues</a>.</p>
+                  <p>Among other things, we fixed couple of bugs (<a href="http://code.google.com/p/fbug/issues/detail?id=3009">issue 3009</a> and <a href="http://code.google.com/p/fbug/issues/detail?id=1189">issue 1189</a>) in the Style side-panel (the one within the HTML panel) and we are keen to get a feedback so, don&#8217;t hesitate to create a <a href="http://code.google.com/p/fbug/issues/list">report</a> if you run into any issues.</p>
+                  <p>Try it out and let us know how it works for you!</p>
+                  <p>Post feedback in the <a href="https://groups.google.com/d/topic/firebug/JSYlBRv-fKs/discussion">newsgroup</a>, thanks!</p>
+                  <p>Jan &#8216;Honza&#8217; Odvarko</p></div>
+
+                <p class="postmetadata">  <a href="http://blog.getfirebug.com/2011/12/16/firebug-1-9b4/#respond" title="Comment on Firebug 1.9b4">Comment on this entry &#187;</a></p>
+              </div>
+
+              <div class="post">
+                <h2><a href="http://blog.getfirebug.com/2011/12/02/firebug-1-9b3/" rel="bookmark" title="Permanent Link to Firebug 1.9b3">Firebug 1.9b3</a></h2>
+                <div class="postDate">2 December 2011 | 2:32 pm  </div>
+
+                <div class="entry">
+                  <p><a href="http://releases.mozilla.org/pub/mozilla.org/addons/1843/firebug-1.9.0b3-fx.xpi">Firebug 1.9b3</a> has been released (compatible with <strong>Firefox 5-11.0a1</strong>).</p>
+                  <p>See <a href="http://releases.mozilla.org/pub/mozilla.org/addons/1843/">AMO archive</a> for all Firebug final and beta releases.</p>
+                  <p><strong>Firebug 1.9b3</strong> fixes <a href="http://code.google.com/p/fbug/issues/list?can=1&amp;q=label:fixed-1.9-b3&amp;colspec=ID+Type+Status+Owner+Test+Summary+Reporter&amp;cells=tiles">10 issues</a>.</p>
+                  <p>Try it out and let us know how it works for you!</p>
+                  <p>We are also still hard working on reducing amount of memory Firebug needs and we appreciate any specific test cases that shows when exactly is Firebug consuming too much memory.</p>
+                  <p>Post feedback in the <a href="https://groups.google.com/d/topic/firebug/m8ge84ztjMU/discussion">newsgroup</a>, thanks!</p>
+                  <p>Jan &#8216;Honza&#8217; Odvarko</p></div>
+
+                <p class="postmetadata">  <a href="http://blog.getfirebug.com/2011/12/02/firebug-1-9b3/#respond" title="Comment on Firebug 1.9b3">Comment on this entry &#187;</a></p>
+              </div>
+
+              <div class="post">
+                <h2><a href="http://blog.getfirebug.com/2011/11/25/firebug-1-9b2/" rel="bookmark" title="Permanent Link to Firebug 1.9b2">Firebug 1.9b2</a></h2>
+                <div class="postDate">25 November 2011 | 5:50 pm  </div>
+
+                <div class="entry">
+                  <p><a href="http://releases.mozilla.org/pub/mozilla.org/addons/1843/firebug-1.9.0b2-fx.xpi">Firebug 1.9b2</a> has been released.</p>
+                  <p>At this point (beta phase) we are focusing mainly on:</p>
+                  <ul>
+                    <li>Stability and regression bugs</li>
+                    <li>Memory Leaks</li>
+                  </ul>
+                  <p>Let us know if Firebug causes higher memory consumption. Several leaks have been already fixed and so, we expect improvement in this area!</p>
+                  <p>We would also like to encourage all Firebug users to download Firebug releases from <a href="https://addons.mozilla.org/en-US/firefox/addon/firebug/">addons.mozilla.org</a> (AMO). Its infrastructure is better and you can also get automated Firefox compatibility updates with new Firefox versions.</p>
+                  <p>The existing <a href="http://blog.getfirebug.com/getfirebug.com/releases/">getfirebug.com/releases</a> archive will be still maintained since it represents great history of all releases (not only Firebug but also some in-house developed extensions).</p>
+                  <p>In any case, we are planning to redirect all Firebug updates to AMO. So, even if Firebug is downloaded from getfirebug.com updates will come from AMO.</p>
+                  <p>All this stuff is transparent so, regular Firebug user shouldn&#8217;t even notice that.</p>
+                  <p>Firebug 1.9b2 fixes <a href="http://code.google.com/p/fbug/issues/list?can=1&amp;q=label:fixed-1.9-b2&amp;colspec=ID+Type+Status+Owner+Test+Summary+Reporter&amp;cells=tiles">10 issues</a>.</p>
+                  <p>Post feedback in the <a href="https://groups.google.com/d/topic/firebug/J3yvx5cK36U/discussion">newsgroup</a>, thanks!</p>
+                  <p>Jan &#8216;Honza&#8217; Odvarko</p></div>
+
+                <p class="postmetadata">  <a href="http://blog.getfirebug.com/2011/11/25/firebug-1-9b2/#respond" title="Comment on Firebug 1.9b2">Comment on this entry &#187;</a></p>
+              </div>
+
+              <h3>Read more blog posts on the <a href="http://blog.getfirebug.com/">Firebug weblog &raquo;</a></h3>
+
+            </div> <!-- /END blog -->
+
+          </div> <!-- /END content -->
+
+          <div id="links">
+            <h2 class="heading">Links and Elsewhere</h2>
+
+            <!-- Delicious -->
+            <div id="delicious-posts-firebug" class="delicious-posts">
+              <h2 class="delicious-banner sidebar-title">Firebug around the web</h2>
+              <script type="text/javascript" src="http://feeds.delicious.com/v2/js/firebugnews?count=10&amp;title=&amp;sort=date&amp;extended"></script>
+            </div>
+
+          </div> <!-- /END links -->
+
+        </div> <!-- /END contentarea -->
+
+      </div> <!-- /END secondary -->
+
+      <div id="footer" class="group">
+
+        <div class="nav">
+          <h3>Firebug</h3>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/downloads">Downloads</a></li>
+            <li><a href="http://getfirebug.com/wiki/">Resources</a></li>
+            <li><a href="/whatisfirebug">What is Firebug</a>
+            </li>
+            <li><a href="/community">Community</a></li>
+            <li><a href="/getinvolved">Get Involved</a></li>
+            <li><a href="http://blog.getfirebug.com/">Blog</a></li>
+          </ul>
+        </div>
+
+        <div id="legal">
+          <div id="copyright">
+            <img src="/img/mozilla-logo.png" width="41" height="31" alt="Firefox Logo" />
+            <p><span>Copyright &copy; 2005-2010 Mozilla.</span> All rights reserved.</p>
+          </div>
+
+          <ul>
+            <li><a href="http://www.mozilla.com/en-US/privacy-policy.html">Privacy Policy</a></li>
+            <li><a href="http://www.mozilla.com/en-US/about/legal.html">Legal Notices</a></li>
+
+          </ul>
+        </div>
+        <div class="bigfirebug"></div>
+
+
+      </div> <!-- /END footer -->
+    </div> <!-- /END wrap -->
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-21831241-1']);
+      _gaq.push(['_setDomainName', '.getfirebug.com']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+
+  </body>
+</html>
