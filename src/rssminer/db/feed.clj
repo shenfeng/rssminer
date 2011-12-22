@@ -25,13 +25,13 @@
       (try
         (let [id (id-k (with-h2
                          (insert-record :feeds
-                                        (assoc (dissoc feed :tags)
+                                        (assoc feed
                                           :rss_link_id rss-id))))]
           (index-feed id feed))
         (catch RuntimeException e       ;link is uniqe
           (trace "update" link)
           (with-connection @h2-db-factory
-            (update-values :feeds ["link=?" link] (dissoc feed :tags))))))))
+            (update-values :feeds ["link=?" link] feed)))))))
 
 (defn fetch-by-rssid [user-id rss-id limit offset]
   (h2-query ["SELECT f.id, author, link, title, tags,
@@ -41,8 +41,12 @@
              (uf.user_id = ? or uf.user_id IS NULL) LIMIT ? OFFSET ?"
              rss-id user-id limit offset] :convert))
 
-(defn fetch-by-id [user-id id]
-  (first (h2-query ["select * from feeds where id = ?" id] :convert)))
+(defn fetch-by-id [id]
+  (first (h2-query ["SELECT * FROM feeds WHERE id = ?" id] :convert)))
+
+(defn fetch-orginal [id]
+  (first
+   (h2-query ["SELECT original, link FROM feeds WHERE id = ?" id] :convert)))
 
 (defn fetch-unread-meta [user-id]
   (h2-query ["SELECT c.* FROM (
@@ -64,6 +68,9 @@
 (defn update-rss-link [id data]
   (with-h2
     (update-values :rss_links ["id = ?" id] data)))
+
+(defn save-feed-original [id original]
+  (with-h2 (update-values :feeds ["id = ?" id] {:original original})))
 
 (defn fetch-rss-links [limit]           ; for fetcher
   "Returns nil when no more"

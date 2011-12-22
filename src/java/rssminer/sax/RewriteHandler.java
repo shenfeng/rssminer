@@ -30,6 +30,15 @@ public class RewriteHandler extends DefaultHandler {
     public RewriteHandler(String html, String uriBase, String proxyURl)
             throws URISyntaxException {
         sb = new StringBuilder(html.length());
+        if (html.length() > 100) {
+            String h = html.substring(0, 20).toLowerCase();
+            if (h.indexOf("doctype") != -1) {
+                int end = html.indexOf('>');
+                if (end < 150) {
+                    sb.append(html.substring(0, end + 1)).append('\n');
+                }
+            }
+        }
         this.uriBase = new URI(uriBase);
         this.proxyURI = proxyURl;
     }
@@ -40,10 +49,8 @@ public class RewriteHandler extends DefaultHandler {
 
     public void characters(char[] ch, int start, int length)
             throws SAXException {
-        String s = new String(ch, start, length).trim();
-        if (s.length() > 0) {
-            sb.append(s);
-        }
+        // trim need care: space matters for pre, and other
+        sb.append(ch, start, length);
     }
 
     public void startElement(String uri, String localName, String qName,
@@ -57,21 +64,26 @@ public class RewriteHandler extends DefaultHandler {
             String name = attrs.getQName(i);
             String val = attrs.getValue(i);
             sb.append(SPACE);
-            sb.append(name).append(EQUAL).append(QUOTE);
+            sb.append(name).append(EQUAL);
             if (rw
                     && proxyURI != null
                     && ("src".equalsIgnoreCase(name) || "href"
                             .equalsIgnoreCase(name)) && val != null) {
+                sb.append(QUOTE);
                 try {
                     String e = URLEncoder.encode(uriBase.resolve(val)
                             .toString(), "utf8");
                     sb.append(proxyURI).append(e);
                 } catch (UnsupportedEncodingException ignore) {
                 }
+                sb.append(QUOTE);
             } else {
-                sb.append(val);
+                if (isQuoteNeeded(val)) {
+                    sb.append(QUOTE).append(val).append(QUOTE);
+                } else {
+                    sb.append(val);
+                }
             }
-            sb.append(QUOTE);
         }
         sb.append(END);
 
@@ -82,11 +94,31 @@ public class RewriteHandler extends DefaultHandler {
 
     }
 
-    public void endElement(String uri, String localName, String qName)
-            throws SAXException {
-        sb.append(START).append(SLASH).append(qName);
-        sb.append(END);
-        sb.append("\n");
+    private boolean isQuoteNeeded(String val) {
+        if (val.length() > 10) {
+            return true;
+        } else {
+            int i = val.length();
+            while (--i >= 0) {
+                char c = val.charAt(i);
+                // http://www.cs.tut.fi/~jkorpela/qattr.html
+                if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z')
+                        || (c >= 'A' && c <= 'Z') || c == '-' || c == '.') {
+                    continue;
+                }
+                return true;
+            }
+
+            return false;
+        }
     }
 
+    public void endElement(String uri, String localName, String qName)
+            throws SAXException {
+        String l = qName.toLowerCase();
+        if (!"br".equals(l) && !"hr".equals(l)) {
+            sb.append(START).append(SLASH).append(qName);
+            sb.append(END);
+        }
+    }
 }

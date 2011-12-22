@@ -44,6 +44,7 @@ APP_ARGS="--db-path $DB_PATH \
     --redis-host 127.0.0.1 \
     --no-proxy \
     --no-dns \
+    --proxy-server http://shenfeng.me \
     --crawler-queue 50 \
     --fetcher-queue 10 \
     --worker 1 \

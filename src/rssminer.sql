@@ -64,6 +64,7 @@ CREATE TABLE feeds
   link VARCHAR UNIQUE,
   title VARCHAR,
   summary CLOB,
+  original CLOB,
   tags VARCHAR,
   updated_ts INTEGER,
   published_ts INTEGER,

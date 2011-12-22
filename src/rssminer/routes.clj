@@ -60,6 +60,7 @@
   (GET "/" [] rssminer/landing-page)
   (GET "/p" []  handle-proxy)
   (GET "/fav" [] get-favicon)
+  (GET "/f/o/:id" [] feed/get-orginal)
   (GET "/oauth2callback" [] oauth2callback)
   (GET "/app" [] rssminer/index-page)
   (context "/dashboard" []
