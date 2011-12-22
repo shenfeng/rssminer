@@ -9,26 +9,43 @@
   <body>
 
     <div id="navigation">
-      <ul>
+      <div class="wrapper">
+        <div class="section">
+          <h3>search</h3>
+          <div id="search-input" class="expand">
+            <input placeholder="full text search all you feeds" name="q"/>
+            <ul class="search-result"></ul>
+          </div>
+        </div>
+        <div class="section active">
+          <h3>subscriptions</h3>
+          <ul class="sub-list expand"> </ul>
+        </div>
 
-      </ul>
+      </div>
     </div>
-
+    <div id="admin-controls">
+      <span class="add">+</span>
+      <img src="/imgs/configure.png" width="28"/>
+      <img src="/imgs/preferences_desktop_keyboard.png" width="28"/>
+    </div>
     <div id="content">
       <div id="reading-area" class="show-iframe">
         <div class="feed">
-          <h3>An Exercise in Species Barcoding</h3>
-          <div class="feed-info">
-            by<span class="author">john canlidy</span>at
-            <span class="time">2011/11/1 10:34</span>
-            <span class="vote">
-              <span class="up"></span>
-              <span class="down"></span>
-            </span>
-            <ul class="tags">
-              <li>google</li>
-              <li>search</li>
-            </ul>
+          <div class="feed-title">
+            <h3>An Exercise in Species Barcoding</h3>
+            <div class="feed-info">
+              by<span class="author">john canlidy</span>at
+              <span class="time">2011/11/1 10:34</span>
+              <span class="vote">
+                <span class="up"></span>
+                <span class="down"></span>
+              </span>
+              <ul class="tags">
+                <li>google</li>
+                <li>search</li>
+              </ul>
+            </div>
           </div>
           <p>Lorem ipsum dolor sit amet, consectetuer adipiscing
             elit. Pellentesque in tellus. In pharetra consequat
@@ -144,10 +161,24 @@
 
       <div id="footer">
         <div id="reading-chooser" class="resizer">
-          <ul>
+          <ul class="chooser">
             <li class="iframe">ORIGINAL</li>
             <li>FEED</li>
           </ul>
+          <ul class="prev-next">
+            <li>prev</li>
+            <li>next</li>
+          </ul>
+          <div class="info">
+            <h5>Strachey's Checkers program from 1966</h5>
+            <span class="author">feng</span>
+            <ul class="tags">  <li>apps</li>  <li>tech</li> </ul>
+          </div>
+
+          <span class="vote">
+            <span class="up"></span>
+            <span class="down"></span>
+          </span>
         </div>
         <div id="feed-list">
           <ul class="feeds">

@@ -5,7 +5,7 @@
         height = $(window).height(),
         nav_width = $('#navigation').width(),
         list_height = $('#footer').height();
-
+    $("#navigation .wrapper").height(height - $("#admin-controls").height());
     $("#reading-area").height(height - list_height).width(width - nav_width);
   }
 
@@ -131,7 +131,7 @@
     }]
   }];
   var html = Mustache.to_html(RM.tmpls.nav, {subs: subs});
-  $("#navigation ul").empty().append(html);
+  $("#navigation ul.sub-list").empty().append(html);
 
   var ymdate = RM.util.ymdate;
 
@@ -244,6 +244,11 @@
     } else {
       $('#reading-area').removeClass('show-iframe');
     }
+  });
+
+  $("#navigation .section h3").click(function (e) {
+    // $(".section.active").removeClass('active');
+    $(this).parents('.section').toggleClass('active');
   });
 
 })();

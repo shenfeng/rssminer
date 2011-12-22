@@ -23,9 +23,23 @@ html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
 
 #content { margin-left: $nav_width; height: 100%; }
 
+#search-input {
+    width: 100%;
+    input {
+        margin: 3px;
+        padding: 2px;
+        width: $nav_width - 30px;
+    }
+}
+
 #reading-area {
     overflow: auto;
     div.feed { padding: 3px 4px; }
+    .feed-title h3 {
+        padding: 5px 0;
+        margin: 0;
+        background: #ccc;
+    }
     &.show-iframe {
         .feed { display: none; }
         .iframe { display: block; }
@@ -41,16 +55,29 @@ html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
     span { padding: 5px 2px 1px 2px; }
 }
 
+#admin-controls {
+    height: 30px;
+    position: absolute;
+    width: $nav_width;
+    background: #aaa;
+    bottom: 0;
+    * { float: right; cursor: pointer; margin: 1px 2px;}
+    span { display: inline-block; }
+    .add {
+        &:hover { color: #ff0; }
+        padding: 0 10px; font-size: 24px; color: #ee0; font-weight: bold;
+    }
+}
+
 #navigation {
     float: left;
     height: 100%;
     width: $nav_width;
     border-right: 2px #deceaa solid;
     background: #eee;
-    overflow-x: hidden;
-    overflow-y: auto;
     font-size: 12px;
     font-family: Consolas, monospace;
+    .wrapper { overflow-x: hidden; overflow-y: auto; }
     a { text-decoration: none; }
     ul { list-style: none; padding: 0; margin: 0; }
     .folder, .item {
@@ -74,6 +101,16 @@ html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
         white-space: nowrap;
         overflow: hidden;
         padding-left: 20px;
+    }
+    .section {
+        h3 {
+            cursor: pointer;
+            margin: 0;
+            &:hover { background: #aaa; }
+            padding: 0.3em 0;
+        }
+        &.active .expand { display: block; }
+        .expand { display: none; }
     }
 }
 
@@ -152,21 +189,31 @@ span.vote {
     margin: 0;
 }
 
-
+#reading-chooser * { display: inline-block; }
 #reading-chooser {
+    position: relative;
+    .info {
+        cursor: default;
+        margin-left: 10em;
+        h5 { margin: 0; }
+    }
+    .prev-next { float: right; margin-right: 2em; }
+    span { visibility: visible; }
+    span.vote { left: 12em; }
     ul {
-        list-style: none;
         padding: 0;
         margin: 0;
+        list-style: none;
     }
-    border-bottom: 2px solid #bbb;
+    .chooser, .prev-next {
+        li {
+            &:hover { background: #bbb; }
+            cursor: pointer;
+            background: #ccc;
+        }
+    }
+    border-bottom: 3px solid #bbb;
     border-top: 1px solid #bbb;
-    li {
-        &:hover { background: #bbb; }
-        cursor: pointer;
-        background: #ccc;
-        display: inline-block;
-    }
 }
 
 #notification {
