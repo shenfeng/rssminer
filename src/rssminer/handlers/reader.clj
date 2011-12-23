@@ -1,9 +1,9 @@
-(ns rssminer.handlers.feedreader
+(ns rssminer.handlers.reader
   (:use [rssminer.util :only [session-get to-int]]
         [rssminer.search :only [search*]]
         [rssminer.db.feed :only [fetch-unread-meta fetch-unread]]
         [rssminer.db.subscription :only [fetch-subs-by-user]])
-  (:require [rssminer.views.feedreader :as view]
+  (:require [rssminer.views.reader :as view]
             [rssminer.config :as cfg]))
 
 (defn landing-page [req]
@@ -29,15 +29,18 @@
                                  (inc (get m rss_link_id 0))))
                        (transient {}) unread)))
 
-(defn index-page [req]
+(defn app-page [req]
+  (view/app-page))
+
+(defn v1-page [req]
   (let [user (session-get req :user)
         user-id (:id user)
         unread (fetch-unread-meta user-id)]
-    (view/index-page {:user user
-                      :by_sub (compute-by-sub unread)
-                      :by_time (compute-by-time unread)
-                      :subs (fetch-subs-by-user user-id)
-                      :feeds (fetch-unread user-id 7 1)})))
+    (view/v1-page {:user user
+                   :by_sub (compute-by-sub unread)
+                   :by_time (compute-by-time unread)
+                   :subs (fetch-subs-by-user user-id)
+                   :feeds (fetch-unread user-id 7 1)})))
 
 (defn dashboard-page [req]
   (view/dashboard-page))

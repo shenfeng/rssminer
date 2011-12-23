@@ -24,7 +24,7 @@ def gen_jstempls(folder)
   data = "(function(){var tmpls = {};"
   html_tmpls.each do |f|
     text = get_file_as_string(f).gsub(/\s+/," ")
-    name = File.basename(f,".tpl")
+    name = File.basename(f, ".tpl")
     data += "tmpls." + name + " = '" + text + "';\n"
   end
   data += "window.RM = {tmpls: tmpls};})();\n"
@@ -66,9 +66,7 @@ file "bin/#{luke}" do
   sh "wget http://luke.googlecode.com/files/#{luke} -O bin/#{luke}"
 end
 
-task :deps => ["bin/#{jscompiler}",
-               "bin/#{luke}",
-               "bin/#{htmlcompressor}"]
+task :deps => ["bin/#{jscompiler}", "bin/#{luke}", "bin/#{htmlcompressor}"]
 
 dashboard_jss = FileList['public/js/lib/jquery.js',
                          'public/js/lib/jquery.flot.js',
@@ -80,20 +78,22 @@ dashboard_jss = FileList['public/js/lib/jquery.js',
                          'public/js/rssminer/plot.js',
                          'public/js/rssminer/dashboard.js']
 
-mockup_jss = FileList['public/js/lib/zepto.js',
-                      'public/js/lib/event.js',
-                      'public/js/lib/underscore.js',
-                      'public/js/lib/mustache.js',
-                      'public/js/gen/mockup-tmpls.js',
-                      'public/js/rssminer/mockup.js']
-
-app_jss = FileList['public/js/lib/jquery.js',
+app_jss = FileList['public/js/lib/zepto.js',
+                   'public/js/lib/event.js',
+                   'public/js/lib/ajax.js',
                    'public/js/lib/underscore.js',
                    'public/js/lib/mustache.js',
                    'public/js/gen/app-tmpls.js',
                    'public/js/rssminer/util.js',
-                   'public/js/rssminer/views.js',
                    'public/js/rssminer/app.js']
+
+v1_jss = FileList['public/js/lib/jquery.js',
+                  'public/js/lib/underscore.js',
+                  'public/js/lib/mustache.js',
+                  'public/js/gen/app-v1-tmpls.js',
+                  'public/js/rssminer/util.js',
+                  'public/js/rssminer/views.js',
+                  'public/js/rssminer/app.js']
 
 
 desc "Clean generated files"
@@ -112,6 +112,12 @@ task :prepare => [:css_compile,:html_compress, "js:tmpls"]
 desc "Prepare for production"
 task :prepare_prod => [:css_compile, "js:minify"]
 
+desc "lein swank"
+task :swank do
+  sh "echo -n \"\033]0;rssminer lein swank\007\"" +
+    " && rm classes -r && lein javac && lein swank"
+end
+
 desc "Run server in dev profile"
 task :run => :prepare do
   sh 'lein javac && scripts/run --profile dev'
@@ -129,7 +135,7 @@ end
 
 desc "Run unit test"
 task :test => :prepare do
-  sh 'lein javac && lein test'
+  sh 'rm classes -r && lein javac && lein test'
 end
 
 namespace :js do
@@ -138,6 +144,7 @@ namespace :js do
     mkdir_p "public/js/gen"
     gen_jstempls("dashboard");
     gen_jstempls("app");
+    gen_jstempls("app-v1");
     gen_jstempls("mockup");
   end
 
@@ -145,7 +152,6 @@ namespace :js do
   task :minify => [:tmpls, :deps] do
     minify_js("dashboard", dashboard_jss, version);
     minify_js("app", app_jss, version);
-    minify_js("mockup", mockup_jss, version);
   end
 end
 
@@ -156,27 +162,31 @@ task :css_compile do
   scss.each do |source|
     target = source.sub(/scss$/, 'css').sub(/^scss/, 'public/css')
     sh "sass -t compressed --cache-location /tmp #{source} #{target}"
-    sh "sed -i \"s/{VERSION}/#{version}/g\" #{target}"
   end
-end
-
-html_srcs = FileList['templates/**/*.*']
-html_triples = html_srcs.map {|f| [f, "src/#{f}", get_dir("src/#{f}")]}
-
-html_triples.each do |src, tgt, dir|
-  directory dir
-  file tgt => [src, dir] do
-    sh "java -jar bin/#{htmlcompressor} --charset utf8 #{src} -o #{tgt}"
-    sh "sed -i \"s/{VERSION}/#{version}/g\" #{tgt}"
-  end
+  sh "find public/css/ -type f " +
+    "| xargs -I {} sed -i \"s/{VERSION}/#{version}/g\" {}"
 end
 
 desc 'Compress html using htmlcompressor, save compressed to src/templates'
-task :html_compress => html_srcs.map {|f| "src/#{f}"}
+task :html_compress do
+  html_srcs = FileList['templates/**/*.*']
+  html_triples = html_srcs.map {|f| [f, "src/#{f}", get_dir("src/#{f}")]}
+  html_triples.each do |src, tgt, dir|
+    if !File.exist?(dir)
+      mkdir_p dir
+    end
+    if !File.exist?(tgt) || File.mtime(tgt) < File.mtime(src)
+      sh "java -jar bin/#{htmlcompressor} --charset utf8 #{src} -o #{tgt}"
+    end
+  end
+  sh "find src/templates/ -type f " +
+    "| xargs -I {} sed -i \"s/{VERSION}/#{version}/g\" {}"
+end
 
 namespace :watch do
   desc 'Watch css, html'
   task :all => [:deps, :css_compile, "js:tmpls"] do
+    sh "echo -n \"\033]0;rssminer rake watch\007\""
     t1 = Thread.new do
       sh 'while inotifywait -r -e modify scss/; do rake css_compile; done'
     end

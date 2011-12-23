@@ -15,12 +15,12 @@
     (.format f d)))
 
 (defn show-login-page [req]
-  (view/login-page "/app"))
+  (view/login-page "/a"))
 
 (defn login [req]
   (let [{:keys [email password return-url persistent]} (:params req)
         user (db/authenticate email password)
-        return-url (or return-url "/app")]
+        return-url (or return-url "/a")]
     (if user
       (assoc (redirect return-url)
         :session {:user (select-keys user [:id :email :name :added_ts])}
@@ -39,5 +39,5 @@
         user (db/create-user {:email email
                               :added_ts (now-seconds)
                               :password password})]
-    (assoc (redirect "/app")
+    (assoc (redirect "/a")
       :session {:user user})))

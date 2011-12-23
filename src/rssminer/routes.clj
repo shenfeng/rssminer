@@ -17,14 +17,14 @@
                   [redis :only [redis-store]]))
   (:require [clojure.string :as str]
             [compojure.route :as route]
-            (rssminer.handlers [feedreader :as rssminer]
+            (rssminer.handlers [reader :as reader]
                                [subscriptions :as subscription]
                                [users :as user]
                                [dashboard :as dashboard]
                                [feeds :as feed]))
   (:import clojure.lang.Namespace))
 
-(let [views-ns '[rssminer.views.feedreader
+(let [views-ns '[rssminer.views.reader
                  rssminer.views.layouts]
       all-rss-ns (filter
                   #(re-find #"^rssminer" (str %)) (all-ns))
@@ -49,7 +49,7 @@
            (JGET "/:rss-id" [] feed/get-by-subscription)
            (JPOST "/:id" [] subscription/customize-subscription)
            (JDELETE "/:id" [] subscription/unsubscribe))
-  (JGET "/search" [] rssminer/search)
+  (JGET "/search" [] reader/search)
   (context "/feeds/:feed-id" []
            (JGET "/" [] feed/get-by-id)
            (JPOST "/pref" [] feed/save-pref))
@@ -57,14 +57,15 @@
   (JGET "/export/opml-export" [] "TODO"))
 
 (defroutes all-routes
-  (GET "/" [] rssminer/landing-page)
+  (GET "/" [] reader/landing-page)
   (GET "/p" []  handle-proxy)
   (GET "/fav" [] get-favicon)
   (GET "/f/o/:id" [] feed/get-orginal)
   (GET "/oauth2callback" [] oauth2callback)
-  (GET "/app" [] rssminer/index-page)
+  (GET "/a" [] reader/app-page)
+  (GET "/v1" [] reader/v1-page)
   (context "/dashboard" []
-           (GET "/" [] rssminer/dashboard-page))
+           (GET "/" [] reader/dashboard-page))
   (context "/login" []
            (GET "/" [] user/show-login-page)
            (POST "/" [] user/login))

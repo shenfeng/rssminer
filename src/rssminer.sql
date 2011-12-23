@@ -38,10 +38,8 @@ create table rss_links (
   added_ts TIMESTAMP default now(),
   next_check_ts INTEGER default 1,
   check_interval INTEGER default 60 * 60 * 24 * 5, -- in seconds, 5 days
-  last_modified VARCHAR,                -- from http response header
-  subscription_count INTEGER default 0, -- how much user subscribed
-  user_id INTEGER REFERENCES users      -- who first add it
-     ON UPDATE CASCADE ON DELETE SET NULL,
+  last_modified VARCHAR,        -- from http response header
+  user_id INTEGER      -- who first add it, REFERENCES users(no index)
 )
 ----
 CREATE TABLE user_subscription
@@ -53,8 +51,9 @@ CREATE TABLE user_subscription
        REFERENCES rss_links  ON UPDATE CASCADE ON DELETE CASCADE,
   title VARCHAR, --user defined title, default is subscription's title
   group_name VARCHAR,
-  added_ts TIMESTAMP DEFAULT now(),
-  UNIQUE (user_id, rss_link_id)
+  sort_index INTEGER default 0, --sort index, keep track of position
+  added_ts TIMESTAMP DEFAULT now()
+  -- UNIQUE (user_id, rss_link_id)
 );
 ----
 CREATE TABLE feeds

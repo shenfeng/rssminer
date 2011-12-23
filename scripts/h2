@@ -55,6 +55,7 @@ case "$1" in
             # tcp://127.0.0.1//var/rssminer/rssminer
             DB_PATH=$2
         fi
+        echo -n "\033]0;h2 console $DB_PATH\007"
         rlwrap java -cp $CP $SHELL \
             -url "jdbc:h2:$DB_PATH;FILE_LOCK=FS;MVCC=true" \
             -user sa
