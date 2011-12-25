@@ -1,9 +1,13 @@
 (ns rssminer.handlers.feeds
   (:use (rssminer [util :only [session-get to-int]]
                   [config :only [rssminer-conf]]
-                  [http :only [client parse-response]]))
+                  [http :only [client parse-response]])
+        [clojure.tools.logging :only [debug error]])
   (:require [rssminer.db.feed :as db])
-  (:import rssminer.Utils))
+  (:import rssminer.Utils
+           rssminer.async.ProxyFuture
+           org.jboss.netty.handler.codec.http.HttpResponse
+           java.net.URI))
 
 (defn save-pref [req]
   (let [{:keys [feed-id pref]} (:params req)
@@ -28,12 +32,20 @@
     (Utils/rewrite original link)))
 
 (defn- fetch-and-store-orginal [id link proxy]
-  (let [resp (-> client (.execGet link) .get parse-response)]
-    (if (= 200 (:status resp))
-      (let [body (:body resp)]
-        (db/save-feed-original id body)
-        (rewrite-html body link proxy))
-      {:status 404})))
+  {:status 200
+   :body (ProxyFuture. client link {} (:proxy @rssminer-conf)
+                       (fn [resp]
+                         (let [resp (parse-response resp)]
+                           (if (= 200 (:status resp))
+                             (let [body (:body resp)]
+                               (db/save-feed-original id body)
+                               {:status 200
+                                :headers {"Content-Type"
+                                          "text/html; charset=utf-8"}
+                                :body (rewrite-html body link proxy)})
+                             (do
+                               (debug resp)
+                               {:status 404})))))})
 
 (defn get-orginal [req]
   (let [{:keys [id p]} (-> req :params)

@@ -37,7 +37,8 @@ public class HttpTaskRunnerConf {
     }
 
     public void setProxy(Proxy proxy) {
-        this.proxy = proxy;
+        if (proxy != null)
+            this.proxy = proxy;
     }
 
     public void setQueueSize(int queueSize) {

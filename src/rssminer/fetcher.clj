@@ -3,8 +3,7 @@
         (rssminer [util :only [assoc-if next-check]]
                   [parser :only [parse-feed]]
                   [http :only [client parse-response links]]
-                  [config :only [rssminer-conf socks-proxy no-proxy
-                                 reseted-url?]]))
+                  [config :only [rssminer-conf]]))
   (:require [rssminer.db.feed :as db])
   (:import [rssminer.task HttpTaskRunner IHttpTask IHttpTaskProvder
             HttpTaskRunnerConf]))
@@ -39,7 +38,7 @@
 (defn- mk-task [{:keys [url last_modified] :as link}]
   (reify IHttpTask
     (getUri [this] (java.net.URI. url))
-    (getProxy [this] (if (reseted-url? url) socks-proxy no-proxy))
+    (getProxy [this] (:proxy @rssminer-conf))
     (getHeaders [this]
       (if last_modified {"If-Modified-Since" last_modified} {}))
     (doTask [this resp]
@@ -58,8 +57,7 @@
                            (.setClient client)
                            (.setLinks links)
                            (.setQueueSize (:fetcher-queue @rssminer-conf))
+                           (.setProxy (:proxy @rssminer-conf))
                            (.setName "Fetcher")
-                           (.setProxy (if (:proxy @rssminer-conf)
-                                        socks-proxy no-proxy))
                            (.setDnsPrefetch (:dns-prefetch @rssminer-conf))))
                     (.start))))

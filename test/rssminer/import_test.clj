@@ -1,12 +1,13 @@
 (ns rssminer.import-test
   (:use clojure.test
         rssminer.import
-        [rssminer.test-common :only [auth-app h2-fixture]]
-        [rssminer.handlers.subscriptions :only [add-subscription*]])
+        [rssminer.test-common :only [auth-app app-fixture user1]]
+        [rssminer.handlers.subscriptions :only [add-subscription*]]
+        [rssminer.db.subscription :only [fetch-user-subs]])
   (:import java.io.File
            rssminer.importer.Parser))
 
-(use-fixtures :each h2-fixture)
+(use-fixtures :each app-fixture)
 
 (def ^File opml (File. "test/opml.xml"))
 
@@ -17,19 +18,22 @@
     (is (every? :url result))))
 
 (deftest test-ompl-import
-  (binding [add-subscription* (fn [& args])]
-    (let [resp (auth-app
-                {:uri "/api/import/opml-import"
-                 :request-method :post
-                 :params {"file" {"filename" (.getName opml)
-                                  "size" (.length opml)
-                                  "content-type" "text/xml"
-                                  "tempfile" opml}}})]
-      (is (= 200 (:status resp))))))
+  (let [resp (auth-app
+              {:uri "/api/import/opml-import"
+               :request-method :post
+               :params {"file" {"filename" (.getName opml)
+                                "size" (.length opml)
+                                "content-type" "text/xml"
+                                "tempfile" opml}}})]
+    (is (= 52 (count (fetch-user-subs (:id user1)))))
+    (is (= 200 (:status resp)))))
 
 (deftest test-parset-google-output
   (let [o (map bean (Parser/parseGReaderSubs
                      (slurp "test/greader-subs-list.xml")))]
+    (subscribe-all (:id user1) (Parser/parseGReaderSubs
+                                (slurp "test/greader-subs-list.xml")))
+    (is (= 83 (count (fetch-user-subs (:id user1)))))
     (is (every? :title o))
     (is (every? :url o))
     (is (= (count o) 83))))

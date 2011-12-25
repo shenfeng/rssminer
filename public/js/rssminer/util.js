@@ -76,7 +76,7 @@
 
   var hostname = (function () {
     var l = document.createElement("a");
-    return function (uri) { l.href = uri; return 'http://' + l.hostname; };
+    return function (uri) { l.href = uri; return l.hostname; };
   })();
 
   function interval (date) {
@@ -200,11 +200,21 @@
     }
   }
 
+  function imgPath (url) {
+    return '/fav?h=' + encodeURIComponent(hostname(url));
+  }
+
+  function imgError (e) {
+    e.src="/imgs/16px-feed-icon.png";
+  }
+
   // export
   window.RM = $.extend(window.RM, {
     ajax: ajax,
     notif: notif,
+    iconError: imgError,
     util: {
+      imgPath: imgPath,
       delegateEvents: delegateEvents,
       hashRouter: hashRouter,
       hostname: hostname,

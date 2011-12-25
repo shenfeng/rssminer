@@ -1,7 +1,7 @@
 @import "css3";
 
-$nav_width: 240px;
-$footer_height: 190px;
+$nav_width: 265px;
+$footer_height: 210px;
 
 .unread-like { background-color: #559F4D; color: #ffffff; }
 .unread-neutral { background-color: #F9C72A; color: #303030; }
@@ -82,8 +82,8 @@ html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
     ul { list-style: none; padding: 0; margin: 0; }
     .folder, .item {
         cursor: pointer;
-        &.selected { background: #bbb; }
-        &:hover { background: #ccc;}
+        &.selected { background: #ccc; }
+        &:hover { background: #ddd; }
     }
     .item {
         padding-left: 2em;
@@ -132,7 +132,8 @@ html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
             padding: 2px;
             cursor: pointer;
             border-bottom: 1px solid #ccc;
-            &:hover { background: #ccc; }
+            &.selected { background: #ccc;}
+            &:hover { background: #ddd; }
             .indicator {
                 margin: 4px;
                 height: 5px;
@@ -250,3 +251,4 @@ iframe {
     display: block;
     border-image: initial;
 }
+

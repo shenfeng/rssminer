@@ -13,7 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import rssminer.sax.ExtractFaviconHandler;
 import rssminer.sax.ExtractInfoHandler;
+import rssminer.sax.ExtractRssUriHandler;
 import rssminer.sax.ExtractTextHandler;
 import rssminer.sax.RewriteHandler;
 
@@ -64,6 +66,24 @@ public class Utils {
             throws IOException, SAXException, URISyntaxException {
         Parser p = parser.get();
         RewriteHandler h = new RewriteHandler(html, urlBase, proxyURI);
+        p.setContentHandler(h);
+        p.parse(new InputSource(new StringReader(html)));
+        return h.get();
+    }
+
+    public static List<String> extractRssLink(String html, String base)
+            throws IOException, SAXException {
+        Parser p = parser.get();
+        ExtractRssUriHandler h = new ExtractRssUriHandler(base);
+        p.setContentHandler(h);
+        p.parse(new InputSource(new StringReader(html)));
+        return h.getRsses();
+    }
+
+    public static String extractFaviconUrl(String html, String base)
+            throws IOException, SAXException {
+        Parser p = parser.get();
+        ExtractFaviconHandler h = new ExtractFaviconHandler(base);
         p.setContentHandler(h);
         p.parse(new InputSource(new StringReader(html)));
         return h.get();

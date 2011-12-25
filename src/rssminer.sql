@@ -4,8 +4,7 @@ SET DEFAULT_LOCK_TIMEOUT 120000;
 ----
 set WRITE_DELAY 3000;           -- default 500ms
 ----
-CREATE TABLE users
-(
+CREATE TABLE users (
   id INTEGER PRIMARY KEY auto_increment,
   email VARCHAR UNIQUE,
   name VARCHAR,
@@ -41,9 +40,9 @@ create table rss_links (
   last_modified VARCHAR,        -- from http response header
   user_id INTEGER      -- who first add it, REFERENCES users(no index)
 )
+
 ----
-CREATE TABLE user_subscription
-(
+CREATE TABLE user_subscription (
   id INTEGER PRIMARY KEY auto_increment,
   user_id INTEGER NOT NULL
        REFERENCES users  ON UPDATE CASCADE ON DELETE CASCADE,
@@ -55,9 +54,9 @@ CREATE TABLE user_subscription
   added_ts TIMESTAMP DEFAULT now()
   -- UNIQUE (user_id, rss_link_id)
 );
+
 ----
-CREATE TABLE feeds
-(
+CREATE TABLE feeds (
   id INTEGER PRIMARY KEY auto_increment,
   author VARCHAR,
   link VARCHAR UNIQUE,
@@ -70,9 +69,9 @@ CREATE TABLE feeds
   rss_link_id INTEGER
              REFERENCES rss_links ON UPDATE CASCADE ON DELETE CASCADE
 );
+
 ----
-create table user_feed
-(
+create table user_feed (
     user_id INTEGER NOT NULL
             REFERENCES users ON UPDATE CASCADE ON DELETE CASCADE,
     feed_id INTEGER NOT NULL
@@ -82,17 +81,20 @@ create table user_feed
     read_date INTEGER,
     UNIQUE(user_id, feed_id),
 )
+
 ----
-create table favicon
-(
+create table favicon (
      hostname VARCHAR primary key,
-     favicon BINARY
+     favicon BINARY,
+     code INTEGER
 )
+
 ----
 create index idx_link_check_ts on crawler_links(next_check_ts)
 ----
 create index idx_rss_check_ts on rss_links(next_check_ts)
 ----
+
 insert into crawler_links (url, domain) values --seeds
 ('http://blog.jquery.com/', 'http://blog.jquery.com'),
 ('http://briancarper.net/', 'http://briancarper.net'),
@@ -116,6 +118,7 @@ insert into crawler_links (url, domain) values --seeds
 ('http://www.dbanotes.net/', 'http://www.dbanotes.net'),
 ('http://xianguo.com/hot', 'http://xianguo.com')
 ----
+
 insert into rss_links (url) values
 ('http://aria42.com/blog/?feed=rss2'),
 ('http://bartoszmilewski.wordpress.com/feed/'),

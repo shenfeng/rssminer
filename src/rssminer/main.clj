@@ -11,7 +11,7 @@
                   [util :only [to-int]]
                   [fetcher :only [start-fetcher stop-fetcher]]
                   [crawler :only [start-crawler stop-crawler]]
-                  [config :only [rssminer-conf netty-option]])))
+                  [config :only [rssminer-conf netty-option socks-proxy]])))
 
 (defonce server (atom nil))
 
@@ -44,7 +44,7 @@
                          (str proxy-server ":" port "/p?u=")
                          (str proxy-server "/p?u="))
          :dns-prefetch dns
-         :proxy proxy)
+         :proxy (when proxy socks-proxy))
   (reset! server
           (run-netty (app :redis-host redis-host) {:port port
                                                    :worker worker
@@ -66,7 +66,7 @@
              ["--profile" "dev or prod" :default :dev :parse-fn keyword]
              ["--redis-host" "redis for session store"
               :default "127.0.0.1"]
-             ["--proxy-server" "proxy server" :default "http://127.0.0.1"]
+             ["--proxy-server" "proxy server" :default "//127.0.0.1"]
              ["--db-path" "H2 Database file path"
               :default "/var/rssminer/rssminer"]
              ["--index-path" "Path to store lucene index"

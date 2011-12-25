@@ -39,7 +39,7 @@
                       (-> e :contents first :value trim)
                       (-> e :description :value trim))
             :link (-> e :link trim)
-            :tags (s/join ", " (map #(-> % :name trim)
+            :tags (s/join "; " (map #(-> % :name trim)
                                     (:categories e)))
             :updated_ts (:updatedDate e)
             :published_ts (:publishedDate e)))

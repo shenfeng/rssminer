@@ -1,0 +1,987 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>Python IAQ: Infrequently Answered Questions</title>
+  </head>
+
+<body bgcolor=#ffffff>
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+<table width="100%"><tr><td bgcolor=#99ccff><center>
+<h1>The Python IAQ: <br>Infrequently Answered Questions</h1>
+</center></table><p>
+
+<center><h2>by Peter Norvig</h2></center>
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="">Q: What is an Infrequently Answered Question?</a></b></font></table><p>
+
+A question is infrequently answered either because few people know the
+answer or because it concerns an obscure, subtle point (but a point
+that may be crucial to you).  I thought I had invented the term for my
+<a href="java-iaq.html">Java IAQ</a>, but it also shows up at the very
+informative
+<a href="http://urbanlegends.about.com/library/weekly/aa082497.htm">
+About.com Urban Legends</a> site.  There are lots of Python FAQs
+around, but this is the only Python IAQ, except for the
+<a href="http://www.chenwy.com/python-iaq-cn.html"><b>Chinese translation</b></a> 
+of this page by Weiyang Chen, the <a href="https://docs.google.com/document/pub?id=1dTAzkH8Cv9Kx0i8f2czAJ9ToKU54btObQGW86Xm5JO4">Russian translation</a> by Alexander Sviridenko, 
+ and the
+<a href="http://newworld.ddo.jp/doc/python-iaq-ja/index_html"><b>Japanese translation</b></a> by Akihiro Takizawa. (There are a few Infrequently
+<i>Asked</i> Questions lists, including a satirical one on <a 
+href="http://www.plethora.net/~seebs/faqs/c-iaq.html">C</a>.)
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="">Q: The code in a <tt>finally</tt> clause will never fail to execute, right?</a></b></font></table><p>
+
+What never? Well, hardly ever. The code in a <tt>finally</tt> clause
+does get executed after the <tt>try</tt> clause whether or not there
+is an exception, and even if <tt>sys.exit</tt> is called.  However,
+the <tt>finally</tt> clause will not execute if execution never gets
+to it.  This would happen regardless of the value of <tt>choice</tt>
+in the following:
+
+<p><table><tr><td bgcolor=cccccc><pre>
+try:
+    if choice:
+        while 1:
+            pass
+    else:
+        print "Please pull the plug on your computer sometime soon..."
+        time.sleep(60 * 60 * 24 * 365 * 10000)
+finally:
+    print "Finally ..."
+</pre></table><p>
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="">Q: Polymorphism is great; I can sort a list of elements of any type, right?</a></b></font></table><p>
+
+Wrong.  Consider this:
+
+<p><table><tr><td bgcolor=cccccc><pre>
+&gt;&gt;&gt; x = [1, 1j]
+&gt;&gt;&gt; x.sort()
+Traceback (most recent call last):
+  File "&lt;pyshell#13&gt;", line 1, in ?
+    x.sort()
+TypeError: cannot compare complex numbers using &lt;, &lt;=, &gt;, &gt;=
+</pre></table><p>
+
+(In Python notation  <tt>1j</tt> is an imaginary number, a square root of -1.)  The problem is that
+the <tt>sort</tt> method (in the current implementation), compares elements
+using the <tt>__lt__</tt> method, which refuses to compare complex numbers 
+(because they are not orderable).  Curiously, <tt>complex.__lt__</tt> has
+no qualms about comparing complex numbers to strings, lists, and
+every other type except complex numbers. So the answer is you can sort
+a sequence of objects that support the <tt>__lt__</tt> method (and possibly
+other methods if the implementation happens to change).
+
+<p>As for the first part of the question, "Polymorphism is great", I
+would agree, but Python sometimes makes it difficult because many Python
+types (such as sequence, and number) are defined informally.
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="">Q: Can I do ++x and x++ in Python?</a></b></font></table><p>
+
+Literally, yes and no; but for practical purposes, no.  What do I mean
+by that? 
+<ul>
+<li> <b>Yes</b>, <tt>++x</tt> is legal Python, but it won't mean
+what you think it should mean if you're a C++ or Java programmer.
+The <tt>+</tt> is a unary prefix operator, so <tt>++x</tt> is parsed
+as <tt>+(+(x))</tt>, which (at least for numbers) results in
+just <tt>x</tt>.  
+<li> <b>No</b>, <tt>x++</tt> by itself is not a legal expression,
+although there are contexts where it is legal.  For example, <tt>x++ -
+y</tt> is parsed as <tt>x + +(-(y))</tt>, 
+so this is equivalent to <tt>x - y</tt> for numbers.
+Now of course you <i>could</i> create a class where <tt>++x</tt> made
+(a limited amount of) sense; for example the class could hold a number
+and have the unary + operator increment it by 0.5 (or increment it by 1 with probability 0.5 if
+you like <a
+href="http://www.amazon.com/exec/obidos/ASIN/0521474655">randomized
+algorithms</a>), but ...
+<li> <b>No</b>, that would be silly.  Better to stick
+with <tt>x += 1</tt>, which was added in Python 2.0.
+</ul>
+
+<p>The deeper question is: <i>why</i> doesn't Python allow <tt>x++</tt>?  I
+believe it is the same reason why Python does not allow assignments in
+expressions: Python wants to clearly separate statements and
+expressions.  If you believe they should be distinct, then disallowing
+<tt>++</tt> is probably the best decision.  On the other hand,
+advocates of functional languages argue that statements should be
+expressions.  I'm with my fellow Dane, Bjarne Stroustrup, on
+this one.  He said in <a
+href="http://www.amazon.com/exec/obidos/ASIN/0201543303/"><i>The
+Design and Evolution of C++</i></a> ``If I were to design a language
+from scratch, I would follow the Algol68 path and make every statement
+and declaration an expression that yields a value''.
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="">Q: Can I use C++'s syntax for ostreams: cout &lt;&lt; x &lt;&lt; y ... ?</a></b></font></table><p>
+
+You can. If you don't like writing ``print x, y'' then 
+you can try this:
+<p><table><tr><td bgcolor=cccccc><pre>
+import sys
+
+class <b>ostream</b>:
+    def <b>__init__</b>(self, file):
+        self.file = file
+        
+    def <b>__lshift__</b>(self, obj):
+        self.file.write(str(obj));
+        return self
+
+<b>cout</b> = ostream(sys.stdout)
+<b>cerr</b> = ostream(sys.stderr)
+<b>nl</b> = '\n'
+<hr>
+cout << x << " " << y << nl
+</pre></table><p>
+<i>(This document shows code that belongs in a file above
+the horizontal line and example uses of it  below the line.)</i>
+This gives you a different syntax, but it doesn't give you a new
+convention for printing--it just packages up the <tt>str</tt>
+convention that already exists in Python.  This is similar to
+the <tt>toString()</tt> convention in Java.  C++ has a very
+different convention: instead of a canonical way to convert
+an object to a string, there is a canonical way to print an
+object to a stream (well, semi-canonical---a lot of C++ code still uses
+<tt>printf</tt>).  The stream approach is more complicated,
+but it does have the advantage that if you need to print a really
+huge object you needn't create a really huge temporary string to do it.
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="">Q: What if I like C++'s <tt>printf</tt>?</a></b></font></table><p>
+
+It's not a bad idea to define a <tt>printf</tt> in Python.  You could argue that
+<tt>printf("%d = %s", num,
+result)</tt> is more natural than <tt>print "%d = %s" % (num, result),</tt>
+because the parens are in a more familiar place (and you get to omit the <tt>%</tt>). Furthermore, it's oh-so-easy:
+
+<p><table><tr><td bgcolor=cccccc><pre>
+def printf(format, *args): print format % args,
+</pre></table><p>
+
+Even in a one-liner like this, there are a few subtleties.  First, I
+had to decide whether to add the comma at the end or not.  To be more
+like C++, I decided to add it (which means that if you want a newline
+printed, you have to add it yourself to the end of the format string).
+Second, this will still print a trailing space.  If you don't want
+that, use <tt>sys.stdout.write</tt> instead of <tt>print</tt>. Third,
+is this good for anything besides being more C-like?  Yes; you need a
+printing function (as opposed to a print statement) for use in
+places that accept functions, but not statements, like in lambda
+expressions and as the first argument to <tt>map</tt>.  In fact, such
+a function is so handy, that you probably want one that does not
+do formatting:
+
+<p><table><tr><td bgcolor=cccccc><pre>
+def prin(x): print x,
+</pre></table><p>
+
+Now <tt>map(prin, seq)</tt> will print each element of <tt>seq</tt>,
+but <tt>map(print, seq)</tt> is a syntax error.
+
+I've seen some careless programmers (well, OK, it was
+me, but I <i>knew</i> I was being careless) think it would
+be a good idea to fit both these functions into one, as follows:
+
+<p><table><tr><td bgcolor=cccccc><pre>
+def <b>printf</b>(format, *args): print str(format) % args,
+</pre></table><p>
+Then <tt>printf(42)</tt>, <tt>printf('A multi-line\n message')</tt>
+and <tt>printf('%4.2f', 42)</tt> all work.
+But the ``good idea'' thought gets changed to ``what was I thinking''
+as soon as you do <tt>printf('100% guaranteed')</tt>, or anything
+else with a <tt>%</tt> character that is not meant as a formatting directive.
+If you do implement this version of <tt>printf</tt>, it needs a 
+comment like this:
+<p><table><tr><td bgcolor=cccccc><pre>
+def <b>printf</b>(format, *args): 
+    """Format args with the first argument as format string, and print.
+    If the format is not a string, it is converted to one with str.
+    You must use printf('%s', x) instead of printf(x) if x might
+    contain % or backslash characters."""
+    print str(format) % args,
+</pre></table><p>
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="">Q: Is there a better syntax for dictionary literals?  All my keys are identifiers.</a></b></font></table><p>
+
+Yes! I agree that it can be tedious to have to type the quote marks
+around your keys, especially for a large dictionary literal.  At first
+I thought it might be a useful change to Python to add special syntax
+for this; maybe <tt>{a=1, b=2}</tt> for what you now have to write as
+<tt>{'a':1, 'b':2}</tt>.  As of Python 2.3 you can use the syntax
+<tt>dict(a=1, b=2, c=3, dee=4)</tt>, which is good enough as far as I'm concerned.
+Before Python 2.3 I used the one-line function <tt>def <b>Dict</b>(**dict): return dict</tt>
+
+<p>A reader suggested that Perl has a similar special notation for hashes; you can write either
+<tt>("a", 1, "b", 2}</tt> or <tt>(a => 1, b => 2)</tt> for hash literals
+in Perl.  This is the truth, but not the whole truth. 
+"man perlop" says  "The <tt>=&gt;</tt>
+digraph is mostly just a synonym for the comma operator ..." and in fact
+you can write <tt>(a, 1, b, 2)</tt>, where <tt>a</tt> and <tt>b</tt>
+are barewords.  But, as Dag Asheim points out,
+if you turn strict on, you'll get an error with this; you must use either
+strings or the <tt>=&gt;</tt> operator.  And Larry Wall has proclaimed that
+"There will be no barewords in Perl 6."
+
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="">Q: Is there a similar shortcut for objects?</a></b></font></table><p>
+
+Indeed there is. When all you want to do is create an object that holds
+data in several fields, the following will do:
+<p><table><tr><td bgcolor=cccccc><pre>
+class <b>Struct</b>:
+    def <b>__init__</b>(self, **entries): self.__dict__.update(entries)
+<hr>
+&gt;&gt;&gt; options = Struct(answer=42, linelen = 80, font='courier')
+&gt;&gt;&gt; options.answer
+42
+&gt;&gt;&gt; options.answer = 'plastics'
+&gt;&gt;&gt; vars(options)
+{'answer': 'plastics', 'font': 'courier', 'linelen': 80}</pre></table><p>
+Essentially what we are doing here is creating an <i>anonymous class</i>.
+OK, I know that the class of <tt>options</tt> is <tt>Struct</tt>, but
+because we are adding slots to it, its like creating a new, unnamed
+class (in much the same way that <tt>lambda</tt> creates anonymous functions).
+I hate to mess with <tt>Struct</tt> because it is so concise the way it is,
+but if you add the following method
+then you will get a nice printed version of each structure:
+<p><table><tr><td bgcolor=cccccc><pre>
+    def <b>__repr__</b>(self):
+        args = ['%s=%s' % (k, repr(v)) for (k,v) in vars(self).items()]
+        return 'Struct(%s)' % ', '.join(args)
+<hr>
+&gt;&gt;&gt; options
+Struct(answer='plastics', font='courier', linelen=80)</pre></table><p>
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="">Q: That's great for creating objects; How about for updating?</a></b></font></table><p>
+
+Well, dictionaries have an <tt>update</tt> method, so you could do
+<tt>d.update(dict(a=100, b=200))</tt> when <tt>d</tt> is a dictionary.
+There is no corresponding method for objects, so you have to do
+<tt>obj.a = 100; obj.b = 200</tt>.  Or you could define one function to
+let you do <tt>update(x, a=100, b=200)</tt> when <tt>x</tt> is either
+a dictionary or an object:
+
+<p><table><tr><td bgcolor=cccccc><pre>
+import types
+
+def <b>update</b>(x, **entries):
+    if type(x) == types.DictType: x.update(entries)
+    else: x.__dict__.update(entries)
+    return x</pre></table><p>
+
+<p>This is especially nice for constructors:
+
+<p><table><tr><td bgcolor=cccccc><pre>
+      def <b>__init__</b>(self, a, b, c, d=42, e=None, f=()):
+        update(self, a=a, b=b, c=c, d=d, e=e, f=f)
+  </pre></table><p>
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="">Q: Can I have a dict with a default value of 0 or [ ] or something?</a></b></font></table><p>
+
+I sympathize that if you're keeping counts of something, it's much
+nicer to be able to say <tt>count[x] += 1</tt> than to have to say
+<tt>count[x] = count.get(x, 0) + 1</tt>. And as of Python 2.2, it is
+easy to subclass the builtin <tt>dict</tt> class to do this. I call my
+version DefaultDict. Note the use of <tt>copy.deepcopy</tt>; it wouldn't
+do to have every key in the dict share the same <tt>[]</tt> as the
+default value (we waste time copying 0, but the time lost is not too
+bad if you do more updates and accesses than initializations):
+
+<p><table><tr><td bgcolor=cccccc><pre>
+class <b>DefaultDict</b>(dict):
+    """Dictionary with a default value for unknown keys."""
+    def __init__(self, default):
+        self.default = default
+
+    def __getitem__(self, key):
+        if key in self: return self.get(key)
+        return self.setdefault(key, copy.deepcopy(self.default))
+<hr>
+&gt;&gt;&gt; d = DefaultDict(0)
+&gt;&gt;&gt; d['hello'] += 1
+&gt;&gt;&gt; d
+{'hello': 1}
+&gt;&gt;&gt; d2 = DefaultDict([])
+&gt;&gt;&gt; d2[1].append('hello')
+&gt;&gt;&gt; d2[2].append('world')
+&gt;&gt;&gt; d2[1].append('there')
+&gt;&gt;&gt; d2
+{1: ['hello', 'there'], 2: ['world']}
+
+def <b>bigrams</b>(words):
+    "Counts of word pairs, in a dict of dicts."
+    d = DefaultDict(DefaultDict(0))
+    for (w1, w2) in zip([None] + words, words + [None]):
+        d[w1][w2] += 1
+    return d
+
+&gt;&gt;&gt; bigrams('i am what i am'.split())
+{None: {'i': 1}, 'i': {'am': 2}, 'what': {'i': 1}, 'am': {None: 1, 'what': 1}}</pre></table><p>
+
+Note that without <tt>DefaultDict</tt> the <tt>d[w1][w2] += 1</tt>
+in the bigram example would have
+to be something like:
+
+<p><tt>d.setdefault(w1,{}).setdefault(w2, 0); d[w1][w2] += 1</tt>
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="">Q: Hey, can you write code to transpose a matrix in 0.007KB or less?</a></b></font></table><p>
+I thought you'd never ask.  If you represent a matrix as a sequence of
+sequences, then <tt>zip</tt> can do the job:
+<p><table><tr><td bgcolor=cccccc><pre>
+&gt;&gt;&gt; m = [(1,2,3), (4,5,6)]
+&gt;&gt;&gt; <b>zip(*m)</b>
+[(1, 4), (2, 5), (3, 6)]</pre></table><p>
+To understand this, you need to know that <tt>f(*m)</tt> is like 
+<tt>apply(f, m)</tt>.  This is based on an old Lisp question,
+the answer to which is Python's equivalent of <tt>map(None,*m)</tt>,
+but the <tt>zip</tt> version, suggested by Chih-Chung Chang,
+is even shorter.  You might think this is only useful for an appearance
+on Letterman's Stupid Programmer's Tricks, but just the other day I
+was faced with this problem: given a list of database rows, where each
+row is a list of ordered values, find the list of unique values that 
+appear in each column.  So I wrote:
+<p><table><tr><td bgcolor=cccccc><pre>
+possible_values = map(unique, zip(*db))
+</pre></table><p>
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="">Q: The <tt>f(*m)</tt> trick is cool.  Does the same syntax work with method calls, like <tt>x.f(*y)</t>?</a></b></font></table><p>
+
+This question reveals a common misconception. There is no syntax for
+method calls!  There is a syntax for calling a function, and there is
+a syntax for extracting a field from an object, and there are bound
+methods.  Together these three features conspire to make it look like
+<tt>x.f(y)</tt> is a single piece of syntax, when actually it is
+equivalent to <tt>(x.f)(y)</tt>, which is equivalent to
+<tt>(getattr(x, 'f'))(y)</tt>.  I can see you don't believe me.  Look:
+<p><table><tr><td bgcolor=cccccc><pre>
+class <b>X</b>:
+    def f(self, y): return 2 * y
+<hr>
+&gt;&gt;&gt; x = X()
+&gt;&gt;&gt; x.f
+&lt;bound method X.f of <__main__.X instance at 0x009C7DB0&gt;&gt;
+&gt;&gt;&gt; y = 21
+&gt;&gt;&gt; x.f(y)
+42
+&gt;&gt;&gt; (x.f)(y)
+42
+&gt;&gt;&gt; (getattr(x, 'f'))(y)
+42
+&gt;&gt;&gt; xf = x.f
+&gt;&gt;&gt; xf(y)
+42
+&gt;&gt;&gt; map(x.f, range(5))
+[0, 2, 4, 6, 8]</pre></table><p>
+So the answer to the question is: you can put
+<tt>*y</tt> or <tt>**y</tt> (or anything else that you would put into
+a function call) into a method call, because method calls are just
+function calls.
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="">Q: Can you implement abstract classes in Python in 0 lines of code? Or 4?</a></b></font></table><p>
+
+Java has an <tt>abstract</tt> keyword so you can define abstract classes
+that cannot be instantiated, but can be subclassed if you implement
+all the abstract methods in the class.  It is a little known fact that
+you can use <tt>abstract</tt> in Python in almost the same way; the
+difference is that you get an error at runtime when you try to call
+the unimplemented method, rather than at compile time.  Compare:
+
+<p><table><tr><td valign=top bgcolor=cccccc><pre>
+## Python
+class <b>MyAbstractClass</b>:
+    def <b>method1</b>(self): abstract
+
+class <b>MyClass</b>(MyAbstractClass): 
+    pass
+<hr>
+&gt;&gt;&gt; MyClass().method1()
+Traceback (most recent call last):
+    ...
+NameError: name 'abstract' is not defined
+<td valign=top bgcolor=cccccc><pre>
+/* Java */
+public abstract class <b>MyAbstractClass</b> {
+    public abstract void <b>method1</b>();
+}
+
+class <b>MyClass</b> extends MyAbstractClass {}
+<hr>
+% javac MyAbstractClass
+MyAbstractClass.java:5: 
+  class MyClass must be declared abstract. 
+  It does not define void method1() from class MyAbstractClass.
+</pre></table><p>
+
+Don't spend too much time looking for the <tt>abstract</tt> keyword in
+the Python Language Reference Manual; it isn't there. I added it
+to the language, and the great part is, the implementation is zero lines of
+code! What happens is that if you call <tt>method1</tt>, you get a
+<tt>NameError</tt> because there is no <tt>abstract</tt> variable. (You
+might say that's cheating, because it will break if somebody defines a
+variable called <tt>abstract</tt>.  But then any program will break if
+someone redefines a variable that the code depends on. The only 
+difference here is that we're depending on the lack of a definition
+rather than on a definition.)
+
+<p>If you're willing to write <tt>abstract()</tt> instead of
+<tt>abstract</tt>, then you can define a function that raises a
+<tt>NotImplementedError</tt> instead of a <tt>NameError</tt>, which
+makes more sense.  (Also, if someone redefines <tt>abstract</tt>
+to be anything but a function of zero arguments, you'll still
+get an error message.) To make <tt>abstract</tt>'s error
+message look nice, just peek into the stack frame to see who
+the offending caller is:
+
+<p><table><tr><td bgcolor=cccccc><pre>
+def <b>abstract</b>():
+    import inspect
+    caller = inspect.getouterframes(inspect.currentframe())[1][3]
+    raise NotImplementedError(caller + ' must be implemented in subclass')
+<hr>
+&gt;&gt;&gt; MyDerivedClass().method1()
+Traceback (most recent call last):
+    ...
+NotImplementedError: method1 must be implemented in subclass</pre></table><p>
+</pre></table><p>
+
+
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="">Q: How do I do Enumerated Types (enums) in Python?</a></b></font></table><p>
+
+The reason there is no one answer to this question in Python is that there
+are several answers, depending on what you expect an enum to be.  If you just
+want some variables, each with a unique integer value, you can do:
+<p><table><tr><td bgcolor=cccccc><pre>
+red, green, blue = range(3)</pre></table><p>
+The drawback is that whenever you add a new variable on the left,
+you have to increment the number on the right.  This is not so
+bad, though, because if you get it wrong Python will raise an error.
+It's probably better hygiene to isolate your enums in a class:
+<p><table><tr><td bgcolor=cccccc><pre>
+class <b>Colors</b>:
+    red, green, blue = range(3)</pre></table><p>
+Now <tt>Colors.red</tt> yields 0, and <tt>dir(Colors)</tt> may be useful
+(although you need to ignore the <tt>__doc__</tt> and <tt>__module__</tt>
+entries).  If you need control over what values each enum variable will have,
+you can use the <tt>Struct</tt> function from several questions ago
+as follows:
+<p><table><tr><td bgcolor=cccccc><pre>
+Enum = Struct
+Colors = Enum(red=0, green=100, blue=200)</pre></table><p>
+While these simple approaches usually suffice, some people want more.
+There are Enum implementations at 
+<A href="http://www.python.org/doc/essays/metaclasses/Enum.py">python.org</a>,
+<a href="http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/67107">ASPN</a>, and
+<a href="http://www.faqts.com/knowledge_base/view.phtml/aid/4415">faqts</a>.
+Here is my version, which is (almost) all things to all people, while still
+being reasonably concise (44 lines, 22 of which are code):
+<p><table><tr><td bgcolor=cccccc><pre>
+class <b>Enum</b>:
+
+    """Create an enumerated type, then add var/value pairs to it.
+    The constructor and the method .ints(names) take a list of variable names,
+    and assign them consecutive integers as values.    The method .strs(names)
+    assigns each variable name to itself (that is variable 'v' has value 'v').
+    The method .vals(a=99, b=200) allows you to assign any value to variables.
+    A 'list of variable names' can also be a string, which will be .split().
+    The method .end() returns one more than the maximum int value.
+    Example: opcodes = Enum("add sub load store").vals(illegal=255)."""
+  
+    def <b>__init__</b>(self, names=[]): self.ints(names)
+
+    def <b>set</b>(self, var, val):
+        """Set var to the value val in the enum."""
+        if var in vars(self).keys(): raise AttributeError("duplicate var in enum")
+        if val in vars(self).values(): raise ValueError("duplicate value in enum")
+        vars(self)[var] = val
+        return self
+  
+    def <b>strs</b>(self, names):
+        """Set each of the names to itself (as a string) in the enum."""
+        for var in self._parse(names): self.set(var, var)
+        return self
+
+    def <b>ints</b>(self, names):
+        """Set each of the names to the next highest int in the enum."""
+        for var in self._parse(names): self.set(var, self.end())
+        return self
+
+    def <b>vals</b>(self, **entries):
+        """Set each of var=val pairs in the enum."""
+        for (var, val) in entries.items(): self.set(var, val)
+        return self
+
+    def <b>end</b>(self):
+        """One more than the largest int value in the enum, or 0 if none."""
+        try: return max([x for x in vars(self).values() if type(x)==type(0)]) + 1
+        except ValueError: return 0
+    
+    def <b>_parse</b>(self, names):
+        ### If names is a string, parse it as a list of names.
+        if type(names) == type(""): return names.split()
+        else: return names</pre></table><p>
+Here's an example of how to use it:
+<p><table><tr><td bgcolor=cccccc><pre>
+&gt;&gt;&gt; opcodes = Enum("add sub load store").vals(illegal=255)
+&gt;&gt;&gt; opcodes.add
+0
+&gt;&gt;&gt; opcodes.illegal
+255
+&gt;&gt;&gt; opcodes.end()
+256
+&gt;&gt;&gt; dir(opcodes)
+['add', 'illegal', 'load', 'store', 'sub']
+&gt;&gt;&gt; vars(opcodes)
+{'store': 3, 'sub': 1, 'add': 0, 'illegal': 255, 'load': 2}
+&gt;&gt;&gt; vars(opcodes).values()
+[3, 1, 0, 255, 2]</pre></table><p>
+Notice that the methods are cascaded, so you can combine <tt>.strs</tt>, <tt>.ints</tt> and <tt>.vals</tt> on a single line after the constuctor.  Notice the helpful use of <tt>dir</tt> and <tt>vals</tt>, and that they are free of clutter
+with anything other than the variables you define.  To iterate over all the
+enumerated values, you can use <tt>for x in vars(opcodes).values()</tt>.
+Notice that you can have non-integer values for enum variables if you want,
+using the <tt>.strs</tt> and <tt>.vals</tt> methods.
+Finally, notice that it is an error to duplicate a variable name or value.
+Sometimes you want to have duplicate values (e.g. for aliases); if you need
+that, either delete the line that raises a ValueError, or use, for
+example <tt>vars(opcodes)['first_op'] = 0</tt>.  If there's one thing I dislike
+most, its the potential for confusion between <tt>vals</tt> and <tt>values</tt>;
+maybe I can think of a better name for <tt>vals</tt>.
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="">Q: Why is there no ``Set'' data type in Python?</a></b></font></table><p>
+
+When this question was first posed there wasn't one, and programmers
+mostly used dictionaries instead, but now in Python 2.4 there is good
+native support for the <a href="http://docs.python.org/lib/types-set.html"><tt>set</tt> type</a>.
+<p><table border=0 cellpadding=3
+width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="Bool">Q:
+Should I, could I use a Boolean type?</a></b></font></table><p>
+
+When this question was first posed there was no Boolean type in Python,
+but as of Python 2.3 there is a <a href="http://docs.python.org/lib/node31.html"><tt>bool</tt> type</a>.  
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="test">Q: Can I do the equivalent of (test ? result : alternative) in Python?</a></b></font></table><p>
+
+Java and C++ have the ternary conditional operator (test ? result : alternative).
+Python has resisted this, but in the upcoming Python 2.5 it will allow
+expressions of the form (result <b>if</b> test <b>else</b> alternative).
+This undermines Python's
+clear distinction between expressions and statements, but it is a compromise
+that many people have asked for.
+<p>
+Until Python 2.5 arrives, what can you do?  Here are some options:
+<ol>
+<li> You could try
+<tt>[alternative, result][test]</tt>. Note this evaluates both <tt>alternative</tt>
+and <tt>result</tt> so it is not good if one is a recursive call or is an expensive
+computation.  If <tt>test</tt> could return a non-bool, then try
+<li><tt>[result, alternative][not test]</tt>  Neither of these is very readable.
+<li><tt>test and result or alternative</tt> Some find this idiomatic
+while others find it confusing. It only works when the <tt>result</tt>
+is guaranteed to be non-false.
+<li><tt>(test and [result] or [alternative])[0]</tt> avoids that restriction.
+<li><tt>[lambda: result, lambda: alternative][not not test]()</tt> gets around
+all the restrictions posed so far (except readability),
+but don't say I told you to do it.  You can even package this up in a
+call.  The approved naming convention for variables that mimic keywords
+is to add a trailing underscore.  So we have:
+<li><tt>if_(test, result, lambda: alternative)</tt> where we define
+<p><table><tr><td bgcolor=cccccc><pre>
+def if_(test, result, alternative=None):
+    "If test is true, 'do' result, else alternative. 'Do' means call if callable."
+    if test:
+        if callable(result): result = result()
+        return result
+    else:
+        if callable(alternative): alternative = alternative()
+        return alternative
+<hr>
+&gt;&gt;&gt; fact = lambda n: if_(n <= 1, 1, lambda: n * fact(n-1))
+&gt;&gt;&gt; fact(6)
+720
+</pre></table><p>
+<li>
+
+Now,
+suppose for some reason you strongly prefer the syntax  "<tt>if (test) ...</tt>" over 
+"<tt>if(test, ...</tt>" (and, you never want to leave off the <i>alternative</i>
+part).
+You could try this:
+<p><table><tr><td bgcolor=cccccc><pre>
+def _if(test):
+    return lambda alternative: \
+               lambda result: \
+                   [delay(result), delay(alternative)][not not test]()
+
+def delay(f):
+    if callable(f): return f
+    else: return lambda: f
+<hr>
+&gt;&gt;&gt; fact = lambda n: _if (n <= 1) (1) (lambda: n * fact(n-1))
+&gt;&gt;&gt; fact(100)
+93326215443944152681699238856266700490715968264381621468592963895217599993229915608941463976156518286253697920827223758251185210916864000000000000000000000000L
+
+</pre></table>
+<p>
+If u cn rd ths, u cn gt a jb in fncnl prg (if thr wr any).
+</ol>
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="">Q: What other major types are missing from Python?</a></b></font></table><p>
+
+One great thing about Python is that you can go a long way with
+numbers, strings, lists, and dicts (and now sets and bools).  But there are a few major types
+that are still missing.  For me, the most important is a mutable string.
+Doing <tt>str += x</tt> over and over, is slow, and manipulating
+lists of characters (or lists of sub-strings) means you give up some of the nice
+string functions.  One possibility 
+is <tt>array.array('c')</tt>.  Another is <tt>UserString.MutableString</tt>,
+although its intended use is more educational than practical.  A third is
+the <tt>mmap</tt> module and a fourth is <tt>cStringIO</tt>.  None of these is perfect, but together they provide
+enough choices.
+
+After that, I find I often want a queue of some sort.  There is
+a standard library 
+<a href="http://www.python.org/doc/current/lib/module-Queue.html">Queue module</a>, 
+but it is specialized for queues of threads.  Because there
+are so many options, I won't lobby for a standard library implementation of queues.
+However, I will offer my implementation of three types of queue, FIFO,
+LIFO, and priority:
+<p><table><tr><td bgcolor=cccccc><pre>
+"""
+This module provides three types of queues, with these constructors:
+  Stack([items])  -- Create a Last In First Out queue, implemented as a list
+  Queue([items])  -- Create a First In First Out queue
+  PriorityQueue([items]) -- Create a queue where minimum item (by <) is first
+Here [items] is an optional list of initial items; if omitted, queue is empty.
+Each type supports the following methods and functions:
+  len(q)          -- number of items in q (also q.__len__())
+  q.append(item)  -- add an item to the queue
+  q.extend(items) -- add each of the items to the queue
+  q.pop()         -- remove and return the "first" item from the queue
+"""
+
+def <b>Stack</b>(items=None):
+    "A stack, or last-in-first-out queue, is implemented as a list."
+    return items or []
+
+class <b>Queue</b>:
+    "A first-in-first-out queue."
+    def <b>__init__</b>(self, items=None): self.start = 0; self.A = items or []
+    def <b>__len__</b>(self):                return len(self.A) - self.start
+    def <b>append</b>(self, item):           self.A.append(item)
+    def <b>extend</b>(self, items):          self.A.extend(items)
+
+    def <b>pop</b>(self):
+        A = self.A
+        item = A[self.start]
+        self.start += 1
+        if self.start > 100 and self.start > len(A)/2:
+            del A[:self.start]
+            self.start = 0
+        return item
+
+class <b>PriorityQueue</b>:
+    "A queue in which the minimum element (as determined by cmp) is first."
+    def __init__(self, items=None, cmp=operator.lt):
+          self.A = []; self.cmp = cmp;
+          if items: self.extend(items)
+      
+    def __len__(self): return len(self.A)
+
+    def append(self, item):
+        A, cmp = self.A, self.cmp
+        A.append(item)
+        i = len(A) - 1
+        while i > 0 and cmp(item, A[i//2]):
+            A[i], i = A[i//2], i//2
+        A[i] = item
+
+    def extend(self, items):
+        for item in items: self.append(item)
+
+    def pop(self):
+        A = self.A
+        if len(A) == 1: return A.pop()
+        e = A[0]
+        A[0] = A.pop()
+        self.heapify(0)
+        return e
+
+    def heapify(self, i):
+        "Assumes A is an array whose left and right children are heaps,"
+        "move A[i] into the correct position.  See CLR&S p. 130"
+        A, cmp = self.A, self.cmp
+        left, right, N = 2*i + 1, 2*i + 2, len(A)-1
+        if left <= N and cmp(A[left], A[i]):
+            smallest = left
+        else:
+            smallest = i
+        if right <= N and cmp(A[right], A[smallest]):
+            smallest = right
+        if smallest != i:
+            A[i], A[smallest] = A[smallest], A[i]
+            self.heapify(smallest)
+</pre></table><p>
+Notice the idiom ``<tt>items or []</tt>.''
+It would be very wrong to do something like
+<p><table><tr><td bgcolor=cccccc><pre>
+def <b>Stack</b>(items=[]): return items</pre></table><p>
+to indicate that the default is an empty list of items.  If we did that,
+then different stacks would share the same list.
+By making the default value be <tt>None</tt> (a false value that is
+outside the range of valid inputs), we can arrange so that each instance
+gets its own fresh list.  One possible objection to the use of this idiom
+in this example: a user who does
+<p><table><tr><td bgcolor=cccccc><pre>
+s = Stack(items)</pre></table><p>
+might expect that <tt>s</tt> and <tt>items</tt> become identical,
+but that only happens when <tt>items</tt> is not empty.  I would say
+that this objection is not too serious, because no such promise is explicitly
+made.  (Indeed, a user might also expect that <tt>items</tt> remains
+unmodified, which is only the case when <tt>items</tt> is empty.)
+
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="">Q: How do I do the Singleton Pattern in Python?</a></b></font></table><p>
+
+I assume you mean that you want a class that can only be instantiated
+once, and raises an exception if you try to make another one.  The
+simplest way I know to do that is to define a function that enforces
+the idea, and call the function from the constructor in your class:
+
+<p><table><tr><td bgcolor=cccccc><pre>
+def <b>singleton</b>(object, instantiated=[]):
+    "Raise an exception if an object of this class has been instantiated before."
+    assert object.__class__ not in instantiated, \
+        "%s is a Singleton class but is already instantiated" % object.__class__
+    instantiated.append(object.__class__)
+
+class <b>YourClass</b>:
+    "A singleton class to do something ..."
+    def __init__(self, args):
+        singleton(self)
+        ...
+</pre></table><p>
+
+<p>You could also mess around with metaclasses so that you could write
+<tt>class YourClass(Singleton)</tt>, but why bother?  Before the Gang
+of Four got all academic on us, ``singleton'' (without the formal
+name) was just a simple idea that deserved a simple line of code, not
+a whole religion.
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="CachedFactory">Q: Is no "news" good news?</a></b></font></table><p>
+
+I presume you mean is it good that Python has no <b>new</b> keyword.
+It is indeed.  In C++, <b>new</b> is used to mark allocation on the
+heap rather than the stack.  As such, the keyword is useful.  In Java,
+all objects are heap-allocated, so <b>new</b> has no real purpose;
+it only serves as a reminder of the distinction between a constructor
+and other static methods.  But making this distinction probably does
+more harm than good in Java, because the distinction is a low-level one that
+forces implementation decisions that really should be delayed.  I think Python
+made the right choice in keeping the syntax of a constructor call the same
+as the syntax of a normal function call. 
+<p>
+For example, before there was a <tt>bool</tt> class, we might have wanted to
+implement it.  Let's call it  <tt>Bool</tt> to keep it distinct from the built-in. 
+Suppose we wanted to
+enforce the idea that there should be only one true and one false object
+of type <tt>Bool</tt>.  One way to do that is to rename the class <tt>Bool</tt> to <tt>_Bool</tt> (so that it won't be exported), and then define a function
+<tt>Bool</tt> as follows:
+<p><table><tr><td bgcolor=cccccc><pre>
+def <b>Bool</b>(val):
+    if val: return true
+    else: return false
+
+true, false = _Bool(1), _Bool(0)</pre></table><p>
+This makes the function <tt>Bool</tt> a <i>factory</i> for <tt>_Bool</tt>
+objects (although admittedly a factory with an unusually small capacity).
+The point is that the programmer who calls <tt>Bool(1)</tt> should not
+know or care if the object returned is a new one or a recycled one (at least
+in the case of immutable objects).  Python syntax allows that distinction
+to be hidden, while Java syntax does not.
+
+<p>There is some confusion in the literature; some people use the term
+"Singleton Pattern" for this type of factory, where there is a
+singleton object for each different argument to the constructor.  I
+vote with what I believe is the majority in my definition of Singleton
+in the previous question. You can also encapsulate this pattern in a
+class. We'll call it "CachedFactory."  The idea is that you write
+
+<p><table><tr><td bgcolor=cccccc><pre>
+class <b>Bool</b>:
+    ... ## <a href="#Bool">see here</a> for Bool's definition
+
+Bool = CachedFactory(Bool)</table><p>
+
+and then the first time you call <tt>Bool(1)</tt> the argument
+list (1,) gets delegated to the original Bool class, but any
+subsequent calls to <tt>Bool(1)</tt> return that first object,
+which gets kept in a cache:
+
+<p><table><tr><td bgcolor=cccccc><pre>
+class <b>CachedFactory</b>:
+    def __init__(self, klass):
+        self.cache = {}
+        self.klass = klass
+
+    def __call__(self, *args):
+        if self.cache.has_key(args):
+            return self.cache[args]
+        else:
+            object = self.cache[args] = self.klass(*args)
+            return object</pre></table><p>
+
+One thing to notice is that nothing rests on classes and constructors;
+this pattern would work with any callable.  When applied to functions
+in general, it is called the "Memoization Pattern".  The implementation
+is the same, only the names are changed:
+
+<p><table><tr><td bgcolor=cccccc><pre>
+class <b>Memoize</b>:
+    def __init__(self, fn):
+        self.cache = {}
+        self.fn = fn
+
+    def __call__(self, *args):
+        if self.cache.has_key(args):
+            return self.cache[args]
+        else:
+            object = self.cache[args] = self.fn(*args)
+            return object</pre></table><p>
+
+Now you can do <tt>fact = Memoize(fact)</tt> and get factorials computed
+in amortized O(1) time, not O(n).
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="">Q: Can I have a history mechanism like in the shell?</a></b></font></table><p>
+Yes. Is this what you want?
+<p><table><tr><td bgcolor=cccccc><pre>&gt;&gt;&gt; from shellhistory import h
+h[2] &gt;&gt;&gt; 7*8
+56
+h[3] &gt;&gt;&gt; 9*9
+81
+h[4] &gt;&gt;&gt; h[2]
+56
+h[5] &gt;&gt;&gt; 'hello' + ' world'
+'hello world'
+h[6] &gt;&gt;&gt; h
+[None, 9, 56, 81, 56, 'hello world']
+h[7] &gt;&gt;&gt; h[5] * 2
+'hello worldhello world'
+h[8] &gt;&gt;&gt;  h[7] is _ is h[-1]
+1
+</pre></table><p>
+How does this work?  The variable
+<tt>sys.ps1</tt> is the system prompt.  By default it is the string
+<tt>'&gt;&gt;&gt; '</tt> but you can set it to anything else.  If you set it
+to a non-string object, the object's <tt>__str__</tt> method gets called.
+So we'll create an object whose string method appends the most recent result
+(the variable <tt>_</tt>) to a list called <tt>h</tt> (for history), and then 
+returns a prompt string that includes the length of the list followed by <tt>'&gt;&gt;&gt;'</tt>.
+Or at least that was the plan.  As it turns out (at least on the IDLE 2.2
+implementation on Windows), <tt>sys.ps1.__str__</tt> gets called
+<i>three</i> times, not just once before the prompt is printed.  Don't
+ask me why. To
+combat this, I only append <tt>_</tt> when it is not already
+the last element in the history list.  And I don't bother inserting
+<tt>None</tt> into the history list, because it's not displayed by the
+Python interactive loop, and I don't insert <tt>h</tt> itself into <tt>h</tt>,
+because the circularity could lead to problems printing or comparing. 
+Another complication was that
+the Python interpreter actually attempts to print <tt>'\n' + sys.ps1</tt>,
+(when it should print the '\n' separately, or print <tt>'\n' + str(sys.ps1)</tt>)
+which means that <tt>sys.ps1</tt> needs an <tt>__radd__</tt> method
+as well.  Finally, my first version would fail if imported as the very first
+input in a Python session (or in the .python startup file).  After some detective
+work it turns out this is because the variable <tt>_</tt> is not bound until
+after the first expression is evaluated.  So I catch the exception if <tt>_</tt>
+is unbound.  That gives us:
+<p><table><tr><td bgcolor=cccccc><pre>import sys
+
+h = [None]
+
+class <b>Prompt</b>:
+    "Create a prompt that stores results (i.e. _) in the array h."
+    def <b>__init__</b>(self, str='h[%d] &gt;&gt;&gt; '):
+        self.str = str;
+        
+    def <b>__str__</b>(self):
+        try:
+            if _ not in [h[-1], None, h]: h.append(_);
+        except NameError:
+            pass
+        return self.str % len(h);
+    
+    def <b>__radd__</b>(self, other):
+        return str(other) + str(self)
+
+sys.ps1 = Prompt()</pre></table><p>
+
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="">Q: How do I time the execution of my functions?</a></b></font></table><p>
+Here's a simple answer:
+<p><table><tr><td bgcolor=cccccc><pre>
+def <b>timer</b>(fn, *args):
+    "Time the application of fn to args. Return (result, seconds)."
+    import time
+    start = time.clock()
+    return fn(*args), time.clock() - start
+<hr>
+&gt;&gt;&gt;timer(max, range(1e6))
+(999999, 0.4921875)
+</pre></table><p>
+
+<p>There's a more complex answer in my <a href="python/utils.html">utils module</a>.
+
+
+<p><table border=0 cellpadding=3 width="100%"><tr><td bgcolor=#99ccff><font size="+1"><b> <a name="">Q: What does your <tt>.python</tt> startup file look like?</a></b></font></table><p>
+Currently it looks like this, but it's been changing a lot:
+<p><table><tr><td bgcolor=cccccc><pre>
+from __future__ import nested_scopes
+import sys, os, string, time
+from <a href="python/utils.html">utils</a> import *
+
+################ Interactive Prompt and Debugging ################
+
+try:
+    import readline
+except ImportError:
+    print "Module readline not available."
+else:
+    import rlcompleter
+    readline.parse_and_bind("tab: complete")
+
+h = [None]
+
+class Prompt:
+    def __init__(self, str='h[%d] &gt;&gt;&gt; '):
+        self.str = str;
+
+    def __str__(self):
+        try:
+            if _ not in [h[-1], None, h]: h.append(_);
+        except NameError:
+           pass
+        return self.str % len(h);
+
+  def __radd__(self, other):
+        return str(other) + str(self)
+
+
+if os.environ.get('TERM') in [ 'xterm', 'vt100' ]:
+    sys.ps1 = Prompt('\001\033[0:1;31m\002h[%d] &gt;&gt;&gt; \001\033[0m\002')
+else:
+    sys.ps1 = Prompt()
+sys.ps2 = ''
+</pre></table>    
+
+
+      <hr>
+<p>
+Thanks to Amit J. Patel, Max M, Dan Winkler, Chih-Chung Chang, Bruce Eckel, 
+Kalle Svensson, Mike Orr, Steven Rogers
+and others who contributed ideas and corrections.
+<p>
+    <address><a href="mailto:peter@norvig.com"><i>Peter Norvig</i></a></address>
+  </body>
+</html>

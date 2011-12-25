@@ -14,19 +14,71 @@
     <link rel="stylesheet" href="/css/app.css?{VERSION}">
   </head>
   <body>
-    <div id="page-wrap">
-      <div id="head">
-        <div class="wrapper">
-          <img src="/imgs/logo.gif"/>
-          <input id="search-input">
+    <div id="navigation">
+      <div class="wrapper">
+        <div class="section">
+          <h3>search</h3>
+          <div id="search-input" class="expand">
+            <input placeholder="full text search all you feeds" name="q"/>
+            <ul class="search-result"></ul>
+          </div>
+        </div>
+        <div class="section active">
+          <h3>subscriptions</h3>
+          <ul class="sub-list expand"> </ul>
         </div>
       </div>
-      <div id="main" class="clearfix">
-        <div id="left"></div>
-        <div id="mid"></div>
-        <div id="right">
-          <div class="wrapper">
+    </div>
+    <div id="admin-controls">
+      <span class="add">+</span>
+      <img src="/imgs/configure.png" width="28"/>
+      <img src="/imgs/preferences_desktop_keyboard.png" width="28"/>
+    </div>
+    <div id="content">
+      <div id="reading-area" class="show-iframe">
+        <div class="feed">
+          <div class="feed-title">
+            <h3>An Exercise in Species Barcoding</h3>
+            <div class="feed-info">
+              by<span class="author">john canlidy</span>at
+              <span class="time">2011/11/1 10:34</span>
+              <span class="vote">
+                <span class="up"></span>
+                <span class="down"></span>
+              </span>
+              <ul class="tags">
+                <li>google</li>
+                <li>search</li>
+              </ul>
+            </div>
           </div>
+        </div>
+        <div class="iframe">
+          <iframe src="about:blank"></iframe>
+        </div>
+      </div>
+
+      <div id="footer">
+        <div id="reading-chooser" class="resizer">
+          <ul class="chooser">
+            <li class="iframe">ORIGINAL</li>
+            <li>FEED</li>
+          </ul>
+          <ul class="prev-next">
+            <li>prev</li>
+            <li>next</li>
+          </ul>
+          <div class="info">
+            <h5>Strachey's Checkers program from 1966</h5>
+          </div>
+          <span class="vote">
+            <span class="up"></span>
+            <span class="down"></span>
+          </span>
+        </div>
+        <div id="feed-list">
+          <ul class="feeds">
+          </ul>
         </div>
       </div>
     </div>
@@ -37,7 +89,9 @@
     <script src="/js/lib/mustache.js" data-profile="dev"></script>
     <script src="/js/gen/app-tmpls.js" data-profile="dev"></script>
     <script src="/js/rssminer/util.js" data-profile="dev"></script>
+    <script src="/js/rssminer/layout.js" data-profile="dev"></script>
+    <script src="/js/rssminer/data.js" data-profile="dev"></script>
     <script src="/js/rssminer/app.js" data-profile="dev"></script>
-    <script src="/js/app-{VERSION}.js" data-profile="dev"></script>
+    <script src="/js/app-{VERSION}.js" data-profile="prod"></script>
   </body>
 </html>

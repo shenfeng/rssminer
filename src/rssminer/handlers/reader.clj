@@ -2,7 +2,7 @@
   (:use [rssminer.util :only [session-get to-int]]
         [rssminer.search :only [search*]]
         [rssminer.db.feed :only [fetch-unread-meta fetch-unread]]
-        [rssminer.db.subscription :only [fetch-subs-by-user]])
+        [rssminer.db.subscription :only [fetch-subs-by-user fetch-user-subs]])
   (:require [rssminer.views.reader :as view]
             [rssminer.config :as cfg]))
 
@@ -30,7 +30,10 @@
                        (transient {}) unread)))
 
 (defn app-page [req]
-  (view/app-page))
+  (let [user (session-get req :user)
+        subs (fetch-user-subs (:id user))]
+    (view/app-page {:rm {:user user
+                         :subs subs}})))
 
 (defn v1-page [req]
   (let [user (session-get req :user)

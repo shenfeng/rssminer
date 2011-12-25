@@ -3,6 +3,9 @@
 
 (defonce rssminer-conf (atom {}))
 
+(def socks-proxy (Proxy. Proxy$Type/SOCKS
+                         (InetSocketAddress. "127.0.0.1" 3128)))
+
 (defn in-prod? [] (= (:profile @rssminer-conf) :prod))
 
 (defn in-dev? [] (= (:profile @rssminer-conf) :dev))
@@ -18,15 +21,8 @@
                    "child.keepAlive" false
                    "child.connectTimeoutMillis" 4000})
 
-(def socks-proxy (Proxy. Proxy$Type/SOCKS
-                         (InetSocketAddress. "127.0.0.1" 3128)))
-
-(def no-proxy Proxy/NO_PROXY)
-
 (def rssminer-agent
   "Mozilla/5.0 (compatible; Rssminer/1.0; +http://rssminer.net)")
-
-(def ungroup "ungrouped")
 
 (def ignored-url-extensions
   '("jpg" "png" "gif" "css" "js" "jpeg"
@@ -98,9 +94,6 @@
     "wayongroup" "pharmavantage" "zhangxun" "broadchemical"
     "ittong" "cotion" "inforice" "suneternal" "jiudaplc" "suanti"
     "synua" "cetc34" "czlyyy"))
-
-(defn reseted-url? [url]
-  (some #(re-find % url) [#"blogspot\.com"]))
 
 (def popular-tags ["clojure" "compojure" "jquery" "jdk" "linux"
                    "database" "performance"  "java" "emacs"

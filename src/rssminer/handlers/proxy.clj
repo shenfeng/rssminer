@@ -1,10 +1,9 @@
 (ns rssminer.handlers.proxy
   (:use (rssminer [http :only [client]]
                   [util :only [assoc-if]]
-                  [config :only [rssminer-conf socks-proxy no-proxy]]))
-  (:import rssminer.ResponseFutureProxy
-           ring.adapter.netty.HttpResponseFuture
-           java.net.URI))
+                  [config :only [rssminer-conf]]))
+  (:import rssminer.async.ProxyFuture
+           org.jboss.netty.handler.codec.http.HttpResponse))
 
 (defn- compute-send-header [req]
   (let [headers (:headers req)]
@@ -17,7 +16,11 @@
   (let [uri (-> req :params :u)
         headers (compute-send-header req)]
     {:status 200
-     :body (ResponseFutureProxy.    ; understand by async-ring-handler
-            (.execGet client (URI. uri) headers
-                      (if (:proxy @rssminer-conf)
-                        socks-proxy no-proxy)))}))
+     ;; understand by async-ring-handler
+     :body (ProxyFuture. client uri headers
+                         (:proxy @rssminer-conf)
+                         (fn [resp] resp))}))
+
+;;; buggy
+;;; http://www.moandroid.com/?p=2020
+;;; http://lambda-the-ultimate.org/node/4387

@@ -116,7 +116,7 @@ public class Searcher {
             }
         }
         if (tags != null) {
-            String[] ts = tags.split(", ");
+            String[] ts = tags.split("; ");
             for (String tag : ts) {
                 Field f = new Field(TAG, tag, Store.NO, Index.NOT_ANALYZED,
                         TermVector.YES);

@@ -2,8 +2,7 @@
   (:use (rssminer [http :only [download-rss]]
                   [time :only [now-seconds]]
                   [parser :only [parse-feed]]
-                  [util :only [to-int if-lets session-get]]
-                  [config :only [ungroup]])
+                  [util :only [to-int if-lets session-get]])
         [rssminer.db.util :only [h2-insert h2-insert-and-return]]
         [clojure.tools.logging :only [info]])
   (:require [rssminer.db.subscription :as db]
@@ -27,7 +26,7 @@
      :message "Already subscribed"}
     (let [us (h2-insert-and-return :user_subscription
                                    {:user_id user-id
-                                    :group_name (or group-name ungroup)
+                                    :group_name group-name
                                     :title (or title (:title subscription))
                                     :rss_link_id (:id subscription)})
           count (db/fetch-feeds-count-by-id (:id subscription))]
@@ -46,7 +45,7 @@
                        :title (:title feeds)})
                  us (h2-insert-and-return :user_subscription
                                           {:user_id user-id
-                                           :group_name (or group-name ungroup)
+                                           :group_name group-name
                                            :title (or title (:title rss))
                                            :rss_link_id (:id rss)})]
              (info (str "user#" user-id) "add"
@@ -62,6 +61,19 @@
     (apply add-exists-subscription sub user-id options)
     ;; first time subscription
     (apply create-subscripton link user-id options)))
+
+(defn subscribe [url user-id title group-name]
+  (let [sub (or (db/fetch-rss-link {:url url})
+                (h2-insert-and-return :rss_links {:url url
+                                                  :user_id user-id}))]
+    (if-let [us (db/fetch-subscription {:user_id user-id
+                                        :rss_link_id (:id sub)})]
+      us
+      (h2-insert-and-return :user_subscription
+                            {:user_id user-id
+                             :group_name group-name
+                             :title title
+                             :rss_link_id (:id sub)}))))
 
 (defn add-subscription [req]
   (let [link (:link (:body req))

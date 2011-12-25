@@ -1,38 +1,45 @@
 (ns rssminer.handlers.favicon
   (:use [rssminer.db.util :only [h2-query h2-insert]]
-        [rssminer.http :only [client]])
+        [ring.util.response :only [redirect]]
+        (rssminer [http :only [client]]
+                  [config :only [rssminer-conf]]))
   (:import org.jboss.netty.handler.codec.http.HttpResponse
+           rssminer.async.FaviconFuture
            java.io.ByteArrayInputStream))
 
 (defn fetch-favicon [hostname]
-  (-> (h2-query ["select favicon from favicon where hostname = ?" hostname])
-      first :favicon))
+  (first (h2-query
+          ["SELECT favicon, code FROM favicon WHERE hostname = ?" hostname])))
 
-(defn insert-favicon [hostname data]
-  (h2-insert :favicon {:hostname hostname
-                       :favicon data}))
+(def default-icon "/imgs/16px-feed-icon.png")
 
 (def headers {"Content-Type" "image/x-icon"
               "Cache-Control" "public, max-age=315360000"
               "Expires" "Thu, 31 Dec 2037 23:55:55 GMT"})
 
-(defn download-favicon [hostname]
-  (let [url (str "http://" hostname "/favicon.ico")
-        ^HttpResponse resp (-> client (.execGet url) .get)]
-    (if (= 200 (-> resp .getStatus .getCode))
-      (let [data (-> resp .getContent .array)]
-        (insert-favicon hostname data)
-        {:status 200
-         :headers headers
-         :body (ByteArrayInputStream. data)})
-      {:status 404})))
+(defn fetch-save-favicon [hostname]
+  {:status 200
+   :body (FaviconFuture. client hostname (:proxy @rssminer-conf)
+                         (fn [resp]
+                           (let [code (-> resp .getStatus .getCode)
+                                 data (-> resp .getContent .array)]
+                             (h2-insert :favicon {:hostname hostname
+                                                  :code code
+                                                  :favicon data})
+                             (if (= 200 code)
+                               {:status 200
+                                :headers headers
+                                :body (ByteArrayInputStream. data)}
+                               (redirect default-icon)))))})
 
 (defn get-favicon [req]
   (if-let [hostname (-> req :params :h)]
-    (if-let [data (fetch-favicon hostname)]
-      {:status 200
-       :headers headers
-       :body (ByteArrayInputStream. data)}
-      (download-favicon hostname))
-    {:status 404}))
+    (if-let [favicon (fetch-favicon hostname)]
+      (if (= 200 (:code favicon))
+        {:status 200
+         :headers headers
+         :body (ByteArrayInputStream. (:favicon favicon))}
+        (redirect default-icon))
+      (fetch-save-favicon hostname))
+    (redirect default-icon)))
 

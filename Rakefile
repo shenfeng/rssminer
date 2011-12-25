@@ -115,7 +115,7 @@ task :prepare_prod => [:css_compile, "js:minify"]
 desc "lein swank"
 task :swank do
   sh "echo -n \"\033]0;rssminer lein swank\007\"" +
-    " && rm classes -r && lein javac && lein swank"
+    " && rm classes -rf && lein javac && lein swank"
 end
 
 desc "Run server in dev profile"

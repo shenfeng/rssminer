@@ -6,7 +6,8 @@
 (deftemplate v1-page "templates/app-v1.html" [data]
   [:head] (html/append (html/html-snippet (serialize-to-js data))))
 
-(deftemplate app-page "templates/app.html" [])
+(deftemplate app-page "templates/app.html" [data]
+  [:head] (html/append (html/html-snippet (serialize-to-js data))))
 
 (deftemplate landing-page "templates/landing.html" [] )
 

@@ -10,7 +10,7 @@
     (is (= "http://www.ppurl.com" (:link feed)))
     (is (:published_ts feed))
     (is (= 1 (-> feed :entries count)))
-    (is (= "computer, R" (-> feed :entries first :tags)))
+    (is (= "computer; R" (-> feed :entries first :tags)))
     (are [k] (-> feed :entries first k)
          :author
          :title
@@ -25,7 +25,7 @@
     (is (= "http://weblogs.asp.net/scottgu/default.aspx" (:link feed)))
     (is (:published_ts feed))
     (is (= 1 (-> feed :entries count)))
-    (is (= "ASP.NET, acategory, Link Listing, MVC"
+    (is (= "ASP.NET; acategory; Link Listing; MVC"
            (-> feed :entries first :tags)))
     (are [k] (-> feed :entries first k)
          :author

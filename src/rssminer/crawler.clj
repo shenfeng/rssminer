@@ -2,8 +2,7 @@
   (:use (rssminer [time :only [now-seconds]]
                   [http :only [parse-response client extract-links links]]
                   [util :only [assoc-if next-check]]
-                  [config :only [rssminer-conf socks-proxy no-proxy
-                                 reseted-url?]])
+                  [config :only [rssminer-conf]])
         [rssminer.db.feed :only [insert-rss-link]]
         [clojure.tools.logging :only [info error trace]])
   (:require [rssminer.db.crawler :as db])
@@ -48,7 +47,7 @@
 (defn- mk-task [{:keys [url last_modified] :as link}]
   (reify IHttpTask
     (getUri [this] (java.net.URI. url))
-    (getProxy [this] (if (reseted-url? url) socks-proxy no-proxy))
+    (getProxy [this] (:proxy @rssminer-conf))
     (getHeaders [this]
       (if last_modified {"If-Modified-Since" last_modified} {}))
     (doTask [this resp]
@@ -68,7 +67,6 @@
                            (.setLinks links)
                            (.setQueueSize (:crawler-queue @rssminer-conf))
                            (.setName "Crawler")
-                           (.setProxy (if (:proxy @rssminer-conf)
-                                        socks-proxy no-proxy))
+                           (.setProxy (:proxy @rssminer-conf))
                            (.setDnsPrefetch (:dns-prefetch @rssminer-conf))))
                     (.start))))

@@ -4,7 +4,6 @@
                   [search :only [indexer index-feed use-index-writer!]]
                   [http :only [clean-resolve]]
                   [time :only [now-seconds]]
-                  [config :only [ungroup]]
                   [util :only [ignore-error to-int]])
         (rssminer.db [user :only [create-user]]
                      [feed :only [fetch-rss-links]]
@@ -27,18 +26,11 @@
   (use-h2-database! db-path)
   (info "import h2 schema, create user feng")
   (import-h2-schema!)
-  (let [user (create-user {:name "feng"
-                           :password password
-                           :added_ts (now-seconds)
-                           :email "shenedu@gmail.com"})
-        rsses (h2-query ["select id from rss_links"])]
-    (doseq [rss rsses]
-      (with-h2
-        (insert-record :user_subscription {:user_id (:id user)
-                                           :rss_link_id (:id rss)
-                                           :group_name ungroup}))))
+  (create-user {:name "feng"
+                :password password
+                :added_ts (now-seconds)
+                :email "shenedu@gmail.com"})
   (close-global-h2-factory!))
-
 
 (defn rand-subscribe []
   (let [rrs (filter identity
