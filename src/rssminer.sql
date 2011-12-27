@@ -36,7 +36,7 @@ create table rss_links (
   alternate VARCHAR,            -- usually, the site's link
   added_ts TIMESTAMP default now(),
   next_check_ts INTEGER default 1,
-  check_interval INTEGER default 60 * 60 * 24 * 5, -- in seconds, 5 days
+  check_interval INTEGER default 60 * 60 * 24 * 1, -- in seconds, 1 day
   last_modified VARCHAR,        -- from http response header
   user_id INTEGER      -- who first add it, REFERENCES users(no index)
 )

@@ -3,6 +3,12 @@
   (:import java.util.UUID
            [redis.clients.jedis JedisPool Jedis JedisPoolConfig]))
 
+(defonce redis-client (atom nil))
+
+(defn set-redis-client [^String host] ;; called when app start
+  (when (nil? @redis-client)
+    (reset! redis-client (JedisPool. (JedisPoolConfig.) host))))
+
 (deftype RedisStore [^JedisPool db ^int expire]
   SessionStore
   (read-session [_ key]
@@ -31,6 +37,26 @@
           (finally
            (.returnResource db j)))))))
 
+(defn redis-store [expire]
+  (when (nil? @redis-client)
+    (set-redis-client "127.0.0.1"))
+  (RedisStore. @redis-client expire))
 
-(defn redis-store [expire ^String host]
-  (RedisStore. (JedisPool. (JedisPoolConfig.) host) expire))
+(def ^String fetcher-key "fetcher-queue")
+
+(def ^"[Ljava.lang.String;" fetcher-key-arr (into-array (list fetcher-key)))
+
+(defn fetcher-enqueue [data]
+  (let [^JedisPool client @redis-client
+        ^Jedis j (.getResource client)]
+    (try
+      (.rpush j fetcher-key (pr-str data)) ; tail
+      (finally (.returnResource client j)))))
+
+(defn fetcher-dequeue [timeout]         ; seconds
+  (let [^JedisPool client @redis-client
+        ^Jedis j (.getResource client)]
+    (try
+      (when-let [d (.blpop j (int timeout) fetcher-key-arr)]
+        (-> d second read-string))
+      (finally (.returnResource client j)))))

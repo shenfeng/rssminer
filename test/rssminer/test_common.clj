@@ -7,6 +7,7 @@
                   [search :only [use-index-writer!
                                  close-global-index-writer!]]
                   [util :only [session-get]]
+                  [redis :only [fetcher-enqueue fetcher-dequeue]]
                   [http :only [download-rss]])
         (rssminer.db [user :only [create-user]]))
   (:require [clojure.string :as str])
@@ -66,9 +67,6 @@
         (print-sql-exception-chain e)
         (throw e)))))
 
-(def app-fixture (join-fixtures [lucene-fixture
-                                 h2-fixture
-                                 user-fixture]))
 (defmacro mocking [var new-f & forms]
   `(let [old# (atom nil)]
      (try
@@ -79,5 +77,14 @@
        (finally
         (alter-var-root ~var (fn [n#] @old#))))))
 
+(defn redis-queue-fixture [test-fn]
+  (mocking #'fetcher-enqueue (fn [& args])
+           (mocking #'fetcher-dequeue (fn [& args])
+                    (test-fn))))
+
+(def app-fixture (join-fixtures [lucene-fixture
+                                 h2-fixture
+                                 user-fixture
+                                 redis-queue-fixture]))
 (def test-app
   (app))

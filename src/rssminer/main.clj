@@ -8,6 +8,7 @@
                   [search :only [use-index-writer!
                                  close-global-index-writer!]]
                   [routes :only [app]]
+                  [redis :only [set-redis-client]]
                   [util :only [to-int]]
                   [fetcher :only [start-fetcher stop-fetcher]]
                   [crawler :only [start-crawler stop-crawler]]
@@ -35,6 +36,7 @@
   (.removeShutdownHook (Runtime/getRuntime) shutdown-hook)
   (.addShutdownHook (Runtime/getRuntime) shutdown-hook)
   (use-h2-database! db-path :trace h2-trace)
+  (set-redis-client redis-host)
   (swap! rssminer-conf assoc :profile (keyword profile)
          :crawler-queue crawler-queue
          :fetcher-queue fetcher-queue
@@ -45,10 +47,9 @@
                          (str proxy-server "/p?u="))
          :dns-prefetch dns
          :proxy (when proxy socks-proxy))
-  (reset! server
-          (run-netty (app :redis-host redis-host) {:port port
-                                                   :worker worker
-                                                   :netty netty-option}))
+  (reset! server (run-netty (app) {:port port
+                                   :worker worker
+                                   :netty netty-option}))
   (info "netty server start at port" port)
   (use-index-writer! index-path)
   (when crawler (start-crawler))

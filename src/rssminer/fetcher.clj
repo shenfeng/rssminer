@@ -2,11 +2,12 @@
   (:use [clojure.tools.logging :only [trace]]
         (rssminer [util :only [assoc-if next-check]]
                   [parser :only [parse-feed]]
+                  [redis :only [fetcher-dequeue]]
                   [http :only [client parse-response links]]
                   [config :only [rssminer-conf]]))
   (:require [rssminer.db.feed :as db])
-  (:import [rssminer.task HttpTaskRunner IHttpTask IHttpTaskProvder
-            HttpTaskRunnerConf]))
+  (:import [rssminer.task HttpTaskRunner IHttpTask IHttpTasksProvder
+            HttpTaskRunnerConf IBlockingTaskProvider]))
 
 (defonce fetcher (atom nil))
 
@@ -31,7 +32,7 @@
                           :alternate (:link feeds)
                           :description (:description feeds)
                           :title (:title feeds))]
-    (trace status url (str "(" (-> feeds :entries count) " feeds)"))
+    (trace status url "(" (-> feeds :entries count) " feeds)")
     (db/update-rss-link id updated)
     (when feeds (db/save-feeds feeds id))))
 
@@ -45,17 +46,26 @@
       (handle-resp link (parse-response resp)))))
 
 (defn mk-provider []
-  (reify IHttpTaskProvder
+  (reify IHttpTasksProvder
     (getTasks [this]
       (map mk-task (db/fetch-rss-links (:fetch-size @rssminer-conf))))))
+
+(defn mk-blocking-provider []
+  (reify IBlockingTaskProvider
+    (getTask [this timeout]
+      (when-let [d (fetcher-dequeue timeout)]
+        (mk-task d)))))
 
 (defn start-fetcher []
   (stop-fetcher)
   (reset! fetcher (doto (HttpTaskRunner.
                          (doto (HttpTaskRunnerConf.)
-                           (.setProvider (mk-provider))
                            (.setClient client)
                            (.setLinks links)
+                           (.setBulkCheckInterval (* 15  60  1000)) ; 15 min
+                           (.setBlockingTimeOut 5) ; 5 second
+                           (.setBulkProvider (mk-provider))
+                           (.setBlockingProvider (mk-blocking-provider))
                            (.setQueueSize (:fetcher-queue @rssminer-conf))
                            (.setProxy (:proxy @rssminer-conf))
                            (.setName "Fetcher")

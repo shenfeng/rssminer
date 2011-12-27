@@ -1,6 +1,7 @@
 (ns rssminer.handlers.subscriptions
   (:use (rssminer [http :only [download-rss]]
                   [time :only [now-seconds]]
+                  [redis :only [fetcher-enqueue]]
                   [parser :only [parse-feed]]
                   [util :only [to-int if-lets session-get]])
         [rssminer.db.util :only [h2-insert h2-insert-and-return]]
@@ -62,10 +63,13 @@
     ;; first time subscription
     (apply create-subscripton link user-id options)))
 
+(def ^{:private true} enqueue-keys [:id :url :check_interval :last_modified])
+
 (defn subscribe [url user-id title group-name]
   (let [sub (or (db/fetch-rss-link {:url url})
                 (h2-insert-and-return :rss_links {:url url
                                                   :user_id user-id}))]
+    (fetcher-enqueue (select-keys sub enqueue-keys))
     (if-let [us (db/fetch-subscription {:user_id user-id
                                         :rss_link_id (:id sub)})]
       us

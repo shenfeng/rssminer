@@ -6,7 +6,7 @@
         [rssminer.db.feed :only [insert-rss-link]]
         [clojure.tools.logging :only [info error trace]])
   (:require [rssminer.db.crawler :as db])
-  (:import [rssminer.task HttpTaskRunner IHttpTask IHttpTaskProvder
+  (:import [rssminer.task HttpTaskRunner IHttpTask IHttpTasksProvder
             HttpTaskRunnerConf]))
 
 (defonce crawler (atom nil))
@@ -54,7 +54,7 @@
       (handle-resp link (parse-response resp)))))
 
 (defn mk-provider []
-  (reify IHttpTaskProvder
+  (reify IHttpTasksProvder
     (getTasks [this]
       (map mk-task (db/fetch-crawler-links (:fetch-size @rssminer-conf))))))
 
@@ -62,7 +62,7 @@
   (stop-crawler)
   (reset! crawler (doto (HttpTaskRunner.
                          (doto (HttpTaskRunnerConf.)
-                           (.setProvider (mk-provider))
+                           (.setBulkProvider (mk-provider))
                            (.setClient client)
                            (.setLinks links)
                            (.setQueueSize (:crawler-queue @rssminer-conf))

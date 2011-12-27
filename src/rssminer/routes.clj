@@ -78,12 +78,10 @@
 
 ;;; The last one in the list is the first one get the request,
 ;;; the last one get the response
-(defn app [& {:keys [redis-host]}]
+(defn app []
   (-> #'all-routes
       wrap-auth
-      (wrap-session
-       {:store (redis-store
-                (* 3600 24 7) (or redis-host "127.0.0.1"))})
+      (wrap-session {:store (redis-store (* 3600 24 7))})
       wrap-cache-header
       wrap-request-logging-in-dev
       wrap-keyword-params

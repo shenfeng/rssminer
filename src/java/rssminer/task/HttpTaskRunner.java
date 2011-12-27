@@ -14,10 +14,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
-import java.util.TreeMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -37,10 +36,10 @@ public class HttpTaskRunner {
     static Logger logger = LoggerFactory.getLogger(HttpTaskRunner.class);
 
     private final HttpClient mHttp;
-    private final IHttpTaskProvder mProvider;
+    private final IHttpTasksProvder mBulkProvider;
     private final String mName;
     private final Proxy mProxy; // proxy used if rested
-    private final Queue<IHttpTask> mTaskQueue;
+    private final ConcurrentLinkedQueue<IHttpTask> mTaskQueue;
     private AtomicInteger mCounter = new AtomicInteger(0);
     private volatile long startTime;
     private volatile boolean mRunning;
@@ -49,33 +48,66 @@ public class HttpTaskRunner {
     private final Semaphore mConcurrent;
     private final Links mLinkCheker;
     private final DnsPrefecher mDnsPrefecher;
+    private final int mBulkCheckInterval;
+    private final int mBlockingGetTimeout;
     private final BlockingQueue<HttpResponseFuture> mDones;
-    private final Map<Integer, Integer> mStat = new TreeMap<Integer, Integer>();
+    private final ConcurrentHashMap<Integer, Integer> mStat;
 
-    private Runnable mWorker = new Runnable() {
+    private final Runnable mWorker = new Worker();
+    private final Runnable mConsummer = new Consummer();
 
-        boolean fillQueueIfNeeded() {
-            if (mTaskQueue.size() == 0) {
-                List<IHttpTask> tasks = mProvider.getTasks();
-                if (tasks == null || tasks.size() == 0)
-                    return false;
-                for (IHttpTask t : tasks) {
-                    if (mDnsPrefecher != null)
-                        mDnsPrefecher.prefetch(t.getUri());
-                    mTaskQueue.offer(t);
+    private final IBlockingTaskProvider mBlockingProvider;
+
+    class Worker implements Runnable {
+
+        private long lastBulkCheckTs = currentTimeMillis();
+
+        void enqueue(IHttpTask t) {
+            if (mDnsPrefecher != null)
+                mDnsPrefecher.prefetch(t.getUri());
+            mTaskQueue.offer(t);
+        }
+
+        void blockingFillIfNeeded() {
+
+            if (mBlockingProvider != null) {
+                while (mTaskQueue.isEmpty()) {
+                    IHttpTask task = mBlockingProvider
+                            .getTask(mBlockingGetTimeout);
+                    if (task != null) {
+                        enqueue(task);
+                        break;
+                    } else if (lastBulkCheckTs + mBulkCheckInterval < currentTimeMillis()) {
+                        List<IHttpTask> tasks = mBulkProvider.getTasks();
+                        if (tasks != null && tasks.size() != 0) {
+                            for (IHttpTask t : tasks) {
+                                enqueue(t);
+                            }
+                            lastBulkCheckTs = currentTimeMillis();
+                            break;
+                        }
+                    }
+                }
+            } else {
+                List<IHttpTask> tasks = mBulkProvider.getTasks();
+                if (tasks != null && tasks.size() != 0) {
+                    for (IHttpTask t : tasks) {
+                        enqueue(t);
+                    }
+                    lastBulkCheckTs = currentTimeMillis();
                 }
             }
-            return true;
         }
 
         public void run() {
             try {
                 while (mRunning) {
-                    if (!fillQueueIfNeeded()) {
-                        break;
-                    }
+                    blockingFillIfNeeded();
                     mConcurrent.acquire();
-                    IHttpTask t = mTaskQueue.poll(); // can't be null
+                    IHttpTask t = mTaskQueue.poll();
+                    if (t == null) {
+                        break; // no job, die
+                    }
                     final HttpResponseFuture future = mHttp.execGet(
                             t.getUri(), t.getHeaders(), t.getProxy());
                     future.setAttachment(t); // keep state
@@ -91,19 +123,19 @@ public class HttpTaskRunner {
                 }
             } catch (InterruptedException ignore) {
             }
-            logger.info("{} producer is stopped", mName);
+            logger.info("{} producer is stopped, {} job(s) left", mName,
+                    mTaskQueue.size());
             mRunning = false;
         }
-    };
+    }
 
-    private Runnable mConsummer = new Runnable() {
-
+    class Consummer implements Runnable {
         private void consumResponse(IHttpTask task, HttpResponse resp)
                 throws Exception {
             if (resp == CONN_RESET && task.getProxy() != mProxy) {
                 mTaskQueue.offer(new RetryHttpTask(task, mProxy, null));
             } else if (resp.getStatus().getCode() == 302) {
-                handle302(task, resp);
+                handle302(task, resp); // 301 is handled by clojure
             } else {
                 task.doTask(resp);
             }
@@ -158,13 +190,20 @@ public class HttpTaskRunner {
             logger.info("{} consummer has stopped", mName);
             mRunning = false;
         }
-    };
+    }
 
     public HttpTaskRunner(HttpTaskRunnerConf conf) {
-        mProvider = conf.provider;
+        mBlockingGetTimeout = conf.blockingTimeOut;
+        mBulkCheckInterval = conf.bulkCheckInterval;
+        mBulkProvider = conf.bulkProvider;
+        mBlockingProvider = conf.blockingProvider;
+        if (mBulkProvider == null) {
+            throw new NullPointerException("bulk provider can not be null");
+        }
         mProxy = conf.proxy;
         // consumer and producer need access concurrently
         mTaskQueue = new ConcurrentLinkedQueue<IHttpTask>();
+
         // prevent too many concurrent HTTP request
         mConcurrent = new Semaphore(conf.queueSize);
         // pace producer and consumer
@@ -172,17 +211,17 @@ public class HttpTaskRunner {
         mHttp = conf.client;
         mLinkCheker = conf.links;
         if (conf.dnsPrefetch) {
-        	logger.info("dns prefetcher enabled");
+            logger.info("dns prefetcher is enabled");
             mDnsPrefecher = DnsPrefecher.getInstance();
         } else {
-        	logger.info("dns prefetcher disabled");
+            logger.info("dns prefetcher is disabled");
             mDnsPrefecher = null;
         }
-        mStat.put(1200, conf.queueSize);
         mName = conf.name;
+        mStat = new ConcurrentHashMap<Integer, Integer>(24, 0.75f, 1);
+        mStat.put(1200, conf.queueSize);
     }
 
-    // TODO mStat is not thread safe
     public Map<Integer, Integer> getStat() {
         mStat.put(1000, mCounter.get());
         double m = (double) (currentTimeMillis() - startTime) / 60000;
@@ -215,7 +254,7 @@ public class HttpTaskRunner {
         mConsummerThread.start();
 
         startTime = currentTimeMillis();
-        logger.info("starting {}", mName);
+        logger.info("{} started", mName);
     }
 
     public void stop() {

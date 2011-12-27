@@ -9,7 +9,7 @@
 (use-fixtures :each h2-fixture)
 
 (deftest test-mk-provider
-  (let [provider ^rssminer.task.IHttpTaskProvder (mk-provider)
+  (let [provider ^rssminer.task.IHttpTasksProvder (mk-provider)
         task (first (.getTasks provider))]
     (is (.getUri task))
     (is (empty? (.getHeaders task)))))
