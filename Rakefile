@@ -85,16 +85,9 @@ app_jss = FileList['public/js/lib/zepto.js',
                    'public/js/lib/mustache.js',
                    'public/js/gen/app-tmpls.js',
                    'public/js/rssminer/util.js',
+                   'public/js/rssminer/layout.js',
+                   'public/js/rssminer/data.js',
                    'public/js/rssminer/app.js']
-
-v1_jss = FileList['public/js/lib/jquery.js',
-                  'public/js/lib/underscore.js',
-                  'public/js/lib/mustache.js',
-                  'public/js/gen/app-v1-tmpls.js',
-                  'public/js/rssminer/util.js',
-                  'public/js/rssminer/views.js',
-                  'public/js/rssminer/app.js']
-
 
 desc "Clean generated files"
 task :clean  do
@@ -135,7 +128,7 @@ end
 
 desc "Run unit test"
 task :test => :prepare do
-  sh 'rm classes -r && lein javac && lein test'
+  sh 'rm classes -rf && lein javac && lein test'
 end
 
 desc "Generate TAGS using etags for clj"
@@ -150,7 +143,6 @@ namespace :js do
     mkdir_p "public/js/gen"
     gen_jstempls("dashboard");
     gen_jstempls("app");
-    gen_jstempls("app-v1");
     gen_jstempls("mockup");
   end
 

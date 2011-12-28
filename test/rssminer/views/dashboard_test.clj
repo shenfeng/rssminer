@@ -9,24 +9,6 @@
   (test-app {:uri (str "/api/dashboard/" q)
              :request-method :get}))
 
-(deftest test-get-rsslinks-stats
-  (let [resp (make-req "rsslinks")
-        stats (-> resp :body read-json)]
-    (is (= 200 (:status resp)))
-    (is (seq (-> stats :data)))))
-
-(deftest test-get-pending
-  (let [resp (make-req "pending")
-        stats (-> resp :body read-json)]
-    (is (= 200 (:status resp)))
-    (is (seq (-> stats :data)))))
-
-(deftest test-get-crawled
-  (let [resp (make-req "crawled")
-        stats (-> resp :body read-json)]
-    (is (= 200 (:status resp)))
-    (is (empty? (-> stats :data)))))
-
 (deftest test-get-settings
   (let [resp (make-req "stat")
         settings (-> resp :body read-json)]

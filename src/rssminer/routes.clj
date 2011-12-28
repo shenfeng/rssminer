@@ -42,7 +42,7 @@
 
 (defroutes api-routes
   (context "/dashboard" []
-           (JGET "/:section" [] dashboard/get-data)
+           (JGET "/stat" [] dashboard/get-data)
            (JPOST "/" [] dashboard/settings))
   (context "/subs" []
            (JPOST "/add" [] subscription/add-subscription)
@@ -63,7 +63,6 @@
   (GET "/f/o/:id" [] feed/get-orginal)
   (GET "/oauth2callback" [] oauth2callback)
   (GET "/a" [] reader/app-page)
-  (GET "/v1" [] reader/v1-page)
   (context "/dashboard" []
            (GET "/" [] reader/dashboard-page))
   (context "/login" []

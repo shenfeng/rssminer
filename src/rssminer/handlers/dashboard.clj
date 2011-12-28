@@ -7,25 +7,14 @@
   (:import [rssminer.task HttpTaskRunner]))
 
 (defn get-data [req]
-  (case (-> req :params :section)
-    "rsslinks"
-    {:caption "Newly added Rss Links"
-     :data (or (db/get-rss-links) [])}
-    "pending"
-    {:caption "Pending Links"
-     :data (or (db/get-pending-links) [])}
-    "crawled"
-    {:caption "Cawled Links"
-     :data (or (db/get-crawled-links) [])}
-    "stat"
-    {:crawler_links (db/crawler-links-count)
-     :rss_links (db/rss-links-count)
-     :feeds (db/feeds-count)
-     :crawler (c/crawler-stat)
-     :crawler_running (c/running?)
-     :fetcher (f/fetcher-stat)
-     :fetcher_running (f/running?)
-     :h2 (d/running?)}))
+  {:crawler_links (db/crawler-links-count)
+   :rss_links (db/rss-links-count)
+   :feeds (db/feeds-count)
+   :crawler (c/crawler-stat)
+   :crawler_running (c/running?)
+   :fetcher (f/fetcher-stat)
+   :fetcher_running (f/running?)
+   :h2 (d/running?)})
 
 (defn settings [req]
   (let [{:keys [which command]} (:body req)]

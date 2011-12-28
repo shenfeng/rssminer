@@ -37,7 +37,7 @@
   (.addShutdownHook (Runtime/getRuntime) shutdown-hook)
   (use-h2-database! db-path :trace h2-trace)
   (set-redis-client redis-host)
-  (swap! rssminer-conf assoc :profile (keyword profile)
+  (swap! rssminer-conf assoc :profile profile
          :crawler-queue crawler-queue
          :fetcher-queue fetcher-queue
          :fetch-size fetch-size

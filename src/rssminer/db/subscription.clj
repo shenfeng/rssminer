@@ -12,12 +12,6 @@
                 FROM feeds WHERE rss_link_id = ?" rss-id])
       first :count))
 
-(defn fetch-subs-by-user [user-id]
-  (h2-query ["SELECT us.rss_link_id AS id, l.title, l.url
-              FROM user_subscription us join rss_links l
-              ON l.id = us.rss_link_id WHERE us.user_id = ?
-              AND l.title IS NOT NULL" user-id]))
-
 (defn fetch-user-subs [user-id]
   (h2-query ["SELECT us.rss_link_id AS id, us.title, l.url,
               us.group_name, us.sort_index,

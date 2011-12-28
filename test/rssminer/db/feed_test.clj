@@ -7,10 +7,6 @@
 
 (use-fixtures :each app-fixture (mk-feeds-fixtrue "test/scottgu-atom.xml"))
 
-(deftest test-fetch-for-nav
-  (let [unread (fetch-unread-meta (:id user1))]
-    (is (= 1 (count unread)))))
-
 (deftest test-update-rss-link
   (let [r1 (h2-insert-and-return :rss_links {:url "http://link1.com"})
         r2 (h2-insert-and-return :rss_links {:url "http://link2.com"})

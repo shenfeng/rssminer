@@ -3,9 +3,6 @@
   (:use [rssminer.util :only [serialize-to-js]])
   (:require [net.cgrand.enlive-html :as html]))
 
-(deftemplate v1-page "templates/app-v1.html" [data]
-  [:head] (html/append (html/html-snippet (serialize-to-js data))))
-
 (deftemplate app-page "templates/app.html" [data]
   [:head] (html/append (html/html-snippet (serialize-to-js data))))
 

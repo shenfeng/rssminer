@@ -48,23 +48,6 @@
   (first
    (h2-query ["SELECT original, link FROM feeds WHERE id = ?" id] :convert)))
 
-(defn fetch-unread-meta [user-id]
-  (h2-query ["SELECT c.* FROM (
-       SELECT f.id as f_id, us.rss_link_id, f.published_ts FROM
-       feeds f JOIN user_subscription us ON us.rss_link_id = f.rss_link_id
-       WHERE us.user_id = ? ) AS c
-       LEFT OUTER JOIN user_feed uf ON uf.feed_id = c.f_id
-       WHERE (uf.read = FALSE OR uf.read IS NULL)" user-id]))
-
-(defn fetch-unread [user-id limit offset]
-  (h2-query ["SELECT c.* FROM (
-       SELECT f.id, f.author, f.link, f.title, f.tags,f.published_ts FROM
-       feeds f JOIN user_subscription us ON us.rss_link_id = f.rss_link_id
-       WHERE us.user_id = ? ) AS c
-       LEFT OUTER JOIN user_feed uf ON uf.feed_id = c.id
-       WHERE (uf.read = FALSE OR uf.read IS NULL)
-       LIMIT ? offset ?" user-id limit offset]))
-
 (defn- safe-update-rss-link [id data]
   (with-h2
     (update-values :rss_links ["id = ?" id] data)))
