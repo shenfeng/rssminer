@@ -60,7 +60,7 @@ CREATE TABLE user_subscription (
 CREATE TABLE feeds (
   id INTEGER PRIMARY KEY auto_increment,
   author VARCHAR,
-  link VARCHAR UNIQUE,
+  link VARCHAR,
   title VARCHAR,
   summary CLOB,
   original CLOB,
@@ -68,7 +68,8 @@ CREATE TABLE feeds (
   updated_ts INTEGER,
   published_ts INTEGER,
   rss_link_id INTEGER
-             REFERENCES rss_links ON UPDATE CASCADE ON DELETE CASCADE
+             REFERENCES rss_links ON UPDATE CASCADE ON DELETE CASCADE,
+  UNIQUE(link, rss_link_id)
 );
 
 ----

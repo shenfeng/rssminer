@@ -6,8 +6,7 @@
                   [util :only [ignore-error]])
         [clojure.string :only [blank?]]
         [clojure.tools.logging :only [info trace]]
-        [clojure.java.jdbc :only [with-connection insert-record
-                                  update-values delete-rows]]))
+        [clojure.java.jdbc :only [insert-record update-values delete-rows]]))
 
 (defn insert-pref [user-id feed-id pref]
   (with-h2
@@ -28,11 +27,11 @@
                                         (assoc feed
                                           :rss_link_id rss-id))))]
           (index-feed id feed))
-        ;; TODO (link, rss_link_id) is uniqe
-        (catch RuntimeException e       ;link is uniqe
-          ;; (trace "update" link)
-          (with-connection @h2-db-factory
-            (update-values :feeds ["link=?" link] feed)))))))
+        (catch RuntimeException e       ;(link, rss_link_id) is unique
+          (trace "update" rss-id link)
+          (with-h2
+            (update-values :feeds ["link=? and rss_link_id = ?"
+                                   link rss-id] feed)))))))
 
 (defn fetch-by-rssid [user-id rss-id limit offset]
   (h2-query ["SELECT f.id, author, link, title, tags,
