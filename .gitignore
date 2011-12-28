@@ -18,3 +18,4 @@ public/js/*min.js
 .idea/
 .emacs.desktop*
 /tags
+/TAGS

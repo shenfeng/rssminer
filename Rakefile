@@ -138,6 +138,12 @@ task :test => :prepare do
   sh 'rm classes -r && lein javac && lein test'
 end
 
+desc "Generate TAGS using etags for clj"
+task :etags do
+  rm_rf 'TAGS'
+  sh %q"find . \! -name '.*' -name '*.clj' | xargs etags --regex='/[ \t\(]*def[a-z]* \([a-z-!0-9?]+\)/\1/'"
+end
+
 namespace :js do
   desc "Generate template js resouces"
   task :tmpls => :html_compress do
