@@ -7,7 +7,7 @@
         [clojure.string :only [blank?]]
         [clojure.tools.logging :only [info trace]]
         [clojure.java.jdbc :only [with-connection insert-record
-                                  update-values]]))
+                                  update-values delete-rows]]))
 
 (defn insert-pref [user-id feed-id pref]
   (with-h2
@@ -28,8 +28,9 @@
                                         (assoc feed
                                           :rss_link_id rss-id))))]
           (index-feed id feed))
+        ;; TODO (link, rss_link_id) is uniqe
         (catch RuntimeException e       ;link is uniqe
-          (trace "update" link)
+          ;; (trace "update" link)
           (with-connection @h2-db-factory
             (update-values :feeds ["link=?" link] feed)))))))
 
@@ -65,9 +66,23 @@
        WHERE (uf.read = FALSE OR uf.read IS NULL)
        LIMIT ? offset ?" user-id limit offset]))
 
-(defn update-rss-link [id data]
+(defn- safe-update-rss-link [id data]
   (with-h2
     (update-values :rss_links ["id = ?" id] data)))
+
+(defn update-rss-link [id data]
+  (if-let [url (:url data)]
+    (if-let [saved-id (-> (h2-query ["select id from rss_links where url = ?"
+                                     (:url data)]) first :id)]
+      (do
+        (with-h2
+          (update-values :user_subscription ["rss_link_id = ?" id]
+                         {:rss_link_id saved-id})
+          (update-values :feeds ["rss_link_id = ?" id]
+                         {:rss_link_id saved-id})
+          (delete-rows :rss_links ["id = ?" id])))
+      (safe-update-rss-link id data))
+    (safe-update-rss-link id data)))
 
 (defn save-feed-original [id original]
   (with-h2 (update-values :feeds ["id = ?" id] {:original original})))

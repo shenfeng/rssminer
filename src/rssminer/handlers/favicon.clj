@@ -2,6 +2,7 @@
   (:use [rssminer.db.util :only [h2-query h2-insert]]
         [ring.util.response :only [redirect]]
         (rssminer [http :only [client]]
+                  [util :only [ignore-error]]
                   [config :only [rssminer-conf]]))
   (:import org.jboss.netty.handler.codec.http.HttpResponse
            rssminer.async.FaviconFuture
@@ -23,9 +24,10 @@
                          (fn [resp]
                            (let [code (-> resp .getStatus .getCode)
                                  data (-> resp .getContent .array)]
-                             (h2-insert :favicon {:hostname hostname
-                                                  :code code
-                                                  :favicon data})
+                             (ignore-error
+                              (h2-insert :favicon {:hostname hostname
+                                                   :code code
+                                                   :favicon data}))
                              (if (= 200 code)
                                {:status 200
                                 :headers headers

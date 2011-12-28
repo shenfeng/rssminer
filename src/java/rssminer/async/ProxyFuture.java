@@ -11,10 +11,14 @@ import me.shenfeng.http.HttpResponseFuture;
 
 import org.jboss.netty.handler.codec.http.HttpHeaders.Names;
 import org.jboss.netty.handler.codec.http.HttpResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import clojure.lang.IFn;
 
 public class ProxyFuture extends AbstractFuture {
+
+    static Logger logger = LoggerFactory.getLogger(ProxyFuture.class);
 
     private final Map<String, Object> headers;
 
@@ -31,10 +35,10 @@ public class ProxyFuture extends AbstractFuture {
     private void doIt(String uri) throws URISyntaxException {
         if (uri == null)
             throw new NullPointerException("url can not be null");
-        if (++retryCount < 4) {
-            HttpResponseFuture f = client.execGet(new URI(uri), headers,
-                    proxy);
-            f.addListener(new Handler(f));
+        if (++retryCount < MAX_RETRY) {
+            URI u = new URI(uri);
+            HttpResponseFuture f = client.execGet(u, headers, proxy);
+            f.addListener(new Handler(f, u));
         } else {
             done(HttpClientConstant.UNKOWN_ERROR);
         }
@@ -42,9 +46,11 @@ public class ProxyFuture extends AbstractFuture {
 
     class Handler implements Runnable {
         private HttpResponseFuture f;
+        private URI base;
 
-        public Handler(HttpResponseFuture f) {
+        public Handler(HttpResponseFuture f, URI base) {
             this.f = f;
+            this.base = base;
         }
 
         public void run() {
@@ -52,11 +58,18 @@ public class ProxyFuture extends AbstractFuture {
                 HttpResponse r = f.get();
                 int code = r.getStatus().getCode();
                 if (code == 301 || code == 302) { // handle redirect
-                    doIt(r.getHeader(Names.LOCATION));
+                    String loc = r.getHeader(Names.LOCATION);
+                    if (loc != null) {
+                        doIt(base.resolve(loc).toString());
+                    } else {
+                        logger.debug("null location in header");
+                        done(HttpClientConstant.UNKOWN_ERROR);
+                    }
                 } else {
                     done(r);
                 }
             } catch (Exception e) {
+                logger.trace("{} : {}", base, e);
                 done(HttpClientConstant.UNKOWN_ERROR);
             }
         };

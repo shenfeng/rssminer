@@ -2,7 +2,7 @@
   (:use [rssminer.util :only [assoc-if]]
         [clojure.tools.logging :only [error trace]])
   (:require [clojure.string :as s])
-  (:import [com.sun.syndication.io SyndFeedInput]
+  (:import [com.sun.syndication.io SyndFeedInput ParsingFeedException]
            java.util.Date
            java.io.StringReader))
 
@@ -55,5 +55,7 @@
          :published_ts (:publishedDate feed)
          :description (-> feed :description trim)
          :entries (map parse-entry (:entries feed))})
+      (catch ParsingFeedException e
+        (trace "ParsingFeedException" e))
       (catch Exception e
         (trace e "parse rss error")))))

@@ -11,6 +11,7 @@ import clojure.lang.IFn;
 
 public class AbstractFuture implements ListenableFuture {
 
+    static final int MAX_RETRY = 5;
     private volatile Runnable listener;
     protected IFn callback;
     protected volatile HttpResponse resp;

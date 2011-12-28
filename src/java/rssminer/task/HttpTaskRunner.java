@@ -60,7 +60,7 @@ public class HttpTaskRunner {
 
     class Worker implements Runnable {
 
-        private long lastBulkCheckTs = currentTimeMillis();
+        private long lastBulkCheckTs = 0;
 
         void enqueue(IHttpTask t) {
             if (mDnsPrefecher != null)
@@ -137,6 +137,12 @@ public class HttpTaskRunner {
             } else if (resp.getStatus().getCode() == 302) {
                 handle302(task, resp); // 301 is handled by clojure
             } else {
+                if (resp.getStatus().getCode() == 301) {
+                    // easier for latter code to deal
+                    resp.setHeader(LOCATION,
+                            task.getUri().resolve(resp.getHeader(LOCATION))
+                                    .toString());
+                }
                 task.doTask(resp);
             }
         }
@@ -149,7 +155,7 @@ public class HttpTaskRunner {
                     task.doTask(NULL_LOCATION);
                     return;
                 }
-                URI loc = new URI(l);
+                URI loc = task.getUri().resolve(l);
                 if (mLinkCheker.keep(loc)) {
                     RetryHttpTask retry = new RetryHttpTask(task, null, loc);
                     if (retry.retryTimes() < 4) {
@@ -176,7 +182,6 @@ public class HttpTaskRunner {
                     try {
                         HttpResponse resp = future.get();
                         recordStat(task, resp);
-                        logger.trace("{} {}", resp.getStatus(), task.getUri());
                         consumResponse(task, resp);
                     } catch (InterruptedException ignore) {
                     } catch (Exception e) {

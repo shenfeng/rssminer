@@ -23,9 +23,8 @@
 (defonce ^{:tag HttpClient}
   client (HttpClient. (doto (HttpClientConfig.)
                         (.setWorkerThread 1) ; 1 is ok
-                        ;; (.setAcceptedContentTypes '("text" "xml"))
                         (.setUserAgent conf/rssminer-agent)
-                        (.setMaxLength (* 512 1024))   ; 512k
+                        (.setMaxLength (* 1024 1024))   ; 1M
                         (.setMaxChunkSize (* 32 1024)) ; tricky
                         (.setTimerInterval 4000) ; 4s check timeout
                         (.setConnectionTimeOutInMs 12000) ;12s

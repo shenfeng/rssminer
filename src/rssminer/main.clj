@@ -62,7 +62,7 @@
              ["-p" "--port" "Port to listen" :default 9090 :parse-fn to-int]
              ["--worker" "Http worker count" :default 1 :parse-fn to-int]
              ["--crawler-queue" "queue size" :default 200 :parse-fn to-int]
-             ["--fetcher-queue" "queue size" :default 100 :parse-fn to-int]
+             ["--fetcher-queue" "queue size" :default 20 :parse-fn to-int]
              ["--fetch-size" "Bulk fetch size" :default 100 :parse-fn to-int]
              ["--profile" "dev or prod" :default :dev :parse-fn keyword]
              ["--redis-host" "redis for session store"

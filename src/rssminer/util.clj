@@ -98,10 +98,10 @@
      value))
 
 (defn next-check [last-interval status headers]
-  (if-let [location (headers "Location")]
+  (if-let [location (headers :location)]
     {:url location :next_check_ts (rand-int 100000)}
     (let [interval (if (= 200 status)
-                     (max 5400 (int (/ last-interval 1.2)))
+                     (max 5400 (int (/ last-interval 1.2))) ; min 1.5h
                      (min (int (* last-interval 1.2)) (* 3600 24 20)))]
       {:check_interval interval
        :next_check_ts (+ (now-seconds) interval)})))

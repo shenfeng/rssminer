@@ -30,9 +30,11 @@
         updated (assoc-if (next-check check_interval status headers)
                           :last_modified (:last-modified headers)
                           :alternate (:link feeds)
+                          :last_status status
                           :description (:description feeds)
                           :title (:title feeds))]
-    (trace status url "(" (-> feeds :entries count) " feeds)")
+    (trace id status url
+           (str "[" (-> feeds :entries count) "] feeds"))
     (db/update-rss-link id updated)
     (when feeds (db/save-feeds feeds id))))
 
@@ -63,7 +65,7 @@
                            (.setClient client)
                            (.setLinks links)
                            (.setBulkCheckInterval (* 15  60  1000)) ; 15 min
-                           (.setBlockingTimeOut 5) ; 5 second
+                           (.setBlockingTimeOut 20) ; 15 second
                            (.setBulkProvider (mk-provider))
                            (.setBlockingProvider (mk-blocking-provider))
                            (.setQueueSize (:fetcher-queue @rssminer-conf))
