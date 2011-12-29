@@ -30,3 +30,25 @@
   (let [feeds (h2-query ["select * from feeds"])]
     (is (empty? (filter (fn [f] (= "one" (:author f))) feeds)))
     (is (= 2 (count feeds)))))
+
+
+(deftest test-insert-vote
+  (let [fid (-> (h2-query ["select id from feeds"]) first :id)]
+    (insert-vote (:id user1) fid 1)
+    (is (= 1 (-> (h2-query
+                  ["SELECT vote FROM user_feed WHERE
+                    user_id = ? AND feed_id = ?" (:id user1) fid])
+                 first :vote)))
+    (insert-vote (:id user1) fid -1)
+    (is (= -1 (-> (h2-query
+                   ["SELECT vote FROM user_feed WHERE
+                    user_id = ? AND feed_id = ?" (:id user1) fid])
+                  first :vote)))))
+
+(deftest test-insert-read-date
+  (let [fid (-> (h2-query ["select id from feeds"]) first :id)]
+    (mark-as-read (:id user1) fid)
+    (is (< 1 (-> (h2-query
+                  ["SELECT read_date FROM user_feed WHERE
+                    user_id = ? AND feed_id = ?" (:id user1) fid])
+                 first :read_date)))))

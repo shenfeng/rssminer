@@ -200,6 +200,17 @@
     }
   }
 
+  function  isNeedProxy (link) {
+    var h = hostname(link);
+    var reseted = ["feedproxy", "wordpress", "blogspot", 'mikemccandless'];
+    for(var i = 0; i < reseted.length; i++) {
+      if(h.indexOf(reseted[i]) != -1) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   function imgPath (url) {
     return '/fav?h=' + encodeURIComponent(hostname(url));
   }
@@ -215,6 +226,7 @@
     iconError: imgError,
     util: {
       imgPath: imgPath,
+      isNeedProxy: isNeedProxy,
       delegateEvents: delegateEvents,
       hashRouter: hashRouter,
       hostname: hostname,

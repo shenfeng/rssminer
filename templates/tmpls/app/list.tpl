@@ -1,5 +1,6 @@
 {{#feeds}}
-  <li class="{{cls}}" id="feed-{{id}}">
+  <li class="feed {{cls}}" data-link={{link}}
+    id="feed-{{id}}" data-id="{{id}}">
     <a href="#{{href}}">
       <span class="indicator"></span>
       <span class="title">{{title}}</span>

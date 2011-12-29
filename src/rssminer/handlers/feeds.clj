@@ -9,17 +9,21 @@
            org.jboss.netty.handler.codec.http.HttpResponse
            java.net.URI))
 
-(defn save-pref [req]
-  (let [{:keys [feed-id pref]} (:params req)
+(defn user-vote [req]
+  (let [fid (-> req :params :feed-id to-int)
+        vote (-> req :body :vote to-int)
         user-id (:id (session-get req :user))]
-    (db/insert-pref user-id feed-id
-                    (Boolean/parseBoolean pref))))
+    (db/insert-vote user-id fid vote)))
+
+(defn mark-as-read [req]
+  (let [fid (-> req :params :feed-id to-int)
+        user-id (:id (session-get req :user))]
+    (db/mark-as-read user-id fid)))
 
 (defn get-by-subscription [req]
-  (let [{:keys [rss-id limit offset] :or {limit 30 offset 0}} (:params req)]
-    (db/fetch-by-rssid (:id (session-get req :user))
-                       (to-int rss-id)
-                       (to-int limit)
+  (let [{:keys [rss-id limit offset] :or {limit 30 offset 0}} (:params req)
+        uid (:id (session-get req :user))]
+    (db/fetch-by-rssid uid (to-int rss-id) (to-int limit)
                        (to-int offset))))
 
 (defn get-by-id [req]
@@ -44,7 +48,7 @@
                                           "text/html; charset=utf-8"}
                                 :body (rewrite-html body link proxy)})
                              (do
-                               (debug resp)
+                               (debug link resp)
                                {:status 404})))))})
 
 (defn get-orginal [req]

@@ -8,15 +8,37 @@
         [clojure.tools.logging :only [info trace]]
         [clojure.java.jdbc :only [insert-record update-values delete-rows]]))
 
-(defn insert-pref [user-id feed-id pref]
-  (with-h2
-    (try (insert-record :user_feed {:user_id user-id
-                                    :feed_id feed-id
-                                    :pref pref})
-         (catch Exception e             ;unique key use_id & feed_id
-           (update-values :user_feed
-                          ["user_id = ? AND feed_id = ?" user-id feed-id]
-                          {:pref pref})))))
+(defn insert-vote [user-id feed-id vote]
+  (let [old  (-> (h2-query
+                  ["SELECT vote FROM user_feed
+                    WHERE user_id = ? AND feed_id =?" user-id feed-id])
+                 first :vote)]
+    (if (nil? old)
+      (with-h2
+        (insert-record :user_feed {:user_id user-id
+                                   :feed_id feed-id
+                                   :vote vote}))
+      (when (not= old vote)
+        (with-h2
+          (update-values :user_feed
+                         ["user_id = ? AND feed_id = ?" user-id feed-id]
+                         {:vote vote}))))))
+
+(defn mark-as-read [user-id feed-id]
+  (let [old  (-> (h2-query
+                  ["SELECT read_date FROM user_feed
+                    WHERE user_id = ? AND feed_id =?" user-id feed-id])
+                 first :read_date)]
+    (if (nil? old)
+      (with-h2
+        (insert-record :user_feed {:user_id user-id
+                                   :feed_id feed-id
+                                   :read_date (now-seconds)}))
+      (when (= old -1)
+        (with-h2
+          (update-values :user_feed
+                         ["user_id = ? AND feed_id = ?" user-id feed-id]
+                         {:read_date (now-seconds)}))))))
 
 (defn save-feeds [feeds rss-id]
   (doseq [{:keys [link] :as feed} (:entries feeds)]
@@ -35,11 +57,12 @@
 
 (defn fetch-by-rssid [user-id rss-id limit offset]
   (h2-query ["SELECT f.id, author, link, title, tags,
-                     published_ts, uf.read
-              FROM feeds f LEFT OUTER JOIN user_feed uf ON uf.feed_id = f.id
-              WHERE rss_link_id = ? AND
-             (uf.user_id = ? or uf.user_id IS NULL) LIMIT ? OFFSET ?"
-             rss-id user-id limit offset] :convert))
+                     published_ts, uf.read_date, uf.vote FROM feeds f
+              LEFT OUTER JOIN user_feed uf ON uf.feed_id = f.id
+              WHERE rss_link_id = ?
+              AND  (uf.user_id = ? or uf.user_id IS NULL)
+              LIMIT ? OFFSET ?"
+             rss-id user-id limit offset]))
 
 (defn fetch-by-id [id]
   (first (h2-query ["SELECT * FROM feeds WHERE id = ?" id] :convert)))

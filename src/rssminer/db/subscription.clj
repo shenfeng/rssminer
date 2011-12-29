@@ -14,7 +14,7 @@
 
 (defn fetch-user-subs [user-id]
   (h2-query ["SELECT us.rss_link_id AS id, us.title, l.url,
-              us.group_name, us.sort_index,
+              us.group_name, us.sort_index, l.title as o_title,
              (SELECT COUNT(*) FROM feeds WHERE
                           rss_link_id = us.rss_link_id) AS count
               FROM user_subscription us join rss_links l

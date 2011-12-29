@@ -1,19 +1,28 @@
 @import "css3";
 
 $nav_width: 265px;
-$footer_height: 210px;
+$footer_height: 230px;
 
 .unread-like { background-color: #559F4D; color: #ffffff; }
 .unread-neutral { background-color: #F9C72A; color: #303030; }
 .unread-dislike { background-color: #CC2A2E; color: #ffffff; }
 
-.unread {
+.feed {
     &.like .indicator { background: #559F4D; }
     &.neutral .indicator { background: #F9C72A; }
     &.dislike .indicator { background: #CC2A2E; }
+    .title {
+        max-width: 800px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+}
+.unread {
+    a { color: #111; }
 }
 .read {
-    color: #777;
+    a { color: #777; }
     .indicator { background: #ccc; }
 }
 
@@ -202,7 +211,13 @@ span.vote {
     .info {
         cursor: default;
         margin-left: 10em;
-        h5 { margin: 0; }
+        h5 {
+            max-width: 400px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            margin: 0;
+        }
     }
     .prev-next { float: right; margin-right: 2em; }
     span { visibility: visible; }

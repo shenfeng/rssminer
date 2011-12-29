@@ -52,7 +52,8 @@
   (JGET "/search" [] reader/search)
   (context "/feeds/:feed-id" []
            (JGET "/" [] feed/get-by-id)
-           (JPOST "/pref" [] feed/save-pref))
+           (JPOST "/vote" [] feed/user-vote)
+           (JPOST "/read" [] feed/mark-as-read))
   (JPOST "/import/opml-import" [] opml-import)
   (JGET "/export/opml-export" [] "TODO"))
 

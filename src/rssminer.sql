@@ -78,9 +78,8 @@ create table user_feed (
             REFERENCES users ON UPDATE CASCADE ON DELETE CASCADE,
     feed_id INTEGER NOT NULL
             REFERENCES feeds ON UPDATE CASCADE ON DELETE CASCADE,
-    read BOOLEAN default false,
-    pref BOOLEAN default null,
-    read_date INTEGER,
+    vote INTEGER default 0,    -- like 1, dislike -1, no pref 0
+    read_date INTEGER default -1, -- the reading date, -1, unread
     UNIQUE(user_id, feed_id),
 )
 
