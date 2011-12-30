@@ -26,7 +26,13 @@ $footer_height: 230px;
     .indicator { background: #ccc; }
 }
 
-.resizer { cursor: s-resize; }
+div.row-resize {
+    cursor: row-resize;
+    height: 4px;
+    width: 100%;
+    background: #ccc;
+    &:hover { background: #bbb; }
+}
 
 html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
 
@@ -89,6 +95,7 @@ html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
     .wrapper { overflow-x: hidden; overflow-y: auto; }
     a { text-decoration: none; }
     ul { list-style: none; padding: 0; margin: 0; }
+    .sub-list > li.collapse  > ul { display: none; }
     .folder, .item {
         cursor: pointer;
         &.selected { background: #ccc; }
@@ -191,7 +198,7 @@ span.vote {
     list-style: none;
     display: inline-block;
     li {
-        background: #bbb;
+        background: #d1d1d1;
         display: inline-block;
         padding: 2px 4px 1px;
         @include border-radius(3px);
@@ -234,7 +241,6 @@ span.vote {
             background: #ccc;
         }
     }
-    border-bottom: 3px solid #bbb;
     border-top: 1px solid #bbb;
 }
 

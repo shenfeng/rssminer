@@ -1,8 +1,9 @@
 (ns rssminer.middleware
-  (:use [rssminer.util :only [json-response session-get]]
+  (:use [rssminer.util :only [session-get]]
         [ring.util.response :only [redirect]]
         [clojure.tools.logging :only [debug error]]
-        [compojure.core :only [GET POST DELETE PUT]])
+        [compojure.core :only [GET POST DELETE PUT]]
+        [clojure.data.json :only [json-str]])
   (:require [rssminer.config :as conf]
             [clojure.data.json :as json])
   (:import java.io.File))
@@ -46,17 +47,18 @@
                                              (slurp body))]
                             (when (seq body-str)
                               (json/read-json body-str))))
-          resp-obj (try ;; easier for js to understand if this is an 500
-                     (handler (assoc req
-                                :body json-req-body))
-                     (catch Exception e
-                       (error e "api error\n Request: " req)
-                       {:status 500
-                        :message "Opps, an error occured"}))
-          status (:status resp-obj)]
-      (if (number? status)
-        (json-response status (dissoc resp-obj :status))
-        (json-response 200 resp-obj)))))
+          resp (try ;; easier for js to understand if this is an 500
+                 (handler (assoc req
+                            :body json-req-body))
+                 (catch Exception e
+                   (error e "api error\n Request: " req)
+                   {:status 500
+                    :body {:message "Opps, an error occured"}}))]
+      (update-in (merge {:status 200
+                         :headers {"Content-Type"
+                                   "application/json; charset=utf-8"}}
+                        (if (contains? resp :body) resp {:body resp}))
+                 [:body] json-str))))
 
 (defn wrap-request-logging-in-dev [handler]
   (if (conf/in-dev?)

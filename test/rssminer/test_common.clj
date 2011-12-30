@@ -30,17 +30,19 @@
   (def user2 (create-user test-user2))
   (test-fn))
 
+(def session-keys [:id :email :name :conf])
+
 (def auth-app
   (fn [& args]
     (binding [session-get (fn [req key]
-                            (if (= key :user) user1
+                            (if (= key :user) (select-keys user1 session-keys)
                                 (throw (Exception. "session-get error"))))]
       (apply (app) args))))
 
 (def auth-app2
   (fn [& args]
     (binding [session-get (fn [req key]
-                            (if (= key :user) user2
+                            (if (= key :user) (select-keys user2 session-keys)
                                 (throw (Exception. "session-get error"))))]
       (apply (app) args))))
 

@@ -107,8 +107,7 @@ task :prepare_prod => [:css_compile, "js:minify"]
 
 desc "lein swank"
 task :swank do
-  sh "echo -n \"\033]0;rssminer lein swank\007\"" +
-    " && rm classes -rf && lein javac && lein swank"
+  sh "rm classes -rf && lein javac && lein swank"
 end
 
 desc "Run server in dev profile"
@@ -184,7 +183,7 @@ end
 namespace :watch do
   desc 'Watch css, html'
   task :all => [:deps, :css_compile, "js:tmpls"] do
-    sh "echo -n \"\033]0;rssminer rake watch\007\""
+    # sh "echo -n \"\033]0;rssminer rake watch\007\""
     t1 = Thread.new do
       sh 'while inotifywait -r -e modify scss/; do rake css_compile; done'
     end

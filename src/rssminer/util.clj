@@ -31,12 +31,6 @@
 (extend Timestamp Write-JSON
         {:write-json write-json-date})
 
-(defn json-response
-  "Construct a JSON HTTP response."
-  [status body] {:status status
-                 :headers {"Content-Type" "application/json; charset=utf-8"}
-                 :body (json-str body)})
-
 (defn ^:dynamic session-get [req key] ;; for test code easy mock
   (-> req :session key))
 

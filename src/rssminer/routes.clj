@@ -50,6 +50,7 @@
            (JPOST "/:id" [] subscription/customize-subscription)
            (JDELETE "/:id" [] subscription/unsubscribe))
   (JGET "/search" [] reader/search)
+  (JPOST "/user/pref" [] user/save-pref)
   (context "/feeds/:feed-id" []
            (JGET "/" [] feed/get-by-id)
            (JPOST "/vote" [] feed/user-vote)

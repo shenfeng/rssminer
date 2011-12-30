@@ -24,7 +24,7 @@
                {:user_id user-id
                 :rss_link_id (:id subscription)})]
     {:status 409                        ;readd is not allowed
-     :message "Already subscribed"}
+     :body {:message "Already subscribed"}}
     (let [us (h2-insert-and-return :user_subscription
                                    {:user_id user-id
                                     :group_name group-name

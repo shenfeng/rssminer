@@ -32,7 +32,8 @@
 
 (defn- rewrite-html [original link proxy]
   (if proxy
-    (Utils/rewrite original link (:proxy-server @rssminer-conf))
+    (Utils/rewrite original link (str
+                                  (:proxy-server @rssminer-conf)  "/p?u="))
     (Utils/rewrite original link)))
 
 (defn- fetch-and-store-orginal [id link proxy]

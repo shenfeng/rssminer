@@ -1,11 +1,9 @@
 {{#subs}}
-  <li>
-    <a href="">
-      <div class="folder">
-        <img src="/imgs/folder.png"/>
-        <span>{{tag}}</span>
-      </div>
-    </a>
+  <li {{#collapse}} class="collapse" {{/collapse}}>
+    <div class="folder" data-name="{{tag}}">
+      <img src="/imgs/folder.png"/>
+      <span>{{tag}}</span>
+    </div>
     <ul>
       {{#list}}
         <li class="item" id="item-{{id}}">

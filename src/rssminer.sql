@@ -8,6 +8,7 @@ CREATE TABLE users (
   id INTEGER PRIMARY KEY auto_increment,
   email VARCHAR UNIQUE,
   name VARCHAR,
+  conf VARCHAR,                 -- json string
   password VARCHAR,
   authen_token VARCHAR,
   added_ts INTEGER              -- interger is easier to serialize
@@ -20,7 +21,7 @@ create table crawler_links (
   domain VARCHAR UNIQUE,        --assume one domain, one rss
   added_ts TIMESTAMP default now(),
   title VARCHAR,
-  next_check_ts INTEGER default 10,
+  next_check_ts INTEGER default 1,
   last_modified VARCHAR,
   check_interval INTEGER default 60 * 60 * 24 * 30, -- in seconds, 1 month
   referer_id INTEGER REFERENCES crawler_links
@@ -67,6 +68,7 @@ CREATE TABLE feeds (
   tags VARCHAR,
   updated_ts INTEGER,
   published_ts INTEGER,
+  fetched_ts INTEGER,
   rss_link_id INTEGER
              REFERENCES rss_links ON UPDATE CASCADE ON DELETE CASCADE,
   UNIQUE(link, rss_link_id)
@@ -87,7 +89,7 @@ create table user_feed (
 create table favicon (
      hostname VARCHAR primary key,
      favicon BINARY,
-     code INTEGER
+     code INTEGER               -- fetch result's http status code
 )
 
 ----

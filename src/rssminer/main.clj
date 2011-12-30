@@ -12,7 +12,8 @@
                   [util :only [to-int]]
                   [fetcher :only [start-fetcher stop-fetcher]]
                   [crawler :only [start-crawler stop-crawler]]
-                  [config :only [rssminer-conf netty-option socks-proxy]])))
+                  [config :only [rssminer-conf netty-option socks-proxy]]))
+  (import java.net.Proxy))
 
 (defonce server (atom nil))
 
@@ -43,10 +44,9 @@
          :fetch-size fetch-size
          :redis-host redis-host
          :proxy-server (if (= :dev profile)
-                         (str proxy-server ":" port "/p?u=")
-                         (str proxy-server "/p?u="))
+                         (str proxy-server ":" port) proxy-server)
          :dns-prefetch dns
-         :proxy (when proxy socks-proxy))
+         :proxy (if proxy socks-proxy Proxy/NO_PROXY))
   (reset! server (run-netty (app) {:port port
                                    :worker worker
                                    :netty netty-option}))

@@ -211,10 +211,6 @@
     return false;
   }
 
-  function imgPath (url) {
-    return '/fav?h=' + encodeURIComponent(hostname(url));
-  }
-
   function imgError (e) {
     e.src="/imgs/16px-feed-icon.png";
   }
@@ -225,7 +221,6 @@
     notif: notif,
     iconError: imgError,
     util: {
-      imgPath: imgPath,
       isNeedProxy: isNeedProxy,
       delegateEvents: delegateEvents,
       hashRouter: hashRouter,

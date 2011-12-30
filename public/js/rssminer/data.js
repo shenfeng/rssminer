@@ -1,6 +1,7 @@
 // functions to transform data
 (function () {
-  var utils = RM.util;
+  var utils = RM.util,
+      user = _RM_ && _RM_.user;
 
   var by = function (name, minor, reverse) { // reverse when -1
     reverse = reverse || -1;
@@ -33,22 +34,32 @@
     }
   }
 
+  function imgPath (url) {
+    var host = encodeURIComponent(utils.hostname(url));
+    return _RM_.proxy_server + '/fav?h=' + host;
+  }
+
   function parseSubs (subs) {
     var grouped = _.groupBy(subs, 'group_name'),
-        result = [];
+        result = [],
+        collapsed = (user && user.conf && user.conf.nav) || [];
     for(var tag in grouped) {
       var list = _(grouped[tag]).chain()
             .sortBy(function (i) { return i.sort_index; })
             .map(function(i) {
               return {
-                img: utils.imgPath(i.url),
+                img: imgPath(i.url),
                 title: i.title || i.o_title, // original title
                 href: 'read/' + i.id,
                 neutral: i.count,
                 id: i.id
               };
             }).value();
-      result.push({tag: tag, list: list});
+      result.push({
+        tag: tag,
+        list: list,
+        collapse: _.include(collapsed, tag)
+      });
     }
     result = _.sortBy(result, function (i) { return i.tag.toLowerCase(); });
     return result;

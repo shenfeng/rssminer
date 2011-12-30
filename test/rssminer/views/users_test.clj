@@ -1,8 +1,9 @@
 (ns rssminer.views.users-test
   (:use clojure.test
-        (rssminer [test-common :only [test-app h2-fixture]])))
+        (rssminer [test-common :only [test-app app-fixture auth-app]])
+        [clojure.data.json :only [json-str]]))
 
-(use-fixtures :each h2-fixture)
+(use-fixtures :each app-fixture)
 
 (deftest test-login-sign-page
   (let [resp (test-app {:uri "/login"
@@ -37,3 +38,12 @@
                  (first ((:headers remerber-me) "Set-Cookie"))))
     (is (= 302 (:status signup)))
     (is (= 302 (:status login)))))
+
+(deftest test-save-pref
+  (let [resp (auth-app {:uri "/api/user/pref"
+                        :request-method :post
+                        :body (json-str {:nav [:tag1 :tag1]
+                                         :width 100
+                                         :expire 60})})]
+    (is (= 204 (:status resp)))))
+

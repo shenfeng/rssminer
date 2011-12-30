@@ -29,7 +29,7 @@
     (if (and file (> (.length file) 10))
       (subscribe-all user-id (Parser/parseOPML (slurp file)))
       {:status 400
-       :message "Please choose a file"})))
+       :body {:message "Please choose a file"}})))
 
 (defn oauth2callback [req]
   (let [code (-> req :params :code)

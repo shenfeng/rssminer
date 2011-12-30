@@ -35,7 +35,7 @@
       if(layout.select('#feed-list', me)) {
         var src = link;
         if(util.isNeedProxy(link)) {
-          src = '/f/o/' + feedid + "?p=t";
+          src = _RM_.proxy_server + '/f/o/' + feedid + "?p=t";
         }
         $('iframe').attr('src', src);
         $('#footer .info h5').text(title);

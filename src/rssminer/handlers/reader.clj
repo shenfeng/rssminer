@@ -12,6 +12,7 @@
   (let [user (session-get req :user)
         subs (fetch-user-subs (:id user))]
     (view/app-page {:rm {:user user
+                         :proxy_server (:proxy-server @cfg/rssminer-conf)
                          :subs subs}})))
 
 (defn dashboard-page [req]
