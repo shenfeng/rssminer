@@ -10,6 +10,8 @@ pom.xml
 bin/
 .settings
 public/css/
+test/20news-bydate-test/
+test/20news-bydate-train/
 src/templates/
 public/cl
 public/js/rssminer/*tmpls.js

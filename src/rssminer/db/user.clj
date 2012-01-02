@@ -18,5 +18,4 @@
       user)))
 
 (defn update-conf [id conf]
-  (with-h2 (update-values :users ["id = ?" id]
-                          {:conf conf})))
+  (with-h2 (update-values :users ["id = ?" id] {:conf conf})))

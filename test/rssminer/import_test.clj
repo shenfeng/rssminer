@@ -25,7 +25,7 @@
                                 "size" (.length opml)
                                 "content-type" "text/xml"
                                 "tempfile" opml}}})]
-    (is (= 52 (count (fetch-user-subs (:id user1)))))
+    (is (= 52 (count (fetch-user-subs (:id user1) (* 100 3600)))))
     (is (= 200 (:status resp)))))
 
 (deftest test-parset-google-output
@@ -33,7 +33,7 @@
                      (slurp "test/greader-subs-list.xml")))]
     (subscribe-all (:id user1) (Parser/parseGReaderSubs
                                 (slurp "test/greader-subs-list.xml")))
-    (is (= 83 (count (fetch-user-subs (:id user1)))))
+    (is (= 83 (count (fetch-user-subs (:id user1) (* 100 3600)))))
     (is (every? :title o))
     (is (every? :url o))
     (is (= (count o) 83))))

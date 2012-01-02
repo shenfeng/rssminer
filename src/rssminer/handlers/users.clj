@@ -32,7 +32,6 @@
                                 {:expires (get-expire 7)
                                  :http-only true}
                                 {:http-only true}))
-
       (view/login-page return-url))))
 
 (defn show-signup-page [req]
@@ -50,6 +49,8 @@
 ;;; :height => bottom feed list height
 ;;; :width => nav width
 ;;; :expire => feed mark as read after X days
+;;; :like_threshhold => more than it mean like
+;;; :dislike_threshhold => less than it mean dislike
 (defn save-pref [req]
   (let [user (session-get req :user)
         updated (merge

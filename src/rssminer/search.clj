@@ -3,22 +3,24 @@
         [rssminer.util :only [to-int]]
         [rssminer.db.util :only [with-h2 h2-query]])
   (:import [rssminer Searcher$Feed Searcher]
+           rssminer.classfier.NaiveBayes
            java.sql.Clob))
 
-(defonce indexer (atom nil))
+(defonce searcher (atom nil))
 
 (defn close-global-index-writer! []
-  (when-not (nil? @indexer)
-    (.close ^Searcher @indexer)
-    (reset! indexer nil)))
+  (when-not (nil? @searcher)
+    (.close ^Searcher @searcher)
+    (reset! searcher nil)))
 
 (defn use-index-writer! [path]
-  "It will close previous indexer"
+  "It will close previous searcher"
   (close-global-index-writer!)
   (let [path (if (= path :RAM) "RAM" path)]
     (info "use index path" path)
-    (reset! indexer (Searcher. path))))
+    (reset! searcher (Searcher. path))))
 
+;;; meta Map<feed-id, {docid, feed-id}>
 (defn fetch-feeds [meta user-id]
   (let [ids (to-array (keys meta))
         sql (if user-id
@@ -34,8 +36,8 @@
 
 (defn index-feed
   [id {:keys [author tags title summary]}]
-  (.index ^Searcher @indexer id author title summary tags))
+  (.index ^Searcher @searcher id author title summary tags))
 
 (defn search* [term limit & {:keys [user-id]}]
-  (let [meta (.search ^Searcher @indexer term limit)]
+  (let [meta (.search ^Searcher @searcher term limit)]
     (fetch-feeds meta user-id)))

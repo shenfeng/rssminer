@@ -1,7 +1,7 @@
 (ns rssminer.admin
   (:use (rssminer [database :only [use-h2-database! close-global-h2-factory!
                                    import-h2-schema!]]
-                  [search :only [indexer index-feed use-index-writer!]]
+                  [search :only [searcher index-feed use-index-writer!]]
                   [http :only [clean-resolve]]
                   [time :only [now-seconds]]
                   [util :only [ignore-error to-int]])
@@ -44,15 +44,15 @@
                                 :title (:title r)})))))
 
 (defn rebuild-index []
-  (.toggleInfoStream ^Searcher @indexer true)
-  (.clear ^Searcher @indexer)
+  (.toggleInfoStream ^Searcher @searcher true)
+  (.clear ^Searcher @searcher)
   (with-h2
     (with-query-results rs ["select * from feeds"]
       (doseq [feed rs]
         (let [feed (update-in feed [:summary]
                               #(slurp (.getCharacterStream ^Clob %)))]
           (index-feed (:id feed) feed)))))
-  (.toggleInfoStream ^Searcher @indexer false))
+  (.toggleInfoStream ^Searcher @searcher false))
 
 (defn export-data [{:keys [data-path] :or {data-path "/tmp/rssminer_data"}}]
   (let [feeds (h2-query

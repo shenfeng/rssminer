@@ -1,5 +1,6 @@
 (ns rssminer.handlers.reader
   (:use [rssminer.util :only [session-get to-int]]
+        [rssminer.time :only [now-seconds]]
         [rssminer.search :only [search*]]
         [rssminer.db.subscription :only [fetch-user-subs]])
   (:require [rssminer.views.reader :as view]
@@ -10,7 +11,8 @@
 
 (defn app-page [req]
   (let [user (session-get req :user)
-        subs (fetch-user-subs (:id user))]
+        t (- (now-seconds) (* (or (-> user :conf :expire) 60) 3600))
+        subs (fetch-user-subs (:id user) t)]
     (view/app-page {:rm {:user user
                          :proxy_server (:proxy-server @cfg/rssminer-conf)
                          :subs subs}})))
