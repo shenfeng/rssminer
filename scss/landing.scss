@@ -3,6 +3,8 @@
 @import "reset";
 @import "common";
 
+h3 > a { display: none; }
+
 #header {
     .content {
         width: $page-width;
