@@ -23,4 +23,3 @@
 
 ;;; buggy
 ;;; http://www.moandroid.com/?p=2020
-;;; http://lambda-the-ultimate.org/node/4387

@@ -18,9 +18,13 @@ public class RewriteHandler extends DefaultHandler {
     static final char EQUAL = '=';
     static final char QUOTE = '\"';
 
+    private static final String[] unCloseableTags = new String[] { "img",
+            "input", "hr", "br", "meta", "link" };
+
     private final StringBuilder sb;
     private final URI uriBase;
     private String proxyURI;
+    private boolean hasBase = false;
 
     public RewriteHandler(String html, String uriBase)
             throws URISyntaxException {
@@ -34,11 +38,16 @@ public class RewriteHandler extends DefaultHandler {
             String h = html.substring(0, 20).toLowerCase();
             if (h.indexOf("doctype") != -1) {
                 int end = html.indexOf('>');
-                if (end < 150) {
+                if (end < 150) { // copy doctype
                     sb.append(html.substring(0, end + 1)).append('\n');
                 }
             }
+            int index = html.indexOf("<base ");
+            if (index != -1 && index < 512) {
+                hasBase = true; // naive tell if has base tag
+            }
         }
+
         this.uriBase = new URI(uriBase);
         this.proxyURI = proxyURl;
     }
@@ -87,11 +96,10 @@ public class RewriteHandler extends DefaultHandler {
         }
         sb.append(END);
 
-        if ("head".equalsIgnoreCase(qName)) {
+        if (!hasBase && "head".equalsIgnoreCase(qName)) {
             sb.append("<base href=\"").append(uriBase.toString())
                     .append("\">");
         }
-
     }
 
     private boolean isQuoteNeeded(String val) {
@@ -116,7 +124,14 @@ public class RewriteHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String qName)
             throws SAXException {
         String l = qName.toLowerCase();
-        if (!"br".equals(l) && !"hr".equals(l)) {
+        boolean close = true;
+        for (String tag : unCloseableTags) {
+            if (tag.equals(l)) {
+                close = false;
+                break;
+            }
+        }
+        if (close) {
             sb.append(START).append(SLASH).append(qName);
             sb.append(END);
         }
