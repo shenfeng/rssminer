@@ -7,9 +7,9 @@
       to_html = Mustache.to_html;
 
   var titles = {
-    recommend: 'Recommand for you',
+    readed: 'Recent readed',
     voted: 'Recently voted',
-    readed: 'Recent readed'
+    recommend: 'Recommand for you'
   };
 
   var $footer = $('#footer'),
@@ -76,11 +76,12 @@
   }
 
   function saveVote (ele, vote) {
-    var $feed = $('.feed.selected'),
-        id = $feed.attr('data-id');
+    var $feed = $(ele).closest('li.feed');
+    $feed = $feed.length ? $feed : $('.feed.selected');
+    var id = $feed.attr('data-id');
     if(($feed.hasClass('dislike') && vote === -1)
        || ($feed.hasClass('like') && vote === 1)) {
-      return;                   // already voted
+      vote = 0;                 // reset
     }
     if(id) {
       ajax.jpost('/api/feeds/' + id  + '/vote', {vote: vote}, function () {
@@ -88,6 +89,8 @@
           $feed.addClass('like').removeClass('dislike neutral');
         } else if(vote === -1) {
           $feed.addClass('dislike').removeClass('like neutral');
+        } else if(vote === 0) {
+          $feed.addClass('neutral').removeClass('like dislike');
         }
       });
     }

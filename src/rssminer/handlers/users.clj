@@ -64,6 +64,6 @@
 
 (defn welcome-list [req]
   (let [u-id (:id (session-get req :user))]
-    {:readed (uf/fetch-recent-read u-id 20)
+    {:readed (uf/fetch-recent-read u-id 30)
      :voted (uf/fetch-recent-voted u-id 20)
      :recommend (uf/fetch-system-voteup u-id 20)}))

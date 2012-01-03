@@ -32,6 +32,8 @@
       var $container = $me.parents('.wrapper').length > 0 ?
             $me.parents('.wrapper') : $me.parents('#feed-list');
       _.defer(function () {
+        // expand navigation if collapsed
+        $me.closest('li.collapse').removeClass('collapse');
         scrollIntoView($container, $me);
       });
       return true;
