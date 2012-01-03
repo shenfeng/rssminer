@@ -12,7 +12,7 @@
         js-resp (test-app {:uri "/js/lib/zepto.js"
                            :request-method :get
                            :headers {}})]
-    (is (= 200 (:status app-resp)))
+    (is (= 302 (:status app-resp)))
     (is (= "no-cache" ((:headers resp) "Cache-Control")))
     (is (= "text/html; charset=utf-8" ((:headers resp) "Content-Type")))
     (is (= 200 (:status js-resp)))
