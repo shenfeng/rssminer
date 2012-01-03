@@ -83,7 +83,8 @@
 (defn app []
   (-> #'all-routes
       wrap-auth
-      (wrap-session {:store (redis-store (* 3600 24 7))})
+      (wrap-session {:store (redis-store (* 3600 24 7))
+                     :cookie-name "rm_id"})
       wrap-cache-header
       wrap-request-logging-in-dev
       wrap-keyword-params

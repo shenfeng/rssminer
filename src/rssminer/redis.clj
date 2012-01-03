@@ -9,6 +9,11 @@
   (when (nil? @redis-client)
     (reset! redis-client (JedisPool. (JedisPoolConfig.) host))))
 
+(defn- gen-key [data]
+  (if-let [id (-> data :user :id)]
+    (str "z" (Integer/toString (- Integer/MAX_VALUE id) 35) "k")
+    (str (UUID/randomUUID))))
+
 (deftype RedisStore [^JedisPool db ^int expire]
   SessionStore
   (read-session [_ key]
@@ -22,7 +27,7 @@
           (finally
            (.returnResource db j))))))
   (write-session [_ key data]
-    (let [^String key (or key (str (UUID/randomUUID)))
+    (let [^String key (or key (gen-key data))
           ^Jedis j (.getResource db)]
       (try
         (.setex j key expire (pr-str data))
