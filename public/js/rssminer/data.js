@@ -74,12 +74,23 @@
     return result;
   }
 
+  function ymdate (i, force) {
+    var date = force || (i.read_date > 1 ? i.read_date : i.published_ts);
+    var d = new Date(date * 1000),
+        m = d.getMonth() + 1,
+        day = d.getDate();
+    return [d.getFullYear(),
+            m < 10 ? '0' + m : m,
+            day < 10 ? '0' + day : day].join('/');
+  }
+
   function  transformItem (subid) {
+    // subid is undefined when used by parsewelcomelist
     return function (i) {
       return {
         author: i.author,
         cls: feedClass(i),
-        date: utils.ymdate(i.published_ts * 1000),
+        date: subid ? ymdate(i, i.published_ts) : ymdate(i),
         href: 'read/' + (subid || i.rss_link_id) + "/" + i.id,
         id: i.id,
         link: i.link,
@@ -95,8 +106,8 @@
     if(typeof data === 'string') { data = JSON.parse(data); }
     var now = new Date().getTime() / 1000;
     _.each(data, function (e) {      // convert null to default
-      // mark old enough as readed
-      if(now - e.published_ts > 3600 * 24 * 60) e.read_date = 1;
+      // mark old enough (90d) as readed
+      if(now - e.published_ts > 3600 * 24 * 90) e.read_date = 1;
       // -1 is db default value
       e.read_date = e.read_date === null ? -1 : e.read_date;
       e.vote = e.vote === null ? 0 : e.vote;

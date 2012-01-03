@@ -2,8 +2,7 @@
   (:use (rssminer [http :only [client]]
                   [util :only [assoc-if]]
                   [config :only [rssminer-conf]]))
-  (:import rssminer.async.ProxyFuture
-           org.jboss.netty.handler.codec.http.HttpResponse))
+  (:import rssminer.async.ProxyFuture))
 
 (defn- compute-send-header [req]
   (let [headers (:headers req)]
