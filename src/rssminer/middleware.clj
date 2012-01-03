@@ -10,10 +10,12 @@
 
 (defn wrap-auth [handler]
   (fn [req]
-    (let [user (session-get req :user)]
-      (if (and (not user) (= (:uri req) "/dashboard"))
-        (redirect "/login")
-        (handler req)))))
+    (let [user (session-get req :user)
+          uri (:uri req)]
+      (if user (handler req)
+          (if (or (= uri "/a") (= uri "/dashboard"))
+            (redirect "/login") ;; require login
+            (handler req))))))
 
 (defn wrap-cache-header
   "set no-cache header." [handler]
