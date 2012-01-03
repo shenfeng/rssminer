@@ -200,15 +200,24 @@
     }
   }
 
-  function  isNeedProxy (link) {
+  var reseted = ["feedproxy", "wordpress", "appspot",
+                 "blogspot", 'mikemccandless'];
+
+  var proxy_sites = ['google'];       // X-Frame-Options
+
+  function getFinalLink (link, feedid) {
     var h = hostname(link);
-    var reseted = ["feedproxy", "wordpress", "blogspot", 'mikemccandless'];
-    for(var i = 0; i < reseted.length; i++) {
-      if(h.indexOf(reseted[i]) != -1) {
-        return true;
+    for(var i = 0; i < proxy_sites.length; i++) {
+      if(h.indexOf(proxy_sites[i]) != -1) {
+        return _RM_.proxy_server + '/f/o/' + feedid;
       }
     }
-    return false;
+    for(i = 0; i < reseted.length; i++) {
+      if(h.indexOf(reseted[i]) != -1) {
+        return  _RM_.proxy_server + '/f/o/' + feedid + "?p=t";
+      }
+    }
+    return link;
   }
 
   function imgError (e) {
@@ -221,7 +230,7 @@
     notif: notif,
     iconError: imgError,
     util: {
-      isNeedProxy: isNeedProxy,
+      getFinalLink: getFinalLink,
       delegateEvents: delegateEvents,
       hashRouter: hashRouter,
       hostname: hostname,

@@ -47,3 +47,8 @@
                                          :expire 60})})]
     (is (= 204 (:status resp)))))
 
+(deftest test-welcome-list
+  (let [resp (auth-app {:uri "/api/user/welcome"
+                        :request-method :get})]
+    (is (= 200 (:status resp)))))
+

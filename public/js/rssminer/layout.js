@@ -12,15 +12,46 @@
     $("#reading-area").height(height - list_height).width(width - nav_width);
   }
 
-  $(window).resize(_.debounce(layout, 100));
-
-  // user's last height of feed list
-  if(_RM_.user && _RM_.user.conf && _RM_.user.conf.height) {
-    $list.height(_RM_.user.conf.height);
-    $footer.height(_RM_.user.conf.height + $('#footer .resizer').height());
+  function scrollIntoView ($container, $element) {
+    var ct = $container.offset().top,
+        ch = $container.height(),
+        eh = $element.height(),
+        et = $element.offset().top;
+    if(et < ct) {               // hide in the above
+      $container[0].scrollTop -= ct - et;
+    } else if( ct + ch < et) {  // hide in the bottom
+      $container[0].scrollTop += et - ct - eh * 2;
+    }
   }
 
-  layout();
+  function select (context, id) {
+    var $me = $('#' + id);
+    if(!$me.hasClass('selected')) {
+      $(".selected", context).removeClass('selected');
+      $me.addClass('selected');
+      var $container = $me.parents('.wrapper').length > 0 ?
+            $me.parents('.wrapper') : $me.parents('#feed-list');
+      _.defer(function () {
+        scrollIntoView($container, $me);
+      });
+      return true;
+    }
+    return false;
+  }
+
+  function toggleNavigationSection (e) {
+    $(this).parents('.section').toggleClass('active');
+  }
+
+  function toggleFolder (e) {
+    $(this).closest('li').toggleClass('collapse');
+    var collapsed = [];
+    $('#navigation li.collapse .folder').each(function (index, item) {
+      collapsed.push($(item).attr('data-name'));
+    });
+    RM.ajax.jpost('/api/user/pref', {nav: collapsed});
+    return false;
+  }
 
   (function () {                        // footer height resize
     var down = false,
@@ -63,50 +94,18 @@
       });
   })();
 
-  function scrollIntoView ($container, $element) {
-    var ct = $container.offset().top,
-        ch = $container.height(),
-        eh = $element.height(),
-        et = $element.offset().top;
-    if(et < ct) {               // hide in the above
-      $container[0].scrollTop -= ct - et;
-    } else if( ct + ch < et) {  // hide in the bottom
-      $container[0].scrollTop += et - ct - eh * 2;
-    }
+  // user's last height of feed list
+  if(_RM_.user && _RM_.user.conf && _RM_.user.conf.height) {
+    $list.height(_RM_.user.conf.height);
+    $footer.height(_RM_.user.conf.height + $('#footer .resizer').height());
   }
 
-  function select (context, id) {
-    var $me = $('#' + id);
-    if($me.hasClass('selected')) {
-      return false;
-    } else {
-      $(".selected", context).removeClass('selected');
-      $me.addClass('selected');
-      var $container = $me.parents('.wrapper').length > 0 ?
-            $me.parents('.wrapper') : $me.parents('#feed-list');
-      _.defer(function () {
-        scrollIntoView($container, $me);
-      });
-      return true;
-    }
-  }
-
-  function toggleNavigationSection (e) {
-    $(this).parents('.section').toggleClass('active');
-  }
-  function toggleFolder (e) {
-    $(this).closest('li').toggleClass('collapse');
-    var collapsed = [];
-    $('#navigation li.collapse .folder').each(function (index, item) {
-      collapsed.push($(item).attr('data-name'));
-    });
-    RM.ajax.jpost('/api/user/pref', {nav: collapsed});
-    return false;
-  }
-
+  $(window).resize(_.debounce(layout, 100));
+  layout();
 
   window.RM = $.extend(window.RM, {
     layout: {
+      reLayout: layout,
       select: select
     }
   });

@@ -27,11 +27,20 @@
   };
 
   function parseTags (tags) {
-    if(tags) {
-      return tags.split("; ");
-    } else {
-      return [];
-    }
+    if(tags) { return tags.split("; "); }
+    else { return []; }
+  }
+
+  function  feedClass (i) {
+    var cls;
+    if(i.read_date === 1) { cls = 'sys-read'; }
+    else if(i.read_date > 1) { cls = 'read';}
+    else {cls = 'unread' ;}
+
+    if (i.vote < 0) { cls += ' dislike'; }
+    else if (i.vote > 0) { cls += ' like'; }
+    else { cls += ' neutral'; }
+    return cls;
   }
 
   function imgPath (url) {
@@ -65,38 +74,41 @@
     return result;
   }
 
+  function  transformItem (subid) {
+    return function (i) {
+      return {
+        author: i.author,
+        cls: feedClass(i),
+        date: utils.ymdate(i.published_ts * 1000),
+        href: 'read/' + (subid || i.rss_link_id) + "/" + i.id,
+        id: i.id,
+        link: i.link,
+        tags: parseTags(i.tags),
+        title: i.title
+      };
+    };
+  }
+
+  function parseWelcomeList (data) { return _.map(data, transformItem()); }
+
   function parseFeedList (subid, data) {
     if(typeof data === 'string') { data = JSON.parse(data); }
     var now = new Date().getTime() / 1000;
     _.each(data, function (e) {      // convert null to default
       // mark old enough as readed
-      // TODO published_ts is not always available
       if(now - e.published_ts > 3600 * 24 * 60) e.read_date = 1;
-      e.read_date = e.read_date === null ? 0 : e.read_date;
+      // -1 is db default value
+      e.read_date = e.read_date === null ? -1 : e.read_date;
       e.vote = e.vote === null ? 0 : e.vote;
     });
 
-    var unread = _.filter(data, function (i) { return i.read_date === 0;});
+    var unread = _.filter(data, function (i) { return i.read_date <= 0;});
     var readed = _.filter(data, function (i) { return i.read_date > 0;});
     unread.sort(by('vote', by('published_ts', null, -1), -1));
     readed.sort(by('vote', by('published_ts', null, -1), -1));
     data = unread.concat(readed);
 
-    var result = _.map(data,(function (i) {
-      var cls = i.read_date > 0 ? 'read' : 'unread';
-      if (i.vote < 0) { cls += ' dislike'; }
-      else if (i.vote > 0) { cls += ' like'; }
-      else { cls += ' neutral'; }
-      return {
-        date: utils.ymdate(i.published_ts * 1000),
-        title: i.title,
-        cls: cls,
-        tags: parseTags(i.tags),
-        id: i.id,
-        href: 'read/' + subid + "/" + i.id,
-        link: i.link
-      };
-    }));
+    var result = _.map(data,transformItem(subid));
     return result;
   };
 
@@ -104,7 +116,8 @@
   window.RM = $.extend(window.RM, {
     data: {
       parseSubs: parseSubs,
-      parseFeedList: parseFeedList
+      parseFeedList: parseFeedList,
+      parseWelcomeList: parseWelcomeList
     }
   });
 

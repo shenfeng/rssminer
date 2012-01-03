@@ -1,7 +1,8 @@
 (ns rssminer.handlers.reader
-  (:use [rssminer.util :only [session-get to-int]]
-        [rssminer.time :only [now-seconds]]
-        [rssminer.search :only [search*]]
+  (:use (rssminer [util :only [session-get to-int]]
+                  [time :only [now-seconds]]
+                  [classify :only [re-compute-sysvote]]
+                  [search :only [search*]])
         [rssminer.db.subscription :only [fetch-user-subs]])
   (:require [rssminer.views.reader :as view]
             [rssminer.config :as cfg]))
@@ -10,14 +11,15 @@
   (view/landing-page))
 
 (defn- time-since [user]
-  (- (now-seconds) (* (or (-> user :conf :expire) 60) 3600)))
+  (- (now-seconds) (* (or (-> user :conf :expire) 90) 3600)))
 
 (defn app-page [req]
   (let [user (session-get req :user)
-        subs (fetch-user-subs (:id user) (time-since user))]
+        ts (time-since user)]
+    (re-compute-sysvote (:id user) ts)
     (view/app-page {:rm {:user user
                          :proxy_server (:proxy-server @cfg/rssminer-conf)
-                         :subs subs}})))
+                         :subs (fetch-user-subs (:id user) ts)}})))
 
 (defn dashboard-page [req]
   (view/dashboard-page))

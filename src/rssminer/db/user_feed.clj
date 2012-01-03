@@ -20,7 +20,7 @@
 
 (defn insert-sys-vote [user-id feed-id vote]
   (let [old  (-> (h2-query
-                  ["SELECT vote FROM user_feed
+                  ["SELECT vote_sys FROM user_feed
                     WHERE user_id = ? AND feed_id =?" user-id feed-id])
                  first :vote_sys)]
     (if (nil? old)
@@ -64,3 +64,24 @@
               SELECT feed_id AS id FROM user_feed
               WHERE user_id = ? AND vote != 0"
                       user-id since-time user-id])))
+
+(defn fetch-system-voteup [user-id limit]
+  (h2-query ["SELECT f.id, f.title, f.author, f.tags, f.link, f.rss_link_id,
+              f.published_ts, uf.vote, uf.vote_sys, uf.read_date
+              FROM feeds f JOIN user_feed uf ON uf.feed_id = f.id
+              WHERE uf.user_id = ? and uf.vote_sys != 0.0
+              ORDER BY uf.vote_sys desc limit ?" user-id limit]))
+
+(defn fetch-recent-read [user-id limit]
+  (h2-query ["SELECT f.id, f.title, f.author, f.link, f.tags, f.rss_link_id,
+              f.published_ts, uf.vote, uf.vote_sys, uf.read_date
+              FROM feeds f JOIN user_feed uf ON uf.feed_id = f.id
+              WHERE uf.user_id = ? and uf.read_date > 0
+              ORDER BY uf.read_date desc limit ?" user-id limit]))
+
+(defn fetch-recent-voted [user-id limit]
+  (h2-query ["SELECT f.id, f.title, f.author, f.link, f.tags, f.rss_link_id,
+              f.published_ts, uf.vote, uf.vote_sys, uf.read_date
+              FROM feeds f JOIN user_feed uf ON uf.feed_id = f.id
+              WHERE uf.user_id = ? and uf.vote != 0
+              ORDER BY uf.read_date desc limit ?" user-id limit]))

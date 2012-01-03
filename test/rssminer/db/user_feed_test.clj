@@ -29,10 +29,10 @@
                  first :read_date)))))
 
 (deftest test-fetch-unvoted-feedids
-  (is (= 1 (count (fetch-unvoted-feedids (:id user1)))))
+  (is (= 1 (count (fetch-unvoted-feedids (:id user1) 0))))
   (let [f1 (-> (h2-query ["select id from feeds"]) first :id)]
     (insert-user-vote (:id user1) f1 0)
-    (is (= 1 (count (fetch-unvoted-feedids (:id user1)))))
+    (is (= 1 (count (fetch-unvoted-feedids (:id user1) 0))))
     (insert-user-vote (:id user1) f1 1)
-    (is (= 0 (count (fetch-unvoted-feedids (:id user1)))))))
+    (is (= 0 (count (fetch-unvoted-feedids (:id user1) 0))))))
 

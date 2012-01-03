@@ -5,6 +5,7 @@
          [ring.middleware.file-info :only [make-http-format]]
          [clojure.data.json :only [json-str read-json]])
   (:require [rssminer.db.user :as db]
+            [rssminer.db.user-feed :as uf]
             [rssminer.views.users :as view])
   (:import [java.util Locale Calendar TimeZone Date]
            java.text.SimpleDateFormat))
@@ -61,3 +62,8 @@
      :body nil
      :session {:user (assoc user :conf updated)}}))
 
+(defn welcome-list [req]
+  (let [u-id (:id (session-get req :user))]
+    {:readed (uf/fetch-recent-read u-id 20)
+     :voted (uf/fetch-recent-voted u-id 20)
+     :recommend (uf/fetch-system-voteup u-id 20)}))

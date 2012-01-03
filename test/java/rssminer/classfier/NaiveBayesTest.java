@@ -44,7 +44,7 @@ public class NaiveBayesTest {
 
     private List<Integer> testDisLikeIds = new ArrayList<Integer>();
 
-    final int MAX_PERCATEGORY = 50;
+    final int MAX_PERCATEGORY = 5000;
 
     public void indexFile(File f, long id) throws FileNotFoundException,
             IOException {

@@ -94,7 +94,8 @@ public class NaiveBayes {
                     String term = terms[i];
                     Double w = submodel.get(term);
                     if (w != null) {
-                        result *= (w * freqs[i]);
+                        // result *= (w * freqs[i]); Infinite
+                        result *= w;
                     }
                 }
             }

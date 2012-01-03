@@ -21,7 +21,7 @@ $footer_height: 230px;
 .unread {
     a { color: #111; }
 }
-.read {
+.read, .sys-read {
     a { color: #777; }
     .indicator { background: #ccc; }
 }
@@ -56,10 +56,10 @@ html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
         background: #ccc;
     }
     &.show-iframe {
-        .feed { display: none; }
+        .welcome-list { display: none; }
         .iframe { display: block; }
     }
-    .feed { display: block; }
+    .welcome-list { display: block; }
     .iframe { display: none; height: 100%;}
 }
 
@@ -136,36 +136,45 @@ html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
 }
 
 #feed-list {
-    font-family: Consolas, monospace;
-    font-size: 13px;
-    span { display: inline-block; }
-    a { text-decoration: none; }
-    ul.feeds {
-        margin: 0;
-        padding: 0;
-        > li {
-            position: relative;
-            padding: 2px;
-            cursor: pointer;
-            border-bottom: 1px solid #ccc;
-            &.selected { background: #ccc;}
-            &:hover { background: #ddd; }
-            .indicator {
-                margin: 4px;
-                height: 5px;
-                width: 5px;
-                @include border-radius(2px);
-            }
-            .date {
-                position: absolute;
-                right: 3em;
-            }
-            &:hover .vote span { visibility: visible; }
-        }
-    }
     span.vote { right: 12em; }
     height: $footer_height - 22px;
     overflow: auto;
+    .feeds > li { border-bottom: 1px solid #ccc; }
+}
+.welcome-list .feeds {
+    .title { max-width: 500px; }
+    .date { right: 1em; }
+    a { color: #333; }
+}
+
+.feeds {
+    font-family: Consolas, monospace;
+    font-size: 13px;
+    margin: 0;
+    list-style: none;
+    padding: 0;
+    span { display: inline-block; }
+    > li {
+        a { text-decoration: none; display: block; }
+        position: relative;
+        padding: 2px;
+        cursor: pointer;
+        &.selected { background: #c4c4c4;}
+        &:hover { background: #d4d4d4; }
+        .indicator {
+            margin: 4px;
+            height: 5px;
+            width: 5px;
+            @include border-radius(2px);
+        }
+        .date {
+            position: absolute;
+            font-size: smaller;
+            color: #777;
+            right: 2em;
+        }
+        &:hover .vote span { visibility: visible; }
+    }
 }
 
 span.vote {
@@ -207,6 +216,7 @@ span.vote {
 
 #footer {
     height: $footer_height;
+    display: none;
     overflow: hidden;
     padding: 0;
     margin: 0;
@@ -273,3 +283,9 @@ iframe {
     border-image: initial;
 }
 
+.welcome-list {
+    .section {
+        width: 760px;
+        float: left;
+    }
+}
