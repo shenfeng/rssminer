@@ -2,8 +2,6 @@ package rssminer;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
-import java.util.TreeMap;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
@@ -131,23 +129,23 @@ public class Searcher {
         indexer.addDocument(doc);
     }
 
-    private Map<String, Feed> doSearch(IndexSearcher searcher, Query q,
-            int count) throws IOException {
+    private String[] doSearch(IndexSearcher searcher, Query q, int count)
+            throws IOException {
         TopDocs docs = searcher.search(q, count);
-        Map<String, Feed> map = new TreeMap<String, Feed>();
+        String[] array = new String[docs.scoreDocs.length];
         for (int i = 0; i < docs.scoreDocs.length; i++) {
             int docid = docs.scoreDocs[i].doc;
             Document doc = searcher.doc(docid);
-            map.put(doc.get(FEED_ID), new Feed(docid, doc.get(FEED_ID)));
+            array[i] = doc.get(FEED_ID);
         }
-        return map;
+        return array;
     }
 
     public IndexReader getReader() throws CorruptIndexException, IOException {
         return IndexReader.open(indexer, false);
     }
 
-    public Map<String, Feed> search(String term, int count)
+    public String[] search(String term, int count) // return feed ids
             throws CorruptIndexException, IOException, ParseException {
         IndexReader reader = getReader();
         IndexSearcher searcher = new IndexSearcher(reader);
@@ -175,15 +173,5 @@ public class Searcher {
             return docs.scoreDocs[0].doc;
         }
         return -1;
-    }
-
-    public static class Feed {
-        public final int docId;
-        public final String id;
-
-        public Feed(int docId, String id) {
-            this.docId = docId;
-            this.id = id;
-        }
     }
 }

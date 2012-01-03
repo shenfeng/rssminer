@@ -88,5 +88,5 @@
                                  h2-fixture
                                  user-fixture
                                  redis-queue-fixture]))
-(def test-app
-  (app))
+
+(def test-app (app))

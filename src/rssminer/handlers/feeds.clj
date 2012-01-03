@@ -3,7 +3,8 @@
                   [config :only [rssminer-conf]]
                   [http :only [client parse-response]])
         [clojure.tools.logging :only [debug error]])
-  (:require [rssminer.db.feed :as db])
+  (:require [rssminer.db.feed :as db]
+            [rssminer.db.user-feed :as uf])
   (:import rssminer.Utils
            rssminer.async.ProxyFuture
            org.jboss.netty.handler.codec.http.HttpResponse
@@ -13,12 +14,12 @@
   (let [fid (-> req :params :feed-id to-int)
         vote (-> req :body :vote to-int)
         user-id (:id (session-get req :user))]
-    (db/insert-vote user-id fid vote)))
+    (uf/insert-user-vote user-id fid vote)))
 
 (defn mark-as-read [req]
   (let [fid (-> req :params :feed-id to-int)
         user-id (:id (session-get req :user))]
-    (db/mark-as-read user-id fid)))
+    (uf/mark-as-read user-id fid)))
 
 (defn get-by-subscription [req]
   (let [{:keys [rss-id limit offset] :or {limit 30 offset 0}} (:params req)

@@ -17,5 +17,9 @@
     (when (= (md5-sum (str email "+" plain-password)) (:password user))
       user)))
 
-(defn update-conf [id conf]
-  (with-h2 (update-values :users ["id = ?" id] {:conf conf})))
+(defn update-user [id data]
+  (with-h2 (update-values :users ["id = ?" id] data)))
+
+(defn fetch-model [user-id]
+  (-> (h2-query ["SELECT model FROM users WHERE id = ?" user-id])
+      first :model))

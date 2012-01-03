@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import rssminer.Searcher;
+import clojure.lang.ArraySeq;
 import clojure.lang.PersistentList;
 
 public class NaiveBayesTest {
@@ -36,12 +37,12 @@ public class NaiveBayesTest {
     String[] disLikes = new String[] { "talk.politics.misc",
             "sci.electronics", "comp.sys.mac.hardware", "comp.graphics" };
 
-    private List<Long> trainLikeIds = new ArrayList<Long>();
+    private List<Integer> trainLikeIds = new ArrayList<Integer>();
 
-    private List<Long> trainDisLikeIds = new ArrayList<Long>();
-    private List<Long> testLikeIds = new ArrayList<Long>();
+    private List<Integer> trainDisLikeIds = new ArrayList<Integer>();
+    private List<Integer> testLikeIds = new ArrayList<Integer>();
 
-    private List<Long> testDisLikeIds = new ArrayList<Long>();
+    private List<Integer> testDisLikeIds = new ArrayList<Integer>();
 
     final int MAX_PERCATEGORY = 50;
 
@@ -83,7 +84,7 @@ public class NaiveBayesTest {
     @Before
     public void setup() throws FileNotFoundException, IOException {
         searcher = new Searcher("RAM");
-        long id = 0;
+        int id = 0;
         File[] train = TRAIN.listFiles();
         for (File folder : train) {
             File[] subs = folder.listFiles();
@@ -158,9 +159,9 @@ public class NaiveBayesTest {
         // testDisLikeIds = trainDisLikeIds;
         // testLikeIds = trainLikeIds;
 
-        for (Long like : testLikeIds) {
+        for (Integer like : testLikeIds) {
             double classify = NaiveBayes.classify(searcher, model,
-                    like.intValue());
+                    ArraySeq.create(like))[0];
             if (classify > guard) {
                 count++;
             } else if (debug) {
@@ -173,9 +174,9 @@ public class NaiveBayesTest {
         }
 
         int discount = 0;
-        for (Long dislike : testDisLikeIds) {
+        for (Integer dislike : testDisLikeIds) {
             double classify = NaiveBayes.classify(searcher, model,
-                    dislike.intValue());
+                    ArraySeq.create(dislike))[0];
             // System.out.println(classify);
             if (classify < guard) {
                 discount++;

@@ -56,9 +56,8 @@
         updated (merge
                  (:conf user)
                  (select-keys (:body req) [:nav :height :width :expire]))]
-    (db/update-conf (:id user) (json-str updated))
+    (db/update-user (:id user) {:conf (json-str updated)})
     {:status 204
      :body nil
      :session {:user (assoc user :conf updated)}}))
-
 

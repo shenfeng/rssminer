@@ -1,54 +1,18 @@
 (ns rssminer.db.feed
-  (:use [rssminer.db.util :only [h2-query id-k with-h2 h2-insert]]
-        (rssminer [database :only [h2-db-factory]]
-                  [search :only [index-feed]]
+  (:use [rssminer.db.util :only [h2-query with-h2 h2-insert]]
+        (rssminer [search :only [index-feed]]
                   [time :only [now-seconds]]
                   [util :only [ignore-error]])
         [clojure.string :only [blank?]]
         [clojure.tools.logging :only [info trace]]
-        [clojure.java.jdbc :only [insert-record update-values delete-rows]]))
-
-(defn insert-vote [user-id feed-id vote]
-  (let [old  (-> (h2-query
-                  ["SELECT vote FROM user_feed
-                    WHERE user_id = ? AND feed_id =?" user-id feed-id])
-                 first :vote)]
-    (if (nil? old)
-      (with-h2
-        (insert-record :user_feed {:user_id user-id
-                                   :feed_id feed-id
-                                   :vote vote}))
-      (when (not= old vote)
-        (with-h2
-          (update-values :user_feed
-                         ["user_id = ? AND feed_id = ?" user-id feed-id]
-                         {:vote vote}))))))
-
-(defn mark-as-read [user-id feed-id]
-  (let [old  (-> (h2-query
-                  ["SELECT read_date FROM user_feed
-                    WHERE user_id = ? AND feed_id =?" user-id feed-id])
-                 first :read_date)]
-    (if (nil? old)
-      (with-h2
-        (insert-record :user_feed {:user_id user-id
-                                   :feed_id feed-id
-                                   :read_date (now-seconds)}))
-      (when (= old -1)
-        (with-h2
-          (update-values :user_feed
-                         ["user_id = ? AND feed_id = ?" user-id feed-id]
-                         {:read_date (now-seconds)}))))))
+        [clojure.java.jdbc :only [update-values delete-rows]]))
 
 (defn save-feeds [feeds rss-id]
   (doseq [{:keys [link] :as feed} (:entries feeds)]
     (when (and link (not (blank? link)))
       (try
-        (let [id (id-k (with-h2
-                         (insert-record :feeds
-                                        (assoc feed
-                                          :rss_link_id rss-id))))]
-          (index-feed id feed))
+        (let [id (h2-insert :feeds (assoc feed :rss_link_id rss-id))]
+          (index-feed id feed))         ; TODO update index
         (catch RuntimeException e       ;(link, rss_link_id) is unique
           (trace "update" rss-id link)
           (with-h2
@@ -99,7 +63,6 @@
               WHERE next_check_ts < ?
               ORDER BY next_check_ts LIMIT ?" (now-seconds) limit]))
 
-(defn insert-rss-link
-  [link]
-  (ignore-error ;; ignore voilate of uniqe constraint
-   (with-h2 (insert-record :rss_links link))))
+(defn insert-rss-link [link]
+  ;; ignore voilate of uniqe constraint
+  (ignore-error (h2-insert :rss_links link)))

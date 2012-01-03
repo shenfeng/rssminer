@@ -102,14 +102,6 @@ public class NaiveBayes {
         return result;
     }
 
-    public static double classify(Searcher searcher,
-            Map<String, Map<String, Double>> model, int feedid)
-            throws CorruptIndexException, IOException {
-        IndexReader reader = searcher.getReader();
-        int docid = searcher.feedIdToDocid(feedid);
-        return classfiy(model, reader, docid);
-    }
-
     public static double[] classify(Searcher searcher,
             Map<String, Map<String, Double>> model, ISeq feeds)
             throws CorruptIndexException, IOException {
@@ -128,8 +120,8 @@ public class NaiveBayes {
         int index = 0;
         int[] array = new int[count];
         for (int i = 0; i < count; i++) {
-            Long l = (Long) (seq.first());
-            int id = searcher.feedIdToDocid(l.intValue());
+            Integer l = (Integer) (seq.first());
+            int id = searcher.feedIdToDocid(l);
             if (id != -1) {
                 array[index++] = id; // remove -1
             }

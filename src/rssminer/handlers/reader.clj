@@ -9,10 +9,12 @@
 (defn landing-page [req]
   (view/landing-page))
 
+(defn- time-since [user]
+  (- (now-seconds) (* (or (-> user :conf :expire) 60) 3600)))
+
 (defn app-page [req]
   (let [user (session-get req :user)
-        t (- (now-seconds) (* (or (-> user :conf :expire) 60) 3600))
-        subs (fetch-user-subs (:id user) t)]
+        subs (fetch-user-subs (:id user) (time-since user))]
     (view/app-page {:rm {:user user
                          :proxy_server (:proxy-server @cfg/rssminer-conf)
                          :subs subs}})))
