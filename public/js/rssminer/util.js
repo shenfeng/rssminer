@@ -201,7 +201,7 @@
   }
 
   var reseted = ["feedproxy", "wordpress", "appspot",
-                 "blogspot", 'mikemccandless'];
+                 'emacsblog', "blogspot", 'mikemccandless'];
 
   var proxy_sites = ['google'];       // X-Frame-Options
 
