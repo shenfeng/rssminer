@@ -4,6 +4,7 @@ import java.net.Proxy;
 
 import me.shenfeng.http.HttpClient;
 
+import org.jboss.netty.handler.codec.http.HttpHeaders.Names;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 
 import ring.adapter.netty.ListenableFuture;
@@ -31,6 +32,8 @@ public class AbstractFuture implements ListenableFuture {
     }
 
     protected void done(HttpResponse r) {
+        // for proxy and favicon, cookie is not wanted
+        r.removeHeader(Names.SET_COOKIE);
         resp = r;
         if (listener != null) {
             listener.run();
