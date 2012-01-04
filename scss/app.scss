@@ -241,15 +241,20 @@ span.vote {
     position: relative;
     .info {
         cursor: default;
-        margin-left: 10em;
-        h5 {
+        margin-left: 1.5em;
+        * { text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
+        h5 { max-width: 500px; margin: 0; }
+        a {
+            color: #666;
             max-width: 400px;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-            margin: 0;
+            font-size: 11px;
+            padding: 0 20px 0 2em;
+            background: url(/imgs/external-link.png) right top no-repeat;
+            text-decoration: none;
         }
+
     }
+    .loader { margin: 5px 0 0 5.5em; }
     .prev-next { float: right; margin-right: 2em; }
     span { visibility: visible; }
     span.vote { left: 12em; }

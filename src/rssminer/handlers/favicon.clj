@@ -21,7 +21,7 @@
 (defn fetch-save-favicon [hostname]
   {:status 200
    :body (FaviconFuture. client hostname (:proxy @rssminer-conf)
-                         (fn [resp]
+                         (fn [^HttpResponse resp]
                            (let [code (-> resp .getStatus .getCode)
                                  data (-> resp .getContent .array)]
                              (ignore-error

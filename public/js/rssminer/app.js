@@ -7,12 +7,14 @@
       to_html = Mustache.to_html;
 
   var titles = {
-    readed: 'Recent readed',
+    read: 'Recently read',
     voted: 'Recently voted',
     recommend: 'Recommand for you'
   };
 
   var $footer = $('#footer'),
+      $iframe = $('iframe'),
+      $loader = $('#reading-chooser .loader'),
       $reading_area = $('#reading-area');
 
   function showFooterList () {
@@ -51,7 +53,12 @@
           link = $me.attr('data-link'),
           title = $('.title', $me).text().trim();
       if(layout.select('#feed-list', me)){
-        $('iframe').attr('src', util.getFinalLink(link, feedid));
+        $('#footer .info a').text(link).attr('href', link);
+
+        link = util.getFinalLink(link, feedid);
+        $loader.css({visibility: 'visible'});
+        var iframe = $iframe.attr('src', link)[0];
+        iframe.onload = function () { $loader.css({visibility: 'hidden'}); };
         $('#footer .info h5').text(title);
         if(!$me.hasClass('read')) {
           ajax.jpost('/api/feeds/' + feedid + '/read');
