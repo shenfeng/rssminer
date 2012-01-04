@@ -43,6 +43,7 @@ APP_ARGS="--db-path $DB_PATH \
     --profile prod \
     --redis-host 127.0.0.1 \
     --no-proxy \
+    --fetcher \
     --no-dns \
     --proxy-server https://rss-miner.com \
     --crawler-queue 50 \
