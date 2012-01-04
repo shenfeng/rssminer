@@ -49,7 +49,12 @@ public class Utils {
 
     static final ThreadLocal<Parser> parser = new ThreadLocal<Parser>() {
         protected Parser initialValue() {
-            return new Parser();
+            Parser p = new Parser();
+            try {
+                p.setFeature(Parser.defaultAttributesFeature, false);
+            } catch (Exception ignore) {
+            }
+            return p;
         }
     };
 
