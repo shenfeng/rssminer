@@ -15,11 +15,20 @@
 
 (defn app-page [req]
   (let [user (session-get req :user)
-        ts (time-since user)]
-    (re-compute-sysvote (:id user) ts)
-    (view/app-page {:rm {:user user
-                         :proxy_server (:proxy-server @cfg/rssminer-conf)
-                         :subs (fetch-user-subs (:id user) ts)}})))
+        ts (time-since user)
+        resp (view/app-page {:rm {:user user
+                                  :proxy_server (:proxy-server
+                                                 @cfg/rssminer-conf)
+                                  :subs (fetch-user-subs (:id user) ts)}})]
+    (if (-> user :conf :updated)
+      (do
+        (re-compute-sysvote (:id user) ts)
+        {:status 200
+         :body resp
+         :headers {"Content-Type" "text/html; charset=utf-8"}
+         :session {:user (assoc user :conf
+                                (dissoc (:conf user) :updated))}})
+      resp)))
 
 (defn dashboard-page [req]
   (view/dashboard-page))

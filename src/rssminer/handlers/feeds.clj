@@ -13,8 +13,13 @@
 (defn user-vote [req]
   (let [fid (-> req :params :feed-id to-int)
         vote (-> req :body :vote to-int)
-        user-id (:id (session-get req :user))]
-    (uf/insert-user-vote user-id fid vote)))
+        user (session-get req :user)]
+    (uf/insert-user-vote (:id user) fid vote)
+    (if (-> user :conf :updated)
+      {:status 204 :body nil}
+      {:status 204 :body nil
+       :session {:user (assoc user :conf
+                              (assoc (:conf user) :updated true))}})))
 
 (defn mark-as-read [req]
   (let [fid (-> req :params :feed-id to-int)

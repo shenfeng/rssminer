@@ -69,7 +69,7 @@
   (h2-query ["SELECT f.id, f.title, f.author, f.tags, f.link, f.rss_link_id,
               f.published_ts, uf.vote, uf.vote_sys, uf.read_date
               FROM feeds f JOIN user_feed uf ON uf.feed_id = f.id
-              WHERE uf.user_id = ? and uf.vote_sys != 0.0
+              WHERE uf.user_id = ? and uf.vote = 0
               ORDER BY uf.vote_sys desc limit ?" user-id limit]))
 
 (defn fetch-recent-read [user-id limit]

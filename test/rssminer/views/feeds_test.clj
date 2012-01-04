@@ -13,7 +13,7 @@
         resp (auth-app {:uri (str "/api/feeds/" fid "/vote")
                         :request-method :post
                         :body (json-str {"vote" "1"})})]
-    (is (= 200 (:status resp)))
+    (is (= 204 (:status resp)))
     (is (= 1 (-> (h2-query
                   ["SELECT vote FROM user_feed WHERE
                     user_id = ? AND feed_id = ?" (:id user1) fid])
