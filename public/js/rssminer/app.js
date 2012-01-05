@@ -45,6 +45,18 @@
     }
   }
 
+  function descrementNumber ($just_read, subid) {
+    var selector = "#item-" + subid;
+    if($just_read.hasClass('neutral')) {
+      selector += ' .unread-neutral';
+    } else if ($just_read.hasClass('like')) {
+      selector += ' .unread-like';
+    } else { selector += ' .unread-dislike'; }
+    var $n = $(selector), n = + $n.text().trim();
+    if(n === 1) { $n.remove(); }
+    else { $n.text(n-1); }
+  }
+
   function readFeed (subid, feedid) {
     showFooterList();
     readSubscription(subid, function () {
@@ -61,8 +73,10 @@
         iframe.onload = function () { $loader.css({visibility: 'hidden'}); };
         $('#footer .info h5').text(title);
         if(!$me.hasClass('read')) {
-          ajax.jpost('/api/feeds/' + feedid + '/read');
-          $me.removeClass('unread sys-read').addClass('read');
+          ajax.jpost('/api/feeds/' + feedid + '/read', function () {
+            descrementNumber($me, subid);
+            $me.removeClass('unread sys-read').addClass('read');
+          });
         }
       }
     });

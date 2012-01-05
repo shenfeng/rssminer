@@ -31,7 +31,7 @@ JVM_ARGS="-Dsun.jnu.encoding=UTF-8 \
     -XX:-DisableExplicitGC \
     -XX:+UseCompressedOops \
     -XX:+UseCompressedStrings \
-    -Xmx192m -Xms192m"
+    -Xmx280m -Xms280m"
 
 JMX_OPTS="-Dcom.sun.management.jmxremote \
      -Dcom.sun.management.jmxremote.port=22134 \

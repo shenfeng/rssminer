@@ -165,8 +165,13 @@
       notif.msg(loading);
       return $.ajax(handler(url, 'GET', success));
     }
-    function jpost(url, data, success){
+
+    function jpost(url, data, success) {
       notif.msg(loading);
+      if(typeof data === 'function') {
+        success = data;
+        data = undefined;
+      }
       var o = handler(url, 'POST', success);
       o.dateType = 'json';
       o.data = JSON.stringify(data);
