@@ -1,6 +1,6 @@
 (ns rssminer.search
   (:use [clojure.tools.logging :only [info]]
-        [rssminer.util :only [to-int]]
+        [rssminer.util :only [to-int ignore-error]]
         [rssminer.db.util :only [with-h2 h2-query]])
   (:import rssminer.Searcher))
 
@@ -29,9 +29,15 @@
                feed-ids])]
     (h2-query sql :convert)))
 
-(defn index-feed
-  [id {:keys [author tags title summary]}]
-  (.index ^Searcher @searcher id author title summary tags))
+(defn index-feed [id {:keys [author tags title summary]}]
+  (ignore-error
+   (.index ^Searcher @searcher id author title summary tags)))
+
+(defn update-index [id html]
+  (try
+    (.updateIndex ^Searcher @searcher (to-int id) html)
+    (catch Exception e
+      (println "updating index " id "error!!"))))
 
 (defn search* [term limit & {:keys [user-id]}]
   (let [meta (.search ^Searcher @searcher term limit)]

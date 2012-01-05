@@ -18,7 +18,6 @@ public class KStemStopAnalyzer extends Analyzer {
         this.v = v;
     }
 
-    @Override
     public TokenStream tokenStream(String fieldName, Reader reader) {
         final StandardTokenizer src = new StandardTokenizer(v, reader);
         TokenStream tok = new StandardFilter(v, src);

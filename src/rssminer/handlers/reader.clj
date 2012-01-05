@@ -11,9 +11,7 @@
             [rssminer.config :as cfg]))
 
 (defn landing-page [req]
-  (if (session-get req :user)
-    (redirect "/a")
-    (view/landing-page)))
+  (view/landing-page))
 
 (defn- time-since [user]                ;45 day
   (- (now-seconds) (* (or (-> user :conf :expire) 45) 3600 24)))

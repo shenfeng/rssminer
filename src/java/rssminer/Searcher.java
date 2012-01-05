@@ -2,6 +2,7 @@ package rssminer;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
@@ -26,9 +27,13 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
+import org.ccil.cowan.tagsoup.Parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import rssminer.sax.ExtractMainTextHandler;
 
 public class Searcher {
 
@@ -67,7 +72,6 @@ public class Searcher {
         indexer = new IndexWriter(dir, cfg);
     }
 
-    @Override
     public String toString() {
         return "Searcher@" + path;
     }
@@ -85,8 +89,36 @@ public class Searcher {
         }
     }
 
+    public void updateIndex(int feedid, String html) {
+        if (html != null && !html.isEmpty()) {
+            Parser p = Utils.parser.get();
+            ExtractMainTextHandler h = new ExtractMainTextHandler();
+            p.setContentHandler(h);
+            try {
+                p.parse(new InputSource(new StringReader(html)));
+                String content = h.getContent();
+                String title = h.getTitle();
+                indexer.updateDocument(new Term(FEED_ID, feedid + ""),
+                        createDocument(feedid, null, title, content, null));
+            } catch (Exception e) {
+                logger.info(e.getMessage(), e);
+            }
+        }
+    }
+
     public void index(int feeId, String author, String title, String summary,
             String tags) throws CorruptIndexException, IOException {
+        try {
+            summary = Utils.extractText(summary);
+        } catch (SAXException ignore) {
+        }
+        Document doc = createDocument(feeId, author, title, summary, tags);
+
+        indexer.addDocument(doc);
+    }
+
+    private Document createDocument(int feeId, String author, String title,
+            String summary, String tags) throws IOException {
         Document doc = new Document();
         Field fid = new Field(FEED_ID, feeId + "", Store.YES,
                 Index.NOT_ANALYZED);
@@ -125,8 +157,7 @@ public class Searcher {
                 doc.add(f);
             }
         }
-
-        indexer.addDocument(doc);
+        return doc;
     }
 
     private String[] doSearch(IndexSearcher searcher, Query q, int count)

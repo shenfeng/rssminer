@@ -48,7 +48,7 @@ public class Utils {
         }
     }
 
-    static final ThreadLocal<Parser> parser = new ThreadLocal<Parser>() {
+    public static final ThreadLocal<Parser> parser = new ThreadLocal<Parser>() {
         protected Parser initialValue() {
             Parser p = new Parser();
             try {

@@ -1,6 +1,7 @@
 (ns rssminer.handlers.feeds
   (:use (rssminer [util :only [session-get to-int]]
                   [config :only [rssminer-conf]]
+                  [search :only [update-index]]
                   [http :only [client parse-response]])
         [clojure.tools.logging :only [debug error]])
   (:require [rssminer.db.feed :as db]
@@ -49,6 +50,7 @@
                          (let [resp (parse-response resp)]
                            (if (= 200 (:status resp))
                              (let [body (:body resp)]
+                               (update-index id body)
                                (db/save-feed-original id body)
                                {:status 200
                                 :headers {"Content-Type"

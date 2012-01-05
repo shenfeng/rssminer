@@ -103,7 +103,7 @@ public class RewriteHandler extends DefaultHandler {
     }
 
     private boolean isQuoteNeeded(String val) {
-        if (val.length() > 10) {
+        if (val.isEmpty() || val.length() > 10) {
             return true;
         } else {
             int i = val.length();
@@ -112,9 +112,9 @@ public class RewriteHandler extends DefaultHandler {
                 // http://www.cs.tut.fi/~jkorpela/qattr.html
                 if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z')
                         || (c >= 'A' && c <= 'Z') || c == '-' || c == '.') {
-                    continue;
+                } else {
+                    return true;
                 }
-                return true;
             }
 
             return false;

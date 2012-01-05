@@ -52,7 +52,7 @@
     } else if ($just_read.hasClass('like')) {
       selector += ' .unread-like';
     } else { selector += ' .unread-dislike'; }
-    var $n = $(selector), n = + $n.text().trim();
+    var $n = $(selector), n = + ($n.text() || "0").trim();
     if(n === 1) { $n.remove(); }
     else { $n.text(n-1); }
   }
