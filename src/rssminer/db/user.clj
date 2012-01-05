@@ -20,6 +20,7 @@
 (defn update-user [id data]
   (with-h2 (update-values :users ["id = ?" id] data)))
 
-(defn fetch-model [user-id]
-  (-> (h2-query ["SELECT model FROM users WHERE id = ?" user-id])
-      first :model))
+(defn fetch-conf [user-id]
+  (-> (h2-query ["SELECT conf FROM users WHERE id = ?"
+                 user-id])
+      first :conf ))

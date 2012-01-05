@@ -55,7 +55,7 @@
       if(layout.select('#feed-list', me)){
         $('#footer .info a').text(link).attr('href', link);
 
-        link = util.getFinalLink(link, feedid);
+        link = data.getFinalLink(link, feedid);
         $loader.css({visibility: 'visible'});
         var iframe = $iframe.attr('src', link)[0];
         iframe.onload = function () { $loader.css({visibility: 'hidden'}); };

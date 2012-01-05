@@ -200,26 +200,6 @@
     }
   }
 
-  var reseted = ["feedproxy", "wordpress", "appspot",
-                 'emacsblog', "blogspot", 'mikemccandless'];
-
-  var proxy_sites = ['google'];       // X-Frame-Options
-
-  function getFinalLink (link, feedid) {
-    var h = hostname(link);
-    for(var i = 0; i < proxy_sites.length; i++) {
-      if(h.indexOf(proxy_sites[i]) != -1) {
-        return _RM_.proxy_server + '/f/o/' + feedid;
-      }
-    }
-    for(i = 0; i < reseted.length; i++) {
-      if(h.indexOf(reseted[i]) != -1) {
-        return  _RM_.proxy_server + '/f/o/' + feedid + "?p=t";
-      }
-    }
-    return link;
-  }
-
   function imgError (e) {
     e.src="/imgs/16px-feed-icon.png";
   }
@@ -230,7 +210,6 @@
     notif: notif,
     iconError: imgError,
     util: {
-      getFinalLink: getFinalLink,
       delegateEvents: delegateEvents,
       hashRouter: hashRouter,
       hostname: hostname,

@@ -60,7 +60,9 @@
                 img: imgPath(i.url),
                 title: i.title || i.o_title, // original title
                 href: 'read/' + i.id,
-                neutral: i.count,
+                like: i.like_c,
+                dislike: i.dislike_c,
+                neutral: i.total_c - i.like_c - i.dislike_c,
                 id: i.id
               };
             }).value();
@@ -106,26 +108,51 @@
     if(typeof data === 'string') { data = JSON.parse(data); }
     var now = new Date().getTime() / 1000;
     _.each(data, function (e) {      // convert null to default
-      // mark old enough (90d) as readed
-      if(now - e.published_ts > 3600 * 24 * 90) e.read_date = 1;
+      // mark old enough (45d) as readed
+      if(now - e.published_ts > 3600 * 24 * 45) e.read_date = 1;
       // -1 is db default value
       e.read_date = e.read_date === null ? -1 : e.read_date;
+      e.vote_sys = e.vote_sys === null ? 1 : e.vote_sys;
       e.vote = e.vote === null ? 0 : e.vote;
     });
 
     var unread = _.filter(data, function (i) { return i.read_date <= 0;});
     var readed = _.filter(data, function (i) { return i.read_date > 0;});
-    unread.sort(by('vote', by('published_ts', null, -1), -1));
-    readed.sort(by('vote', by('published_ts', null, -1), -1));
+    var cmp = by('vote', by('vote_sys',
+                            by('published_ts', null, -1), -1), -1);
+    readed.sort(cmp);
+    unread.sort(cmp);
     data = unread.concat(readed);
 
     var result = _.map(data,transformItem(subid));
     return result;
   };
 
+  var reseted = ["wordpress", "appspot", 'emacsblog',
+                 "blogspot", 'mikemccandless'];
+
+  var proxy_sites = ['google', "feedproxy"];       // X-Frame-Options
+
+  function getFinalLink (link, feedid) {
+    var h = utils.hostname(link);
+    for(var i = 0; i < proxy_sites.length; i++) {
+      if(h.indexOf(proxy_sites[i]) != -1) {
+        return _RM_.proxy_server + '/f/o/' + feedid;
+      }
+    }
+    for(i = 0; i < reseted.length; i++) {
+      if(h.indexOf(reseted[i]) != -1) {
+        return  _RM_.proxy_server + '/f/o/' + feedid + "?p=t";
+      }
+    }
+    return link;
+  }
+
+
   // export
   window.RM = $.extend(window.RM, {
     data: {
+      getFinalLink: getFinalLink,
       parseSubs: parseSubs,
       parseFeedList: parseFeedList,
       parseWelcomeList: parseWelcomeList

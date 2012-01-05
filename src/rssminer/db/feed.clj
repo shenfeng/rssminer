@@ -21,7 +21,8 @@
 
 (defn fetch-by-rssid [user-id rss-id limit offset]
   (h2-query ["SELECT f.id, author, link, title, tags,
-                     published_ts, uf.read_date, uf.vote FROM feeds f
+                     published_ts, uf.read_date, uf.vote, uf.vote_sys
+              FROM feeds f
               LEFT OUTER JOIN user_feed uf ON uf.feed_id = f.id
               WHERE rss_link_id = ?
               AND  (uf.user_id = ? or uf.user_id IS NULL)

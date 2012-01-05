@@ -5,6 +5,7 @@ import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.ccil.cowan.tagsoup.Parser;
@@ -107,6 +108,15 @@ public class Utils {
             logger.trace(e.getMessage(), e);
             return Info.EMPTY;
         }
+    }
+
+    public static double[] pick(double[] prefs, double likeRatio,
+            double dislikeRatio) {
+        int likeIndex = prefs.length - (int) (prefs.length * likeRatio);
+        int disLikeIndex = (int) (prefs.length * dislikeRatio);
+        likeIndex = likeIndex == prefs.length ? prefs.length - 1 : likeIndex;
+        Arrays.sort(prefs);
+        return new double[] { prefs[likeIndex], prefs[disLikeIndex] };
     }
 
     public static String extractText(String html) throws IOException,

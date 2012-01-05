@@ -27,7 +27,7 @@
     (uf/mark-as-read user-id fid)))
 
 (defn get-by-subscription [req]
-  (let [{:keys [rss-id limit offset] :or {limit 30 offset 0}} (:params req)
+  (let [{:keys [rss-id limit offset] :or {limit 40 offset 0}} (:params req)
         uid (:id (session-get req :user))]
     (db/fetch-by-rssid uid (to-int rss-id) (to-int limit)
                        (to-int offset))))
