@@ -67,21 +67,21 @@
 
 (defn fetch-system-voteup [user-id limit]
   (h2-query ["SELECT f.id, f.title, f.author, f.tags, f.link, f.rss_link_id,
-              f.published_ts, uf.vote
+              f.published_ts, uf.vote, uf.vote_sys
               FROM feeds f JOIN user_feed uf ON uf.feed_id = f.id
               WHERE uf.user_id = ? and uf.vote = 0
               ORDER BY uf.vote_sys desc limit ?" user-id limit]))
 
 (defn fetch-recent-read [user-id limit]
   (h2-query ["SELECT f.id, f.title, f.author, f.link, f.tags, f.rss_link_id,
-              f.published_ts, uf.vote, uf.read_date
+              f.published_ts, uf.vote, uf.read_date, uf.vote_sys
               FROM feeds f JOIN user_feed uf ON uf.feed_id = f.id
               WHERE uf.user_id = ? and uf.read_date > 0
               ORDER BY uf.read_date desc limit ?" user-id limit]))
 
 (defn fetch-recent-voted [user-id limit]
   (h2-query ["SELECT f.id, f.title, f.author, f.link, f.tags, f.rss_link_id,
-              f.published_ts, uf.vote, uf.read_date
+              f.published_ts, uf.vote, uf.read_date, uf.vote_sys
               FROM feeds f JOIN user_feed uf ON uf.feed_id = f.id
               WHERE uf.user_id = ? and uf.vote != 0
               ORDER BY uf.read_date desc limit ?" user-id limit]))

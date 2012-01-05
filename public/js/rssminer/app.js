@@ -93,11 +93,11 @@
     if(id) {
       ajax.jpost('/api/feeds/' + id  + '/vote', {vote: vote}, function () {
         if(vote === 1) {
-          $feed.addClass('like').removeClass('dislike neutral');
+          $feed.addClass('like').removeClass('dislike neutral sys');
         } else if(vote === -1) {
-          $feed.addClass('dislike').removeClass('like neutral');
+          $feed.addClass('dislike').removeClass('like neutral sys');
         } else if(vote === 0) {
-          $feed.addClass('neutral').removeClass('like dislike');
+          $feed.addClass('neutral').removeClass('like dislike sys');
         }
       });
     }

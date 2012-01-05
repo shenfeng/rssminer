@@ -175,11 +175,19 @@ html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
         cursor: pointer;
         &.selected { background: #c4c4c4;}
         &:hover { background: #d4d4d4; }
-        .indicator {
-            margin: 4px;
+        /* by sys, virtual small than bad user */
+        &.sys .indicator {
             height: 5px;
             width: 5px;
-            @include border-radius(2px);
+            top: 1px;
+            @include border-radius(2px);}
+        .indicator {
+            margin: 4px;
+            position: relative;
+            top: 3px;
+            height: 7px;
+            width: 7px;
+            @include border-radius(5px);
         }
         .date {
             position: absolute;

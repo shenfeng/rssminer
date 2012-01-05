@@ -22,7 +22,7 @@
     (let [ids (uf/fetch-unvoted-feedids user-id since-time)
           votes (NaiveBayes/classify @searcher model ids)]
       (dorun (map (fn [id score]
-                    (uf/insert-sys-vote user-id score)) ids votes))
+                    (uf/insert-sys-vote user-id id score)) ids votes))
       ;; 30% => like, 20% dislike, 50% neutual
       (let [r (rssminer.Utils/pick votes 0.3 0.2)
             conf (merge (read-json (or (fetch-conf user-id) "{}"))

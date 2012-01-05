@@ -1,7 +1,8 @@
 // functions to transform data
 (function () {
   var utils = RM.util,
-      user = _RM_ && _RM_.user;
+      user = (_RM_ && _RM_.user) || {},
+      user_conf = user.conf || {};
 
   var by = function (name, minor, reverse) { // reverse when -1
     reverse = reverse || -1;
@@ -32,14 +33,19 @@
   }
 
   function  feedClass (i) {
+    var like_score = user_conf.like_score || 1,
+        neutral_score = user_conf.neutral_score || 0; // db default 0
     var cls;
     if(i.read_date === 1) { cls = 'sys-read'; }
     else if(i.read_date > 1) { cls = 'read';}
-    else {cls = 'unread' ;}
+    else {cls = 'unread';}
 
     if (i.vote < 0) { cls += ' dislike'; }
     else if (i.vote > 0) { cls += ' like'; }
-    else { cls += ' neutral'; }
+    else if(i.vote_sys > like_score) { cls += ' like sys'; }
+    else if(i.vote_sys < neutral_score) { cls += ' dislike sys';}
+    else { cls += ' neutral sys'; }
+
     return cls;
   }
 
@@ -51,7 +57,7 @@
   function parseSubs (subs) {
     var grouped = _.groupBy(subs, 'group_name'),
         result = [],
-        collapsed = (user && user.conf && user.conf.nav) || [];
+        collapsed = user_conf.nav || [];
     for(var tag in grouped) {
       var list = _(grouped[tag]).chain()
             .sortBy(function (i) { return i.sort_index; })
