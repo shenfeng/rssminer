@@ -12,10 +12,8 @@ import me.shenfeng.http.HttpClient;
 import me.shenfeng.http.HttpClientConstant;
 import me.shenfeng.http.HttpResponseFuture;
 
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.http.HttpHeaders.Names;
 import org.jboss.netty.handler.codec.http.HttpResponse;
-import org.jboss.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +25,11 @@ public class FaviconFuture extends AbstractFuture {
     static Logger logger = LoggerFactory.getLogger(FaviconFuture.class);
 
     private final String hostname;
-    private static final Map<String, Object> EMPTY = new TreeMap<String, Object>();
+    static final Map<String, Object> EMPTY = new TreeMap<String, Object>();
+    static final Map<String, Object> IMG_HEADER = new TreeMap<String, Object>();
+    static {
+        IMG_HEADER.put(Names.ACCEPT_ENCODING, null);
+    }
 
     class Handler implements Runnable {
         private HttpResponseFuture f;
@@ -54,13 +56,6 @@ public class FaviconFuture extends AbstractFuture {
                     }
 
                 } else if (img) {
-                    String type = r.getHeader(Names.CONTENT_TYPE);
-                    // some website return gziped text
-                    // http://blogs.oracle.com/
-                    if (type != null && type.indexOf("text") != -1) {
-                        r.setContent(ChannelBuffers.copiedBuffer(bodyStr(r),
-                                CharsetUtil.UTF_8));
-                    }
                     done(r); // is image, not 301, 302, OK, get it
                 } else {
                     if (code == 200) {
@@ -88,7 +83,8 @@ public class FaviconFuture extends AbstractFuture {
             throw new NullPointerException("url can not be null");
         if (++retryCount < MAX_RETRY) {
             URI u = new URI(uri);
-            HttpResponseFuture f = client.execGet(new URI(uri), EMPTY, proxy);
+            HttpResponseFuture f = client.execGet(new URI(uri),
+                    img ? IMG_HEADER : EMPTY, proxy);
             f.addListener(new Handler(f, u, img));
         } else {
             done(HttpClientConstant.UNKOWN_ERROR);

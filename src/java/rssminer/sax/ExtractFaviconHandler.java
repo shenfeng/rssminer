@@ -22,13 +22,14 @@ public class ExtractFaviconHandler extends DefaultHandler {
             Attributes attributes) throws SAXException {
         if ("link".equalsIgnoreCase(qName)) {
             int index = attributes.getIndex("rel");
-            if (index != -1
-                    && attributes.getValue(index).toLowerCase()
-                            .indexOf("icon") != -1) {
-                String v = attributes.getValue("href");
-                try {
-                    url = new URI(urlbase).resolve(v).toString();
-                } catch (Exception ignore) {
+            if (index != -1) {
+                String val = attributes.getValue(index).toLowerCase();
+                if (val.equals("icon") || val.indexOf(" icon") != -1) {
+                    String v = attributes.getValue("href");
+                    try {
+                        url = new URI(urlbase).resolve(v).toString();
+                    } catch (Exception ignore) {
+                    }
                 }
             }
         }
