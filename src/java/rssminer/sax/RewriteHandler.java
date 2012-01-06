@@ -18,12 +18,16 @@ public class RewriteHandler extends DefaultHandler {
     static final char EQUAL = '=';
     static final char QUOTE = '\"';
 
-    private static final String[] unCloseableTags = new String[] { "img",
-            "input", "hr", "br", "meta", "link" };
+    static final String[] unCloseableTags = new String[] { "img", "input",
+            "hr", "br", "meta", "link" };
+
+    static final String[] preseveWhiteSpaceTags = new String[] { "pre",
+            "script", "style" };
 
     private final StringBuilder sb;
     private final URI uriBase;
     private String proxyURI;
+    private boolean squashWithspace = true;
     private boolean hasBase = false;
 
     public RewriteHandler(String html, String uriBase)
@@ -58,26 +62,38 @@ public class RewriteHandler extends DefaultHandler {
 
     public void characters(char[] ch, int start, int length)
             throws SAXException {
-        // trim need care: space matters for pre, and other
-        sb.append(ch, start, length);
+        if (squashWithspace) {
+            boolean isLastWhiteSpace = false;
+            for (int i = start; i < start + length; i++) {
+                if (Character.isWhitespace(ch[i])) {
+                    if (!isLastWhiteSpace) { // ignore adjacent whitespace
+                        sb.append(SPACE);
+                    }
+                    isLastWhiteSpace = true;
+                } else {
+                    sb.append(ch[i]);
+                    isLastWhiteSpace = false;
+                }
+            }
+        } else {
+            sb.append(ch, start, length);
+        }
     }
 
     public void startElement(String uri, String localName, String qName,
             Attributes attrs) throws SAXException {
-        boolean rw = "script".equalsIgnoreCase(qName)
-                || "img".equalsIgnoreCase(qName)
-                || "link".equalsIgnoreCase(qName);
+        qName = qName.toLowerCase();
+        boolean rw = "script".equals(qName) || "img".equals(qName)
+                || "link".equals(qName);
         sb.append(START).append(qName);
         int length = attrs.getLength();
         for (int i = 0; i < length; ++i) {
-            String name = attrs.getQName(i);
+            String name = attrs.getQName(i).toLowerCase();
             String val = attrs.getValue(i);
             sb.append(SPACE);
             sb.append(name).append(EQUAL);
-            if (rw
-                    && proxyURI != null
-                    && ("src".equalsIgnoreCase(name) || "href"
-                            .equalsIgnoreCase(name)) && val != null) {
+            if (rw && proxyURI != null
+                    && ("src".equals(name) || "href".equals(name))) {
                 sb.append(QUOTE);
                 try {
                     String e = URLEncoder.encode(uriBase.resolve(val)
@@ -96,9 +112,16 @@ public class RewriteHandler extends DefaultHandler {
         }
         sb.append(END);
 
-        if (!hasBase && "head".equalsIgnoreCase(qName)) {
+        if (!hasBase && "head".equals(qName)) {
             sb.append("<base href=\"").append(uriBase.toString())
                     .append("\">");
+        } else {
+            for (String tag : preseveWhiteSpaceTags) {
+                if (qName.equals(tag)) {
+                    squashWithspace = false;
+                    break;
+                }
+            }
         }
     }
 
@@ -134,6 +157,12 @@ public class RewriteHandler extends DefaultHandler {
         if (close) {
             sb.append(START).append(SLASH).append(qName);
             sb.append(END);
+        }
+        for (String tag : preseveWhiteSpaceTags) {
+            if (l.equals(tag)) {
+                squashWithspace = true;
+                break;
+            }
         }
     }
 }

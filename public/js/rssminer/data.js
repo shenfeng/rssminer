@@ -154,7 +154,6 @@
     return link;
   }
 
-
   // export
   window.RM = $.extend(window.RM, {
     data: {
