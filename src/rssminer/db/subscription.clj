@@ -16,21 +16,22 @@
   (h2-query ["SELECT us.rss_link_id AS id, us.group_name, l.url,
               us.sort_index, us.title, l.title as o_title,
            (SELECT COUNT(*) FROM feeds
-              LEFT JOIN user_feed on feeds.id = user_feed.feed_id
+              LEFT JOIN user_feed ON feeds.id = user_feed.feed_id
               WHERE rss_link_id = us.rss_link_id
-              AND published_ts > ? and user_feed.read_date < 1)
+              AND published_ts > ? AND
+              (user_feed.read_date < 1 OR user_feed.read_date IS NULL))
               AS total_c,
            (SELECT COUNT(*) FROM feeds
-              LEFT JOIN user_feed on feeds.id = user_feed.feed_id
+              LEFT JOIN user_feed ON feeds.id = user_feed.feed_id
               WHERE rss_link_id = us.rss_link_id
               AND published_ts > ? AND user_feed.read_date < 1
               AND user_feed.vote_sys > ?) AS like_c,
            (SELECT COUNT(*) FROM feeds
-              LEFT JOIN user_feed on feeds.id = user_feed.feed_id
+              LEFT JOIN user_feed ON feeds.id = user_feed.feed_id
               WHERE rss_link_id = us.rss_link_id
               AND published_ts > ? AND user_feed.read_date < 1
               AND user_feed.vote_sys < ?) AS dislike_c
-           FROM user_subscription us join rss_links l
+           FROM user_subscription us JOIN rss_links l
             ON l.id = us.rss_link_id WHERE us.user_id = ?"
              mark-as-read-time mark-as-read-time
              like mark-as-read-time neutral user-id]))

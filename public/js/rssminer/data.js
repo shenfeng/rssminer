@@ -134,21 +134,31 @@
     return result;
   };
 
+  var enable_proxy = true;
+  setTimeout(function () {
+    var img = new Image(),
+        src = ["blog", "spot",".com/favicon.ico?t="].join("");
+    img.onload = function () { enable_proxy = false; };
+    img.src = "http://sujitpal."+ src + new Date().getTime();
+  }, 1000);
+
   var reseted = ["wordpress", "appspot", 'emacsblog',
                  "blogspot", 'mikemccandless'];
 
   var proxy_sites = ['google', "feedproxy"];       // X-Frame-Options
 
   function getFinalLink (link, feedid) {
-    var h = utils.hostname(link);
-    for(var i = 0; i < proxy_sites.length; i++) {
-      if(h.indexOf(proxy_sites[i]) != -1) {
-        return _RM_.proxy_server + '/f/o/' + feedid;
+    if(enable_proxy) {
+      var h = utils.hostname(link);
+      for(var i = 0; i < proxy_sites.length; i++) {
+        if(h.indexOf(proxy_sites[i]) != -1) {
+          return _RM_.proxy_server + '/f/o/' + feedid;
+        }
       }
-    }
-    for(i = 0; i < reseted.length; i++) {
-      if(h.indexOf(reseted[i]) != -1) {
-        return  _RM_.proxy_server + '/f/o/' + feedid + "?p=t";
+      for(i = 0; i < reseted.length; i++) {
+        if(h.indexOf(reseted[i]) != -1) {
+          return  _RM_.proxy_server + '/f/o/' + feedid + "?p=t";
+        }
       }
     }
     return link;
