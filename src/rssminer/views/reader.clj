@@ -1,5 +1,5 @@
 (ns rssminer.views.reader
-  (:use [rssminer.views.layouts :only [layout snippet deftemplate]])
+  (:use [rssminer.views.layouts :only [snippet deftemplate]])
   (:use [rssminer.util :only [serialize-to-js]])
   (:require [net.cgrand.enlive-html :as html]))
 

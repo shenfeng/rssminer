@@ -10,14 +10,15 @@
 (defn save-feeds [feeds rss-id]
   (doseq [{:keys [link] :as feed} (:entries feeds)]
     (when (and link (not (blank? link)))
-      (try
-        (let [id (h2-insert :feeds (assoc feed :rss_link_id rss-id))]
-          (index-feed id feed))         ; TODO update index
-        (catch RuntimeException e       ;(link, rss_link_id) is unique
-          (trace "update" rss-id link)
-          (with-h2
-            (update-values :feeds ["link=? and rss_link_id = ?"
-                                   link rss-id] feed)))))))
+      (let [f (dissoc feed :summary)]   ; summary not saved
+        (try
+          (let [id (h2-insert :feeds (assoc f :rss_link_id rss-id))]
+            (index-feed id feed))
+          (catch RuntimeException e      ;(link, rss_link_id) is unique
+            (trace "update" rss-id link)
+            (with-h2
+              (update-values :feeds ["link=? and rss_link_id = ?"
+                                     link rss-id] f))))))))
 
 (defn fetch-by-rssid [user-id rss-id limit offset]
   (h2-query ["SELECT f.id, author, link, title, tags,

@@ -1,33 +1,55 @@
 @import "variable";
 @import "css3";
-@import "reset";
-@import "common";
+/* @import "reset"; */
+/* @import "common"; */
+
+.clearfix:before, .clearfix:after { content: ""; display: table; }
+.clearfix:after { clear: both; }
+.clearfix { zoom: 1; }
+
+.required { color: #C00; }
+
+.lfloat { float: left; }
+.rfloat { float: right; }
+
+body {
+    font: 400 13px/1.231 Arial, Helvetica, sans-serif;
+    color: #222;
+    margin: 0;
+    padding: 0;
+    background: #F9F9F9;
+}
+a { outline: none; }
+table { border-collapse: collapse; border-spacing: 0; }
+
+p { font-size: 14px;}
 
 #header {
-    .content {
-        width: $page-width;
-        margin: 0 auto;
-    }
-    background-color: #F7F7F7;
-    background-image: -moz-linear-gradient(center bottom , #E9EAEF 10%, #F3F6F9 84%);
+    padding: 0.8em 0.5em 0em 0.5em;
+    text-indent: 1em;
+    text-shadow: 1px 1px 0px #E0E0E0;
+    h1 { margin: 4px 0; font-size: 40px;}
+    a { color: #303030; text-decoration: none; }
 }
+
+#header {
+    .content { width: $page-width; margin: 0 auto; }
+    background-color: #F7F7F7;
+    @include linear-gradient(#E9EAEF, #F3F6F9, true);
+}
+
 #signup-form {
     td { font-size: 13px; padding: 2px;}
-    td:first-child {
-        text-align: right;
-    }
-    #reg-email, #reg-password {
-        padding: 4px;
-        width: 250px;
-    }
+    td:first-child { text-align: right; }
+    #reg-email, #reg-password { padding: 4px; width: 250px; }
 }
 
 #login-form {
     td { font-size: 11px; }
-    #email, #password {
-        width: 150px;
-    }
+    #email, #password { width: 150px; }
 }
+
+#content { border-bottom: 1px solid #E3E3E3; }
 
 #main {
     margin: 0 auto;
@@ -37,13 +59,17 @@
         padding: 1em 1em 1em 0;
         width: $left_width;
         border-right: 1px solid #E0E0E0;
-        img { margin: 12px auto; @include box-shadow(0, 0, 10px, #666); }
+        img {
+            margin: 12px auto;
+            @include box-shadow(0, 0, 10px, #666);
+        }
     }
     .rfloat {
         padding-top: 2em;
         width: $page-width - $left_width - 30px;
         a { display: block; margin: 0 40px; }
         img {
+            border: none;
             margin: 12px 0 12px 12px;
             &:hover { @include box-shadow(0, 0, 10px, #666); }
             @include box-shadow(0, 0, 5px, #666);
@@ -52,7 +78,7 @@
             padding: 0.5em;
             margin: 0.5em;
             background-color: #D1E1FA;
-            background-image: -moz-linear-gradient(center bottom , #C5D7FB 16%, #D8E1FF 84%);
+            @include linear-gradient(#C5D7FB, #D8E1FF, true);
         }
     }
 }
@@ -63,23 +89,37 @@
         margin: 0 auto;
         padding: 0.3em;
     }
-    border-top: #ddd solid 1px;
+    background: #464646;
+    border-top: 1px solid #FFFFFF;
     ul {
         padding: 0;
-        li {
-            &:first-child { margin-left: 0; }
-            margin: 0 8px;
-            display: inline;
-            a {
-                &:hover {
-                    background: #CCD2E5;
-                    border-color: #B3B3B3;
-                    @include border-radius(3px);
-                    @include box-shadow(0, 1px, 0, rgba(0,0,0,.1));
-                }
-                padding: 5px 10px;
-                text-decoration: none;
+    }
+    li {
+        &:first-child { margin-left: 0; }
+        margin: 0 8px;
+        display: inline;
+        a {
+            color: white;
+            &:hover {
+                background: #CCD2E5;
+                border-color: #B3B3B3;
+                @include border-radius(3px);
+                @include box-shadow(0, 1px, 0, rgba(0,0,0,.1));
             }
+            padding: 5px 10px;
+            text-decoration: none;
         }
+    }
+}
+
+#accouts-div {
+    a { text-decoration: none; }
+    h1 { width: 300px; margin: 40px auto 20px; }
+    form {
+        width: 400px;
+        margin: 0 auto;
+        font-size: 15px;
+        .textfield { width: 250px; padding: 5px; }
+        td { padding: 4px; }
     }
 }

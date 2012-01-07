@@ -22,6 +22,3 @@
 
 (defmacro defsnippet [name source selector args & forms]
   `(def ~name (snippet ~source ~selector ~args ~@forms)))
-
-(deftemplate layout "templates/layout.html" [body]
-  [:#main] (html/substitute body))

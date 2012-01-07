@@ -1,13 +1,9 @@
 (ns rssminer.views.users
-  (:use [rssminer.views.layouts :only [layout snippet]])
+  (:use [rssminer.views.layouts :only [snippet deftemplate]])
   (:require [net.cgrand.enlive-html :as html]))
 
-(let [s (snippet
-         "templates/user/login.html" [html/root] [return-url]
-         [:input#return-url] (html/set-attr :value return-url))]
-  (defn login-page [return-url]
-    (layout (s return-url))))
+(deftemplate login-page "templates/user/login.html" [return-url]
+  [:input#return-url] (html/set-attr :value return-url))
 
-(let [s (snippet "templates/user/signup.html" [html/root] [])]
-  (defn signup-page []
-    (layout (s))))
+(deftemplate signup-page "templates/user/signup.html" [])
+

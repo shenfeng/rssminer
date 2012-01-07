@@ -20,11 +20,11 @@
 
 (defn fetch-feeds [feed-ids user-id]
   (let [sql (if user-id
-              ["SELECT id, author, title, summary, link, p.pref, tags
+              ["SELECT id, author, title, link, p.pref, tags
                 FROM TABLE(x int=?) T INNER JOIN feeds f ON T.x = f.id
                 LEFT JOIN user_feed_pref p
                      on p.feed_id = id and p.user_id = ?" feed-ids user-id]
-              ["SELECT id, author, title, summary, link, tags
+              ["SELECT id, author, title, link, tags
                 FROM TABLE(x int=?) T INNER JOIN feeds f ON T.x = f.id"
                feed-ids])]
     (h2-query sql :convert)))

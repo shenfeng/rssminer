@@ -64,7 +64,8 @@ CREATE TABLE feeds (
   author VARCHAR,
   link VARCHAR,
   title VARCHAR,
-  summary CLOB,
+  -- saved in lucene index, updated by orginal if fetched. not saved in db
+  -- summary CLOB,
   original CLOB,
   tags VARCHAR,
   updated_ts INTEGER,
