@@ -70,7 +70,9 @@
            (GET "/" [] reader/dashboard-page))
   (context "/login" []
            (GET "/" [] user/show-login-page)
-           (POST "/" [] user/login))
+           (POST "/" [] user/login)
+           (GET "/google" [] user/google-openid)
+           (GET "/checkauth" [] user/checkauth))
   (context "/signup" []
            (GET "/" [] user/show-signup-page)
            (POST "/" [] user/signup))

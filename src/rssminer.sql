@@ -9,8 +9,8 @@ CREATE TABLE users (
   email VARCHAR UNIQUE,
   name VARCHAR,
   conf VARCHAR,                 -- json string
-  model VARCHAR,                -- json string
   password VARCHAR,
+  provider VARCHAR,             -- openid provider, eg: google
   authen_token VARCHAR,
   added_ts INTEGER              -- interger is easier to serialize
 );
@@ -39,7 +39,7 @@ create table rss_links (
   added_ts TIMESTAMP default now(),
   next_check_ts INTEGER default 1,
   last_status INTEGER,
-  check_interval INTEGER default 60 * 60 * 8, -- seconds, in 8 h, min 1.5h
+  check_interval INTEGER default 60 * 60 * 4, -- seconds, in 4 h, min 1.5h
   last_modified VARCHAR,        -- from http response header
   user_id INTEGER      -- who first add it, REFERENCES users(no index)
 )

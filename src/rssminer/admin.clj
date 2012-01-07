@@ -26,10 +26,6 @@
   (use-h2-database! db-path)
   (info "import h2 schema, create user feng")
   (import-h2-schema!)
-  (create-user {:name "feng"
-                :password password
-                :added_ts (now-seconds)
-                :email "shenedu@gmail.com"})
   (close-global-h2-factory!))
 
 (defn rand-subscribe []
