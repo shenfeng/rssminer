@@ -317,3 +317,14 @@ iframe {
         float: left;
     }
 }
+
+#new-user {
+    padding: 30px;
+    img {
+        &:hover { @include box-shadow(0, 0, 6px, #666); }
+        margin: 6px auto; @include box-shadow(0, 0, 3px, #666);
+    }
+    a {
+        text-align: center;
+    }
+}

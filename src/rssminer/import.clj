@@ -4,7 +4,8 @@
         [clojure.tools.logging :only [info error]]
         [ring.util.response :only [redirect]]
         (rssminer [util :only [session-get]]
-                  [http :only [client parse-response]]))
+                  [http :only [client parse-response]]
+                  [config :only [rssminer-conf]]))
   (:import java.net.URI
            java.io.File
            rssminer.importer.Parser))
@@ -50,3 +51,13 @@
               (redirect "/"))))
       (do (error "get greader code" (:status resp))
           (redirect "/")))))
+
+(defn greader-import [req]
+  (let [host (if (= (@rssminer-conf :profile) :dev)
+               "localhost:9090/" "rssminer.net/")]
+    (redirect
+     (str
+      "https://accounts.google.com/o/oauth2/auth?redirect_uri=http://"
+      host "oauth2callback&response_type=code"
+      "&client_id=1062014352023.apps.googleusercontent.com"
+      "&scope=https://www.google.com/reader/api/&access_type=offline"))))

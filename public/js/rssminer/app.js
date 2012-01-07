@@ -83,17 +83,19 @@
   }
 
   function welcome () {
-    ajax.get('/api/user/welcome', function (resp) {
+    if(_RM_.subs) {             // user has subscriptions
       var $welcome = $('.welcome-list').empty();
-      if(typeof resp === 'string') { resp = JSON.parse(resp); }
-      for(var name in titles) {
-        var html = to_html(tmpls.welcome_section, {
-          title: titles[name],
-          list: data.parseWelcomeList(resp[name])
-        });
-        $welcome.append(html);
-      }
-    });
+      ajax.get('/api/user/welcome', function (resp) {
+        if(typeof resp === 'string') { resp = JSON.parse(resp); }
+        for(var name in titles) {
+          var html = to_html(tmpls.welcome_section, {
+            title: titles[name],
+            list: data.parseWelcomeList(resp[name])
+          });
+          $welcome.append(html);
+        }
+      });
+    }
   }
 
   function saveVote (ele, vote) {

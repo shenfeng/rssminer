@@ -13,10 +13,10 @@
                                      wrap-reload-in-dev wrap-failsafe
                                      wrap-request-logging-in-dev
                                      JPOST JPUT JDELETE JGET]]
-                  [import :only [opml-import oauth2callback]]
                   [redis :only [redis-store]]))
   (:require [clojure.string :as str]
             [compojure.route :as route]
+            [rssminer.import :as import]
             (rssminer.handlers [reader :as reader]
                                [subscriptions :as subscription]
                                [users :as user]
@@ -56,7 +56,7 @@
            (JGET "/" [] feed/get-by-id)
            (JPOST "/vote" [] feed/user-vote)
            (JPOST "/read" [] feed/mark-as-read))
-  (JPOST "/import/opml-import" [] opml-import)
+  (JPOST "/import/opml-import" [] import/opml-import)
   (JGET "/export/opml-export" [] "TODO"))
 
 (defroutes all-routes
@@ -64,7 +64,7 @@
   (GET "/p" []  handle-proxy)
   (GET "/fav" [] get-favicon)
   (GET "/f/o/:id" [] feed/get-orginal)
-  (GET "/oauth2callback" [] oauth2callback)
+  (GET "/oauth2callback" [] import/oauth2callback)
   (GET "/a" [] reader/app-page)
   (context "/dashboard" []
            (GET "/" [] reader/dashboard-page))
@@ -73,6 +73,7 @@
            (POST "/" [] user/login)
            (GET "/google" [] user/google-openid)
            (GET "/checkauth" [] user/checkauth))
+  (GET "/import/google" [] import/greader-import)
   (context "/signup" []
            (GET "/" [] user/show-signup-page)
            (POST "/" [] user/signup))

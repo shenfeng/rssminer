@@ -3,8 +3,6 @@
 @import "reset";
 @import "common";
 
-h3 > a { display: none; }
-
 #header {
     .content {
         width: $page-width;
@@ -44,8 +42,8 @@ h3 > a { display: none; }
     .rfloat {
         padding-top: 2em;
         width: $page-width - $left_width - 30px;
+        a { display: block; margin: 0 40px; }
         img {
-            display: block;
             margin: 12px 0 12px 12px;
             &:hover { @include box-shadow(0, 0, 10px, #666); }
             @include box-shadow(0, 0, 5px, #666);
