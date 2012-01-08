@@ -2,7 +2,24 @@
 (function () {
   var utils = RM.util,
       user = (_RM_ && _RM_.user) || {},
-      user_conf = user.conf || {};
+      proxy_server = _RM_.proxy_server,
+      user_conf = user.conf || {},
+      expire = user.conf.expire || 45,
+      enable_proxy = true,      // proxy reseted site?
+      like_score = user_conf.like_score || 1,
+      neutral_score = user_conf.neutral_score || 0; // db default 0
+
+  setTimeout(function () {
+    var img = new Image(),
+        src = ["blog", "spot",".com/favicon.ico?t="].join("");
+    img.onload = function () { enable_proxy = false; };
+    img.src = "http://sujitpal."+ src + new Date().getTime();
+  }, 1000);
+
+  function toJson (data) {
+    if(typeof data === 'string') { return JSON.parse(data); }
+    return data;
+  }
 
   var by = function (name, minor, reverse) { // reverse when -1
     reverse = reverse || -1;
@@ -33,8 +50,6 @@
   }
 
   function  feedClass (i) {
-    var like_score = user_conf.like_score || 1,
-        neutral_score = user_conf.neutral_score || 0; // db default 0
     var cls;
     if(i.read_date === 1) { cls = 'sys-read'; }
     else if(i.read_date > 1) { cls = 'read';}
@@ -49,9 +64,10 @@
     return cls;
   }
 
+
   function imgPath (url) {
     var host = encodeURIComponent(utils.hostname(url));
-    return _RM_.proxy_server + '/fav?h=' + host;
+    return proxy_server + '/fav?h=' + host;
   }
 
   function parseSubs (subs) {
@@ -108,22 +124,53 @@
     };
   }
 
-  function parseWelcomeList (data) { return _.map(data, transformItem()); }
+  function parseWelcomeList (data, subid) {
+    return _.map(toJson(data), transformItem(subid));
+  }
+
+  function defaultFeedData (e) {
+    var now = new Date().getTime() / 1000;
+    // mark old enough (45d) as readed
+    if(now - e.published_ts > expire * 3600 * 24 && e.read_date < 1) {
+      e.read_date = 1;
+    }
+    // -1 is db default value
+    e.read_date = e.read_date === null ? -1 : e.read_date;
+    e.vote_sys = e.vote_sys === null ? 1 : e.vote_sys;
+    e.vote = e.vote === null ? 0 : e.vote;
+  }
+
+  function parseFeedListForWelcome (subid, data) {
+    data = toJson(data);
+    _.each(data, defaultFeedData); // default value
+    var unread = _.filter(data, function (i) { return i.read_date < 0;}),
+        outdated = _.filter(data, function (i) { return i.read_date === 1;}),
+        readed = _.filter(data, function (i) { return i.read_date > 1;});
+
+    var cmp = by('vote', by('vote_sys',
+                            by('published_ts', null, -1), -1), -1);
+
+    readed.sort(cmp);
+    readed.sort(outdated);
+    unread.sort(cmp);
+
+    return [{
+      title: 'Feeds that are not read',
+      list: _.map(unread, transformItem(subid))
+    },{
+      title: 'Feeds that have been read',
+      list: _.map(readed, transformItem(subid))
+    }, {
+      title: 'Feeds that are outdated',
+      list: _.map(outdated, transformItem(subid))
+    }];
+  }
 
   function parseFeedList (subid, data) {
-    if(typeof data === 'string') { data = JSON.parse(data); }
-    var now = new Date().getTime() / 1000;
-    _.each(data, function (e) {      // convert null to default
-      // mark old enough (45d) as readed
-      if(now - e.published_ts > 3600 * 24 * 45) e.read_date = 1;
-      // -1 is db default value
-      e.read_date = e.read_date === null ? -1 : e.read_date;
-      e.vote_sys = e.vote_sys === null ? 1 : e.vote_sys;
-      e.vote = e.vote === null ? 0 : e.vote;
-    });
-
-    var unread = _.filter(data, function (i) { return i.read_date <= 0;});
-    var readed = _.filter(data, function (i) { return i.read_date > 0;});
+    data = toJson(data);
+    _.each(data, defaultFeedData); // default value
+    var unread = _.filter(data, function (i) { return i.read_date <= 0;}),
+        readed = _.filter(data, function (i) { return i.read_date > 0;});
     var cmp = by('vote', by('vote_sys',
                             by('published_ts', null, -1), -1), -1);
     readed.sort(cmp);
@@ -134,15 +181,7 @@
     return result;
   };
 
-  var enable_proxy = true;
-  setTimeout(function () {
-    var img = new Image(),
-        src = ["blog", "spot",".com/favicon.ico?t="].join("");
-    img.onload = function () { enable_proxy = false; };
-    img.src = "http://sujitpal."+ src + new Date().getTime();
-  }, 1000);
-
-  var reseted = ["wordpress", "appspot", 'emacsblog',
+  var reseted = ["wordpress", "appspot", 'emacsblog','blogger',
                  "blogspot", 'mikemccandless'];
 
   var proxy_sites = ['google', "feedproxy"];       // X-Frame-Options
@@ -150,14 +189,14 @@
   function getFinalLink (link, feedid) {
     if(enable_proxy) {
       var h = utils.hostname(link);
-      for(var i = 0; i < proxy_sites.length; i++) {
-        if(h.indexOf(proxy_sites[i]) != -1) {
-          return _RM_.proxy_server + '/f/o/' + feedid;
-        }
-      }
       for(i = 0; i < reseted.length; i++) {
         if(h.indexOf(reseted[i]) != -1) {
-          return  _RM_.proxy_server + '/f/o/' + feedid + "?p=t";
+          return  proxy_server + '/f/o/' + feedid + "?p=t";
+        }
+      }
+      for(var i = 0; i < proxy_sites.length; i++) {
+        if(h.indexOf(proxy_sites[i]) != -1) {
+          return proxy_server + '/f/o/' + feedid;
         }
       }
     }
@@ -169,6 +208,7 @@
     data: {
       getFinalLink: getFinalLink,
       parseSubs: parseSubs,
+      parseFeedListForWelcome: parseFeedListForWelcome,
       parseFeedList: parseFeedList,
       parseWelcomeList: parseWelcomeList
     }

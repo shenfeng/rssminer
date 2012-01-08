@@ -3,6 +3,10 @@
 $nav_width: 265px;
 $footer_height: 230px;
 
+.clearfix:before, .clearfix:after { content: ""; display: table; }
+.clearfix:after { clear: both; }
+.clearfix { zoom: 1; }
+
 .unread-like { background-color: #449d4e; color: #ffffff; }
 .unread-neutral { background-color: #f5d85f; color: #303030; }
 .unread-dislike { background-color: #c28561; color: #ffffff; }
@@ -155,10 +159,14 @@ html, body {
     overflow: auto;
     .feeds > li { border-bottom: 1px solid #ccc; }
 }
-.welcome-list .feeds {
-    .title { max-width: 60%; }
-    .date { right: 1em; }
-    a { color: #333; }
+.welcome-list {
+    margin: 3px 2px;
+    h3 { text-align: center; margin-bottom: 5px; }
+    .feeds {
+        .title { max-width: 60%; }
+        .date { right: 1em; }
+    }
+    .section { width: 49%; margin: 3px 5px; float: left; }
 }
 
 .feeds {
@@ -255,7 +263,11 @@ span.vote {
     .info {
         cursor: default;
         margin-left: 1.5em;
-        * { text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
+        h5, a {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
         h5 { max-width: 500px; margin: 0; }
         a {
             color: #666;
@@ -265,16 +277,11 @@ span.vote {
             background: url(/imgs/external-link.png) right top no-repeat;
             text-decoration: none;
         }
-
     }
     .loader { margin: 5px 0 0 5.5em; }
     span { visibility: visible; }
     span.vote { left: 12em; }
-    ul {
-        padding: 0;
-        margin: 0;
-        list-style: none;
-    }
+    ul { padding: 0; margin: 0; list-style: none; }
     .chooser {
         li {
             &:hover { background: #bbb; }
@@ -312,14 +319,6 @@ iframe {
     overflow: auto !important;
     display: block;
     border-image: initial;
-}
-
-.welcome-list {
-    .section {
-        width: 48%;
-        margin: 3px 1%;
-        float: left;
-    }
 }
 
 #new-user {

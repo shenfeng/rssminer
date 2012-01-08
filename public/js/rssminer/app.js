@@ -17,6 +17,12 @@
       $loader = $('#reading-chooser .loader'),
       $reading_area = $('#reading-area');
 
+  function addWelcomeTitle (title) {
+    var $welcome = $('.welcome-list').empty();
+    $welcome.append('<h3>' + title +'</h3>');
+    return $welcome;
+  }
+
   function showFooterList () {
     $footer.show();
     $reading_area.addClass('show-iframe');
@@ -30,14 +36,23 @@
   }
 
   function readSubscription (id, callback) {
+    var title = $("#item-" + id + " .title").text().trim();
     if(layout.select('.sub-list', "item-" + id)) {
-      ajax.get("/api/subs/" + id, function (d) {
-        d = data.parseFeedList(id, d);
-        var html = to_html(tmpls.list, {feeds: d});
+      ajax.get("/api/subs/" + id, function (resp) {
+        var d = data.parseFeedList(id, resp),
+            html = to_html(tmpls.list, {feeds: d});
         $('#feed-list ul').empty().append(html);
         if(typeof callback === 'function') { callback(); }
         else if(d.length > 0) {
-          location.hash = "read/" + id + '/' + d[0].id;
+          hideFooterList();
+          var $welcome = addWelcomeTitle(title),
+              result = data.parseFeedListForWelcome(id, resp);
+          for(var i = 0; i < result.length; i++) {
+            var r = result[i];
+            if(r.list.length) {
+              $welcome.append(to_html(tmpls.welcome_section, result[i]));
+            }
+          }
         }
       });
     } else if (typeof callback === 'function') {
@@ -84,15 +99,16 @@
 
   function welcome () {
     if(_RM_.subs) {             // user has subscriptions
-      var $welcome = $('.welcome-list').empty();
+      var $welcome = addWelcomeTitle('Rssminer - an intelligent RSS reader');
       ajax.get('/api/user/welcome', function (resp) {
         if(typeof resp === 'string') { resp = JSON.parse(resp); }
         for(var name in titles) {
-          var html = to_html(tmpls.welcome_section, {
-            title: titles[name],
-            list: data.parseWelcomeList(resp[name])
-          });
-          $welcome.append(html);
+          var list = data.parseWelcomeList(resp[name]),
+              html = to_html(tmpls.welcome_section, {
+                title: titles[name],
+                list: list
+              });
+          if(list.length) { $welcome.append(html); }
         }
       });
     }
