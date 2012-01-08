@@ -4,6 +4,7 @@ import java.net.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.TreeMap;
 
 import me.shenfeng.http.HttpClient;
 import me.shenfeng.http.HttpClientConstant;
@@ -15,12 +16,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import clojure.lang.IFn;
+import clojure.lang.Keyword;
 
 public class ProxyFuture extends AbstractFuture {
+    static final Keyword resp_k = Keyword.intern("resp");
+    static final Keyword final_link_k = Keyword.intern("final-link");
 
     static Logger logger = LoggerFactory.getLogger(ProxyFuture.class);
 
     private final Map<String, Object> headers;
+    private String finalLink;
 
     public ProxyFuture(HttpClient client, String uri,
             Map<String, Object> headers, Proxy proxy, IFn callback)
@@ -33,6 +38,7 @@ public class ProxyFuture extends AbstractFuture {
     }
 
     private void doIt(String uri) throws URISyntaxException {
+        finalLink = uri;
         if (uri == null)
             throw new NullPointerException("url can not be null");
         if (++retryCount < MAX_RETRY) {
@@ -40,8 +46,16 @@ public class ProxyFuture extends AbstractFuture {
             HttpResponseFuture f = client.execGet(u, headers, proxy);
             f.addListener(new Handler(f, u));
         } else {
-            done(HttpClientConstant.UNKOWN_ERROR);
+            finish(HttpClientConstant.UNKOWN_ERROR);
         }
+    }
+
+    private void finish(HttpResponse resp) {
+        resp.removeHeader(Names.SET_COOKIE); // no cookie need
+        Map<Keyword, Object> r = new TreeMap<Keyword, Object>();
+        r.put(resp_k, resp);
+        r.put(final_link_k, finalLink);
+        done(r);
     }
 
     class Handler implements Runnable {
@@ -63,14 +77,14 @@ public class ProxyFuture extends AbstractFuture {
                         doIt(base.resolve(loc).toString());
                     } else {
                         logger.debug("null location in header");
-                        done(HttpClientConstant.UNKOWN_ERROR);
+                        finish(HttpClientConstant.UNKOWN_ERROR);
                     }
                 } else {
-                    done(r);
+                    finish(r);
                 }
             } catch (Exception e) {
                 logger.trace("{} : {}", base, e);
-                done(HttpClientConstant.UNKOWN_ERROR);
+                finish(HttpClientConstant.UNKOWN_ERROR);
             }
         };
     }

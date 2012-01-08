@@ -74,7 +74,7 @@
               :default "/var/rssminer/index"]
              ["--[no-]h2-trace" "Enable H2 trace"]
              ["--[no-]crawler" "Start link crawler"]
-             ["--[no-]fetcher" "Start rss fetcher"]
+             ["--[no-]fetcher" "Start rss fetcher" :default true]
              ["--[no-]dns" "Enable dns prefetch" :default false]
              ["--[no-]proxy" "Enable Socks proxy" :default true]
              ["--[no-]help" "Print this help"])]

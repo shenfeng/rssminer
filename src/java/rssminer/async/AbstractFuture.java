@@ -3,10 +3,6 @@ package rssminer.async;
 import java.net.Proxy;
 
 import me.shenfeng.http.HttpClient;
-
-import org.jboss.netty.handler.codec.http.HttpHeaders.Names;
-import org.jboss.netty.handler.codec.http.HttpResponse;
-
 import ring.adapter.netty.ListenableFuture;
 import clojure.lang.IFn;
 
@@ -15,7 +11,7 @@ public class AbstractFuture implements ListenableFuture {
     static final int MAX_RETRY = 5;
     private volatile Runnable listener;
     protected IFn callback;
-    protected volatile HttpResponse resp;
+    protected volatile Object resp;
     protected Proxy proxy;
 
     protected volatile int retryCount = 0;
@@ -31,13 +27,10 @@ public class AbstractFuture implements ListenableFuture {
         return callback.invoke(resp);
     }
 
-    protected void done(HttpResponse r) {
-        // for proxy and favicon, cookie is not wanted
-        r.removeHeader(Names.SET_COOKIE);
+    protected void done(Object r) {
         resp = r;
         if (listener != null) {
             listener.run();
         }
     }
-
 }

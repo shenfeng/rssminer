@@ -4,7 +4,7 @@
       user = (_RM_ && _RM_.user) || {},
       proxy_server = _RM_.proxy_server,
       user_conf = user.conf || {},
-      expire = user.conf.expire || 45,
+      expire = user_conf.expire || 45,
       enable_proxy = true,      // proxy reseted site?
       like_score = user_conf.like_score || 1,
       neutral_score = user_conf.neutral_score || 0; // db default 0

@@ -34,8 +34,8 @@
   (first (h2-query ["SELECT * FROM feeds WHERE id = ?" id] :convert)))
 
 (defn fetch-orginal [id]
-  (first
-   (h2-query ["SELECT original, link FROM feeds WHERE id = ?" id] :convert)))
+  (first (h2-query ["SELECT original, link, final_link
+                     FROM feeds WHERE id = ?" id] :convert)))
 
 (defn- safe-update-rss-link [id data]
   (with-h2
@@ -55,8 +55,9 @@
       (safe-update-rss-link id data))
     (safe-update-rss-link id data)))
 
-(defn save-feed-original [id original]
-  (with-h2 (update-values :feeds ["id = ?" id] {:original original})))
+(defn update-feed [id data]
+  (with-h2
+    (update-values :feeds ["id = ?" id] data)))
 
 (defn fetch-rss-links [limit]           ; for fetcher
   "Returns nil when no more"
