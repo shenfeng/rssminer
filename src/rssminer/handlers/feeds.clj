@@ -1,5 +1,5 @@
 (ns rssminer.handlers.feeds
-  (:use (rssminer [util :only [session-get to-int assoc-if]]
+  (:use (rssminer [util :only [session-get to-int assoc-if get-expire]]
                   [config :only [rssminer-conf]]
                   [search :only [update-index]]
                   [http :only [client parse-response extract-host]])
@@ -48,6 +48,9 @@
                                   (:proxy-server @rssminer-conf)  "/p?u="))
     (Utils/rewrite original link)))
 
+(def default-header {"Content-Type" "text/html; charset=utf-8"
+                     "Cache-Control" "public, max-age=604800"})
+
 (defn- fetch-and-store-orginal [id link proxy]
   {:status 200
    :body (ProxyFuture. client link {} (:proxy @rssminer-conf)
@@ -62,8 +65,8 @@
                                                      :final_link final-link}
                                                     {:original body}))
                                {:status 200
-                                :headers {"Content-Type"
-                                          "text/html; charset=utf-8"}
+                                :headers (assoc default-header
+                                           "Expires" (get-expire 7))
                                 :body (rewrite-html body final-link proxy)})
                              (do
                                (debug link resp)

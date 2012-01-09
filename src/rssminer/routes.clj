@@ -13,7 +13,8 @@
                                      wrap-reload-in-dev wrap-failsafe
                                      wrap-request-logging-in-dev
                                      JPOST JPUT JDELETE JGET]]
-                  [redis :only [redis-store]]))
+                  [redis :only [redis-store]]
+                  [util :only [get-expire]]))
   (:require [clojure.string :as str]
             [compojure.route :as route]
             [rssminer.import :as import]
@@ -22,9 +23,7 @@
                                [users :as user]
                                [dashboard :as dashboard]
                                [feeds :as feed]))
-  (:import clojure.lang.Namespace
-           [java.util Locale Calendar TimeZone Date]
-           java.text.SimpleDateFormat))
+  (:import clojure.lang.Namespace))
 
 (let [views-ns '[rssminer.views.reader
                  rssminer.views.layouts]
@@ -83,22 +82,15 @@
   (route/files "") ;; files under public folder
   (route/not-found "<h1>Page not found.</h1>" ))
 
-(defn- get-expire "get string for http expire header" [days]
-  (let [^SimpleDateFormat f (make-http-format)
-        c (doto (Calendar/getInstance)
-            (.add Calendar/DAY_OF_YEAR days))
-        d (.getTime c)]
-    (.format f d)))
-
 ;;; The last one in the list is the first one get the request,
 ;;; the last one get the response
 (defn app []
   (-> #'all-routes
       wrap-auth
-      (wrap-session {:store (redis-store (* 3600 24 7))
+      (wrap-session {:store (redis-store (* 3600 24 3))
                      :cookie-name "rm_id"
                      :cookie-attrs {:http-only true
-                                    :expires (get-expire 7)}})
+                                    :expires (get-expire 3)}})
       wrap-cache-header
       wrap-request-logging-in-dev
       wrap-keyword-params
