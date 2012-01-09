@@ -53,7 +53,7 @@ public class NaiveBayes {
     static Map<String, Double> calculate(Map<String, Holder> map,
             double totalLike, double totalDislike) {
 
-        double ratio = totalLike / totalDislike;
+        // double ratio = totalLike / totalDislike;
 
         int size = map.size() < MAX_FEATURE ? map.size() : MAX_FEATURE;
         Map<String, Double> result = new HashMap<String, Double>(
@@ -61,7 +61,7 @@ public class NaiveBayes {
         if (map.size() < MAX_FEATURE) {
             for (Entry<String, Holder> e : map.entrySet()) {
                 Holder h = e.getValue();
-                double r = h.getRatio() / ratio;
+                double r = h.getRatio();
                 result.put(e.getKey(), r);
             }
         } else {
@@ -95,7 +95,7 @@ public class NaiveBayes {
                     Double w = submodel.get(term);
                     if (w != null) {
                         // result *= (w * freqs[i]); Infinite
-                        result *= w;
+                        result += Math.log(w) * freqs[i];
                     }
                 }
             }
