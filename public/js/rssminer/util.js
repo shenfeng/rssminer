@@ -79,6 +79,18 @@
     return function (uri) { l.href = uri; return l.hostname; };
   })();
 
+  function extractData ($ele) {
+    var data = {};
+    $("input, select", $ele).each(function (index, e) {
+      var $input = $(e),
+          name = $(e).attr('name');
+      if(name) {
+        data[name] = $input.val();
+      }
+    });
+    return data;
+  }
+
   function interval (date) {
     var seconds = date - new Date().getTime() / 1000,
         data = {
@@ -216,6 +228,7 @@
     iconError: imgError,
     util: {
       delegateEvents: delegateEvents,
+      extractData: extractData,
       hashRouter: hashRouter,
       hostname: hostname,
       ymdate: ymdate,

@@ -19,7 +19,7 @@
 
   function addWelcomeTitle (title) {
     var $welcome = $('.welcome-list').empty();
-    $welcome.append('<h3>' + title +'</h3>');
+    if(title) { $welcome.append('<h3>' + title +'</h3>'); }
     return $welcome;
   }
 
@@ -145,6 +145,25 @@
     }
   }
 
+  function settings () {
+    var $welcome = addWelcomeTitle();
+    $welcome.append(to_html(tmpls.settings, data.userSettings()));
+  }
+
+  function saveSettings (e) {
+    var d = util.extractData( $('#settings') );
+    for(var i in d) { if(!d[i]) { delete d[i]; } }
+    d.expire = parseInt(d.expire, 10);
+    if(d.password && d.password !== d.password2) {
+      alert('2 password not match');
+      return;
+    }
+    delete d.password2;
+    RM.ajax.jpost('/api/user/settings', d, function () {
+      location = "/a";
+    });
+  }
+
   function saveVoteUp (e) { saveVote(this, 1); return false; }
   function saveVotedown (e) { saveVote(this, -1); return false; }
 
@@ -154,12 +173,14 @@
 
   util.delegateEvents($(document), {
     'click .vote span.up': saveVoteUp,
+    'click #save-settings': saveSettings,
     'click .vote span.down': saveVotedown,
     'click .chooser li': toggleWelcome
   });
 
   util.hashRouter({
     '': welcome,
+    'settings': settings,
     'read/:id': readSubscription,
     'read/:id/:id': readFeed
   });

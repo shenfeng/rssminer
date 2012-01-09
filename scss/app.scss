@@ -331,3 +331,13 @@ iframe {
         text-align: center;
     }
 }
+
+#settings {
+    padding: 1em 0 0 1em;
+    input { width: 300px; padding: 4px; }
+    td:first-child { width: 130px; }
+    td {
+        padding-top: 17px;
+        vertical-align: baseline;
+    }
+}

@@ -51,7 +51,7 @@
     $('#navigation li.collapse .folder').each(function (index, item) {
       collapsed.push($(item).attr('data-name'));
     });
-    RM.ajax.jpost('/api/user/pref', {nav: collapsed});
+    RM.ajax.jpost('/api/user/settings', {nav: collapsed});
     return false;
   }
 
@@ -80,7 +80,7 @@
           $(document).unbind('selectstart', noop);
           $footer.css('cursor', 'auto');
           if(updated) {                // save on server
-            RM.ajax.jpost('/api/user/pref', {height: $list.height()});
+            RM.ajax.jpost('/api/user/settings', {height: $list.height()});
           }
           down = false;
           updated = false;

@@ -1,7 +1,7 @@
 (ns rssminer.handlers.users
   (:use  [ring.util.response :only [redirect]]
          (rssminer [time :only [now-seconds]]
-                   [util :only [session-get assoc-if]]
+                   [util :only [session-get assoc-if md5-sum]]
                    [config :only [rssminer-conf]])
          [clojure.data.json :only [json-str read-json]])
   (:require [rssminer.db.user :as db]
@@ -37,15 +37,18 @@
 ;;; :expire => feed mark as read after X days
 ;;; :like_threshhold => more than it mean like
 ;;; :dislike_threshhold => less than it mean dislike
-(defn save-pref [req]
-  (let [user (session-get req :user)
-        updated (merge
-                 (:conf user)
-                 (select-keys (:body req) [:nav :height :width :expire]))]
-    (db/update-user (:id user) {:conf (json-str updated)})
-    {:status 204
-     :body nil
-     :session {:user (assoc user :conf updated)}}))
+(defn save-settings [req]
+  (let [user (session-get req :user)]
+    (when-let [password (-> req :body :password)]
+      (let [p (md5-sum (str (:email user) "+" password))]
+        (db/update-user (:id user) {:password p})))
+    (let [updated (merge (:conf user)
+                         (select-keys (:body req)
+                                      [:nav :height :width :expire]))]
+      (db/update-user (:id user) {:conf (json-str updated)})
+      {:status 204
+       :body nil
+       :session {:user (assoc user :conf updated)}})))
 
 (defn welcome-list [req]
   (let [u-id (:id (session-get req :user))]

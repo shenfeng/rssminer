@@ -151,7 +151,7 @@
                             by('published_ts', null, -1), -1), -1);
 
     readed.sort(cmp);
-    readed.sort(outdated);
+    outdated.sort(cmp);
     unread.sort(cmp);
 
     return [{
@@ -186,6 +186,15 @@
 
   var proxy_sites = ['google', "feedproxy"];       // X-Frame-Options
 
+
+  function userSettings () {
+    var expire_times = [];
+    for(var i = 15; i < 120; i += 15) {
+      expire_times.push({time: i, selected: i === expire});
+    }
+    return {expire_times: expire_times};
+  }
+
   function getFinalLink (link, feedid) {
     if(enable_proxy) {
       var h = utils.hostname(link);
@@ -208,6 +217,7 @@
     data: {
       getFinalLink: getFinalLink,
       parseSubs: parseSubs,
+      userSettings: userSettings,
       parseFeedListForWelcome: parseFeedListForWelcome,
       parseFeedList: parseFeedList,
       parseWelcomeList: parseWelcomeList

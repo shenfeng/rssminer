@@ -40,7 +40,7 @@
     (is (= 302 (:status login)))))
 
 (deftest test-save-pref
-  (let [resp (auth-app {:uri "/api/user/pref"
+  (let [resp (auth-app {:uri "/api/user/settings"
                         :request-method :post
                         :body (json-str {:nav [:tag1 :tag1]
                                          :width 100

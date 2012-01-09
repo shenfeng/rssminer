@@ -52,7 +52,7 @@
            (JPOST "/:id" [] subscription/customize-subscription)
            (JDELETE "/:id" [] subscription/unsubscribe))
   (JGET "/search" [] reader/search)
-  (JPOST "/user/pref" [] user/save-pref)
+  (JPOST "/user/settings" [] user/save-settings)
   (JGET "/user/welcome" [] user/welcome-list)
   (context "/feeds/:feed-id" []
            (JGET "/" [] feed/get-by-id)
