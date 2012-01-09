@@ -3,20 +3,10 @@
          (rssminer [time :only [now-seconds]]
                    [util :only [session-get assoc-if]]
                    [config :only [rssminer-conf]])
-         [ring.middleware.file-info :only [make-http-format]]
          [clojure.data.json :only [json-str read-json]])
   (:require [rssminer.db.user :as db]
             [rssminer.db.user-feed :as uf]
-            [rssminer.views.users :as view])
-  (:import [java.util Locale Calendar TimeZone Date]
-           java.text.SimpleDateFormat))
-
-(defn- get-expire "get string for http expire header" [days]
-  (let [^SimpleDateFormat f (make-http-format)
-        c (doto (Calendar/getInstance)
-            (.add Calendar/DAY_OF_YEAR days))
-        d (.getTime c)]
-    (.format f d)))
+            [rssminer.views.users :as view]))
 
 (defn show-login-page [req]
   (view/login-page "/a"))
@@ -27,11 +17,7 @@
         return-url (or return-url "/a")]
     (if user
       (assoc (redirect return-url)
-        :session {:user (select-keys user [:id :email :name :conf])}
-        :session-cookie-attrs (if persistent
-                                {:expires (get-expire 7)
-                                 :http-only true}
-                                {:http-only true}))
+        :session {:user (select-keys user [:id :email :name :conf])})
       (view/login-page return-url))))
 
 (defn show-signup-page [req]

@@ -9,7 +9,7 @@
                  [ch.qos.logback/logback-classic "0.9.30"]
                  [javax.mail/mail "1.4.4"]
                  [org.apache.commons/commons-email "1.2"]
-                 [compojure "1.0.0"]
+                 [compojure "1.0.1"]
                  [enlive "1.0.0"]
                  [commons-io "2.1"]
                  [redis.clients/jedis "2.0.0"]

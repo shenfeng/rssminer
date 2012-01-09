@@ -39,8 +39,8 @@
 
 (defn- proxy? [link]
   (let [^String host (extract-host link)]
-    (or (= -1 (.indexOf host "blogspot"))
-        (= -1 (.indexOf host "wordpress")))))
+    (or (not= -1 (.indexOf host "blogspot"))
+        (not= -1 (.indexOf host "wordpress")))))
 
 (defn- rewrite-html [original link proxy]
   (if (or proxy (proxy? link))
