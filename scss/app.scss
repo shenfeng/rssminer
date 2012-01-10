@@ -2,10 +2,29 @@
 
 $nav_width: 265px;
 $footer_height: 230px;
+$hover_color: #DDD;
+$selected_color: #CCC;
 
 .clearfix:before, .clearfix:after { content: ""; display: table; }
 .clearfix:after { clear: both; }
 .clearfix { zoom: 1; }
+
+.indicator {
+    margin: 4px;
+    position: relative;
+    top: 3px;
+    height: 7px;
+    width: 7px;
+    @include border-radius(5px);
+}
+
+/* by sys, virtual small than by user */
+.sys .indicator {
+    height: 5px;
+    width: 5px;
+    top: 3px;
+    @include border-radius(2px);
+}
 
 .unread-like { background-color: #449d4e; color: #ffffff; }
 .unread-neutral { background-color: #f5d85f; color: #303030; }
@@ -31,11 +50,15 @@ $footer_height: 230px;
         overflow: hidden;
     }
 }
-.unread { a { color: #111; } }
-.read, .sys-read {
-    a { color: #777; }
-    .indicator { background: #ccc; }
+
+.feeds .feed.sys {
+    &.dislike, &.like {
+        &:hover .vote span { visibility: visible; }
+    }
 }
+
+.unread a { color: #111; }
+.read, .sys-read { a { color: #444; } }
 
 div.row-resize {
     cursor: row-resize;
@@ -94,7 +117,7 @@ html, body {
     width: $nav_width;
     background: #aaa;
     bottom: 0;
-    * { float: right; cursor: pointer; margin: 1px 2px;}
+    >a { float: right; margin: 1px 2px; text-decoration: none; }
     span { display: inline-block; }
     .add {
         &:hover { color: #ff0; }
@@ -107,7 +130,6 @@ html, body {
     height: 100%;
     width: $nav_width;
     border-right: 2px #deceaa solid;
-    background: #eee;
     font-size: 12px;
     font-family: Consolas, monospace;
     .wrapper { overflow-x: hidden; overflow-y: auto; }
@@ -116,11 +138,10 @@ html, body {
     .sub-list > li.collapse  > ul { display: none; }
     .folder, .item {
         cursor: pointer;
-        &.selected { background: #ccc; }
-        &:hover { background: #ddd; }
+        &.selected { background: $selected_color; }
+        &:hover { background: $hover_color; }
     }
     .item {
-        padding-left: 2em;
         padding-left: 2em;
         position: relative;
         a {
@@ -159,12 +180,13 @@ html, body {
     overflow: auto;
     .feeds > li { border-bottom: 1px solid #dadada; }
 }
+
 .welcome-list {
     margin: 3px 2px;
     h2 { text-align: center; }
     a { font-size: 14px;}
     .feeds {
-        .title { max-width: 60%; }
+        .title { max-width: 80%; }
         .date { right: 1em; }
     }
     .section { width: 49%; margin: 3px 5px; float: left; }
@@ -186,23 +208,8 @@ html, body {
         }
         position: relative;
         padding: 2px;
-        cursor: pointer;
-        &.selected { background: #c4c4c4;}
-        &:hover { background: #d4d4d4; }
-        /* by sys, virtual small than bad user */
-        &.sys .indicator {
-            height: 5px;
-            width: 5px;
-            top: 1px;
-            @include border-radius(2px);}
-        .indicator {
-            margin: 4px;
-            position: relative;
-            top: 3px;
-            height: 7px;
-            width: 7px;
-            @include border-radius(5px);
-        }
+        &.selected { background: $selected_color; }
+        &:hover { background: $hover_color; }
         .date {
             position: absolute;
             font-size: smaller;
@@ -216,7 +223,6 @@ html, body {
 span.vote {
     position: absolute;
     span {
-        display: inline-block;
         visibility: hidden;
         cursor: pointer;
         width: 18px;
@@ -227,16 +233,6 @@ span.vote {
 }
 
 .author { font-size: 10px; margin-left: 10px; }
-.feed-info {
-    font-size: 12px;
-    color: #777;
-    position: relative;
-    padding-left: 12em;
-    span.vote { left: 7em; top: 6px; }
-    .up { visibility: visible; }
-    .author, .time, .tags li { color: #222; }
-    &:hover .vote span { visibility: visible; }
-}
 
 .tags {
     font-size: 10px;
@@ -245,7 +241,8 @@ span.vote {
     li {
         background: #d1d1d1;
         display: inline-block;
-        padding: 2px 4px 1px;
+        margin: 0 2px;
+        padding: 4px 4px 1px;
         @include border-radius(3px);
     }
 }

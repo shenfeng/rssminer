@@ -13,7 +13,7 @@
         {{/tags}}
       </ul>
       <span class="vote">
-        <span class="up"></span>
+        <span class="up" title="I like it"></span>
         <span class="down"></span>
       </span>
       <span class="date">{{ date }}</span>
