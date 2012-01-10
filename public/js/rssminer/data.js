@@ -189,7 +189,7 @@
 
   function userSettings () {
     var expire_times = [];
-    for(var i = 15; i < 120; i += 15) {
+    for(var i = 15; i <= 120; i += 15) {
       expire_times.push({time: i, selected: i === expire});
     }
     return {expire_times: expire_times};

@@ -39,15 +39,15 @@ $footer_height: 230px;
 
 div.row-resize {
     cursor: row-resize;
-    height: 4px;
+    height: 6px;
     width: 100%;
-    background: #ccc;
+    background: #d9d9d9;
     &:hover { background: #bbb; }
 }
 
 html, body {
     height: 100%; margin: 0; padding: 0; overflow: hidden;
-    background: #F9F9F9;
+    background: #F4F4F4 url(/imgs/background.png);
 }
 
 #content { margin-left: $nav_width; height: 100%; }
@@ -157,11 +157,12 @@ html, body {
     span.vote { right: 12em; }
     height: $footer_height - 22px;
     overflow: auto;
-    .feeds > li { border-bottom: 1px solid #ccc; }
+    .feeds > li { border-bottom: 1px solid #dadada; }
 }
 .welcome-list {
     margin: 3px 2px;
-    h3 { text-align: center; margin-bottom: 5px; }
+    h2 { text-align: center; }
+    a { font-size: 14px;}
     .feeds {
         .title { max-width: 60%; }
         .date { right: 1em; }

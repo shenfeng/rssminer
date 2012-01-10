@@ -19,7 +19,7 @@
 
   function addWelcomeTitle (title) {
     var $welcome = $('.welcome-list').empty();
-    if(title) { $welcome.append('<h3>' + title +'</h3>'); }
+    if(title) { $welcome.append('<h2>' + title +'</h2>'); }
     return $welcome;
   }
 
@@ -42,9 +42,7 @@
         var d = data.parseFeedList(id, resp),
             html = to_html(tmpls.list, {feeds: d});
         $('#feed-list ul').empty().append(html);
-        if(typeof callback === 'function') { callback(); }
-        else if(d.length > 0) {
-          hideFooterList();
+        if(d.length > 0) {
           var $welcome = addWelcomeTitle(title),
               result = data.parseFeedListForWelcome(id, resp);
           for(var i = 0; i < result.length; i++) {
@@ -54,6 +52,8 @@
             }
           }
         }
+        if(typeof callback === 'function') { callback(); }
+        else { hideFooterList(); }
       });
     } else if (typeof callback === 'function') {
       callback();
@@ -140,7 +140,6 @@
     if(wantIframe) {
       $reading_area.addClass('show-iframe');
     } else {
-      welcome();
       $reading_area.removeClass('show-iframe');
     }
   }

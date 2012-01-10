@@ -13,11 +13,11 @@
 .rfloat { float: right; }
 
 body {
-    font: 400 13px/1.231 Arial, Helvetica, sans-serif;
+    font: 400 13px/1.331 Arial, Helvetica, sans-serif;
     color: #222;
     margin: 0;
     padding: 0;
-    background: #F9F9F9;
+    background: #F4F4F4 url(/imgs/background.png);
 }
 a { outline: none; }
 table { border-collapse: collapse; border-spacing: 0; }
@@ -56,7 +56,7 @@ p { font-size: 14px;}
     width: $page-width;
     $left_width: 585px;
     .lfloat {
-        padding: 1em 1em 1em 0;
+        padding: 2em 1em 1em 0;
         width: $left_width;
         border-right: 1px solid #E0E0E0;
         img {
@@ -65,7 +65,7 @@ p { font-size: 14px;}
         }
     }
     .rfloat {
-        padding-top: 2em;
+        padding-top: 2.5em;
         width: $page-width - $left_width - 30px;
         a { display: block; margin: 0 40px; }
         img {
