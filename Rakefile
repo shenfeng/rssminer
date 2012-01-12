@@ -87,6 +87,7 @@ app_jss = FileList['public/js/lib/zepto.js',
                    'public/js/rssminer/util.js',
                    'public/js/rssminer/layout.js',
                    'public/js/rssminer/data.js',
+                   'public/js/rssminer/keyboard.js',
                    'public/js/rssminer/app.js']
 
 desc "Clean generated files"

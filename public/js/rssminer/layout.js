@@ -55,6 +55,14 @@
     return false;
   }
 
+  function adjust (delta, old_footer_height, old_list_height) {
+    old_list_height = old_list_height || $list.height();
+    old_footer_height = old_footer_height || $footer.height();
+    $footer.height(old_footer_height + delta);
+    $list.height(old_list_height + delta);
+    layout();
+  }
+
   (function () {                        // footer height resize
     var down = false,
         startY,
@@ -87,11 +95,8 @@
         }
       }).bind('mousemove', function (e) {
         if(down) {
-          var delta = e.clientY - startY;
           updated = true;
-          $footer.height(old_footer_height - delta);
-          $list.height(old_list_height  - delta);
-          layout();
+          adjust(startY - e.clientY);
         }
       });
   })();
@@ -108,7 +113,8 @@
   window.RM = $.extend(window.RM, {
     layout: {
       reLayout: layout,
-      select: select
+      select: select,
+      adjust: adjust
     }
   });
 

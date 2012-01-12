@@ -70,6 +70,17 @@
     return proxy_server + '/fav?h=' + host;
   }
 
+  function getAllSubTitle (filter) {
+    var subs = _RM_.subs, result = [];
+    _.each(subs, function (sub) {
+      var title = sub.title || sub.o_title;
+      if(!filter || title.toLowerCase().indexOf(filter) !== -1) {
+        result.push({ title: title, id: sub.id });
+      }
+    });
+    return result;
+  }
+
   function parseSubs (subs) {
     var grouped = _.groupBy(subs, 'group_name'),
         result = [],
@@ -220,7 +231,8 @@
       userSettings: userSettings,
       parseFeedListForWelcome: parseFeedListForWelcome,
       parseFeedList: parseFeedList,
-      parseWelcomeList: parseWelcomeList
+      parseWelcomeList: parseWelcomeList,
+      getAllSubTitle: getAllSubTitle
     }
   });
 

@@ -12,10 +12,16 @@
     recommend: 'Recommand for you'
   };
 
+
   var $footer = $('#footer'),
       $iframe = $('iframe'),
       $loader = $('#reading-chooser .loader'),
       $reading_area = $('#reading-area');
+
+  function focusFirstFeed () {
+    $($('.welcome-list li.feed')[0]).addClass('selected');
+    $reading_area.removeClass('show-iframe');
+  }
 
   function addWelcomeTitle (title) {
     var $welcome = $('.welcome-list').empty();
@@ -49,6 +55,7 @@
             var r = result[i];
             if(r.list.length) {
               $welcome.append(to_html(tmpls.welcome_section, result[i]));
+              focusFirstFeed();
             }
           }
         }
@@ -108,15 +115,23 @@
                 title: titles[name],
                 list: list
               });
-          if(list.length) { $welcome.append(html); }
+          if(list.length) { $welcome.append(html); focusFirstFeed(); }
         }
       });
     }
   }
 
-  function saveVote (ele, vote) {
-    var $feed = $(ele).closest('li.feed');
-    $feed = $feed.length ? $feed : $('.feed.selected');
+  function saveVote (vote, ele) {
+    var $feed;
+    //  1. select it's parent if ele is defined;
+    if(ele) { $feed = $(ele).closest('li.feed'); }
+    if(!$feed || !$feed.length) {
+      if($('#reading-area').hasClass('show-iframe')) {
+        $feed = $('#feed-list .selected');
+      } else {
+        $feed = $('.welcome-list .selected');
+      }
+    }
     var id = $feed.attr('data-id');
     if(($feed.hasClass('dislike') && vote === -1)
        || ($feed.hasClass('like') && vote === 1)) {
@@ -163,12 +178,13 @@
     });
   }
 
-  function saveVoteUp (e) { saveVote(this, 1); return false; }
-  function saveVotedown (e) { saveVote(this, -1); return false; }
+  function saveVoteUp (e) { saveVote(1, this); return false; }
+  function saveVotedown (e) { saveVote(-1, this); return false; }
 
   // render feed list
   var nav = to_html(tmpls.nav, {subs: data.parseSubs(_RM_.subs)});
   $("#navigation ul.sub-list").empty().append(nav);
+  if(_RM_.subs.length) { addWelcomeTitle(); }
 
   util.delegateEvents($(document), {
     'click .vote span.up': saveVoteUp,
@@ -177,10 +193,18 @@
     'click .chooser li': toggleWelcome
   });
 
+  window.RM = $.extend(window.RM, {
+    app: {
+      welcome: welcome,
+      saveVote: saveVote
+    }
+  });
+
   util.hashRouter({
     '': welcome,
     'settings': settings,
     'read/:id': readSubscription,
     'read/:id/:id': readFeed
   });
+
 })();
