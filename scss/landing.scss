@@ -1,5 +1,7 @@
 @import "variable";
 @import "css3";
+@import "colorbox";
+
 /* @import "reset"; */
 /* @import "common"; */
 
@@ -123,4 +125,10 @@ p { font-size: 14px;}
         td { padding: 4px; }
     }
     .openid { width: 400px; margin: 4em auto 0; }
+}
+
+#imgs {
+    img {
+        width: 500px;
+    }
 }

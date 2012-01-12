@@ -78,6 +78,10 @@ dashboard_jss = FileList['public/js/lib/jquery.js',
                          'public/js/rssminer/plot.js',
                          'public/js/rssminer/dashboard.js']
 
+landing_jss = FileList['public/js/lib/jquery.js',
+                       'public/js/lib/jquery.colorbox.js',
+                       'public/js/rssminer/landing.js']
+
 app_jss = FileList['public/js/lib/zepto.js',
                    'public/js/lib/event.js',
                    'public/js/lib/ajax.js',
@@ -150,6 +154,7 @@ namespace :js do
   task :minify => [:tmpls, :deps] do
     minify_js("dashboard", dashboard_jss, version);
     minify_js("app", app_jss, version);
+    minify_js("landing", landing_jss, version);
   end
 end
 

@@ -48,11 +48,28 @@
             <!-- <p>Take a look, <a href="/app">here</a></p> -->
             <h3>why another one? </h3>
             <p>There are many good reader out there, like google reader.</p>
-            <p>Rssminer want to solve the following problem: </p>
+            <p>Rssminer want to solve a few problem: </p>
+            <!--
             <img src="/imgs/why.png?{VERSION}" style="display: none"/>
             <img src="/imgs/not-available.png?{VERSION}" width="500"/>
             <img src="/imgs/not-available-greader.png?{VERSION}"
                  width="500"/>
+            -->
+            <div id="imgs">
+              <a href="/imgs/l/scott.png?{VERSION}" class="g"
+                 title="group feeds, sort them by you preference">
+                <img src="/imgs/l/scott.png?{VERSION}"/>
+              </a>
+              <a href="/imgs/l/original.png?{VERSION}" class="g"
+                 title="read the original feed, instead of just abstract">
+                <img src="/imgs/l/original.png?{VERSION}"/>
+              </a>
+              <a href="/imgs/l/keyboard.png?{VERSION}" class="g"
+                 title="keyboard shortcut">
+                <img src="/imgs/l/keyboard.png?{VERSION}"/>
+              </a>
+            </div>
+
             <h3>Status</h3>
             <p>Not ready yet.
               Please check the souce code
@@ -97,5 +114,9 @@
         </div>
       </div> <!-- footer -->
     </div>   <!-- page-wrap -->
+    <script src="/js/lib/jquery.js" data-profile="dev"></script>
+    <script src="/js/lib/jquery.colorbox.js" data-profile="dev"></script>
+    <script src="/js/rssminer/landing.js" data-profile="dev"></script>
+    <script src="/js/landing-{VERSION}-min.js" data-profile="prod"></script>
   </body>
 </html>
