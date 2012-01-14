@@ -7,11 +7,6 @@
   var g_pressed = false,
       is_list_show = false;
 
-  function showHelp () {
-    $("#help").remove();
-    $('body').append(tmpls.keyboard);
-  }
-
   function getSelected () { return $('.welcome-list .selected'); }
 
   function filterSubscription (e) {
@@ -57,12 +52,11 @@
   }
 
   function handleEnter () {
-    var $ab = $("#help, #subs");
-    if($ab.length) { $ab.remove(); }
+    RM.app.hideHelp();
     openSelected();
   }
 
-  function closeAll () { $("#help, #subs").remove(); is_list_show = false; }
+  function closeAll () { RM.app.hideHelp(); is_list_show = false; }
 
   function selecteNextFeed () {
     var $selected = getSelected(),
@@ -126,9 +120,9 @@
     case 70:                    // f
       $('#footer').toggle(); RM.layout.reLayout(); break;
     case 79:                    // o
-      openSelected(); break;
+      if(!is_list_show) openSelected(); break;
     case 72:                    // h
-      if(g_pressed && !e.altKey) { RM.app.welcome(); }
+      if(!is_list_show && g_pressed && !e.altKey) { RM.app.welcome(); }
       else if(!is_list_show && e.altKey) { RM.app.saveVote(-1); }
       break;
     case 13:                    // ENTER,  handled by filterSubscription
@@ -138,9 +132,9 @@
     case 76:                    // l like
       if(!is_list_show && e.altKey) { RM.app.saveVote(1); }; break;
     case 191:                   // ?
-      if(e.shiftKey) { showHelp(); } break;
+      if(e.shiftKey) { RM.app.showHelp(); } break;
     case 83:                    // 83
-      $('#reading-area').toggleClass('show-iframe');
+      if(!is_list_show) { $('#reading-area').toggleClass('show-iframe'); }
       break;
     case 85:                    // u
       if(g_pressed && !is_list_show) {

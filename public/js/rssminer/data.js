@@ -1,20 +1,13 @@
 // functions to transform data
 (function () {
-  var utils = RM.util,
+  var util = RM.util,
       user = (_RM_ && _RM_.user) || {},
       proxy_server = _RM_.proxy_server,
+      static_server = _RM_.static_server,
       user_conf = user.conf || {},
       expire = user_conf.expire || 45,
-      enable_proxy = true,      // proxy reseted site?
       like_score = user_conf.like_score || 1,
       neutral_score = user_conf.neutral_score || 0; // db default 0
-
-  setTimeout(function () {
-    var img = new Image(),
-        src = ["blog", "spot",".com/favicon.ico?t="].join("");
-    img.onload = function () { enable_proxy = false; };
-    img.src = "http://sujitpal."+ src + new Date().getTime();
-  }, 1000);
 
   function toJson (data) {
     if(typeof data === 'string') { return JSON.parse(data); }
@@ -64,10 +57,9 @@
     return cls;
   }
 
-
-  function imgPath (url) {
-    var host = encodeURIComponent(utils.hostname(url));
-    return proxy_server + '/fav?h=' + host;
+  function faviconPath (url) {
+    var host = encodeURIComponent(util.hostname(url));
+    return static_server + '/fav?h=' + host;
   }
 
   function getAllSubTitle (filter) {
@@ -90,7 +82,7 @@
             .sortBy(function (i) { return i.sort_index; })
             .map(function(i) {
               return {
-                img: imgPath(i.url),
+                img: faviconPath(i.url),
                 title: i.title || i.o_title, // original title
                 href: 'read/' + i.id,
                 like: i.like_c,
@@ -192,11 +184,9 @@
     return result;
   };
 
-  var reseted = ["wordpress", "appspot", 'emacsblog','blogger',
-                 "blogspot", 'mikemccandless'];
-
-  var proxy_sites = ['google', "feedproxy"];       // X-Frame-Options
-
+  var proxy_sites = ['google', "feedproxy",// X-Frame-Options
+                     "javaworld"           // for Readability
+                                              ];
 
   function userSettings () {
     var expire_times = [];
@@ -207,12 +197,10 @@
   }
 
   function getFinalLink (link, feedid) {
-    if(enable_proxy) {
-      var h = utils.hostname(link);
-      for(i = 0; i < reseted.length; i++) {
-        if(h.indexOf(reseted[i]) != -1) {
-          return  proxy_server + '/f/o/' + feedid + "?p=t";
-        }
+    if(util.enableProxy()) {
+      var h = util.hostname(link);
+      if(util.isProtected(h)) {
+        return  proxy_server + '/f/o/' + feedid + "?p=t";
       }
       for(var i = 0; i < proxy_sites.length; i++) {
         if(h.indexOf(proxy_sites[i]) != -1) {

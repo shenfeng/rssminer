@@ -45,15 +45,20 @@
 (defn- rewrite-html [original link proxy]
   (if (or proxy (proxy? link))
     (Utils/rewrite original link (str
-                                  (:proxy-server @rssminer-conf)  "/p?u="))
+                                  (:static-server @rssminer-conf)  "/p?u="))
     (Utils/rewrite original link)))
 
 (def default-header {"Content-Type" "text/html; charset=utf-8"
                      "Cache-Control" "public, max-age=604800"})
 
-(defn- fetch-and-store-orginal [id link proxy]
+(defn- compute-send-header [req]
+  (let [headers (:headers req)]
+    (assoc-if {"X-Forwarded-For" (:remote-addr req)}
+              "User-Agent" (headers "user-agent"))))
+
+(defn- fetch-and-store-orginal [id link header proxy]
   {:status 200
-   :body (ProxyFuture. client link {} (:proxy @rssminer-conf)
+   :body (ProxyFuture. client link header (:proxy @rssminer-conf)
                        (fn [{:keys [resp final-link]}]
                          (let [resp (parse-response resp)]
                            (if (= 200 (:status resp))
@@ -77,5 +82,5 @@
         {:keys [original link final_link]} (db/fetch-orginal id)] ; proxy
     (if original
       (rewrite-html original (or final_link link) p)
-      (fetch-and-store-orginal id link p))))
+      (fetch-and-store-orginal id link (compute-send-header req) p))))
 

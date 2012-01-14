@@ -326,24 +326,17 @@ iframe {
     border-image: initial;
 }
 
-#new-user {
-    padding: 30px;
+#settings, #add-sub {
+    h2 { text-align: left; padding-left: 4em; }
     img {
         &:hover { @include box-shadow(0, 0, 6px, #666); }
         margin: 6px auto; @include box-shadow(0, 0, 3px, #666);
     }
-    a {
-        text-align: center;
-    }
-}
-
-#settings {
     padding: 1em 0 0 1em;
-    input { width: 300px; padding: 4px; }
-    td:first-child { width: 130px; }
+    input { width: 400px; padding: 5px; }
     td {
         padding-top: 17px;
-        vertical-align: baseline;
+        &:first-child { width: 130px; }
     }
 }
 

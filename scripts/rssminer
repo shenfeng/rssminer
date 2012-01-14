@@ -45,6 +45,7 @@ APP_ARGS="--db-path $DB_PATH \
     --no-proxy \
     --fetcher \
     --no-dns \
+    --static-server https://static.rss-miner.com \
     --proxy-server https://rss-miner.com \
     --crawler-queue 50 \
     --fetcher-queue 10 \

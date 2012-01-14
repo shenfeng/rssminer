@@ -32,7 +32,7 @@
 (defn start-server
   [{:keys [port index-path profile db-path h2-trace worker crawler-queue
            fetcher-queue crawler fetcher proxy dns fetch-size redis-host
-           proxy-server]}]
+           proxy-server static-server]}]
   (stop-server)
   (.removeShutdownHook (Runtime/getRuntime) shutdown-hook)
   (.addShutdownHook (Runtime/getRuntime) shutdown-hook)
@@ -45,6 +45,8 @@
          :redis-host redis-host
          :proxy-server (if (= :dev profile)
                          (str proxy-server ":" port) proxy-server)
+         :static-server (if (= :dev profile)
+                          (str static-server ":" port) static-server)
          :dns-prefetch dns
          :proxy (if proxy socks-proxy Proxy/NO_PROXY))
   (reset! server (run-netty (app) {:port port
@@ -67,7 +69,8 @@
              ["--profile" "dev or prod" :default :dev :parse-fn keyword]
              ["--redis-host" "redis for session store"
               :default "127.0.0.1"]
-             ["--proxy-server" "proxy server" :default "//127.0.0.1"]
+             ["--proxy-server" "proxy server" :default "//192.168.1.114"]
+             ["--static-server" "static server" :default "//127.0.0.1"]
              ["--db-path" "H2 Database file path"
               :default "/var/rssminer/rssminer"]
              ["--index-path" "Path to store lucene index"

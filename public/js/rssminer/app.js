@@ -7,11 +7,10 @@
       to_html = Mustache.to_html;
 
   var titles = {
-    read: 'Recently read',
+    recommend: 'Recommand for you',
     voted: 'Recently voted',
-    recommend: 'Recommand for you'
+    read: 'Recently read'
   };
-
 
   var $footer = $('#footer'),
       $iframe = $('iframe'),
@@ -42,7 +41,9 @@
   }
 
   function readSubscription (id, callback) {
+    hideHelp();
     var title = $("#item-" + id + " .title").text().trim();
+    hideFooterList();
     if(layout.select('.sub-list', "item-" + id)) {
       ajax.get("/api/subs/" + id, function (resp) {
         var d = data.parseFeedList(id, resp),
@@ -60,7 +61,6 @@
           }
         }
         if(typeof callback === 'function') { callback(); }
-        else { hideFooterList(); }
       });
     } else if (typeof callback === 'function') {
       callback();
@@ -80,8 +80,8 @@
   }
 
   function readFeed (subid, feedid) {
-    showFooterList();
     readSubscription(subid, function () {
+      showFooterList();
       var me = "feed-" + feedid,
           $me = $('#' + me),
           link = $me.attr('data-link'),
@@ -118,7 +118,7 @@
           if(list.length) { $welcome.append(html); focusFirstFeed(); }
         }
       });
-    }
+    } else { location.hash = "add"; }
   }
 
   function saveVote (vote, ele) {
@@ -160,6 +160,7 @@
   }
 
   function settings () {
+    hideHelp();
     var $welcome = addWelcomeTitle();
     $welcome.append(to_html(tmpls.settings, data.userSettings()));
   }
@@ -177,6 +178,19 @@
       location = "/a";
     });
   }
+
+  function showHelp () {
+    hideHelp();
+    $('body').append(tmpls.keyboard);
+  }
+
+  function addSubscription () {
+    hideHelp();
+    var $welcome = addWelcomeTitle();
+    $welcome.append(tmpls.add);
+  }
+
+  function hideHelp () { $("#help, #subs").remove(); }
 
   function saveVoteUp (e) { saveVote(1, this); return false; }
   function saveVotedown (e) { saveVote(-1, this); return false; }
@@ -196,13 +210,17 @@
   window.RM = $.extend(window.RM, {
     app: {
       welcome: welcome,
-      saveVote: saveVote
+      hideHelp: hideHelp,
+      saveVote: saveVote,
+      showHelp: showHelp
     }
   });
 
-  util.hashRouter({
+  RM.hashRouter({
     '': welcome,
     'settings': settings,
+    'help': showHelp,
+    'add': addSubscription,
     'read/:id': readSubscription,
     'read/:id/:id': readFeed
   });

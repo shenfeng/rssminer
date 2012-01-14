@@ -1,6 +1,8 @@
 (function () {
   var $footer = $('#footer'),
       $list = $('#feed-list'),
+      user = (_RM_ && _RM_.user) || {},
+      user_conf = user.conf || {},
       util = RM.util;
 
   function layout () {
@@ -96,15 +98,16 @@
       }).bind('mousemove', function (e) {
         if(down) {
           updated = true;
-          adjust(startY - e.clientY);
+          adjust(startY - e.clientY, old_footer_height, old_list_height);
         }
       });
   })();
 
   // user's last height of feed list
-  if(_RM_.user && _RM_.user.conf && _RM_.user.conf.height) {
-    $list.height(_RM_.user.conf.height);
-    $footer.height(_RM_.user.conf.height + $('#footer .resizer').height());
+  if(user_conf.height) {
+    if(user_conf.height > 700) { user_conf.height = 700; }
+    $list.height(user_conf.height);
+    $footer.height(user_conf.height + $('#footer .resizer').height());
   }
 
   $(window).resize(_.debounce(layout, 100));

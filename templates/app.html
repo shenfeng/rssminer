@@ -29,29 +29,22 @@
       </div>
     </div>
     <div id="admin-controls">
-      <a href="#add"><span class="add">+</span></a>
-      <a href="#settings">
+      <a href="#add" title="add subscription">
+        <span class="add">+</span>
+      </a>
+      <a href="#settings" title="settings">
         <img src="/imgs/configure.png" width="28"/>
       </a>
-      <a href="#">
+      <a href="#help" title="show keyboard shortcut">
         <img src="/imgs/preferences_desktop_keyboard.png" width="28"/>
       </a>
     </div>
     <div id="content">
       <div id="reading-area">
         <div class="welcome-list clearfix">
-          <div id="new-user">
-            <h3>You have no subscriptions yet</h3>
-            <a href="/import/google">
-              <img src="/imgs/import-greader.png"/>
-            </a>
-          </div>
         </div>
-        <div class="iframe">
-          <iframe src="about:blank"></iframe>
-        </div>
+        <div class="iframe"><iframe src="about:blank"></iframe></div>
       </div>
-
       <div id="footer">
         <div id="reading-chooser">
           <ul class="chooser">
@@ -60,8 +53,7 @@
           </ul>
           <img class="loader" src="/imgs/loading.gif"/>
           <div class="info">
-            <h5></h5>
-            <a target="_blank"></a>
+            <h5></h5><a target="_blank"></a>
           </div>
           <span class="vote">
             <span class="up"></span>
@@ -70,8 +62,7 @@
           <div class="row-resize resizer"></div>
         </div>
         <div id="feed-list">
-          <ul class="feeds">
-          </ul>
+          <ul class="feeds"></ul>
         </div>
       </div>
     </div>
@@ -82,6 +73,8 @@
     <script src="/js/lib/mustache.js" data-profile="dev"></script>
     <script src="/js/gen/app-tmpls.js" data-profile="dev"></script>
     <script src="/js/rssminer/util.js" data-profile="dev"></script>
+    <script src="/js/rssminer/ajax.js" data-profile="dev"></script>
+    <script src="/js/rssminer/router.js" data-profile="dev"></script>
     <script src="/js/rssminer/layout.js" data-profile="dev"></script>
     <script src="/js/rssminer/data.js" data-profile="dev"></script>
     <script src="/js/rssminer/keyboard.js" data-profile="dev"></script>
