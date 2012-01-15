@@ -100,6 +100,7 @@ desc "Clean generated files"
 task :clean  do
   rm_rf 'public/js/rssminer/tmpls.js'
   rm_rf 'src/templates'
+  rm_rf 'public/rssminer.crx'
   rm_rf 'public/js/gen'
   rm_rf "public/css"
   rm_rf "classes"
@@ -128,7 +129,7 @@ task :run_prod => :prepare_prod do
 end
 
 desc 'Deploy to production'
-task :deploy => [:clean, :test, :prepare_prod] do
+task :deploy => [:clean, :chrome, :test, :prepare_prod] do
   sh "scripts/deploy"
 end
 
@@ -170,6 +171,13 @@ task :css_compile do
   end
   sh "find public/css/ -type f " +
     "| xargs -I {} sed -i \"s/{VERSION}/#{version}/g\" {}"
+end
+
+desc "create chrome extension"
+task :chrome do
+  sh 'google-chrome --pack-extension=chrome ' +
+    '--pack-extension-key=conf/chrome.pem'
+  sh 'mv chrome.crx public/rssminer.crx'
 end
 
 desc 'Compress html using htmlcompressor, save compressed to src/templates'

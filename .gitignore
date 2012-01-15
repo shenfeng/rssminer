@@ -21,3 +21,4 @@ public/js/*min.js
 .emacs.desktop*
 /tags
 /TAGS
+/public/rssminer.crx

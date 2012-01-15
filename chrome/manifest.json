@@ -1,0 +1,23 @@
+{
+  "name": "Rssminer",
+  "version": "1.0",
+  "description": "Make reading feed more comfortable",
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_title": "Rssminer",
+    "popup": "popup.html"
+  },
+  "icons": {"48": "icon48.png",
+            "128": "icon128.png"},
+  "homepage_url" : "http://rssminer.net",
+  "permissions": ["http://*/"],
+  "content_scripts" : [
+    {
+      "matches" : ["http://192.168.1.114/*",
+                   "https://rss-miner.com/*"],
+      "js" : ["jquery.js", "underscore.js", "contentscript.js" ],
+      "run_at" : "document_end",
+      "all_frames" : true
+    }
+  ]
+}
