@@ -1,20 +1,18 @@
 <div id="settings">
   <h2>Settings</h2>
-  <table>
-    <tr>
-      <td>
-        <h4>Password</h4>
-      </td>
-      <td>
-        <p> <input type="password" placeholder="new password"
-          name="password"/> </p>
-          <p> <input type="password" placeholder="retype password"
-            name="password2" id="password2"/> </p>
-      </td>
-    </tr>
-    <tr>
-      <td><h4>Expire time</h4></td>
-      <td>
+  <div class="displaytable">
+    <section>
+      <h4>Password</h4>
+      <div>
+        <input type="password" placeholder="new password"
+        name="password"/>
+        <input type="password" placeholder="retype password"
+        name="password2" id="password2"/>
+      </div>
+    </section>
+    <section>
+      <h4>Expire time</h4>
+      <div>
         <select name="expire"
           title="System automatically mark feed as read when
           expires, calculated from author publish it.
@@ -28,12 +26,10 @@
             {{/selected}}
           {{/expire_times}}
         </select>
-      </td>
-    </tr>
-    <tr>
-      <td>
-      </td>
-      <td><button id="save-settings">Save</button></td>
-    </tr>
-  </table>
+      </div>
+    </section>
+    <section>
+      <button id="save-settings">Save</button>
+    </section>
+  </div>
 </div>
