@@ -179,6 +179,35 @@
     });
   }
 
+  function addSubscriptionHandler (e) {
+    var $input = $("#rss_atom_url"),
+        url = $input.val();
+    if(url) {
+      ajax.jpost("/api/subs/add", {link: url}, function (data) {
+        $input.val('');
+        var max_times = 3,
+            polling_interval = 2000;
+        var polling = function () {
+          if(max_times > 0) {
+            max_times -= 1;
+            ajax.get('/api/subs/p/' + data.rss_link_id, function (sub) {
+              var s0 = sub && sub[0];
+              if(s0 && s0.title) {
+                s0.group_name = null; // newly added, no-group
+                _RM_.subs.push(s0);
+                renderNavList();
+              } else {
+                polling_interval += 1500;
+                setTimeout(polling, polling_interval);
+              }
+            });
+          }
+        };
+        setTimeout(polling, polling_interval);
+      });
+    }
+  }
+
   function showHelp () {
     hideHelp();
     $('body').append(tmpls.keyboard);
@@ -195,14 +224,15 @@
   function saveVoteUp (e) { saveVote(1, this); return false; }
   function saveVotedown (e) { saveVote(-1, this); return false; }
 
-  // render feed list
-  var nav = to_html(tmpls.nav, {subs: data.parseSubs(_RM_.subs)});
-  $("#navigation ul.sub-list").empty().append(nav);
-  if(_RM_.subs.length) { addWelcomeTitle(); }
+  function renderNavList () {
+    var nav = to_html(tmpls.nav, {subs: data.parseSubs(_RM_.subs)});
+    $("#navigation ul.sub-list").empty().append(nav);
+  }
 
   util.delegateEvents($(document), {
     'click .vote span.up': saveVoteUp,
     'click #save-settings': saveSettings,
+    'click #add-subscription': addSubscriptionHandler,
     'click .vote span.down': saveVotedown,
     'click .chooser li': toggleWelcome
   });
@@ -216,6 +246,8 @@
     }
   });
 
+  renderNavList();              // should before hashRouter;
+
   RM.hashRouter({
     '': welcome,
     'settings': settings,
@@ -224,5 +256,6 @@
     'read/:id': readSubscription,
     'read/:id/:id': readFeed
   });
+
 
 })();

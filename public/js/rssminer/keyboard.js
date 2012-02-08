@@ -115,6 +115,9 @@
   }
 
   function keyupHandler (e) {
+    if($("#add-sub, #settings").length) {
+      return;
+    }
     if(is_list_show) { filterSubscription(e); }
     switch(e.which) {
     case 70:                    // f

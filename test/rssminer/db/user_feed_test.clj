@@ -5,7 +5,7 @@
         [clojure.java.jdbc :only [delete-rows]]
         (rssminer [test-common :only [user1 app-fixture mk-feeds-fixtrue]])))
 
-(use-fixtures :each app-fixture (mk-feeds-fixtrue "test/scottgu-atom.xml"))
+(use-fixtures :each app-fixture (mk-feeds-fixtrue "test/scottgu-atom.xml" ))
 
 (deftest test-insert-user-vote
   (let [fid (-> (h2-query ["select id from feeds"]) first :id)]

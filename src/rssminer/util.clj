@@ -108,3 +108,5 @@
       {:check_interval interval
        :next_check_ts (+ (now-seconds) interval)})))
 
+(defn time-since [user]                ;45 day
+  (- (now-seconds) (* (or (-> user :conf :expire) 45) 3600 24)))

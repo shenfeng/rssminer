@@ -3,13 +3,16 @@
         [clojure.test :only [join-fixtures]]
         [clojure.data.json :only [json-str]]
         [clojure.java.jdbc :only [print-sql-exception-chain]]
+        [rssminer.handlers.subscriptions :only [subscribe]]
         (rssminer [database :only [import-h2-schema! use-h2-database!]]
                   [search :only [use-index-writer!
                                  close-global-index-writer!]]
                   [util :only [session-get]]
+                  [parser :only [parse-feed]]
                   [redis :only [fetcher-enqueue fetcher-dequeue]]
                   [http :only [download-rss]])
-        (rssminer.db [user :only [create-user]]))
+        (rssminer.db [user :only [create-user]]
+                     [feed :only [save-feeds]]))
   (:require [clojure.string :as str])
   (:import java.io.File
            java.sql.SQLException))
@@ -48,12 +51,10 @@
 
 (defn mk-feeds-fixtrue [resource]
   (fn [test-fn]
-    (binding [download-rss (fn [& args]
-                             {:body (slurp resource)})]
-      (auth-app {:uri "/api/subs/add"
-                 :request-method :post
-                 :body (json-str {:link "http://link-to-scottgu's rss"})})
-      (test-fn))))
+    (let [sub (subscribe "http://link-to-scottgu's rss" (:id user1) nil nil)
+          feeds (parse-feed (slurp resource))]
+      (save-feeds feeds (:rss_link_id sub)))
+    (test-fn)))
 
 (defn lucene-fixture [test-fn]
   (use-index-writer! :RAM)

@@ -2,7 +2,6 @@
   (:use clojure.test
         rssminer.import
         [rssminer.test-common :only [auth-app app-fixture user1]]
-        [rssminer.handlers.subscriptions :only [add-subscription*]]
         [rssminer.db.subscription :only [fetch-user-subs]])
   (:import java.io.File
            rssminer.importer.Parser))

@@ -19,7 +19,7 @@
             [compojure.route :as route]
             [rssminer.import :as import]
             (rssminer.handlers [reader :as reader]
-                               [subscriptions :as subscription]
+                               [subscriptions :as subs]
                                [users :as user]
                                [dashboard :as dashboard]
                                [feeds :as feed]))
@@ -46,10 +46,11 @@
            (JGET "/stat" [] dashboard/get-data)
            (JPOST "/" [] dashboard/settings))
   (context "/subs" []
-           (JPOST "/add" [] subscription/add-subscription)
+           (JPOST "/add" [] subs/add-subscription)
            (JGET "/:rss-id" [] feed/get-by-subscription)
-           (JPOST "/:id" [] subscription/customize-subscription)
-           (JDELETE "/:id" [] subscription/unsubscribe))
+           (JGET "/p/:rss-id" [] subs/polling-subscription)
+           (JPOST "/:id" [] subs/customize-subscription)
+           (JDELETE "/:id" [] subs/unsubscribe))
   (JGET "/search" [] reader/search)
   (JPOST "/user/settings" [] user/save-settings)
   (JGET "/user/welcome" [] user/welcome-list)

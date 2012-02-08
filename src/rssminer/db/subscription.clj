@@ -36,6 +36,10 @@
              mark-as-read-time mark-as-read-time
              like mark-as-read-time neutral user-id]))
 
+(defn fetch-user-sub [id user-id mark-as-read-time like neutral]
+  (h2-query ["SELECT rl.id, rl.url, rl.title
+              FROM rss_links rl WHERE id = ?" id]))
+
 (defn fetch-subscription [map]
   (first
    (h2-query

@@ -1,5 +1,5 @@
 (ns rssminer.handlers.reader
-  (:use (rssminer [util :only [session-get to-int]]
+  (:use (rssminer [util :only [session-get to-int time-since]]
                   [time :only [now-seconds]]
                   [classify :only [re-compute-sysvote]]
                   [search :only [search*]])
@@ -12,9 +12,6 @@
 
 (defn landing-page [req]
   (view/landing-page))
-
-(defn- time-since [user]                ;45 day
-  (- (now-seconds) (* (or (-> user :conf :expire) 45) 3600 24)))
 
 (defn- recompute-if-needed [updated user ts]
   (or (and updated (re-compute-sysvote (:id user) ts))

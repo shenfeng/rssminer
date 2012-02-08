@@ -42,5 +42,3 @@ remote_run "sudo service nginx restart"
 rm rssminer.jar
 exit 0
 
-
-

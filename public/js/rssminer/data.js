@@ -9,11 +9,6 @@
       like_score = user_conf.like_score || 1,
       neutral_score = user_conf.neutral_score || 0; // db default 0
 
-  function toJson (data) {
-    if(typeof data === 'string') { return JSON.parse(data); }
-    return data;
-  }
-
   var by = function (name, minor, reverse) { // reverse when -1
     reverse = reverse || -1;
     return function (o, p) {
@@ -91,6 +86,7 @@
                 id: i.id
               };
             }).value();
+      list = _.filter(list, function (i) { return i.title; });
       result.push({
         tag: tag,
         list: list,
@@ -128,7 +124,7 @@
   }
 
   function parseWelcomeList (data, subid) {
-    return _.map(toJson(data), transformItem(subid));
+    return _.map(data, transformItem(subid));
   }
 
   function defaultFeedData (e) {
@@ -144,7 +140,6 @@
   }
 
   function parseFeedListForWelcome (subid, data) {
-    data = toJson(data);
     _.each(data, defaultFeedData); // default value
     var unread = _.filter(data, function (i) { return i.read_date < 0;}),
         outdated = _.filter(data, function (i) { return i.read_date === 1;}),
@@ -170,7 +165,6 @@
   }
 
   function parseFeedList (subid, data) {
-    data = toJson(data);
     _.each(data, defaultFeedData); // default value
     var unread = _.filter(data, function (i) { return i.read_date <= 0;}),
         readed = _.filter(data, function (i) { return i.read_date > 0;});

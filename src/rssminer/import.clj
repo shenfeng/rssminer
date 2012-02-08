@@ -1,5 +1,5 @@
 (ns rssminer.import
-  (:use [rssminer.handlers.subscriptions :only [add-subscription* subscribe]]
+  (:use [rssminer.handlers.subscriptions :only [subscribe]]
         [clojure.data.json :only [read-json]]
         [clojure.tools.logging :only [info error]]
         [ring.util.response :only [redirect]]

@@ -3,14 +3,9 @@
         [clojure.data.json :only [read-json json-str]]
         [rssminer.db.util :only [h2-query select-sql-params]]
         [rssminer.time :only [now-seconds]]
-        (rssminer [test-common :only [auth-app auth-app2 app-fixture]]
-                  [http :only [download-rss]])))
+        (rssminer [test-common :only [auth-app auth-app2 app-fixture]])))
 
-(use-fixtures :each app-fixture
-              (fn [f] (binding [download-rss
-                               (fn [& args]
-                                 {:body (slurp "test/ppurl-rss.xml")})]
-                       (f))))
+(use-fixtures :each app-fixture)
 
 (def add-req {:uri "/api/subs/add"
               :request-method :post
@@ -27,31 +22,31 @@
         subscribe-again (auth-app add-req)
         another-resp (auth-app2 add-req)]
     (is (= 200 (:status subscribe-resp)))
-    (is (= 409 (:status subscribe-again)))
+    (is (= 200 (:status subscribe-again)))
     (is (= 200 (:status another-resp)))
     ;;    make sure only one subscription is added
     (is (= 1 (- (count (h2-query ["select * from rss_links"])) c)))
     (let [rss (first (h2-query
                       ["select * from rss_links order by id desc"]))]
-      (is (> (:next_check_ts rss) (now-seconds))))
+      (is (>  (now-seconds) (:next_check_ts rss))))
     (are [key] (-> subscription key)
-         :total_count
          :id
-         :unread_count
-         :title)))
+         :user_id
+         :rss_link_id)))
 
-(deftest test-get-subscription
-  (let [[_ subscription] (prepare)
-        resp (auth-app {:uri (str "/api/subs/" (:rss_link_id subscription))
-                        :request-method :get
-                        :params {"limit" "13" "offset" "0"}})
-        fetched-feeds (-> resp :body read-json)]
-    (is (= 200 (:status resp)))
-    (are [key] (-> fetched-feeds first key)
-         :link
-         :id
-         :title)
-    (is (= 1 (count fetched-feeds)))))
+(comment
+  (deftest test-get-subscription
+    (let [[_ subscription] (prepare)
+          resp (auth-app {:uri (str "/api/subs/" (:rss_link_id subscription))
+                          :request-method :get
+                          :params {"limit" "13" "offset" "0"}})
+          fetched-feeds (-> resp :body read-json)]
+      (is (= 200 (:status resp)))
+      (are [key] (-> fetched-feeds first key)
+           :link
+           :id
+           :title)
+      (is (= 1 (count fetched-feeds))))))
 
 (deftest test-customize-subscription
   (let [[_ subscription] (prepare)

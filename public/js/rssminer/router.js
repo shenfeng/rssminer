@@ -60,8 +60,6 @@
     return loadUrl(oldHash);
   }
 
-  window.RM = $.extend(window.RM, {
-    hashRouter: hashRouter
-  });
+  window.RM.hashRouter = hashRouter;
 
 })();

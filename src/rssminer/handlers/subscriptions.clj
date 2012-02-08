@@ -1,67 +1,10 @@
 (ns rssminer.handlers.subscriptions
-  (:use (rssminer [http :only [download-rss]]
-                  [time :only [now-seconds]]
-                  [redis :only [fetcher-enqueue]]
-                  [parser :only [parse-feed]]
-                  [util :only [to-int if-lets session-get]])
-        [rssminer.db.util :only [h2-insert h2-insert-and-return]]
+  (:use (rssminer [redis :only [fetcher-enqueue]]
+                  [util :only [to-int session-get time-since]])
+        [rssminer.db.util :only [h2-insert-and-return]]
         [clojure.tools.logging :only [info]])
   (:require [rssminer.db.subscription :as db]
-            [rssminer.db.feed :as fdb])
-  (:import java.io.StringReader))
-
-(defn- add-subscription-ret [subscription rss count]
-  {:group_name (:group_name subscription)
-   :id (:id subscription)
-   :rss_link_id (:id rss)
-   :total_count count
-   :unread_count count
-   :title (:title subscription)})
-
-(defn- add-exists-subscription [subscription user-id
-                                & {:keys [group-name title]}]
-  (if-let [us (db/fetch-subscription
-               {:user_id user-id
-                :rss_link_id (:id subscription)})]
-    {:status 409                        ;readd is not allowed
-     :body {:message "Already subscribed"}}
-    (let [us (h2-insert-and-return :user_subscription
-                                   {:user_id user-id
-                                    :group_name group-name
-                                    :title (or title (:title subscription))
-                                    :rss_link_id (:id subscription)})
-          count (db/fetch-feeds-count-by-id (:id subscription))]
-      (add-subscription-ret us subscription count))))
-
-(defn- create-subscripton [link user-id & {:keys [group-name title]}]
-  (if-lets [{:keys [status headers body]} (download-rss link)
-            feeds (parse-feed body)]
-           (let [rss (h2-insert-and-return
-                      :rss_links
-                      {:url link
-                       :last_modified (:last-modified headers)
-                       :next_check_ts (+ (now-seconds) (* 3600 24))
-                       :user_id user-id
-                       :description (:description feeds)
-                       :title (:title feeds)})
-                 us (h2-insert-and-return :user_subscription
-                                          {:user_id user-id
-                                           :group_name group-name
-                                           :title (or title (:title rss))
-                                           :rss_link_id (:id rss)})]
-             (info (str "user#" user-id) "add"
-                   (str "(" (-> feeds :entries count) ")" link))
-             (fdb/save-feeds feeds (:id rss)) ;; 3. save feeds
-             (add-subscription-ret us rss (-> feeds :entries count)))
-           {:status 460
-            :message "Bad feedlink"}))
-
-(defn ^{:dynamic true}  add-subscription* [link user-id & options]
-  (if-let [sub (db/fetch-rss-link {:url link})]
-    ;; we have the subscription
-    (apply add-exists-subscription sub user-id options)
-    ;; first time subscription
-    (apply create-subscripton link user-id options)))
+            [rssminer.db.feed :as fdb]))
 
 (def ^{:private true} enqueue-keys [:id :url :check_interval :last_modified])
 
@@ -79,10 +22,20 @@
                              :title title
                              :rss_link_id (:id sub)}))))
 
+(defn polling-subscription [req]
+  (let [rss-id (-> req :params :rss-id to-int)
+        user (session-get req :user)]
+    (db/fetch-user-sub rss-id (:id user)
+                       (time-since user)
+                       (or (-> user :conf :like_score) 1.0)
+                       (or (-> user :conf :neutral_score) 0))))
+
 (defn add-subscription [req]
-  (let [link (:link (:body req))
+  (let [link  (-> req :body :link)
         user-id (:id (session-get req :user))]
-    (add-subscription* link user-id)))
+    (info "user " user-id " add subscription: " link)
+    ;; enqueue, client need to poll for result
+    (subscribe link user-id nil nil)))
 
 (defn customize-subscription [req]
   (let [user-id (:id (session-get req :user))]

@@ -47,10 +47,14 @@
     return {
       type: method,
       url: url,
-      success: function () {
+      success: function (result, status, xhr) {
         notif.hide(loading);
         if(typeof success === 'function') {
-          success.apply(null, arguments);
+          var cy = xhr.getResponseHeader("Content-Type");
+          if(cy && cy.toLowerCase().indexOf('json') > 0) {
+            result = JSON.parse(result);
+          }
+          success.apply(null, [result, status, xhr]);
         }
       },
       error: function (xhr) {

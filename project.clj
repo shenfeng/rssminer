@@ -40,7 +40,7 @@
              "-Xms512m"]
   ;; :jvm-opts ["-agentlib:hprof=cpu=samples,format=b,file=/tmp/profile.txt"]
   ;; :jvm-opts ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n"]
-  :dev-dependencies [[swank-clojure "1.4.0-SNAPSHOT"]
+  :dev-dependencies [[swank-clojure "1.4.0"]
                      [junit/junit "4.8.2"]
                      [commons-lang "2.3"]
                      [com.google.guava/guava "10.0"]
