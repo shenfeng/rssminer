@@ -178,10 +178,6 @@
     return result;
   };
 
-  var proxy_sites = ['google', "feedproxy",// X-Frame-Options
-                     "javaworld"           // for Readability
-                                              ];
-
   function userSettings () {
     var expire_times = [];
     for(var i = 15; i <= 120; i += 15) {
@@ -190,25 +186,63 @@
     return {expire_times: expire_times};
   }
 
-  function getFinalLink (link, feedid) {
+  var proxy_sites = ['groups.google', "feedproxy",// X-Frame-Options
+                     "javaworld"           // for Readability
+                                              ];
+
+  var protectedHostname = ["wordpress", "appspot", 'emacsblog','blogger',
+                           "blogspot", 'mikemccandless'];
+
+  function shouldFetchOrignal (link) {
     if(util.enableProxy()) {
       var h = util.hostname(link);
-      if(util.isProtected(h)) {
-        return  proxy_server + '/f/o/' + feedid + "?p=t";
-      }
+      if(shouldProxy(link)) { return true; }
       for(var i = 0; i < proxy_sites.length; i++) {
         if(h.indexOf(proxy_sites[i]) != -1) {
-          return proxy_server + '/f/o/' + feedid;
+          return true;
         }
       }
     }
-    return link;
+    return false;
+  }
+
+  function shouldProxy (link) {
+    var hostname= util.hostname(link);
+    for(var i = 0; i < protectedHostname.length; i++) {
+      if(hostname.indexOf(protectedHostname[i]) != -1) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function writeDocument (doc, data, link) {
+    doc.open();         // clear
+    doc.write(data);
+    var proxy = shouldProxy(link);
+    $("link, img", doc).each(function (index, item) {
+      var $item = $(item),
+          src = $item.attr('data-src'),
+          href = $item.attr('data-href');
+      if(src) {
+        if(proxy) { src = proxy_server + "/p?u=" + encodeURIComponent(src); }
+        $item.attr('src', src);
+      }
+      if(href) {
+        if(proxy) {
+          href = proxy_server + "/p?u=" + encodeURIComponent(href);
+        }
+        $item.attr('href', href);
+      }
+    });
+    doc.close();
   }
 
   // export
   window.RM = $.extend(window.RM, {
     data: {
-      getFinalLink: getFinalLink,
+      shouldFetchOrignal: shouldFetchOrignal,
+      writeDocument: writeDocument,
       parseSubs: parseSubs,
       userSettings: userSettings,
       parseFeedListForWelcome: parseFeedListForWelcome,

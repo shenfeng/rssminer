@@ -13,7 +13,6 @@
   };
 
   var $footer = $('#footer'),
-      $iframe = $('iframe'),
       $loader = $('#reading-chooser .loader'),
       $reading_area = $('#reading-area');
 
@@ -88,12 +87,21 @@
           title = $('.title', $me).text().trim();
       if(layout.select('#feed-list', me)){
         $('#footer .info a').text(link).attr('href', link);
-
-        link = data.getFinalLink(link, feedid);
-        $loader.css({visibility: 'visible'});
-        var iframe = $iframe.attr('src', link)[0];
-        iframe.onload = function () { $loader.css({visibility: 'hidden'}); };
         $('#footer .info h5').text(title);
+        var iframe = $('iframe')[0];
+        $loader.css({visibility: 'visible'});
+        if(data.shouldFetchOrignal(link)) { // proxy
+          iframe.src = 'about:blank';
+          ajax.get('/f/o/' + feedid + '?callback=?', function (resp) {
+            var doc = (iframe.contentWindow || iframe).document;
+            data.writeDocument(doc, resp, link);
+            $loader.css({visibility: 'hidden'});
+          });
+        } else {
+          iframe.src = link;
+          iframe.onload = function () { $loader.css({visibility: 'hidden'}); };
+        }
+
         if(!$me.hasClass('read')) {
           ajax.jpost('/api/feeds/' + feedid + '/read', function () {
             descrementNumber($me, subid);

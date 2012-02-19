@@ -3,7 +3,8 @@
                   [config :only [rssminer-conf]]
                   [search :only [update-index]]
                   [http :only [client parse-response extract-host]])
-        [clojure.tools.logging :only [debug error]])
+        [clojure.tools.logging :only [debug error]]
+        [clojure.data.json :only [json-str]])
   (:require [rssminer.db.feed :as db]
             [rssminer.db.user-feed :as uf])
   (:import rssminer.Utils
@@ -37,17 +38,6 @@
   (let [feed-id (-> req :params :feed-id)]
     (db/fetch-by-id feed-id)))
 
-(defn- proxy? [link]
-  (let [^String host (extract-host link)]
-    (or (not= -1 (.indexOf host "blogspot"))
-        (not= -1 (.indexOf host "wordpress")))))
-
-(defn- rewrite-html [original link proxy]
-  (if (or proxy (proxy? link))
-    (Utils/rewrite original link (str
-                                  (:static-server @rssminer-conf)  "/p?u="))
-    (Utils/rewrite original link)))
-
 (def default-header {"Content-Type" "text/html; charset=utf-8"
                      "Cache-Control" "public, max-age=604800"})
 
@@ -56,31 +46,32 @@
     (assoc-if {"X-Forwarded-For" (:remote-addr req)}
               "User-Agent" (headers "user-agent"))))
 
-(defn- fetch-and-store-orginal [id link header proxy]
-  {:status 200
-   :body (ProxyFuture. client link header (:proxy @rssminer-conf)
-                       (fn [{:keys [resp final-link]}]
-                         (let [resp (parse-response resp)]
-                           (if (= 200 (:status resp))
-                             (let [body (:body resp)]
-                               (update-index id body)
-                               ;; save final_link if different
-                               (db/update-feed id (if (not= final-link link)
-                                                    {:original body
-                                                     :final_link final-link}
-                                                    {:original body}))
-                               {:status 200
-                                :headers (assoc default-header
-                                           "Expires" (get-expire 7))
-                                :body (rewrite-html body final-link proxy)})
-                             (do
-                               (debug link resp)
-                               {:status 404})))))})
+(defn- fetch-and-store-orginal [id link header callback]
+  (let [cb (fn [{:keys [resp final-link]}]
+             (let [resp (parse-response resp)]
+               (if (= 200 (:status resp))
+                 (let [body (Utils/minfiyHtml (:body resp) final-link)]
+                   (update-index id body)
+                   ;; save final_link if different
+                   (db/update-feed id (if (not= final-link link)
+                                        {:original body
+                                         :final_link final-link}
+                                        {:original body}))
+                   {:status 200
+                    :headers default-header
+                    :body (str callback "(" (json-str body) ")")})
+                 (do
+                   (debug link resp)
+                   {:status 404}))))]
+    {:status 200
+     :body (ProxyFuture. client link header (:proxy @rssminer-conf) cb)}))
 
 (defn get-orginal [req]
-  (let [{:keys [id p]} (-> req :params)
-        {:keys [original link final_link]} (db/fetch-orginal id)] ; proxy
+  (let [{:keys [id callback]} (-> req :params)
+        {:keys [original link]} (db/fetch-orginal id)] ; proxy
     (if original
-      (rewrite-html original (or final_link link) p)
-      (fetch-and-store-orginal id link (compute-send-header req) p))))
+      {:status 200
+       :headers default-header
+       :body (str callback "(" (json-str original) ")")}
+      (fetch-and-store-orginal id link (compute-send-header req) callback))))
 

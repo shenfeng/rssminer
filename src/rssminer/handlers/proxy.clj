@@ -1,6 +1,6 @@
 (ns rssminer.handlers.proxy
   (:use (rssminer [http :only [client]]
-                  [util :only [assoc-if get-expire]]
+                  [util :only [assoc-if]]
                   [config :only [rssminer-conf]]))
   (:import rssminer.async.ProxyFuture
            org.jboss.netty.handler.codec.http.HttpResponse))
@@ -21,9 +21,7 @@
                          (fn [{:keys [^HttpResponse resp final-link]}]
                            (.setHeader resp "Cache-Control"
                                        "public, max-age=604800")
-                           (.setHeader resp "Expires" (get-expire 7))
-                           {:status 200
-                            :body resp}))}))
+                           {:status 200 :body resp}))}))
 
 ;;; buggy
 ;;; http://www.moandroid.com/?p=2020

@@ -18,6 +18,7 @@ import rssminer.sax.ExtractFaviconHandler;
 import rssminer.sax.ExtractInfoHandler;
 import rssminer.sax.ExtractRssUriHandler;
 import rssminer.sax.ExtractTextHandler;
+import rssminer.sax.HTMLMinfiyHandler;
 import rssminer.sax.RewriteHandler;
 
 public class Utils {
@@ -59,24 +60,6 @@ public class Utils {
         }
     };
 
-    public static String rewrite(String html, String urlBase)
-            throws IOException, SAXException, URISyntaxException {
-        Parser p = parser.get();
-        RewriteHandler h = new RewriteHandler(html, urlBase);
-        p.setContentHandler(h);
-        p.parse(new InputSource(new StringReader(html)));
-        return h.get();
-    }
-
-    public static String rewrite(String html, String urlBase, String proxyURI)
-            throws IOException, SAXException, URISyntaxException {
-        Parser p = parser.get();
-        RewriteHandler h = new RewriteHandler(html, urlBase, proxyURI);
-        p.setContentHandler(h);
-        p.parse(new InputSource(new StringReader(html)));
-        return h.get();
-    }
-
     public static List<String> extractRssLink(String html, String base)
             throws IOException, SAXException {
         Parser p = parser.get();
@@ -93,6 +76,15 @@ public class Utils {
         p.setContentHandler(h);
         p.parse(new InputSource(new StringReader(html)));
         return h.get();
+    }
+
+    public static String minfiyHtml(String html, String url)
+            throws IOException, SAXException {
+        Parser p = parser.get();
+        HTMLMinfiyHandler m = new HTMLMinfiyHandler(html, url);
+        p.setContentHandler(m);
+        p.parse(new InputSource(new StringReader(html)));
+        return m.get();
     }
 
     public static Info extract(String html, String base, Links linker)

@@ -50,8 +50,9 @@
       success: function (result, status, xhr) {
         notif.hide(loading);
         if(typeof success === 'function') {
-          var cy = xhr.getResponseHeader("Content-Type");
-          if(cy && cy.toLowerCase().indexOf('json') > 0) {
+          var cy = xhr.getResponseHeader &&
+                xhr.getResponseHeader("Content-Type");
+          if(result && cy && cy.toLowerCase().indexOf('json') > 0) {
             result = JSON.parse(result);
           }
           success.apply(null, [result, status, xhr]);

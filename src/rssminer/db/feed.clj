@@ -34,7 +34,7 @@
   (first (h2-query ["SELECT * FROM feeds WHERE id = ?" id] :convert)))
 
 (defn fetch-orginal [id]
-  (first (h2-query ["SELECT original, link, final_link
+  (first (h2-query ["SELECT original, link
                      FROM feeds WHERE id = ?" id] :convert)))
 
 (defn- safe-update-rss-link [id data]

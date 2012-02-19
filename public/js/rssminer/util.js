@@ -81,18 +81,6 @@
     }
   }
 
-  var protectedHostname = ["wordpress", "appspot", 'emacsblog','blogger',
-                           "blogspot", 'mikemccandless'];
-
-  function isProtected (hostname) {
-    for(var i = 0; i < protectedHostname.length; i++) {
-      if(hostname.indexOf(protectedHostname[i]) != -1) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   function imgError (e) {
     e.src="/imgs/16px-feed-icon.png";
   }
@@ -104,7 +92,6 @@
       delegateEvents: delegateEvents,
       extractData: extractData,
       hostname: hostname,
-      isProtected: isProtected,
       ymdate: ymdate,
       enableProxy: function () { return enable_proxy;  },
       snippet: snippet,
