@@ -90,26 +90,23 @@
         $('#footer .info h5').text(title);
         var iframe = $('iframe')[0];
         $loader.css({visibility: 'visible'});
-        if(data.shouldFetchOrignal(link)) { // proxy
-          iframe.src = 'about:blank';
-          ajax.get('/f/o/' + feedid + '?callback=?', function (resp) {
-            var doc = (iframe.contentWindow || iframe).document;
-            data.writeDocument(doc, resp, link);
-            $loader.css({visibility: 'hidden'});
-          });
-        } else {
-          iframe.src = link;
-          iframe.onload = function () { $loader.css({visibility: 'hidden'}); };
-        }
 
-        if(!$me.hasClass('read')) {
-          ajax.jpost('/api/feeds/' + feedid + '/read', function () {
-            descrementNumber($me, subid);
-            $me.removeClass('unread sys-read').addClass('read');
-          });
-        }
+        iframe.src = data.get_final_link(link, feedid);
+        iframe.onload = function () {
+          mark_as_read($me, feedid, subid);
+          $loader.css({visibility: 'hidden'});
+        };
       }
     });
+  }
+
+  function mark_as_read ($me, feedid, subid) {
+    if(!$me.hasClass('read')) {
+      ajax.jpost('/api/feeds/' + feedid + '/read', function () {
+        descrementNumber($me, subid);
+        $me.removeClass('unread sys-read').addClass('read');
+      });
+    }
   }
 
   function welcome () {

@@ -2,26 +2,9 @@ package rssminer.sax;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
-public class HTMLMinfiyHandler extends DefaultHandler {
+public class HTMLMinfiyHandler extends AbstractHTMLHandler {
 
-    static final char SPACE = ' ';
-    static final char START = '<';
-    static final char END = '>';
-    static final char SLASH = '/';
-    static final char EQUAL = '=';
-    static final char QUOTE = '\"';
-
-    static final String[] unCloseableTags = new String[] { "img", "input",
-            "hr", "br", "meta", "link" };
-
-    static final String[] preseveWhiteSpaceTags = new String[] { "pre",
-            "script", "style" };
-    private StringBuilder sb;
-    static final String PRE = "pre";
-    static final String SCRIPT = "script";
-    static final String STYLE = "style";
     private boolean squashWithspace = true;
     private boolean isInPre = false;
     private boolean isInScript = false;
@@ -31,25 +14,13 @@ public class HTMLMinfiyHandler extends DefaultHandler {
     private String uriBase;
 
     public HTMLMinfiyHandler(String html, String url) {
-        sb = new StringBuilder(html.length());
+        super(html);
         if (html.length() > 100) {
-            String h = html.substring(0, 20).toLowerCase();
-            if (h.indexOf("doctype") != -1) {
-                int end = html.indexOf('>');
-                if (end < 150) { // copy doctype
-                    sb.append(html.substring(0, end + 1).trim()).append('\n');
-                }
-            }
-
             int index = html.indexOf("<base ");
             if (index == -1 && index < 512) {
                 uriBase = url; // naive tell if has base tag
             }
         }
-    }
-
-    public String get() {
-        return sb.toString();
     }
 
     public void characters(char[] ch, int start, int length)
@@ -89,31 +60,7 @@ public class HTMLMinfiyHandler extends DefaultHandler {
                 }
                 // \n is not needed
             }
-        }
-
-        // } else if (isInScript) {
-        // final int total = start + length;
-        // String s = new String(ch, start, length);
-        // System.out.println(s);
-        // for (int i = start; i < total;) {
-        // char last = ' ';
-        // // skip leading space
-        // while (i < total && Character.isWhitespace(ch[i])) {
-        // ++i;
-        // }
-        // while (i < total && ch[i] != '\n') {
-        // last = ch[i];
-        // sb.append(last);
-        // ++i;
-        // }
-        // // i am sure \n is not need
-        // if (last == ';' || last == ',' || last == '{' || last == '}') {
-        // } else if (i < total && ch[i] == '\n') {
-        // sb.append('\n');
-        // }
-        // }
-        // }
-        else {
+        } else {
             sb.append(ch, start, length);
         }
     }
@@ -126,13 +73,6 @@ public class HTMLMinfiyHandler extends DefaultHandler {
         for (int i = 0; i < length; ++i) {
             String name = attrs.getQName(i).toLowerCase();
             String val = attrs.getValue(i);
-
-            if (name.equals("src")) { // prevent browser do request
-                name = "data-src";
-            } else if (name.equals("href")) {
-                name = "data-href";
-            }
-
             sb.append(SPACE);
             sb.append(name).append(EQUAL);
             if (isQuoteNeeded(val)) {
@@ -159,7 +99,7 @@ public class HTMLMinfiyHandler extends DefaultHandler {
             throws SAXException {
         String l = qName.toLowerCase();
         boolean close = true;
-        for (String tag : unCloseableTags) {
+        for (String tag : UN_ClOSEABLE_TATS) {
             if (tag.equals(l)) {
                 close = false;
                 break;
@@ -176,24 +116,6 @@ public class HTMLMinfiyHandler extends DefaultHandler {
             isInScript = false;
         } else if (STYLE.equals(qName)) {
             isInStyle = false;
-        }
-    }
-
-    private static boolean isQuoteNeeded(String val) {
-        if (val.isEmpty() || val.length() > 10) {
-            return true;
-        } else {
-            int i = val.length();
-            while (--i >= 0) {
-                char c = val.charAt(i);
-                // http://www.cs.tut.fi/~jkorpela/qattr.html
-                if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z')
-                        || (c >= 'A' && c <= 'Z') || c == '-' || c == '.') {
-                } else {
-                    return true;
-                }
-            }
-            return false;
         }
     }
 }

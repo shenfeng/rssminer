@@ -69,7 +69,7 @@
              ["--profile" "dev or prod" :default :dev :parse-fn keyword]
              ["--redis-host" "redis for session store"
               :default "127.0.0.1"]
-             ["--proxy-server" "proxy server" :default "//192.168.1.114"]
+             ["--proxy-server" "proxy server" :default "//127.0.0.1"]
              ["--static-server" "static server" :default "//127.0.0.1"]
              ["--db-path" "H2 Database file path"
               :default "/var/rssminer/rssminer"]

@@ -186,64 +186,55 @@
     return {expire_times: expire_times};
   }
 
-  var proxy_sites = ['groups.google', "feedproxy",// X-Frame-Options
-                     "javaworld"           // for Readability
-                                              ];
+  var bypass_proxy_sites = ['groups.google', // X-Frame-Options
+                            "feedproxy",
+                            "alibuybuy",
+                            "javaworld" // for Readability
+                                           ];
 
-  var protectedHostname = ["wordpress", "appspot", 'emacsblog','blogger',
-                           "blogspot", 'mikemccandless'];
+  var reseted_sites = ["wordpress", "appspot", 'emacsblog','blogger',
+                       "blogspot", 'mikemccandless'];
 
-  function shouldFetchOrignal (link) {
-    if(util.enableProxy()) {
-      var h = util.hostname(link);
-      if(shouldProxy(link)) { return true; }
-      for(var i = 0; i < proxy_sites.length; i++) {
-        if(h.indexOf(proxy_sites[i]) != -1) {
-          return true;
-        }
+  function is_bypass_proxy_site (link) {
+    var h = util.hostname(link);
+    return _.any(bypass_proxy_sites, function (site) {
+      return h.indexOf(site) !== -1;
+    });
+  }
+
+  function get_final_link (link, feedid) {
+    if(is_bypass_proxy_site(link)) {
+      return proxy_server + "/f/o/" + feedid + "?p=1";
+    } else {
+      if(util.enableProxy() && is_reseted_site(link)) {
+        return proxy_server + "/f/o/" + feedid + "?p=1";
       }
+      return link;
     }
-    return false;
+  }
+
+  function is_reseted_site (link) {
+    var h = util.hostname(link);
+    return _.any(reseted_sites, function (site) {
+      return h.indexOf(site) !== -1;
+    });
   }
 
   function shouldProxy (link) {
     var hostname= util.hostname(link);
-    for(var i = 0; i < protectedHostname.length; i++) {
-      if(hostname.indexOf(protectedHostname[i]) != -1) {
+    for(var i = 0; i < reseted_sites.length; i++) {
+      if(hostname.indexOf(reseted_sites[i]) != -1) {
         return true;
       }
     }
     return false;
   }
 
-  function writeDocument (doc, data, link) {
-    doc.open();         // clear
-    doc.write(data);
-    var proxy = shouldProxy(link);
-    $("link, img", doc).each(function (index, item) {
-      var $item = $(item),
-          src = $item.attr('data-src'),
-          href = $item.attr('data-href');
-      if(src) {
-        if(proxy) { src = proxy_server + "/p?u=" + encodeURIComponent(src); }
-        $item.attr('src', src);
-      }
-      if(href) {
-        if(proxy) {
-          href = proxy_server + "/p?u=" + encodeURIComponent(href);
-        }
-        $item.attr('href', href);
-      }
-    });
-    doc.close();
-  }
-
   // export
   window.RM = $.extend(window.RM, {
     data: {
-      shouldFetchOrignal: shouldFetchOrignal,
-      writeDocument: writeDocument,
       parseSubs: parseSubs,
+      get_final_link: get_final_link,
       userSettings: userSettings,
       parseFeedListForWelcome: parseFeedListForWelcome,
       parseFeedList: parseFeedList,

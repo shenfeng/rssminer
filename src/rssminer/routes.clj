@@ -65,7 +65,7 @@
   (GET "/" [] reader/landing-page)
   (GET "/p" []  handle-proxy)
   (GET "/fav" [] get-favicon)
-  (GET "/f/o/:id" [] feed/get-orginal)
+  (GET "/f/o/:id" [] feed/proxy-orginal)
   (GET "/oauth2callback" [] import/oauth2callback)
   (GET "/a" [] reader/app-page)
   (context "/dashboard" []

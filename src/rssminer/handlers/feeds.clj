@@ -3,8 +3,7 @@
                   [config :only [rssminer-conf]]
                   [search :only [update-index]]
                   [http :only [client parse-response extract-host]])
-        [clojure.tools.logging :only [debug error]]
-        [clojure.data.json :only [json-str]])
+        [clojure.tools.logging :only [debug error]])
   (:require [rssminer.db.feed :as db]
             [rssminer.db.user-feed :as uf])
   (:import rssminer.Utils
@@ -38,15 +37,14 @@
   (let [feed-id (-> req :params :feed-id)]
     (db/fetch-by-id feed-id)))
 
-(def default-header {"Content-Type" "text/html; charset=utf-8"
+(defn rewrite-html [link html]
+  (let [proxy (str (:proxy-server @rssminer-conf) "/p?u=")]
+    (Utils/rewrite html link proxy)))
+
+(def default-header {"Content-Type" "text/html; charset=utf8"
                      "Cache-Control" "public, max-age=604800"})
 
-(defn- compute-send-header [req]
-  (let [headers (:headers req)]
-    (assoc-if {"X-Forwarded-For" (:remote-addr req)}
-              "User-Agent" (headers "user-agent"))))
-
-(defn- fetch-and-store-orginal [id link header callback]
+(defn- fetch-and-store-orginal [id link proxy? header]
   (let [cb (fn [{:keys [resp final-link]}]
              (let [resp (parse-response resp)]
                (if (= 200 (:status resp))
@@ -59,19 +57,22 @@
                                         {:original body}))
                    {:status 200
                     :headers default-header
-                    :body (str callback "(" (json-str body) ")")})
+                    :body (if proxy? (rewrite-html final-link body) body)})
                  (do
                    (debug link resp)
                    {:status 404}))))]
     {:status 200
-     :body (ProxyFuture. client link header (:proxy @rssminer-conf) cb)}))
+     :body (ProxyFuture. client link header
+                         (:proxy @rssminer-conf) cb)}))
 
-(defn get-orginal [req]
-  (let [{:keys [id callback]} (-> req :params)
+(defn proxy-orginal [req]
+  (let [{:keys [id p]} (:params req)
+        header {"X-Forwarded-For" (:remote-addr req)
+                "User-Agent" ((:headers req) "user-agent")}
         {:keys [original link]} (db/fetch-orginal id)] ; proxy
     (if original
       {:status 200
        :headers default-header
-       :body (str callback "(" (json-str original) ")")}
-      (fetch-and-store-orginal id link (compute-send-header req) callback))))
+       :body (if p (rewrite-html link original) original)}
+      (fetch-and-store-orginal id link p header))))
 

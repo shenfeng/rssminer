@@ -102,6 +102,15 @@ public class Utils {
         }
     }
 
+    public static String rewrite(String html, String urlBase, String proxyURI)
+            throws IOException, SAXException, URISyntaxException {
+        Parser p = parser.get();
+        RewriteHandler h = new RewriteHandler(html, urlBase, proxyURI);
+        p.setContentHandler(h);
+        p.parse(new InputSource(new StringReader(html)));
+        return h.get();
+    }
+
     public static double[] pick(double[] prefs, double likeRatio,
             double dislikeRatio) {
         int likeIndex = prefs.length - (int) (prefs.length * likeRatio);
@@ -110,6 +119,8 @@ public class Utils {
         Arrays.sort(prefs);
         return new double[] { prefs[likeIndex], prefs[disLikeIndex] };
     }
+
+
 
     public static String extractText(String html) throws IOException,
             SAXException {
