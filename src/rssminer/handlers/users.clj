@@ -1,7 +1,7 @@
 (ns rssminer.handlers.users
   (:use  [ring.util.response :only [redirect]]
          (rssminer [time :only [now-seconds]]
-                   [util :only [session-get assoc-if md5-sum]]
+                   [util :only [session-get assoc-if md5-sum get-expire]]
                    [config :only [rssminer-conf]])
          [clojure.data.json :only [json-str read-json]])
   (:require [rssminer.db.user :as db]
@@ -17,7 +17,8 @@
         return-url (or return-url "/a")]
     (if user
       (assoc (redirect return-url)
-        :session {:user (select-keys user [:id :email :name :conf])})
+        :session {:user (select-keys user [:id :email :name :conf])}
+        :session-cookie-attrs {:expires (get-expire 3)})
       (view/login-page return-url))))
 
 (defn show-signup-page [req]

@@ -13,8 +13,7 @@
                                      wrap-reload-in-dev wrap-failsafe
                                      wrap-request-logging-in-dev
                                      JPOST JPUT JDELETE JGET]]
-                  [redis :only [redis-store]]
-                  [util :only [get-expire]]))
+                  [redis :only [redis-store]]))
   (:require [clojure.string :as str]
             [compojure.route :as route]
             [rssminer.import :as import]
@@ -90,8 +89,7 @@
       wrap-auth
       (wrap-session {:store (redis-store (* 3600 24 3))
                      :cookie-name "rm_id"
-                     :cookie-attrs {:http-only true
-                                    :expires (get-expire 3)}})
+                     :cookie-attrs {:http-only true}})
       wrap-cache-header
       wrap-request-logging-in-dev
       wrap-keyword-params
