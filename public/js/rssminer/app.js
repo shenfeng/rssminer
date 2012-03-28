@@ -2,6 +2,7 @@
   var data = RM.data,
       tmpls = RM.tmpls,
       util = RM.util,
+      hashRouter = RM.hashRouter,
       ajax = RM.ajax,
       layout = RM.layout,
       to_html = Mustache.to_html;
@@ -253,7 +254,7 @@
 
   renderNavList();              // should before hashRouter;
 
-  RM.hashRouter({
+  hashRouter({
     '': welcome,
     'settings': settings,
     'help': showHelp,

@@ -14,6 +14,7 @@
                  [commons-io "2.1"]
                  [redis.clients/jedis "2.0.0"]
                  [commons-codec "1.5"]
+                 [mysql/mysql-connector-java "5.1.18"]
                  [org.apache.lucene/lucene-core "3.5.0"]
                  [org.apache.lucene/lucene-queries "3.5.0"]
                  [org.apache.lucene/lucene-analyzers "3.5.0"]
