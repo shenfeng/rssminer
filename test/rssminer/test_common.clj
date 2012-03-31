@@ -4,8 +4,7 @@
         [clojure.data.json :only [json-str]]
         [clojure.java.jdbc :only [print-sql-exception-chain]]
         [rssminer.handlers.subscriptions :only [subscribe]]
-        (rssminer [database :only [import-h2-schema! use-h2-database!]]
-                  [search :only [use-index-writer!
+        (rssminer [search :only [use-index-writer!
                                  close-global-index-writer!]]
                   [util :only [session-get]]
                   [parser :only [parse-feed]]
@@ -13,7 +12,9 @@
                   [http :only [download-rss]])
         (rssminer.db [user :only [create-user]]
                      [feed :only [save-feeds]]))
-  (:require [clojure.string :as str])
+  (:require [clojure.string :as str]
+            [clojure.java.jdbc :as jdbc]
+            [rssminer.database :as db])
   (:import java.io.File
            java.sql.SQLException))
 
@@ -60,15 +61,23 @@
   (use-index-writer! :RAM)
   (test-fn))
 
-(defn h2-fixture [test-fn]
-  (let [file (str "mem:rssminer_test")]
+(defn- use-db [db]
+  (db/use-mysql-database! (str "jdbc:mysql://localhost/" db)))
+
+(defn mysql-fixture [test-fn]
+  (let [test-db-name "rssminer_test"]
     (try
-      (use-h2-database! file)
-      (import-h2-schema!)
+      (use-db "mysql")
+      (db/do-mysql-commands (str "create database " test-db-name))
+      (use-db test-db-name)
+      (db/import-mysql-schema!)
       (test-fn)
       (catch SQLException e
         (print-sql-exception-chain e)
-        (throw e)))))
+        (throw e))
+      (finally
+       (use-db "mysql")
+       (db/do-mysql-commands (str "drop database " test-db-name))))))
 
 (defmacro mocking [var new-f & forms]
   `(let [old# (atom nil)]
@@ -86,7 +95,7 @@
                     (test-fn))))
 
 (def app-fixture (join-fixtures [lucene-fixture
-                                 h2-fixture
+                                 mysql-fixture
                                  user-fixture
                                  redis-queue-fixture]))
 

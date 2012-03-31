@@ -3,19 +3,19 @@
         (rssminer [config :only [multi-domain?]]
                   [time :only [now-seconds]]
                   [util :only [ignore-error]])
-        [rssminer.db.util :only [h2-query with-h2]]
+        [rssminer.db.util :only [mysql-query with-mysql]]
         [clojure.java.jdbc :only [with-connection with-query-results
                                   insert-record update-values]]))
 (defn fetch-crawler-links [limit]
   "Returns nil when no more"
-  (h2-query ["SELECT id, url, check_interval
+  (mysql-query ["SELECT id, url, check_interval
               FROM crawler_links
               WHERE next_check_ts < ?
               ORDER BY next_check_ts LIMIT ? " (now-seconds) limit]))
 
 (defn- insert-crawler-link [link]
   (ignore-error ;; ignore voilation of uniqe constraint
-   (with-h2
+   (with-mysql
      (insert-record :crawler_links link))))
 
 (defn insert-crawler-links
@@ -30,6 +30,6 @@
     (doall (filter identity (flatten (map f grouped))))))
 
 (defn update-crawler-link [id data]
-  (with-h2
+  (with-mysql
     (update-values :crawler_links ["id = ?" id] data)))
 

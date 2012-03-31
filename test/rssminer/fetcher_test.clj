@@ -3,10 +3,14 @@
         rssminer.fetcher
         rssminer.db.feed
         [rssminer.time :only [now-seconds]]
-        [rssminer.db.util :only [h2-query]]
-        [rssminer.test-common :only [h2-fixture]]))
+        [rssminer.db.util :only [mysql-query mysql-insert]]
+        [rssminer.test-common :only [mysql-fixture]]))
 
-(use-fixtures :each h2-fixture)
+(use-fixtures :each mysql-fixture
+              (fn [test-fn]
+                (mysql-insert :rss_links
+                              {:url "http://aria42.com/blog/?feed=rss2"})
+                (test-fn)))
 
 (deftest test-mk-provider
   (let [provider ^rssminer.task.IHttpTasksProvder (mk-provider)
@@ -16,12 +20,12 @@
 
 (deftest test-handle-resp
   (let [links (fetch-rss-links 10000)
-        feeds (h2-query ["select * from feeds"])]
+        feeds (mysql-query ["select * from feeds"])]
     (handle-resp (first links)
                  {:status 200
                   :headers {:last-modified "Sat, 23 Jul 2011 01:40:16 GMT"}
                   :body (slurp "test/scottgu-atom.xml")})
-    (is (= (count (h2-query ["select * from feeds"])) 1))
+    (is (= (count (mysql-query ["select * from feeds"])) 1))
     (is (= 1 (- (count links) (count (fetch-rss-links 1000)))))))
 
 (deftest test-insert-rss-link

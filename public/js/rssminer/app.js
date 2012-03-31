@@ -167,6 +167,7 @@
 
   function settings () {
     hideHelp();
+    $reading_area.removeClass('show-iframe');
     var $welcome = addWelcomeTitle();
     $welcome.append(to_html(tmpls.settings, data.userSettings()));
   }
@@ -221,6 +222,7 @@
 
   function addSubscription () {
     hideHelp();
+    $reading_area.removeClass('show-iframe');
     var $welcome = addWelcomeTitle();
     $welcome.append(tmpls.add);
   }

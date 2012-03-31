@@ -2,13 +2,13 @@
   (:use clojure.test
         rssminer.classify
         [rssminer.db.feed :only [save-feeds]]
-        [rssminer.db.util :only [h2-query with-h2 h2-insert-and-return]]
+        [rssminer.db.util :only [mysql-query with-mysql mysql-insert-and-return]]
         (rssminer [test-common :only [user1 app-fixture mk-feeds-fixtrue]]
                   [time :only [now-seconds]]))
   (:require [rssminer.db.user-feed :as uf]))
 
 (defn prepare-insert-feeds [test-fn]
-  (let [rss-id (-> (h2-query ["SELECT rss_link_id FROM user_subscription"])
+  (let [rss-id (-> (mysql-query ["SELECT rss_link_id FROM user_subscription"])
                    first :rss_link_id)]
     (save-feeds {:entries
                  [{:author "feng"
@@ -29,16 +29,17 @@
                 rss-id)
     (test-fn)))
 
-(use-fixtures :each app-fixture (mk-feeds-fixtrue "test/scottgu-atom.xml")
+(use-fixtures :each app-fixture
+              (mk-feeds-fixtrue "test/scottgu-atom.xml")
               prepare-insert-feeds)
 
 (deftest test-recompute-sysvote
   (let [u-id (:id user1)
-        feed-ids (map :id (h2-query ["select id from feeds"]))]
+        feed-ids (map :id (mysql-query ["select id from feeds"]))]
     (uf/insert-user-vote u-id (first feed-ids) 1)
     (is (not (re-build-model u-id)))
     (uf/insert-user-vote u-id (second feed-ids) -1)
     (is (re-build-model u-id))
     (re-compute-sysvote u-id 0)
-    (let [all (h2-query ["select * from user_feed"])]
+    (let [all (mysql-query ["select * from user_feed"])]
       (is (= 4 (count all))))))

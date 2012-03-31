@@ -1,5 +1,5 @@
 (ns rssminer.handlers.favicon
-  (:use [rssminer.db.util :only [h2-query h2-insert]]
+  (:use [rssminer.db.util :only [mysql-query mysql-insert]]
         [ring.util.response :only [redirect]]
         (rssminer [http :only [client]]
                   [util :only [ignore-error]]
@@ -9,7 +9,7 @@
            java.io.ByteArrayInputStream))
 
 (defn fetch-favicon [hostname]
-  (first (h2-query
+  (first (mysql-query
           ["SELECT favicon, code FROM favicon WHERE hostname = ?" hostname])))
 
 (def default-icon "/imgs/16px-feed-icon.png")
@@ -25,7 +25,7 @@
                            (let [code (-> resp .getStatus .getCode)
                                  data (-> resp .getContent .array)]
                              (ignore-error
-                              (h2-insert :favicon {:hostname hostname
+                              (mysql-insert :favicon {:hostname hostname
                                                    :code code
                                                    :favicon data}))
                              (if (= 200 code)

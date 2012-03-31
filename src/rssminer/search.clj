@@ -1,8 +1,9 @@
 (ns rssminer.search
   (:use [clojure.tools.logging :only [info]]
         [rssminer.util :only [to-int ignore-error]]
-        [rssminer.db.util :only [with-h2 h2-query]])
-  (:import rssminer.Searcher))
+        [rssminer.db.util :only [with-mysql mysql-query]])
+  (:import rssminer.Searcher)
+  (:require [clojure.string :as str]))
 
 (defonce searcher (atom nil))
 
@@ -19,15 +20,19 @@
     (reset! searcher (Searcher. path))))
 
 (defn fetch-feeds [feed-ids user-id]
-  (let [sql (if user-id
-              ["SELECT id, author, title, link, p.pref, tags
-                FROM TABLE(x int=?) T INNER JOIN feeds f ON T.x = f.id
-                LEFT JOIN user_feed_pref p
-                     on p.feed_id = id and p.user_id = ?" feed-ids user-id]
-              ["SELECT id, author, title, link, tags
-                FROM TABLE(x int=?) T INNER JOIN feeds f ON T.x = f.id"
-               feed-ids])]
-    (h2-query sql :convert)))
+  ;; TODO use para user-id
+  (let [sql [(str "SELECT id, author, title, link, tags
+                  FROM feeds WHERE id IN (" (str/join ", " feed-ids) ")")]
+        ;; (if user-id
+        ;;       ["SELECT id, author, title, link, p.pref, tags
+        ;;         FROM TABLE(x int=?) T INNER JOIN feeds f ON T.x = f.id
+        ;;         LEFT JOIN user_feed_pref p
+        ;;              on p.feed_id = id and p.user_id = ?" feed-ids user-id]
+        ;;       ["SELECT id, author, title, link, tags
+        ;;         FROM TABLE(x int=?) T INNER JOIN feeds f ON T.x = f.id"
+        ;;        feed-ids])
+        ]
+    (mysql-query sql)))
 
 (defn index-feed [id {:keys [author tags title summary]}]
   (ignore-error

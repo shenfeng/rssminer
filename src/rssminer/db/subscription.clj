@@ -1,19 +1,19 @@
 (ns rssminer.db.subscription
-  (:use [rssminer.db.util :only [select-sql-params h2-insert-and-return
-                                 h2-query with-h2]]
+  (:use [rssminer.db.util :only [select-sql-params mysql-insert-and-return
+                                 mysql-query with-mysql]]
         [clojure.java.jdbc :only [delete-rows update-values]]))
 
 (defn fetch-rss-link [map]
   (first
-   (h2-query (select-sql-params :rss_links map))))
+   (mysql-query (select-sql-params :rss_links map))))
 
 (defn fetch-feeds-count-by-id [rss-id]
-  (-> (h2-query ["SELECT COUNT(*) as count
+  (-> (mysql-query ["SELECT COUNT(*) as count
                 FROM feeds WHERE rss_link_id = ?" rss-id])
       first :count))
 
 (defn fetch-user-subs [user-id mark-as-read-time like neutral]
-  (h2-query ["SELECT us.rss_link_id AS id, us.group_name, l.url,
+  (mysql-query ["SELECT us.rss_link_id AS id, us.group_name, l.url,
               us.sort_index, us.title, l.title as o_title,
            (SELECT COUNT(*) FROM feeds
               LEFT JOIN user_feed ON feeds.id = user_feed.feed_id
@@ -37,21 +37,21 @@
              like mark-as-read-time neutral user-id]))
 
 (defn fetch-user-sub [id user-id mark-as-read-time like neutral]
-  (h2-query ["SELECT rl.id, rl.url, rl.title
+  (mysql-query ["SELECT rl.id, rl.url, rl.title
               FROM rss_links rl WHERE id = ?" id]))
 
 (defn fetch-subscription [map]
   (first
-   (h2-query
+   (mysql-query
     (select-sql-params :user_subscription map))))
 
 (defn update-subscription [user-id id data]
-  (with-h2
+  (with-mysql
     (update-values :user_subscription
                    ["user_id = ? AND id = ?" user-id id]
                    (select-keys data [:group_name :title]))))
 
 (defn delete-subscription [user-id id]
-  (with-h2
+  (with-mysql
     (delete-rows :user_subscription
                  ["user_id = ? AND id = ?" user-id id])))

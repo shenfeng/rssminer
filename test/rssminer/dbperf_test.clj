@@ -1,9 +1,9 @@
 (ns rssminer.dbperf-test
-  (:use (rssminer [database :only [import-h2-schema! use-h2-database!]])
+  (:use (rssminer [database :only [import-mysql-schema! use-mysql-database!]])
         [clojure.tools.cli :only [cli]]
         [rssminer.util :only [extract-text to-int]]
         [rssminer.test-common]
-        [rssminer.db.util :only [h2-query]])
+        [rssminer.db.util :only [mysql-query]])
   (:require [clojure.string :as str]
             [rssminer.http :as http]
             [net.cgrand.enlive-html :as html]
@@ -36,8 +36,8 @@
 
 (defn do-insert [& {:keys [n path]}]
   (.delete (java.io.File. (str path ".h2.db")))
-  (use-h2-database! path)
-  (import-h2-schema!)
+  (use-mysql-database! "")
+  (import-mysql-schema!)
   (let [refer (first (gen-rss-links))]
     (doseq [rss (partition 10 (take n (gen-rss-links)))]
       (db/insert-crawler-links refer rss))))
@@ -53,7 +53,7 @@
                   (iterate (fn [n] (* n step)) init))]
     (let [r (my-time (do-insert :n n :path path))
           inserted (-> ["select count (*) as count from crawler_links"]
-                       h2-query first :count)
+                       mysql-query first :count)
           time (:time r)]
       (println "\n-----" (java.util.Date.) "-----")
       (println  n "items, inserted" inserted
@@ -65,7 +65,7 @@
         (println "candidate"
                  (str (-> ["select count (*) as count from crawler_links
                              where next_check_ts < ?"
-                           (time/now-seconds)] h2-query  first :count) ",")
+                           (time/now-seconds)] mysql-query  first :count) ",")
                  "fetched"
                  (count (:result r))
                  (str "in " (:time r) "ms"))))))
@@ -85,7 +85,7 @@
        " )"))
 
 (defn f []  (let [start (System/currentTimeMillis)]
-              (h2-query [ (sql) ])
+              (mysql-query [ (sql) ])
               (let [time (- (System/currentTimeMillis) start)]
                 (println (.getName (Thread/currentThread))
                          time "ms")

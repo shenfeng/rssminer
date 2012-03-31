@@ -1,6 +1,5 @@
 (ns rssminer.db.util
-  (:use [rssminer.database :only [h2-db-factory]]
-        [clojure.walk :only [postwalk]]
+  (:use [rssminer.database :only [mysql-db-factory]]
         [clojure.java.jdbc :only [with-connection with-query-results
                                   insert-record as-identifier]])
   (:require [clojure.string :as str])
@@ -8,8 +7,6 @@
            java.util.Locale
            java.sql.Clob
            java.sql.Timestamp))
-
-(def id-k (keyword "scope_identity()"))
 
 (defn select-sql-params
   ([table pred-map] (select-sql-params table pred-map 1 0))
@@ -25,28 +22,19 @@
                      " LIMIT ? OFFSET ?")]
        (apply vector (cons (apply str sql) values)))))
 
-(defmacro with-h2 [& body]
-  `(with-connection @h2-db-factory
+(defmacro with-mysql [& body]
+  `(with-connection @mysql-db-factory
      ~@body))
 
-(defn h2-query
-  ([query] (with-h2
-             (with-query-results rs query
-               (doall rs))))
-  ([query c] (with-h2
-               (with-query-results rs query
-                 (postwalk (fn [x] (if (instance? Clob x)
-                                    (slurp (.getCharacterStream ^Clob x))
-                                    x))
-                           rs)))))
+(defn mysql-query [query]
+  (with-mysql (with-query-results rs query (doall rs))))
 
-(defn h2-insert [table record]
-  (id-k (with-h2
-          (insert-record table record))))
+(defn mysql-insert [table record]
+  (:generated_key (with-mysql (insert-record table record))))
 
-(defn h2-insert-and-return [table record]
-  (let [id (h2-insert table record)]
-    (first (h2-query (select-sql-params table {:id id})))))
+(defn mysql-insert-and-return [table record]
+  (let [id (mysql-insert table record)]
+    (first (mysql-query (select-sql-params table {:id id})))))
 
 (defn parse-timestamp [str]
   (let [f (SimpleDateFormat. "EEE, dd MMM yyyy HH:mm:ss ZZZ" Locale/US)]

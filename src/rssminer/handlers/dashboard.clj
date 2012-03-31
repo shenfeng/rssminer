@@ -2,19 +2,16 @@
   (:require [rssminer.db.dashboard :as db]
             (rssminer [config :as conf]
                       [fetcher :as f]
-                      [crawler :as c]
-                      [database :as d]))
+                      [crawler :as c]))
   (:import [rssminer.task HttpTaskRunner]))
 
 (defn get-data [req]
-  {:crawler_links (db/crawler-links-count)
-   :rss_links (db/rss-links-count)
+  {:rss_links (db/rss-links-count)
    :feeds (db/feeds-count)
    :crawler (c/crawler-stat)
    :crawler_running (c/running?)
    :fetcher (f/fetcher-stat)
-   :fetcher_running (f/running?)
-   :h2 (d/running?)})
+   :fetcher_running (f/running?)})
 
 (defn settings [req]
   (let [{:keys [which command]} (:body req)]
@@ -26,9 +23,5 @@
       "fetcher"
       (if (= "start" command)
         (f/start-fetcher)
-        (f/stop-fetcher))
-      "h2"
-      (if (= "start" command)
-        (d/start-h2-server)
-        (d/stop-h2-server)))
+        (f/stop-fetcher)))
     nil))

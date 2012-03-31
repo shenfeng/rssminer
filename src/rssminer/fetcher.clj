@@ -71,5 +71,5 @@
                            (.setQueueSize (:fetcher-queue @rssminer-conf))
                            (.setProxy (:proxy @rssminer-conf))
                            (.setName "Fetcher")
-                           (.setDnsPrefetch (:dns-prefetch @rssminer-conf))))
+                           (.setDnsPrefetch false)))
                     (.start))))

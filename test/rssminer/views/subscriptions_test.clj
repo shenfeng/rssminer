@@ -1,7 +1,7 @@
 (ns rssminer.views.subscriptions-test
   (:use clojure.test
         [clojure.data.json :only [read-json json-str]]
-        [rssminer.db.util :only [h2-query select-sql-params]]
+        [rssminer.db.util :only [mysql-query select-sql-params]]
         [rssminer.time :only [now-seconds]]
         (rssminer [test-common :only [auth-app auth-app2 app-fixture]])))
 
@@ -17,7 +17,7 @@
     [resp subscription]))
 
 (deftest test-add-feedsource
-  (let [c (count (h2-query ["select * from rss_links"]))
+  (let [c (count (mysql-query ["select * from rss_links"]))
         [subscribe-resp subscription] (prepare)
         subscribe-again (auth-app add-req)
         another-resp (auth-app2 add-req)]
@@ -25,8 +25,8 @@
     (is (= 200 (:status subscribe-again)))
     (is (= 200 (:status another-resp)))
     ;;    make sure only one subscription is added
-    (is (= 1 (- (count (h2-query ["select * from rss_links"])) c)))
-    (let [rss (first (h2-query
+    (is (= 1 (- (count (mysql-query ["select * from rss_links"])) c)))
+    (let [rss (first (mysql-query
                       ["select * from rss_links order by id desc"]))]
       (is (>  (now-seconds) (:next_check_ts rss))))
     (are [key] (-> subscription key)

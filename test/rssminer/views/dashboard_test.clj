@@ -1,9 +1,9 @@
 (ns rssminer.views.dashboard-test
   (:use clojure.test
         (clojure.data [json :only [read-json json-str]])
-        (rssminer [test-common :only [test-app h2-fixture]])))
+        (rssminer [test-common :only [test-app mysql-fixture]])))
 
-(use-fixtures :each h2-fixture)
+(use-fixtures :each mysql-fixture)
 
 (defn- make-req [q]
   (test-app {:uri (str "/api/dashboard/" q)

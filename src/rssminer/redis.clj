@@ -5,7 +5,7 @@
 
 (defonce redis-client (atom nil))
 
-(defn set-redis-client [^String host] ;; called when app start
+(defn set-redis-client! [^String host] ;; called when app start
   (when (nil? @redis-client)
     (reset! redis-client (JedisPool. (JedisPoolConfig.) host))))
 
@@ -44,7 +44,7 @@
 
 (defn redis-store [expire]
   (when (nil? @redis-client)
-    (set-redis-client "127.0.0.1"))
+    (set-redis-client! "127.0.0.1"))
   (RedisStore. @redis-client expire))
 
 (def ^String fetcher-key "fetcher-queue")

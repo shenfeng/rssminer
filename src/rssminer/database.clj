@@ -3,46 +3,28 @@
         [clojure.tools.logging :only [debug info]]
         [clojure.java.jdbc :only [with-connection do-commands]])
   (:require [clojure.string :as str])
-  (:import org.h2.jdbcx.JdbcConnectionPool
-           org.h2.tools.Server))
+  (:import java.sql.DriverManager))
 
-(defonce h2-db-factory  (atom {:factory nil :ds nil}))
+(defonce mysql-db-factory (atom {}))
 
-(defonce server (atom nil))
+(defn use-mysql-database! [url]
+  (reset! mysql-db-factory
+          {:factory (fn [& args]
+                      (DriverManager/getConnection url "root" ""))}))
 
-(defn running? []
-  (not (nil? @server)))
+(defn do-mysql-commands [& commands]
+  (with-connection @mysql-db-factory
+    (apply do-commands commands)))
 
-(defn start-h2-server []
-  (when-not (running?)
-    (reset! server (doto (Server.)
-                     (.runTool (into-array '("-tcp" "-tcpAllowOthers")))))))
+(defn close-global-mysql-factory! []
+  (reset! mysql-db-factory nil))
 
-(defn stop-h2-server []
-  (when (running?)
-    (.shutdown ^Server @server)
-    (reset! server nil)))
+(defn import-mysql-schema! []
+  (apply do-mysql-commands (filter (complement str/blank?)
+                                   (str/split (slurp "src/rssminer.sql")
+                                              #"\s*----*\s*"))))
 
-(defn close-global-h2-factory! []
-  (if-let [ds (:ds @h2-db-factory)]
-    (.dispose ^JdbcConnectionPool ds)
-    (reset! h2-db-factory nil)))
+(defmacro with-mysql [& body]
+  `(with-connection @mysql-db-factory
+     ~@body))
 
-(defn use-h2-database! [db-path & {:keys [trace]}]
-  (close-global-h2-factory!)
-  (let [opts ";LOG=1;LOCK_MODE=3;CACHE_SIZE=16384;UNDO_LOG=1"
-        url (str "jdbc:h2:" db-path ";FILE_LOCK=FS;MVCC=true" opts
-                 ";DB_CLOSE_ON_EXIT=FALSE"
-                 (when trace ";TRACE_LEVEL_FILE=2;TRACE_MAX_FILE_SIZE=1000"))
-        ds (JdbcConnectionPool/create url "sa" "")
-        f (fn [& args]  (.getConnection ds))]
-    (info "use h2 database" url)
-    (reset! h2-db-factory {:factory f
-                           :ds ds})))
-
-(defn import-h2-schema! []
-  (let [stats (filter (complement str/blank?)
-                      (str/split (slurp "src/rssminer.sql")
-                                 #"\s*----*\s*"))]
-    (with-connection @h2-db-factory
-      (apply do-commands (cons "DROP ALL OBJECTS" stats)))))
