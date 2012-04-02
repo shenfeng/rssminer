@@ -1,5 +1,5 @@
 (ns rssminer.dbperf-test
-  (:use (rssminer [database :only [import-mysql-schema! use-mysql-database!]])
+  (:use (rssminer [database :only [use-mysql-database!]])
         [clojure.tools.cli :only [cli]]
         [rssminer.util :only [extract-text to-int]]
         [rssminer.test-common]
@@ -37,7 +37,6 @@
 (defn do-insert [& {:keys [n path]}]
   (.delete (java.io.File. (str path ".h2.db")))
   (use-mysql-database! "")
-  (import-mysql-schema!)
   (let [refer (first (gen-rss-links))]
     (doseq [rss (partition 10 (take n (gen-rss-links)))]
       (db/insert-crawler-links refer rss))))

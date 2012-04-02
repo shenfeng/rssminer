@@ -1,3 +1,4 @@
+
 CREATE TABLE users (
   id INTEGER PRIMARY KEY auto_increment,
   email VARCHAR(64) unique,
@@ -9,7 +10,6 @@ CREATE TABLE users (
   added_ts INTEGER              -- interger is easier to serialize
 );
 
-----
 CREATE TABLE rss_links (
   id INTEGER PRIMARY KEY AUTO_INCREMENT,
   url VARCHAR(220) unique,
@@ -25,7 +25,6 @@ CREATE TABLE rss_links (
   INDEX idx_rss_check_ts (next_check_ts)
 );
 
-----
 CREATE TABLE feeds (
   id INTEGER PRIMARY KEY auto_increment,
   author VARCHAR(24),
@@ -44,7 +43,6 @@ CREATE TABLE feeds (
   UNIQUE(rss_link_id, link)
 );
 
-----
 CREATE TABLE user_subscription (
   id INTEGER PRIMARY KEY auto_increment,
   user_id INTEGER NOT NULL
@@ -59,7 +57,6 @@ CREATE TABLE user_subscription (
   UNIQUE (user_id, rss_link_id)
 );
 
-----
 create table user_feed (
     user_id INTEGER NOT NULL
             REFERENCES users ON UPDATE CASCADE ON DELETE CASCADE,
@@ -69,23 +66,20 @@ create table user_feed (
     vote_sys DOUBLE default 0,    -- learn by program
     read_date INTEGER default -1, -- the reading date, -1, unread
     PRIMARY KEY(user_id, feed_id)
-)
+);
 
-----
 create table favicon (
      hostname VARCHAR(96) primary key,
-     favicon BINARY,
+     favicon VARBINARY(65536),  -- 64k
      code INTEGER               -- fetch result's http status code
-)
+);
 
-----
--- delimiter //
 
+delimiter //
 
 CREATE PROCEDURE get_unvoted_feedids (user_id INT, published_ts INT)
 BEGIN
-SELECT p.*
-FROM (
+SELECT p.* FROM (
 SELECT f.id
 FROM feeds f
 JOIN user_subscription us ON us.rss_link_id = f.rss_link_id
@@ -95,11 +89,7 @@ SELECT feed_id AS id
 FROM user_feed
 WHERE user_id = user_id AND vote != 0) q ON p.id = q.id
 WHERE q.id IS NULL;
-END
-
--- delimiter ;
-
-----
+END //
 
 CREATE PROCEDURE get_user_subs (user_id_p INT, mark_as_read_time_p INT, like_s_p DOUBLE, neutral_s_p DOUBLE)
 BEGIN
@@ -124,6 +114,5 @@ WHERE rss_link_id = us.rss_link_id AND published_ts > mark_as_read_time_p AND us
 FROM user_subscription us
 JOIN rss_links l ON l.id = us.rss_link_id
 WHERE us.user_id = user_id_p;
-
-END
-----
+END //
+delimiter ;

@@ -16,7 +16,6 @@
                         (str "create database if not exists " db-name))
   (db/use-mysql-database! (str "jdbc:mysql://localhost/" db-name))
   (info "Import mysql schema, Create first user" email)
-  (db/import-mysql-schema!)
   (create-user {:email email :password password})
   (db/close-global-mysql-factory!))
 

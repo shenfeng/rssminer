@@ -1,15 +1,64 @@
-#!/bin/sh
+#!/bin/bash
 
 ABSOLUTE_PATH=$(readlink -f $0)
 HOME="${ABSOLUTE_PATH%/*/*}"
-cd "${HOME}" && java \
-    -Dsun.jnu.encoding=UTF-8 \
-    -Dfile.encoding=UTF-8 \
-    -Djava.net.preferIPv4Stack=true \
-    -XX:+TieredCompilation \
-    -XX:+UseCompressedOops \
-    -XX:+UseCompressedStrings \
-    -Xms1560m -Xmx3g \
-    -cp "classes:lib/*:src/" clojure.main \
-    -m rssminer.admin $@
+DB_NAME='rssminer'
+DB_USER='feng'
 
+log() {
+    echo "`date --rfc-3339=seconds` INFO -- $@"
+}
+
+drop_db() {
+    SQL="drop database if exists $1"
+    log $SQL
+    mysql -uroot -e "$SQL"
+}
+
+create_db() {
+    SQL="create database $1"
+    log $SQL
+    mysql -uroot -e "$SQL"
+}
+
+usage () {
+    cat <<-EOF
+USAGE:
+admin [options] [command]
+
+Options:
+  -d --db-name       mysql database name
+  -u --db-user-name  mysql username to create
+
+Commands:
+  init-db            initialize database, create user, import schema
+  drop-db            drop database
+EOF
+}
+
+init_db() {
+    drop_db $DB_NAME
+    create_db $DB_NAME
+    mysql -uroot mysql -e "DROP USER '$DB_USER'@localhost"
+    mysql -uroot -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY ''";
+    mysql -uroot -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';"
+    mysql -uroot $DB_NAME < $HOME/src/rssminer.sql
+
+}
+
+while test $# -ne 0; do
+    arg=$1; shift
+    case $arg in
+        -h|--help) usage; exit;;
+        -d|--db-name) DB_NAME=$1; shift;;
+        -u|--db-user-name) DB_USER=$1; shift;;
+        init-db) init_db $@; exit;;
+        drop-db) drop_db $DB_NAME; exit;;
+        *) usage; exit;;
+    esac
+done
+
+# reach hear, no args is given
+usage
+
+# ssh server 'mysqldump -u feng --routines --single-transaction --database user0 --add-drop-database --add-drop-table | gzip --stdout' | zcat > /tmp/backup_user0.sql

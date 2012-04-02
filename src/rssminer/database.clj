@@ -7,11 +7,11 @@
 
 (defonce mysql-db-factory (atom {}))
 
-(defn use-mysql-database! [url]
+(defn use-mysql-database! [url user]
   (reset! mysql-db-factory
           (let [ds (doto (BasicDataSource.)
                      (.setUrl url)
-                     (.setUsername "root")
+                     (.setUsername user)
                      (.setPassword ""))]
             {:factory (fn [& args] (.getConnection ds))
              :ds ds})))
@@ -24,11 +24,6 @@
   (if-let [ds (:ds @mysql-db-factory)]
     (.close ^BasicDataSource ds)
     (reset! mysql-db-factory nil)))
-
-(defn import-mysql-schema! []
-  (apply do-mysql-commands (filter (complement str/blank?)
-                                   (str/split (slurp "src/rssminer.sql")
-                                              #"\s*----*\s*"))))
 
 (defmacro with-mysql [& body]
   `(with-connection @mysql-db-factory

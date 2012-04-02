@@ -182,10 +182,12 @@ end
 
 desc "update dev mysql config file, restart mysql"
 task :mysql_dev do
+  sh 'sudo /etc/init.d/mysql stop'
   sh 'sudo rm /tmp/mysql -rf && sudo rm /tmp/mysql.log -f'
   sh 'sudo cp /var/lib/mysql /tmp -r '
   sh 'sudo chown mysql:mysql /tmp/mysql -R'
-  sh 'sudo cp conf/my-dev.cnf /etc/mysql/my.cnf && sudo /etc/init.d/mysql restart'
+  sh 'sudo cp conf/my-dev.cnf /etc/mysql/my.cnf'
+  sh 'sudo /etc/init.d/mysql start'
 end
 
 desc 'Compress html using htmlcompressor, save compressed to src/templates'

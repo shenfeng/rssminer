@@ -31,12 +31,12 @@
 
 (defn start-server
   [{:keys [port index-path profile db-url worker fetcher-queue
-           fetcher proxy fetch-size redis-host
+           fetcher proxy fetch-size redis-host db-user
            proxy-server static-server]}]
   (stop-server)
   (.removeShutdownHook (Runtime/getRuntime) shutdown-hook)
   (.addShutdownHook (Runtime/getRuntime) shutdown-hook)
-  (use-mysql-database! db-url)
+  (use-mysql-database! db-url db-user)
   (set-redis-client! redis-host)
   (swap! rssminer-conf assoc :profile profile
          :fetcher-queue fetcher-queue
@@ -69,6 +69,7 @@
              ["--static-server" "static server" :default "//127.0.0.1"]
              ["--db-url" "Mysql Database url"
               :default "jdbc:mysql://localhost/rssminer"]
+             ["--db-user" "Mysql Database user name" :default "feng"]
              ["--index-path" "Path to store lucene index"
               :default "/var/rssminer/index"]
              ["--[no-]fetcher" "Start rss fetcher" :default true]

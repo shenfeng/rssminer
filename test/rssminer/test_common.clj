@@ -1,6 +1,7 @@
 (ns rssminer.test-common
   (:use [rssminer.routes :only [app]]
         [clojure.test :only [join-fixtures]]
+        [clojure.java.shell :only [sh]]
         [clojure.data.json :only [json-str]]
         [clojure.java.jdbc :only [print-sql-exception-chain]]
         [rssminer.handlers.subscriptions :only [subscribe]]
@@ -61,23 +62,21 @@
   (use-index-writer! :RAM)
   (test-fn))
 
-(defn- use-db [db]
-  (db/use-mysql-database! (str "jdbc:mysql://localhost/" db)))
+(defn- run-admin [cmd params]
+  (apply sh (concat ["./scripts/admin"] params [cmd])))
 
 (defn mysql-fixture [test-fn]
-  (let [test-db-name "rssminer_test"]
+  (let [test-db-name "rssminer_test"
+        test-user "feng_test"]
     (try
-      (use-db "mysql")
-      (db/do-mysql-commands (str "create database " test-db-name))
-      (use-db test-db-name)
-      (db/import-mysql-schema!)
+      (run-admin "init-db" ["-d" test-db-name "-u" test-user])
+      (db/use-mysql-database! (str "jdbc:mysql://localhost/" test-db-name)
+                              test-user)
       (test-fn)
       (catch SQLException e
         (print-sql-exception-chain e)
         (throw e))
-      (finally
-       (use-db "mysql")
-       (db/do-mysql-commands (str "drop database " test-db-name))))))
+      (finally (run-admin "drop-db" ["-d" test-db-name])))))
 
 (defmacro mocking [var new-f & forms]
   `(let [old# (atom nil)]
