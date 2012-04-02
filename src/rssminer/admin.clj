@@ -8,10 +8,7 @@
         [clojure.java.jdbc :only [with-query-results]])
   (:require [clojure.string :as str]
             [rssminer.database :as db])
-  (:import java.io.File
-           java.net.URI
-           java.sql.Clob
-           rssminer.Searcher))
+  (:import rssminer.Searcher))
 
 (defn setup-db [{:keys [db-name email password]}]
   (db/use-mysql-database! (str "jdbc:mysql://localhost/mysql"))
@@ -25,8 +22,9 @@
 
 (defn rand-subscribe []
   (let [rrs (filter identity
-                    (map #(first (mysql-query ["select id, title from rss_links
-                        where title is not NULL and id > ? limit 1" %]))
+                    (map #(first (mysql-query
+                                  ["SELECT id, title FROM rss_links
+                        WHERE title IS NOT NULL AND id > ? LIMIT 1" %]))
                          (set (repeatedly 45 #(rand-int 10000)))))]
     (doseq [r rrs]
       (ignore-error (mysql-insert :user_subscription
@@ -40,9 +38,7 @@
   (with-mysql
     (with-query-results rs ["select * from feeds"]
       (doseq [feed rs]
-        (let [feed (update-in feed [:summary]
-                              #(slurp (.getCharacterStream ^Clob %)))]
-          (index-feed (:id feed) feed)))))
+        (index-feed (:id feed) feed))))
   (.toggleInfoStream ^Searcher @searcher false))
 
 (defn -main [& args]
