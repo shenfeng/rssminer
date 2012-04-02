@@ -66,7 +66,8 @@ myisam-recover         = BACKUP
 # * Query Cache Configuration
 #
 query_cache_limit	= 1M
-query_cache_size        = 16M
+# query_cache_size        = 16M
+query_cache_size        = 0
 #
 # * Logging and Replication
 #
@@ -80,8 +81,10 @@ general_log             = 1
 # Error logging goes to syslog due to /etc/mysql/conf.d/mysqld_safe_syslog.cnf.
 #
 # Here you can see queries with especially long duration
-log_slow_queries	= /var/log/mysql/mysql-slow.log
-long_query_time = 2
+# log_slow_queries	= /var/log/mysql/mysql-slow.log
+log_slow_queries	= /tmp/mysql-slow.log
+# long_query_time = 2
+long_query_time = .2
 log-queries-not-using-indexes
 #
 # The following can be used as easy to replay backup logs or for replication.

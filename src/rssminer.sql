@@ -81,6 +81,7 @@ create table favicon (
 ----
 -- delimiter //
 
+
 CREATE PROCEDURE get_unvoted_feedids (user_id INT, published_ts INT)
 BEGIN
 SELECT p.*
@@ -98,4 +99,31 @@ END
 
 -- delimiter ;
 
+----
+
+CREATE PROCEDURE get_user_subs (user_id_p INT, mark_as_read_time_p INT, like_s_p DOUBLE, neutral_s_p DOUBLE)
+BEGIN
+SELECT us.rss_link_id AS id, us.group_name, l.url,
+ us.sort_index, us.title, l.title AS o_title,
+ (
+SELECT COUNT(*)
+FROM feeds
+LEFT JOIN user_feed ON feeds.id = user_feed.feed_id
+WHERE rss_link_id = us.rss_link_id AND published_ts > mark_as_read_time_p AND
+ (user_feed.read_date < 1 OR user_feed.read_date IS NULL)) AS total_c,
+ (
+SELECT COUNT(*)
+FROM feeds
+LEFT JOIN user_feed ON feeds.id = user_feed.feed_id
+WHERE rss_link_id = us.rss_link_id AND published_ts > mark_as_read_time_p AND user_feed.read_date < 1 AND user_feed.vote_sys > like_s_p) AS like_c,
+ (
+SELECT COUNT(*)
+FROM feeds
+LEFT JOIN user_feed ON feeds.id = user_feed.feed_id
+WHERE rss_link_id = us.rss_link_id AND published_ts > mark_as_read_time_p AND user_feed.read_date < 1 AND user_feed.vote_sys < neutral_s_p) AS dislike_c
+FROM user_subscription us
+JOIN rss_links l ON l.id = us.rss_link_id
+WHERE us.user_id = user_id_p;
+
+END
 ----
