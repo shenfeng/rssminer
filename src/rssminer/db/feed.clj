@@ -21,14 +21,16 @@
                                      link rss-id] f))))))))
 
 (defn fetch-by-rssid [user-id rss-id limit offset]
-  (mysql-query ["SELECT f.id, author, link, title, tags,
-                     published_ts, uf.read_date, uf.vote, uf.vote_sys
-              FROM feeds f
-              LEFT OUTER JOIN user_feed uf ON uf.feed_id = f.id
-              WHERE rss_link_id = ?
-              AND  (uf.user_id = ? or uf.user_id IS NULL)
-              LIMIT ? OFFSET ?"
-             rss-id user-id limit offset]))
+  (mysql-query ["SELECT f.id, author, link, title, tags, published_ts,
+                 uf.read_date, uf.vote_user, uf.vote_sys
+                FROM feeds f
+       LEFT OUTER JOIN user_feed uf
+         ON uf.feed_id = f.id
+WHERE  rss_link_id = ?
+       AND ( uf.user_id = ?
+              OR uf.user_id IS NULL )
+LIMIT ? offset ?",
+                rss-id, user-id, limit, offset]))
 
 (defn fetch-by-id [id]
   (first (mysql-query ["SELECT * FROM feeds WHERE id = ?" id] :convert)))
@@ -43,8 +45,9 @@
 
 (defn update-rss-link [id data]
   (if-let [url (:url data)]
-    (if-let [saved-id (-> (mysql-query ["select id from rss_links where url = ?"
-                                     (:url data)]) first :id)]
+    (if-let [saved-id (-> (mysql-query
+                           ["SELECT id FROM rss_links WHERE url = ?"
+                            (:url data)]) first :id)]
       (do
         (with-mysql
           (update-values :user_subscription ["rss_link_id = ?" id]

@@ -1,7 +1,6 @@
 (ns rssminer.handlers.users
   (:use  [ring.util.response :only [redirect]]
-         (rssminer [time :only [now-seconds]]
-                   [util :only [session-get assoc-if md5-sum get-expire]]
+         (rssminer [util :only [session-get assoc-if md5-sum get-expire]]
                    [config :only [rssminer-conf]])
          [clojure.data.json :only [json-str read-json]])
   (:require [rssminer.db.user :as db]
@@ -27,7 +26,6 @@
 (defn signup [req]
   (let [{:keys [email password]} (:params req)
         user (db/create-user {:email email
-                              :added_ts (now-seconds)
                               :password password})]
     (assoc (redirect "/a")              ; no conf currently
       :session {:user (select-keys user [:id :email :name])})))
@@ -85,7 +83,6 @@
       :session {:user (select-keys
                        (or (db/find-user {:email email})
                            (db/create-user {:email email
-                                            :added_ts (now-seconds)
                                             :provider "google"}))
                        [:id :email :name :conf])})
     (redirect "/")))

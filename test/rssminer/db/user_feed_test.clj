@@ -11,14 +11,14 @@
   (let [fid (-> (mysql-query ["select id from feeds"]) first :id)]
     (insert-user-vote (:id user1) fid 1)
     (is (= 1 (-> (mysql-query
-                  ["SELECT vote FROM user_feed WHERE
+                  ["SELECT vote_user FROM user_feed WHERE
                     user_id = ? AND feed_id = ?" (:id user1) fid])
-                 first :vote)))
+                 first :vote_user)))
     (insert-user-vote (:id user1) fid -1)
     (is (= -1 (-> (mysql-query
-                   ["SELECT vote FROM user_feed WHERE
+                   ["SELECT vote_user FROM user_feed WHERE
                     user_id = ? AND feed_id = ?" (:id user1) fid])
-                  first :vote)))))
+                  first :vote_user)))))
 
 (deftest test-insert-read-date
   (let [fid (-> (mysql-query ["select id from feeds"]) first :id)]

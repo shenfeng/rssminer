@@ -195,7 +195,7 @@ public class Searcher {
         }
     }
 
-    public int feedIdToDocid(int feedId) throws CorruptIndexException,
+    public int feedIdToDocid(long feedId) throws CorruptIndexException,
             IOException {
         IndexSearcher searcher = new IndexSearcher(getReader());
         TermQuery query = new TermQuery(new Term(FEED_ID, feedId + ""));

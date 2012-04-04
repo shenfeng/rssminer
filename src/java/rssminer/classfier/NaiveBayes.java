@@ -121,7 +121,7 @@ public class NaiveBayes {
         int index = 0;
         int[] array = new int[count];
         for (int i = 0; i < count; i++) {
-            Integer l = (Integer) (seq.first());
+            Long l = (Long) (seq.first());
             int id = searcher.feedIdToDocid(l);
             if (id != -1) {
                 array[index++] = id; // remove -1

@@ -11,16 +11,16 @@
 (defn subscribe [url user-id title group-name]
   (let [sub (or (db/fetch-rss-link {:url url})
                 (mysql-insert-and-return :rss_links {:url url
-                                                  :user_id user-id}))]
+                                                     :user_id user-id}))]
     (fetcher-enqueue (select-keys sub enqueue-keys))
     (if-let [us (db/fetch-subscription {:user_id user-id
                                         :rss_link_id (:id sub)})]
       us
       (mysql-insert-and-return :user_subscription
-                            {:user_id user-id
-                             :group_name group-name
-                             :title title
-                             :rss_link_id (:id sub)}))))
+                               {:user_id user-id
+                                :group_name group-name
+                                :title title
+                                :rss_link_id (:id sub)}))))
 
 (defn polling-subscription [req]
   (let [rss-id (-> req :params :rss-id to-int)

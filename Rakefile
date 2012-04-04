@@ -188,6 +188,7 @@ task :mysql_dev do
   sh 'sudo chown mysql:mysql /tmp/mysql -R'
   sh 'sudo cp conf/my-dev.cnf /etc/mysql/my.cnf'
   sh 'sudo /etc/init.d/mysql start'
+  sh 'scripts/admin -d rssminer -u feng init-db'
 end
 
 desc 'Compress html using htmlcompressor, save compressed to src/templates'

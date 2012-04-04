@@ -5,18 +5,18 @@
 
 (defn insert-user-vote [user-id feed-id vote]
   (let [old  (-> (mysql-query
-                  ["SELECT vote FROM user_feed
+                  ["SELECT vote_user FROM user_feed
                     WHERE user_id = ? AND feed_id =?" user-id feed-id])
-                 first :vote)]
+                 first :vote_user)]
     (if (nil? old)
       (mysql-insert :user_feed {:user_id user-id
-                             :feed_id feed-id
-                             :vote vote})
+                                :feed_id feed-id
+                                :vote_user vote})
       (when (not= old vote)
         (with-mysql
           (update-values :user_feed
                          ["user_id = ? AND feed_id = ?" user-id feed-id]
-                         {:vote vote}))))))
+                         {:vote_user vote}))))))
 
 (defn insert-sys-vote [user-id feed-id vote]
   (let [old  (-> (mysql-query
@@ -25,8 +25,8 @@
                  first :vote_sys)]
     (if (nil? old)
       (mysql-insert :user_feed {:user_id user-id
-                             :feed_id feed-id
-                             :vote_sys vote})
+                                :feed_id feed-id
+                                :vote_sys vote})
       (when (not= old vote)
         (with-mysql
           (update-values :user_feed
@@ -40,8 +40,8 @@
                  first :read_date)]
     (if (nil? old)
       (mysql-insert :user_feed {:user_id user-id
-                             :feed_id feed-id
-                             :read_date (now-seconds)})
+                                :feed_id feed-id
+                                :read_date (now-seconds)})
       (when (= old -1)
         (with-mysql
           (update-values :user_feed
@@ -50,32 +50,32 @@
 
 (defn fetch-up-ids [user-id]
   (map :feed_id (mysql-query ["SELECT feed_id FROM user_feed
-                            WHERE user_id = ? AND vote = 1" user-id])))
+                            WHERE user_id = ? AND vote_user = 1" user-id])))
 
 (defn fetch-down-ids [user-id]
   (map :feed_id (mysql-query ["SELECT feed_id FROM user_feed
-                            WHERE user_id = ? AND vote = -1" user-id])))
+                            WHERE user_id = ? AND vote_user = -1" user-id])))
 
 (defn fetch-unvoted-feedids [user-id since-time]
   (map :id (mysql-query ["call get_unvoted_feedids(?, ?)" user-id since-time])))
 
 (defn fetch-system-voteup [user-id limit]
   (mysql-query ["SELECT f.id, f.title, f.author, f.tags, f.link, f.rss_link_id,
-              f.published_ts, uf.vote, uf.vote_sys
+              f.published_ts, uf.vote_user, uf.vote_sys
               FROM feeds f JOIN user_feed uf ON uf.feed_id = f.id
-              WHERE uf.user_id = ? and uf.vote = 0
+              WHERE uf.user_id = ? and uf.vote_user = 0
               ORDER BY uf.vote_sys desc limit ?" user-id limit]))
 
 (defn fetch-recent-read [user-id limit]
   (mysql-query ["SELECT f.id, f.title, f.author, f.link, f.tags, f.rss_link_id,
-              f.published_ts, uf.vote, uf.read_date, uf.vote_sys
+              f.published_ts, uf.vote_user, uf.read_date, uf.vote_sys
               FROM feeds f JOIN user_feed uf ON uf.feed_id = f.id
               WHERE uf.user_id = ? and uf.read_date > 0
               ORDER BY uf.read_date desc limit ?" user-id limit]))
 
 (defn fetch-recent-voted [user-id limit]
   (mysql-query ["SELECT f.id, f.title, f.author, f.link, f.tags, f.rss_link_id,
-              f.published_ts, uf.vote, uf.read_date, uf.vote_sys
+              f.published_ts, uf.vote_user, uf.read_date, uf.vote_sys
               FROM feeds f JOIN user_feed uf ON uf.feed_id = f.id
-              WHERE uf.user_id = ? and uf.vote != 0
+              WHERE uf.user_id = ? and uf.vote_user != 0
               ORDER BY uf.read_date desc limit ?" user-id limit]))

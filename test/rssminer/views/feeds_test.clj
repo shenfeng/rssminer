@@ -15,7 +15,7 @@
                         :body (json-str {"vote" "1"})})]
     (is (= 204 (:status resp)))
     (is (= 1 (-> (mysql-query
-                  ["SELECT vote FROM user_feed WHERE
+                  ["SELECT vote_user FROM user_feed WHERE
                     user_id = ? AND feed_id = ?" (:id user1) fid])
-                 first :vote)))))
+                 first :vote_user)))))
 
