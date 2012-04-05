@@ -63,7 +63,7 @@
              ["--fetcher-queue" "queue size" :default 20 :parse-fn to-int]
              ["--fetch-size" "Bulk fetch size" :default 100 :parse-fn to-int]
              ["--profile" "dev or prod" :default :dev :parse-fn keyword]
-             ["--redis-host" "redis for session store"
+             ["--redis-host" "Redis for session store"
               :default "127.0.0.1"]
              ["--proxy-server" "proxy server" :default "//127.0.0.1"]
              ["--static-server" "static server" :default "//127.0.0.1"]

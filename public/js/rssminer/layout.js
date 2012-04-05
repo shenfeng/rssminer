@@ -1,14 +1,15 @@
 (function () {
-  var $footer = $('#footer'),
-      $list = $('#feed-list'),
-      user = (_RM_ && _RM_.user) || {},
+  var user = (_RM_ && _RM_.user) || {},
       user_conf = user.conf || {},
       util = RM.util;
+
+  var $footer = $('#footer'),
+      $feed_list = $('#feed-list');
 
   function layout () {
     var width = $(window).width(),
         height = $(window).height(),
-        nav_width = $('#navigation').width(),
+        nav_width = $('#navigation').outerWidth(),
         list_height = $footer.height();
     $("#navigation .wrapper").height(height - $("#admin-controls").height());
     $("#reading-area").height(height - list_height).width(width - nav_width);
@@ -58,10 +59,10 @@
   }
 
   function adjust (delta, old_footer_height, old_list_height) {
-    old_list_height = old_list_height || $list.height();
+    old_list_height = old_list_height || $feed_list.height();
     old_footer_height = old_footer_height || $footer.height();
     $footer.height(old_footer_height + delta);
-    $list.height(old_list_height + delta);
+    $feed_list.height(old_list_height + delta);
     layout();
   }
 
@@ -82,7 +83,7 @@
           down = true;
           $footer.css('cursor', 'row-resize');
           old_footer_height = $footer.height();
-          old_list_height = $list.height();
+          old_list_height = $feed_list.height();
           $(document).bind('selectstart', noop);
         }
       }}).bind('mouseup', function (e) {
@@ -90,7 +91,7 @@
           $(document).unbind('selectstart', noop);
           $footer.css('cursor', 'auto');
           if(updated) {                // save on server
-            RM.ajax.jpost('/api/user/settings', {height: $list.height()});
+            RM.ajax.jpost('/api/user/settings', {height: $feed_list.height()});
           }
           down = false;
           updated = false;
@@ -105,8 +106,10 @@
 
   // user's last height of feed list
   if(user_conf.height) {
-    if(user_conf.height > 700) { user_conf.height = 700; }
-    $list.height(user_conf.height);
+    if(user_conf.height > 700) {
+      user_conf.height = 700;
+    }
+    $feed_list.height(user_conf.height);
     $footer.height(user_conf.height + $('#footer .resizer').height());
   }
 

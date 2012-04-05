@@ -4,7 +4,7 @@
       <img src="/imgs/folder.png"/>
       <span>{{tag}}</span>
     </div>
-    <ul>
+    <ul class="rss-category">
       {{#list}}
         <li class="item" id="item-{{id}}">
           <a href="#{{href}}">

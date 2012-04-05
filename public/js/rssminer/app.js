@@ -202,7 +202,7 @@
               if(s0 && s0.title) {
                 s0.group_name = null; // newly added, no-group
                 _RM_.subs.push(s0);
-                renderNavList();
+                render_nav_list();
               } else {
                 polling_interval += 1500;
                 setTimeout(polling, polling_interval);
@@ -232,9 +232,18 @@
   function saveVoteUp (e) { saveVote(1, this); return false; }
   function saveVotedown (e) { saveVote(-1, this); return false; }
 
-  function renderNavList () {
+  function save_sort_order (event, ui) {
+    // console.log('saveing', event, ui, $(ui.item));
+  }
+
+  function render_nav_list () {
     var nav = to_html(tmpls.nav, {subs: data.parseSubs(_RM_.subs)});
     $("#navigation ul.sub-list").empty().append(nav);
+    $('.sub-list').sortable();  // category sortable
+    $(".rss-category").sortable({ // subscription sortable with categories
+      connectWith: ".rss-category",
+      stop: save_sort_order
+    });
   }
 
   util.delegateEvents($(document), {
@@ -254,7 +263,7 @@
     }
   });
 
-  renderNavList();              // should before hashRouter;
+  render_nav_list();              // should before hashRouter;
 
   hashRouter({
     '': welcome,
@@ -264,6 +273,4 @@
     'read/:id': readSubscription,
     'read/:id/:id': readFeed
   });
-
-
 })();

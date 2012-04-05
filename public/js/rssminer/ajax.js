@@ -1,77 +1,65 @@
 (function(){
-  var loading = 'Loading...';
-  var notif = (function() {
-    var $nofity = $('<div id="notification"><p></p></div>')
-          .prependTo($('body')),
-        $p = $('p', $nofity),
-        message,
-        count = 0,
-        MSG = 'message',
-        ERROR = 'error';
+  var $nofity = $('<div id="notification"><p></p></div>')
+        .prependTo($('body')),
+      $p = $('p', $nofity),
+      hide_timer_id;
 
-    function msg(a, r, msg){
-      if(message !== msg){
-        count = 1;
-        message = msg;
-        $p.html(msg).removeClass(r).addClass(a);
-        $nofity.css({
-          marginLeft: -$p.width()/2,
-          visibility: 'visible'
-        });
-      } else {
-        count++;
-      }
-      // auto hide in 10s
-      _.delay(_.bind(hide, null, msg), 100000);
-    }
+  var LOADING = 'Loading...',
+      MSG_CLASS = 'message',
+      ERROR_CLASS = 'error';
 
-    function hide (msg){
-      if(msg === message){
-        count--;
-      }
-      if(!msg || count === 0){
-        _.delay(function (){
-          message = null;
-          $nofity.css('visibility', 'hidden');
-        }, 1000);
-      }
+  function show_msg(msg) {
+    $p.html(msg).removeClass(ERROR_CLASS).addClass(MSG_CLASS);
+    $nofity.css({ marginLeft: -$p.width() / 2, visibility: 'visible' });
+  }
+
+  function show_error_msg(msg) {
+    $p.html(msg).removeClass(MSG_CLASS).addClass(ERROR_CLASS);
+    $nofity.css({ marginLeft: -$p.width() / 2, visibility: 'visible' });
+    // auto hide in 10s
+    window.setTimeout(hide_notif, 10000);
+  }
+
+  function _clear_timer () {
+    if(hide_timer_id) {
+      clearTimeout(hide_timer_id);
+      hide_timer_id = undefined;
     }
-    return {
-      msg: _.bind(msg, null, MSG, ERROR),
-      error: _.bind(msg, null, ERROR, MSG),
-      hide: hide
-    };
-  })();
+  }
+
+  function hide_notif() {
+    _clear_timer();
+    hide_timer_id = setTimeout(function () {
+      $nofity.css('visibility', 'hidden');
+    }, 600);
+  }
 
   function handler (url, method, success) {
     return {
       type: method,
       url: url,
       success: function (result, status, xhr) {
-        notif.hide(loading);
+        hide_notif(LOADING);
         if(typeof success === 'function') {
-          var cy = xhr.getResponseHeader &&
-                xhr.getResponseHeader("Content-Type");
-          if(result && cy && cy.toLowerCase().indexOf('json') > 0) {
-            result = JSON.parse(result);
-          }
-          success.apply(null, [result, status, xhr]);
+          success.apply(null, arguments);
         }
       },
       error: function (xhr) {
-        notif.error(JSON.parse(xhr.responseText).message);
+        show_error_msg(JSON.parse(xhr.responseText).message);
       }
     };
   }
 
-  function get(url, success){
-    notif.msg(loading);
+  function get(url, success) {
+    show_msg(LOADING);
+    _clear_timer();
     return $.ajax(handler(url, 'GET', success));
   }
 
   function jpost(url, data, success) {
-    notif.msg(loading);
-    if(typeof data === 'function') {
+    show_msg(LOADING);
+    _clear_timer();
+    if(typeof data === 'function') { // shift
       success = data;
       data = undefined;
     }
@@ -83,10 +71,6 @@
   }
 
   window.RM = $.extend(window.RM, {
-    notif: notif,
-    ajax: {
-      get: get,
-      jpost: jpost
-    }
+    ajax: { get: get, jpost: jpost }
   });
 })();

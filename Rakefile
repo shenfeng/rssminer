@@ -31,9 +31,9 @@ def gen_jstempls(folder)
   File.open("public/js/gen/#{folder}-tmpls.js", 'w') {|f| f.write(data)}
 end
 
-def minify_js(name, jss, version)
+def minify_js(name, jss)
   jscompiler = "closure-compiler.jar"
-  target = "public/js/#{name}-#{version}-min.js"
+  target = "public/js/#{name}-min.js"
 
   source_arg = ''
   jss.each do |js|
@@ -82,9 +82,8 @@ landing_jss = FileList['public/js/lib/jquery.js',
                        'public/js/lib/jquery.colorbox.js',
                        'public/js/rssminer/landing.js']
 
-app_jss = FileList['public/js/lib/zepto.js',
-                   'public/js/lib/event.js',
-                   'public/js/lib/ajax.js',
+app_jss = FileList['public/js/lib/jquery-1.7.2.js',
+                   'public/js/lib/jquery-ui-1.8.18.custom.js',
                    'public/js/lib/underscore.js',
                    'public/js/lib/mustache.js',
                    'public/js/gen/app-tmpls.js',
@@ -155,9 +154,9 @@ namespace :js do
 
   desc 'Combine all js into one, minify it using google closure'
   task :minify => [:tmpls, :deps] do
-    minify_js("dashboard", dashboard_jss, version);
-    minify_js("app", app_jss, version);
-    minify_js("landing", landing_jss, version);
+    minify_js("dashboard", dashboard_jss);
+    minify_js("app", app_jss);
+    minify_js("landing", landing_jss);
   end
 end
 
