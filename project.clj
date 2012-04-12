@@ -13,6 +13,7 @@
                  [commons-io "2.1"]
                  [redis.clients/jedis "2.0.0"]
                  [commons-codec "1.5"]
+                 [me.shenfeng.http/http-kit "1.0.0-SNAPSHOT"]
                  [mysql/mysql-connector-java "5.1.18"]
                  [commons-dbcp/commons-dbcp "1.4"]
                  [org.apache.lucene/lucene-core "3.5.0"]
@@ -20,8 +21,7 @@
                  [org.apache.lucene/lucene-analyzers "3.5.0"]
                  [net.java.dev.rome/rome "1.0.0"]
                  [ring/ring-core "1.0.1"]
-                 [me.shenfeng/async-http-client "1.0.3"]
-                 [me.shenfeng/async-ring-adapter "1.0.1"]]
+                 [me.shenfeng/async-http-client "1.0.3"]]
   :dev-resources-path "/usr/lib/jvm/java-6-sun/lib/tools.jar:/usr/lib/jvm/java-6-sun/lib/src.zip"
   :exclusions [javax.activation/activation]
   :repositories {"java.net" {:url "http://download.java.net/maven/2/"
@@ -34,9 +34,10 @@
              "-Dsun.net.inetaddr.ttl=0"
              "-Djava.net.preferIPv4Stack=true"
              "-XX:+TieredCompilation"
-             "-XX:-DisableExplicitGC"
+             "-XX:ParallelGCThreads=2"
+             "-XX:+DisableExplicitGC"
+             "-XX:+UseConcMarkSweepGC"
              "-XX:+UseCompressedStrings"
-             "-XX:-UseLoopPredicate"
              "-Xmx512m"
              "-Xms512m"]
   ;; :jvm-opts ["-agentlib:hprof=cpu=samples,format=b,file=/tmp/profile.txt"]

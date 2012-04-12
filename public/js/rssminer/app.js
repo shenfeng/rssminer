@@ -246,7 +246,7 @@
     });
   }
 
-  util.delegateEvents($(document), {
+  util.delegate_events($(document), {
     'click .vote span.up': saveVoteUp,
     'click #save-settings': saveSettings,
     'click #add-subscription': addSubscriptionHandler,

@@ -40,33 +40,36 @@ def minify_js(name, jss)
     source_arg += " --js #{js} "
   end
   # ADVANCED_OPTIMIZATIONS SIMPLE_OPTIMIZATIONS
-  sh "java -jar bin/#{jscompiler} --warning_level QUIET " +
+  sh "java -jar thirdparty/#{jscompiler} --warning_level QUIET " +
     "--compilation_level SIMPLE_OPTIMIZATIONS " +
     "--js_output_file '#{target}' #{source_arg}"
 end
 
-file "bin/#{jscompiler}" do
-  mkdir_p 'bin'
+file "thirdparty/#{jscompiler}" do
+  mkdir_p "thirdparty"
   sh 'wget http://closure-compiler.googlecode.com/files/compiler-latest.zip' +
     ' -O /tmp/closure-compiler.zip'
   rm_rf '/tmp/compiler.jar'
   sh 'unzip /tmp/closure-compiler.zip compiler.jar -d /tmp'
   rm_rf '/tmp/closure-compiler.zip'
-  mv '/tmp/compiler.jar', "bin/#{jscompiler}"
+  mv '/tmp/compiler.jar', "thirdparty/#{jscompiler}"
 end
 
-file "bin/#{htmlcompressor}" do
-  mkdir_p 'bin'
+file "thirdparty/#{htmlcompressor}" do
+  mkdir_p "thirdparty"
   sh 'wget http://htmlcompressor.googlecode.com/files/htmlcompressor-1.3.1.jar' +
-    " -O bin/#{htmlcompressor}"
+    " -O thirdparty/#{htmlcompressor}"
 end
 
-file "bin/#{luke}" do
-  mkdir_p 'bin'
-  sh "wget http://luke.googlecode.com/files/#{luke} -O bin/#{luke}"
+file "thirdparty/#{luke}" do
+  mkdir_p "thirdparty"
+  sh "wget http://luke.googlecode.com/files/#{luke} " +
+    "-O thirdparty/#{luke}"
 end
 
-task :deps => ["bin/#{jscompiler}", "bin/#{luke}", "bin/#{htmlcompressor}"]
+task :deps => ["thirdparty/#{jscompiler}",
+               "thirdparty/#{luke}",
+               "thirdparty/#{htmlcompressor}"]
 
 dashboard_jss = FileList['public/js/lib/jquery.js',
                          'public/js/lib/jquery.flot.js',
@@ -199,7 +202,7 @@ task :html_compress do
       mkdir_p dir
     end
     if !File.exist?(tgt) || File.mtime(tgt) < File.mtime(src)
-      sh "java -jar bin/#{htmlcompressor} --charset utf8 #{src} -o #{tgt}"
+      sh "java -jar thirdparty/#{htmlcompressor} --charset utf8 #{src} -o #{tgt}"
     end
   end
   sh "find src/templates/ -type f " +

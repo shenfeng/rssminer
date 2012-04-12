@@ -18,6 +18,14 @@
             day < 10 ? '0' + day : day].join('/');
   }
 
+  function favicon_path (url) {
+    var host = encodeURIComponent(hostname(url));
+    // revert to fight agaist firewall
+    host = host.split("").reverse().join("");
+    return '/fav?h=' + host;
+  }
+
+
   var hostname = (function () {
     var l = document.createElement("a");
     return function (uri) {
@@ -67,7 +75,7 @@
 
   var eventSplitter = /^(\S+)\s*(.*)$/;
 
-  function delegateEvents($ele, events) {
+  function delegate_events($ele, events) {
     for (var key in events) {
       var method = events[key],
           match = key.match(eventSplitter),
@@ -89,8 +97,9 @@
   window.RM = $.extend(window.RM || {}, {
     iconError: imgError,
     util: {
-      delegateEvents: delegateEvents,
+      delegate_events: delegate_events,
       extractData: extractData,
+      favicon_path: favicon_path,
       hostname: hostname,
       ymdate: ymdate,
       enableProxy: function () { return enable_proxy;  },

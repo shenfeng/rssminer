@@ -21,7 +21,6 @@ java -Dsun.jnu.encoding=UTF-8 \
     -XX:+UseCompressedStrings \
     -Xmx256m -Xms256m \
     -cp rssminer.jar:lib/* rssminer.main \
-    --db-path /var/rssminer/rssminer \
     --index-path /var/rssminer/index \
     --profile prod \
     --worker 1 \

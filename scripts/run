@@ -7,6 +7,7 @@ cd "${HOME}" && java \
     -Dfile.encoding=UTF-8 \
     -Dsun.net.inetaddr.ttl=0 \
     -Djava.net.preferIPv4Stack=true \
+    -XX:+UseConcMarkSweepGC \
     -XX:+UseCompressedOops \
     -XX:+UseCompressedStrings \
     -Xms386m -Xmx386m \

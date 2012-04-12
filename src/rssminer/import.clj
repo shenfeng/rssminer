@@ -37,20 +37,22 @@
         user-id (:id (session-get req :user))
         resp (-> client (.execPost token-ep {} (assoc oauth2 "code" code))
                  .get parse-response)]
-    (if (= 200 (:status resp))
-      (let [{:keys [access_token refresh_token]} (read-json (:body resp))
-            data (-> client (.execGet list-dp {"Authorization"
-                                               (str "OAuth " access_token)})
-                     .get parse-response)]
-        (if (= 200 (:status data))
-          (let [items (Parser/parseGReaderSubs (:body data))]
-            (info user-id "import greader" (count items))
-            (subscribe-all user-id items)
-            (redirect "/a"))
-          (do (error "import greader" (:status data) "; code" code)
-              (redirect "/"))))
-      (do (error "get greader code" (:status resp))
-          (redirect "/")))))
+    (if user-id
+      (if (= 200 (:status resp))
+        (let [{:keys [access_token refresh_token]} (read-json (:body resp))
+              data (-> client (.execGet list-dp {"Authorization"
+                                                 (str "OAuth " access_token)})
+                       .get parse-response)]
+          (if (= 200 (:status data))
+            (let [items (Parser/parseGReaderSubs (:body data))]
+              (info user-id "import greader" (count items))
+              (subscribe-all user-id items)
+              (redirect "/a"))
+            (do (error "import greader" (:status data) "; code" code)
+                (redirect "/"))))
+        (do (error "get greader code" (:status resp))
+            (redirect "/")))
+      (redirect "/login"))))
 
 (defn greader-import [req]
   (let [host (if (= (@rssminer-conf :profile) :dev)

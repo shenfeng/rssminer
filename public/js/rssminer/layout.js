@@ -124,7 +124,7 @@
     }
   });
 
-  util.delegateEvents($(document), {
+  util.delegate_events($(document), {
     'click #navigation .section h3': toggleNavigationSection,
     'click #navigation .folder span': toggleFolder
   });

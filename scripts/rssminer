@@ -19,7 +19,6 @@ APP_HOME="/var/www/rssminer"
 PID_DIR="/var/run/${APP_NAME}"
 LOG_DIR="/var/log/${APP_NAME}"
 
-DB_PATH=/var/rssminer/rssminer
 INDEX_PATH=/var/rssminer/index
 
 JAVA=`which java`
@@ -28,7 +27,8 @@ JVM_ARGS="-Dsun.jnu.encoding=UTF-8 \
     -Dfile.encoding=UTF-8 \
     -Dsun.net.inetaddr.ttl=0 \
     -Djava.net.preferIPv4Stack=true \
-    -XX:-DisableExplicitGC \
+    -XX:+DisableExplicitGC \
+    -XX:+UseConcMarkSweepGC \
     -XX:+UseCompressedOops \
     -XX:+UseCompressedStrings \
     -Xmx280m -Xms280m"
@@ -38,8 +38,7 @@ JMX_OPTS="-Dcom.sun.management.jmxremote \
      -Dcom.sun.management.jmxremote.authenticate=false \
      -Dcom.sun.management.jmxremote.ssl=false"
 
-APP_ARGS="--db-path $DB_PATH \
-    --index-path $INDEX_PATH \
+APP_ARGS="--index-path $INDEX_PATH \
     --profile prod \
     --redis-host 127.0.0.1 \
     --no-proxy \
@@ -76,13 +75,6 @@ mkdir_chown $LOG_DIR
 mkdir_chown $INDEX_PATH
 
 function start_server() {
-
-    if [ ! -e ${DB_PATH}.h2.db ]
-    then
-        echo "There is no database, please init ${DB_PATH}.h2.db"
-        exit 1
-    fi
-
     if running; then
         echo "$APP_NAME already running."
         exit 0

@@ -3,10 +3,10 @@ package rssminer.async;
 import java.net.Proxy;
 
 import me.shenfeng.http.HttpClient;
-import ring.adapter.netty.ListenableFuture;
+import me.shenfeng.http.server.IListenableFuture;
 import clojure.lang.IFn;
 
-public class AbstractFuture implements ListenableFuture {
+public class AbstractFuture implements IListenableFuture {
 
     static final int MAX_RETRY = 5;
     private volatile Runnable listener;

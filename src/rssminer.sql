@@ -45,9 +45,9 @@ CREATE TABLE feeds (
 CREATE TABLE user_subscription (
   id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
   -- id INTEGER PRIMARY KEY auto_increment,
-  user_id INT UNSIGNED,
+  user_id INT UNSIGNED NOT NULL,
     -- REFERENCES users ON UPDATE CASCADE ON DELETE CASCADE,
-  rss_link_id INT UNSIGNED,
+  rss_link_id INT UNSIGNED NOT NULL,
    -- REFERENCES rss_links  ON UPDATE CASCADE ON DELETE CASCADE,
   title VARCHAR(256), -- user defined title, default is subscription's title
   group_name VARCHAR(64),

@@ -1,7 +1,7 @@
 (ns rssminer.main
   (:gen-class)
   (:use [clojure.tools.cli :only [cli]]
-        [ring.adapter.netty :only [run-netty]]
+        [me.shenfeng.http.server :only [run-server]]
         [clojure.tools.logging :only [info]]
         (rssminer [database :only [use-mysql-database!
                                    close-global-mysql-factory!]]
@@ -11,17 +11,15 @@
                   [redis :only [set-redis-client!]]
                   [util :only [to-int]]
                   [fetcher :only [start-fetcher stop-fetcher]]
-                  [crawler :only [start-crawler stop-crawler]]
-                  [config :only [rssminer-conf netty-option socks-proxy]]))
+                  [config :only [rssminer-conf socks-proxy]]))
   (import java.net.Proxy))
 
 (defonce server (atom nil))
 
 (defn stop-server []
-  (stop-crawler)
   (stop-fetcher)
   (when-not (nil? @server)
-    (info "shutdown netty server....")
+    (info "shutdown Rssminer server....")
     (@server)
     (reset! server nil))
   (close-global-mysql-factory!)
@@ -47,10 +45,9 @@
          :static-server (if (= :dev profile)
                           (str static-server ":" port) static-server)
          :proxy (if proxy socks-proxy Proxy/NO_PROXY))
-  (reset! server (run-netty (app) {:port port
-                                   :worker worker
-                                   :netty netty-option}))
-  (info "netty server start at port" port)
+  (reset! server (run-server (app) {:port port
+                                    :thread worker}))
+  (info "Rssminer server start at port" port)
   (use-index-writer! index-path)
   (when fetcher (start-fetcher)))
 
@@ -59,7 +56,7 @@
   (let [[options _ banner]
         (cli args
              ["-p" "--port" "Port to listen" :default 9090 :parse-fn to-int]
-             ["--worker" "Http worker count" :default 1 :parse-fn to-int]
+             ["--worker" "Http worker count" :default 6 :parse-fn to-int]
              ["--fetcher-queue" "queue size" :default 20 :parse-fn to-int]
              ["--fetch-size" "Bulk fetch size" :default 100 :parse-fn to-int]
              ["--profile" "dev or prod" :default :dev :parse-fn keyword]

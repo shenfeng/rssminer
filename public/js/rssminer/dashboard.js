@@ -13,7 +13,7 @@
     ajax.jpost("/api/dashboard", {which: section, command: command});
   }
 
-  window.RM.util.delegateEvents($content, {
+  window.RM.util.delegate_events($content, {
     "click #controls button": toggleService
   });
 
