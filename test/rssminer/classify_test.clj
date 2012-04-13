@@ -2,7 +2,7 @@
   (:use clojure.test
         rssminer.classify
         [rssminer.db.feed :only [save-feeds]]
-        [rssminer.db.util :only [mysql-query with-mysql mysql-insert-and-return]]
+        [rssminer.db.util :only [mysql-query mysql-insert-and-return]]
         (rssminer [test-common :only [user1 app-fixture mk-feeds-fixtrue]]
                   [time :only [now-seconds]]))
   (:require [rssminer.db.user-feed :as uf]))
