@@ -14,7 +14,7 @@
         (try
           (let [id (mysql-insert :feeds (assoc f :rss_link_id rss-id))]
             (index-feed id feed))
-          (catch RuntimeException e      ;(link, rss_link_id) is unique
+          (catch java.sql.SQLException e      ;(link, rss_link_id) is unique
             (trace "update" rss-id link)
             (with-mysql
               (update-values :feeds ["link=? and rss_link_id = ?"

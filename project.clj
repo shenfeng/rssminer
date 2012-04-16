@@ -1,14 +1,14 @@
 (defproject rssminer "1.0.0"
   :description "A feed reader written in clojure"
-  :dependencies [[clojure "1.3.0"]
+  :dependencies [[clojure "1.4.0"]
                  [org.clojure/data.json "0.1.2"]
-                 [org.clojure/java.jdbc "0.1.1"]
+                 [org.clojure/java.jdbc "0.1.4"]
                  [org.clojure/tools.cli "0.2.1"]
                  [org.clojure/tools.logging "0.2.3"]
                  [ch.qos.logback/logback-classic "0.9.30"]
                  [javax.mail/mail "1.4.4"]
                  [org.apache.commons/commons-email "1.2"]
-                 [compojure "1.0.1"]
+                 [compojure "1.0.2"]
                  [enlive "1.0.0"]
                  [commons-io "2.1"]
                  [redis.clients/jedis "2.0.0"]
@@ -20,7 +20,7 @@
                  [org.apache.lucene/lucene-queries "3.5.0"]
                  [org.apache.lucene/lucene-analyzers "3.5.0"]
                  [net.java.dev.rome/rome "1.0.0"]
-                 [ring/ring-core "1.0.1"]
+                 [ring/ring-core "1.1.0-RC1"]
                  [me.shenfeng/async-http-client "1.0.3"]]
   :dev-resources-path "/usr/lib/jvm/java-6-sun/lib/tools.jar:/usr/lib/jvm/java-6-sun/lib/src.zip"
   :exclusions [javax.activation/activation]
