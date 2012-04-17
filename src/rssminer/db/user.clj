@@ -7,9 +7,9 @@
 
 (defn create-user [{:keys [email password] :as user}]
   (mysql-insert-and-return :users
-                        (assoc user :password
-                               (when password
-                                 (md5-sum (str email "+" password))))))
+                           (assoc user :password
+                                  (when password
+                                    (md5-sum (str email "+" password))))))
 
 (defn find-user [attr]
   (when-let [user (first (mysql-query (select-sql-params :users attr)))]
@@ -26,5 +26,5 @@
 
 (defn fetch-conf [user-id]
   (-> (mysql-query ["SELECT conf FROM users WHERE id = ?"
-                 user-id])
+                    user-id])
       first :conf ))

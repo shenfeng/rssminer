@@ -5,7 +5,7 @@ set -e
 ABSOLUTE_PATH=$(readlink -f $0)
 RSSMINER_CODE_ROOT="${ABSOLUTE_PATH%/*/*}"
 
-lein compile
+rm bin classes -rf && lein compile
 cp src/templates classes -r
 rm classes/templates/tmpls/ -r
 cd classes

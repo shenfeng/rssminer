@@ -5,6 +5,7 @@
          [clojure.data.json :only [json-str read-json]])
   (:require [rssminer.db.user :as db]
             [rssminer.db.user-feed :as uf]
+            [clojure.string :as str]
             [rssminer.views.users :as view]))
 
 (defn show-login-page [req]
@@ -24,11 +25,14 @@
   (view/signup-page))
 
 (defn signup [req]
-  (let [{:keys [email password]} (:params req)
-        user (db/create-user {:email email
-                              :password password})]
-    (assoc (redirect "/a")              ; no conf currently
-      :session {:user (select-keys user [:id :email :name])})))
+  (let [{:keys [email password]} (:params req)]
+    (if (or (str/blank? email)
+            (str/blank? password))
+      (redirect "/") ;; TODO error reporting
+      (let [user (db/create-user {:email email
+                                  :password password})]
+        (assoc (redirect "/a")           ; no conf currently
+          :session {:user (select-keys user [:id :email :name])})))))
 
 ;;; :nav => show and hide of left nav
 ;;; :height => bottom feed list height
