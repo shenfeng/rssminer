@@ -1,21 +1,22 @@
-server {
-    listen 443 default ssl;
-    keepalive_timeout    70;
-    ssl_certificate      conf.d/rssminer.crt;
-    ssl_certificate_key  conf.d/rssminer.key;
-    server_name  rss-miner.com;
-    location ~* \.(ico|css|js|gif|jpe?g|png)(\?.+)?$ {
-        root    /var/www/rssminer/public;
-        add_header Expires "Thu, 31 Dec 2037 23:55:55 GMT";
-        add_header Cache-Control "public, max-age=315360000";
-        access_log off;
-    }
-    location / {
-        proxy_pass  http://127.0.0.1:8100/;
-        proxy_set_header Host $http_host;
-        access_log  /var/log/rssminer/access.log;
-    }
-}
+# server {
+#     listen 443 default ssl;
+#     keepalive_timeout    70;
+#     ssl_certificate      conf.d/rssminer.crt;
+#     ssl_certificate_key  conf.d/rssminer.key;
+#     server_name  rss-miner.com;
+#     location ~* \.(ico|css|js|gif|jpe?g|png)(\?.+)?$ {
+#         root    /var/www/rssminer/public;
+#         add_header Expires "Thu, 31 Dec 2037 23:55:55 GMT";
+#         add_header Cache-Control "public, max-age=315360000";
+#         access_log off;
+#     }
+#     location / {
+#         proxy_pass  http://127.0.0.1:8100/;
+#         proxy_set_header Host $http_host;
+#         access_log  /var/log/rssminer/access.log;
+#     }
+# }
+
 server {
     server_name  .rssminer.net;
     location ~* \.(ico|css|js|gif|jpe?g|png)(\?.+)?$ {
@@ -26,18 +27,29 @@ server {
     }
     location / {
         proxy_pass  http://127.0.0.1:8100/;
-        proxy_set_header Host $http_host;
+        # proxy_set_header Host $http_host;
         access_log  /var/log/rssminer/access.log;
     }
 }
+
+# proxy, favicon file
 server {
-      listen 80;
-      server_name .rss-miner.com;
-      rewrite ^/(.*) https://rss-miner.com/$1 permanent;
+    server_name .rss-miner.com;
+    location / {
+    # cache header is set by program
+        proxy_pass  http://127.0.0.1:8100/;
+        # add_header Expires "Thu, 31 Dec 2037 23:55:55 GMT";
+        # add_header Cache-Control "public, max-age=";
+        access_log off;
+        # proxy_set_header Host $http_host;
+        # access_log  /var/log/rssminer/access.log;
+    }
+      # listen 80;
+      # rewrite ^/(.*) https://rss-miner.com/$1 permanent;
 }
 
-server {
-      listen 80;
-      server_name reader.shenfeng.me;
-      rewrite ^/(.*) https://rss-miner.com/$1 permanent;
-}
+# server {
+#       listen 80;
+#       server_name reader.shenfeng.me;
+#       rewrite ^/(.*) https://rss-miner.com/$1 permanent;
+# }

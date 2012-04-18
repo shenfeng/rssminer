@@ -52,9 +52,10 @@
     return cls;
   }
 
-  function faviconPath (url) {
-    var host = encodeURIComponent(util.hostname(url));
-    return static_server + '/fav?h=' + host;
+  function favicon_path (url) {
+    var host = util.hostname(url),
+        h = encodeURIComponent(host.split("").reverse().join(''));
+    return static_server + '/fav?h=' + h;
   }
 
   function getAllSubTitle (filter) {
@@ -77,7 +78,7 @@
             .sortBy(function (i) { return i.sort_index; })
             .map(function(i) {
               return {
-                img: faviconPath(i.url),
+                img: favicon_path(i.url),
                 title: i.title || i.o_title, // original title
                 href: 'read/' + i.id,
                 like: i.like_c,

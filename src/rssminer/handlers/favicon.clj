@@ -4,6 +4,7 @@
         (rssminer [http :only [client]]
                   [util :only [ignore-error]]
                   [config :only [rssminer-conf]]))
+  (:require [clojure.string :as str])
   (:import org.jboss.netty.handler.codec.http.HttpResponse
            rssminer.async.FaviconFuture
            java.io.ByteArrayInputStream))
@@ -26,8 +27,8 @@
                                  data (-> resp .getContent .array)]
                              (ignore-error
                               (mysql-insert :favicon {:hostname hostname
-                                                   :code code
-                                                   :favicon data}))
+                                                      :code code
+                                                      :favicon data}))
                              (if (= 200 code)
                                {:status 200
                                 :headers headers
@@ -35,7 +36,7 @@
                                (redirect default-icon)))))})
 
 (defn get-favicon [req]
-  (if-let [hostname (-> req :params :h)]
+  (if-let [hostname (-> req :params :h str/reverse)]
     (if-let [favicon (fetch-favicon hostname)]
       (if (= 200 (:code favicon))
         {:status 200

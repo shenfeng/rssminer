@@ -29,9 +29,12 @@ CREATE TABLE feeds (
   author VARCHAR(24),
   link VARCHAR(220),
   title VARCHAR(256),
-  -- saved in lucene index, updated by orginal if fetched. not saved in db
-  -- summary CLOB,
-  -- original CLOB,
+  -- saved in lucene index, updated by orginal if fetched.
+  summary MEDIUMTEXT,           -- rss summary
+  original MEDIUMTEXT,          -- max 16m, orignal web page
+  -- 2012/4/18
+  -- ALTER TABLE feeds ADD COLUMN original MEDIUMTEXT
+  -- ALTER TABLE feeds ADD COLUMN summary MEDIUMTEXT
   final_link VARCHAR(256),
   tags VARCHAR(128),
   updated_ts INT UNSIGNED,
@@ -74,7 +77,7 @@ create table user_feed (
 
 create table favicon (
      hostname VARCHAR(96) PRIMARY KEY,
-     favicon VARBINARY(65536),  -- 64k
+     favicon BLOB,  -- max 64k
      -- SMALLINT, 0, 35536, 2 bytes storage
      code SMALLINT UNSIGNED     -- fetch result's http status code
 );

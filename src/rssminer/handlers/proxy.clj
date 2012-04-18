@@ -2,6 +2,7 @@
   (:use (rssminer [http :only [client]]
                   [util :only [assoc-if]]
                   [config :only [rssminer-conf]]))
+  (:require [clojure.string :as str])
   (:import rssminer.async.ProxyFuture
            org.jboss.netty.handler.codec.http.HttpResponse))
 
@@ -13,7 +14,7 @@
               "Cache-Control" (headers "cache-control"))))
 
 (defn handle-proxy [req]
-  (let [uri (-> req :params :u)
+  (let [uri (-> req :params :u str/reverse)
         headers (compute-send-header req)]
     {:status 200
      ;; understand by async-ring-handler

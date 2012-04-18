@@ -1,9 +1,11 @@
 package rssminer.sax;
 
+import static java.net.URLEncoder.encode;
+import static rssminer.Utils.reverse;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -40,8 +42,8 @@ public class RewriteHandler extends AbstractHTMLHandler {
             if (rw && ("src".equals(name) || "href".equals(name))) {
                 sb.append(QUOTE);
                 try {
-                    String e = URLEncoder.encode(uriBase.resolve(val)
-                            .toString(), "utf8");
+                    String url = uriBase.resolve(val).toString();
+                    String e = encode(reverse(url), "utf8");
                     sb.append(proxyURI).append(e);
                 } catch (UnsupportedEncodingException ignore) {
                 }

@@ -10,15 +10,14 @@
 (defn save-feeds [feeds rss-id]
   (doseq [{:keys [link] :as feed} (:entries feeds)]
     (when (and link (not (blank? link)))
-      (let [f (dissoc feed :summary)]   ; summary not saved
-        (try
-          (let [id (mysql-insert :feeds (assoc f :rss_link_id rss-id))]
-            (index-feed id feed))
-          (catch java.sql.SQLException e      ;(link, rss_link_id) is unique
-            (trace "update" rss-id link)
-            (with-mysql
-              (update-values :feeds ["link=? and rss_link_id = ?"
-                                     link rss-id] f))))))))
+      (try
+        (let [id (mysql-insert :feeds (assoc feed :rss_link_id rss-id))]
+          (index-feed id feed))
+        (catch java.sql.SQLException e      ;(link, rss_link_id) is unique
+          (trace "update" rss-id link)
+          (with-mysql
+            (update-values :feeds ["link=? and rss_link_id = ?"
+                                   link rss-id] feed)))))))
 
 (defn fetch-by-rssid [user-id rss-id limit offset]
   (mysql-query ["SELECT f.id, author, link, title, tags, published_ts,
@@ -32,12 +31,9 @@ WHERE  rss_link_id = ?
 LIMIT ? offset ?",
                 rss-id, user-id, limit, offset]))
 
-(defn fetch-by-id [id]
-  (first (mysql-query ["SELECT * FROM feeds WHERE id = ?" id] :convert)))
-
 (defn fetch-orginal [id]
   (first (mysql-query ["SELECT original, link
-                     FROM feeds WHERE id = ?" id] :convert)))
+                     FROM feeds WHERE id = ?" id])))
 
 (defn- safe-update-rss-link [id data]
   (with-mysql

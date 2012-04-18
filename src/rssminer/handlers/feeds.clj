@@ -33,10 +33,6 @@
     (db/fetch-by-rssid uid (to-int rss-id) (to-int limit)
                        (to-int offset))))
 
-(defn get-by-id [req]
-  (let [feed-id (-> req :params :feed-id)]
-    (db/fetch-by-id feed-id)))
-
 (defn rewrite-html [link html]
   (let [proxy (str (:proxy-server @rssminer-conf) "/p?u=")]
     (Utils/rewrite html link proxy)))

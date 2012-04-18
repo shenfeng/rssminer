@@ -111,6 +111,14 @@ public class Utils {
         return h.get();
     }
 
+    public static String reverse(String str) {
+        if (str != null) {
+            return new StringBuilder(str).reverse().toString();
+        } else {
+            return null;
+        }
+    }
+
     public static double[] pick(double[] prefs, double likeRatio,
             double dislikeRatio) {
         int likeIndex = prefs.length - (int) (prefs.length * likeRatio);
@@ -119,8 +127,6 @@ public class Utils {
         Arrays.sort(prefs);
         return new double[] { prefs[likeIndex], prefs[disLikeIndex] };
     }
-
-
 
     public static String extractText(String html) throws IOException,
             SAXException {

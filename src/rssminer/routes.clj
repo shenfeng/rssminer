@@ -54,7 +54,6 @@
   (JPOST "/user/settings" [] user/save-settings)
   (JGET "/user/welcome" [] user/welcome-list)
   (context "/feeds/:feed-id" []
-           (JGET "/" [] feed/get-by-id)
            (JPOST "/vote" [] feed/user-vote)
            (JPOST "/read" [] feed/mark-as-read))
   (JPOST "/import/opml-import" [] import/opml-import)
