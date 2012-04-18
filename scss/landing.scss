@@ -15,7 +15,7 @@
 .rfloat { float: right; }
 
 body {
-    font: 400 14px/1.331 'Helvetica Neue',Helvetica,Arial,sans-serif;
+    font: 400 14px/1.431 'Helvetica Neue',Helvetica,Arial,sans-serif;
     background: transparent url('/imgs/bg-site.png') repeat center top;
     color: #222;
     margin: 0;
@@ -24,11 +24,19 @@ body {
 a { outline: none; }
 table { border-collapse: collapse; border-spacing: 0; }
 
+.eg {
+    background-color:#DDD;
+    padding: 0.3em 0.5em;
+    font-size: 90%;
+    color: #444;
+    @include border-radius(3px);
+}
+
 #header {
     padding: 0.8em 0.5em 0em 0.5em;
     text-indent: 1em;
     text-shadow: 1px 1px 0px #E0E0E0;
-    h1 { margin: 4px 0; font-size: 40px;}
+    h1 { margin: 0; font-size: 40px;}
     a { color: #303030; text-decoration: none; }
 }
 
@@ -50,13 +58,16 @@ table { border-collapse: collapse; border-spacing: 0; }
 }
 
 #content { border-bottom: 1px solid #E3E3E3; }
+p {
+    margin: 0.7em 0;
+}
 
 #main {
     margin: 0 auto;
     width: $page-width;
     $left_width: 585px;
     .lfloat {
-        padding: 2em 1em 1em 0;
+        padding: 0.5em 1em 1em 0;
         width: $left_width;
         border-right: 1px solid #E0E0E0;
         img {
@@ -65,7 +76,7 @@ table { border-collapse: collapse; border-spacing: 0; }
         }
     }
     .rfloat {
-        padding-top: 2.5em;
+        padding-top: 1em;
         width: $page-width - $left_width - 30px;
         a { display: block; margin: 0 40px; }
         img {
