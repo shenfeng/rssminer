@@ -26,3 +26,5 @@ README
 Rakefile
 pom.xml
 tags
+/target
+/thirdparty

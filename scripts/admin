@@ -4,9 +4,14 @@ ABSOLUTE_PATH=$(readlink -f $0)
 HOME="${ABSOLUTE_PATH%/*/*}"
 DB_NAME='rssminer'
 DB_USER='feng'
+BACKUP_FOLDER="/var/rssminer_backup"
 
 log() {
     echo "`date --rfc-3339=seconds` INFO -- $@"
+}
+
+error() {
+    echo "`date --rfc-3339=seconds` ERROR -- $@"
 }
 
 drop_db() {
@@ -21,6 +26,43 @@ create_db() {
     mysql -uroot -e "$SQL"
 }
 
+recreate_db_and_user () {
+    drop_db $DB_NAME
+    create_db $DB_NAME
+    mysql -uroot mysql -e "DROP USER '$DB_USER'@localhost"
+    mysql -uroot -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY ''";
+    mysql -uroot -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';"
+}
+
+init_db() {
+    recreate_db_and_user
+    mysql -u$DB_USER $DB_NAME < $HOME/src/rssminer.sql
+}
+
+backup_db() {
+    if [ ! -d "$BACKUP_SQL" ]; then
+        sudo mkdir -p $BACKUP_FOLDER
+        sudo chown -R feng:feng $BACKUP_FOLDER
+    fi
+    D=`date +"%Y%m%d%H%M"`
+    BACKUP_SQL="$BACKUP_FOLDER/rssminer_$D.sql.gz"
+    log "Back up to file $BACKUP_SQL"
+    ssh rssminer.net "mysqldump -u $DB_USER --routines --single-transaction --database $DB_NAME --add-drop-database --add-drop-table | gzip --stdout" > $BACKUP_SQL
+}
+
+restore_db () {
+    recreate_db_and_user
+    FILE=`ls $BACKUP_FOLDER -t |head -1`
+    FILE="$BACKUP_FOLDER/$FILE"
+    if [ -f "$FILE" ]; then
+        log "restore $DB_NAME db from file $FILE"
+        zcat $FILE | mysql -ufeng
+        # mysql -ufeng < $file
+    else
+        error "Backup sql file is required"
+    fi
+}
+
 usage () {
     cat <<-EOF
 USAGE:
@@ -32,18 +74,9 @@ Options:
 
 Commands:
   init-db            initialize database, create user, import schema
-  drop-db            drop database
+  backup-db          backup mysql database from online
+  restore-db         restore backuped mysql database
 EOF
-}
-
-init_db() {
-    drop_db $DB_NAME
-    create_db $DB_NAME
-    mysql -uroot mysql -e "DROP USER '$DB_USER'@localhost"
-    mysql -uroot -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY ''";
-    mysql -uroot -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';"
-    mysql -uroot $DB_NAME < $HOME/src/rssminer.sql
-
 }
 
 while test $# -ne 0; do
@@ -53,7 +86,8 @@ while test $# -ne 0; do
         -d|--db-name) DB_NAME=$1; shift;;
         -u|--db-user-name) DB_USER=$1; shift;;
         init-db) init_db $@; exit;;
-        drop-db) drop_db $DB_NAME; exit;;
+        backup-db) backup_db; exit;;
+        restore-db) restore_db $@; exit;;
         *) usage; exit;;
     esac
 done
@@ -62,3 +96,6 @@ done
 usage
 
 # ssh server 'mysqldump -u feng --routines --single-transaction --database user0 --add-drop-database --add-drop-table | gzip --stdout' | zcat > /tmp/backup_user0.sql
+
+# clear root password
+# update mysql.user set password=null where user='root';

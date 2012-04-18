@@ -15,16 +15,14 @@
 .rfloat { float: right; }
 
 body {
-    font: 400 13px/1.331 Arial, Helvetica, sans-serif;
+    font: 400 14px/1.331 'Helvetica Neue',Helvetica,Arial,sans-serif;
+    background: transparent url('/imgs/bg-site.png') repeat center top;
     color: #222;
     margin: 0;
     padding: 0;
-    background: #F4F4F4 url(/imgs/background.png);
 }
 a { outline: none; }
 table { border-collapse: collapse; border-spacing: 0; }
-
-p { font-size: 14px;}
 
 #header {
     padding: 0.8em 0.5em 0em 0.5em;
