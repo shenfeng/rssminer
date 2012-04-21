@@ -1,5 +1,6 @@
 package rssminer.async;
 
+import java.io.ByteArrayInputStream;
 import java.net.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -20,6 +21,9 @@ import clojure.lang.Keyword;
 
 public class ProxyFuture extends AbstractFuture {
     static final Keyword resp_k = Keyword.intern("resp");
+    static final Keyword status = Keyword.intern("status");
+    static final Keyword header = Keyword.intern("headers");
+    static final Keyword body = Keyword.intern("body");
     static final Keyword final_link_k = Keyword.intern("final-link");
 
     static Logger logger = LoggerFactory.getLogger(ProxyFuture.class);
@@ -52,8 +56,17 @@ public class ProxyFuture extends AbstractFuture {
 
     private void finish(HttpResponse resp) {
         resp.removeHeader(Names.SET_COOKIE); // no cookie need
+        resp.removeHeader("Server");
+        Map<String, String> headers = new TreeMap<String, String>();
+        for (String name : resp.getHeaderNames()) {
+            headers.put(name, resp.getHeader(name));
+        }
+        headers.put("Cache-Control", "public, max-age=604800");
+
         Map<Keyword, Object> r = new TreeMap<Keyword, Object>();
-        r.put(resp_k, resp);
+        r.put(header, headers);
+        r.put(status, resp.getStatus().getCode());
+        r.put(body, new ByteArrayInputStream(resp.getContent().array()));
         r.put(final_link_k, finalLink);
         done(r);
     }

@@ -4,17 +4,13 @@ import java.net.Proxy;
 import java.net.URI;
 import java.util.Map;
 
-import org.jboss.netty.handler.codec.http.HttpResponse;
-
 public class RetryHttpTask implements IHttpTask {
 
     final IHttpTask mTask;
-    final Proxy mProxy;
     final URI mUri;
 
-    public RetryHttpTask(IHttpTask task, Proxy proxy, URI uri) {
+    public RetryHttpTask(IHttpTask task, URI uri) {
         mTask = task;
-        mProxy = proxy;
         mUri = uri;
     }
 
@@ -24,17 +20,11 @@ public class RetryHttpTask implements IHttpTask {
         return mTask.getUri();
     }
 
-    public Map<String, Object> getHeaders() {
+    public Map<String, String> getHeaders() {
         return mTask.getHeaders();
     }
 
-    public Object doTask(HttpResponse response) throws Exception {
-        return mTask.doTask(response);
-    }
-
     public Proxy getProxy() {
-        if (mProxy != null)
-            return mProxy;
         return mTask.getProxy();
     }
 
@@ -42,5 +32,13 @@ public class RetryHttpTask implements IHttpTask {
         if (mTask instanceof RetryHttpTask)
             return ((RetryHttpTask) mTask).retryTimes() + 1;
         return 1;
+    }
+
+    public Object doTask(int status, Map<String, String> headers, String body) {
+        return mTask.doTask(status, headers, body);
+    }
+
+    public Object onThrowable(Throwable t) {
+        return mTask.onThrowable(t);
     }
 }

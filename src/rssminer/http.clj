@@ -5,20 +5,10 @@
   (:require [clojure.string :as str]
             [rssminer.config :as conf])
   (:import java.net.URI
-           [rssminer Utils$Info Utils$Pair Links Links$LinksConf]
            me.shenfeng.Utils
            [me.shenfeng.http HttpClient HttpClientConfig]
            org.jboss.netty.handler.codec.http.HttpResponse
            org.apache.commons.codec.binary.Base64))
-
-(def ^Links links
-  (Links. (doto (Links$LinksConf.)
-            (.setIgnoredExtensions conf/ignored-url-extensions)
-            (.setBadDomainPattens conf/bad-domain-pattens)
-            (.setBlackDomainStr conf/black-domain-strs)
-            (.setAcceptedTopDomains conf/accepted-top-domains)
-            (.setBadRssTitlePattens conf/bad-rss-title-pattens)
-            (.setBadRssUrlPattens conf/bad-rss-url-pattens))))
 
 (defonce ^{:tag HttpClient}
   client (HttpClient. (doto (HttpClientConfig.)
@@ -31,9 +21,6 @@
                         (.setRequestTimeoutInMs 40000)    ;40s
                         (.setReceiveBuffer (* 32 1024))   ;32k
                         (.setSendBuffer (* 8 1024)))))    ;8k
-
-(defn ^URI clean-resolve [base part]
-  (.resoveAndClean links base part))
 
 (defn extract-host [^String host]
   (let [^URI uri (URI. host)
@@ -61,13 +48,3 @@
                (fn [in] (when in (slurp in))))
     (catch Exception e
       (error e "download-rss" url))))
-
-(defn extract-links [base html]
-  (let [^Utils$Info info (rssminer.Utils/extract html base links)]
-    {:rss (map (fn [^Utils$Pair r]
-                 {:title (.title r)
-                  :url (.url r)}) (.rssLinks info))
-     :links (map (fn [^URI uri]
-                   {:url (str uri)
-                    :domain (.getHost uri)}) (.links info))
-     :title (.title info)}))

@@ -120,16 +120,6 @@ task :swank do
   sh "rm classes -rf && lein javac && lein swank"
 end
 
-desc "Run server in dev profile"
-task :run => :prepare do
-  sh 'lein javac && scripts/run --profile dev'
-end
-
-desc "Run server in production profile"
-task :run_prod => :prepare_prod do
-  sh 'lein javac && scripts/run --profile prod'
-end
-
 desc 'Deploy to production'
 task :deploy => [:clean, :chrome, :test, :prepare_prod] do
   sh "scripts/deploy"
@@ -207,6 +197,33 @@ task :html_compress do
   end
   sh "find src/templates/ -type f " +
     "| xargs -I {} sed -i \"s/{VERSION}/#{version}/g\" {}"
+end
+
+namespace :db do
+  desc "Reload database with production data"
+  task :reload_prod do
+    sh './scripts/admin backup-db && ./scripts/admin restore-db'
+  end
+
+  desc "Restore db from latest backup"
+  task :restore_db do
+    sh './scripts/admin restore-db'
+  end
+end
+
+namespace :run do
+  desc "Run server in dev profile"
+  task :dev => :prepare do
+    sh 'rm classes -rf && lein javac && scripts/run --profile dev'
+  end
+
+  desc "Run server in production profile"
+  task :prod => :prepare_prod do
+    sh 'rm classes -rf && lein javac && scripts/run --profile prod'
+  end
+
+  desc "Restore db from latest backup, Run server in dev profile"
+  task :restore_db_dev => ["db:restore_db", "run:dev"]
 end
 
 namespace :watch do

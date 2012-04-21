@@ -10,6 +10,7 @@
            [java.util Locale Calendar TimeZone Date]
            java.text.SimpleDateFormat
            java.net.URI
+           me.shenfeng.http.HttpUtils
            [java.io StringWriter PrintWriter StringReader]
            [java.security NoSuchAlgorithmException MessageDigest]))
 
@@ -98,15 +99,6 @@
      (println (str "TRACE" (when name (str " " name)) ":"))
      (pprint value)
      value))
-
-(defn next-check [last-interval status headers]
-  (if-let [location (headers :location)]
-    {:url location :next_check_ts (rand-int 100000)}
-    (let [interval (if (= 200 status)
-                     (max 5400 (int (/ last-interval 1.2))) ; min 1.5h
-                     (min (int (* last-interval 1.2)) (* 3600 24 20)))]
-      {:check_interval interval
-       :next_check_ts (+ (now-seconds) interval)})))
 
 (defn time-since [user]                ;45 day
   (- (now-seconds) (* (or (-> user :conf :expire) 45) 3600 24)))

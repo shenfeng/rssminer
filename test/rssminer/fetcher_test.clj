@@ -22,9 +22,9 @@
   (let [links (fetch-rss-links 10000)
         feeds (mysql-query ["select * from feeds"])]
     (handle-resp (first links)
-                 {:status 200
-                  :headers {:last-modified "Sat, 23 Jul 2011 01:40:16 GMT"}
-                  :body (slurp "test/scottgu-atom.xml")})
+                 200
+                 {"Last-Modified" "Sat, 23 Jul 2011 01:40:16 GMT"}
+                 (slurp "test/scottgu-atom.xml"))
     (is (= (count (mysql-query ["select * from feeds"])) 1))
     (is (= 1 (- (count links) (count (fetch-rss-links 1000)))))))
 

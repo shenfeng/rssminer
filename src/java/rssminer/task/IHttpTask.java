@@ -4,15 +4,15 @@ import java.net.Proxy;
 import java.net.URI;
 import java.util.Map;
 
-import org.jboss.netty.handler.codec.http.HttpResponse;
-
 public interface IHttpTask {
 
     URI getUri();
 
-    Map<String, Object> getHeaders();
+    Map<String, String> getHeaders();
 
-    Object doTask(HttpResponse response) throws Exception;
+    Object doTask(int status, Map<String, String> headers, String body);
+
+    Object onThrowable(Throwable t);
 
     Proxy getProxy();
 }

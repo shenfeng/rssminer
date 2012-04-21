@@ -19,10 +19,8 @@
     {:status 200
      ;; understand by async-ring-handler
      :body (ProxyFuture. client uri headers (:proxy @rssminer-conf)
-                         (fn [{:keys [^HttpResponse resp final-link]}]
-                           (.setHeader resp "Cache-Control"
-                                       "public, max-age=604800")
-                           {:status 200 :body resp}))}))
+                         (fn [{:keys [headers status body final-link]}]
+                           {:status 200 :body body :headers headers}))}))
 
 ;;; buggy
 ;;; http://www.moandroid.com/?p=2020

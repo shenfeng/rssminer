@@ -30,16 +30,17 @@
   :javac-options {:source "1.6" :target "1.6" :debug "true" :fork "true"}
   :java-source-path "src/java"
   :aot [rssminer.main]
-  :jvm-opts ["-XX:+UseCompressedOops"
-             "-Dsun.net.inetaddr.ttl=0"
+  :jvm-opts ["-Dclojure.compiler.disable-locals-clearing=true"
              "-Djava.net.preferIPv4Stack=true"
-             "-XX:+TieredCompilation"
-             "-XX:ParallelGCThreads=2"
+             "-Dsun.net.inetaddr.ttl=0"
              "-XX:+DisableExplicitGC"
-             "-XX:+UseConcMarkSweepGC"
+             "-XX:+TieredCompilation"
+             "-XX:+UseCompressedOops"
              "-XX:+UseCompressedStrings"
-             "-Xmx512m"
-             "-Xms512m"]
+             "-XX:+UseConcMarkSweepGC"
+             "-XX:ParallelGCThreads=2"
+             "-Xms512m"
+             "-Xmx512m"]
   ;; :jvm-opts ["-agentlib:hprof=cpu=samples,format=b,file=/tmp/profile.txt"]
   ;; :jvm-opts ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n"]
   :dev-dependencies [[swank-clojure "1.4.0"]

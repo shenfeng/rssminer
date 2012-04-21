@@ -2,11 +2,11 @@ package rssminer;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+
+import me.shenfeng.http.client.HttpClient;
+import me.shenfeng.http.client.HttpClientConfig;
 
 import org.ccil.cowan.tagsoup.Parser;
 import org.slf4j.Logger;
@@ -15,37 +15,20 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import rssminer.sax.ExtractFaviconHandler;
-import rssminer.sax.ExtractInfoHandler;
-import rssminer.sax.ExtractRssUriHandler;
 import rssminer.sax.ExtractTextHandler;
 import rssminer.sax.HTMLMinfiyHandler;
 import rssminer.sax.RewriteHandler;
 
 public class Utils {
     final static Logger logger = LoggerFactory.getLogger(Utils.class);
+    public static final HttpClient CLIENT;
+    public static final String USER_AGETNT = "Mozilla/5.0 (compatible; Rssminer/1.0; +http://rssminer.net)";
 
-    public static class Info {
-        static Info EMPTY = new Info(new ArrayList<Pair>(0),
-                new ArrayList<URI>(0), null);
-
-        public final List<URI> links;
-        public final List<Pair> rssLinks;
-        public final String title;
-
-        public Info(List<Pair> rssLinks, List<URI> links, String title) {
-            this.rssLinks = rssLinks;
-            this.links = links;
-            this.title = title;
-        }
-    }
-
-    public static class Pair {
-        public final String title;
-        public final String url;
-
-        public Pair(String url, String title) {
-            this.url = url;
-            this.title = title;
+    static {
+        try {
+            CLIENT = new HttpClient(new HttpClientConfig(50000, USER_AGETNT));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -59,15 +42,6 @@ public class Utils {
             return p;
         }
     };
-
-    public static List<String> extractRssLink(String html, String base)
-            throws IOException, SAXException {
-        Parser p = parser.get();
-        ExtractRssUriHandler h = new ExtractRssUriHandler(base);
-        p.setContentHandler(h);
-        p.parse(new InputSource(new StringReader(html)));
-        return h.getRsses();
-    }
 
     public static String extractFaviconUrl(String html, String base)
             throws IOException, SAXException {
@@ -85,21 +59,6 @@ public class Utils {
         p.setContentHandler(m);
         p.parse(new InputSource(new StringReader(html)));
         return m.get();
-    }
-
-    public static Info extract(String html, String base, Links linker)
-            throws IOException, SAXException {
-        try {
-            Parser p = parser.get();
-            ExtractInfoHandler h = new ExtractInfoHandler(base, linker);
-            p.setContentHandler(h);
-            p.parse(new InputSource(new StringReader(html)));
-            return h.get();
-        } catch (IOException e) {
-            // Pushback buffer overflow, not html?
-            logger.trace(e.getMessage(), e);
-            return Info.EMPTY;
-        }
     }
 
     public static String rewrite(String html, String urlBase, String proxyURI)

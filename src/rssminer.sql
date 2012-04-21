@@ -6,7 +6,7 @@ CREATE TABLE users (
   `password` VARCHAR(32),
   provider VARCHAR(10),         -- openid provider, eg: google
   authen_token VARCHAR(32),
-  added_ts TIMESTAMP DEFAULT now() -- interger is easier to serialize
+  added_ts TIMESTAMP DEFAULT now() -- timestamp is easier to read
 );
 
 CREATE TABLE rss_links (
@@ -14,12 +14,14 @@ CREATE TABLE rss_links (
   url VARCHAR(220) UNIQUE,
   title VARCHAR(1024),
   description VARCHAR(1024),
-  alternate VARCHAR(220), -- usually, the site's link
+  alternate VARCHAR(220),       -- usually, the site's link
   added_ts TIMESTAMP DEFAULT now(),
   next_check_ts INT UNSIGNED DEFAULT 1,
   last_status SMALLINT UNSIGNED,
-  check_interval SMALLINT DEFAULT 14400, -- seconds, in 4 h, min 1.5h
-  last_modified VARCHAR(64),            -- from http response header
+  error_msg VARCHAR(200),
+  check_interval SMALLINT DEFAULT 14400, -- seconds, in 4 h, min 3h
+  -- alter table rss_links change check_interval check_interval mediumint default 14400
+  last_modified VARCHAR(64),             -- from http response header
   user_id INT UNSIGNED,      -- who first add it, REFERENCES users(no index)
   INDEX idx_rss_check_ts (next_check_ts)
 );

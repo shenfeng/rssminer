@@ -3,14 +3,12 @@ package rssminer.task;
 import java.net.Proxy;
 
 import me.shenfeng.http.HttpClient;
-import rssminer.Links;
 
 public class HttpTaskRunnerConf {
 
     IHttpTasksProvder bulkProvider;
     IBlockingTaskProvider blockingProvider;
     HttpClient client;
-    Links links;
     int queueSize = 300;
     int bulkCheckInterval = 15 * 60 * 1000; // 15 min, mills
     int blockingTimeOut = 5; // blocking provider timeout, ie redis blpop.
@@ -18,8 +16,6 @@ public class HttpTaskRunnerConf {
 
     String name;
     Proxy proxy = Proxy.NO_PROXY;
-
-    boolean dnsPrefetch = false;
 
     public void setBlockingProvider(IBlockingTaskProvider blockingProvider) {
         this.blockingProvider = blockingProvider;
@@ -39,14 +35,6 @@ public class HttpTaskRunnerConf {
 
     public void setClient(HttpClient client) {
         this.client = client;
-    }
-
-    public void setDnsPrefetch(boolean dnsPrefetch) {
-        this.dnsPrefetch = dnsPrefetch;
-    }
-
-    public void setLinks(Links links) {
-        this.links = links;
     }
 
     public void setName(String name) {
