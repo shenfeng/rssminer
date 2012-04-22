@@ -9,7 +9,7 @@
 
   function getSelected () { return $('.welcome-list .selected'); }
 
-  function filterSubscription (e) {
+  function filter_subscription (e) {
     var $selected = $("#subs ." + sc),
         which = (e && e.which) || -1,
         $input = $('#sub-filter'), val = '';
@@ -118,22 +118,24 @@
     if($("#add-sub, #settings").length) {
       return;
     }
-    if(is_list_show) { filterSubscription(e); }
+    if(is_list_show) { filter_subscription(e); }
     switch(e.which) {
     case 70:                    // f
       $('#footer').toggle(); RM.layout.reLayout(); break;
     case 79:                    // o
       if(!is_list_show) openSelected(); break;
     case 72:                    // h
-      if(!is_list_show && g_pressed && !e.altKey) { RM.app.welcome(); }
-      else if(!is_list_show && e.altKey) { RM.app.saveVote(-1); }
+      if(!is_list_show && g_pressed && !e.altKey) {
+        location.hash = '';
+      }
+      else if(!is_list_show && e.altKey) { RM.app.save_vote(-1); }
       break;
-    case 13:                    // ENTER,  handled by filterSubscription
+    case 13:                    // ENTER,  handled by filter_subscription
       closeAll(); break;
     case 27:                    // ESC
       closeAll(); break;
     case 76:                    // l like
-      if(!is_list_show && e.altKey) { RM.app.saveVote(1); }; break;
+      if(!is_list_show && e.altKey) { RM.app.save_vote(1); }; break;
     case 191:                   // ?
       if(e.shiftKey) { RM.app.showHelp(); } break;
     case 83:                    // 83
@@ -142,7 +144,7 @@
     case 85:                    // u
       if(g_pressed && !is_list_show) {
         is_list_show = true;
-        filterSubscription();
+        filter_subscription();
       }
       break;
     case 78:                    // n

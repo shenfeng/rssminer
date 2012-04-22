@@ -110,7 +110,7 @@
     }
   }
 
-  function welcome () {
+  function show_welcome () {
     if(_RM_.subs) {             // user has subscriptions
       var $welcome = addWelcomeTitle('Rssminer - an intelligent RSS reader');
       ajax.get('/api/user/welcome', function (resp) {
@@ -131,6 +131,7 @@
     var $feed;
     //  1. select it's parent if ele is defined;
     if(ele) { $feed = $(ele).closest('li.feed'); }
+    // guess target feed
     if(!$feed || !$feed.length) {
       if($('#reading-area').hasClass('show-iframe')) {
         $feed = $('#feed-list .selected');
@@ -256,9 +257,8 @@
 
   window.RM = $.extend(window.RM, {
     app: {
-      welcome: welcome,
       hideHelp: hideHelp,
-      saveVote: saveVote,
+      save_vote: saveVote,
       showHelp: showHelp
     }
   });
@@ -266,7 +266,7 @@
   render_nav_list();              // should before hashRouter;
 
   hashRouter({
-    '': welcome,
+    '': show_welcome,
     'settings': settings,
     'help': showHelp,
     'add': addSubscription,

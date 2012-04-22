@@ -11,11 +11,14 @@
         height = $(window).height(),
         nav_width = $('#navigation').outerWidth(),
         list_height = $footer.height();
+    if(!$footer.is(':visible')) {
+      list_height = 0;
+    }
     $("#navigation .wrapper").height(height - $("#admin-controls").height());
     $("#reading-area").height(height - list_height).width(width - nav_width);
   }
 
-  function scrollIntoView ($container, $element) {
+  function scroll_to_view ($container, $element) {
     var ct = $container.offset().top,
         ch = $container.height(),
         eh = $element.height(),
@@ -37,18 +40,18 @@
       _.defer(function () {
         // expand navigation if collapsed
         $me.closest('li.collapse').removeClass('collapse');
-        scrollIntoView($container, $me);
+        scroll_to_view($container, $me);
       });
       return true;
     }
     return false;
   }
 
-  function toggleNavigationSection (e) {
+  function toggle_navigation_section (e) {
     $(this).parents('.section').toggleClass('active');
   }
 
-  function toggleFolder (e) {
+  function toggle_nav_foler (e) {
     $(this).closest('li').toggleClass('collapse');
     var collapsed = [];
     $('#navigation li.collapse .folder').each(function (index, item) {
@@ -125,8 +128,8 @@
   });
 
   util.delegate_events($(document), {
-    'click #navigation .section h3': toggleNavigationSection,
-    'click #navigation .folder span': toggleFolder
+    'click #navigation .section h3': toggle_navigation_section,
+    'click #navigation .folder span': toggle_nav_foler
   });
 
 })();

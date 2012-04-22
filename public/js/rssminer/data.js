@@ -32,19 +32,19 @@
     };
   };
 
-  function parseTags (tags) {
+  function split_tag (tags) {
     if(tags) { return tags.split("; "); }
     else { return []; }
   }
 
-  function  feedClass (i) {
+  function feed_css_class (i) {
     var cls;
     if(i.read_date === 1) { cls = 'sys-read'; }
     else if(i.read_date > 1) { cls = 'read';}
     else {cls = 'unread';}
 
-    if (i.vote < 0) { cls += ' dislike'; }
-    else if (i.vote > 0) { cls += ' like'; }
+    if (i.vote_user < 0) { cls += ' dislike'; }
+    else if (i.vote_user > 0) { cls += ' like'; }
     else if(i.vote_sys > like_score) { cls += ' like sys'; }
     else if(i.vote_sys < neutral_score) { cls += ' dislike sys';}
     else { cls += ' neutral sys'; }
@@ -113,12 +113,12 @@
     return function (i) {
       return {
         author: i.author,
-        cls: feedClass(i),
+        cls: feed_css_class(i),
         date: subid ? ymdate(i, i.published_ts) : ymdate(i),
         href: 'read/' + (subid || i.rss_link_id) + "/" + i.id,
         id: i.id,
         link: i.link,
-        tags: parseTags(i.tags),
+        tags: split_tag(i.tags),
         title: i.title
       };
     };
