@@ -199,15 +199,20 @@ task :html_compress do
     "| xargs -I {} sed -i \"s/{VERSION}/#{version}/g\" {}"
 end
 
+desc "Using luke to inspect luence index"
+task :luke do
+  sh 'java -jar thirdparty/lukeall-3.4.0_1.jar -index /var/rssminer/index &'
+end
+
 namespace :db do
   desc "Reload database with production data"
-  task :reload_prod do
-    sh './scripts/admin backup-db && ./scripts/admin restore-db'
+  task :backup_prod do
+    sh './scripts/admin backup-db && ./scripts/admin restore-db && ./scripts/admin rebuild-index'
   end
 
   desc "Restore db from latest backup"
   task :restore_db do
-    sh './scripts/admin restore-db'
+    sh './scripts/admin restore-db && ./scripts/admin rebuild-index'
   end
 end
 

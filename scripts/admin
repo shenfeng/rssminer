@@ -63,6 +63,25 @@ restore_db () {
     fi
 }
 
+rebuild_index () {
+    log "rm -rf /var/rssminer/index/*"
+    rm -rf /var/rssminer/index/*
+    cd "${HOME}" && java \
+        -Dfile.encoding=UTF-8 \
+        -Djava.net.preferIPv4Stack=true \
+        -Dsun.jnu.encoding=UTF-8 \
+        -Dsun.net.inetaddr.ttl=0 \
+        -XX:+DisableExplicitGC \
+        -XX:+TieredCompilation \
+        -XX:+UseCompressedOops \
+        -XX:+UseCompressedStrings \
+        -XX:+UseConcMarkSweepGC \
+        -XX:ParallelGCThreads=2 \
+        -Xms386m -Xmx386m \
+        -server -cp "classes:lib/*:src/" clojure.main \
+        -m rssminer.admin -c rebuild-index
+}
+
 usage () {
     cat <<-EOF
 USAGE:
@@ -76,6 +95,7 @@ Commands:
   init-db            initialize database, create user, import schema
   backup-db          backup mysql database from online
   restore-db         restore backuped mysql database
+  rebuild-index      rebuild luence index
 EOF
 }
 
@@ -88,6 +108,7 @@ while test $# -ne 0; do
         init-db) init_db $@; exit;;
         backup-db) backup_db; exit;;
         restore-db) restore_db $@; exit;;
+        rebuild-index) rebuild_index $@; exit;;
         *) usage; exit;;
     esac
 done
