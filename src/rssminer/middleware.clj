@@ -12,16 +12,21 @@
   (fn [req]
     (let [user (session-get req :user)
           uri (:uri req)]
-      (if user (handler req)
-          (if (or (= uri "/a") (= uri "/dashboard"))
-            (redirect "/login") ;; require login
-            (handler req))))))
+      (if user
+        (handler req)
+        (if (or (= uri "/a") (= uri "/dashboard") ;;  login required
+                (.startsWith ^String uri "/api"))
+          (if (= "XMLHttpRequest"
+                 (-> req :headers (get "x-requested-with")))
+            {:status 401} ;; easier for script to handle
+            (redirect "/login"))
+          (handler req))))))
 
 (defn wrap-cache-header
   "set no-cache header." [handler]
   (fn [req]
     (let [resp (handler req)
-          headers (resp :headers)
+          headers (get resp :headers {})
           ctype (headers "Content-Type")]
       (if (or (not= 200 (:status resp))
               (and ctype (re-find #"text|json|xml" ctype)))

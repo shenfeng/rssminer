@@ -4,7 +4,7 @@
                       [fetcher :as f]))
   (:import [rssminer.task HttpTaskRunner]))
 
-(defn get-data [req]
+(defn get-stat [req]
   {:rss_links (db/rss-links-count)
    :feeds (db/feeds-count)
    :fetcher (f/fetcher-stat)

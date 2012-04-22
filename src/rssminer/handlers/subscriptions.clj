@@ -8,13 +8,16 @@
 
 (def ^{:private true} enqueue-keys [:id :url :check_interval :last_modified])
 
+(defn- add-rss-link [user-id url]
+  (let [sub (mysql-insert-and-return :rss_links {:url url
+                                                 :user_id user-id})]
+    (fetcher-enqueue (select-keys sub enqueue-keys))
+    sub))
+
 (defn subscribe [url user-id title group-name]
   (let [sub (or (db/fetch-rss-link {:url url})
-                (mysql-insert-and-return :rss_links {:url url
-                                                     :user_id user-id}))]
-    (fetcher-enqueue (select-keys sub enqueue-keys))
-    (if-let [us (db/fetch-subscription {:user_id user-id
-                                        :rss_link_id (:id sub)})]
+                (add-rss-link user-id url))]
+    (if-let [us (db/fetch-subscription user-id (:id sub))]
       us
       (mysql-insert-and-return :user_subscription
                                {:user_id user-id
@@ -30,10 +33,14 @@
                        (or (-> user :conf :like_score) 1.0)
                        (or (-> user :conf :neutral_score) 0))))
 
+(defn list-subscriptions [req]
+  (let [user-id (:id (session-get req :user))]
+    (map :url (db/fetch-user-subsurls user-id))))
+
 (defn add-subscription [req]
   (let [link  (-> req :body :link)
         user-id (:id (session-get req :user))]
-    (info "user " user-id " add subscription: " link)
+    (info (str "user: " user-id " add subscription: " link))
     ;; enqueue, client need to poll for result
     (subscribe link user-id nil nil)))
 

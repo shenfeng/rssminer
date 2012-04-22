@@ -41,10 +41,8 @@
                   {"src/templates" views-ns}))))
 
 (defroutes api-routes
-  (context "/dashboard" []
-           (JGET "/stat" [] dashboard/get-data)
-           (JPOST "/" [] dashboard/settings))
   (context "/subs" []
+           (JGET "/" [] subs/list-subscriptions)
            (JPOST "/add" [] subs/add-subscription)
            (JGET "/:rss-id" [] feed/get-by-subscription)
            (JGET "/p/:rss-id" [] subs/polling-subscription)
@@ -64,8 +62,8 @@
   (GET "/p" []  handle-proxy)
   (GET "/fav" [] get-favicon)
   (GET "/f/o/:id" [] feed/proxy-orginal)
-  (GET "/oauth2callback" [] import/oauth2callback)
   (GET "/a" [] reader/app-page)
+  (JGET "/stat" [] dashboard/get-stat)
   (context "/dashboard" []
            (GET "/" [] reader/dashboard-page))
   (context "/login" []
@@ -73,6 +71,7 @@
            (POST "/" [] user/login)
            (GET "/google" [] user/google-openid)
            (GET "/checkauth" [] user/checkauth))
+  (GET "/oauth2callback" [] import/oauth2callback)
   (GET "/import/google" [] import/greader-import)
   (context "/signup" []
            (GET "/" [] user/show-signup-page)

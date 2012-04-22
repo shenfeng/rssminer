@@ -20,16 +20,21 @@
   (mysql-query ["SELECT rl.id, rl.url, rl.title
               FROM rss_links rl WHERE id = ?" id]))
 
-(defn fetch-subscription [map]
-  (first
-   (mysql-query
-    (select-sql-params :user_subscription map))))
+(defn fetch-subscription [user-id rss-link-id]
+  (first (mysql-query ["SELECT id, rss_link_id, title, group_name FROM
+                       user_subscription
+                       WHERE user_id = ? AND rss_link_id = ?"
+                       user-id rss-link-id])))
 
 (defn update-subscription [user-id id data]
   (with-mysql
     (update-values :user_subscription
                    ["user_id = ? AND id = ?" user-id id]
                    (select-keys data [:group_name :title]))))
+
+(defn fetch-user-subsurls [user-id]
+  (mysql-query ["SELECT url FROM rss_links r JOIN user_subscription s
+                 ON r.id = s.rss_link_id WHERE s.user_id = ?" user-id]))
 
 (defn delete-subscription [user-id id]
   (with-mysql
