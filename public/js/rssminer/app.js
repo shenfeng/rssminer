@@ -140,9 +140,11 @@
       }
     }
     var id = $feed.attr('data-id');
-    if(($feed.hasClass('dislike') && vote === -1)
-       || ($feed.hasClass('like') && vote === 1)) {
-      vote = 0;                 // reset
+    if(!$feed.hasClass('sys')) {
+      if(($feed.hasClass('dislike') && vote === -1)
+         || ($feed.hasClass('like') && vote === 1)) {
+        vote = 0;                 // reset
+      }
     }
     if(id) {
       ajax.jpost('/api/feeds/' + id  + '/vote', {vote: vote}, function () {
@@ -248,11 +250,11 @@
   }
 
   util.delegate_events($(document), {
-    'click .vote span.up': saveVoteUp,
-    'click #save-settings': saveSettings,
     'click #add-subscription': addSubscriptionHandler,
+    'click #save-settings': saveSettings,
+    'click .chooser li': toggleWelcome,
     'click .vote span.down': saveVotedown,
-    'click .chooser li': toggleWelcome
+    'click .vote span.up': saveVoteUp
   });
 
   window.RM = $.extend(window.RM, {

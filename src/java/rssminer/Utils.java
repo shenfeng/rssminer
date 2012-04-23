@@ -3,7 +3,6 @@ package rssminer;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 
 import me.shenfeng.http.client.HttpClient;
 import me.shenfeng.http.client.HttpClientConfig;
