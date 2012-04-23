@@ -34,6 +34,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import rssminer.sax.ExtractMainTextHandler;
+import clojure.lang.ISeq;
 
 public class Searcher {
 
@@ -195,14 +196,24 @@ public class Searcher {
         }
     }
 
-    public int feedIdToDocid(long feedId) throws CorruptIndexException,
+    public int[] feedID2DocIDs(ISeq seq) throws CorruptIndexException,
             IOException {
+        int count = seq.count();
+        int[] array = new int[count];
         IndexSearcher searcher = new IndexSearcher(getReader());
-        TermQuery query = new TermQuery(new Term(FEED_ID, feedId + ""));
-        TopDocs docs = searcher.search(query, 1);
-        if (docs.totalHits == 1) {
-            return docs.scoreDocs[0].doc;
+
+        for (int i = 0; i < count; i++) {
+            int l = ((Long) (seq.first())).intValue();
+            TermQuery query = new TermQuery(new Term(FEED_ID,
+                    Integer.toString(l)));
+            TopDocs docs = searcher.search(query, 1);
+            if (docs.totalHits == 1) {
+                array[i] = docs.scoreDocs[0].doc;
+            } else {
+                array[i] = -1; // return -1, not found
+            }
+            seq = seq.next();
         }
-        return -1;
+        return array;
     }
 }

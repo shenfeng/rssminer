@@ -78,15 +78,6 @@ public class Utils {
         }
     }
 
-    public static double[] pick(double[] prefs, double likeRatio,
-            double dislikeRatio) {
-        int likeIndex = prefs.length - (int) (prefs.length * likeRatio);
-        int disLikeIndex = (int) (prefs.length * dislikeRatio);
-        likeIndex = likeIndex == prefs.length ? prefs.length - 1 : likeIndex;
-        Arrays.sort(prefs);
-        return new double[] { prefs[likeIndex], prefs[disLikeIndex] };
-    }
-
     public static String extractText(String html) throws IOException,
             SAXException {
         Parser p = parser.get();
