@@ -16,11 +16,12 @@
 
 body {
     font: 400 14px/1.431 'Helvetica Neue',Helvetica,Arial,sans-serif;
-    background: transparent url('/imgs/bg-site.png') repeat center top;
+    /* background: transparent url('/imgs/bg-site.png') repeat center top; */
     color: #222;
     margin: 0;
     padding: 0;
 }
+img { border: 0;}
 a { outline: none; }
 table { border-collapse: collapse; border-spacing: 0; }
 
@@ -65,26 +66,16 @@ p {
 #main {
     margin: 0 auto;
     width: $page-width;
-    $left_width: 585px;
+    $left_width: 630px;
     .lfloat {
         padding: 0.5em 1em 1em 0;
         width: $left_width;
         border-right: 1px solid #E0E0E0;
-        img {
-            margin: 12px auto;
-            @include box-shadow(0, 0, 10px, #666);
-        }
     }
     .rfloat {
         padding-top: 1em;
         width: $page-width - $left_width - 30px;
         a { display: block; margin: 0 40px; }
-        img {
-            border: none;
-            margin: 12px 0 12px 12px;
-            &:hover { @include box-shadow(0, 0, 10px, #666); }
-            @include box-shadow(0, 0, 5px, #666);
-        }
         h3 {
             padding: 0.5em;
             margin: 0.5em;
@@ -136,8 +127,65 @@ p {
     .openid { width: 400px; margin: 4em auto 0; }
 }
 
-#imgs {
+/*
+  Slides container
+  Important:
+  Set the width of your slides container
+  Set to display none, prevents content flash
+  */
+
+$slide_img_width: 610px;
+$slide_img_height: 360px;
+
+.slides_container {
+    width: $slide_img_width;
+    height: $slide_img_height;
+    overflow:hidden;
+    position:relative;
+    display:none;
     img {
-        width: 500px;
+        width: $slide_img_width;
+        height: $slide_img_height;
+    }
+}
+
+#slides {
+    position: relative;
+    .next, .prev {
+        position:absolute;
+        top:147px;
+        left:-39px;
+        width:24px;
+        height:43px;
+        display:block;
+        z-index:101;
+        img {
+            width: 24px;
+            height: 43px;
+        }
+    }
+    .next { left: $slide_img_width + 10px; }
+}
+
+.pagination {
+    margin:26px auto 0;
+    width:100px;
+    li {
+        float:left;
+        margin:0 1px;
+        list-style:none;
+        &.current a {
+            background-position:0 -12px;
+        }
+        a {
+            display:block;
+            width:12px;
+            height:0;
+            padding-top:12px;
+            background-image:url(/imgs/pagination.png);
+            background-position:0 0;
+            float:left;
+            overflow:hidden;
+        }
     }
 }

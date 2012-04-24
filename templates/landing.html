@@ -45,7 +45,19 @@
             <p>Rssminer is an intelligent RSS reader. By
               machine learning, Rssminer highlight stories you
               like, and help discover stories you may like.</p>
-            <!-- <p>Take a look, <a href="/app">here</a></p> -->
+            <br>
+            <div id="slides">
+              <div class="slides_container">
+                <img src="/imgs/l/img1_s.png?{VERSION}">
+                <img src="/imgs/l/img2_s.png?{VERSION}">
+                <img src="/imgs/l/img3_s.png?{VERSION}">
+              </div>
+              <a href="#" class="prev">
+                <img src="/imgs/arrow-prev.png" alt="Arrow Prev"></a>
+              <a href="#" class="next">
+                <img src="/imgs/arrow-next.png" alt="Arrow Next"></a>
+            </div>
+            <div class="clearfix"></div>
             <h3>why another one? </h3>
             <p>There are so many good readers out there, like google
               reader. Why bother do another one?
@@ -74,20 +86,6 @@
             <img src="/imgs/not-available-greader.png?{VERSION}"
                  width="500"/>
             -->
-            <div id="imgs">
-              <a href="/imgs/l/scott.png?{VERSION}" class="g"
-                 title="group feeds, sort them by you preference">
-                <img src="/imgs/l/scott.png?{VERSION}"/>
-              </a>
-              <a href="/imgs/l/original.png?{VERSION}" class="g"
-                 title="read the original feed, instead of just abstract">
-                <img src="/imgs/l/original.png?{VERSION}"/>
-              </a>
-              <a href="/imgs/l/keyboard.png?{VERSION}" class="g"
-                 title="keyboard shortcut">
-                <img src="/imgs/l/keyboard.png?{VERSION}"/>
-              </a>
-            </div>
 
             <h3>Status</h3>
             <p>Not ready yet.
@@ -140,7 +138,7 @@
       </div> <!-- footer -->
     </div>   <!-- page-wrap -->
     <script src="/js/lib/jquery.js" data-profile="dev"></script>
-    <script src="/js/lib/jquery.colorbox.js" data-profile="dev"></script>
+    <script src="/js/lib/slides.min.jquery.js" data-profile="dev"></script>
     <script src="/js/rssminer/landing.js" data-profile="dev"></script>
     <script src="/js/landing-min.js?{VERSION}" data-profile="prod"></script>
   </body>

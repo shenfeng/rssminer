@@ -82,7 +82,7 @@ dashboard_jss = FileList['public/js/lib/jquery.js',
                          'public/js/rssminer/dashboard.js']
 
 landing_jss = FileList['public/js/lib/jquery.js',
-                       'public/js/lib/jquery.colorbox.js',
+                       'public/js/lib/slides.min.jquery.js',
                        'public/js/rssminer/landing.js']
 
 app_jss = FileList['public/js/lib/jquery-1.7.2.js',

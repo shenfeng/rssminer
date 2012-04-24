@@ -10,6 +10,9 @@ $selected_color: #E5ECF9;
     height: 8px;
 }
 
+img { border: 0; }
+a { outline: 0; }
+
 ::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.6);
     background: #ECECEC;
