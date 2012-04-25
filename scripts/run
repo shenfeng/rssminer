@@ -9,8 +9,6 @@ cd "${HOME}" && java \
     -Dsun.net.inetaddr.ttl=0 \
     -XX:+DisableExplicitGC \
     -XX:+TieredCompilation \
-    -XX:+UseCompressedOops \
-    -XX:+UseCompressedStrings \
     -XX:+UseConcMarkSweepGC \
     -XX:ParallelGCThreads=2 \
     -Xms386m -Xmx386m \

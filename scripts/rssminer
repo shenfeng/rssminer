@@ -11,7 +11,7 @@
 
 AS_USER="deploy"
 
-export JAVA_HOME=/usr/lib/jvm/java-6-sun
+export JAVA_HOME=/usr/lib/jdk1.7.0
 PATH=$JAVA_HOME/bin:/bin:/usr/bin:/sbin:/usr/sbin
 
 APP_NAME="rssminer"
@@ -23,14 +23,12 @@ INDEX_PATH=/var/rssminer/index
 
 JAVA=`which java`
 
-JVM_ARGS="-Dsun.jnu.encoding=UTF-8 \
+JVM_ARGS="-server -Dsun.jnu.encoding=UTF-8 \
     -Dfile.encoding=UTF-8 \
     -Dsun.net.inetaddr.ttl=0 \
     -Djava.net.preferIPv4Stack=true \
     -XX:+DisableExplicitGC \
     -XX:+UseConcMarkSweepGC \
-    -XX:+UseCompressedOops \
-    -XX:+UseCompressedStrings \
     -Xmx280m -Xms280m"
 
 JMX_OPTS="-Dcom.sun.management.jmxremote \

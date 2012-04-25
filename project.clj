@@ -27,7 +27,7 @@
   :repositories {"java.net" {:url "http://download.java.net/maven/2/"
                              :snapshots false}}
   :warn-on-reflection true
-  :javac-options {:source "1.6" :target "1.6" :debug "true" :fork "true"}
+  :javac-options {:source "1.7" :target "1.7" :debug "true" :fork "true"}
   :java-source-path "src/java"
   :aot [rssminer.main]
   :jvm-opts ["-Dclojure.compiler.disable-locals-clearing=true"
@@ -35,8 +35,6 @@
              "-Dsun.net.inetaddr.ttl=0"
              "-XX:+DisableExplicitGC"
              "-XX:+TieredCompilation"
-             "-XX:+UseCompressedOops"
-             "-XX:+UseCompressedStrings"
              "-XX:+UseConcMarkSweepGC"
              "-XX:ParallelGCThreads=2"
              "-Xms512m"
