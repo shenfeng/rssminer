@@ -16,9 +16,9 @@
                  [me.shenfeng.http/http-kit "1.0.0-SNAPSHOT"]
                  [mysql/mysql-connector-java "5.1.18"]
                  [commons-dbcp/commons-dbcp "1.4"]
-                 [org.apache.lucene/lucene-core "3.5.0"]
-                 [org.apache.lucene/lucene-queries "3.5.0"]
-                 [org.apache.lucene/lucene-analyzers "3.5.0"]
+                 [org.apache.lucene/lucene-core "3.6.0"]
+                 [org.apache.lucene/lucene-queries "3.6.0"]
+                 [org.apache.lucene/lucene-analyzers "3.6.0"]
                  [net.java.dev.rome/rome "1.0.0"]
                  [ring/ring-core "1.1.0-RC1"]
                  [me.shenfeng/async-http-client "1.0.3"]]
@@ -44,5 +44,5 @@
   :dev-dependencies [[swank-clojure "1.4.0"]
                      [junit/junit "4.8.2"]
                      [commons-lang "2.3"]
-                     [com.google.guava/guava "10.0"]
-                     [org.apache.lucene/lucene-spellchecker "3.4.0"]])
+                     [com.google.guava/guava "11.0.2"]
+                     [org.apache.lucene/lucene-spellchecker "3.6.0"]])
