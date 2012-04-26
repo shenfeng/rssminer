@@ -1,23 +1,24 @@
 package rssminer.async;
 
-import static me.shenfeng.Utils.bodyStr;
+import static me.shenfeng.http.HttpUtils.LOCATION;
+import static rssminer.Utils.CLIENT;
+import static rssminer.Utils.extractFaviconUrl;
 
 import java.net.Proxy;
 import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
-import me.shenfeng.http.HttpClient;
-import me.shenfeng.http.HttpClientConstant;
-import me.shenfeng.http.HttpResponseFuture;
+import me.shenfeng.http.DynamicBytes;
+import me.shenfeng.http.client.BinaryRespListener;
+import me.shenfeng.http.client.IBinaryHandler;
+import me.shenfeng.http.client.ITextHandler;
+import me.shenfeng.http.client.TextRespListener;
 
-import org.jboss.netty.handler.codec.http.HttpHeaders.Names;
-import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import rssminer.Utils;
 import clojure.lang.IFn;
 
 public class FaviconFuture extends AbstractFuture {
@@ -25,79 +26,97 @@ public class FaviconFuture extends AbstractFuture {
     static Logger logger = LoggerFactory.getLogger(FaviconFuture.class);
 
     private final String hostname;
-    static final Map<String, Object> EMPTY = new TreeMap<String, Object>();
-    static final Map<String, Object> IMG_HEADER = new TreeMap<String, Object>();
-    static {
-        IMG_HEADER.put(Names.ACCEPT_ENCODING, null);
-    }
 
-    class Handler implements Runnable {
-        private HttpResponseFuture f;
-        private boolean img;
-        private URI base;
+    private class FaviconHandler implements IBinaryHandler {
+        private final URI base;
 
-        public Handler(HttpResponseFuture f, URI base, boolean img) {
-            this.f = f;
-            this.img = img;
-            this.base = base;
+        public FaviconHandler(URI u) {
+            this.base = u;
         }
 
-        public void run() {
-            try {
-                HttpResponse r = f.get();
-                int code = r.getStatus().getCode();
-                if (code == 301 || code == 302) {
-                    String loc = r.getHeader(Names.LOCATION);
-                    if (loc != null) {
-                        doIt(base.resolve(loc).toString(), img);
-                    } else {
-                        logger.debug("null location in header: {}", base);
-                        done(HttpClientConstant.UNKOWN_ERROR);
-                    }
-
-                } else if (img) {
-                    done(r); // is image, not 301, 302, OK, get it
+        public void onSuccess(int status, Map<String, String> headers,
+                DynamicBytes bytes) {
+            if (status == 301 || status == 302) {
+                String loc = headers.get(LOCATION);
+                if (loc != null) {
+                    doIt(base.resolve(loc), true);
                 } else {
-                    if (code == 200) {
-                        String url = Utils.extractFaviconUrl(bodyStr(r),
-                                hostname);
-                        if (url != null) {
-                            doIt(url, true); // get url, do it
-                        } else {
-                            doIt(hostname + "/favicon.ico", true); // default
-                        }
-                    } else {
-                        logger.debug("{}, status is {}", base, r.getStatus());
-                        done(r); // error, accept
-                    }
+                    fail();
                 }
-            } catch (Exception e) {
-                logger.trace("{} : {}", base, e);
-                done(HttpClientConstant.UNKOWN_ERROR);
+            } else {
+                done(status, headers,
+                        Arrays.copyOf(bytes.get(), bytes.length()));
             }
         }
-    }
 
-    private void doIt(String uri, boolean img) throws URISyntaxException {
-        if (uri == null)
-            throw new NullPointerException("url can not be null");
-        if (++retryCount < MAX_RETRY) {
-            URI u = new URI(uri);
-            HttpResponseFuture f = client.execGet(new URI(uri),
-                    img ? IMG_HEADER : EMPTY, proxy);
-            f.addListener(new Handler(f, u, img));
-        } else {
-            done(HttpClientConstant.UNKOWN_ERROR);
+        public void onThrowable(Throwable t) {
+            fail();
         }
     }
 
-    public FaviconFuture(HttpClient client, String hostname, Proxy proxy,
-            IFn callback) throws URISyntaxException {
-        this.hostname = "http://" + hostname;
-        this.client = client;
-        this.proxy = proxy;
-        this.callback = callback;
-        doIt(this.hostname, false);
+    private class WebPageHandler implements ITextHandler {
+
+        private final URI base;
+
+        public WebPageHandler(URI u) {
+            this.base = u;
+        }
+
+        public void onSuccess(int status, Map<String, String> headers,
+                String body) {
+            if (status == 301 || status == 302) {
+                String loc = headers.get(LOCATION);
+                if (loc != null) {
+                    doIt(base.resolve(loc), true);
+                } else {
+                    fail();
+                }
+            } else if (status == 200) {
+                try {
+                    URI uri = extractFaviconUrl(body, base);
+                    if (uri == null) {
+                        uri = new URI(base.getScheme() + "://"
+                                + base.getHost() + "/favicon.ico");
+                    }
+                    doIt(uri, true);
+                } catch (Exception e) {
+                    onThrowable(e);
+                }
+            }
+        }
+
+        public void onThrowable(Throwable t) {
+            fail();
+        }
     }
 
+    private void doIt(URI u, boolean img) {
+        if (++retryCount < MAX_RETRY) {
+            try {
+                TreeMap<String, String> header = new TreeMap<String, String>();
+                if (img) {
+                    CLIENT.get(u, header, proxy, new BinaryRespListener(
+                            new FaviconHandler(u)));
+                } else {
+                    CLIENT.get(u, header, proxy, new TextRespListener(
+                            new WebPageHandler(u)));
+                }
+            } catch (Exception e) {
+                fail();
+            }
+        } else {
+            fail();
+        }
+    }
+
+    public FaviconFuture(String hostname, Proxy proxy, IFn callback) {
+        this.hostname = "http://" + hostname;
+        this.proxy = proxy;
+        this.callback = callback;
+        try {
+            doIt(new URI(this.hostname), false);
+        } catch (Exception e) {
+            fail();
+        }
+    }
 }

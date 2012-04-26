@@ -7,14 +7,14 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class ExtractFaviconHandler extends DefaultHandler {
-    String url;
-    private String urlbase;
+    URI url;
+    private URI urlbase;
 
-    public ExtractFaviconHandler(String urlbase) {
+    public ExtractFaviconHandler(URI urlbase) {
         this.urlbase = urlbase;
     }
 
-    public String get() {
+    public URI get() {
         return url;
     }
 
@@ -27,7 +27,7 @@ public class ExtractFaviconHandler extends DefaultHandler {
                 if (val.equals("icon") || val.indexOf(" icon") != -1) {
                     String v = attributes.getValue("href");
                     try {
-                        url = new URI(urlbase).resolve(v).toString();
+                        url = urlbase.resolve(v);
                     } catch (Exception ignore) {
                     }
                 }

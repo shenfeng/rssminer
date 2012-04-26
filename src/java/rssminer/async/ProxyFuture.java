@@ -1,104 +1,102 @@
 package rssminer.async;
 
+import static me.shenfeng.http.HttpUtils.CACHE_CONTROL;
+import static me.shenfeng.http.HttpUtils.CONTENT_TYPE;
+import static me.shenfeng.http.HttpUtils.LOCATION;
+import static rssminer.Utils.CLIENT;
+
 import java.io.ByteArrayInputStream;
 import java.net.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.TreeMap;
 
-import me.shenfeng.http.HttpClient;
-import me.shenfeng.http.HttpClientConstant;
-import me.shenfeng.http.HttpResponseFuture;
+import me.shenfeng.http.DynamicBytes;
+import me.shenfeng.http.client.BinaryRespListener;
+import me.shenfeng.http.client.IBinaryHandler;
 
-import org.jboss.netty.handler.codec.http.HttpHeaders.Names;
-import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import clojure.lang.IFn;
-import clojure.lang.Keyword;
 
 public class ProxyFuture extends AbstractFuture {
-    static final Keyword resp_k = Keyword.intern("resp");
-    static final Keyword status = Keyword.intern("status");
-    static final Keyword header = Keyword.intern("headers");
-    static final Keyword body = Keyword.intern("body");
-    static final Keyword final_link_k = Keyword.intern("final-link");
 
     static Logger logger = LoggerFactory.getLogger(ProxyFuture.class);
 
-    private final Map<String, Object> headers;
-    private String finalLink;
+    private final Map<String, String> header;
 
-    public ProxyFuture(HttpClient client, String uri,
-            Map<String, Object> headers, Proxy proxy, IFn callback)
-            throws URISyntaxException {
-        this.client = client;
-        this.proxy = proxy;
-        this.headers = headers;
-        this.callback = callback;
-        doIt(uri);
-    }
+    private class ProxyHandler implements IBinaryHandler {
+        private final URI base;
 
-    private void doIt(String uri) throws URISyntaxException {
-        finalLink = uri;
-        if (uri == null)
-            throw new NullPointerException("url can not be null");
-        if (++retryCount < MAX_RETRY) {
-            URI u = new URI(uri);
-            HttpResponseFuture f = client.execGet(u, headers, proxy);
-            f.addListener(new Handler(f, u));
-        } else {
-            finish(HttpClientConstant.UNKOWN_ERROR);
-        }
-    }
-
-    private void finish(HttpResponse resp) {
-        resp.removeHeader(Names.SET_COOKIE); // no cookie need
-        resp.removeHeader("Server");
-        Map<String, String> headers = new TreeMap<String, String>();
-        for (String name : resp.getHeaderNames()) {
-            headers.put(name, resp.getHeader(name));
-        }
-        headers.put("Cache-Control", "public, max-age=604800");
-
-        Map<Keyword, Object> r = new TreeMap<Keyword, Object>();
-        r.put(header, headers);
-        r.put(status, resp.getStatus().getCode());
-        r.put(body, new ByteArrayInputStream(resp.getContent().array()));
-        r.put(final_link_k, finalLink);
-        done(r);
-    }
-
-    class Handler implements Runnable {
-        private HttpResponseFuture f;
-        private URI base;
-
-        public Handler(HttpResponseFuture f, URI base) {
-            this.f = f;
-            this.base = base;
+        public ProxyHandler(URI u) {
+            this.base = u;
         }
 
-        public void run() {
-            try {
-                HttpResponse r = f.get();
-                int code = r.getStatus().getCode();
-                if (code == 301 || code == 302) { // handle redirect
-                    String loc = r.getHeader(Names.LOCATION);
-                    if (loc != null) {
-                        doIt(base.resolve(loc).toString());
-                    } else {
-                        logger.debug("null location in header");
-                        finish(HttpClientConstant.UNKOWN_ERROR);
-                    }
-                } else {
-                    finish(r);
-                }
-            } catch (Exception e) {
-                logger.trace("{} : {}", base, e);
-                finish(HttpClientConstant.UNKOWN_ERROR);
+        private Map<String, String> transformHeader(Map<String, String> header) {
+            Map<String, String> h = new TreeMap<String, String>();
+            String ct = header.get(CONTENT_TYPE);
+            if (ct != null) {
+                h.put(CONTENT_TYPE, ct);
             }
-        };
+
+            String cache = header.get(CACHE_CONTROL);
+            if (cache != null) {
+                h.put(CACHE_CONTROL, cache);
+            } else {
+                h.put(CACHE_CONTROL, "public, max-age=604800");
+            }
+
+            return h;
+        }
+
+        public void onSuccess(int status, Map<String, String> headers,
+                DynamicBytes bytes) {
+            if (status == 301 || status == 302) {
+                String loc = headers.get(LOCATION);
+                if (loc != null) {
+                    doIt(base.resolve(loc));
+                } else {
+                    fail();
+                }
+            } else {
+                ByteArrayInputStream body = new ByteArrayInputStream(
+                        bytes.get(), 0, bytes.length());
+                done(status, transformHeader(headers), body);
+            }
+        }
+
+        public void onThrowable(Throwable t) {
+            fail();
+        }
+    }
+
+    public ProxyFuture(String uri, Map<String, String> headers, Proxy proxy,
+            IFn callback) {
+        this.proxy = proxy;
+        // defensive copy
+        this.header = new TreeMap<String, String>(headers);
+        this.callback = callback;
+        try {
+            doIt(new URI(uri));
+        } catch (URISyntaxException e) {
+            fail();
+        }
+    }
+
+    private void doIt(URI uri) {
+        // finalLink = uri;
+        if (++retryCount < MAX_RETRY) {
+            try {
+                CLIENT.get(uri, header, proxy, new BinaryRespListener(
+                        new ProxyHandler(uri)));
+            } catch (UnknownHostException e) {
+                fail();
+            }
+        } else {
+            fail();
+        }
     }
 }

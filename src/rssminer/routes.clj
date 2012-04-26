@@ -7,8 +7,6 @@
                          [multipart-params :only [wrap-multipart-params]]
                          [file :only [wrap-file]]
                          [session :only [wrap-session]])
-        (rssminer.handlers [proxy :only [handle-proxy]]
-                           [favicon :only [get-favicon]])
         (rssminer [middleware :only [wrap-auth wrap-cache-header
                                      wrap-reload-in-dev wrap-failsafe
                                      wrap-request-logging-in-dev
@@ -19,6 +17,7 @@
             [rssminer.import :as import]
             (rssminer.handlers [reader :as reader]
                                [subscriptions :as subs]
+                               [proxy :as proxy]
                                [users :as user]
                                [dashboard :as dashboard]
                                [feeds :as feed]))
@@ -59,9 +58,9 @@
 
 (defroutes all-routes
   (GET "/" [] reader/landing-page)
-  (GET "/p" []  handle-proxy)
-  (GET "/fav" [] get-favicon)
-  (GET "/f/o/:id" [] feed/proxy-orginal)
+  (GET "/fav" [] proxy/get-favicon)
+  (GET "/p" []  proxy/handle-proxy)
+  (GET "/f/o/:id" [] proxy/proxy-feed)
   (GET "/a" [] reader/app-page)
   (JGET "/stat" [] dashboard/get-stat)
   (context "/dashboard" []

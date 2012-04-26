@@ -2,6 +2,7 @@ package rssminer;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URI;
 import java.net.URISyntaxException;
 
 import me.shenfeng.http.client.HttpClient;
@@ -42,7 +43,7 @@ public class Utils {
         }
     };
 
-    public static String extractFaviconUrl(String html, String base)
+    public static URI extractFaviconUrl(String html, URI base)
             throws IOException, SAXException {
         Parser p = parser.get();
         ExtractFaviconHandler h = new ExtractFaviconHandler(base);

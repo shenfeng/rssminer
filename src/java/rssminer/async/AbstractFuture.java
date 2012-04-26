@@ -1,8 +1,8 @@
 package rssminer.async;
 
 import java.net.Proxy;
+import java.util.Map;
 
-import me.shenfeng.http.HttpClient;
 import me.shenfeng.http.server.IListenableFuture;
 import clojure.lang.IFn;
 
@@ -11,11 +11,9 @@ public class AbstractFuture implements IListenableFuture {
     static final int MAX_RETRY = 5;
     private volatile Runnable listener;
     protected IFn callback;
-    protected volatile Object resp;
+    private volatile Object resp;
     protected Proxy proxy;
-
     protected volatile int retryCount = 0;
-    protected HttpClient client;
 
     public void addListener(Runnable listener) {
         if (this.listener != null)
@@ -24,13 +22,18 @@ public class AbstractFuture implements IListenableFuture {
     }
 
     public Object get() {
-        return callback.invoke(resp);
+        return resp;
     }
 
-    protected void done(Object r) {
-        resp = r;
+    protected void done(int status, Map<String, String> headers, Object bytes) {
+        // resp is is what return to http server;
+        resp = callback.invoke(status, headers, bytes);
         if (listener != null) {
-            listener.run();
+            listener.run(); // listener should call get()
         }
+    }
+
+    protected void fail() {
+        done(404, null, null);
     }
 }
