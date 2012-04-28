@@ -23,22 +23,6 @@
                                [feeds :as feed]))
   (:import clojure.lang.Namespace))
 
-(let [views-ns '[rssminer.views.reader
-                 rssminer.views.layouts]
-      all-rss-ns (filter
-                  #(re-find #"^rssminer" (str %)) (all-ns))
-      ns-to-path (fn [clj-ns]
-                   (str
-                    (str/replace
-                     (str/replace (str clj-ns) #"-" "_")
-                     #"\." "/") ".clj"))]
-  (def reload-meta
-    (apply merge (conj
-                  (map (fn [clj-ns]
-                         {(str "src/" (ns-to-path clj-ns))
-                          [(.getName ^Namespace clj-ns)]}) all-rss-ns)
-                  {"src/templates" views-ns}))))
-
 (defroutes api-routes
   (context "/subs" []
            (JGET "/" [] subs/list-subscriptions)
@@ -92,5 +76,5 @@
       wrap-keyword-params
       wrap-multipart-params
       wrap-params
-      (wrap-reload-in-dev reload-meta)
+      wrap-reload-in-dev
       wrap-failsafe))

@@ -5,8 +5,10 @@
         [compojure.core :only [GET POST DELETE PUT]]
         [clojure.data.json :only [json-str]])
   (:require [rssminer.config :as conf]
+            [clojure.string :as str]
             [clojure.data.json :as json])
-  (:import java.io.File))
+  (:import java.io.File
+           clojure.lang.Namespace))
 
 (defn wrap-auth [handler]
   (fn [req]
@@ -78,20 +80,49 @@
         resp))
     handler))
 
-(defn wrap-reload-in-dev [handler reload-meta]
+
+
+(defmacro JPOST [path args handler]
+  `(POST ~path ~args (wrap-json ~handler)))
+
+(defmacro JPUT [path args handler]
+  `(PUT ~path ~args (wrap-json ~handler)))
+
+(defmacro JGET [path args handler]
+  `(GET ~path ~args (wrap-json ~handler)))
+
+(defmacro JDELETE [path args handler]
+  `(DELETE ~path ~args (wrap-json ~handler)))
+
+(defn- ns-to-path [clj-ns]
+  (str (str/replace (str/replace (str clj-ns) #"-" "_")
+                    #"\." "/") ".clj"))
+
+(defn- read-mtime [dir]
+  (reduce
+   (fn [totalTime file]
+     (+ totalTime
+        (.lastModified ^File file))) 0 (file-seq dir)))
+
+(defn- file-mtime [e]
+  (let [file (File. ^String (key e))]
+    {file {:ns (val e)
+           :mtime (read-mtime file)}}))
+
+(defn wrap-reload-in-dev [handler]
   (if (conf/in-dev?)
-    (let [read-mtime (fn [dir]
-                       (reduce
-                        (fn [totalTime file]
-                          (+ totalTime
-                             (.lastModified ^File file))) 0 (file-seq dir)))
-          map-fn (fn [e]
-                   (let [file (File. ^String (key e))]
-                     {file {:ns (val e)
-                            :mtime (read-mtime file)}}))
+    (let [reload-meta (apply merge
+                             (conj
+                              (map (fn [clj-ns]
+                                     {(str "src/" (ns-to-path clj-ns))
+                                      [(.getName ^Namespace clj-ns)]})
+                                   (filter
+                                    #(re-find #"^rssminer" (str %)) (all-ns)))
+                              {"src/templates" '[rssminer.views.reader
+                                                 rssminer.views.layouts]}))
           data (atom
                 (apply merge
-                       (map map-fn reload-meta)))]
+                       (map file-mtime reload-meta)))]
       (fn [req]
         (doseq [d @data]
           (let [file (key d)
@@ -105,15 +136,3 @@
                                         :mtime mtime})))))
         (handler req)))
     handler))
-
-(defmacro JPOST [path args handler]
-  `(POST ~path ~args (wrap-json ~handler)))
-
-(defmacro JPUT [path args handler]
-  `(PUT ~path ~args (wrap-json ~handler)))
-
-(defmacro JGET [path args handler]
-  `(GET ~path ~args (wrap-json ~handler)))
-
-(defmacro JDELETE [path args handler]
-  `(DELETE ~path ~args (wrap-json ~handler)))
