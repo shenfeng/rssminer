@@ -12,6 +12,7 @@ rm classes/templates/tmpls/ -r
 cd classes
 jar -cf ../rssminer.jar *
 cd $TARGET_DIR
+rake prepare_prod
 
 java -Dsun.jnu.encoding=UTF-8 \
     -Dfile.encoding=UTF-8 \
@@ -22,4 +23,4 @@ java -Dsun.jnu.encoding=UTF-8 \
     --index-path /var/rssminer/index \
     --profile prod \
     --worker 4 \
-    --port 8101 \
+    --port 9090 \

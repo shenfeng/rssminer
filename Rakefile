@@ -71,8 +71,7 @@ task :deps => ["thirdparty/#{jscompiler}",
                "thirdparty/#{luke}",
                "thirdparty/#{htmlcompressor}"]
 
-dashboard_jss = FileList['public/js/lib/jquery.js',
-                         'public/js/lib/jquery.flot.js',
+dashboard_jss = FileList['public/js/lib/jquery.flot.js',
                          'public/js/lib/jquery.flot.pie.js',
                          'public/js/lib/underscore.js',
                          'public/js/lib/mustache.js',
@@ -81,12 +80,10 @@ dashboard_jss = FileList['public/js/lib/jquery.js',
                          'public/js/rssminer/plot.js',
                          'public/js/rssminer/dashboard.js']
 
-landing_jss = FileList['public/js/lib/jquery.js',
-                       'public/js/lib/slides.min.jquery.js',
+landing_jss = FileList['public/js/lib/slides.min.jquery.js',
                        'public/js/rssminer/landing.js']
 
-app_jss = FileList['public/js/lib/jquery-1.7.2.js',
-                   'public/js/lib/jquery-ui-1.8.18.custom.js',
+app_jss = FileList['public/js/lib/jquery-ui-1.8.18.custom.js',
                    'public/js/lib/underscore.js',
                    'public/js/lib/mustache.js',
                    'public/js/gen/app-tmpls.js',
