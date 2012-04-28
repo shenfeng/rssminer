@@ -17,11 +17,9 @@ java -Dsun.jnu.encoding=UTF-8 \
     -Dfile.encoding=UTF-8 \
     -Dsun.net.inetaddr.ttl=0 \
     -Djava.net.preferIPv4Stack=true \
-    -XX:+UseCompressedOops \
-    -XX:+UseCompressedStrings \
     -Xmx256m -Xms256m \
     -cp rssminer.jar:lib/* rssminer.main \
     --index-path /var/rssminer/index \
     --profile prod \
-    --worker 1 \
+    --worker 4 \
     --port 8101 \
