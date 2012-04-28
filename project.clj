@@ -5,7 +5,7 @@
                  [org.clojure/java.jdbc "0.1.4"]
                  [org.clojure/tools.cli "0.2.1"]
                  [org.clojure/tools.logging "0.2.3"]
-                 [ch.qos.logback/logback-classic "0.9.30"]
+                 [ch.qos.logback/logback-classic "1.0.1"]
                  [javax.mail/mail "1.4.4"]
                  [org.apache.commons/commons-email "1.2"]
                  [compojure "1.0.2"]

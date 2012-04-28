@@ -47,7 +47,6 @@
          :proxy (if proxy socks-proxy Proxy/NO_PROXY))
   (reset! server (run-server (app) {:port port
                                     :thread worker}))
-  (info "Rssminer server start at port" port)
   (use-index-writer! index-path)
   (when fetcher (start-fetcher)))
 
@@ -69,7 +68,7 @@
              ["--db-user" "Mysql Database user name" :default "feng"]
              ["--index-path" "Path to store lucene index"
               :default "/var/rssminer/index"]
-             ["--[no-]fetcher" "Start rss fetcher" :default true]
+             ["--[no-]fetcher" "Start rss fetcher" :default false]
              ["--[no-]proxy" "Enable Socks proxy" :default true]
              ["--[no-]help" "Print this help"])]
     (when (:help options) (println banner) (System/exit 0))

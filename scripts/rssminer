@@ -41,8 +41,8 @@ APP_ARGS="--index-path $INDEX_PATH \
     --redis-host 127.0.0.1 \
     --no-proxy \
     --fetcher \
-    --static-server http://s.rss-miner.com \
-    --proxy-server http://p.rss-miner.com \
+    --static-server //s.rss-miner.com \
+    --proxy-server //p.rss-miner.com \
     --db-url jdbc:mysql://localhost/rssminer \
     --fetcher-queue 10 \
     --worker 2 \
