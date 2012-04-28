@@ -8,20 +8,18 @@
                          [file :only [wrap-file]]
                          [session :only [wrap-session]])
         (rssminer [middleware :only [wrap-auth wrap-cache-header
-                                     wrap-reload-in-dev wrap-failsafe
+                                     wrap-failsafe
                                      wrap-request-logging-in-dev
                                      JPOST JPUT JDELETE JGET]]
                   [redis :only [redis-store]]))
-  (:require [clojure.string :as str]
-            [compojure.route :as route]
+  (:require [compojure.route :as route]
             [rssminer.import :as import]
             (rssminer.handlers [reader :as reader]
                                [subscriptions :as subs]
                                [proxy :as proxy]
                                [users :as user]
                                [dashboard :as dashboard]
-                               [feeds :as feed]))
-  (:import clojure.lang.Namespace))
+                               [feeds :as feed])))
 
 (defroutes api-routes
   (context "/subs" []
@@ -76,5 +74,4 @@
       wrap-keyword-params
       wrap-multipart-params
       wrap-params
-      wrap-reload-in-dev
       wrap-failsafe))
