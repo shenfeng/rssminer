@@ -7,6 +7,7 @@ import static rssminer.Utils.CLIENT;
 
 import java.net.URI;
 import java.net.UnknownHostException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 import me.shenfeng.http.client.ITextHandler;
 import me.shenfeng.http.client.TextRespListener;
@@ -120,9 +122,10 @@ public class HttpTaskRunner {
 
     private final int mBulkCheckInterval;
     private final int mBlockingGetTimeout;
+    private final long DUMP_STATS_INTERVAL = TimeUnit.HOURS.toMillis(6);
     private long lastBulkCheckTs = 0;
 
-    private final ConcurrentHashMap<Object, Integer> mStat;
+    private final ConcurrentHashMap<Object, Object> mStat;
 
     public HttpTaskRunner(HttpTaskRunnerConf conf) {
         mBlockingGetTimeout = conf.blockingTimeOut;
@@ -138,21 +141,21 @@ public class HttpTaskRunner {
         // prevent too many concurrent HTTP request
         mConcurrent = new Semaphore(conf.queueSize);
         mName = conf.name;
-        mStat = new ConcurrentHashMap<Object, Integer>(24, 0.75f, 1);
-        mStat.put(1200, conf.queueSize);
+        mStat = new ConcurrentHashMap<Object, Object>(24, 0.75f, 2);
+        mStat.put("QueueSize", conf.queueSize);
     }
 
-    private Map<Object, Integer> computeStat() {
+    private Map<Object, Object> computeStat() {
         mStat.put("Total", mCounter);
         double m = (double) (currentTimeMillis() - startTime) / 60000;
-        mStat.put("Per Miniute", (int) (mCounter / m));
-        mStat.put("Queue permits", mConcurrent.availablePermits());
-        mStat.put("Start time", (int) (startTime / 1000));
+        mStat.put("PerMiniute", (int) (mCounter / m));
+        mStat.put("QueuePermits", mConcurrent.availablePermits());
+        mStat.put("StartTime", new Date(startTime));
         return mStat;
     }
 
-    public Map<Object, Integer> getStat() {
-        return new HashMap<Object, Integer>(computeStat());
+    public Map<Object, Object> getStat() {
+        return new HashMap<Object, Object>(computeStat());
     }
 
     public boolean isRunning() {
@@ -160,10 +163,12 @@ public class HttpTaskRunner {
     }
 
     private void recordStat(int code) {
-        Integer c = mStat.get(code);
-        if (c == null)
-            c = 0;
-        mStat.put(code, ++c);
+        Object c = mStat.get(code);
+        Integer count = 0;
+        if (c instanceof Integer) {
+            count = ((Integer) c).intValue() + 1;
+        }
+        mStat.put(code, count);
     }
 
     public void start() {
@@ -189,14 +194,18 @@ public class HttpTaskRunner {
 
     void tryFillTask() {
         while (mTaskQueue.isEmpty()) {
+            long currentTime = currentTimeMillis();
+            if (lastBulkCheckTs + DUMP_STATS_INTERVAL < currentTime) {
+                logger.info(toString());
+            }
             // first bulk fetch, since it fast, then blocking get
-            if (lastBulkCheckTs + mBulkCheckInterval < currentTimeMillis()) {
+            if (lastBulkCheckTs + mBulkCheckInterval < currentTime) {
                 List<IHttpTask> tasks = mBulkProvider.getTasks();
                 if (tasks != null && tasks.size() != 0) {
                     for (IHttpTask t : tasks) {
                         mTaskQueue.offer(t);
                     }
-                    lastBulkCheckTs = currentTimeMillis();
+                    lastBulkCheckTs = currentTime;
                     break;
                 }
             }
