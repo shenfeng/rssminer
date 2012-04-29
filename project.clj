@@ -8,7 +8,7 @@
                  [ch.qos.logback/logback-classic "1.0.1"]
                  [javax.mail/mail "1.4.4"]
                  [org.apache.commons/commons-email "1.2"]
-                 [compojure "1.0.2"]
+                 [compojure "1.0.3"]
                  [enlive "1.0.0"]
                  [commons-io "2.1"]
                  [redis.clients/jedis "2.0.0"]
@@ -20,7 +20,7 @@
                  [org.apache.lucene/lucene-queries "3.6.0"]
                  [org.apache.lucene/lucene-analyzers "3.6.0"]
                  [net.java.dev.rome/rome "1.0.0"]
-                 [ring/ring-core "1.1.0-RC1"]
+                 [ring/ring-core "1.1.0"]
                  [me.shenfeng/async-http-client "1.0.3"]]
   :dev-resources-path "/usr/lib/jvm/java-6-sun/lib/tools.jar:/usr/lib/jvm/java-6-sun/lib/src.zip"
   :exclusions [javax.activation/activation]
