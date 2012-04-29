@@ -177,7 +177,16 @@ task :mysql_dev do
   sh 'sudo chown mysql:mysql /tmp/mysql -R'
   sh 'sudo cp conf/my-dev.cnf /etc/mysql/my.cnf'
   sh 'sudo /etc/init.d/mysql start'
-  sh 'scripts/admin -d rssminer -u feng init-db'
+  sh 'rake db:restore_db'
+  # sh 'scripts/admin -d rssminer -u feng init-db'
+end
+
+desc "update dev mysql config file, restart mysql"
+task :mysql_prod do
+  sh 'sudo /etc/init.d/mysql stop'
+  sh 'sudo cp conf/my.cnf /etc/mysql/my.cnf'
+  sh 'sudo /etc/init.d/mysql start'
+  sh 'rake db:restore_db'
 end
 
 desc 'Compress html using htmlcompressor, save compressed to src/templates'

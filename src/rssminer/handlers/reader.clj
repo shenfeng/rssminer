@@ -1,20 +1,26 @@
 (ns rssminer.handlers.reader
   (:use (rssminer [util :only [session-get to-int time-since]]
                   [time :only [now-seconds]]
-                  [classify :only [re-compute-sysvote]]
+                  [database :only [mysql-db-factory]]
                   [search :only [search*]])
         [ring.util.response :only [redirect]]
         [rssminer.db.subscription :only [fetch-user-subs]]
         [clojure.data.json :only [read-json]]
         [rssminer.db.user :only [fetch-conf]])
   (:require [rssminer.views.reader :as view]
-            [rssminer.config :as cfg]))
+            [rssminer.config :as cfg])
+  (:import rssminer.classfier.UserSysVote))
 
 (defn landing-page [req]
   (view/landing-page))
 
 (defn- recompute-if-needed [updated user ts]
-  (or (and updated (re-compute-sysvote (:id user) ts))
+  (or (and updated (let [v (UserSysVote. (:id user)
+                                         ts
+                                         (:ds @mysql-db-factory))
+                         result (.reCompute v)]
+                     (when result
+                       [(aget result 0) (aget result 1)])))
       (let [like (-> user :conf :like_score)
             neutral (-> user :conf :neutral_score)]
         (when (and like neutral)

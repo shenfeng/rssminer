@@ -1,11 +1,12 @@
 (ns rssminer.classify-test
   (:use clojure.test
-        rssminer.classify
         [rssminer.db.feed :only [save-feeds]]
+        [rssminer.database :only [mysql-db-factory]]
         [rssminer.db.util :only [mysql-query mysql-insert-and-return]]
         (rssminer [test-common :only [user1 app-fixture mk-feeds-fixtrue]]
                   [time :only [now-seconds]]))
-  (:require [rssminer.db.user-feed :as uf]))
+  (:require [rssminer.db.user-feed :as uf])
+  (:import rssminer.classfier.UserSysVote))
 
 (defn prepare-insert-feeds [test-fn]
   (let [rss-id (-> (mysql-query ["SELECT rss_link_id FROM user_subscription"])
@@ -33,13 +34,19 @@
               (mk-feeds-fixtrue "test/scottgu-atom.xml")
               prepare-insert-feeds)
 
+(defn- re-compute-sysvote [user-id]
+  (let [v (UserSysVote. user-id
+                        0
+                        (:ds @mysql-db-factory))]
+    (.reCompute v)))
+
 (deftest test-recompute-sysvote
   (let [u-id (:id user1)
         feed-ids (map :id (mysql-query ["select id from feeds"]))]
     (uf/insert-user-vote u-id (first feed-ids) 1)
-    (is (not (re-build-model u-id)))
+    (is (not (re-compute-sysvote u-id)))
     (uf/insert-user-vote u-id (second feed-ids) -1)
-    (is (re-build-model u-id))
-    (re-compute-sysvote u-id 0)
+    (is (re-compute-sysvote u-id))
+    (re-compute-sysvote u-id)
     (let [all (mysql-query ["select * from user_feed"])]
       (is (= 4 (count all))))))

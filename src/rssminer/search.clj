@@ -17,7 +17,7 @@
   (close-global-index-writer!)
   (let [path (if (= path :RAM) "RAM" path)]
     (info "use index path" path)
-    (reset! searcher (Searcher. path))))
+    (reset! searcher (Searcher/initGlobalSearcher path))))
 
 (defn fetch-feeds [feed-ids user-id]
   ;; TODO use para user-id

@@ -1,5 +1,7 @@
 package rssminer.classfier;
 
+import static rssminer.Searcher.SEARCHER;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +17,6 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.TermFreqVector;
 
 import rssminer.Searcher;
-import clojure.lang.ISeq;
 
 class Holder implements Comparable<Holder> {
 
@@ -110,12 +111,11 @@ public class NaiveBayes {
         return new double[] { prefs[likeIndex], prefs[disLikeIndex] };
     }
 
-    public static double[] classify(Searcher searcher,
-            Map<String, Map<String, Double>> model, ISeq feeds)
-            throws CorruptIndexException, IOException {
-        int[] ids = searcher.feedID2DocIDs(feeds);
+    public static double[] classify(Map<String, Map<String, Double>> model,
+            List<Integer> feeds) throws CorruptIndexException, IOException {
+        int[] ids = SEARCHER.feedID2DocIDs(feeds);
         double[] result = new double[ids.length];
-        IndexReader reader = searcher.getReader();
+        IndexReader reader = SEARCHER.getReader();
         for (int i = 0; i < ids.length; i++) {
             int id = ids[i];
             if (id != -1) {
@@ -127,12 +127,11 @@ public class NaiveBayes {
         return result;
     }
 
-    public static Map<String, Map<String, Double>> train(Searcher searcher,
-            ISeq like, ISeq dislike) throws CorruptIndexException,
-            IOException {
-        int[] likes = searcher.feedID2DocIDs(like);
-        int[] dislikes = searcher.feedID2DocIDs(dislike);
-        IndexReader reader = searcher.getReader();
+    public static Map<String, Map<String, Double>> train(List<Integer> like,
+            List<Integer> dislike) throws CorruptIndexException, IOException {
+        int[] likes = SEARCHER.feedID2DocIDs(like);
+        int[] dislikes = SEARCHER.feedID2DocIDs(dislike);
+        IndexReader reader = SEARCHER.getReader();
         Map<String, Map<String, Double>> result = new HashMap<String, Map<String, Double>>();
         for (String field : Searcher.FIELDS) {
             Map<String, Double> sub = trainField(reader, likes, dislikes,

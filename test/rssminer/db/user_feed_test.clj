@@ -27,12 +27,3 @@
                   ["SELECT read_date FROM user_feed WHERE
                     user_id = ? AND feed_id = ?" (:id user1) fid])
                  first :read_date)))))
-
-(deftest test-fetch-unvoted-feedids
-  (is (= 1 (count (fetch-unvoted-feedids (:id user1) 0))))
-  (let [f1 (-> (mysql-query ["select id from feeds"]) first :id)]
-    (insert-user-vote (:id user1) f1 0)
-    (is (= 1 (count (fetch-unvoted-feedids (:id user1) 0))))
-    (insert-user-vote (:id user1) f1 1)
-    (is (= 0 (count (fetch-unvoted-feedids (:id user1) 0))))))
-

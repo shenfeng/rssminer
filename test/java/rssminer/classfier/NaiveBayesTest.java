@@ -16,7 +16,6 @@ import org.junit.Test;
 
 import rssminer.Searcher;
 import clojure.lang.ArraySeq;
-import clojure.lang.PersistentList;
 
 public class NaiveBayesTest {
 
@@ -83,7 +82,7 @@ public class NaiveBayesTest {
 
     @Before
     public void setup() throws FileNotFoundException, IOException {
-        searcher = new Searcher("RAM");
+        searcher = Searcher.initGlobalSearcher("RAM");
         int id = 0;
         File[] train = TRAIN.listFiles();
         for (File folder : train) {
@@ -122,9 +121,7 @@ public class NaiveBayesTest {
         }
         System.out.println("train like: " + trainLikeIds.size()
                 + "\t dislike: " + trainDisLikeIds.size());
-        model = NaiveBayes.train(searcher, PersistentList
-                .create(trainLikeIds).seq(),
-                PersistentList.create(trainDisLikeIds).seq());
+        model = NaiveBayes.train(trainLikeIds, trainDisLikeIds);
 
         printModelDetail(model);
     }
@@ -160,7 +157,7 @@ public class NaiveBayesTest {
         // testLikeIds = trainLikeIds;
 
         for (Integer like : testLikeIds) {
-            double classify = NaiveBayes.classify(searcher, model,
+            double classify = NaiveBayes.classify(model,
                     ArraySeq.create(like))[0];
             if (classify > guard) {
                 count++;
@@ -175,7 +172,7 @@ public class NaiveBayesTest {
 
         int discount = 0;
         for (Integer dislike : testDisLikeIds) {
-            double classify = NaiveBayes.classify(searcher, model,
+            double classify = NaiveBayes.classify(model,
                     ArraySeq.create(dislike))[0];
             // System.out.println(classify);
             if (classify < guard) {

@@ -3,6 +3,7 @@ package rssminer;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
@@ -34,7 +35,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import rssminer.sax.ExtractMainTextHandler;
-import clojure.lang.ISeq;
 
 public class Searcher {
 
@@ -60,7 +60,25 @@ public class Searcher {
         }
     }
 
-    public Searcher(String path) throws IOException {
+    public static Searcher SEARCHER; // global
+
+    public static Searcher initGlobalSearcher(String path) throws IOException {
+        closeGlobalSearcher();
+        SEARCHER = new Searcher(path);
+        return SEARCHER;
+    }
+
+    public static void closeGlobalSearcher() {
+        if (SEARCHER != null) {
+            try {
+                SEARCHER.close();
+            } catch (Exception ignore) {
+            }
+            SEARCHER = null;
+        }
+    }
+
+    private Searcher(String path) throws IOException {
         final IndexWriterConfig cfg = new IndexWriterConfig(V, analyzer);
         this.path = path;
         cfg.setOpenMode(OpenMode.CREATE_OR_APPEND);
@@ -196,14 +214,12 @@ public class Searcher {
         }
     }
 
-    public int[] feedID2DocIDs(ISeq seq) throws CorruptIndexException,
-            IOException {
-        int count = seq.count();
-        int[] array = new int[count];
+    public int[] feedID2DocIDs(List<Integer> feeds)
+            throws CorruptIndexException, IOException {
+        int[] array = new int[feeds.size()];
         IndexSearcher searcher = new IndexSearcher(getReader());
-
-        for (int i = 0; i < count; i++) {
-            int l = ((Long) (seq.first())).intValue();
+        for (int i = 0; i < feeds.size(); i++) {
+            int l = feeds.get(i);
             TermQuery query = new TermQuery(new Term(FEED_ID,
                     Integer.toString(l)));
             TopDocs docs = searcher.search(query, 1);
@@ -212,7 +228,6 @@ public class Searcher {
             } else {
                 array[i] = -1; // return -1, not found
             }
-            seq = seq.next();
         }
         return array;
     }

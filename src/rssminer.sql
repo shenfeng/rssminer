@@ -68,9 +68,15 @@ create table user_feed (
     -- tiny int require 1 bytes, -128 127
     -- like 1, dislike -1, no pref 0
     vote_user TINYINT default 0,
-    vote_sys FLOAT default 0,    -- learn by program
+    -- alter table user_feed change vote_sys vote_sys DOUBLE default 0;
+    -- float => double 2012/4/30
+    vote_sys DOUBLE default 0,    -- learn by program
     read_date INT default -1,    -- the reading date, -1, unread
-    INDEX user_feed_id (user_id, feed_id)
+    -- 2012/4/29 --replace index with unique index to support upsert
+    -- insert into user_feed (user_id, feed_id, vote_user) values (1, 557, 1) on duplicate key update vote_user = 10;
+    -- alter table user_feed drop index user_feed_id
+    -- alter table user_feed add unique index user_feed_id(user_id, feed_id)
+    UNIQUE user_feed_id(user_id, feed_id)
     -- REFERENCES users ON UPDATE CASCADE ON DELETE CASCADE,
     -- REFERENCES feeds ON UPDATE CASCADE ON DELETE CASCADE,
     -- FOREIGN KEY (user_id) REFERENCES

@@ -1,63 +1,20 @@
 (ns rssminer.db.user-feed
-  (:use [rssminer.db.util :only [mysql-query with-mysql mysql-insert]]
+  (:use [rssminer.db.util :only [mysql-query with-mysql]]
         [rssminer.time :only [now-seconds]]
-        [clojure.java.jdbc :only [insert-record update-values]]))
+        [clojure.java.jdbc :only [do-commands]]))
 
 (defn insert-user-vote [user-id feed-id vote]
-  (let [old  (-> (mysql-query
-                  ["SELECT vote_user FROM user_feed
-                    WHERE user_id = ? AND feed_id =?" user-id feed-id])
-                 first :vote_user)]
-    (if (nil? old)
-      (mysql-insert :user_feed {:user_id user-id
-                                :feed_id feed-id
-                                :vote_user vote})
-      (when (not= old vote)
-        (with-mysql
-          (update-values :user_feed
-                         ["user_id = ? AND feed_id = ?" user-id feed-id]
-                         {:vote_user vote}))))))
-
-(defn insert-sys-vote [user-id feed-id vote]
-  (let [old  (-> (mysql-query
-                  ["SELECT vote_sys FROM user_feed
-                    WHERE user_id = ? AND feed_id =?" user-id feed-id])
-                 first :vote_sys)]
-    (if (nil? old)
-      (mysql-insert :user_feed {:user_id user-id
-                                :feed_id feed-id
-                                :vote_sys vote})
-      (when (not= old vote)
-        (with-mysql
-          (update-values :user_feed
-                         ["user_id = ? AND feed_id = ?" user-id feed-id]
-                         {:vote_sys vote}))))))
+  (with-mysql (do-commands
+               (format "INSERT INTO user_feed (user_id, feed_id, vote_user)
+             VALUES (%d, %d, %d) ON DUPLICATE KEY UPDATE vote_user = %d"
+                       user-id feed-id vote vote))))
 
 (defn mark-as-read [user-id feed-id]
-  (let [old  (-> (mysql-query
-                  ["SELECT read_date FROM user_feed
-                    WHERE user_id = ? AND feed_id =?" user-id feed-id])
-                 first :read_date)]
-    (if (nil? old)
-      (mysql-insert :user_feed {:user_id user-id
-                                :feed_id feed-id
-                                :read_date (now-seconds)})
-      (when (= old -1)
-        (with-mysql
-          (update-values :user_feed
-                         ["user_id = ? AND feed_id = ?" user-id feed-id]
-                         {:read_date (now-seconds)}))))))
-
-(defn fetch-up-ids [user-id]
-  (map :feed_id (mysql-query ["SELECT feed_id FROM user_feed
-                            WHERE user_id = ? AND vote_user = 1" user-id])))
-
-(defn fetch-down-ids [user-id]
-  (map :feed_id (mysql-query ["SELECT feed_id FROM user_feed
-                            WHERE user_id = ? AND vote_user = -1" user-id])))
-
-(defn fetch-unvoted-feedids [user-id since-time]
-  (map :id (mysql-query ["call get_unvoted_feedids(?, ?)" user-id since-time])))
+  (let [now (now-seconds)]
+    (with-mysql (do-commands
+                 (format "INSERT INTO user_feed (user_id, feed_id, read_date)
+       VALUES (%d, %d, %d) ON DUPLICATE KEY UPDATE read_date = %d"
+                         user-id feed-id now now)))))
 
 (defn fetch-system-voteup [user-id limit]
   (mysql-query ["SELECT f.id, f.title, f.author, f.tags, f.link, f.rss_link_id,
