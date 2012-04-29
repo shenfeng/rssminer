@@ -16,6 +16,7 @@
                  [me.shenfeng.http/http-kit "1.0.0-SNAPSHOT"]
                  [mysql/mysql-connector-java "5.1.18"]
                  [commons-dbcp/commons-dbcp "1.4"]
+                 [com.chenlb/mmseg4j "1.8.5-SNAPSHOT"]
                  [org.apache.lucene/lucene-core "3.6.0"]
                  [org.apache.lucene/lucene-queries "3.6.0"]
                  [org.apache.lucene/lucene-analyzers "3.6.0"]

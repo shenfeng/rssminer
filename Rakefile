@@ -204,11 +204,13 @@ end
 namespace :db do
   desc "Reload database with production data"
   task :backup_prod do
+    sh 'rm classes -rf && lein javac'
     sh './scripts/admin backup-db && ./scripts/admin restore-db && ./scripts/admin rebuild-index'
   end
 
   desc "Restore db from latest backup"
   task :restore_db do
+    sh 'rm classes -rf && lein javac'
     sh './scripts/admin restore-db && ./scripts/admin rebuild-index'
   end
 end
