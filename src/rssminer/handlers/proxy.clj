@@ -4,7 +4,6 @@
                   [search :only [update-index]]
                   [config :only [rssminer-conf]])
         [clojure.tools.logging :only [debug error]]
-        [ring.util.response :only [redirect]]
         [rssminer.db.util :only [mysql-query mysql-insert]])
   (:require [clojure.string :as str]
             [rssminer.db.feed :as db])
@@ -65,8 +64,7 @@
        :body (if p (rewrite-html link original) original)}
       (fetch-and-store-orginal id link p header))))
 
-
-(def default-icon "/imgs/16px-feed-icon.png")
+(def no-favicon {:status 404})
 
 (defn- fetch-favicon [hostname]
   (first (mysql-query
@@ -74,7 +72,7 @@
 
 (def favicon-header {"Content-Type" "image/x-icon"
                      "Cache-Control" "public, max-age=315360000"
-                     "Expires" "Thu, 31 Dec 2037 23:55:55 GMT"})
+                     "Expires" "Thu, 31 Dec 2017 23:55:55 GMT"})
 
 (defn- fetch-save-favicon [hostname]
   (let [cb (fn [status headers body]
@@ -86,7 +84,7 @@
                {:status 200
                 :headers favicon-header
                 :body (ByteArrayInputStream. body)}
-               (redirect default-icon)))]
+               no-favicon))]
     {:status 200
      :body (FaviconFuture. hostname (:proxy @rssminer-conf) cb)}))
 
@@ -97,6 +95,6 @@
         {:status 200
          :headers favicon-header
          :body (ByteArrayInputStream. (:favicon favicon))}
-        (redirect default-icon))
+        no-favicon)
       (fetch-save-favicon hostname))
-    (redirect default-icon)))
+    no-favicon))

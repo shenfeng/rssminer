@@ -9,7 +9,7 @@ $useIEFilters: 0; // might be 0 or 1. disabled by default.
 
 @mixin border-radius ($values) {
     -moz-border-radius: $values;
-    -webkit-border-radius: $values;
+    /* -webkit-border-radius: $values; */
     border-radius: $values;
 }
 
@@ -22,7 +22,7 @@ $useIEFilters: 0; // might be 0 or 1. disabled by default.
 @mixin box-shadow ($x, $y, $offset, $hex, $ie: $useIEFilters) {
     -moz-box-shadow: $x $y $offset $hex;
     -o-box-shadow: $x $y $offset $hex;
-    -webkit-box-shadow: $x $y $offset $hex;
+    /* -webkit-box-shadow: $x $y $offset $hex; */
     box-shadow: $x $y $offset $hex;
 
     @if $ie == 1 {

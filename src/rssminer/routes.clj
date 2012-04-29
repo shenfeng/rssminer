@@ -30,13 +30,13 @@
            (JPOST "/:id" [] subs/customize-subscription)
            (JDELETE "/:id" [] subs/unsubscribe))
   (JGET "/search" [] reader/search)
-  (JPOST "/user/settings" [] user/save-settings)
-  (JGET "/user/welcome" [] user/welcome-list)
+  (JPOST "/settings" [] user/save-settings)
+  (JGET "/welcome" [] user/summary)
   (context "/feeds/:id" []
            (JPOST "/vote" [] feed/user-vote)
            (JPOST "/read" [] feed/mark-as-read))
-  (JPOST "/import/opml-import" [] import/opml-import)
-  (JGET "/export/opml-export" [] "TODO"))
+  (JPOST "/import/opml" [] import/opml-import)
+  (JGET "/export/opml" [] "TODO"))
 
 (defroutes all-routes
   (GET "/" [] reader/landing-page)

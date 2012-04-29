@@ -189,7 +189,7 @@
 
   var bypass_proxy_sites = ['groups.google', // X-Frame-Options
                             "feedproxy",
-                            "alibuybuy",
+                            // "alibuybuy",
                             "javaworld" // for Readability
                                            ];
 

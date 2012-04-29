@@ -6,15 +6,12 @@ $hover_color: #E5ECF9; // #DDD;
 $selected_color: #E5ECF9;
 
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 9px;
     height: 8px;
 }
 
-img { border: 0; }
-a { outline: 0; }
-
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.6);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.6);
     background: #ECECEC;
     /* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); */
     /* background: #cecece; */
@@ -26,13 +23,15 @@ a { outline: 0; }
     /* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); */
     background: white;
     border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
 }
-
 
 ::-webkit-scrollbar-thumb:vertical:hover {
     background: #fafafa;
 }
+
+img { border: 0; }
+a { outline: 0; }
 
 .clearfix:before, .clearfix:after { content: ""; display: table; }
 .clearfix:after { clear: both; }
@@ -325,30 +324,25 @@ span.vote {
     margin: 0;
 }
 
-#reading-chooser * { display: inline-block; }
 #reading-chooser {
     position: relative;
+    * { display: inline-block; }
     .info {
         @include overflow-ellipsis();
         cursor: default;
-        margin-left: 1.5em;
-        h5, a {
-            @include overflow-ellipsis();
-        }
+        margin-left: 4.5em;
         h5 {
-            max-width: 350px;
             margin: 0;
-        }
-        a {
-            color: #666;
-            max-width: 400px;
-            font-size: 11px;
-            padding: 0 20px 0 2em;
-            background: url(/imgs/external-link.png) right top no-repeat;
-            text-decoration: none;
+            a {
+                @include overflow-ellipsis();
+                max-width: 400px;
+                padding: 0 20px 0 1em;
+                text-decoration: none;
+                background: url(/imgs/external-link.png) right 3px no-repeat;
+            }
         }
     }
-    .loader { margin: 5px 0 0 5.5em; }
+    .loader { position: absolute; right: 1em; top: 5px; }
     span { visibility: visible; }
     span.vote { left: 12em; }
     ul { padding: 0; margin: 0; list-style: none; }

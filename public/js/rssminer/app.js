@@ -87,8 +87,7 @@
           link = $me.attr('data-link'),
           title = $('.title', $me).text().trim();
       if(layout.select('#feed-list', me)){
-        $('#footer .info a').text(link).attr('href', link);
-        $('#footer .info h5').text(title);
+        $('#footer .info a').text(title).attr('href', link);
         var iframe = $('iframe')[0];
         $loader.css({visibility: 'visible'});
 
@@ -113,7 +112,7 @@
   function show_welcome () {
     if(_RM_.subs) {             // user has subscriptions
       var $welcome = addWelcomeTitle('Rssminer - an intelligent RSS reader');
-      ajax.get('/api/user/welcome', function (resp) {
+      ajax.get('/api/welcome', function (resp) {
         if(typeof resp === 'string') { resp = JSON.parse(resp); }
         for(var name in titles) {
           var list = data.parseWelcomeList(resp[name]),
@@ -184,7 +183,7 @@
       return;
     }
     delete d.password2;
-    RM.ajax.jpost('/api/user/settings', d, function () {
+    ajax.jpost('/api/settings', d, function () {
       location = "/a";
     });
   }

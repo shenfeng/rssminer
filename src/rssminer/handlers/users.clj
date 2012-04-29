@@ -53,7 +53,7 @@
        :body nil
        :session {:user (assoc user :conf updated)}})))
 
-(defn welcome-list [req]
+(defn summary [req]
   (let [u-id (:id (session-get req :user))]
     {:read (uf/fetch-recent-read u-id 30)
      :voted (uf/fetch-recent-voted u-id 20)
