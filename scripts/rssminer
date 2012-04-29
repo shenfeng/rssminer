@@ -49,7 +49,7 @@ APP_ARGS="--index-path $INDEX_PATH \
     --port 8100"
 
 
-CLASSPATH=$APP_HOME/lib/*:$APP_HOME/rssminer.jar
+CLASSPATH=$APP_HOME/rssminer.jar:$APP_HOME/lib/*
 JAVA_CONFIG="$JVM_ARGS -cp $CLASSPATH rssminer.main $APP_ARGS"
 
 daemon_args="--name $APP_NAME \

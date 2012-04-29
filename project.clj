@@ -31,6 +31,10 @@
   :javac-options {:source "1.7" :target "1.7" :debug "true" :fork "true"}
   :java-source-path "src/java"
   :aot [rssminer.main, rssminer.admin]
+  :main rssminer.main
+  :test-selectors {:default (complement :benchmark)
+                   :benchmark :benchmark
+                   :all (fn [_] true)}
   :jvm-opts ["-Dclojure.compiler.disable-locals-clearing=true"
              "-Djava.net.preferIPv4Stack=true"
              "-Dsun.net.inetaddr.ttl=0"
