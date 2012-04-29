@@ -18,7 +18,7 @@
 
 (deftest test-ompl-import
   (let [resp (auth-app
-              {:uri "/api/import/opml-import"
+              {:uri "/api/import/opml"
                :request-method :post
                :params {"file" {"filename" (.getName opml)
                                 "size" (.length opml)

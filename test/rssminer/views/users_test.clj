@@ -40,7 +40,7 @@
     (is (= 302 (:status login)))))
 
 (deftest test-save-pref
-  (let [resp (auth-app {:uri "/api/user/settings"
+  (let [resp (auth-app {:uri "/api/settings"
                         :request-method :post
                         :body (json-str {:nav [:tag1 :tag1]
                                          :width 100
@@ -48,7 +48,7 @@
     (is (= 204 (:status resp)))))
 
 (deftest test-welcome-list
-  (let [resp (auth-app {:uri "/api/user/welcome"
+  (let [resp (auth-app {:uri "/api/welcome"
                         :request-method :get})]
     (is (= 200 (:status resp)))))
 

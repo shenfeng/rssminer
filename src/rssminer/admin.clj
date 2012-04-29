@@ -1,4 +1,5 @@
 (ns rssminer.admin
+  (:gen-class)
   (:use (rssminer [search :only [index-feed use-index-writer!
                                  close-global-index-writer!]])
         (rssminer.db [util :only [mysql-query with-mysql mysql-insert]])

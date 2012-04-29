@@ -30,7 +30,7 @@
   :warn-on-reflection true
   :javac-options {:source "1.7" :target "1.7" :debug "true" :fork "true"}
   :java-source-path "src/java"
-  :aot [rssminer.main]
+  :aot [rssminer.main, rssminer.admin]
   :jvm-opts ["-Dclojure.compiler.disable-locals-clearing=true"
              "-Djava.net.preferIPv4Stack=true"
              "-Dsun.net.inetaddr.ttl=0"

@@ -107,8 +107,17 @@ case "$1" in
         done
         $0 start
         ;;
+    rebuild-index)
+        while running
+        do
+            $0 stop
+            sleep 1;
+        done
+        $JAVA $JVM_ARGS -cp $CLASSPATH rssminer.admin -c rebuild-index
+        $0 start
+        ;;
     *)
-        echo "Usage: /etc/init.d/$APP_NAME {start|status|stop|restart|force-reload}" >&2
+        echo "Usage: /etc/init.d/$APP_NAME {start|status|stop|restart|force-reload|rebuild-index}" >&2
         exit 1
         ;;
 esac
