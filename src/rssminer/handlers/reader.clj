@@ -42,7 +42,7 @@
                                                    @cfg/rssminer-conf)
                                     :static_server (:static-server
                                                     @cfg/rssminer-conf)
-                                    :subs (fetch-user-subs (:id user) ts
+                                    :subs (fetch-user-subs (:id user)
                                                            like neutral)}})]
       (if updated
         {:status 200

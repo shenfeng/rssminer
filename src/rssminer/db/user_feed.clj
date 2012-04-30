@@ -4,14 +4,14 @@
         [clojure.java.jdbc :only [do-commands]]))
 
 (defn insert-user-vote [user-id feed-id vote]
-  (with-mysql (do-commands
+  (with-mysql (do-commands ;; rss_link_id default 0, which is ok
                (format "INSERT INTO user_feed (user_id, feed_id, vote_user)
              VALUES (%d, %d, %d) ON DUPLICATE KEY UPDATE vote_user = %d"
                        user-id feed-id vote vote))))
 
 (defn mark-as-read [user-id feed-id]
   (let [now (now-seconds)]
-    (with-mysql (do-commands
+    (with-mysql (do-commands ;; rss_link_id default 0
                  (format "INSERT INTO user_feed (user_id, feed_id, read_date)
        VALUES (%d, %d, %d) ON DUPLICATE KEY UPDATE read_date = %d"
                          user-id feed-id now now)))))

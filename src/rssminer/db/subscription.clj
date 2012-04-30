@@ -12,9 +12,8 @@
                 FROM feeds WHERE rss_link_id = ?" rss-id])
       first :count))
 
-(defn fetch-user-subs [user-id mark-as-read-time like neutral]
-  (mysql-query ["call get_user_subs(?, ?, ?, ?)"
-                user-id mark-as-read-time like neutral]))
+(defn fetch-user-subs [user-id like neutral]
+  (mysql-query ["call get_user_subs(?, ?, ?)" user-id like neutral]))
 
 (defn fetch-user-sub [id user-id mark-as-read-time like neutral]
   (mysql-query ["SELECT rl.id, rl.url, rl.title

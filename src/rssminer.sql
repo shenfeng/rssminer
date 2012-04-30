@@ -68,6 +68,7 @@ create table user_feed (
     -- tiny int require 1 bytes, -128 127
     -- like 1, dislike -1, no pref 0
     vote_user TINYINT default 0,
+    rss_link_id int UNSIGNED NOT NULL default 0,
     -- alter table user_feed change vote_sys vote_sys DOUBLE default 0;
     -- float => double 2012/4/30
     vote_sys DOUBLE default 0,    -- learn by program
@@ -76,11 +77,17 @@ create table user_feed (
     -- insert into user_feed (user_id, feed_id, vote_user) values (1, 557, 1) on duplicate key update vote_user = 10;
     -- alter table user_feed drop index user_feed_id
     -- alter table user_feed add unique index user_feed_id(user_id, feed_id)
-    UNIQUE user_feed_id(user_id, feed_id)
+    UNIQUE user_feed_id(user_id, feed_id),
+    INDEX user_rsslink(user_id, rss_link_id)
     -- REFERENCES users ON UPDATE CASCADE ON DELETE CASCADE,
     -- REFERENCES feeds ON UPDATE CASCADE ON DELETE CASCADE,
     -- FOREIGN KEY (user_id) REFERENCES
     -- PRIMARY KEY(user_id, feed_id)
+
+    -- 2012/4/30 performance
+    -- ALTER TABLE user_feed add column rss_link_id int unsigned not null default 0
+    -- UPDATE user_feed SET rss_link_id = (SELECT rss_link_id FROM feeds WHERE id = feed_id)
+    -- ALTER TABLE user_feed add index user_rsslink (user_id, rss_link_id)
 );
 
 create table favicon (
@@ -90,59 +97,55 @@ create table favicon (
      code SMALLINT UNSIGNED     -- fetch result's http status code
 );
 
-
 delimiter //
 
-CREATE PROCEDURE get_unvoted_feedids (user_id INT, published_ts INT)
+-- mysql does not support EXCEPT operator, use left join
+CREATE PROCEDURE get_unvoted (user_id_p INT, published_ts_p INT)
 BEGIN
 SELECT p.*
-FROM   (SELECT f.id
+FROM   (SELECT f.id,
+               f.rss_link_id
         FROM   feeds f
                JOIN user_subscription us
-                 ON us.rss_link_id = f.rss_link_id
-        WHERE  us.user_id = user_id
-               AND f.published_ts > published_ts) p
-       LEFT JOIN (SELECT feed_id AS id
+                 ON f.rss_link_id = us.rss_link_id
+                    AND us.user_id = user_id_p
+        WHERE  f.published_ts > published_ts_p) p
+       LEFT JOIN (SELECT feed_id
                   FROM   user_feed
-                  WHERE  user_id = user_id
-                         AND vote_user != 0) q
-         ON p.id = q.id
-WHERE  q.id IS NULL;
+                  WHERE  user_id = user_id_p
+                         AND ( vote_user != 0
+                                OR read_date > 0 )) q
+         ON p.id = q.feed_id
+WHERE  q.feed_id IS NULL;
+
 END //
 
-
-CREATE PROCEDURE get_user_subs (user_id_p INT, mark_as_read_time_p INT, like_s_p DOUBLE, neutral_s_p DOUBLE)
+-- DROP PROCEDURE IF EXISTS `get_user_subs`;
+CREATE PROCEDURE get_user_subs (user_id_p INT, like_s_p DOUBLE, neutral_s_p DOUBLE)
 BEGIN
-SELECT us.rss_link_id                                   AS id,
+SELECT us.rss_link_id              AS id,
        us.group_name,
        l.url,
        us.sort_index,
        us.title,
-       l.title                                          AS o_title,
-       (SELECT COUNT(*)
-        FROM   feeds
-               LEFT JOIN user_feed
-                 ON feeds.id = user_feed.feed_id
-        WHERE  rss_link_id = us.rss_link_id
-               AND published_ts > mark_as_read_time_p
-               AND ( user_feed.read_date < 1
-                      OR user_feed.read_date IS NULL )) AS total_c,
-       (SELECT COUNT(*)
-        FROM   feeds
-               LEFT JOIN user_feed
-                 ON feeds.id = user_feed.feed_id
-        WHERE  rss_link_id = us.rss_link_id
-               AND published_ts > mark_as_read_time_p
-               AND user_feed.read_date < 1
-               AND user_feed.vote_sys > like_s_p)       AS like_c,
-       (SELECT COUNT(*)
-        FROM   feeds
-               LEFT JOIN user_feed
-                 ON feeds.id = user_feed.feed_id
-        WHERE  rss_link_id = us.rss_link_id
-               AND published_ts > mark_as_read_time_p
-               AND user_feed.read_date < 1
-               AND user_feed.vote_sys < neutral_s_p)    AS dislike_c
+       l.title                     AS o_title,
+       (SELECT Count(*)
+        FROM   user_feed
+        WHERE  user_id = user_id_p
+               AND rss_link_id = us.rss_link_id
+               AND vote_sys > like_s_p
+               AND read_date = -1) AS like_c,
+       (SELECT Count(*)
+        FROM   user_feed
+        WHERE  user_id = user_id_p
+               AND rss_link_id = us.rss_link_id
+               AND vote_sys < neutral_s_p
+               AND read_date = -1) AS dislike_c,
+       (SELECT Count(*)
+        FROM   user_feed
+        WHERE  user_id = user_id_p
+               AND rss_link_id = us.rss_link_id
+               AND read_date = -1) AS total_c
 FROM   user_subscription us
        JOIN rss_links l
          ON l.id = us.rss_link_id

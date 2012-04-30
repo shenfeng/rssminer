@@ -26,6 +26,9 @@ create_db() {
     mysql -uroot -e "$SQL"
 }
 
+# GRANT ALL PRIVILEGES ON *.* TO 'admin'@'%';
+# CREATE USER admin@'%' IDENTIFIED BY ''
+
 recreate_db_and_user () {
     drop_db $DB_NAME
     create_db $DB_NAME

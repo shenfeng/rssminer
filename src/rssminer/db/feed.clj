@@ -21,15 +21,15 @@
 
 (defn fetch-by-rssid [user-id rss-id limit offset sort]
   (mysql-query
-   [(str "SELECT f.id, author, link, title, tags, published_ts,
-         uf.read_date, uf.vote_user, uf.vote_sys FROM feeds f
-       LEFT OUTER JOIN user_feed uf ON uf.feed_id = f.id
-       WHERE rss_link_id = ? AND (uf.user_id = ? OR uf.user_id IS NULL) "
+   [(str "SELECT id, author, link, title, tags, published_ts,
+          uf.read_date, uf.vote_user, uf.vote_sys FROM feeds
+          LEFT JOIN user_feed uf on user_id = ? and id = uf.feed_id
+      WHERE feeds.rss_link_id = ? "
          (if (= sort "time")
            "ORDER BY published_ts DESC"
            "ORDER BY vote_sys DESC")
-         " LIMIT ? offset ?"),
-    rss-id, user-id, limit, offset]))
+         " LIMIT ? OFFSET ?")
+    user-id, rss-id, limit, offset]))
 
 (defn fetch-orginal [id]
   (first (mysql-query ["SELECT original, link
