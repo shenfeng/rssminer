@@ -7,6 +7,8 @@ import static rssminer.Utils.CLIENT;
 
 import java.net.URI;
 import java.net.UnknownHostException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -148,9 +150,11 @@ public class HttpTaskRunner {
     private Map<Object, Object> computeStat() {
         mStat.put("Total", mCounter);
         double m = (double) (currentTimeMillis() - startTime) / 60000;
-        mStat.put("PerMiniute", (int) (mCounter / m));
+        mStat.put("PerMiniute", mCounter / m);
         mStat.put("QueuePermits", mConcurrent.availablePermits());
-        mStat.put("StartTime", new Date(startTime));
+        DateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
+        mStat.put("StartTime", format.format(new Date(startTime)));
+        mStat.put("LastCheck", format.format(new Date(lastBulkCheckTs)));
         return mStat;
     }
 
@@ -195,9 +199,7 @@ public class HttpTaskRunner {
     void tryFillTask() {
         while (mTaskQueue.isEmpty()) {
             long currentTime = currentTimeMillis();
-            if (lastBulkCheckTs + DUMP_STATS_INTERVAL < currentTime) {
-                logger.info(toString());
-            }
+
             // first bulk fetch, since it fast, then blocking get
             if (lastBulkCheckTs + mBulkCheckInterval < currentTime) {
                 List<IHttpTask> tasks = mBulkProvider.getTasks();
@@ -208,6 +210,9 @@ public class HttpTaskRunner {
                     lastBulkCheckTs = currentTime;
                     break;
                 }
+            }
+            if (lastBulkCheckTs + DUMP_STATS_INTERVAL < currentTime) {
+                logger.info(toString());
             }
             IHttpTask task = mBlockingProvider.getTask(mBlockingGetTimeout);
             if (task != null) {
