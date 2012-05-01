@@ -195,11 +195,11 @@ public class HttpTaskRunner {
     void tryFillTask() {
         while (mTaskQueue.isEmpty()) {
             long currentTime = currentTimeMillis();
-            if (lastBulkCheckTs + DUMP_STATS_INTERVAL > currentTime) {
+            if (lastBulkCheckTs + DUMP_STATS_INTERVAL < currentTime) {
                 logger.info(toString());
             }
             // first bulk fetch, since it fast, then blocking get
-            if (lastBulkCheckTs + mBulkCheckInterval > currentTime) {
+            if (lastBulkCheckTs + mBulkCheckInterval < currentTime) {
                 List<IHttpTask> tasks = mBulkProvider.getTasks();
                 if (tasks != null && tasks.size() != 0) {
                     for (IHttpTask t : tasks) {
