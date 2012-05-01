@@ -35,7 +35,7 @@
       val = val.toLowerCase();
       $input.text(val);
       $("#help, #subs").remove();
-      var all = data.getAllSubTitle(val),
+      var all = data.get_all_sub_titles(val),
           html = to_html(tmpls.sublist, {subs: all, value: val});
       $('body').append(html);
       $("#subs li:first-child").addClass(sc);

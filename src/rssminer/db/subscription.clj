@@ -13,11 +13,18 @@
       first :count))
 
 (defn fetch-user-subs [user-id like neutral]
-  (mysql-query ["call get_user_subs(?, ?, ?)" user-id like neutral]))
+  (map (fn [{:keys [o_title title] :as s}]
+         (dissoc (assoc s :title (or title o_title))
+                 :o_title))
+       (mysql-query ["call get_user_subs(?, ?, ?)" user-id like neutral])))
+
+(defn fetch-user-subsurls [user-id]     ; only url
+  (mysql-query ["SELECT url FROM rss_links r JOIN user_subscription s
+                 ON r.id = s.rss_link_id WHERE s.user_id = ?" user-id]))
 
 (defn fetch-user-sub [id user-id mark-as-read-time like neutral]
-  (mysql-query ["SELECT rl.id, rl.url, rl.title
-              FROM rss_links rl WHERE id = ?" id]))
+  (first (mysql-query ["SELECT id, url, title
+              FROM rss_links WHERE id = ?" id])))
 
 (defn fetch-subscription [user-id rss-link-id]
   (first (mysql-query ["SELECT id, rss_link_id, title, group_name FROM
@@ -30,10 +37,6 @@
     (update-values :user_subscription
                    ["user_id = ? AND id = ?" user-id id]
                    (select-keys data [:group_name :title]))))
-
-(defn fetch-user-subsurls [user-id]
-  (mysql-query ["SELECT url FROM rss_links r JOIN user_subscription s
-                 ON r.id = s.rss_link_id WHERE s.user_id = ?" user-id]))
 
 (defn delete-subscription [user-id id]
   (with-mysql

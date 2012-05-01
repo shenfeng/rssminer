@@ -1,64 +1,56 @@
 (function () {
-  var data = RM.data,
+  var RM = window.RM,
+      data = RM.data,
       tmpls = RM.tmpls,
       util = RM.util,
-      hashRouter = RM.hashRouter,
-      ajax = RM.ajax,
       layout = RM.layout,
       to_html = Mustache.to_html;
 
-  var titles = {
-    recommend: 'Recommand for you',
-    voted: 'Recently voted',
-    read: 'Recently read'
-  };
+  var current_subid;
 
   var $footer = $('#footer'),
       $loader = $('#reading-chooser .loader'),
       $reading_area = $('#reading-area');
 
-  function focusFirstFeed () {
+  function focus_first_feed () {
     $($('.welcome-list li.feed')[0]).addClass('selected');
     $reading_area.removeClass('show-iframe');
   }
 
-  function addWelcomeTitle (title) {
+  function set_welcome_title (title) {
     var $welcome = $('.welcome-list').empty();
     if(title) { $welcome.append('<h2>' + title +'</h2>'); }
     return $welcome;
   }
 
-  function showFooterList () {
-    $footer.show();
-    $reading_area.addClass('show-iframe');
-    layout.reLayout();
+  function show_footer_list () {
+    data.get_feeds(current_subid, 0, 40, 'time', function (feeds) {
+      var html = to_html(tmpls.list, {feeds: feeds});
+      $('#feed-list ul').empty().append(html);
+      $footer.show();
+      $reading_area.addClass('show-iframe');
+      layout.reLayout();
+    });
   }
 
-  function hideFooterList () {
+  function hide_footer_list () {
     $footer.hide();
     $reading_area.removeClass('show-iframe');
     layout.reLayout();
   }
 
-  function readSubscription (id, callback) {
+  function read_subscription (id, callback) {
+    current_subid = id;
     hideHelp();
-    var title = $("#item-" + id + " .title").text().trim();
-    hideFooterList();
+    hide_footer_list();
+    var sub = data.get_subscription(id),
+        title = sub.title;
     if(layout.select('.sub-list', "item-" + id)) {
-      ajax.get("/api/subs/" + id, function (resp) {
-        var d = data.parseFeedList(id, resp),
-            html = to_html(tmpls.list, {feeds: d});
-        $('#feed-list ul').empty().append(html);
-        if(d.length > 0) {
-          var $welcome = addWelcomeTitle(title),
-              result = data.parseFeedListForWelcome(id, resp);
-          for(var i = 0; i < result.length; i++) {
-            var r = result[i];
-            if(r.list.length) {
-              $welcome.append(to_html(tmpls.welcome_section, result[i]));
-              focusFirstFeed();
-            }
-          }
+      data.get_feeds(id, 0, 40, 'time', function (data) {
+        if(data.length) {
+          var $welcome = set_welcome_title(title);
+          $welcome.append(to_html(tmpls.welcome_section, {list: data }));
+          focus_first_feed();
         }
         if(typeof callback === 'function') { callback(); }
       });
@@ -67,7 +59,7 @@
     }
   }
 
-  function descrementNumber ($just_read, subid) {
+  function decrement_number ($just_read, subid) {
     var selector = "#item-" + subid;
     if($just_read.hasClass('neutral')) {
       selector += ' .unread-neutral';
@@ -79,18 +71,18 @@
     else { $n.text(n-1); }
   }
 
-  function readFeed (subid, feedid) {
-    readSubscription(subid, function () {
-      showFooterList();
+  function read_feed (subid, feedid) {
+    read_subscription(subid, function () {
+      show_footer_list();
       var me = "feed-" + feedid,
-          $me = $('#' + me),
-          link = $me.attr('data-link'),
-          title = $('.title', $me).text().trim();
-      if(layout.select('#feed-list', me)){
+          $me = $('#' + me);
+      if(layout.select('#feed-list', me)) {
+        var feed = data.get_feed(subid, feedid),
+            title = feed.title,
+            link = feed.link;
         $('#footer .info a').text(title).attr('href', link);
         var iframe = $('iframe')[0];
         $loader.css({visibility: 'visible'});
-
         iframe.src = data.get_final_link(link, feedid);
         iframe.onload = function () {
           mark_as_read($me, feedid, subid);
@@ -102,28 +94,27 @@
 
   function mark_as_read ($me, feedid, subid) {
     if(!$me.hasClass('read')) {
-      ajax.jpost('/api/feeds/' + feedid + '/read', function () {
-        descrementNumber($me, subid);
-        $me.removeClass('unread sys-read').addClass('read');
-      });
+      data.mark_as_read(feedid, subid);
+      decrement_number($me, subid);
+      $me.removeClass('unread sys-read').addClass('read');
     }
   }
 
   function show_welcome () {
-    if(_RM_.subs) {             // user has subscriptions
-      var $welcome = addWelcomeTitle('Rssminer - an intelligent RSS reader');
-      ajax.get('/api/welcome', function (resp) {
-        if(typeof resp === 'string') { resp = JSON.parse(resp); }
-        for(var name in titles) {
-          var list = data.parseWelcomeList(resp[name]),
-              html = to_html(tmpls.welcome_section, {
-                title: titles[name],
-                list: list
-              });
-          if(list.length) { $welcome.append(html); focusFirstFeed(); }
+    if(data.is_user_has_subscription()) { // user has subscriptions
+      var $welcome = set_welcome_title('Rssminer - an intelligent RSS reader');
+      data.get_welcome_list(function (data) {
+        for(var section in data) {
+          var d = data[section];
+          if(d.list.length) {
+            $welcome.append(to_html(tmpls.welcome_section, d));
+            focus_first_feed();
+          }
         }
       });
-    } else { location.hash = "add"; }
+    } else {
+      location.hash = "add";
+    }
   }
 
   function saveVote (vote, ele) {
@@ -146,7 +137,7 @@
       }
     }
     if(id) {
-      ajax.jpost('/api/feeds/' + id  + '/vote', {vote: vote}, function () {
+      data.save_vote(id, vote, function () {
         if(vote === 1) {
           $feed.addClass('like').removeClass('dislike neutral sys');
         } else if(vote === -1) {
@@ -170,11 +161,11 @@
   function settings () {
     hideHelp();
     $reading_area.removeClass('show-iframe');
-    var $welcome = addWelcomeTitle();
-    $welcome.append(to_html(tmpls.settings, data.userSettings()));
+    var $welcome = set_welcome_title();
+    $welcome.append(to_html(tmpls.settings, data.user_settings()));
   }
 
-  function saveSettings (e) {
+  function save_settings (e) {
     var d = util.extractData( $('#settings') );
     for(var i in d) { if(!d[i]) { delete d[i]; } }
     d.expire = parseInt(d.expire, 10);
@@ -183,49 +174,29 @@
       return;
     }
     delete d.password2;
-    ajax.jpost('/api/settings', d, function () {
-      location = "/a";
-    });
+    data.save_settings(d, function () { location = "/a"; });
   }
 
-  function addSubscriptionHandler (e) {
+  function add_subscription (e) {
     var $input = $("#rss_atom_url"),
         url = $input.val();
     if(url) {
-      ajax.jpost("/api/subs/add", {link: url}, function (data) {
+      data.add_subscription(url, function () {
         $input.val('');
-        var max_times = 3,
-            polling_interval = 2000;
-        var polling = function () {
-          if(max_times > 0) {
-            max_times -= 1;
-            ajax.get('/api/subs/p/' + data.rss_link_id, function (sub) {
-              var s0 = sub && sub[0];
-              if(s0 && s0.title) {
-                s0.group_name = null; // newly added, no-group
-                _RM_.subs.push(s0);
-                render_nav_list();
-              } else {
-                polling_interval += 1500;
-                setTimeout(polling, polling_interval);
-              }
-            });
-          }
-        };
-        setTimeout(polling, polling_interval);
+        // TODO adjust UI
       });
     }
   }
 
-  function showHelp () {
+  function show_help () {
     hideHelp();
     $('body').append(tmpls.keyboard);
   }
 
-  function addSubscription () {
+  function show_add_sub_ui () {
     hideHelp();
     $reading_area.removeClass('show-iframe');
-    var $welcome = addWelcomeTitle();
+    var $welcome = set_welcome_title();
     $welcome.append(tmpls.add);
   }
 
@@ -238,40 +209,41 @@
     // console.log('saveing', event, ui, $(ui.item));
   }
 
-  function render_nav_list () {
-    var nav = to_html(tmpls.nav, {subs: data.parseSubs(_RM_.subs)});
-    $("#navigation ul.sub-list").empty().append(nav);
-    $('.sub-list').sortable();  // category sortable
-    $(".rss-category").sortable({ // subscription sortable with categories
-      connectWith: ".rss-category",
-      stop: save_sort_order
-    });
-  }
-
   util.delegate_events($(document), {
-    'click #add-subscription': addSubscriptionHandler,
-    'click #save-settings': saveSettings,
+    'click #add-subscription': add_subscription,
+    'click #save-settings': save_settings,
     'click .chooser li': toggleWelcome,
     'click .vote span.down': saveVotedown,
     'click .vote span.up': saveVoteUp
   });
 
+  data.get_user_subs(function (subs) {
+    var nav = to_html(tmpls.nav, {subs: subs});
+    $("#navigation ul.sub-list").empty().append(nav);
+    $("#navigation .item img").each(function (index, img) {
+      img.onerror = function () { img.src="/imgs/16px-feed-icon.png"; };
+    });
+    $('.sub-list').sortable();  // category sortable
+    $(".rss-category").sortable({ // subscription sortable with categories
+      connectWith: ".rss-category",
+      stop: save_sort_order
+    });
+
+    RM.hashRouter({
+      '': show_welcome,
+      'settings': settings,
+      'help': show_help,
+      'add': show_add_sub_ui,
+      'read/:id': read_subscription,
+      'read/:id/:id': read_feed
+    });
+  });
+  // export
   window.RM = $.extend(window.RM, {
     app: {
       hideHelp: hideHelp,
       save_vote: saveVote,
-      showHelp: showHelp
+      showHelp: show_help
     }
-  });
-
-  render_nav_list();              // should before hashRouter;
-
-  hashRouter({
-    '': show_welcome,
-    'settings': settings,
-    'help': showHelp,
-    'add': addSubscription,
-    'read/:id': readSubscription,
-    'read/:id/:id': readFeed
   });
 })();

@@ -34,12 +34,12 @@
     }, 600);
   }
 
-  function handler (url, method, success) {
+  function handler (url, method, success, silent) {
     return {
       type: method,
       url: url,
       success: function (result, status, xhr) {
-        hide_notif(LOADING);
+        if(!silent) { hide_notif(LOADING); }
         if(typeof success === 'function') {
           success.apply(null, arguments);
         }
@@ -50,27 +50,36 @@
     };
   }
 
-  function get(url, success) {
-    show_msg(LOADING);
+  function get(url, success, silent) {
+    if(!silent) { show_msg(LOADING); }
     _clear_timer();
-    return $.ajax(handler(url, 'GET', success));
+    return $.ajax(handler(url, 'GET', success, silent));
   }
 
-  function jpost(url, data, success) {
+  function sget (url, success) {
+    return get(url, success, true);
+  }
+
+  function jpost(url, data, success, silent) {
     show_msg(LOADING);
     _clear_timer();
     if(typeof data === 'function') { // shift
+      silent = success;
       success = data;
       data = undefined;
     }
-    var o = handler(url, 'POST', success);
+    var o = handler(url, 'POST', success, silent);
     o.dateType = 'json';
     o.data = JSON.stringify(data);
     o.contentType = 'application/json';
     return $.ajax(o);
   }
 
+  function spost (url, data, success) {
+    return jpost(url, data, success, true);
+  }
+
   window.RM = $.extend(window.RM, {
-    ajax: { get: get, jpost: jpost }
+    ajax: { sget: sget, spot: spost, get: get, jpost: jpost }
   });
 })();

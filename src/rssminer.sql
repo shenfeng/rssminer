@@ -19,7 +19,7 @@ CREATE TABLE rss_links (
   next_check_ts INT UNSIGNED DEFAULT 1,
   last_status SMALLINT UNSIGNED,
   error_msg VARCHAR(200),
-  check_interval SMALLINT DEFAULT 14400, -- seconds, in 4 h, min 3h
+  check_interval MEDIUMINT DEFAULT 14400, -- seconds, in 4 h, min 3h
   -- alter table rss_links change check_interval check_interval mediumint default 14400
   last_modified VARCHAR(64),             -- from http response header
   user_id INT UNSIGNED,      -- who first add it, REFERENCES users(no index)
@@ -56,7 +56,7 @@ CREATE TABLE user_subscription (
    -- REFERENCES rss_links  ON UPDATE CASCADE ON DELETE CASCADE,
   title VARCHAR(256), -- user defined title, default is subscription's title
   group_name VARCHAR(64),
-  -- keep track of position, smallint is just ok
+  -- keep track of position, smallint is just ok, 0-65536
   sort_index SMALLINT UNSIGNED default 0,
   added_ts TIMESTAMP DEFAULT now(),
   UNIQUE (user_id, rss_link_id)

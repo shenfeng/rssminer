@@ -34,8 +34,12 @@
                        (or (-> user :conf :neutral_score) 0))))
 
 (defn list-subscriptions [req]
-  (let [user-id (:id (session-get req :user))]
-    (map :url (db/fetch-user-subsurls user-id))))
+  (let [user (session-get req :user)]
+    (if (-> req :params :only_url)
+      (map :url (db/fetch-user-subsurls (:id user))) ; for extension
+      (let [like (or (-> user :conf :like_score) 1)
+            neutral (or (-> user :conf :neutral_score) 0)]
+        (db/fetch-user-subs (:id user) like neutral)))))
 
 (defn add-subscription [req]
   (let [link  (-> req :body :link)

@@ -1,15 +1,14 @@
 {{#subs}}
   <li {{#collapse}} class="collapse" {{/collapse}}>
-    <div class="folder" data-name="{{tag}}">
+    <div class="folder" data-name="{{group}}">
       <img src="/imgs/folder.png"/>
-      <span>{{tag}}</span>
+      <span>{{group}}</span>
     </div>
     <ul class="rss-category">
       {{#list}}
-        <li class="item" id="item-{{id}}">
+        <li class="item" id="item-{{id}}" data-sort="{{sort_index}}">
           <a href="#{{href}}">
-            <img src="{{img}}" width="16" onerror="RM.iconError(this)"
-            height="16" />
+            <img src="{{img}}" width="16" height="16" />
             <span class="title"> {{title}} </span>
             <span class="count">
               {{#dislike}}

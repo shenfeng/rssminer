@@ -18,6 +18,29 @@
             day < 10 ? '0' + day : day].join('/');
   }
 
+  var cmp_by = function (name, minor, reverse) { // reverse when -1
+    reverse = reverse || -1;
+    return function (o, p) {
+      var a, b;
+      if (o && p && typeof o === 'object' && typeof p === 'object') {
+        a = o[name];
+        b = p[name];
+        if (a === b) {
+          return typeof minor === 'function' ? minor(o, p) : 0;
+        }
+        if (typeof a === typeof b) {
+          return reverse * (a < b ? -1 : 1);
+        }
+        return reverse * (typeof a < typeof b ? -1 : 1);
+      } else {
+        throw {
+          name: 'Error',
+          message: 'Expected an object when sorting by ' + name
+        };
+      }
+    };
+  };
+
   function favicon_path (url) {
     var host = encodeURIComponent(hostname(url));
     // revert to fight agaist firewall
@@ -89,15 +112,11 @@
     }
   }
 
-  function imgError (e) {
-    e.src="/imgs/16px-feed-icon.png";
-  }
-
   // export
   window.RM = $.extend(window.RM || {}, {
-    iconError: imgError,
     util: {
       delegate_events: delegate_events,
+      cmp_by: cmp_by,
       extractData: extractData,
       favicon_path: favicon_path,
       hostname: hostname,
