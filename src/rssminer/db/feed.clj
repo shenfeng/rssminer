@@ -5,7 +5,7 @@
                   [util :only [ignore-error]])
         [clojure.string :only [blank?]]
         [clojure.tools.logging :only [info trace]]
-        [clojure.java.jdbc :only [update-values delete-rows]]))
+        [clojure.java.jdbc :only [update-values delete-rows do-commands]]))
 
 (defn save-feeds [feeds rss-id]
   (doseq [{:keys [link] :as feed} (:entries feeds)]
@@ -18,6 +18,12 @@
           (with-mysql
             (update-values :feeds ["link=? and rss_link_id = ?"
                                    link rss-id] feed)))))))
+
+(defn update-total-feeds [rss-id]
+  (with-mysql
+    (do-commands (str "UPDATE rss_links SET total_feeds =
+(SELECT COUNT(*) FROM feeds where rss_link_id = " rss-id
+") WHERE id = " rss-id))))
 
 (defn fetch-by-rssid [user-id rss-id limit offset sort]
   (mysql-query

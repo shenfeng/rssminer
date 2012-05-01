@@ -19,6 +19,10 @@ CREATE TABLE rss_links (
   next_check_ts INT UNSIGNED DEFAULT 1,
   last_status SMALLINT UNSIGNED,
   error_msg VARCHAR(200),
+  -- 2012/5/1
+  -- alter table rss_links add total_feeds int unsigned default 0
+  -- update rss_links rl set total_feeds = (select count(*) from feeds where feeds.rss_link_id = rl.id)
+  total_feeds INT UNSIGNED default 0,
   check_interval MEDIUMINT DEFAULT 14400, -- seconds, in 4 h, min 3h
   -- alter table rss_links change check_interval check_interval mediumint default 14400
   last_modified VARCHAR(64),             -- from http response header
@@ -129,6 +133,7 @@ SELECT us.rss_link_id              AS id,
        us.sort_index,
        us.title,
        l.title                     AS o_title,
+       l.total_feeds,
        (SELECT Count(*)
         FROM   user_feed
         WHERE  user_id = user_id_p

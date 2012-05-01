@@ -52,7 +52,9 @@
     (trace (str "id:" id) status url
            (str "[" (-> feeds :entries count) "] feeds"))
     (db/update-rss-link id updated)
-    (when feeds (db/save-feeds feeds id))))
+    (when feeds
+      (db/save-feeds feeds id)
+      (db/update-total-feeds id))))
 
 (defn- mk-task [{:keys [url last_modified] :as link}]
   (reify IHttpTask
