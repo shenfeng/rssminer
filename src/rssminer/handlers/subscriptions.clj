@@ -52,6 +52,10 @@
   (let [user-id (:id (session-get req :user))]
     (db/update-subscription user-id (-> req :params :id to-int) (:body req))))
 
+(defn save-sort-order [req]
+  (db/update-sort-order (:id (session-get req :user)) (:body req))
+  {:status 204})
+
 (defn unsubscribe [req]
   (let [user-id (:id (session-get req :user))]
     (db/delete-subscription user-id (-> req :params :id to-int))))

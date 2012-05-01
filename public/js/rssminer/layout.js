@@ -57,7 +57,7 @@
     $('#navigation li.collapse .folder').each(function (index, item) {
       collapsed.push($(item).attr('data-name'));
     });
-    RM.ajax.jpost('/api/user/settings', {nav: collapsed});
+    RM.ajax.spost('/api/settings', {nav: collapsed});
     return false;
   }
 

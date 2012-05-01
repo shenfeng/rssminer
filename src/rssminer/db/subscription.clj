@@ -1,7 +1,7 @@
 (ns rssminer.db.subscription
   (:use [rssminer.db.util :only [select-sql-params mysql-insert-and-return
                                  mysql-query with-mysql]]
-        [clojure.java.jdbc :only [delete-rows update-values]]))
+        [clojure.java.jdbc :only [delete-rows update-values do-commands]]))
 
 (defn fetch-rss-link [map]
   (first
@@ -42,3 +42,10 @@
   (with-mysql
     (delete-rows :user_subscription
                  ["user_id = ? AND id = ?" user-id id])))
+
+(defn update-sort-order [user-id data]
+  (with-mysql
+    (apply do-commands
+           (map (fn [d] (str "update user_subscription set sort_index = "
+                            (:o d) " where user_id = " user-id
+                            " and rss_link_id = " (:id d))) data))))

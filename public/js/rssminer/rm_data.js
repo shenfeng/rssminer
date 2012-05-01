@@ -15,6 +15,7 @@
       PROXY_SERVER = window._RM_.proxy_server,
       STATIC_SERVER = window._RM_.static_server,
       LIKE_SCORE = user_conf.like_score || 1,
+      MAX_SORT_ORDER = 65535,
       NEUTRAL_SCORE = user_conf.neutral_score || 0; // db default 0
 
   var TITLES = {
@@ -216,6 +217,8 @@
       cb(parse_subs(global_cache.subscriptions));
     } else {
       ajax.get('/api/subs', function (resp) {
+        // maintain sorted order
+        resp = _.sortBy(resp, function (sub) { return sub.sort_index; });
         global_cache.subscriptions = resp;
         cb(parse_subs(resp));
       });
@@ -305,8 +308,34 @@
     });
   }
 
-  function update_group_name_sort_order (subid, sort_order, groupname) {
+  function update_sort_order (moved_id, new_before) {
+    var old = [],
+        subs = parse_subs(global_cache.subscriptions);
+    _.each(subs, function (group) {
+      _.each(group.list, function (sub) { old.push(sub); });
+    });
 
+    var sorted = [],
+        sub, moved = _.find(old, function (s) { return s.id === moved_id; });
+    if(new_before === null) { sorted.push(moved); } // first one
+    for(var i = 0; i < old.length; i++) {
+      sub = old[i];
+      if(sub.id !== moved_id) { // ignore
+        sorted.push(sub);
+        if(sub.id === new_before) {
+          sorted.push(moved);
+        }
+      }
+    }
+    var step = Math.floor(MAX_SORT_ORDER / sorted.length),
+        sort_index = 0,
+        result = [];
+    for(i = 0; i < sorted.length; i++) {
+      result.push({id: sorted[i].id, o: sort_index});
+      sort_index += step;
+    }
+    ajax.spost('/api/subs/sort', result, function (resp) {
+    });
   }
 
   function get_all_sub_titles (filter) {
@@ -332,7 +361,8 @@
       is_user_has_subscription: is_user_has_subscription,
       mark_as_read: mark_as_read,
       save_vote: save_vote,
-      user_settings: user_settings
+      user_settings: user_settings,
+      update_sort_order: update_sort_order
     }
   });
 })();

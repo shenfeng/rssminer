@@ -231,7 +231,7 @@ body {
     span.vote { right: 12em; }
     height: $footer_height - 22px;
     overflow: auto;
-    .title { max-width: 800px; }
+    .title { max-width: 700px; }
     .feeds > li { border-bottom: 1px dotted #eee; }
     .selected { background: $selected_color; }
 }

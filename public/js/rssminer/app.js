@@ -206,7 +206,11 @@
   function saveVotedown (e) { saveVote(-1, this); return false; }
 
   function save_sort_order (event, ui) {
-    // console.log('saveing', event, ui, $(ui.item));
+    var $moved = $(ui.item),
+        $before = $moved.prev(),
+        moved_id = parseInt($moved.attr('data-id')),
+        new_before_id = $before.length ? parseInt($before.attr('data-id')) : null;
+    data.update_sort_order(moved_id, new_before_id);
   }
 
   util.delegate_events($(document), {
@@ -218,15 +222,15 @@
   });
 
   data.get_user_subs(function (subs) {
-    var nav = to_html(tmpls.nav, {subs: subs});
-    $("#navigation ul.sub-list").empty().append(nav);
+    var html = to_html(tmpls.nav, {subs: subs});
+    $("#navigation ul.sub-list").empty().append(html);
     $("#navigation .item img").each(function (index, img) {
       img.onerror = function () { img.src="/imgs/16px-feed-icon.png"; };
     });
-    $('.sub-list').sortable();  // category sortable
+    $('.sub-list').sortable({ update: save_sort_order }); // category sortable
     $(".rss-category").sortable({ // subscription sortable with categories
       connectWith: ".rss-category",
-      stop: save_sort_order
+      update: save_sort_order
     });
 
     RM.hashRouter({

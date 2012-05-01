@@ -61,7 +61,9 @@
   }
 
   function jpost(url, data, success, silent) {
-    show_msg(LOADING);
+    if(!silent) {
+      show_msg(LOADING);
+    }
     _clear_timer();
     if(typeof data === 'function') { // shift
       silent = success;
@@ -80,6 +82,6 @@
   }
 
   window.RM = $.extend(window.RM, {
-    ajax: { sget: sget, spot: spost, get: get, jpost: jpost }
+    ajax: { sget: sget, spost: spost, get: get, jpost: jpost }
   });
 })();

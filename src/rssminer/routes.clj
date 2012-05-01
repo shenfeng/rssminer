@@ -24,6 +24,7 @@
 (defroutes api-routes
   (context "/subs" []
            (JGET "/" [] subs/list-subscriptions)
+           (JPOST "/sort" [] subs/save-sort-order)
            (JPOST "/add" [] subs/add-subscription)
            (JGET "/:rss-id" [] feed/get-by-subscription)
            (JGET "/p/:rss-id" [] subs/polling-subscription)
