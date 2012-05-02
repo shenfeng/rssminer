@@ -16,6 +16,7 @@
       STATIC_SERVER = window._RM_.static_server,
       LIKE_SCORE = user_conf.like_score || 1,
       MAX_SORT_ORDER = 65535,
+      INIT_SORT_ORDER = 256,
       NEUTRAL_SCORE = user_conf.neutral_score || 0; // db default 0
 
   var TITLES = {
@@ -50,7 +51,7 @@
 
   function get_subscription (subid) {
     return _.find(global_cache.subscriptions, function (sub) {
-      return subid = sub.id;
+      return subid === sub.id;
     });
   }
 
@@ -217,10 +218,15 @@
       cb(parse_subs(global_cache.subscriptions));
     } else {
       ajax.get('/api/subs', function (resp) {
-        // maintain sorted order
-        resp = _.sortBy(resp, function (sub) { return sub.sort_index; });
-        global_cache.subscriptions = resp;
-        cb(parse_subs(resp));
+        var result = parse_subs(resp),
+            cache = [];
+        _.each(result, function (group) { // for the first time, all sort_index is 0
+          _.each(group.list, function (sub) {
+            cache.push(_.find(resp, function (i) { return i.id === sub.id; }));
+          });
+        });
+        global_cache.subscriptions = cache;
+        cb(result);
       });
     }
   }
@@ -308,34 +314,68 @@
     });
   }
 
-  function update_sort_order (moved_id, new_before) {
-    var old = [],
-        subs = parse_subs(global_cache.subscriptions);
-    _.each(subs, function (group) {
-      _.each(group.list, function (sub) { old.push(sub); });
-    });
+  function update_sort_order (moved_id, new_before, new_cat) {
+    var subs = global_cache.subscriptions;
+    var step = Math.min(Math.floor(MAX_SORT_ORDER / subs.length), 256);
+    var moved =  get_subscription(moved_id);
+    var old_idx = _.indexOf(subs, moved);
+    var before = get_subscription(new_before);
+    var before_idx = _.indexOf(subs, before);
+    var update_cat = moved.group_name !== new_cat;
 
-    var sorted = [],
-        sub, moved = _.find(old, function (s) { return s.id === moved_id; });
-    if(new_before === null) { sorted.push(moved); } // first one
-    for(var i = 0; i < old.length; i++) {
-      sub = old[i];
-      if(sub.id !== moved_id) { // ignore
-        sorted.push(sub);
-        if(sub.id === new_before) {
-          sorted.push(moved);
+    if(update_cat) { moved.group_name = new_cat; }
+
+    var save_data = [],
+        generate_all = false,
+        self = update_cat ? {g: new_cat, id: moved.id}: {id: moved.id};
+
+    if(before_idx === -1) { // no prev element
+      if(subs[0].sort_index >= 2) {
+        self.o = Math.floor(subs[0].sort_index / 2);
+        save_data.push(self);
+      } else {
+        generate_all = true;
+      }
+    } else if (before_idx === subs.length - 2 ) { // the last one
+      if(before.sort_index + step < MAX_SORT_ORDER) {
+        self.o = before.sort_index + step;
+        save_data.push(self);
+      } else {
+        generate_all = true;
+      }
+    } else {
+      var gap = subs[before_idx + 1].sort_index - before.sort_index;
+      if( gap > 2 ) {
+        self.o = before.sort_index + Math.floor(gap / 2);
+        save_data.push(self);
+      } else {
+        generate_all = true;
+      }
+    }
+
+    if (generate_all){                    // regenerate all
+      var sort_index = INIT_SORT_ORDER;
+      for(var i = 0; i < subs.length; i++) {
+        if(old_idx !== i) {
+          save_data.push({id: subs[i].id, o: sort_index});
+          subs[i].sort_index = sort_index;
+          sort_index += step;
+          if(before_idx === i) {
+            self.o = sort_index;
+            save_data.push(self);
+            subs[old_idx].sort_index = sort_index;
+            sort_index += step;
+          }
         }
       }
     }
-    var step = Math.floor(MAX_SORT_ORDER / sorted.length),
-        sort_index = 0,
-        result = [];
-    for(i = 0; i < sorted.length; i++) {
-      result.push({id: sorted[i].id, o: sort_index});
-      sort_index += step;
-    }
-    ajax.spost('/api/subs/sort', result, function (resp) {
+
+    if(self.o) { moved.sort_index = self.o; }    // update sort_index
+
+    global_cache.subscriptions = _.sortBy(subs, function (s) {
+      return s.sort_index;
     });
+    ajax.spost('/api/subs/sort', save_data);
   }
 
   function get_all_sub_titles (filter) {

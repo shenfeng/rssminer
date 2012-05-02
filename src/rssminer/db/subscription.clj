@@ -46,6 +46,9 @@
 (defn update-sort-order [user-id data]
   (with-mysql
     (apply do-commands
-           (map (fn [d] (str "update user_subscription set sort_index = "
-                            (:o d) " where user_id = " user-id
-                            " and rss_link_id = " (:id d))) data))))
+           (map (fn [d] (str "UPDATE user_subscription SET sort_index = "
+                            (:o d)
+                            (if (:g d)
+                              (str " , group_name = '" (:g d) "'") "")
+                            " WHERE user_id = " user-id
+                            " AND rss_link_id = " (:id d))) data))))

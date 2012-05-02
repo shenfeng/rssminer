@@ -205,12 +205,19 @@
   function saveVoteUp (e) { saveVote(1, this); return false; }
   function saveVotedown (e) { saveVote(-1, this); return false; }
 
-  function save_sort_order (event, ui) {
-    var $moved = $(ui.item),
-        $before = $moved.prev(),
-        moved_id = parseInt($moved.attr('data-id')),
-        new_before_id = $before.length ? parseInt($before.attr('data-id')) : null;
-    data.update_sort_order(moved_id, new_before_id);
+  function update_subs_sort_order (event, ui) {
+    if(!ui.sender) { // prevent be callded twice if move bettween categories
+      var $moved = $(ui.item),
+          $before = $moved.prev(),
+          moved_id = parseInt($moved.attr('data-id')),
+          new_cat = $moved.closest('.rss-category').siblings('.folder').attr('data-name'),
+          new_before_id = $before.length ? parseInt($before.attr('data-id')) : null;
+      data.update_sort_order(moved_id, new_before_id, new_cat);
+    }
+  }
+
+  function update_category_sort_order () {
+
   }
 
   util.delegate_events($(document), {
@@ -227,10 +234,11 @@
     $("#navigation .item img").each(function (index, img) {
       img.onerror = function () { img.src="/imgs/16px-feed-icon.png"; };
     });
-    $('.sub-list').sortable({ update: save_sort_order }); // category sortable
+    // category sortable
+    $('.sub-list').sortable({change: update_category_sort_order });
     $(".rss-category").sortable({ // subscription sortable with categories
       connectWith: ".rss-category",
-      update: save_sort_order
+      update: update_subs_sort_order
     });
 
     RM.hashRouter({

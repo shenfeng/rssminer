@@ -45,7 +45,12 @@
         }
       },
       error: function (xhr) {
-        show_error_msg(JSON.parse(xhr.responseText).message);
+        try {
+          show_error_msg(JSON.parse(xhr.responseText).message);
+        }
+        catch(e) {
+          show_error_msg(xhr.responseText);
+        }
       }
     };
   }
