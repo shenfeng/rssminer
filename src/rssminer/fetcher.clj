@@ -40,11 +40,12 @@
       {:check_interval interval
        :next_check_ts (+ (now-seconds) interval)})))
 
-(defn handle-resp [{:keys [id url check_interval last_modified]}
+(defn handle-resp [{:keys [id url check_interval last_modified url]}
                    status headers body]
   (let [feeds (when (and (= 200 status) body) (parse-feed body))
         updated (assoc-if (next-check check_interval status headers)
                           :last_modified (get headers HttpUtils/LAST_MODIFIED)
+                          :etag (get headers HttpUtils/ETAG)
                           :alternate (:link feeds)
                           :last_status status
                           :description (:description feeds)
@@ -56,7 +57,7 @@
       (db/save-feeds feeds id)
       (db/update-total-feeds id))))
 
-(defn- mk-task [{:keys [url last_modified] :as link}]
+(defn- mk-task [{:keys [url last_modified etag] :as link}]
   (reify IHttpTask
     (getUri [this] (java.net.URI. url))
     (getProxy [this] (:proxy @rssminer-conf))
@@ -67,7 +68,8 @@
                              :next_check_ts (+ (now-seconds) interval)
                              :error_msg (.getMessage ^Throwable t)})))
     (getHeaders [this]
-      (if last_modified {"If-Modified-Since" last_modified} {}))
+      {HttpUtils/IF_MODIFIED_SINCE last_modified
+       HttpUtils/IF_NONE_MATCH etag})
     (doTask [this status headers body]
       (handle-resp link status headers body))))
 

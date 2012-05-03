@@ -66,7 +66,7 @@
 
 (defn fetch-rss-links [limit]           ; for fetcher
   "Returns nil when no more"
-  (mysql-query ["SELECT id, url, check_interval, last_modified
+  (mysql-query ["SELECT id, url, check_interval, last_modified, etag
               FROM rss_links
               WHERE next_check_ts < ?
               ORDER BY next_check_ts LIMIT 0, ?" (now-seconds) limit]))

@@ -2,6 +2,7 @@ package rssminer.async;
 
 import static me.shenfeng.http.HttpUtils.LOCATION;
 import static rssminer.Utils.CLIENT;
+import static rssminer.Utils.FINAL_URI;
 import static rssminer.Utils.minfiyHtml;
 
 import java.net.Proxy;
@@ -18,7 +19,7 @@ import clojure.lang.IFn;
 // fetch the orginal html
 public class FetchFuture extends AbstractFuture {
 
-    public static final String FINAL_URI = "X-final-uri";
+  
     private Map<String, String> header;
 
     private class ResultHandler implements ITextHandler {

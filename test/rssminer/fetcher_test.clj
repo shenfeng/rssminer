@@ -4,7 +4,8 @@
         rssminer.db.feed
         [rssminer.time :only [now-seconds]]
         [rssminer.db.util :only [mysql-query mysql-insert]]
-        [rssminer.test-common :only [mysql-fixture]]))
+        [rssminer.test-common :only [mysql-fixture]])
+  (:import me.shenfeng.http.HttpUtils))
 
 (use-fixtures :each mysql-fixture
               (fn [test-fn]
@@ -16,7 +17,9 @@
   (let [provider ^rssminer.task.IHttpTasksProvder (mk-provider)
         task (first (.getTasks provider))]
     (is (.getUri task))
-    (is (empty? (.getHeaders task)))))
+    (let [header (.getHeaders task)]
+      (is (nil? (get header HttpUtils/IF_MODIFIED_SINCE {}))
+          (nil? (get header HttpUtils/IF_NONE_MATCH {}))))))
 
 (deftest test-handle-resp
   (let [links (fetch-rss-links 10000)

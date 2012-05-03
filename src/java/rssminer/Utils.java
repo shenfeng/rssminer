@@ -24,6 +24,8 @@ public class Utils {
     public static final HttpClient CLIENT;
     public static final String USER_AGETNT = "Mozilla/5.0 (compatible; Rssminer/1.0; +http://rssminer.net)";
 
+    public static final String FINAL_URI = "X-final-uri";
+
     static {
         try {
             CLIENT = new HttpClient(new HttpClientConfig(50000, USER_AGETNT));

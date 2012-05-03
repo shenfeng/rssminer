@@ -26,6 +26,9 @@ CREATE TABLE rss_links (
   check_interval MEDIUMINT DEFAULT 14400, -- seconds, in 4 h, min 3h
   -- alter table rss_links change check_interval check_interval mediumint default 14400
   last_modified VARCHAR(64),             -- from http response header
+  -- 2012/5/3
+  -- alter table rss_links add etag varchar(64)
+  etag varchar(64),
   user_id INT UNSIGNED,      -- who first add it, REFERENCES users(no index)
   INDEX idx_rss_check_ts (next_check_ts)
 );

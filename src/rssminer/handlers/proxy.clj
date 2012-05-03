@@ -37,7 +37,7 @@
 
 (defn- fetch-and-store-orginal [id link proxy? header]
   (let [cb (fn [status headers html]     ; html is minified
-             (let [final-uri (get headers FetchFuture/FINAL_URI)]
+             (let [final-uri (get headers Utils/FINAL_URI)]
                (if (= 200 status)
                  (do (update-index id html)
                      ;; save final_link if different
