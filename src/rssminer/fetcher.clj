@@ -3,7 +3,7 @@
         (rssminer [util :only [assoc-if]]
                   [parser :only [parse-feed]]
                   [time :only [now-seconds]]
-                  [redis :only [fetcher-dequeue]]
+                  [redis :only [fetcher-dequeue fetcher-enqueue]]
                   [http :only [parse-response]]
                   [config :only [rssminer-conf]]))
   (:require [rssminer.db.feed :as db])
@@ -71,17 +71,23 @@
       {HttpUtils/IF_MODIFIED_SINCE last_modified
        HttpUtils/IF_NONE_MATCH etag})
     (doTask [this status headers body]
-      (handle-resp link status headers body))))
+      (handle-resp link status headers body))
+    (toString [this]
+      (str (.getUri this) " " (.getHeaders this)))))
 
 (defn mk-provider []
   (reify IHttpTasksProvder
     (getTasks [this]
       (map mk-task (db/fetch-rss-links (:fetch-size @rssminer-conf))))))
 
+(defn refetch-rss-link [id]
+  (if-let [rss (db/fetch-rss-link id)]
+    (fetcher-enqueue rss)))
+
 (defn mk-blocking-provider []
   (reify IBlockingTaskProvider
     (getTask [this timeout]
-      (when-let [d (fetcher-dequeue timeout)]
+      (when-let [d (fetcher-dequeue timeout)] ; seconds
         (mk-task d)))))
 
 (defn start-fetcher []
@@ -90,7 +96,7 @@
                          (doto (HttpTaskRunnerConf.)
                            ;; poll database
                            (.setBulkCheckInterval (* 15  60  1000)) ; 15 min
-                           (.setBlockingTimeOut 20) ; 15 second
+                           (.setBlockingTimeOut 20) ; 20 second
                            (.setBulkProvider (mk-provider))
                            (.setBlockingProvider (mk-blocking-provider))
                            (.setQueueSize (:fetcher-queue @rssminer-conf))

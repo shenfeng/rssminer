@@ -41,4 +41,8 @@ public class RetryHttpTask implements IHttpTask {
     public Object onThrowable(Throwable t) {
         return mTask.onThrowable(t);
     }
+
+    public String toString() {
+        return "retry: " + retryTimes() + " " + getUri() + " " + getHeaders();
+    }
 }

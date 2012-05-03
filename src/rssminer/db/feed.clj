@@ -71,6 +71,11 @@
               WHERE next_check_ts < ?
               ORDER BY next_check_ts LIMIT 0, ?" (now-seconds) limit]))
 
+(defn fetch-rss-link [id]
+  (first (mysql-query
+          ["SELECT id, url, check_interval, last_modified, etag
+              FROM rss_links where id = ?" id])))
+
 (defn insert-rss-link [link]
   ;; ignore voilate of uniqe constraint
   (ignore-error (mysql-insert :rss_links link)))
