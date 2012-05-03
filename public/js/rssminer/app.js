@@ -6,11 +6,19 @@
       layout = RM.layout,
       to_html = Mustache.to_html;
 
-  var current_subid;
+  var ANIMATION_TIME = 250;
 
-  var $footer = $('#footer'),
-      $loader = $('#reading-chooser .loader'),
-      $reading_area = $('#reading-area');
+  var current_subid,
+      current_feeds_cnt = 0,
+      current_nav_subs = true;
+
+  var $loader = $('#footer img'),
+      $reading_area = $('#reading-area'),
+      $navigation = $('#navigation'),
+      $footer_title = $('#footer a'),
+      $footer_domain = $('#footer .domain'),
+      $subs_list = $('.sub-list'),
+      $feeds_list = $('#feed-list');
 
   function focus_first_feed () {
     $($('.welcome-list li.feed')[0]).addClass('selected');
@@ -23,31 +31,47 @@
     return $welcome;
   }
 
-  function show_footer_list () {
-    data.get_feeds(current_subid, 0, 40, 'time', function (feeds) {
-      var html = to_html(tmpls.list, {feeds: feeds});
-      $('#feed-list ul').empty().append(html);
-      $footer.show();
-      $reading_area.addClass('show-iframe');
-      layout.reLayout();
-    });
+  function toggle_nav () {
+    if(current_nav_subs) { switch_nav_to_feeds(); }
+    else { switch_nav_to_subs(); }
   }
 
-  function hide_footer_list () {
-    $footer.hide();
-    $reading_area.removeClass('show-iframe');
-    layout.reLayout();
+  function switch_nav_to_subs () {
+    if(!current_nav_subs) {
+      current_nav_subs = true;
+      $feeds_list.animate({height: 0, opacity: 0}, ANIMATION_TIME, function () {
+        $feeds_list.hide().css({height: 'auto', opacity: 1});
+        $subs_list.show();
+      });
+    }
+  }
+
+  function switch_nav_to_feeds (cb) {
+    if(current_nav_subs && current_feeds_cnt) {
+      current_nav_subs = false;
+      $subs_list.animate({height: 0, opacity: 0}, ANIMATION_TIME, function () {
+        $subs_list.hide().css({ opacity: 1, height: 'auto' });
+        $feeds_list.show();
+        if(typeof cb === 'function') { cb(); }
+      });
+    } else if(typeof cb === 'function') {
+      cb();
+    }
   }
 
   function read_subscription (id, callback) {
     current_subid = id;
-    hideHelp();
-    hide_footer_list();
+    hide_help();
+    $reading_area.removeClass('show-iframe');
     var sub = data.get_subscription(id),
         title = sub.title;
     if(layout.select('.sub-list', "item-" + id)) {
       data.get_feeds(id, 0, 40, 'time', function (data) {
+        current_feeds_cnt = data.length;
         if(data.length) {
+          var html = to_html(tmpls.list, {feeds: data});
+          $feeds_list.empty().append(html);
+          switch_nav_to_subs();
           var $welcome = set_welcome_title(title);
           $welcome.append(to_html(tmpls.welcome_section, {list: data }));
           focus_first_feed();
@@ -73,22 +97,24 @@
 
   function read_feed (subid, feedid) {
     read_subscription(subid, function () {
-      show_footer_list();
+      $reading_area.addClass('show-iframe');
       var me = "feed-" + feedid,
           $me = $('#' + me);
-      if(layout.select('#feed-list', me)) {
-        var feed = data.get_feed(subid, feedid),
-            title = feed.title,
-            link = feed.link;
-        $('#footer .info a').text(title).attr('href', link);
-        var iframe = $('iframe')[0];
-        $loader.css({visibility: 'visible'});
-        iframe.src = data.get_final_link(link, feedid);
-        iframe.onload = function () {
-          mark_as_read($me, feedid, subid);
-          $loader.css({visibility: 'hidden'});
-        };
-      }
+      switch_nav_to_feeds(function () {
+        layout.select('#feed-list', me);
+      });
+      var feed = data.get_feed(subid, feedid),
+          title = feed.title,
+          link = feed.link;
+      $footer_title.text(title).attr('href', link);
+      $footer_domain.text(util.hostname(link));
+      var iframe = $('iframe')[0];
+      $loader.css({visibility: 'visible'});
+      iframe.src = data.get_final_link(link, feedid);
+      iframe.onload = function () {
+        mark_as_read($me, feedid, subid);
+        $loader.css({visibility: 'hidden'});
+      };
     });
   }
 
@@ -159,7 +185,7 @@
   }
 
   function settings () {
-    hideHelp();
+    hide_help();
     $reading_area.removeClass('show-iframe');
     var $welcome = set_welcome_title();
     $welcome.append(to_html(tmpls.settings, data.user_settings()));
@@ -189,18 +215,18 @@
   }
 
   function show_help () {
-    hideHelp();
+    hide_help();
     $('body').append(tmpls.keyboard);
   }
 
   function show_add_sub_ui () {
-    hideHelp();
+    hide_help();
     $reading_area.removeClass('show-iframe');
     var $welcome = set_welcome_title();
     $welcome.append(tmpls.add);
   }
 
-  function hideHelp () { $("#help, #subs").remove(); }
+  function hide_help () { $("#help, #subs").remove(); }
 
   function saveVoteUp (e) { saveVote(1, this); return false; }
   function saveVotedown (e) { saveVote(-1, this); return false; }
@@ -220,12 +246,25 @@
 
   }
 
+  function toggle_nav_foler (e) {
+    $(this).closest('li').toggleClass('collapse');
+    var collapsed = [];
+    $('#navigation li.collapse .folder').each(function (index, item) {
+      collapsed.push($(item).attr('data-name'));
+    });
+    RM.ajax.spost('/api/settings', {nav: collapsed});
+    return false;
+  }
+
+
   util.delegate_events($(document), {
     'click #add-subscription': add_subscription,
     'click #save-settings': save_settings,
     'click .chooser li': toggleWelcome,
     'click .vote span.down': saveVotedown,
-    'click .vote span.up': saveVoteUp
+    'click .vote span.up': saveVoteUp,
+    'click #main .hover-switch': toggle_nav,
+    'click #navigation .folder span': toggle_nav_foler
   });
 
   data.get_user_subs(function (subs) {
@@ -241,6 +280,9 @@
       update: update_subs_sort_order
     });
 
+    // $('#navigation .subs').mouseenter(switch_nav_to_subs);
+    // $('#navigation .hover-switch').mouseenter(toggle_nav);
+
     RM.hashRouter({
       '': show_welcome,
       'settings': settings,
@@ -253,7 +295,7 @@
   // export
   window.RM = $.extend(window.RM, {
     app: {
-      hideHelp: hideHelp,
+      hideHelp: hide_help,
       save_vote: saveVote,
       showHelp: show_help
     }

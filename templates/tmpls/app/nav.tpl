@@ -6,7 +6,7 @@
     </div>
     <ul class="rss-category">
       {{#list}}
-        <li class="item" id="item-{{id}}" data-id="{{id}}">
+        <li class="item" id="item-{{id}}" data-id="{{id}}" title="{{title}}">
           <a href="#{{href}}">
             <img src="{{img}}" width="16" height="16" />
             <span class="title"> {{title}} </span>

@@ -120,8 +120,6 @@
     }
     if(is_list_show) { filter_subscription(e); }
     switch(e.which) {
-    case 70:                    // f
-      $('#footer').toggle(); RM.layout.reLayout(); break;
     case 79:                    // o
       if(!is_list_show) openSelected(); break;
     case 72:                    // h

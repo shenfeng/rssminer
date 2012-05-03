@@ -1,0 +1,74 @@
+#settings, #add-sub {
+    padding: 1em 0 0 1em;
+    h2 { text-align: left; padding-left: 4em; }
+    h4 { width: 130px; }
+    section {
+        display: table-row;
+        border-bottom: 1px solid #EEE;
+        h4, > div {
+            padding: 17px 0;
+            display: table-cell;
+            vertical-align: baseline;
+            border-bottom: 1px solid #EEE;
+        }
+    }
+    img {
+        &:hover { @include box-shadow(0, 0, 6px, #666); }
+        @include box-shadow(0, 0, 3px, #666);
+    }
+    input {
+        margin-top: 5px;
+        width: 400px;
+        padding: 5px;
+        display: block;
+    }
+}
+
+#help {
+    h3 {
+        font-size: 24px;
+        margin: 10px 0;
+        border-bottom: 1px solid white;
+    }
+    td {
+        padding: 4px 4px;
+        color: white;
+        &:first-child { text-align: right; }
+    }
+    .key { color: #8D0; font-weight: bold; }
+}
+
+#subs, #help {
+    color: white;
+    @include border-radius(10px);
+    width: 70%;
+    background: rgba(0, 0, 0, 0.8);
+    position: absolute;
+    z-index: 100;
+    top: 70px;
+    left: 14%;
+    padding: 5px 2% 40px;
+}
+
+#sub-filter {
+    height: 27px;
+    text-align: center;
+    width: 100%;
+    font-size: 22px;
+    padding: 4px 0 5px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+#subs {
+    input {
+        display: block;
+        padding: 5px; width: 300px; margin: 15px auto;
+    }
+    .selected {
+        background: #ccc;
+        @include border-radius(3px);
+    }
+    li {
+        display: inline-block; padding: 3px 5px; margin: 2px;
+    }
+}

@@ -13,65 +13,52 @@
     <link rel="stylesheet" href="/css/app.css?{VERSION}">
   </head>
   <body>
-    <div id="navigation">
+    <div id="header">
       <div class="wrapper">
-        <div class="section">
-          <h3>search</h3>
-          <div id="search-input" class="expand">
-            <input placeholder="full text search all you feeds" name="q"/>
-            <ul class="search-result"></ul>
-          </div>
-        </div>
-        <div class="section active">
-          <h3>subscriptions</h3>
-          <ul class="sub-list expand"> </ul>
-        </div>
+        <h1><a href="#">Rssminer</a></h1>
+        <input id="q" placeholder="search, feed, subscription..."/>
+        <ul>
+          <li><a href="#add" title="add subscription">Add</a></li>
+          <li><a href="#settings"> Settings </a></li>
+          <li><a href="#help">Help</a></li>
+        </ul>
+
       </div>
     </div>
-    <div id="admin-controls">
-      <a href="#add" title="add subscription">
-        <span class="add">+</span>
-      </a>
-      <a href="#settings" title="settings">
-        <img src="/imgs/configure.png" width="28"/>
-      </a>
-      <a href="#help" title="show keyboard shortcut">
-        <img src="/imgs/preferences_desktop_keyboard.png" width="28"/>
-      </a>
-    </div>
-    <div id="content">
-      <div id="reading-area">
-        <div class="welcome-list clearfix"></div>
-        <div class="iframe">
-          <span class="vote">
-            <span class="up">UP</span>
-            <span class="down">DOWN</span>
-          </span>
-          <iframe src="about:blank"></iframe>
+    <div id="main">
+      <div id="navigation">
+        <div class="subs">
+          <!-- <h3>subscriptions</h3> -->
+          <ul class="sub-list"> </ul>
+        </div>
+        <div class="feeds">
+          <!-- <h3>Feeds</h3> -->
+          <ul id="feed-list" class="feeds"></ul>
         </div>
       </div>
-      <div id="footer">
-        <div id="reading-chooser">
-          <ul class="chooser">
-            <li class="iframe">READING</li>
-            <li>FEED LIST</li>
-          </ul>
-          <div class="info">
-            <h5><a target="_blank"></a></h5>
+      <div class="hover-switch"></div>
+      <div id="content">
+        <div id="reading-area">
+          <div class="welcome-list clearfix"></div>
+          <div class="iframe">
+            <iframe src="about:blank"></iframe>
+            <div id="footer">
+              <span class="domain"></span>
+              <a href="" target="_blank"></a>
+              <span class="vote">
+                <span class="up">UP</span>
+                <span class="down">DOWN</span>
+              </span>
+              <img class="loader" src="/imgs/loader.gif"/>
+            </div>
           </div>
-          <span class="vote">
-            <span class="down"></span>
-            <span class="up"></span>
-          </span>
-          <img class="loader" src="/imgs/loading.gif"/>
-          <div class="row-resize resizer"></div>
         </div>
         <div id="feed-list">
           <ul class="feeds"></ul>
         </div>
       </div>
     </div>
-    <script src="//code.jquery.com/jquery-1.7.2.min.js"></script>
+    <script src="/js/lib/jquery-1.7.2.min.js"></script>
     <script src="/js/lib/jquery-ui-1.8.18.custom.js" data-profile="dev"></script>
     <script src="/js/lib/underscore.js" data-profile="dev"></script>
     <script src="/js/lib/mustache.js" data-profile="dev"></script>
@@ -82,6 +69,7 @@
     <script src="/js/rssminer/layout.js" data-profile="dev"></script>
     <script src="/js/rssminer/rm_data.js" data-profile="dev"></script>
     <script src="/js/rssminer/keyboard.js" data-profile="dev"></script>
+    <script src="/js/rssminer/search.js" data-profile="dev"></script>
     <script src="/js/rssminer/app.js" data-profile="dev"></script>
     <script src="/js/app-min.js?{VERSION}" data-profile="prod"></script>
   </body>

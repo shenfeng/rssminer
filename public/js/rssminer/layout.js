@@ -3,30 +3,26 @@
       user_conf = user.conf || {},
       util = RM.util;
 
-  var $footer = $('#footer'),
-      $feed_list = $('#feed-list');
+  var $win = $(window),
+      $nav = $('#navigation');
 
   function layout () {
-    var width = $(window).width(),
-        height = $(window).height(),
-        nav_width = $('#navigation').outerWidth(),
-        list_height = $footer.height();
-    if(!$footer.is(':visible')) {
-      list_height = 0;
-    }
-    $("#navigation .wrapper").height(height - $("#admin-controls").height());
-    $("#reading-area").height(height - list_height).width(width - nav_width);
+    var height = $win.height() - $('#header').height();
+    $nav.height(height);
+    $("#reading-area").height(height);
   }
 
   function scroll_to_view ($container, $element) {
-    var ct = $container.offset().top,
-        ch = $container.height(),
-        eh = $element.height(),
-        et = $element.offset().top;
-    if(et < ct) {               // hide in the above
-      $container[0].scrollTop -= ct - et;
-    } else if( ct + ch < et) {  // hide in the bottom
-      $container[0].scrollTop += et - ct - eh * 2;
+    if($container.length && $element.length) {
+      var ct = $container.offset().top,
+          ch = $container.height(),
+          eh = $element.height(),
+          et = $element.offset().top;
+      if(et < ct) {               // hide in the above
+        $container[0].scrollTop -= ct - et;
+      } else if( ct + ch < et) {  // hide in the bottom
+        $container[0].scrollTop += et - ct - eh * 2;
+      }
     }
   }
 
@@ -35,101 +31,23 @@
     if(!$me.hasClass('selected')) {
       $(".selected", context).removeClass('selected');
       $me.addClass('selected');
-      var $container = $me.parents('.wrapper').length > 0 ?
-            $me.parents('.wrapper') : $me.parents('#feed-list');
       _.defer(function () {
         // expand navigation if collapsed
         $me.closest('li.collapse').removeClass('collapse');
-        scroll_to_view($container, $me);
+        // current sub-list and feed-list are all in navigation
+        scroll_to_view($nav, $me);
       });
       return true;
     }
     return false;
   }
 
-  function toggle_navigation_section (e) {
-    $(this).parents('.section').toggleClass('active');
-  }
-
-  function toggle_nav_foler (e) {
-    $(this).closest('li').toggleClass('collapse');
-    var collapsed = [];
-    $('#navigation li.collapse .folder').each(function (index, item) {
-      collapsed.push($(item).attr('data-name'));
-    });
-    RM.ajax.spost('/api/settings', {nav: collapsed});
-    return false;
-  }
-
-  function adjust (delta, old_footer_height, old_list_height) {
-    old_list_height = old_list_height || $feed_list.height();
-    old_footer_height = old_footer_height || $footer.height();
-    $footer.height(old_footer_height + delta);
-    $feed_list.height(old_list_height + delta);
-    layout();
-  }
-
-  (function () {                        // footer height resize
-    var down = false,
-        startY,
-        updated = false,
-        old_footer_height,
-        old_list_height;
-
-    function noop () { return false; }
-
-    $(document).bind('mousedown', function (e) {
-      if( e.button === 0 ) {       // left
-        var $target = $(e.target);
-        if($target.hasClass('row-resize')) {
-          startY = e.clientY;
-          down = true;
-          $footer.css('cursor', 'row-resize');
-          old_footer_height = $footer.height();
-          old_list_height = $feed_list.height();
-          $(document).bind('selectstart', noop);
-        }
-      }}).bind('mouseup', function (e) {
-        if(e.button ===0) {
-          $(document).unbind('selectstart', noop);
-          $footer.css('cursor', 'auto');
-          if(updated) {                // save on server
-            RM.ajax.jpost('/api/user/settings', {height: $feed_list.height()});
-          }
-          down = false;
-          updated = false;
-        }
-      }).bind('mousemove', function (e) {
-        if(down) {
-          updated = true;
-          adjust(startY - e.clientY, old_footer_height, old_list_height);
-        }
-      });
-  })();
-
-  // user's last height of feed list
-  if(user_conf.height) {
-    if(user_conf.height > 700) {
-      user_conf.height = 700;
-    }
-    $feed_list.height(user_conf.height);
-    $footer.height(user_conf.height + $('#footer .resizer').height());
-  }
-
-  $(window).resize(_.debounce(layout, 100));
+  $win.resize(_.debounce(layout, 100));
   layout();
 
   window.RM = $.extend(window.RM, {
     layout: {
-      reLayout: layout,
-      select: select,
-      adjust: adjust
+      select: select
     }
   });
-
-  util.delegate_events($(document), {
-    'click #navigation .section h3': toggle_navigation_section,
-    'click #navigation .folder span': toggle_nav_foler
-  });
-
 })();
