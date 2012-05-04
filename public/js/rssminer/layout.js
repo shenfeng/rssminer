@@ -1,10 +1,8 @@
 (function () {
-  var user = (_RM_ && _RM_.user) || {},
-      user_conf = user.conf || {},
-      util = RM.util;
-
   var $win = $(window),
       $nav = $('#navigation');
+
+  var SELECTED = 'selected';
 
   function layout () {
     var height = $win.height() - $('#header').height();
@@ -12,30 +10,19 @@
     $("#reading-area").height(height);
   }
 
-  function scroll_to_view ($container, $element) {
-    if($container.length && $element.length) {
-      var ct = $container.offset().top,
-          ch = $container.height(),
-          eh = $element.height(),
-          et = $element.offset().top;
-      if(et < ct) {               // hide in the above
-        $container[0].scrollTop -= ct - et;
-      } else if( ct + ch < et) {  // hide in the bottom
-        $container[0].scrollTop += et - ct - eh * 2;
-      }
-    }
-  }
-
   function select (context, id) {
     var $me = $('#' + id);
-    if(!$me.hasClass('selected')) {
-      $(".selected", context).removeClass('selected');
-      $me.addClass('selected');
+    if(!$me.hasClass(SELECTED)) {
+      $("." + SELECTED, context).removeClass(SELECTED);
+      $me.addClass(SELECTED);
       _.defer(function () {
         // expand navigation if collapsed
         $me.closest('li.collapse').removeClass('collapse');
-        // current sub-list and feed-list are all in navigation
-        scroll_to_view($nav, $me);
+        var me = $me[0],
+            rect = me.getBoundingClientRect();
+        if(rect.top < 0 || rect.top > $win.height()) {
+          me.scrollIntoView();
+        }
       });
       return true;
     }

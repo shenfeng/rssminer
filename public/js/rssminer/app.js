@@ -65,13 +65,15 @@
     $reading_area.removeClass('show-iframe');
     var sub = data.get_subscription(id),
         title = sub.title;
+    if(typeof callback !== 'function') {
+      switch_nav_to_subs();
+    }
     if(layout.select('.sub-list', "item-" + id)) {
       data.get_feeds(id, 0, 40, 'time', function (data) {
         current_feeds_cnt = data.length;
         if(data.length) {
           var html = to_html(tmpls.list, {feeds: data});
           $feeds_list.empty().append(html);
-          switch_nav_to_subs();
           var $welcome = set_welcome_title(title);
           $welcome.append(to_html(tmpls.welcome_section, {list: data }));
           focus_first_feed();
@@ -134,6 +136,7 @@
           var d = data[section];
           if(d.list.length) {
             $welcome.append(to_html(tmpls.welcome_section, d));
+            switch_nav_to_subs();
             focus_first_feed();
           }
         }
@@ -143,7 +146,7 @@
     }
   }
 
-  function saveVote (vote, ele) {
+  function save_vote (vote, ele) {
     var $feed;
     //  1. select it's parent if ele is defined;
     if(ele) { $feed = $(ele).closest('li.feed'); }
@@ -172,15 +175,6 @@
           $feed.addClass('neutral').removeClass('like dislike sys');
         }
       });
-    }
-  }
-
-  function toggleWelcome () {
-    var wantIframe = $(this).hasClass('iframe');
-    if(wantIframe) {
-      $reading_area.addClass('show-iframe');
-    } else {
-      $reading_area.removeClass('show-iframe');
     }
   }
 
@@ -228,8 +222,8 @@
 
   function hide_help () { $("#help, #subs").remove(); }
 
-  function saveVoteUp (e) { saveVote(1, this); return false; }
-  function saveVotedown (e) { saveVote(-1, this); return false; }
+  function saveVoteUp (e) { save_vote(1, this); return false; }
+  function saveVotedown (e) { save_vote(-1, this); return false; }
 
   function update_subs_sort_order (event, ui) {
     if(!ui.sender) { // prevent be callded twice if move bettween categories
@@ -260,7 +254,6 @@
   util.delegate_events($(document), {
     'click #add-subscription': add_subscription,
     'click #save-settings': save_settings,
-    'click .chooser li': toggleWelcome,
     'click .vote span.down': saveVotedown,
     'click .vote span.up': saveVoteUp,
     'click #main .hover-switch': toggle_nav,
@@ -296,7 +289,7 @@
   window.RM = $.extend(window.RM, {
     app: {
       hideHelp: hide_help,
-      save_vote: saveVote,
+      save_vote: save_vote,
       showHelp: show_help
     }
   });

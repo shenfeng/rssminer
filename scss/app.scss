@@ -2,7 +2,7 @@
 
 $nav_width: 265px;
 $footer_height: 230px;
-$hover_color: #E5ECF9; // #DDD;
+$hover_color: #D6E9F8; // #DDD;
 $selected_color: #E5ECF9;
 $header_height: 46px;
 $body_width: 1260px;
@@ -359,7 +359,7 @@ iframe {
     li {
         padding: 5px 8px;
         &.selected, &:hover {
-            background: #D6E9F8;
+            background: $hover_color;
         }
     }
     box-shadow: 0 1px 4px rgba(0, 0, 0, .5);
@@ -378,6 +378,9 @@ iframe {
     width: 100%;
     padding: 6px 0 0 0;
     a {
+        @include overflow-ellipsis();
+        max-width: 750px;
+        display: inline-block;
         font-weight: bold;
         color: white;
         &:hover { text-decoration: underline; }
