@@ -2,6 +2,7 @@
   var data = window.RM.data,
       $q = $('#header input'),
       tmpls = RM.tmpls,
+      ID = 'search-result',
       to_html = Mustache.to_html;
 
   var SELECTED = 'selected';
@@ -24,7 +25,6 @@
 
   function do_search (e) {
     var q = $q.val(),
-        ID = 'search-result',
         $selected = $('#' + ID + ' .selected');
     switch(e.which) {
     case 38:                    // up
@@ -59,13 +59,13 @@
         return false;
       }
     case 27:                  // esc
-      $('#' + ID).remove();
+      hide_search_result();
       return false;
     }
 
     get_search_result(q, 15, function (result) {
       var html = to_html(tmpls.search_result, result);
-      $('#' + ID).remove();
+      hide_search_result();
       var $result = $(html).attr('id', ID);
       $('#header .wrapper').append($result);
       $('li', $result).mouseenter(function () {
@@ -76,5 +76,14 @@
     return false;
   }
 
-  $('#header input').keyup(do_search);
+  function hide_search_result () {
+    $('#' + ID).remove();
+  }
+
+  window.RM.util.delegate_events($(document), {
+    'keyup #header input': do_search,
+    'click #search-result a': hide_search_result
+  });
+
+  $('').keyup(do_search);
 })();

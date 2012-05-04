@@ -5,6 +5,7 @@ $footer_height: 230px;
 $hover_color: #D6E9F8; // #DDD;
 $selected_color: #E5ECF9;
 $header_height: 46px;
+$header_color: #3D5877;
 $body_width: 1260px;
 
 ::-webkit-scrollbar {
@@ -44,25 +45,20 @@ a { outline: 0; text-decoration: none;}
     top: 0;
     left: 0;
     z-index: 1;
-    background: rgba(136, 160, 185, 0.41);
+    background: $header_color;
+    /* background: #1E3F64 url(http://ejohn.org/images/ejohn-head-back.png); */
     height: $header_height;
     width: 100%;
     .wrapper {
         width: $body_width;
         margin: 0 auto;
-        > * { position: absolute; }
         position: relative;
+        > * { position: absolute; }
     }
-    img {
-        left: 160px;
-        visibility: hidden;
-        top: 10px;
-    }
+    img { left: 160px; visibility: hidden; top: 10px; }
     h1 {
-        left: 10px;
-        top: 3px;
-        margin: 3px 0;
-        font-size: 26px;
+        left: 10px; top: 3px; margin: 3px 0; font-size: 26px;
+        a { color: white; }
     }
     input {
         left: 230px;
@@ -73,25 +69,27 @@ a { outline: 0; text-decoration: none;}
         margin-top: 6px;
         @include border-radius(5px);
     }
-    .wrapper > ul {
+    ul.nav {
         font-size: 12px;
+        right: 20px;
+        top: 0;
         li {
             display: inline-block;
             padding: 2px;
             &:hover { text-decoration: underline; }
         }
-        right: 20px;
-        top: 0;
+        a { color: white; }
     }
 }
 
 #main {
     margin-top: $header_height;
-    background: white url('/imgs/bg-site.png') repeat center top;
+    background: white;
+    /* background: #F6F6F6 url('/imgs/bg-site.png') repeat center top; */
     position: relative;
     .hover-switch {
         position: absolute;
-        background: #44A0F5;
+        background: $header_color;
         width: 18px;
         height: 55px;
         top: 45%;
@@ -113,8 +111,9 @@ html, body {
 
 body {
     font: 400 14px/1.431 'Helvetica Neue',Helvetica,Arial,sans-serif;
-    color: #222;
-    background: #F7F7F7;
+    color: #111;
+    background: #F6F6F6 url('/imgs/bg.png') repeat center top;
+/* background: #F7F7F7; */
 }
 
 #content { margin-left: $nav_width; }
@@ -215,7 +214,7 @@ body {
     }
 }
 
-.unread a { color: #111; color: #00E; }
+.unread a { color: #00E; }
 .read, .sys-read { a { color: #444; } }
 
 #reading-area {
@@ -374,20 +373,20 @@ iframe {
 #footer {
     position: absolute;
     bottom: 0;
-    background: rgba(27, 27, 27, 0.4);
+    background: rgba(3, 3, 3, 0.53);
     width: 100%;
     padding: 6px 0 0 0;
     a {
-        @include overflow-ellipsis();
-        max-width: 750px;
+        max-width: 670px;
         display: inline-block;
         font-weight: bold;
         color: white;
-        &:hover { text-decoration: underline; }
         padding: 0 20px 0 0;
         background: url(/imgs/external-link.png) right 3px no-repeat;
+        @include overflow-ellipsis();
+        &:hover { text-decoration: underline; }
     }
-    span.domain { color: white; padding-right: 2em; font-size: small;}
+    span.domain { color: white; padding: 0 1.3em; font-size: small;}
     img {
         float: right;
         width: 25px;
@@ -395,25 +394,8 @@ iframe {
         margin-right: 35px;
     }
     .vote {
-        /* display: block; */
-        /* position: absolute; */
-        /* bottom: 40%; */
-        /* right: 0; */
-        /* @include border-radius(5px 0 0 0); */
-        /* background: rgba(0, 0, 0, 0.1); */
-        /* height: 100px; */
-        /* width: 35px; */
         span {
             background: transparent;
-        /* visibility: visible; */
-        /* padding: 9px 9px 31px 26px; */
-        /* display: block; */
-        /* font-weight: bold; */
-        /* -webkit-transform: rotate(-90deg); */
-        /* -moz-transform: rotate(-90deg); */
-        /* &:hover { */
-        /* color: red; */
-        /* } */
         }
     }
 }

@@ -17,12 +17,11 @@
       <div class="wrapper">
         <h1><a href="#">Rssminer</a></h1>
         <input id="q" placeholder="search, feed, subscription..."/>
-        <ul>
+        <ul class="nav">
           <li><a href="#add" title="add subscription">Add</a></li>
           <li><a href="#settings"> Settings </a></li>
           <li><a href="#help">Help</a></li>
         </ul>
-
       </div>
     </div>
     <div id="main">
@@ -41,7 +40,8 @@
         <div id="reading-area">
           <div class="welcome-list clearfix"></div>
           <div class="iframe">
-            <iframe src="about:blank"></iframe>
+            <iframe src="about:blank"
+                    sandbox="allow-scripts allow-same-origin"></iframe>
             <div id="footer">
               <span class="domain"></span>
               <a href="" target="_blank"></a>
