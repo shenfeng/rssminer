@@ -69,30 +69,27 @@
     }
   }
 
-  function read_subscription (id, callback) {
+  function read_subscription (id, sort, callback) {
     current_subid = id;
     $reading_area.removeClass(SHOW_IFRAME);
     var sub = data.get_subscription(id);
     if(typeof callback !== 'function') {
       switch_nav_to_subs();
     }
-    if(layout.select('.sub-list', "item-" + id)) {
-      data.get_feeds(id, 0, 40, 'newest', function (data) {
-        current_feeds_cnt = data.feeds.length;
-        data.title = sub.title;
-        set_document_title(data.title);
-        if(data.feeds.length) {
-          var html = to_html(tmpls.feeds_nav, data);
-          $feeds_list.empty().append(html);
-          html = to_html(tmpls.sub_feeds, data);
-          $welcome_list.empty().append(html);
-          focus_first_feed();
-        }
-        if(typeof callback === 'function') { callback(); }
-      });
-    } else if (typeof callback === 'function') {
-      callback();
-    }
+    layout.select('.sub-list', "item-" + id);
+    data.get_feeds(id, 0, 40, sort, function (data) {
+      current_feeds_cnt = data.feeds.length;
+      data.title = sub.title;
+      set_document_title(data.title);
+      if(data.feeds.length) {
+        var html = to_html(tmpls.feeds_nav, data);
+        $feeds_list.empty().append(html);
+        html = to_html(tmpls.sub_feeds, data);
+        $welcome_list.empty().append(html);
+        focus_first_feed();
+      }
+      if(typeof callback === 'function') { callback(); }
+    });
   }
 
   function decrement_number ($just_read, subid) {
@@ -108,7 +105,7 @@
   }
 
   function read_feed (subid, feedid) {
-    read_subscription(subid, function () {
+    read_subscription(subid, 'newest', function () {
       $reading_area.addClass(SHOW_IFRAME);
       var me = "feed-" + feedid,
           $me = $('#' + me);
@@ -265,7 +262,7 @@
       '': show_welcome,
       'settings': show_settings,
       'add': show_add_sub_ui,
-      'read/:id': read_subscription,
+      'read/:id?s=:sort': read_subscription,
       'read/:id/:id': read_feed
     });
   });

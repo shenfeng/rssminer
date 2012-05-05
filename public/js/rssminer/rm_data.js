@@ -25,7 +25,13 @@
     read: 'Recently read'
   };
 
-  var SORTINGS = ['newest', 'oldest', 'favariable'];
+  var SORTINGS = {
+    'newest': util.cmp_by('published_ts', null, -1), // revert sort
+    'oldest': util.cmp_by('published_ts', null, 1),
+    'likest': util.cmp_by('vote_user', util.cmp_by('vote_sys', null, -1), -1)
+    // first by user's vote, then by sys's vote
+    // 'reading': util.cmp_by('read_date', null, -1)
+  };
 
   var BYPASS_PROXY_SITES = ['groups.google', // X-Frame-Options
                             "feedproxy",
@@ -98,7 +104,7 @@
     return new Date().getTime();
   }
 
-  function sub_list (list, offset, length) {
+  function sub_array (list, offset, length) {
     var result = [];
     if(list.length) {
       for(var i = offset; i < list.length && i < offset + length; i++) {
@@ -123,7 +129,12 @@
     var cache = get_cached_feeds(subid) || [];
     _.each(feeds, function (feed) {
       var has = _.any(cache, function (c) { return c.id === feed.id; });
-      if(!has) { cache.push(feed); }
+      if(!has) {
+        feed.read_date = feed.read_date || -1; // db
+        feed.vote_sys = feed.vote_sys || 0;
+        feed.vote_user = feed.vote_user || 0;
+        cache.push(feed);
+      }
     });
     global_cache['sub_' + subid] = cache;
   }
@@ -192,7 +203,7 @@
                 img: favicon_path(i.url),
                 title: i.title,
                 title_l: i.title.toLowerCase(),
-                href: 'read/' + i.id,
+                href: sub_hash(i.id, 'newest'),
                 like: i.like_c,
                 index: i.sort_index,
                 sort_index: i.sort_index + '',
@@ -251,32 +262,27 @@
     });
   }
 
-  function get_cmp (sort) {
-    if(sort === 'newest') {
-      return util.cmp_by('published_ts', null, -1); // revert sort
-    } else if(sort === 'oldest') {
-      return util.cmp_by('published_ts', null, 1);
-    } else {
-      return util.cmp_by('vote_sys', null, -1);
-    }
+  function sub_hash (id, sort) {
+    return 'read/' + id + '?s=' + sort;
   }
 
   function get_feeds (subid, offset, limit, sort, cb) {
     var cache = get_cached_feeds(subid),
         total = get_total_feeds(subid);
+    // TODO, cache according to sorting
     if(cache && (total <= cache.length || cache.length >= offset + limit)) {
-      var list = cache.sort(get_cmp(sort));
-      list = _.map(list, transorm_item(subid));
+      var feeds = cache.sort(SORTINGS[sort]);
+      feeds = _.map(feeds, transorm_item(subid));
       var sort_data = [];
-      _.each(SORTINGS, function (s) {
+      for(var s in SORTINGS) {
         sort_data.push({
           selected: !sort || s === sort,
-          href: 'read/' + subid,
+          href: sub_hash(subid, s),
           text: s
         });
-      });
+      }
       cb({
-        feeds: sub_list(list, offset, limit),
+        feeds: sub_array(feeds, offset, limit),
         sort: sort_data
       });
     } else {
