@@ -14,32 +14,6 @@
     </tr>
     <tr>
       <td>
-        <span>
-          <span class="key">g</span>
-          <span class="word">then</span>
-          <span class="key">u</span>
-          :
-        </span>
-      </td>
-      <td>select subscription</td>
-    </tr>
-
-    <tr>
-      <td>
-        <span class="key">ALT + n</span>
-        :
-      </td>
-      <td> decrease nav height </td>
-    </tr>
-    <tr>
-      <td>
-        <span class="key">ALT + p</span>
-        :
-      </td>
-      <td> increase nav height </td>
-    </tr>
-    <tr>
-      <td>
         <span class="key">ALT + l</span>
         :
       </td>
@@ -86,13 +60,6 @@
         :
       </td>
       <td>switch between reading and listing</td>
-    </tr>
-    <tr>
-      <td>
-        <span class="key">f</span>
-        :
-      </td>
-      <td>toggle nav</td>
     </tr>
     <tr>
       <td>

@@ -6,7 +6,7 @@
       layout = RM.layout,
       to_html = Mustache.to_html;
 
-  var ANIMATION_TIME = 250,
+  var ANIMATION_TIME = 200,
       SHOW_IFRAME = 'show-iframe';
 
   var current_subid,
@@ -29,15 +29,18 @@
   }
 
   function toggle_nav () {
-    if(current_nav_subs) { switch_nav_to_feeds(); }
-    else { switch_nav_to_subs(); }
+    if(current_nav_subs) {
+      switch_nav_to_feeds();
+    } else {
+      switch_nav_to_subs();
+    }
   }
 
   function switch_nav_to_subs () {
     if(!current_nav_subs) {
       current_nav_subs = true;
-      $feeds_list.animate({height: 0, opacity: 0}, ANIMATION_TIME, function () {
-        $feeds_list.hide().css({height: 'auto', opacity: 1});
+      $feeds_list.animate({opacity: 0}, ANIMATION_TIME, function () {
+        $feeds_list.hide().css({opacity: 1});
         $subs_list.show();
       });
     }
@@ -46,8 +49,8 @@
   function switch_nav_to_feeds (cb) {
     if(current_nav_subs && current_feeds_cnt) {
       current_nav_subs = false;
-      $subs_list.animate({height: 0, opacity: 0}, ANIMATION_TIME, function () {
-        $subs_list.hide().css({ opacity: 1, height: 'auto' });
+      $subs_list.animate({opacity: 0}, ANIMATION_TIME, function () {
+        $subs_list.hide().css({opacity: 1});
         $feeds_list.show();
         if(typeof cb === 'function') { cb(); }
       });
@@ -60,18 +63,18 @@
     current_subid = id;
     hide_help();
     $reading_area.removeClass(SHOW_IFRAME);
-    var sub = data.get_subscription(id),
-        title = sub.title;
+    var sub = data.get_subscription(id);
     if(typeof callback !== 'function') {
       switch_nav_to_subs();
     }
     if(layout.select('.sub-list', "item-" + id)) {
-      data.get_feeds(id, 0, 40, 'time', function (data) {
-        current_feeds_cnt = data.length;
-        if(data.length) {
-          var html = to_html(tmpls.feeds_nav, {feeds: data});
+      data.get_feeds(id, 0, 40, 'newest', function (data) {
+        current_feeds_cnt = data.feeds.length;
+        data.title = sub.title;
+        if(data.feeds.length) {
+          var html = to_html(tmpls.feeds_nav, data);
           $feeds_list.empty().append(html);
-          html = to_html(tmpls.sub_feeds, {feeds: data, title: title});
+          html = to_html(tmpls.sub_feeds, data);
           $welcome_list.empty().append(html);
           focus_first_feed();
         }
@@ -128,6 +131,8 @@
     if(data.is_user_has_subscription()) { // user has subscriptions
       data.get_welcome_list(function (data) {
         $welcome_list.empty().append(to_html(tmpls.welcome, data));
+        $reading_area.removeClass(SHOW_IFRAME);
+        switch_nav_to_subs();
       });
     } else {
       location.hash = "add";
@@ -140,7 +145,7 @@
     if(ele) { $feed = $(ele).closest('li.feed'); }
     // guess target feed
     if(!$feed || !$feed.length) {
-      if($('#reading-area').hasClass(SHOW_IFRAME)) {
+      if($reading_area.hasClass(SHOW_IFRAME)) {
         $feed = $('#feed-list .selected');
       } else {
         $feed = $('.welcome-list .selected');
@@ -169,7 +174,8 @@
   function settings () {
     hide_help();
     $reading_area.removeClass(SHOW_IFRAME);
-    $welcome_list.append(to_html(tmpls.settings, data.user_settings()));
+    var html = to_html(tmpls.settings, data.user_settings());
+    $welcome_list.empty().append(html);
   }
 
   function save_settings (e) {
@@ -197,30 +203,29 @@
 
   function show_help () {
     hide_help();
-    $('body').append(tmpls.keyboard);
+    $('#main').append(tmpls.keyboard);
   }
 
   function show_add_sub_ui () {
     hide_help();
     $reading_area.removeClass(SHOW_IFRAME);
-    var $welcome = set_welcome_title();
-    $welcome.append(tmpls.add);
+    $welcome_list.empty().append(tmpls.add);
   }
 
   function hide_help () { $("#help, #subs").remove(); }
-
-  function saveVoteUp (e) { save_vote(1, this); return false; }
-  function saveVotedown (e) { save_vote(-1, this); return false; }
+  function save_vote_up (e) { save_vote(1, this); return false; }
+  function save_vote_down (e) { save_vote(-1, this); return false; }
 
   function update_subs_sort_order (event, ui) {
-    if(!ui.sender) { // prevent be callded twice if move bettween categories
-      var $moved = $(ui.item),
-          $before = $moved.prev(),
-          moved_id = parseInt($moved.attr('data-id')),
-          new_cat = $moved.closest('.rss-category').siblings('.folder').attr('data-name'),
-          new_before_id = $before.length ? parseInt($before.attr('data-id')) : null;
-      data.update_sort_order(moved_id, new_before_id, new_cat);
+    if(ui.sender) { // prevent be callded twice if move bettween categories
+      return;
     }
+    var $moved = $(ui.item),
+        $before = $moved.prev(),
+        moved_id = parseInt($moved.attr('data-id')),
+        new_cat = $moved.closest('.rss-category').siblings('.folder').attr('data-name'),
+        new_before_id = $before.length ? parseInt($before.attr('data-id')) : null;
+    data.update_sort_order(moved_id, new_before_id, new_cat);
   }
 
   function update_category_sort_order () {
@@ -241,8 +246,8 @@
   util.delegate_events($(document), {
     'click #add-subscription': add_subscription,
     'click #save-settings': save_settings,
-    'click .vote span.down': saveVotedown,
-    'click .vote span.up': saveVoteUp,
+    'click .vote span.down': save_vote_down,
+    'click .vote span.up': save_vote_up,
     'click #main .hover-switch': toggle_nav,
     'click #navigation .folder span': toggle_nav_foler
   });

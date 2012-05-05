@@ -9,15 +9,6 @@
     img.src = "http://sujitpal."+ src + new Date().getTime();
   }, 300);
 
-  function ymdate (date) {
-    var d = new Date(date),
-        m = d.getMonth() + 1,
-        day = d.getDate();
-    return [d.getFullYear(),
-            m < 10 ? '0' + m : m,
-            day < 10 ? '0' + day : day].join('/');
-  }
-
   var cmp_by = function (name, minor, reverse) { // reverse when -1
     reverse = reverse || -1;
     return function (o, p) {
@@ -40,14 +31,6 @@
       }
     };
   };
-
-  function favicon_path (url) {
-    var host = encodeURIComponent(hostname(url));
-    // revert to fight agaist firewall
-    host = host.split("").reverse().join("");
-    return '/fav?h=' + host;
-  }
-
 
   var hostname = (function () {
     var l = document.createElement("a");
@@ -118,9 +101,7 @@
       delegate_events: delegate_events,
       cmp_by: cmp_by,
       extractData: extractData,
-      favicon_path: favicon_path,
       hostname: hostname,
-      ymdate: ymdate,
       enableProxy: function () { return enable_proxy;  },
       snippet: snippet,
       // one dom ele is within another dom, or they are just the same

@@ -55,7 +55,6 @@ a { outline: 0; text-decoration: none;}
         position: relative;
         > * { position: absolute; }
     }
-    img { left: 160px; visibility: hidden; top: 10px; }
     h1 {
         left: 10px; top: 3px; margin: 3px 0; font-size: 26px;
         a { color: white; }
@@ -247,7 +246,7 @@ body {
     margin: 3px 2px 2px 25px;
     h2 { text-align: center; }
     .feed { border: 2px solid rgba(0,0,0,0);}
-    .selected { border: 2px solid #f5d85f; }
+    /* .selected { border: 2px solid #f5d85f; } */
     .feeds {
         .title {
             max-width: 70%;
@@ -256,6 +255,40 @@ body {
         .date { right: 1em;}
         margin: 3px 5px;
         width: $body_width - $nav_width - 150px;
+    }
+    .sort {
+        $border_color: #777;
+        border-bottom: 1px solid $border_color;
+        font-weight: bold;
+        position: relative;
+        height: 31px;
+        ul {
+            padding: 0; margin: 0; text-align: right;
+            position: absolute;
+            bottom: 2px;
+            right: 110px;
+        }
+        li {
+            display: inline-block;
+            a {
+                border: 1px solid white;
+                color: #777;
+                margin-right: 8px;
+                padding: 3px 11px 4px 11px;
+                &:hover {
+                    border: 1px solid $border_color;
+                    padding-bottom: 5px;
+                    border-bottom-color: white;
+                }
+                &.selected {
+                    border: 1px solid $border_color;
+                    border-bottom-color: white;
+                    color: black;
+                    font-size: 120%;
+                    padding: 5px 11px 4px 11px;
+                }
+            }
+        }
     }
 }
 
@@ -344,27 +377,22 @@ iframe {
 
 #search-result {
     ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        a {
-            @include overflow-ellipsis();
-            max-width: 500px;
-        }
+        list-style: none; padding: 0; margin: 0;
+        a { max-width: 500px; @include overflow-ellipsis(); }
     }
     li {
-        padding: 5px 8px;
-        &.selected, &:hover {
-            background: $hover_color;
-        }
+        position: relative;
+        padding: 4px 8px;
+        &.selected, &:hover { background: $hover_color; }
     }
     box-shadow: 0 1px 4px rgba(0, 0, 0, .5);
     position: absolute;
-    top: 38px;
     width: 540px;
+    top: 38px;
     left: 230px;
-    @include border-radius(0 0 5px 5px);
+    font-size: 13px;
     background: white;
+    @include border-radius(0 0 5px 5px);
 }
 
 #footer {

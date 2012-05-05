@@ -1,7 +1,18 @@
 <h2>{{ title }}</h2>
+<div class="sort">
+  <ul>
+    {{#sort}}
+      <li>
+        <a {{#selected}} class="selected" {{/selected}} href="#{{href}}">
+          {{text}}
+        </a>
+      </li>
+    {{/sort}}
+  </ul>
+</div>
 <ul class="feeds">
   {{#feeds}}
-    <li class="feed {{cls}}">
+    <li class="feed {{cls}}" data-id="{{id}}">
       <a href="#{{href}}">
         <span class="indicator"></span>
         <span class="title" title="{{title}}">{{title}}</span>
