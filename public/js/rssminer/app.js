@@ -6,7 +6,8 @@
       layout = RM.layout,
       to_html = Mustache.to_html;
 
-  var ANIMATION_TIME = 250;
+  var ANIMATION_TIME = 250,
+      SHOW_IFRAME = 'show-iframe';
 
   var current_subid,
       current_feeds_cnt = 0,
@@ -18,17 +19,13 @@
       $footer_title = $('#footer a'),
       $footer_domain = $('#footer .domain'),
       $subs_list = $('.sub-list'),
+      iframe = $('iframe')[0],
+      $welcome_list = $('.welcome-list'),
       $feeds_list = $('#feed-list');
 
   function focus_first_feed () {
     $($('.welcome-list li.feed')[0]).addClass('selected');
-    $reading_area.removeClass('show-iframe');
-  }
-
-  function set_welcome_title (title) {
-    var $welcome = $('.welcome-list').empty();
-    if(title) { $welcome.append('<h2>' + title +'</h2>'); }
-    return $welcome;
+    $reading_area.removeClass(SHOW_IFRAME);
   }
 
   function toggle_nav () {
@@ -62,7 +59,7 @@
   function read_subscription (id, callback) {
     current_subid = id;
     hide_help();
-    $reading_area.removeClass('show-iframe');
+    $reading_area.removeClass(SHOW_IFRAME);
     var sub = data.get_subscription(id),
         title = sub.title;
     if(typeof callback !== 'function') {
@@ -72,10 +69,10 @@
       data.get_feeds(id, 0, 40, 'time', function (data) {
         current_feeds_cnt = data.length;
         if(data.length) {
-          var html = to_html(tmpls.list, {feeds: data});
+          var html = to_html(tmpls.feeds_nav, {feeds: data});
           $feeds_list.empty().append(html);
-          var $welcome = set_welcome_title(title);
-          $welcome.append(to_html(tmpls.welcome_section, {list: data }));
+          html = to_html(tmpls.sub_feeds, {feeds: data, title: title});
+          $welcome_list.empty().append(html);
           focus_first_feed();
         }
         if(typeof callback === 'function') { callback(); }
@@ -99,7 +96,7 @@
 
   function read_feed (subid, feedid) {
     read_subscription(subid, function () {
-      $reading_area.addClass('show-iframe');
+      $reading_area.addClass(SHOW_IFRAME);
       var me = "feed-" + feedid,
           $me = $('#' + me);
       switch_nav_to_feeds(function () {
@@ -110,7 +107,6 @@
           link = feed.link;
       $footer_title.text(title).attr('href', link);
       $footer_domain.text(util.hostname(link));
-      var iframe = $('iframe')[0];
       $loader.css({visibility: 'visible'});
       iframe.src = data.get_final_link(link, feedid);
       iframe.onload = function () {
@@ -130,16 +126,8 @@
 
   function show_welcome () {
     if(data.is_user_has_subscription()) { // user has subscriptions
-      var $welcome = set_welcome_title('Rssminer - an intelligent RSS reader');
       data.get_welcome_list(function (data) {
-        for(var section in data) {
-          var d = data[section];
-          if(d.list.length) {
-            $welcome.append(to_html(tmpls.welcome_section, d));
-            switch_nav_to_subs();
-            focus_first_feed();
-          }
-        }
+        $welcome_list.empty().append(to_html(tmpls.welcome, data));
       });
     } else {
       location.hash = "add";
@@ -152,7 +140,7 @@
     if(ele) { $feed = $(ele).closest('li.feed'); }
     // guess target feed
     if(!$feed || !$feed.length) {
-      if($('#reading-area').hasClass('show-iframe')) {
+      if($('#reading-area').hasClass(SHOW_IFRAME)) {
         $feed = $('#feed-list .selected');
       } else {
         $feed = $('.welcome-list .selected');
@@ -180,9 +168,8 @@
 
   function settings () {
     hide_help();
-    $reading_area.removeClass('show-iframe');
-    var $welcome = set_welcome_title();
-    $welcome.append(to_html(tmpls.settings, data.user_settings()));
+    $reading_area.removeClass(SHOW_IFRAME);
+    $welcome_list.append(to_html(tmpls.settings, data.user_settings()));
   }
 
   function save_settings (e) {
@@ -215,7 +202,7 @@
 
   function show_add_sub_ui () {
     hide_help();
-    $reading_area.removeClass('show-iframe');
+    $reading_area.removeClass(SHOW_IFRAME);
     var $welcome = set_welcome_title();
     $welcome.append(tmpls.add);
   }
@@ -261,7 +248,7 @@
   });
 
   data.get_user_subs(function (subs) {
-    var html = to_html(tmpls.nav, {subs: subs});
+    var html = to_html(tmpls.subs_nav, {subs: subs});
     $("#navigation ul.sub-list").empty().append(html);
     $("#navigation .item img").each(function (index, img) {
       img.onerror = function () { img.src="/imgs/16px-feed-icon.png"; };

@@ -237,10 +237,13 @@
       for(var section in TITLES) {
         result.push({
           title: TITLES[section],
-          list: _.map(resp[section], transorm_item())
+          feeds: _.map(resp[section], transorm_item())
         });
       }
-      cb(result);
+      cb({
+        title: 'Rssminer - an intelligent RSS reader',
+        section: result
+      });
     });
   }
 

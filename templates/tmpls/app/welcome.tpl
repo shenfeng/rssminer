@@ -1,7 +1,9 @@
-<div class="section">
-  {{#title}}<h4>{{title}}</h4>{{/title}}
+<h2>{{ title }}</h2>
+{{#section}}
+  <div class="section">
+    <h4>{{title}}</h4>
     <ul class="feeds">
-      {{#list}}
+      {{#feeds}}
         <li class="feed {{cls}}">
           <a href="#{{href}}">
             <span class="indicator"></span>
@@ -21,6 +23,7 @@
             <span class="date">{{ date }}</span>
           </a>
         </li>
-      {{/list}}
+      {{/feeds}}
     </ul>
-</div>
+  </div>
+{{/section}}

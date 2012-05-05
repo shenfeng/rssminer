@@ -254,10 +254,7 @@ body {
             @include overflow-ellipsis();
         }
         .date { right: 1em;}
-    }
-    .section {
         margin: 3px 5px;
-        float: left;
         width: $body_width - $nav_width - 150px;
     }
 }
