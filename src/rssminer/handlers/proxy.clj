@@ -64,7 +64,10 @@
        :body (if p (rewrite-html link original) original)}
       (fetch-and-store-orginal id link p header))))
 
-(def no-favicon {:status 404})
+;;; js will detect not image, replace with default
+;;; cache it half a day
+(def no-favicon {:status 204
+                 :headers {"Cache-Control" "private, max-age=18000"}})
 
 (defn- fetch-favicon [hostname]
   (first (mysql-query

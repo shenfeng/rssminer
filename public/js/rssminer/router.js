@@ -41,7 +41,7 @@
       if(regex.test(hash)) {
         var args = regex.exec(hash).slice(1);
         for(var j = 0; j < args.length; j++) {
-          if(/\d+/.test(args[j])) {
+          if(/^\d+$/.test(args[j])) {
             args[j] = parseInt(args[j], 10); // convert to int if it's an int
           }
         }
