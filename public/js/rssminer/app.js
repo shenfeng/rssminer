@@ -11,6 +11,7 @@
 
   var current_subid,
       current_feeds_cnt = 0,
+      mark_as_read_timer_id = 0,
       current_nav_subs = true;
 
   var $loader = $('#footer img'),
@@ -104,6 +105,13 @@
     else { $n.text(n-1); }
   }
 
+  function clear_timer () {
+    if(mark_as_read_timer_id) {
+      window.clearTimeout(mark_as_read_timer_id);
+      mark_as_read_timer_id = null;
+    }
+  }
+
   function read_feed (subid, feedid) {
     read_subscription(subid, 'newest', function () {
       $reading_area.addClass(SHOW_IFRAME);
@@ -120,19 +128,26 @@
       $('#footer .feed').replaceWith(html);
       $loader.css({visibility: 'visible'});
       iframe.src = data.get_final_link(link, feedid);
+      var mark = mark_as_read($me, feedid, subid);
+      clear_timer();
+      mark_as_read_timer_id = window.setTimeout(mark, 500);
       iframe.onload = function () {
-        mark_as_read($me, feedid, subid);
+        mark();
         $loader.css({visibility: 'hidden'});
       };
     });
   }
 
   function mark_as_read ($me, feedid, subid) {
-    if(!$me.hasClass('read')) {
-      data.mark_as_read(feedid, subid);
-      decrement_number($me, subid);
-      $me.removeClass('unread sys-read').addClass('read');
-    }
+    var called = false;
+    return function () {
+      if(!called && !$me.hasClass('read')) {
+        called = true;
+        data.mark_as_read(subid, feedid);
+        decrement_number($me, subid);
+        $me.removeClass('unread sys-read').addClass('read');
+      }
+    };
   }
 
   function show_welcome () {

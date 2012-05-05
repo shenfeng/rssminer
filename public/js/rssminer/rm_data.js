@@ -101,7 +101,7 @@
 
   // helper function
   function current_time () {
-    return new Date().getTime();
+    return Math.round(new Date().getTime() / 1000);
   }
 
   function sub_array (list, offset, length) {
@@ -305,7 +305,12 @@
 
   function mark_as_read (subid, feedid, cb) {
     ajax.spost('/api/feeds/' + feedid + '/read', function () {
-      if(typeof cb === 'function') { cb(); }
+      var cache = get_cached_feeds(subid),
+          feed = _.find(cache, function (feed) {
+            return feed.id === feedid;
+          });
+      feed.read_date = current_time();
+      if(typeof cb === 'function') { cb(feed); }
     });
   }
 

@@ -15,9 +15,10 @@
                               (assoc (:conf user) :updated true))}})))
 
 (defn mark-as-read [req]
-  (let [ fid (-> req :params :id to-int)
+  (let [fid (-> req :params :id to-int)
         user-id (:id (session-get req :user))]
-    (uf/mark-as-read user-id fid)))
+    (uf/mark-as-read user-id fid)
+    {:status 200 :body nil}))
 
 (defn get-by-subscription [req]
   (let [{:keys [rss-id limit sort offset]

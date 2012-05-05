@@ -249,7 +249,7 @@ body {
     /* .selected { border: 2px solid #f5d85f; } */
     .feeds {
         .title {
-            max-width: 70%;
+            max-width: 75%;
             @include overflow-ellipsis();
         }
         .date { right: 1em;}

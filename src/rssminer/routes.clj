@@ -35,7 +35,7 @@
   (JGET "/welcome" [] user/summary)
   (context "/feeds/:id" []
            (JPOST "/vote" [] feed/user-vote)
-           (JPOST "/read" [] feed/mark-as-read))
+           (POST "/read" [] feed/mark-as-read))
   (JPOST "/import/opml" [] import/opml-import)
   (JGET "/export/opml" [] "TODO"))
 
