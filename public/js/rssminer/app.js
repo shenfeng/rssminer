@@ -60,6 +60,15 @@
     }
   }
 
+  function set_document_title (title) {
+    var rssminer = 'Rssminer, intelligent rss reader';
+    if(title) {
+      document.title = title + ' - ' + rssminer;
+    } else {
+      document.title = rssminer;
+    }
+  }
+
   function read_subscription (id, callback) {
     current_subid = id;
     $reading_area.removeClass(SHOW_IFRAME);
@@ -71,6 +80,7 @@
       data.get_feeds(id, 0, 40, 'newest', function (data) {
         current_feeds_cnt = data.feeds.length;
         data.title = sub.title;
+        set_document_title(data.title);
         if(data.feeds.length) {
           var html = to_html(tmpls.feeds_nav, data);
           $feeds_list.empty().append(html);
@@ -108,6 +118,7 @@
       var feed = data.get_feed(subid, feedid),
           link = feed.link;
       feed.domain = util.hostname(link);
+      set_document_title(feed.title);
       var html = to_html(tmpls.footer_info, feed);
       $('#footer .feed').replaceWith(html);
       $loader.css({visibility: 'visible'});
@@ -133,6 +144,7 @@
         $welcome_list.empty().append(to_html(tmpls.welcome, data));
         $reading_area.removeClass(SHOW_IFRAME);
         switch_nav_to_subs();
+        set_document_title();
       });
     } else {
       location.hash = "add";
