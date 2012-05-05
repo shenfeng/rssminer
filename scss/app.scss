@@ -6,7 +6,7 @@ $hover_color: #D6E9F8; // #DDD;
 $selected_color: #E5ECF9;
 $header_height: 46px;
 $header_color: #3D5877;
-$body_width: 1260px;
+$body_width: 1250px;
 
 ::-webkit-scrollbar {
     width: 9px;
@@ -261,11 +261,11 @@ body {
         border-bottom: 1px solid $border_color;
         font-weight: bold;
         position: relative;
-        height: 31px;
+        height: 29px;
         ul {
             padding: 0; margin: 0; text-align: right;
             position: absolute;
-            bottom: 2px;
+            bottom: 3px;
             right: 110px;
         }
         li {
@@ -284,8 +284,8 @@ body {
                     border: 1px solid $border_color;
                     border-bottom-color: white;
                     color: black;
-                    font-size: 120%;
-                    padding: 5px 11px 4px 11px;
+                    font-size: 15px;
+                    padding: 5px 11px 5px 11px;
                 }
             }
         }

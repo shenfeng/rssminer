@@ -43,6 +43,8 @@
         $feeds_list.hide().css({opacity: 1});
         $subs_list.show();
       });
+    } else {
+      $feeds_list.hide();
     }
   }
 
@@ -54,14 +56,14 @@
         $feeds_list.show();
         if(typeof cb === 'function') { cb(); }
       });
-    } else if(typeof cb === 'function') {
-      cb();
+    } else {
+      $subs_list.hide();
+      if(typeof cb === 'function') { cb(); }
     }
   }
 
   function read_subscription (id, callback) {
     current_subid = id;
-    hide_help();
     $reading_area.removeClass(SHOW_IFRAME);
     var sub = data.get_subscription(id);
     if(typeof callback !== 'function') {
@@ -171,8 +173,7 @@
     }
   }
 
-  function settings () {
-    hide_help();
+  function show_settings () {
     $reading_area.removeClass(SHOW_IFRAME);
     var html = to_html(tmpls.settings, data.user_settings());
     $welcome_list.empty().append(html);
@@ -201,18 +202,11 @@
     }
   }
 
-  function show_help () {
-    hide_help();
-    $('#main').append(tmpls.keyboard);
-  }
-
   function show_add_sub_ui () {
-    hide_help();
     $reading_area.removeClass(SHOW_IFRAME);
     $welcome_list.empty().append(tmpls.add);
   }
 
-  function hide_help () { $("#help, #subs").remove(); }
   function save_vote_up (e) { save_vote(1, this); return false; }
   function save_vote_down (e) { save_vote(-1, this); return false; }
 
@@ -242,7 +236,6 @@
     return false;
   }
 
-
   util.delegate_events($(document), {
     'click #add-subscription': add_subscription,
     'click #save-settings': save_settings,
@@ -254,12 +247,12 @@
 
   data.get_user_subs(function (subs) {
     var html = to_html(tmpls.subs_nav, {subs: subs});
-    $("#navigation ul.sub-list").empty().append(html);
+    $subs_list.empty().append(html);
     $("#navigation .item img").each(function (index, img) {
       img.onerror = function () { img.src="/imgs/16px-feed-icon.png"; };
     });
     // category sortable
-    $('.sub-list').sortable({change: update_category_sort_order });
+    $subs_list.sortable({change: update_category_sort_order });
     $(".rss-category").sortable({ // subscription sortable with categories
       connectWith: ".rss-category",
       update: update_subs_sort_order
@@ -270,19 +263,10 @@
 
     RM.hashRouter({
       '': show_welcome,
-      'settings': settings,
-      'help': show_help,
+      'settings': show_settings,
       'add': show_add_sub_ui,
       'read/:id': read_subscription,
       'read/:id/:id': read_feed
     });
-  });
-  // export
-  window.RM = $.extend(window.RM, {
-    app: {
-      hideHelp: hide_help,
-      save_vote: save_vote,
-      showHelp: show_help
-    }
   });
 })();

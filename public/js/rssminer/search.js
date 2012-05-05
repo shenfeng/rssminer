@@ -1,11 +1,13 @@
 (function () {
-  var data = window.RM.data,
-      $q = $('#header input'),
+  var RM = window.RM,
+      data = RM.data,
       tmpls = RM.tmpls,
-      ID = 'search-result',
-      to_html = Mustache.to_html;
+      util = RM.util,
+      $q = $('#header input'),
+      to_html = window.Mustache.to_html;
 
-  var SELECTED = 'selected';
+  var ID = 'search-result',
+      SELECTED = 'selected';
 
   function do_search (e) {
     var q = $q.val(),
@@ -66,10 +68,8 @@
     $('#' + ID).remove();
   }
 
-  window.RM.util.delegate_events($(document), {
+  util.delegate_events($(document), {
     'keyup #header input': do_search,
     'click #search-result a': hide_search_result
   });
-
-  $('').keyup(do_search);
 })();
