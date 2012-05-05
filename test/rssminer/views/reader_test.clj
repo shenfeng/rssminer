@@ -9,7 +9,7 @@
                         :request-method :get})
         app-resp (test-app {:uri "/a"
                             :request-method :get})
-        js-resp (test-app {:uri "/js/lib/zepto.js"
+        js-resp (test-app {:uri "/js/lib/underscore.js"
                            :request-method :get
                            :headers {}})]
     (is (= 302 (:status app-resp)))
