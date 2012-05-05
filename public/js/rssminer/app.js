@@ -16,8 +16,6 @@
   var $loader = $('#footer img'),
       $reading_area = $('#reading-area'),
       $navigation = $('#navigation'),
-      $footer_title = $('#footer a'),
-      $footer_domain = $('#footer .domain'),
       $subs_list = $('.sub-list'),
       iframe = $('iframe')[0],
       $welcome_list = $('.welcome-list'),
@@ -108,10 +106,10 @@
         layout.select('#feed-list', me);
       });
       var feed = data.get_feed(subid, feedid),
-          title = feed.title,
           link = feed.link;
-      $footer_title.text(title).attr('href', link);
-      $footer_domain.text(util.hostname(link));
+      feed.domain = util.hostname(link);
+      var html = to_html(tmpls.footer_info, feed);
+      $('#footer .feed').replaceWith(html);
       $loader.css({visibility: 'visible'});
       iframe.src = data.get_final_link(link, feedid);
       iframe.onload = function () {
@@ -141,19 +139,9 @@
     }
   }
 
-  function save_vote (vote, ele) {
-    var $feed;
-    //  1. select it's parent if ele is defined;
-    if(ele) { $feed = $(ele).closest('li.feed'); }
-    // guess target feed
-    if(!$feed || !$feed.length) {
-      if($reading_area.hasClass(SHOW_IFRAME)) {
-        $feed = $('#feed-list .selected');
-      } else {
-        $feed = $('.welcome-list .selected');
-      }
-    }
-    var id = $feed.attr('data-id');
+  function save_user_vote (vote, ele) {
+    var $feed = $(ele).closest('.feed'),
+        id = $feed.attr('data-id');
     if(!$feed.hasClass('sys')) {
       if(($feed.hasClass('dislike') && vote === -1)
          || ($feed.hasClass('like') && vote === 1)) {
@@ -167,7 +155,7 @@
         } else if(vote === -1) {
           $feed.addClass('dislike').removeClass('like neutral sys');
         } else if(vote === 0) {
-          $feed.addClass('neutral').removeClass('like dislike sys');
+          $feed.addClass('neutral sys').removeClass('like dislike');
         }
       });
     }
@@ -207,8 +195,8 @@
     $welcome_list.empty().append(tmpls.add);
   }
 
-  function save_vote_up (e) { save_vote(1, this); return false; }
-  function save_vote_down (e) { save_vote(-1, this); return false; }
+  function save_vote_up (e) { save_user_vote(1, this); return false; }
+  function save_vote_down (e) { save_user_vote(-1, this); return false; }
 
   function update_subs_sort_order (event, ui) {
     if(ui.sender) { // prevent be callded twice if move bettween categories
@@ -238,11 +226,11 @@
 
   util.delegate_events($(document), {
     'click #add-subscription': add_subscription,
+    'click #main .hover-switch': toggle_nav,
+    'click #navigation .folder span': toggle_nav_foler,
     'click #save-settings': save_settings,
     'click .vote span.down': save_vote_down,
-    'click .vote span.up': save_vote_up,
-    'click #main .hover-switch': toggle_nav,
-    'click #navigation .folder span': toggle_nav_foler
+    'click .vote span.up': save_vote_up
   });
 
   data.get_user_subs(function (subs) {

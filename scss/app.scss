@@ -400,28 +400,43 @@ iframe {
     bottom: 0;
     background: rgba(3, 3, 3, 0.53);
     width: 100%;
-    padding: 6px 0 0 0;
+    height: 27px;
+    padding: 4px 0 0 0;
     a {
         max-width: 670px;
         display: inline-block;
         font-weight: bold;
         color: white;
-        padding: 0 20px 0 0;
-        background: url(/imgs/external-link.png) right 3px no-repeat;
         @include overflow-ellipsis();
         &:hover { text-decoration: underline; }
     }
-    span.domain { color: white; padding: 0 1.3em; font-size: small;}
     img {
-        float: right;
+        position: absolute;
         width: 25px;
         height: 25px;
-        margin-right: 35px;
+        right: 24px;
+        top: 6px;
     }
+    .like .vote span.up { visibility: visible; }
+    .dislike .vote span.down { visibility: visible; }
+    .neutral, .sys { span { visibility: visible; } }
+    span.domain { color: white; padding: 0 1.3em 0 2em ; font-size: small;}
+    .indicator {
+        top: 7px; right: 65px;
+        height: 12px;
+        width: 12px;
+        @include border-radius(6px);
+    }
+    .sys .indicator {
+        height: 9px;
+        width: 9px;
+        top: 7px;
+        @include border-radius(5px);
+    }
+
     .vote {
-        span {
-            background: transparent;
-        }
+        right: 85px;
+        span { display: inline-block; }
     }
 }
 

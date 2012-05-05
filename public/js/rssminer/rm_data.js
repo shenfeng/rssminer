@@ -58,10 +58,11 @@
   }
 
   function get_feed (subid, feedid) {
-    var cache = get_cached_feeds(subid);
-    return _.find(cache, function (feed) {
-      return feed.id === feedid;
-    });
+    var cache = get_cached_feeds(subid),
+        feed = _.find(cache, function (feed) {
+          return feed.id === feedid;
+        });
+    return transorm_item()(feed);
   }
 
   function get_final_link (link, feedid) {
