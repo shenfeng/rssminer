@@ -41,9 +41,7 @@
                                     :proxy_server (:proxy-server
                                                    @cfg/rssminer-conf)
                                     :static_server (:static-server
-                                                    @cfg/rssminer-conf)
-                                    :subs (fetch-user-subs (:id user)
-                                                           like neutral)}})]
+                                                    @cfg/rssminer-conf)}})]
       (if updated
         {:status 200
          :body resp
