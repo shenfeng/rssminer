@@ -118,7 +118,6 @@ body {
 #content { margin-left: $nav_width; }
 
 #navigation {
-    h3 { margin: 0; cursor: pointer; }
     float: left;
     height: 100%;
     width: $nav_width;
@@ -345,23 +344,6 @@ span.vote {
         padding: 4px 4px 1px;
         @include border-radius(3px);
     }
-}
-
-#notification {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    z-index: 1000;
-    font-weight: bold;
-    overflow: hidden;
-    p {
-        @include border-radius(4px);
-        padding: 5px;
-        margin: 0;
-    }
-    .message { background: yellow;  }
-    .error { background: #FDD };
-    visibility: hidden;
 }
 
 iframe {
