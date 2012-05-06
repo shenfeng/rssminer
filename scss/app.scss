@@ -191,6 +191,7 @@ body {
 .unread-like { background-color: #449d4e; color: #ffffff; }
 .unread-neutral { background-color: #f5d85f; color: #303030; }
 .unread-dislike { background-color: #c28561; color: #ffffff; }
+.total { background: #999; color: white; }
 
 .feed {
     &.like {
@@ -246,7 +247,6 @@ body {
     margin: 3px 2px 2px 25px;
     h2 { text-align: center; }
     .feed { border: 2px solid rgba(0,0,0,0);}
-    /* .selected { border: 2px solid #f5d85f; } */
     .feeds {
         .title {
             max-width: 75%;
@@ -376,13 +376,14 @@ iframe {
 }
 
 #search-result {
-    ul {
-        list-style: none; padding: 0; margin: 0;
-        a { max-width: 500px; @include overflow-ellipsis(); }
+    ul { list-style: none; padding: 0; margin: 0; }
+    a { padding: 4px 8px; display: block }
+    .title {
+        max-width: 500px;
+        @include overflow-ellipsis();
     }
     li {
         position: relative;
-        padding: 4px 8px;
         &.selected, &:hover { background: $hover_color; }
     }
     box-shadow: 0 1px 4px rgba(0, 0, 0, .5);

@@ -205,8 +205,8 @@
                 title_l: i.title.toLowerCase(),
                 href: sub_hash(i.id, 'newest'),
                 like: i.like_c,
+                total: i.total_feeds,
                 index: i.sort_index,
-                sort_index: i.sort_index + '',
                 dislike: i.dislike_c,
                 neutral: i.total_c - i.like_c - i.dislike_c,
                 id: i.id
@@ -431,8 +431,10 @@
     _.each(grouped, function (group) {
       _.each(group.list, function (sub) {
         if((!q || sub.title_l.indexOf(q) !== -1) && count < limit) {
-          result.push(sub);
-          count++;
+          if(sub.total) {
+            result.push(sub);
+            count++;
+          }
         }
       });
     });
