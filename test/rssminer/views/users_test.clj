@@ -43,7 +43,6 @@
   (let [resp (auth-app {:uri "/api/settings"
                         :request-method :post
                         :body (json-str {:nav [:tag1 :tag1]
-                                         :width 100
                                          :expire 60})})]
     (is (= 204 (:status resp)))))
 

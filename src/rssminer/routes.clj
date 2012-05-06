@@ -67,7 +67,7 @@
   (-> #'all-routes
       wrap-auth
       (wrap-session {:store (redis-store (* 3600 24 3))
-                     :cookie-name "rm_id"
+                     :cookie-name "_id_"
                      :cookie-attrs {:http-only true}})
       wrap-cache-header
       wrap-request-logging-in-dev

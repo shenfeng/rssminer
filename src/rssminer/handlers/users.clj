@@ -35,8 +35,6 @@
           :session {:user (select-keys user [:id :email :name])})))))
 
 ;;; :nav => show and hide of left nav
-;;; :height => bottom feed list height
-;;; :width => nav width
 ;;; :expire => feed mark as read after X days
 ;;; :like_threshhold => more than it mean like
 ;;; :dislike_threshhold => less than it mean dislike
@@ -47,7 +45,7 @@
         (db/update-user (:id user) {:password p})))
     (let [updated (merge (:conf user)
                          (select-keys (:body req)
-                                      [:nav :height :width :expire]))]
+                                      [:nav :expire]))]
       (db/update-user (:id user) {:conf (json-str updated)})
       {:status 204
        :body nil
