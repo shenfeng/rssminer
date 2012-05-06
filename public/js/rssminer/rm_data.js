@@ -2,7 +2,8 @@
   var RM = window.RM,           // namespace
       _RM_ = window._RM_,       // inject to html, data
       ajax = RM.ajax,
-      util = RM.util;
+      util = RM.util,
+      call_if_fn = util.call_if_fn;
 
   var user = (_RM_ && _RM_.user) || {},
       user_conf = user.conf || {},
@@ -38,13 +39,15 @@
                             // "alibuybuy",
                             "javaworld" // for Readability
                                            ];
-
   function user_settings () {
     var expire_times = [];
     for(var i = 15; i <= 120; i += 15) {
       expire_times.push({time: i, selected: i === expire});
     }
-    return {expire_times: expire_times};
+    return {
+      expire_times: expire_times,
+      groups: parse_subs(global_cache.subscriptions)
+    };
   }
 
   var RESETED_SITES = ["wordpress", "appspot", 'emacsblog','blogger',
@@ -209,19 +212,19 @@
                 index: i.sort_index,
                 dislike: i.dislike_c,
                 neutral: i.total_c - i.like_c - i.dislike_c,
-                id: i.id
+                id: i.id        // rss_link_id
               };
             }).value();
       list = _.filter(list, function (i) { return i.title; });
       if(list.length) {
         result.push({
           group: group,
-          list: list,
+          subs: list,
           collapse: _.include(collapsed, group)
         });
       }
     }
-    result = _.sortBy(result, function (i) { return i.list[0].index; });
+    result = _.sortBy(result, function (i) { return i.subs[0].index; });
     return result;
   }
 
@@ -236,7 +239,8 @@
         var result = parse_subs(resp),
             cache = [];
         _.each(result, function (group) { // for the first time, all sort_index is 0
-          _.each(group.list, function (sub) {
+          _.each(group.subs, function (sub) {
+            // keep them in sort order
             cache.push(_.find(resp, function (i) { return i.id === sub.id; }));
           });
         });
@@ -310,7 +314,7 @@
             return feed.id === feedid;
           });
       feed.read_date = current_time();
-      if(typeof cb === 'function') { cb(feed); }
+      call_if_fn(cb, feed);
     });
   }
 
@@ -325,7 +329,7 @@
           if(feed) { feed.vote_user = vote; break; }
         }
       }
-      if(typeof cb === 'function') { cb(); }
+      call_if_fn(cb);
     });
   }
 
@@ -334,9 +338,7 @@
       ajax.sget('/api/subs/p/' + rss_link_id, function (sub) {
         // TODO refetch user subs
         if(sub && sub.title) {  // ok, title is fetched
-          if(typeof cb === 'function') {
-            cb();
-          }
+          call_if_fn(cb);
         } else {                // fetch again
           interval += 1500;
           times -= 1;
@@ -354,9 +356,22 @@
     });
   }
 
+  function unsubscribe (id, cb) {
+    ajax.del('/api/subs/' + id, function (resp) {
+      var cache = [];
+      _.each(global_cache.subscriptions, function (sub) {
+        if(sub.id !== id) {
+          cache.push(sub);
+        }
+      });
+      global_cache.subscriptions = cache;
+      call_if_fn(cb);
+    });
+  }
+
   function save_settings (data, cb) {
     ajax.jpost('/api/settings', data, function () {
-      if(typeof cb === 'function') { cb(); }
+      call_if_fn(cb);
     });
   }
 
@@ -429,7 +444,7 @@
         count = 0,
         grouped = parse_subs(global_cache.subscriptions);
     _.each(grouped, function (group) {
-      _.each(group.list, function (sub) {
+      _.each(group.subs, function (sub) {
         if((!q || sub.title_l.indexOf(q) !== -1) && count < limit) {
           if(sub.total) {
             result.push(sub);
@@ -444,18 +459,19 @@
   window.RM = $.extend(window.RM, {
     data: {
       add_subscription: add_subscription,
-      get_search_result: get_search_result,
       get_feed: get_feed,
       get_feeds: get_feeds,
       get_final_link: get_final_link,
+      get_search_result: get_search_result,
       get_subscription: get_subscription,
       get_user_subs: get_user_subs,
       get_welcome_list: get_welcome_list,
       is_user_has_subscription: is_user_has_subscription,
       mark_as_read: mark_as_read,
       save_vote: save_vote,
-      user_settings: user_settings,
-      update_sort_order: update_sort_order
+      unsubscribe: unsubscribe,
+      update_sort_order: update_sort_order,
+      user_settings: user_settings
     }
   });
 })();

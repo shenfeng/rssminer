@@ -82,11 +82,15 @@
     return $.ajax(o);
   }
 
+  function sdelete (url, success) {
+    return $.ajax(handler(url, 'DELETE', success, true));
+  }
+
   function spost (url, data, success) {
     return jpost(url, data, success, true);
   }
 
   window.RM = $.extend(window.RM, {
-    ajax: { sget: sget, spost: spost, get: get, jpost: jpost }
+    ajax: { sget: sget, spost: spost, get: get, jpost: jpost, del: sdelete }
   });
 })();

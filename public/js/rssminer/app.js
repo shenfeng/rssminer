@@ -4,6 +4,7 @@
       tmpls = RM.tmpls,
       util = RM.util,
       layout = RM.layout,
+      call_if_fn = util.call_if_fn,
       to_html = Mustache.to_html;
 
   var ANIMATION_TIME = 200,
@@ -53,11 +54,11 @@
       $subs_list.animate({opacity: 0}, ANIMATION_TIME, function () {
         $subs_list.hide().css({opacity: 1});
         $feeds_list.show();
-        if(typeof cb === 'function') { cb(); }
+        call_if_fn(cb);
       });
     } else {
       $subs_list.hide();
-      if(typeof cb === 'function') { cb(); }
+      call_if_fn(cb);
     }
   }
 
@@ -89,7 +90,7 @@
         $welcome_list.empty().append(html);
         focus_first_feed();
       }
-      if(typeof callback === 'function') { callback(); }
+      call_if_fn(callback);
     });
   }
 
@@ -189,7 +190,7 @@
   function show_settings () {
     $reading_area.removeClass(SHOW_IFRAME);
     var html = to_html(tmpls.settings, data.user_settings());
-    $welcome_list.empty().append(html);
+    $welcome_list.empty().append(html).find('img').each(util.favicon_error);;
   }
 
   function save_settings (e) {
@@ -249,21 +250,35 @@
     return false;
   }
 
+  function unsubscribe () {
+    var $tr = $(this).closest('tr'),
+        id = $tr.attr('data-id');
+    if(id) {
+      id = parseInt(id, 10);
+      var sub = data.get_subscription(id);
+      if(confirm('unsubscribe "' + sub.title + '"')) {
+        data.unsubscribe(id, function () {
+          $tr.remove();
+          $('#item-' + id).remove();
+        });
+      }
+    }
+  }
+
   util.delegate_events($(document), {
     'click #add-subscription': add_subscription,
     'click #main .hover-switch': toggle_nav,
     'click #navigation .folder span': toggle_nav_foler,
     'click #save-settings': save_settings,
     'click .vote span.down': save_vote_down,
-    'click .vote span.up': save_vote_up
+    'click .vote span.up': save_vote_up,
+    'click #settings .delete': unsubscribe
   });
 
   data.get_user_subs(function (subs) {
-    var html = to_html(tmpls.subs_nav, {subs: subs});
+    var html = to_html(tmpls.subs_nav, {groups: subs});
     $subs_list.empty().append(html);
-    $("#navigation .item img").each(function (index, img) {
-      img.onerror = function () { img.src="/imgs/16px-feed-icon.png"; };
-    });
+    $("#navigation .item img").each(util.favicon_error);
     // category sortable
     $subs_list.sortable({change: update_category_sort_order });
     $(".rss-category").sortable({ // subscription sortable with categories

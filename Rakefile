@@ -139,7 +139,6 @@ namespace :js do
     mkdir_p "public/js/gen"
     gen_jstempls("dashboard");
     gen_jstempls("app");
-    gen_jstempls("mockup");
   end
 
   desc 'Combine all js into one, minify it using google closure'

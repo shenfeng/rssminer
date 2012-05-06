@@ -11,16 +11,39 @@
             vertical-align: baseline;
             border-bottom: 1px solid #EEE;
         }
-    }
-    img {
-        &:hover { @include box-shadow(0, 0, 6px, #666); }
-        @include box-shadow(0, 0, 3px, #666);
+        img {
+            &:hover { @include box-shadow(0, 0, 6px, #666); }
+            @include box-shadow(0, 0, 3px, #666);
+        }
     }
     input {
         margin-top: 5px;
         width: 400px;
         padding: 5px;
         display: block;
+    }
+}
+
+#settings {
+    table {
+        font-size: 13px;
+        tr {
+            &:hover {
+                background: $hover_color;
+            }
+        }
+        .title {
+            @include overflow-ellipsis();
+            max-width: 600px;
+        }
+        .delete {
+            cursor: pointer;
+            padding: 3px 7px;
+            &:hover { color: red; }
+        }
+        td {
+            padding: 3px 4px
+        }
     }
 }
 

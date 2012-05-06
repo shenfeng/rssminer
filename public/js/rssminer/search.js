@@ -52,10 +52,9 @@
     data.get_search_result(q, 15, function (result) {
       var html = to_html(tmpls.search_result, {subs: result});
       hide_search_result();
-      var $result = $(html).attr('id', ID);
-      $('#header .wrapper').append($result).find('img').each(function (i, img) {
-        img.onerror = function () { img.src="/imgs/16px-feed-icon.png"; };
-      });
+      var $result = $(html).attr('id', ID),
+          $header = $('#header .wrapper');
+      $header.append($result).find('img').each(util.favicon_error);
       $('li', $result).mouseenter(function (e) {
         $('li', $result).removeClass(SELECTED);
         $(this).addClass(SELECTED);

@@ -32,16 +32,12 @@
                        WHERE user_id = ? AND rss_link_id = ?"
                        user-id rss-link-id])))
 
-(defn update-subscription [user-id id data]
-  (with-mysql
-    (update-values :user_subscription
-                   ["user_id = ? AND id = ?" user-id id]
-                   (select-keys data [:group_name :title]))))
-
-(defn delete-subscription [user-id id]
+(defn delete-subscription [user-id rss-id]
   (with-mysql
     (delete-rows :user_subscription
-                 ["user_id = ? AND id = ?" user-id id])))
+                 ["user_id = ? AND rss_link_id = ?" user-id rss-id])
+    (delete-rows :user_feed
+                 ["user_id = ? AND rss_link_id = ?" user-id rss-id])))
 
 (defn update-sort-order [user-id data]
   (with-mysql

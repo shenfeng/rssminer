@@ -95,10 +95,22 @@
     }
   }
 
+  function call_if_fn (f) {
+    if(typeof f === 'function') {
+      f.apply(null, _.toArray(arguments).slice(1));
+    }
+  }
+
+  function favicon_error (idx, img) {
+    img.onerror = function () { img.src="/imgs/16px-feed-icon.png"; };
+  }
+
   // export
   window.RM = $.extend(window.RM || {}, {
     util: {
       delegate_events: delegate_events,
+      favicon_error: favicon_error,
+      call_if_fn: call_if_fn,
       cmp_by: cmp_by,
       extractData: extractData,
       hostname: hostname,
