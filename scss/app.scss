@@ -46,7 +46,6 @@ a { outline: 0; text-decoration: none;}
     left: 0;
     z-index: 1;
     background: $header_color;
-    /* background: #1E3F64 url(http://ejohn.org/images/ejohn-head-back.png); */
     height: $header_height;
     width: 100%;
     .wrapper {
@@ -84,7 +83,8 @@ a { outline: 0; text-decoration: none;}
 #main {
     margin-top: $header_height;
     background: white;
-    /* background: #F6F6F6 url('/imgs/bg-site.png') repeat center top; */
+    /* background: #F6F6F6 url('/imgs/bg.png') repeat center top; */
+    /* background: #F6F6F6 url('/imgs/background.png') repeat center top; */
     position: relative;
     .hover-switch {
         position: absolute;
@@ -111,8 +111,8 @@ html, body {
 body {
     font: 400 14px/1.431 'Helvetica Neue',Helvetica,Arial,sans-serif;
     color: #111;
-    background: #F6F6F6 url('/imgs/bg.png') repeat center top;
-/* background: #F7F7F7; */
+    background: #F6F6F6 url('/imgs/background.png') repeat center top;
+    /* background: #F6F6F6 url('/imgs/bg.png') repeat center top; */
 }
 
 #content { margin-left: $nav_width; }

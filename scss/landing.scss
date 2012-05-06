@@ -17,6 +17,7 @@
 body {
     font: 400 14px/1.431 'Helvetica Neue',Helvetica,Arial,sans-serif;
     /* background: transparent url('/imgs/bg-site.png') repeat center top; */
+    background: #F6F6F6 url('/imgs/background.png') repeat center top;
     color: #222;
     margin: 0;
     padding: 0;
@@ -153,7 +154,7 @@ $slide_img_height: 360px;
     .next, .prev {
         position:absolute;
         top:147px;
-        left:-39px;
+        left:-29px;
         width:24px;
         height:43px;
         display:block;
@@ -163,7 +164,7 @@ $slide_img_height: 360px;
             height: 43px;
         }
     }
-    .next { left: $slide_img_width + 10px; }
+    .next { left: $slide_img_width + 6px; }
 }
 
 .pagination {
