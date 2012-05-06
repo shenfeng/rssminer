@@ -10,13 +10,19 @@
     $("#reading-area").height(height);
   }
 
-  function select (context, id) {
-    var $me = $('#' + id),
-        me = $me[0],
-        rect = me.getBoundingClientRect();
-    if(rect.top < 0 || rect.top > $win.height()) {
-      me.scrollIntoView();
+  function scroll_into_view ($me) {
+    if($me.length) {
+      var me = $me[0],
+          rect = me.getBoundingClientRect();
+      if(rect.top < 0 || rect.top > $win.height()) {
+        me.scrollIntoView();
+      }
     }
+  }
+
+  function select (context, id) {
+    var $me = $('#' + id);
+    scroll_into_view($me);
     if(!$me.hasClass(SELECTED)) {
       $("." + SELECTED, context).removeClass(SELECTED);
       $me.addClass(SELECTED);
@@ -34,7 +40,8 @@
 
   window.RM = $.extend(window.RM, {
     layout: {
-      select: select
+      select: select,
+      scroll_into_view: scroll_into_view
     }
   });
 })();

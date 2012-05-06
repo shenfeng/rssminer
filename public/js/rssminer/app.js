@@ -42,6 +42,7 @@
       $feeds_list.animate({opacity: 0}, ANIMATION_TIME, function () {
         $feeds_list.hide().css({opacity: 1});
         $subs_list.show();
+        layout.scroll_into_view($('.sub-list .selected'));
       });
     } else {
       $feeds_list.hide();
@@ -55,6 +56,7 @@
         $subs_list.hide().css({opacity: 1});
         $feeds_list.show();
         call_if_fn(cb);
+        layout.scroll_into_view($('#feed-list .selected'));
       });
     } else {
       $subs_list.hide();
