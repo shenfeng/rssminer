@@ -18,7 +18,7 @@
   var $loader = $('#footer img'),
       $reading_area = $('#reading-area'),
       $navigation = $('#navigation'),
-      $subs_list = $('.sub-list'),
+      $subs_list = $('#sub-list'),
       iframe = $('iframe')[0],
       $welcome_list = $('.welcome-list'),
       $feeds_list = $('#feed-list');
@@ -42,7 +42,7 @@
       $feeds_list.animate({opacity: 0}, ANIMATION_TIME, function () {
         $feeds_list.hide().css({opacity: 1});
         $subs_list.show();
-        layout.scroll_into_view($('.sub-list .selected'));
+        layout.scroll_into_view($('#sub-list .selected'));
       });
     } else {
       $feeds_list.hide();
@@ -80,7 +80,7 @@
     if(typeof callback !== 'function') {
       switch_nav_to_subs();
     }
-    layout.select('.sub-list', "item-" + id);
+    layout.select('#sub-list', "item-" + id);
     data.get_feeds(id, 0, 40, sort, function (data) {
       current_feeds_cnt = data.feeds.length;
       data.title = sub.title;
