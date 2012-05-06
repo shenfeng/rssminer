@@ -1,7 +1,7 @@
 (function () {
   var API_SERVER = "http://rssminer.net/api/",
-      SUBSCRIBED_ICON = 'icon.png',
-      UN_SUBSCRIBED_ICON = '16px-feed-icon.png';
+      RSSMINER_ICON = 'icon.png',
+      RSS_ICON = '16px-feed-icon.png';
 
   // gloal cache, which link is subscribed
   var user_sub_lists = {};
@@ -26,7 +26,11 @@
     try {
       xhr.setRequestHeader("X-Requested-With","XMLHttpRequest");
     } catch(_){}
-    if(data) { xhr.send(JSON.stringify(data)); } else { xhr.send(); }
+    if(data) {
+      xhr.send(JSON.stringify(data));
+    } else {
+      xhr.send();
+    }
     return xhr;
   }
 
@@ -62,26 +66,37 @@
     });
   }
 
-  function show_icon (tabid, subscribed) {
-    chrome.pageAction.setIcon({
-      path: subscribed? SUBSCRIBED_ICON : UN_SUBSCRIBED_ICON,
-      tabId: tabid
+  function change_extension_icon (rss_links) {
+    var subscribed = false;
+    for(var i = 0; i < rss_links.length; i++) {
+      if(user_sub_lists[rss_links[i].href]) {
+        subscribed = true;
+        break;
+      }
+    }
+    if(rss_links.length) {
+      chrome.browserAction.setBadgeText({text: rss_links.length + ''});n
+    } else {
+      // clear BadgeText
+      chrome.browserAction.setBadgeText({text:''});
+    }
+    chrome.browserAction.setIcon({
+      path: rss_links.length? RSS_ICON : RSSMINER_ICON
     });
-    chrome.pageAction.show(tabid);
   }
 
   function show_rssminer_icon (request, sender, sendResponse) {
     if(request.type === 'rss_links') {
       var rss_links = request.data,
           subscribed = is_subscribed(rss_links);
-      show_icon(sender.tab.id, subscribed);
+      change_extension_icon(rss_links);
       // Return nothing to let the connection be cleaned up.
       sendResponse({});
     }
   }
 
   function get_user_subscrptions () {
-    get(API_SERVER + 'subs', function (data) { // ok
+    get(API_SERVER + 'subs?only_url=1', function (data) { // ok
       for(var i = 0; i < data.length; ++i) {
         user_sub_lists[data[i]] = true;
       }
@@ -91,8 +106,27 @@
     });                         // fail
   }
 
-  chrome.pageAction.onClicked.addListener(pageaction_clicked);
-  chrome.extension.onRequest.addListener(show_rssminer_icon);
-  get_user_subscrptions();      // init
+  // tab select change
+  function tab_activated (info) {
+    chrome.tabs.sendRequest(info.tabId, {}, function (response) {
+      var rss_links = response.data;
+      change_extension_icon(rss_links);
+    });
+    change_extension_icon([]);
+  }
 
+  // get_user_subscrptions();      // init
+
+  // set init icon
+  chrome.extension.onRequest.addListener(show_rssminer_icon);
+  // tab select change
+  chrome.tabs.onActivated.addListener(tab_activated);
+  // chrome.browserAction.onClicked.addListener(function (tab) {
+
+  //   chrome.browserAction.setPopup({
+  //     tabId: tab.id,
+  //     popup: Math.random() + ''
+  //   });
+
+  // });
 })();

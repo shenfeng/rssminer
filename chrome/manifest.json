@@ -3,15 +3,15 @@
   "version": "1.1",
   "description": "Rssminer, an intelligent web RSS reader",
   "background": { "scripts": ["background.js"] },
-  "page_action": {
-    "default_icon": "16px-feed-icon.png", // optional
-    "default_title": "Subscribe to rssminer" // optional; shown in tooltip
-    // "default_popup": "popup.html"    // optional
+  "browser_action": {
+    "default_icon": "icon.png", // optional
+    "default_title": "Rssminer", // optional; shown in tooltip
+    "default_popup": "popup.html"    // optional
   },
   "icons": {"48": "icon48.png",
             "128": "icon128.png"},
   "homepage_url" : "http://rssminer.net",
-  "permissions": ["http://*/", "tabs"],
+  "permissions": ["http://rssminer.net/", "tabs"],
   "content_scripts" : [
     {
       "matches" : ["http://*/*"],
