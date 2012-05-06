@@ -28,7 +28,7 @@
           headers (get resp :headers {})
           ctype (headers "Content-Type")]
       (if (or (not= 200 (:status resp))
-              (and ctype (re-find #"text|json|xml" ctype)))
+              (and ctype (re-find #"text|json" ctype)))
         ;; do not cache non-200; do not cache text, json, or xml.
         (let [new-headers (assoc headers
                             "Cache-Control" "no-cache")]

@@ -66,7 +66,7 @@
 
 ;;; js will detect not image, replace with default
 ;;; cache it half a day
-(def no-favicon {:status 204
+(def no-favicon {:status 200
                  :headers {"Cache-Control" "private, max-age=18000"}})
 
 (defn- fetch-favicon [hostname]
