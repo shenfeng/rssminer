@@ -316,6 +316,15 @@
 
   function save_vote (feedid, vote, cb) {
     ajax.spost('/api/feeds/' + feedid  + '/vote', {vote: vote}, function () {
+      for(var key in global_cache) {
+        // TODO brute force
+        if(key.indexOf('sub_') === 0) {
+          var feed = _.find(global_cache[key], function (feed) {
+            return feed.id === feedid;
+          });
+          if(feed) { feed.vote_user = vote; break; }
+        }
+      }
       if(typeof cb === 'function') { cb(); }
     });
   }

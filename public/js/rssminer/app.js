@@ -173,6 +173,7 @@
       }
     }
     if(id) {
+      id = parseInt(id, 10);
       data.save_vote(id, vote, function () {
         if(vote === 1) {
           $feed.addClass('like').removeClass('dislike neutral sys');
