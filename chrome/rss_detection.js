@@ -1,5 +1,4 @@
 (function () {
-
   var cached_rss_links;
 
   function send_rss_links_to_backgroud (request, sender, sendResponse) {

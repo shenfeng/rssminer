@@ -23,3 +23,5 @@ public/js/*min.js
 /tags
 /TAGS
 /public/rssminer.crx
+chrome/style.css
+/chrome/tmpls.js

@@ -31,10 +31,8 @@ def gen_jstempls(folder)
   File.open("public/js/gen/#{folder}-tmpls.js", 'w') {|f| f.write(data)}
 end
 
-def minify_js(name, jss)
+def minify_js(target, jss)
   jscompiler = "closure-compiler.jar"
-  target = "public/js/#{name}-min.js"
-
   source_arg = ''
   jss.each do |js|
     source_arg += " --js #{js} "
@@ -139,13 +137,15 @@ namespace :js do
     mkdir_p "public/js/gen"
     gen_jstempls("dashboard");
     gen_jstempls("app");
+    gen_jstempls("chrome");
+    sh 'mv public/js/gen/chrome-tmpls.js chrome/tmpls.js'
   end
 
   desc 'Combine all js into one, minify it using google closure'
   task :minify => [:tmpls, :deps] do
-    minify_js("dashboard", dashboard_jss);
-    minify_js("app", app_jss);
-    minify_js("landing", landing_jss);
+    minify_js("public/js/dashboard-min.js", dashboard_jss);
+    minify_js("public/js/app-min.js", app_jss);
+    minify_js("public/js/landing-min.js", landing_jss);
   end
 end
 
@@ -159,6 +159,7 @@ task :css_compile do
   end
   sh "find public/css/ -type f " +
     "| xargs -I {} sed -i \"s/{VERSION}/#{version}/g\" {}"
+  sh 'mv public/css/chrome.css chrome/style.css'
 end
 
 desc "create chrome extension"

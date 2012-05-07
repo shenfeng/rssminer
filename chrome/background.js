@@ -1,7 +1,7 @@
 (function () {
-  var API_SERVER = "http://rssminer.net/api/",
-      RSSMINER_ICON = 'icon.png',
-      RSS_ICON = '16px-feed-icon.png';
+  var API_SERVER = "http://127.0.0.1:9090/api/",
+      RSSMINER_ICON = 'imgs/icon.png',
+      RSS_ICON = 'imgs/16px-feed-icon.png';
 
   // gloal cache, which link is subscribed
   var user_sub_lists = {};
@@ -75,7 +75,7 @@
       }
     }
     if(rss_links.length) {
-      chrome.browserAction.setBadgeText({text: rss_links.length + ''});n
+      chrome.browserAction.setBadgeText({text: rss_links.length + ''});
     } else {
       // clear BadgeText
       chrome.browserAction.setBadgeText({text:''});
@@ -115,7 +115,7 @@
     change_extension_icon([]);
   }
 
-  // get_user_subscrptions();      // init
+  get_user_subscrptions();      // init
 
   // set init icon
   chrome.extension.onRequest.addListener(show_rssminer_icon);
