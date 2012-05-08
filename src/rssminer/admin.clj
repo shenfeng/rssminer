@@ -13,7 +13,7 @@
   (with-mysql
     (with-query-results rs ["select * from feeds"]
       (doseq [feed rs]
-        (index-feed (:id feed) feed))))
+        (index-feed (:id feed) (:rss_link_id feed) feed))))
   (close-global-index-writer!)
   (info "Rebuild index OK"))
 

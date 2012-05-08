@@ -176,7 +176,7 @@ body {
     top: 4px;
     height: 7px;
     width: 7px;
-    @include border-radius(5px);
+    @include border-radius(8px);
 }
 
 /* by sys, virtual small than by user */
@@ -184,7 +184,6 @@ body {
     height: 5px;
     width: 5px;
     top: 5px;
-    @include border-radius(2px);
 }
 
 .unread-like { background-color: #449d4e; color: #ffffff; }
@@ -359,21 +358,33 @@ iframe {
 
 #search-result {
     ul { list-style: none; padding: 0; margin: 0; }
-    a { padding: 4px 8px; display: block }
+    a { padding: 3px 7px; display: block; }
     .title {
         max-width: 500px;
         @include overflow-ellipsis();
     }
     li {
         position: relative;
+        padding: 0;
         &.selected, &:hover { background: $hover_color; }
     }
+    .indicator {
+        top: 5px;
+        height: 7px;
+        width: 7px;
+        left: 4px;
+    }
+    .count { top: 9px; right: 7px; }
+    img { margin-top: 3px; }
+    .feeds { .title { margin-left: 12px; } }
+    .date { top: 26px; right: 7px; }
+    .author { margin: 0; background: #eee;}
+    .meta { font-size: 11px; padding-left: 12px; color: #666; }
     box-shadow: 0 1px 4px rgba(0, 0, 0, .5);
     position: absolute;
     width: 540px;
     top: 38px;
     left: 230px;
-    font-size: 13px;
     background: white;
     @include border-radius(0 0 5px 5px);
 }

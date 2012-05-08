@@ -179,18 +179,39 @@
   }
 
   function transorm_item (subid) {
+    var titles = {};
+    _.each(global_cache.subscriptions, function (sub) {
+      titles[sub.id] = transorm_sub(sub);
+    });
     // subid is undefined when used by parsewelcomelist
     return function (i) {
+      var sub_id = subid || i.rss_link_id;
       return {
         author: i.author,
+        sub: titles[sub_id],
         cls: feed_css_class(i),
         date: subid ? ymdate(i, i.published_ts) : ymdate(i),
-        href: 'read/' + (subid || i.rss_link_id) + "/" + i.id,
+        href: 'read/' + sub_id + "/" + i.id,
         id: i.id,
         link: i.link,
         tags: split_tag(i.tags),
         title: i.title
       };
+    };
+  }
+
+  function transorm_sub (i) {
+    return {
+      img: favicon_path(i.url),
+      title: i.title,
+      title_l: i.title.toLowerCase(),
+      href: sub_hash(i.id, 'newest'),
+      like: i.like_c,
+      total: i.total_feeds,
+      index: i.sort_index,
+      dislike: i.dislike_c,
+      neutral: i.total_c - i.like_c - i.dislike_c,
+      id: i.id        // rss_link_id
     };
   }
 
@@ -201,20 +222,7 @@
     for(var group in grouped) {
       var list = _(grouped[group]).chain()
             .sortBy(function (i) { return i.sort_index; })
-            .map(function(i) {
-              return {
-                img: favicon_path(i.url),
-                title: i.title,
-                title_l: i.title.toLowerCase(),
-                href: sub_hash(i.id, 'newest'),
-                like: i.like_c,
-                total: i.total_feeds,
-                index: i.sort_index,
-                dislike: i.dislike_c,
-                neutral: i.total_c - i.like_c - i.dislike_c,
-                id: i.id        // rss_link_id
-              };
-            }).value();
+            .map(transorm_sub).value();
       list = _.filter(list, function (i) { return i.title; });
       if(list.length) {
         result.push({
@@ -440,20 +448,27 @@
   }
 
   function get_search_result (q, limit, cb) {
-    var result = [],
+    var subs = [],
         count = 0,
         grouped = parse_subs(global_cache.subscriptions);
     _.each(grouped, function (group) {
       _.each(group.subs, function (sub) {
         if((!q || sub.title_l.indexOf(q) !== -1) && count < limit) {
           if(sub.total) {
-            result.push(sub);
+            subs.push(sub);
             count++;
           }
         }
       });
     });
-    cb(result);
+    if(q.length > 1) {
+      limit = Math.max(17 - subs.length, 10);
+      ajax.sget('/api/search?q=' + q + "&limit=" + limit, function (feeds) {
+        cb({subs: subs, feeds: _.map(feeds, transorm_item())});
+      });
+    } else {
+      cb({subs: subs});
+    }
   }
 
   window.RM = $.extend(window.RM, {

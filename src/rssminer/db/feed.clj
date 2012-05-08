@@ -12,7 +12,7 @@
     (when (and link (not (blank? link)))
       (try
         (let [id (mysql-insert :feeds (assoc feed :rss_link_id rss-id))]
-          (index-feed id feed))
+          (index-feed id rss-id feed))
         (catch java.sql.SQLException e      ;(link, rss_link_id) is unique
           (trace (str "update id:" rss-id) link)
           (with-mysql
@@ -36,6 +36,8 @@
            "ORDER BY vote_sys DESC")
          " LIMIT ? OFFSET ?")
     user-id, rss-id, limit, offset]))
+
+
 
 (defn fetch-orginal [id]
   (first (mysql-query ["SELECT original, link

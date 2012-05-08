@@ -1,7 +1,7 @@
 (ns rssminer.search
   (:use [clojure.tools.logging :only [info]]
         [rssminer.util :only [to-int ignore-error]]
-        [rssminer.db.util :only [with-mysql mysql-query]])
+        [rssminer.db.util :only [mysql-query]])
   (:import rssminer.Searcher)
   (:require [clojure.string :as str]))
 
@@ -19,31 +19,27 @@
     (info "use index path" path)
     (reset! searcher (Searcher/initGlobalSearcher path))))
 
-(defn fetch-feeds [feed-ids user-id]
-  ;; TODO use para user-id
-  (let [sql [(str "SELECT id, author, title, link, tags
-                  FROM feeds WHERE id IN (" (str/join ", " feed-ids) ")")]
-        ;; (if user-id
-        ;;       ["SELECT id, author, title, link, p.pref, tags
-        ;;         FROM TABLE(x int=?) T INNER JOIN feeds f ON T.x = f.id
-        ;;         LEFT JOIN user_feed_pref p
-        ;;              on p.feed_id = id and p.user_id = ?" feed-ids user-id]
-        ;;       ["SELECT id, author, title, link, tags
-        ;;         FROM TABLE(x int=?) T INNER JOIN feeds f ON T.x = f.id"
-        ;;        feed-ids])
-        ]
-    (mysql-query sql)))
+(defn index-feed [id rss-id {:keys [author tags title summary]}]
+  (.index ^Searcher @searcher id rss-id author title summary tags))
 
-(defn index-feed [id {:keys [author tags title summary]}]
-  (ignore-error
-   (.index ^Searcher @searcher id author title summary tags)))
+;;; Cyclic load dependency
+(defn fetch-feeds [feed-ids user-id]
+  (mysql-query
+   [(str "SELECT id, author, link, title, tags, published_ts, f.rss_link_id,
+          uf.read_date, uf.vote_user, uf.vote_sys FROM feeds f
+          LEFT JOIN user_feed uf on user_id = ? and id = uf.feed_id
+      WHERE f.id in " "(" (str/join ", " feed-ids) ")")
+    user-id]))
 
 (defn update-index [id html]
   (try
-    (.updateIndex ^Searcher @searcher (to-int id) html)
+    ;; TODO replace 1 with real rss-id
+    (.updateIndex ^Searcher @searcher (to-int id) 1 html)
     (catch Exception e
       (println "updating index " id "error!!"))))
 
-(defn search* [term limit & {:keys [user-id]}]
-  (let [meta (.search ^Searcher @searcher term limit)]
-    (fetch-feeds meta user-id)))
+(defn search* [term rss-ids limit & {:keys [user-id]}]
+  (let [meta (.search ^Searcher @searcher term rss-ids limit)]
+    (if (seq meta)
+      (fetch-feeds meta user-id)
+      [])))

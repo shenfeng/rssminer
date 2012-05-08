@@ -3,9 +3,12 @@ package rssminer;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
@@ -18,12 +21,12 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.BooleanClause.Occur;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.similar.MoreLikeThis;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
@@ -38,197 +41,241 @@ import rssminer.sax.ExtractMainTextHandler;
 
 public class Searcher {
 
-    static final Version V = Version.LUCENE_35;
-    static final Analyzer analyzer = new KStemStopAnalyzer(V);
-    static final Logger logger = LoggerFactory.getLogger(Searcher.class);
-    static final String FEED_ID = "id";
-    static final String AUTHOR = "author";
-    static final String TITLE = "title";
-    static final String CONTENT = "content";
-    static final String TAG = "tag";
-    public static String[] FIELDS = new String[] { AUTHOR, TITLE, CONTENT,
-            TAG };
+	static final Version V = Version.LUCENE_35;
+	static final Analyzer analyzer = new KStemStopAnalyzer(V);
+	static final Logger logger = LoggerFactory.getLogger(Searcher.class);
+	static final String FEED_ID = "id";
+	static final String RSS_ID = "rid";
+	static final String AUTHOR = "author";
+	static final String TITLE = "title";
+	static final String CONTENT = "content";
+	static final String TAG = "tag";
 
-    private IndexWriter indexer = null;
-    private final String path;
+	public static String[] FIELDS = new String[] { AUTHOR, TITLE, CONTENT, TAG };
 
-    public void toggleInfoStream(boolean toggle) throws IOException {
-        if (toggle) {
-            indexer.setInfoStream(System.out);
-        } else {
-            indexer.setInfoStream(null);
-        }
-    }
+	// cache it, String.intern is heavy
+	static Term[] TERMS = new Term[] { new Term(AUTHOR), new Term(TITLE),
+			new Term(TAG) };
 
-    public static Searcher SEARCHER; // global
+	static Term CONTENT_TERM = new Term(CONTENT);
+	static Term FEED_ID_TERM = new Term(FEED_ID);
+	static Term RSS_ID_TERM = new Term(RSS_ID);
 
-    public static Searcher initGlobalSearcher(String path) throws IOException {
-        closeGlobalSearcher();
-        SEARCHER = new Searcher(path);
-        return SEARCHER;
-    }
+	private IndexWriter indexer = null;
+	private final String path;
 
-    public static void closeGlobalSearcher() {
-        if (SEARCHER != null) {
-            try {
-                SEARCHER.close();
-            } catch (Exception ignore) {
-            }
-            SEARCHER = null;
-        }
-    }
+	public void toggleInfoStream(boolean toggle) throws IOException {
+		if (toggle) {
+			indexer.setInfoStream(System.out);
+		} else {
+			indexer.setInfoStream(null);
+		}
+	}
 
-    private Searcher(String path) throws IOException {
-        final IndexWriterConfig cfg = new IndexWriterConfig(V, analyzer);
-        this.path = path;
-        cfg.setOpenMode(OpenMode.CREATE_OR_APPEND);
-        Directory dir = null;
-        if (path.equals("RAM")) {
-            dir = new RAMDirectory();
-        } else {
-            dir = FSDirectory.open(new File(path));
-        }
-        indexer = new IndexWriter(dir, cfg);
-    }
+	public static Searcher SEARCHER; // global
 
-    public String toString() {
-        return "Searcher@" + path;
-    }
+	public static Searcher initGlobalSearcher(String path) throws IOException {
+		closeGlobalSearcher();
+		SEARCHER = new Searcher(path);
+		return SEARCHER;
+	}
 
-    public void clear() throws IOException {
-        indexer.deleteAll();
-        indexer.commit();
-    }
+	public static void closeGlobalSearcher() {
+		if (SEARCHER != null) {
+			try {
+				SEARCHER.close();
+			} catch (Exception ignore) {
+			}
+			SEARCHER = null;
+		}
+	}
 
-    public void close() throws CorruptIndexException, IOException {
-        if (indexer != null) {
-            logger.info("close Searcher@" + path);
-            indexer.close();
-            indexer = null;
-        }
-    }
+	private Searcher(String path) throws IOException {
+		final IndexWriterConfig cfg = new IndexWriterConfig(V, analyzer);
+		this.path = path;
+		cfg.setOpenMode(OpenMode.CREATE_OR_APPEND);
+		Directory dir = null;
+		if (path.equals("RAM")) {
+			dir = new RAMDirectory();
+		} else {
+			dir = FSDirectory.open(new File(path));
+		}
+		indexer = new IndexWriter(dir, cfg);
+	}
 
-    public void updateIndex(int feedid, String html) {
-        if (html != null && !html.isEmpty()) {
-            Parser p = Utils.parser.get();
-            ExtractMainTextHandler h = new ExtractMainTextHandler();
-            p.setContentHandler(h);
-            try {
-                p.parse(new InputSource(new StringReader(html)));
-                String content = h.getContent();
-                String title = h.getTitle();
-                indexer.updateDocument(new Term(FEED_ID, feedid + ""),
-                        createDocument(feedid, null, title, content, null));
-            } catch (Exception e) {
-                logger.info(e.getMessage(), e);
-            }
-        }
-    }
+	public String toString() {
+		return "Searcher@" + path;
+	}
 
-    public void index(int feeId, String author, String title, String summary,
-            String tags) throws CorruptIndexException, IOException {
-        try {
-            summary = Utils.extractText(summary);
-        } catch (SAXException ignore) {
-        }
-        Document doc = createDocument(feeId, author, title, summary, tags);
+	public void clear() throws IOException {
+		indexer.deleteAll();
+		indexer.commit();
+	}
 
-        indexer.addDocument(doc);
-    }
+	public void close() throws CorruptIndexException, IOException {
+		if (indexer != null) {
+			logger.info("close Searcher@" + path);
+			indexer.close();
+			indexer = null;
+		}
+	}
 
-    private Document createDocument(int feeId, String author, String title,
-            String summary, String tags) throws IOException {
-        Document doc = new Document();
-        Field fid = new Field(FEED_ID, feeId + "", Store.YES,
-                Index.NOT_ANALYZED);
-        doc.add(fid);
+	public void updateIndex(int feedid, int rssID, String html) {
+		if (html != null && !html.isEmpty()) {
+			Parser p = Utils.parser.get();
+			ExtractMainTextHandler h = new ExtractMainTextHandler();
+			p.setContentHandler(h);
+			try {
+				p.parse(new InputSource(new StringReader(html)));
+				String content = h.getContent();
+				String title = h.getTitle();
+				indexer.updateDocument(
+						FEED_ID_TERM.createTerm(Integer.toString(feedid)),
+						createDocument(feedid, rssID, null, title, content,
+								null));
+			} catch (Exception e) {
+				logger.info(e.getMessage(), e);
+			}
+		}
+	}
 
-        if (author != null && author.length() > 0) {
-            // TODO why NOT_ANALYZED searched nothing?
-            Field a = new Field(AUTHOR, author, Store.NO, Index.ANALYZED,
-                    TermVector.YES);
-            a.setBoost(1.2f);
-            doc.add(a);
-        }
+	public void index(int feeID, int rssID, String author, String title,
+			String summary, String tags) throws CorruptIndexException,
+			IOException {
+		try {
+			if (summary != null)
+				summary = Utils.extractText(summary);
+		} catch (SAXException ignore) {
+		}
+		Document doc = createDocument(feeID, rssID, author, title, summary,
+				tags);
 
-        if (title != null) {
-            Field t = new Field(TITLE, title, Store.NO, Index.ANALYZED,
-                    TermVector.YES);
-            t.setBoost(1.5f);
-            doc.add(t);
-        }
+		indexer.addDocument(doc);
+	}
 
-        if (summary != null) {
-            try {
-                String content = Utils.extractText(summary);
-                Field c = new Field(CONTENT, content, Store.NO,
-                        Index.ANALYZED, TermVector.YES);
-                doc.add(c);
-            } catch (SAXException ignore) {
-            }
-        }
-        if (tags != null) {
-            String[] ts = tags.split("; ");
-            for (String tag : ts) {
-                Field f = new Field(TAG, tag, Store.NO, Index.NOT_ANALYZED,
-                        TermVector.YES);
-                f.setBoost(1.3f);
-                doc.add(f);
-            }
-        }
-        return doc;
-    }
+	private Document createDocument(int feeId, int rssID, String author,
+			String title, String summary, String tags) throws IOException {
+		Document doc = new Document();
+		// not intern, already interned
+		Field fid = new Field(FEED_ID, false, Integer.toString(feeId),
+				Store.YES, Index.NOT_ANALYZED, TermVector.NO);
+		doc.add(fid);
 
-    private String[] doSearch(IndexSearcher searcher, Query q, int count)
-            throws IOException {
-        TopDocs docs = searcher.search(q, count);
-        String[] array = new String[docs.scoreDocs.length];
-        for (int i = 0; i < docs.scoreDocs.length; i++) {
-            int docid = docs.scoreDocs[i].doc;
-            Document doc = searcher.doc(docid);
-            array[i] = doc.get(FEED_ID);
-        }
-        return array;
-    }
+		Field rid = new Field(RSS_ID, false, Integer.toString(rssID),
+				Store.YES, Index.NOT_ANALYZED, TermVector.NO);
+		doc.add(rid);
 
-    public IndexReader getReader() throws CorruptIndexException, IOException {
-        return IndexReader.open(indexer, false);
-    }
+		if (author != null && author.length() > 0) {
+			// TODO why NOT_ANALYZED searched nothing?
+			Field a = new Field(AUTHOR, false, author, Store.NO,
+					Index.ANALYZED, TermVector.YES);
+			a.setBoost(1.2f);
+			doc.add(a);
+		}
 
-    public String[] search(String term, int count) // return feed ids
-            throws CorruptIndexException, IOException, ParseException {
-        IndexReader reader = getReader();
-        IndexSearcher searcher = new IndexSearcher(reader);
-        if (term.startsWith("related:")) {
-            int docId = Integer.valueOf(term.substring("related:".length()));
-            MoreLikeThis likeThis = new MoreLikeThis(reader);
-            likeThis.setFieldNames(FIELDS);
-            likeThis.setMinTermFreq(1);
-            likeThis.setMinDocFreq(3);
-            Query like = likeThis.like(docId);
-            return doSearch(searcher, like, count);
-        } else {
-            QueryParser parser = new QueryParser(V, CONTENT, analyzer);
-            Query query = parser.parse(term);
-            return doSearch(searcher, query, count);
-        }
-    }
+		if (title != null) {
+			Field t = new Field(TITLE, false, title, Store.NO, Index.ANALYZED,
+					TermVector.YES);
+			t.setBoost(1.5f);
+			doc.add(t);
+		}
 
-    public int[] feedID2DocIDs(List<Integer> feeds)
-            throws CorruptIndexException, IOException {
-        int[] array = new int[feeds.size()];
-        IndexSearcher searcher = new IndexSearcher(getReader());
-        for (int i = 0; i < feeds.size(); i++) {
-            int l = feeds.get(i);
-            TermQuery query = new TermQuery(new Term(FEED_ID,
-                    Integer.toString(l)));
-            TopDocs docs = searcher.search(query, 1);
-            if (docs.totalHits == 1) {
-                array[i] = docs.scoreDocs[0].doc;
-            } else {
-                array[i] = -1; // return -1, not found
-            }
-        }
-        return array;
-    }
+		if (summary != null) {
+			try {
+				String content = Utils.extractText(summary);
+				Field c = new Field(CONTENT, false, content, Store.NO,
+						Index.ANALYZED, TermVector.YES);
+				doc.add(c);
+			} catch (SAXException ignore) {
+			}
+		}
+		if (tags != null) {
+			String[] ts = tags.split("; ");
+			for (String tag : ts) {
+				Field f = new Field(TAG, false, tag, Store.NO,
+						Index.NOT_ANALYZED, TermVector.YES);
+				f.setBoost(1.3f);
+				doc.add(f);
+			}
+		}
+		return doc;
+	}
+
+	public IndexReader getReader() throws CorruptIndexException, IOException {
+		return IndexReader.open(indexer, false);
+	}
+
+	private Query buildQuery(String text, List<Long> rssids) throws IOException {
+		TokenStream stream = analyzer.tokenStream("", new StringReader(text));
+
+		CharTermAttribute c = stream.getAttribute(CharTermAttribute.class);
+		List<String> terms = new ArrayList<String>(4);
+		while (stream.incrementToken()) {
+			String term = new String(c.buffer(), 0, c.length());
+			terms.add(term);
+		}
+
+		BooleanQuery q = new BooleanQuery();
+
+		for (Term t : TERMS) {
+			BooleanQuery part = new BooleanQuery();
+			for (String term : terms) {
+				part.add(new TermQuery(t.createTerm(term)), Occur.MUST);
+			}
+			part.setBoost(2);
+			q.add(part, Occur.SHOULD);
+		}
+
+		BooleanQuery part = new BooleanQuery();
+		for (String term : terms) {
+			part.add(new TermQuery(CONTENT_TERM.createTerm(term)), Occur.MUST);
+		}
+		q.add(part, Occur.SHOULD);
+
+		BooleanQuery ids = new BooleanQuery();
+		for (Long rid : rssids) {
+			ids.add(new TermQuery(RSS_ID_TERM.createTerm(rid.toString())),
+					Occur.SHOULD);
+		}
+
+		BooleanQuery query = new BooleanQuery();
+		query.add(q, Occur.MUST);
+		query.add(ids, Occur.MUST);
+
+		return query;
+	}
+
+	// return feed ids
+	public String[] search(String term, List<Long> rssids, int count)
+			throws CorruptIndexException, IOException, ParseException {
+		IndexReader reader = getReader();
+		IndexSearcher searcher = new IndexSearcher(reader);
+		Query q = buildQuery(term, rssids);
+		TopDocs docs = searcher.search(q, count);
+		String[] array = new String[docs.scoreDocs.length];
+		for (int i = 0; i < docs.scoreDocs.length; i++) {
+			int docid = docs.scoreDocs[i].doc;
+			Document doc = searcher.doc(docid);
+			array[i] = doc.get(FEED_ID);
+		}
+		return array;
+	}
+
+	public int[] feedID2DocIDs(List<Integer> feeds)
+			throws CorruptIndexException, IOException {
+		int[] array = new int[feeds.size()];
+		IndexSearcher searcher = new IndexSearcher(getReader());
+		for (int i = 0; i < feeds.size(); i++) {
+			int l = feeds.get(i);
+			TermQuery query = new TermQuery(new Term(FEED_ID,
+					Integer.toString(l)));
+			TopDocs docs = searcher.search(query, 1);
+			if (docs.totalHits == 1) {
+				array[i] = docs.scoreDocs[0].doc;
+			} else {
+				array[i] = -1; // return -1, not found
+			}
+		}
+		return array;
+	}
 }
