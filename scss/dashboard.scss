@@ -1,7 +1,156 @@
 @import "variable";
 @import "css3";
-@import "reset";
-@import "common";
+/* @import "reset"; */
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+
+a { color: $link_color; text-decoration: none; outline: none; }
+a:hover { color: $link_hover_color; }
+
+small { font-size: 85%; }
+b, strong, th { font-weight: bold; }
+
+/* html { overflow-y: scroll; } */
+
+body {
+    font: 400 13px/1.231 Arial, Helvetica, sans-serif;
+    color: #222;
+    margin: 0;
+    padding: 0;
+}
+
+blockquote, q { quotes: none; }
+
+blockquote:before, blockquote:after,
+q:before, q:after { content: ""; content: none; }
+
+mark {
+    background-color: #ff9;
+    color: #000;
+    font-style: italic;
+    font-weight: bold;
+}
+
+del { text-decoration: line-through; }
+
+table { border-collapse: collapse; border-spacing: 0; }
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+a { color: $link_color; text-decoration: none; outline: none; }
+a:hover { color: $link_hover_color; }
+
+small { font-size: 85%; }
+b, strong, th { font-weight: bold; }
+
+/* Set sub, sup without affecting line-height: gist.github.com/413930 */
+sub, sup { font-size: 75%; line-height: 0; position: relative; }
+sup { top: -0.5em; }
+sub { bottom: -0.25em; }
+
+pre {
+    /* www.pathf.com/blogs/2008/05/formatting-quoted-code-in-blog-posts-css21-white-space-pre-wrap/ */
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    padding: 15px;
+}
+
+/* 1) Make inputs and buttons play nice in IE: www.viget.com/inspire/styling-the-button-element-in-internet-explorer/
+   2) WebKit browsers add a 2px margin outside the chrome of form elements.
+   Firefox adds a 1px margin above and below textareas
+   3) Set font-size to match <body>'s, and font-family to sans-serif
+   4) Align to baseline */
+button, input, select, textarea {
+    width: auto;
+    overflow: visible;
+    margin: 0;
+    font-size: 100%;
+    font-family: sans-serif;
+    vertical-align: baseline;
+}
+
+/* 1) Remove default scrollbar in IE: www.sitepoint.com/blogs/2010/08/20/ie-remove-textarea-scrollbars/
+   2) Align to text-top */
+textarea { overflow: auto; vertical-align:text-top; }
+
+/* Hand cursor on clickable input elements */
+label, input[type="button"], input[type="submit"], input[type="image"], button { cursor: pointer; }
+
+/* Remove extra padding and inner border in Firefox */
+input::-moz-focus-inner,
+button::-moz-focus-inner { border: 0; padding: 0; }
+
+
+/* These selection declarations have to be separate
+   No text-shadow: twitter.com/miketaylr/status/12228805301
+   Also: hot pink! */
+::-moz-selection { background: #fe57a1; color:#fff; text-shadow: none; }
+::selection { background:#fe57a1; color:#fff; text-shadow: none; }
+
+pre, code, kbd, samp { font-family: monospace, sans-serif; }
+
+
+#header {
+    padding: 0.8em 0.5em 0em 0.5em;
+    text-indent: 1em;
+    font-size: 18px;
+    text-shadow: 1px 1px 0px #E0E0E0;
+    h1 { margin: 4px 0 }
+    a { color: #303030; text-decoration: none;}
+}
+
+/* Hide for both screenreaders and browsers:
+   css-discuss.incutio.com/wiki/Screenreader_Visibility */
+.hidden { display: none; visibility: hidden; }
+
+/* Hide visually and from screenreaders, but maintain layout */
+.invisible { visibility: hidden; }
+
+/* The Magnificent Clearfix: Updated to prevent margin-collapsing on child elements in most situations.
+   nicolasgallagher.com/micro-clearfix-hack/ */
+
+.clearfix:before, .clearfix:after { content: ""; display: table; }
+.clearfix:after { clear: both; }
+.clearfix { zoom: 1; }
+
+.required { color: #C00; }
+
+.lfloat { float: left; }
+.rfloat { float: right; }
+
+
+#notification {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    z-index: 1000;
+    font-weight: bold;
+    font-size: 13px;
+    overflow: hidden;
+    p {
+        @include border-radius(4px);
+        padding: 5px;
+        margin: 0;
+    }
+    .message { background: yellow;  }
+    .error { background: #FDD };
+    visibility: hidden;
+}
+
+.code {
+    font-family: Consolas, Inconsolata, monospace;
+}
+
 
 #page-wrap {
     margin: 0 auto;
