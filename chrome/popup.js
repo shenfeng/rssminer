@@ -1,6 +1,5 @@
 (function () {
   // document.write(Math.random());
-
   var tmpls = window.RM.tmpls,
       to_html = Mustache.to_html;
 
@@ -19,5 +18,4 @@
       }
     });
   });
-
 })();

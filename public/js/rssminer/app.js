@@ -4,8 +4,7 @@
       tmpls = RM.tmpls,
       util = RM.util,
       layout = RM.layout,
-      call_if_fn = util.call_if_fn,
-      to_html = Mustache.to_html;
+      call_if_fn = util.call_if_fn;
 
   var ANIMATION_TIME = 200,
       SHOW_IFRAME = 'show-iframe';
@@ -86,9 +85,9 @@
       data.title = sub.title;
       set_document_title(data.title);
       if(data.feeds.length) {
-        var html = to_html(tmpls.feeds_nav, data);
+        var html = tmpls.feeds_nav(data);
         $feeds_list.empty().append(html);
-        html = to_html(tmpls.sub_feeds, data);
+        html = tmpls.sub_feeds(data);
         $welcome_list.empty().append(html);
         focus_first_feed();
       }
@@ -127,7 +126,7 @@
           link = feed.link;
       feed.domain = util.hostname(link);
       set_document_title(feed.title);
-      var html = to_html(tmpls.footer_info, feed);
+      var html = tmpls.footer_info(feed);
       $('#footer .feed').replaceWith(html);
       $loader.css({visibility: 'visible'});
       iframe.src = data.get_final_link(link, feedid);
@@ -156,7 +155,7 @@
   function show_welcome () {
     if(data.is_user_has_subscription()) { // user has subscriptions
       data.get_welcome_list(function (data) {
-        $welcome_list.empty().append(to_html(tmpls.welcome, data));
+        $welcome_list.empty().append(tmpls.welcome(data));
         $reading_area.removeClass(SHOW_IFRAME);
         switch_nav_to_subs();
         set_document_title();
@@ -191,7 +190,7 @@
 
   function show_settings () {
     $reading_area.removeClass(SHOW_IFRAME);
-    var html = to_html(tmpls.settings, data.user_settings());
+    var html = tmpls.settings(data.user_settings());
     $welcome_list.empty().append(html).find('img').each(util.favicon_error);;
   }
 
@@ -220,7 +219,7 @@
 
   function show_add_sub_ui () {
     $reading_area.removeClass(SHOW_IFRAME);
-    $welcome_list.empty().append(tmpls.add);
+    $welcome_list.empty().append(tmpls.add());
   }
 
   function save_vote_up (e) { save_user_vote(1, this); return false; }
@@ -278,7 +277,7 @@
   });
 
   data.get_user_subs(function (subs) {
-    var html = to_html(tmpls.subs_nav, {groups: subs});
+    var html = tmpls.subs_nav({groups: subs});
     $subs_list.empty().append(html);
     $("#navigation .item img").each(util.favicon_error);
     // category sortable

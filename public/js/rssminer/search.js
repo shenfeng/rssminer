@@ -4,8 +4,7 @@
       tmpls = RM.tmpls,
       util = RM.util,
       $q = $('#header input'),
-      $header = $('#header .wrapper'),
-      to_html = window.Mustache.to_html;
+      $header = $('#header .wrapper');
 
   var ID = 'search-result',
       SELECTED = 'selected';
@@ -68,7 +67,7 @@
   }
 
   function show_search_result (data) {
-    var html = to_html(tmpls.search_result, data);
+    var html = tmpls.search_result(data);
     hide_search_result();
     $header.append(html).find('img').each(util.favicon_error);
     $lis = $('#search-result > ul > li');

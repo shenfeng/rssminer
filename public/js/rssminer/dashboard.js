@@ -22,7 +22,7 @@
   function showSettings () {
     ajax.get("/api/dashboard/stat", function (data) {
       var resp = plot.parse(data),
-          html = window.Mustache.to_html(window.RM.tmpls.settings, resp);
+          html = window.RM.tmpls.settings(resp);
       $("#content").empty().append(html);
       plot.plot();
 

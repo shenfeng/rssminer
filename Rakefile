@@ -21,11 +21,11 @@ end
 def gen_jstempls(folder)
   print "Generating #{folder}-tmpls.js, please wait....\n"
   html_tmpls = FileList["src/templates/tmpls/#{folder}/**/*.*"]
-  data = "(function(){var tmpls = {};"
+  data = "(function(){var c = Mustache.compile; var tmpls = {};"
   html_tmpls.each do |f|
     text = get_file_as_string(f).gsub(/\s+/," ")
     name = File.basename(f, ".tpl")
-    data += "tmpls." + name + " = '" + text + "';\n"
+    data += "tmpls." + name + " = c('" + text + "');\n"
   end
   data += "window.RM = {tmpls: tmpls};})();\n"
   File.open("public/js/gen/#{folder}-tmpls.js", 'w') {|f| f.write(data)}
