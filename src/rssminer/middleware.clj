@@ -27,8 +27,9 @@
     (let [resp (handler req)
           headers (get resp :headers {})
           ctype (headers "Content-Type")]
-      (if (or (not= 200 (:status resp))
-              (and ctype (re-find #"text|json" ctype)))
+      (if (and (or (not= 200 (:status resp))
+                   (and ctype (re-find #"text|json" ctype)))
+               (not (get headers "Cache-Control")))
         ;; do not cache non-200; do not cache text, json, or xml.
         (let [new-headers (assoc headers
                             "Cache-Control" "no-cache")]
@@ -44,27 +45,29 @@
            (error e "error handling request" req)
            {:status 500 :body "Sorry, an error occured."}))))
 
+(def ^{:private true} json-resp-header {"Content-Type"
+                                        "application/json; charset=utf-8"})
+
 (defn wrap-json
   [handler]
   (fn [req]
     ;; it must be json, keywordize by default
-    (let [json-req-body (if-let [body (:body req)]
-                          (let [body-str (if (string? body) body
-                                             (slurp body))]
-                            (when (seq body-str)
-                              (json/read-json body-str))))
+    (let [json-body (if-let [body (:body req)]
+                      (let [body-str (slurp body)]
+                        (json/read-json body-str)))
           resp (try ;; easier for js to understand if this is an 500
-                 (handler (assoc req
-                            :body json-req-body))
+                 (handler (assoc req :body json-body))
                  (catch Exception e
-                   (error e "api error\n Request: " req)
+                   (error e "api error Request: " req)
                    {:status 500
                     :body {:message "Opps, an error occured"}}))]
-      (update-in (merge {:status 200
-                         :headers {"Content-Type"
-                                   "application/json; charset=utf-8"}}
-                        (if (contains? resp :body) resp {:body resp}))
-                 [:body] json-str))))
+      (if (contains? resp :body)
+        {:status (or (:status resp) 200)
+         :headers (merge json-resp-header (:headers resp))
+         :body (-> resp :body json-str)}
+        {:status 200
+         :headers json-resp-header
+         :body (json-str resp)}))))
 
 (defn wrap-request-logging-in-dev [handler]
   (if (conf/in-dev?)
@@ -76,8 +79,6 @@
                (str (- finish start) "ms"))
         resp))
     handler))
-
-
 
 (defmacro JPOST [path args handler]
   `(POST ~path ~args (wrap-json ~handler)))

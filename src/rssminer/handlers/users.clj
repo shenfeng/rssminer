@@ -53,9 +53,11 @@
 
 (defn summary [req]
   (let [u-id (:id (session-get req :user))]
-    {:read (uf/fetch-recent-read u-id 30)
-     :voted (uf/fetch-recent-voted u-id 20)
-     :recommend (uf/fetch-system-voteup u-id 20)}))
+    {:body {:read (uf/fetch-recent-read u-id 30)
+            :voted (uf/fetch-recent-voted u-id 20)
+            :recommend (uf/fetch-system-voteup u-id 20)}
+     ;; ok, just cache for half hour
+     :headers {"Cache-Control" "private, max-age=1800"}}))
 
 (defn google-openid [req]
   (let [spec "http://specs.openid.net/auth/2.0/identifier_select"

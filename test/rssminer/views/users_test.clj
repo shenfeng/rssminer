@@ -1,7 +1,7 @@
 (ns rssminer.views.users-test
   (:use clojure.test
-        (rssminer [test-common :only [test-app app-fixture auth-app]])
-        [clojure.data.json :only [json-str]]))
+        [rssminer.test-common :only [test-app app-fixture
+                                     auth-app json-body]]))
 
 (use-fixtures :each app-fixture)
 
@@ -42,8 +42,8 @@
 (deftest test-save-pref
   (let [resp (auth-app {:uri "/api/settings"
                         :request-method :post
-                        :body (json-str {:nav [:tag1 :tag1]
-                                         :expire 60})})]
+                        :body (json-body {:nav [:tag1 :tag1]
+                                          :expire 60})})]
     (is (= 204 (:status resp)))))
 
 (deftest test-welcome-list

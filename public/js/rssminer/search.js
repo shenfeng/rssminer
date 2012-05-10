@@ -6,8 +6,7 @@
       $q = $('#header input'),
       $header = $('#header .wrapper');
 
-  var ID = 'search-result',
-      SELECTED = 'selected';
+  var SELECTED = 'selected';
 
   var $lis,
       old_q,
@@ -28,6 +27,7 @@
           current_idx = 0;
         }
         select_by_index();
+        return false;
       }
       break;
     case 38:                    // up
@@ -37,14 +37,16 @@
           current_idx = $lis.length - 1;
         }
         select_by_index();
+        return false;
       }
       break;
     }
+    return true;
   }
 
   function do_search (e) {
     var q = $.trim($q.val()),
-        $selected = $('#' + ID + ' .selected');
+        $selected = $('#search-result .selected');
     switch(e.which) {
     case 13:                    // enter
       if($selected.length) {
@@ -83,7 +85,7 @@
   }
 
   function hide_search_result () {
-    $('#' + ID).remove();
+    $('#search-result').remove();
   }
 
   function hide_search_result_on_esc (e) {

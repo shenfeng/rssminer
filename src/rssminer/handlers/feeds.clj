@@ -23,8 +23,10 @@
 (defn get-by-subscription [req]
   (let [{:keys [rss-id limit sort offset]
          :or {limit 40 offset 0 sort "newest"}} (:params req)]
-    (db/fetch-by-rssid (:id (session-get req :user))
-                       (to-int rss-id)
-                       (to-int limit)
-                       (to-int offset)
-                       sort)))
+    {:body (db/fetch-by-rssid (:id (session-get req :user))
+                              (to-int rss-id)
+                              (to-int limit)
+                              (to-int offset)
+                              sort)
+     :headers {"Cache-Control" "private, max-age=3600"} })) ;; cache one hour
+

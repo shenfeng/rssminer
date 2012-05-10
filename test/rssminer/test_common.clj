@@ -98,4 +98,7 @@
                                  user-fixture
                                  redis-queue-fixture]))
 
+(defn json-body [body]
+  (java.io.ByteArrayInputStream. (.getBytes ^String (json-str body))))
+
 (def test-app (app))

@@ -40,6 +40,7 @@
 
 (defn search* [term rss-ids limit & {:keys [user-id]}]
   (let [meta (.search ^Searcher @searcher term rss-ids limit)]
-    (if (seq meta)
-      (fetch-feeds meta user-id)
-      [])))
+    {:body (if (seq meta)
+             (fetch-feeds meta user-id)
+             [])
+     :headers {"Cache-Control" "private, max-age=3600"}} ))
