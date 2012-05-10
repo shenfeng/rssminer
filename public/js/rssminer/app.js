@@ -72,15 +72,17 @@
     }
   }
 
-  function read_subscription (id, sort, callback) {
+  function read_subscription (id, page, sort, callback) {
     current_subid = id;
+    page = page || 1;
+    sort = sort || 'newest';
     $reading_area.removeClass(SHOW_IFRAME);
     var sub = data.get_subscription(id);
     if(typeof callback !== 'function') {
       switch_nav_to_subs();
     }
     layout.select('#sub-list', "item-" + id);
-    data.get_feeds(id, 0, 40, sort, function (data) {
+    data.get_feeds(id, page, sort, function (data) {
       current_feeds_cnt = data.feeds.length;
       data.title = sub.title;
       set_document_title(data.title);
@@ -115,7 +117,7 @@
   }
 
   function read_feed (subid, feedid) {
-    read_subscription(subid, 'newest', function () {
+    read_subscription(subid, 1, 'newest', function () {
       $reading_area.addClass(SHOW_IFRAME);
       var me = "feed-" + feedid,
           $me = $('#' + me);
@@ -294,8 +296,10 @@
       '': show_welcome,
       'settings': show_settings,
       'add': show_add_sub_ui,
-      'read/:id?s=:sort': read_subscription,
-      'read/:id/:id': read_feed
+      'read/:id?p=:page&s=:sort': read_subscription,
+      'read/:id?p=:page': read_subscription,
+      'read/:id/:id': read_feed,
+      'read/:id': read_subscription
     });
   });
 })();

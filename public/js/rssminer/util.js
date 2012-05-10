@@ -105,12 +105,21 @@
     img.onerror = function () { img.src="/imgs/16px-feed-icon.png"; };
   }
 
+  function params (p) {
+    var arr = [];
+    for(var k in p) {
+      arr.push(encodeURIComponent(k) + "=" + encodeURIComponent(p[k]));
+    }
+    return arr.join('&');
+  }
+
   // export
   window.RM = $.extend(window.RM || {}, {
     util: {
       delegate_events: delegate_events,
       favicon_error: favicon_error,
       call_if_fn: call_if_fn,
+      params: params,
       cmp_by: cmp_by,
       extractData: extractData,
       hostname: hostname,

@@ -31,9 +31,10 @@
           uf.read_date, uf.vote_user, uf.vote_sys FROM feeds
           LEFT JOIN user_feed uf on user_id = ? and id = uf.feed_id
       WHERE feeds.rss_link_id = ? "
-         (if (= sort "time")
-           "ORDER BY published_ts DESC"
-           "ORDER BY vote_sys DESC")
+         (case sort
+           "newest" "ORDER BY published_ts DESC"
+           "oldest" "ORDER BY published_ts"
+           "likest" "ORDER BY vote_sys DESC")
          " LIMIT ? OFFSET ?")
     user-id, rss-id, limit, offset]))
 

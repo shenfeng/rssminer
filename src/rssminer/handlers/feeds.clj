@@ -22,7 +22,7 @@
 
 (defn get-by-subscription [req]
   (let [{:keys [rss-id limit sort offset]
-         :or {limit 40 offset 0}} (:params req)]
+         :or {limit 40 offset 0 sort "newest"}} (:params req)]
     (db/fetch-by-rssid (:id (session-get req :user))
                        (to-int rss-id)
                        (to-int limit)

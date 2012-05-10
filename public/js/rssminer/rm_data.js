@@ -18,6 +18,7 @@
       LIKE_SCORE = user_conf.like_score || 1,
       MAX_SORT_ORDER = 65535,
       INIT_SORT_ORDER = 256,
+      PER_PAGE_FEEDS = 25,
       NEUTRAL_SCORE = user_conf.neutral_score || 0; // db default 0
 
   var TITLES = {
@@ -205,7 +206,7 @@
       img: favicon_path(i.url),
       title: i.title,
       title_l: i.title.toLowerCase(),
-      href: sub_hash(i.id, 'newest'),
+      href: sub_hash(i.id, 1, 'newest'),
       like: i.like_c,
       total: i.total_feeds,
       index: i.sort_index,
@@ -274,36 +275,64 @@
     });
   }
 
-  function sub_hash (id, sort) {
-    return 'read/' + id + '?s=' + sort;
+  function sub_hash (id, page, sort) {
+    var href = 'read/' + id;
+    if(page) { href = href + '?p='+ page; }
+    if(sort) { href = href + "&s=" + sort; }
+    return href;
   }
 
-  function get_feeds (subid, offset, limit, sort, cb) {
+  function get_feeds (subid, page, sort, cb) {
     var cache = get_cached_feeds(subid),
-        total = get_total_feeds(subid);
-    // TODO, cache according to sorting
-    if(cache && (total <= cache.length || cache.length >= offset + limit)) {
-      var feeds = cache.sort(SORTINGS[sort]);
-      feeds = _.map(feeds, transorm_item(subid));
-      var sort_data = [];
+        total = get_total_feeds(subid),
+        offset = Math.max(0, page -1) * PER_PAGE_FEEDS;
+
+    sort = SORTINGS[sort] ? sort : 'newest';
+    var url = '/api/subs/' + subid + '?' + util.params({
+      offset: offset,
+      limit: PER_PAGE_FEEDS,
+      sort: sort
+    });
+    ajax.get(url, function (resp) {
+      cache_feeds(subid, resp); // for local lookup
+      var feeds =  _.map(resp, transorm_item(subid)),
+          sort_data = [];
       for(var s in SORTINGS) {
         sort_data.push({
           selected: !sort || s === sort,
-          href: sub_hash(subid, s),
+          href: sub_hash(subid, 1, s),
           text: s
         });
       }
       cb({
-        feeds: sub_array(feeds, offset, limit),
-        sort: sort_data
+        feeds: feeds,
+        sort: sort_data,
+        pager: compute_paging(subid, sort, total, page, PER_PAGE_FEEDS)
       });
+      // recursive
+      // get_feeds(subid, page, sort, cb);
+    });
+    // TODO, cache according to sorting
+  }
+
+  function compute_paging (subid, sorting, total, page, per_page) {
+    if(total <= per_page) {
+      return false;
     } else {
-      var url = '/api/subs/' + subid + '?offset=' + offset + '&limit=' + limit + '&sort=' + sort;
-      ajax.get(url, function (resp) {
-        cache_feeds(subid, resp);
-        // recursive
-        get_feeds(subid, offset, limit, sort, cb);
-      });
+      var count = Math.ceil(total / per_page),
+          pages = [];
+      for(var i = 1; i < count + 1; i++) {
+        pages.push({
+          page: i,
+          current: i === page,
+          href: sub_hash(subid, i, sorting)
+        });
+      }
+      return {
+        count: count,
+        page: page,
+        pages: pages
+      };
     }
   }
 
