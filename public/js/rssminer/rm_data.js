@@ -8,17 +8,18 @@
   var user = (_RM_ && _RM_.user) || {},
       user_conf = user.conf || {},
       expire = user_conf.expire || 45,
-      global_cache = {};
+      subscriptions_cache,
+      feeds_cache = {};
 
   var CACHE_TIME = 1000 * 60 * 60 * 4, // 4 hour
       POLLING_TIMES = 4,
       POLLING_INTERVAL = 3000,
       PROXY_SERVER = window._RM_.proxy_server,
       STATIC_SERVER = window._RM_.static_server,
-      LIKE_SCORE = user_conf.like_score || 1,
       MAX_SORT_ORDER = 65535,
       INIT_SORT_ORDER = 256,
       PER_PAGE_FEEDS = 25,
+      LIKE_SCORE = user_conf.like_score || 1,
       NEUTRAL_SCORE = user_conf.neutral_score || 0; // db default 0
 
   var TITLES = {
@@ -47,7 +48,7 @@
     }
     return {
       expire_times: expire_times,
-      groups: parse_subs(global_cache.subscriptions)
+      groups: parse_subs(subscriptions_cache)
     };
   }
 
@@ -62,17 +63,13 @@
   }
 
   function get_subscription (subid) {
-    return _.find(global_cache.subscriptions, function (sub) {
+    return _.find(subscriptions_cache, function (sub) {
       return subid === sub.id;
     });
   }
 
-  function get_feed (subid, feedid) {
-    var cache = get_cached_feeds(subid),
-        feed = _.find(cache, function (feed) {
-          return feed.id === feedid;
-        });
-    return transorm_item()(feed);
+  function get_feed (feedid) {
+    return feeds_cache[feedid];
   }
 
   function get_final_link (link, feedid) {
@@ -118,29 +115,25 @@
     return result;
   }
 
-  function get_total_feeds (subid) {
-    var sub =_.find(global_cache.subscriptions, function (sub) {
+  function get_feeds_count (subid) {
+    var sub =_.find(subscriptions_cache, function (sub) {
       return sub.id === subid;
     });
     return sub ? sub.total_feeds : 0;
   }
 
   function get_cached_feeds (subid) {
-    return global_cache['sub_' + subid];
+    return feeds_cache['sub_' + subid];
   }
 
-  function cache_feeds (subid, feeds) {
-    var cache = get_cached_feeds(subid) || [];
+  function cache_feeds (feeds) {
+    var transform = transform_item();
     _.each(feeds, function (feed) {
-      var has = _.any(cache, function (c) { return c.id === feed.id; });
-      if(!has) {
-        feed.read_date = feed.read_date || -1; // db
-        feed.vote_sys = feed.vote_sys || 0;
-        feed.vote_user = feed.vote_user || 0;
-        cache.push(feed);
-      }
+      feed.read_date = feed.read_date || -1; // db
+      feed.vote_sys = feed.vote_sys || 0;
+      feed.vote_user = feed.vote_user || 0;
+      feeds_cache[feed.id] = transform(feed);
     });
-    global_cache['sub_' + subid] = cache;
   }
 
   function favicon_path (url) {
@@ -179,9 +172,9 @@
             day < 10 ? '0' + day : day].join('/');
   }
 
-  function transorm_item (subid) {
+  function transform_item (subid) {
     var titles = {};
-    _.each(global_cache.subscriptions, function (sub) {
+    _.each(subscriptions_cache, function (sub) {
       titles[sub.id] = transorm_sub(sub);
     });
     // subid is undefined when used by parsewelcomelist
@@ -241,8 +234,8 @@
 
   // API
   function get_user_subs (cb) {
-    if(global_cache.subscriptions) {
-      cb(parse_subs(global_cache.subscriptions));
+    if(subscriptions_cache) {
+      cb(parse_subs(subscriptions_cache));
     } else {
       ajax.get('/api/subs', function (resp) {
         var result = parse_subs(resp),
@@ -253,7 +246,7 @@
             cache.push(_.find(resp, function (i) { return i.id === sub.id; }));
           });
         });
-        global_cache.subscriptions = cache;
+        subscriptions_cache = cache;
         cb(result);
       });
     }
@@ -263,9 +256,10 @@
     ajax.get('/api/welcome', function (resp) {
       var result = [];
       for(var section in TITLES) {
+        cache_feeds(resp[section]);
         result.push({
           title: TITLES[section],
-          feeds: _.map(resp[section], transorm_item())
+          feeds: _.map(resp[section], transform_item())
         });
       }
       cb({
@@ -283,8 +277,7 @@
   }
 
   function get_feeds (subid, page, sort, cb) {
-    var cache = get_cached_feeds(subid),
-        total = get_total_feeds(subid),
+    var total = get_feeds_count(subid),
         offset = Math.max(0, page -1) * PER_PAGE_FEEDS;
 
     sort = SORTINGS[sort] ? sort : 'newest';
@@ -294,8 +287,8 @@
       sort: sort
     });
     ajax.get(url, function (resp) {
-      cache_feeds(subid, resp); // for local lookup
-      var feeds =  _.map(resp, transorm_item(subid)),
+      cache_feeds(resp); // for local lookup
+      var feeds =  _.map(resp, transform_item(subid)),
           sort_data = [];
       for(var s in SORTINGS) {
         sort_data.push({
@@ -309,10 +302,7 @@
         sort: sort_data,
         pager: compute_paging(subid, sort, total, page, PER_PAGE_FEEDS)
       });
-      // recursive
-      // get_feeds(subid, page, sort, cb);
     });
-    // TODO, cache according to sorting
   }
 
   function compute_paging (subid, sorting, total, page, per_page) {
@@ -337,19 +327,16 @@
   }
 
   function is_user_has_subscription () {
-    if(global_cache.subscriptions) {
-      return global_cache.subscriptions.length;
+    if(subscriptions_cache) {
+      return subscriptions_cache.length;
     } else {
       return false;
     }
   }
 
-  function mark_as_read (subid, feedid, cb) {
+  function mark_as_read (feedid, cb) {
     ajax.spost('/api/feeds/' + feedid + '/read', function () {
-      var cache = get_cached_feeds(subid),
-          feed = _.find(cache, function (feed) {
-            return feed.id === feedid;
-          });
+      var feed = get_feed(feedid);
       feed.read_date = current_time();
       call_if_fn(cb, feed);
     });
@@ -357,10 +344,10 @@
 
   function save_vote (feedid, vote, cb) {
     ajax.spost('/api/feeds/' + feedid  + '/vote', {vote: vote}, function () {
-      for(var key in global_cache) {
+      for(var key in feeds_cache) {
         // TODO brute force
         if(key.indexOf('sub_') === 0) {
-          var feed = _.find(global_cache[key], function (feed) {
+          var feed = _.find(feeds_cache[key], function (feed) {
             return feed.id === feedid;
           });
           if(feed) { feed.vote_user = vote; break; }
@@ -396,12 +383,12 @@
   function unsubscribe (id, cb) {
     ajax.del('/api/subs/' + id, function (resp) {
       var cache = [];
-      _.each(global_cache.subscriptions, function (sub) {
+      _.each(subscriptions_cache, function (sub) {
         if(sub.id !== id) {
           cache.push(sub);
         }
       });
-      global_cache.subscriptions = cache;
+      subscriptions_cache = cache;
       call_if_fn(cb);
     });
   }
@@ -413,7 +400,7 @@
   }
 
   function update_sort_order (moved_id, new_before, new_cat) {
-    var subs = global_cache.subscriptions;
+    var subs = subscriptions_cache;
     var step = Math.min(Math.floor(MAX_SORT_ORDER / subs.length), 256);
     var moved =  get_subscription(moved_id);
     var old_idx = _.indexOf(subs, moved);
@@ -470,7 +457,7 @@
 
     if(self.o) { moved.sort_index = self.o; }    // update sort_index
 
-    global_cache.subscriptions = _.sortBy(subs, function (s) {
+    subscriptions_cache = _.sortBy(subs, function (s) {
       return s.sort_index;
     });
     ajax.spost('/api/subs/sort', save_data);
@@ -479,7 +466,7 @@
   function get_search_result (q, limit, cb) {
     var subs = [],
         count = 0,
-        grouped = parse_subs(global_cache.subscriptions);
+        grouped = parse_subs(subscriptions_cache);
     _.each(grouped, function (group) {
       _.each(group.subs, function (sub) {
         if((!q || sub.title_l.indexOf(q) !== -1) && count < limit) {
@@ -493,7 +480,7 @@
     if(q.length > 1) {
       limit = Math.max(17 - subs.length, 10);
       ajax.sget('/api/search?q=' + q + "&limit=" + limit, function (feeds) {
-        cb({subs: subs, feeds: _.map(feeds, transorm_item())});
+        cb({subs: subs, feeds: _.map(feeds, transform_item())});
       });
     } else {
       cb({subs: subs});

@@ -124,7 +124,7 @@
       switch_nav_to_feeds(function () {
         layout.select('#feed-list', me);
       });
-      var feed = data.get_feed(subid, feedid),
+      var feed = data.get_feed(feedid),
           link = feed.link;
       feed.domain = util.hostname(link);
       set_document_title(feed.title);
@@ -147,7 +147,7 @@
     return function () {
       if(!called && !$me.hasClass('read')) {
         called = true;
-        data.mark_as_read(subid, feedid);
+        data.mark_as_read(feedid);
         decrement_number($me, subid);
         $me.removeClass('unread sys-read').addClass('read');
       }
