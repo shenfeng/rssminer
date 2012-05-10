@@ -8,11 +8,11 @@
 (deftest test-search
   (let [rss-ids (range 1 100)]
     (testing "search summary"
-      (let [resp (search* "onsummary" rss-ids 10)]
+      (let [resp (:body (search* "onsummary" rss-ids 10))]
         (is (= (count resp) 1))))
     (testing "search category"
-      (let [resp (search* "acategory" rss-ids 10)]
+      (let [resp (:body (search* "acategory" rss-ids 10))]
         (is (= (count resp) 1))))
     (testing "search author"
-      (let [resp (search* "aScottGu" rss-ids 10)]
+      (let [resp (:body (search* "aScottGu" rss-ids 10))]
         (is (= (count resp) 1))))))
