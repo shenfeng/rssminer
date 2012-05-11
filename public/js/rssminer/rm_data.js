@@ -126,6 +126,7 @@
     return feeds_cache['sub_' + subid];
   }
 
+  // TODO expire them, prevent OOM
   function cache_feeds (feeds) {
     var transform = transform_item();
     _.each(feeds, function (feed) {
@@ -143,7 +144,7 @@
   }
 
   function split_tag (tags) {
-    if(tags) { return tags.split("; "); }
+    if(tags) { return sub_array(tags.split("; "), 0, 4); } // at most 4
     else { return []; }
   }
 
@@ -480,6 +481,7 @@
     if(q.length > 1) {
       limit = Math.max(17 - subs.length, 10);
       ajax.sget('/api/search?q=' + q + "&limit=" + limit, function (feeds) {
+        cache_feeds(feeds);
         cb({subs: subs, feeds: _.map(feeds, transform_item())});
       });
     } else {

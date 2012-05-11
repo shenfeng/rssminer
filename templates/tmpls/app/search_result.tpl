@@ -33,14 +33,14 @@
           <div class="meta">
             <ul class="tags">
               {{#tags}}
-                <li>{{.}}</li>
+                <li title="tag">{{.}}</li>
               {{/tags}}
             </ul>
             {{#author}}
-              <span class="author">{{author}}</span>
+              <span class="author" title="author">{{author}}</span>
             {{/author}}
             {{#sub}}
-              <span class="sub">{{ title }}</span>
+              <span class="sub" title="from">{{ title }}</span>
             {{/sub}}
             <span class="date">{{ date }}</span>
           </div>

@@ -136,15 +136,9 @@ body {
     .selected { background: $selected_color; }
 }
 
+ul { list-style: none; padding: 0; margin: 0; }
+
 #sub-list {                     /* in navigation */
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
     li.collapse  > ul { display: none; }
     .folder, .item {
         cursor: pointer;
@@ -192,6 +186,7 @@ body {
 .total { background: #999; color: white; }
 
 .feed {
+    .vote { margin: 0 0 0 12px; }
     &.like {
         .indicator { background: #449d4e; }
         &:hover .vote span.up { visibility: visible; }
@@ -289,7 +284,6 @@ body {
         }
     }
     .pager {
-        list-style: none;
         li {
             &.current {
                 background: #ccc;
@@ -311,18 +305,12 @@ body {
 }
 
 .feeds {                        /* share by welcome-list and feed-list */
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    span { display: inline-block; }
     .title { margin-left: 17px; }
     > li {
-        a {
-            display: block;
-        }
+        a { display: block; }
         position: relative;
         padding: 2px 3px;
-        &:hover { background: $hover_color; }
+        &.selected, &:hover { background: $hover_color; }
         .date {
             position: absolute;
             color: #777;
@@ -335,6 +323,7 @@ body {
 span.vote {
     position: absolute;
     span {
+        display: inline-block;
         visibility: hidden;
         cursor: pointer;
         width: 18px;
@@ -347,20 +336,21 @@ span.vote {
 .author {
     font-size: 10px;
     margin-left: 10px;
-    color: #555;
+    color: #444;
+    display: inline-block;
+    background: #f2f2f2;
+    padding: 1px 2px;
 }
 
 .date { font-size: 11px; }
 
 .tags {
     font-size: 10px;
-    list-style: none;
     display: none;
     li {
-        background: #d1d1d1;
+        background: #e7e7e7;
         display: inline-block;
-        margin: 0 2px;
-        padding: 4px 4px 1px;
+        padding: 1px 2px;
         @include border-radius(3px);
     }
 }
@@ -377,16 +367,13 @@ iframe {
 }
 
 #search-result {
-    ul { list-style: none; padding: 0; margin: 0; }
     a { padding: 3px 7px; display: block; }
+    .tags { display: inline-block; }
+    .feed { padding: 1px 3px;}
     .title {
+        display: inline-block;
         max-width: 500px;
         @include overflow-ellipsis();
-    }
-    li {
-        position: relative;
-        padding: 0;
-        &.selected, &:hover { background: $hover_color; }
     }
     .indicator {
         top: 5px;
@@ -394,12 +381,22 @@ iframe {
         width: 7px;
         left: 4px;
     }
+    .subs li {
+        position: relative;
+        &.selected, &:hover { background: $hover_color; }
+    }
     .count { top: 9px; right: 7px; }
     img { margin-top: 3px; }
     .feeds { .title { margin-left: 12px; } }
     .date { top: 26px; right: 7px; }
-    .author { margin: 0; background: #eee;}
-    .meta { font-size: 11px; padding-left: 12px; color: #666; }
+    .author { margin: 0; }
+    .meta {
+        font-size: 11px;
+        padding-left: 12px;
+        color: #666;
+        width: 440px;
+        @include overflow-ellipsis();
+    }
     box-shadow: 0 1px 4px rgba(0, 0, 0, .5);
     position: absolute;
     width: 540px;
@@ -447,7 +444,6 @@ iframe {
         top: 7px;
         @include border-radius(5px);
     }
-
     .vote {
         right: 85px;
         span { display: inline-block; }
