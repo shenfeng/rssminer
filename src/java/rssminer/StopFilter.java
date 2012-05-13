@@ -102,7 +102,9 @@ public class StopFilter extends FilteringTokenFilter {
                 "be", "but", "by", "for", "if", "in", "into", "is", "it",
                 "no", "not", "of", "on", "or", "such", "that", "the",
                 "their", "then", "there", "these", "they", "this", "to",
-                "was", "will", "with");
+                "was", "will", "with", "一", "与", "且", "个", "为", "么", "乎",
+                "了", "从", "吗", "吧", "的");
+
         final CharArraySet stopSet = new CharArraySet(Version.LUCENE_33,
                 stopWords.size(), false);
         stopSet.addAll(stopWords);

@@ -8,6 +8,7 @@ RSSMINER_CODE_ROOT="${ABSOLUTE_PATH%/*/*}"
 rm bin classes -rf && lein compile
 cp src/templates classes -r
 cp src/logback.xml classes/logback.xml
+cp src/words.dic classes/words.dic
 rm classes/templates/tmpls/ -r
 cd classes
 jar -cf ../rssminer.jar *
