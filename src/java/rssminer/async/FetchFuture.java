@@ -19,7 +19,6 @@ import clojure.lang.IFn;
 // fetch the orginal html
 public class FetchFuture extends AbstractFuture {
 
-  
     private Map<String, String> header;
 
     private class ResultHandler implements ITextHandler {

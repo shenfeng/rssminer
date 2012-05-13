@@ -210,6 +210,12 @@ task :luke do
   sh "java -jar thirdparty/#{luke} -index /var/rssminer/index &"
 end
 
+desc "Rebuild index"
+task :rebuild_index do
+  sh 'rm classes -rf && lein javac'
+  sh './scripts/admin rebuild-index'
+end
+
 namespace :db do
   desc "Reload database with production data"
   task :backup_prod do

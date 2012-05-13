@@ -10,14 +10,10 @@ import me.shenfeng.mmseg.SimpleMMsegTokenizer;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.LowerCaseFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.en.KStemFilter;
-import org.apache.lucene.util.Version;
 
 public class KStemStopAnalyzer extends Analyzer {
-
-    private final Version v;
 
     static class DictHolder {
         static final Dictionary dic;
@@ -37,10 +33,6 @@ public class KStemStopAnalyzer extends Analyzer {
         }
     }
 
-    public KStemStopAnalyzer(Version v) {
-        this.v = v;
-    }
-
     public TokenStream tokenStream(String fieldName, Reader reader) {
 
         SimpleMMsegTokenizer msegTokenizer = new SimpleMMsegTokenizer(
@@ -51,8 +43,7 @@ public class KStemStopAnalyzer extends Analyzer {
 
         // final StandardTokenizer src = new StandardTokenizer(v, reader);
         // TokenStream tok = new StandardFilter(v, src);
-        TokenStream tok = new LowerCaseFilter(v, msegTokenizer);
-        tok = new StopFilter(tok);
+        TokenStream tok = new StopFilter(msegTokenizer);
         return new KStemFilter(tok);
     }
 }

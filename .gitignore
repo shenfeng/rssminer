@@ -25,3 +25,4 @@ public/js/*min.js
 /public/rssminer.crx
 chrome/style.css
 /chrome/tmpls.js
+/chrome/lib

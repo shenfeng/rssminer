@@ -103,7 +103,7 @@ public class StopFilter extends FilteringTokenFilter {
                 "no", "not", "of", "on", "or", "such", "that", "the",
                 "their", "then", "there", "these", "they", "this", "to",
                 "was", "will", "with", "一", "与", "且", "个", "为", "么", "乎",
-                "了", "从", "吗", "吧", "的");
+                "了", "从", "吗", "吧", "的", "也", "要", "也");
 
         final CharArraySet stopSet = new CharArraySet(Version.LUCENE_33,
                 stopWords.size(), false);
@@ -128,7 +128,7 @@ public class StopFilter extends FilteringTokenFilter {
     @Override
     protected boolean accept() throws IOException {
         return !STOP_WORDS_SET
-                .contains(termAtt.buffer(), 0, termAtt.length())
-                && hasLetter(termAtt.buffer(), termAtt.length());
+                .contains(termAtt.buffer(), 0, termAtt.length());
+        // && hasLetter(termAtt.buffer(), termAtt.length());
     }
 }

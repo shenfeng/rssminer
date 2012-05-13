@@ -7,9 +7,9 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class AbstractHandler extends DefaultHandler {
 
-	protected List<Item> items = new ArrayList<Item>(8);
+    protected List<Item> items = new ArrayList<Item>(8);
 
-	public List<Item> getItems() {
-		return items;
-	}
+    public List<Item> getItems() {
+        return items;
+    }
 }
