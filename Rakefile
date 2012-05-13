@@ -3,7 +3,7 @@ task :default => :test
 version = Time.now.strftime("%Y%m%d%H%M") # timestamp
 jscompiler = "closure-compiler.jar"
 htmlcompressor = "htmlcompressor.jar"
-luke = "lukeall-3.4.0_1.jar"
+luke = "lukeall-3.5.0.jar"
 
 def get_file_as_string(filename)
   data = ''
@@ -207,7 +207,7 @@ end
 
 desc "Using luke to inspect luence index"
 task :luke do
-  sh 'java -jar thirdparty/lukeall-3.4.0_1.jar -index /var/rssminer/index &'
+  sh "java -jar thirdparty/#{luke} -index /var/rssminer/index &"
 end
 
 namespace :db do
