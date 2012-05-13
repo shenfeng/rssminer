@@ -113,7 +113,9 @@ case "$1" in
             $0 stop
             sleep 1;
         done
-        $JAVA $JVM_ARGS -cp $CLASSPATH rssminer.admin -c rebuild-index
+        rm $INDEX_PATH/* -fv
+        su $AS_USER -c "$JAVA $JVM_ARGS -cp $CLASSPATH rssminer.admin -c rebuild-index"
+        ls -lh $INDEX_PATH
         $0 start
         ;;
     *)
