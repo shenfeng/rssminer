@@ -193,7 +193,7 @@
   function show_settings () {
     $reading_area.removeClass(SHOW_IFRAME);
     var html = tmpls.settings(data.user_settings());
-    $welcome_list.empty().append(html).find('img').each(util.favicon_error);;
+    $welcome_list.empty().append(html).find('img').each(util.favicon_error);
   }
 
   function save_settings (e) {
@@ -210,12 +210,20 @@
 
   function add_subscription (e) {
     var $input = $("#rss_atom_url"),
-        url = $input.val();
+        url = $.trim($input.val()),
+        fetcher_finished = function (result) {
+          if(result) {
+            fetch_and_show_user_subs(function () {
+              // if user is waiting, just put he there
+              if(location.hash === '#add') {
+                location.hash = 'read/' + result.id;
+              }
+            });
+          }
+        },
+        added = function () { $input.val(''); };
     if(url) {
-      data.add_subscription(url, function () {
-        $input.val('');
-        // TODO adjust UI
-      });
+      data.add_subscription(url, added, fetcher_finished);
     }
   }
 
@@ -278,20 +286,22 @@
     'click #settings .delete': unsubscribe
   });
 
-  data.get_user_subs(function (subs) {
-    var html = tmpls.subs_nav({groups: subs});
-    $subs_list.empty().append(html);
-    $("#navigation .item img").each(util.favicon_error);
-    // category sortable
-    $subs_list.sortable({change: update_category_sort_order });
-    $(".rss-category").sortable({ // subscription sortable with categories
-      connectWith: ".rss-category",
-      update: update_subs_sort_order
+  function fetch_and_show_user_subs (cb) {
+    data.get_user_subs(function (subs) {
+      var html = tmpls.subs_nav({groups: subs});
+      $subs_list.empty().append(html);
+      $("#navigation .item img").each(util.favicon_error);
+      // category sortable
+      $subs_list.sortable({change: update_category_sort_order });
+      $(".rss-category").sortable({ // subscription sortable with categories
+        connectWith: ".rss-category",
+        update: update_subs_sort_order
+      });
+      util.call_if_fn(cb);
     });
+  }
 
-    // $('#navigation .subs').mouseenter(switch_nav_to_subs);
-    // $('#navigation .hover-switch').mouseenter(toggle_nav);
-
+  fetch_and_show_user_subs(function () { // app start here
     RM.hashRouter({
       '': show_welcome,
       'settings': show_settings,

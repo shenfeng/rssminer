@@ -15,8 +15,7 @@
         (handler req)
         (if (or (= uri "/a") (= uri "/dashboard") ;;  login required
                 (.startsWith ^String uri "/api"))
-          (if (= "XMLHttpRequest"
-                 (-> req :headers (get "x-requested-with")))
+          (if (= "XMLHttpRequest" (-> req :headers (get "x-requested-with")))
             {:status 401} ;; easier for script to handle
             (redirect "/login"))
           (handler req))))))

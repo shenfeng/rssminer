@@ -27,7 +27,7 @@
                  WHERE user_id = ?" user-id])))
 
 (defn fetch-user-sub [id user-id mark-as-read-time like neutral]
-  (first (mysql-query ["SELECT id, url, title
+  (first (mysql-query ["SELECT id, url, title, alternate
               FROM rss_links WHERE id = ?" id])))
 
 (defn fetch-subscription [user-id rss-link-id]

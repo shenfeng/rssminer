@@ -8,15 +8,11 @@
 
 (def ^{:private true} enqueue-keys [:id :url :check_interval :last_modified])
 
-(defn- add-rss-link [user-id url]
-  (let [sub (mysql-insert-and-return :rss_links {:url url
-                                                 :user_id user-id})]
-    (fetcher-enqueue (select-keys sub enqueue-keys))
-    sub))
-
 (defn subscribe [url user-id title group-name]
   (let [sub (or (db/fetch-rss-link {:url url})
-                (add-rss-link user-id url))]
+                (mysql-insert-and-return :rss_links {:url url
+                                                     :user_id user-id}))]
+    (fetcher-enqueue (select-keys sub enqueue-keys))
     (if-let [us (db/fetch-subscription user-id (:id sub))]
       us
       (mysql-insert-and-return :user_subscription

@@ -196,10 +196,11 @@
   }
 
   function transorm_sub (i) {
+    var title = i.title || i.url;
     return {
       img: favicon_path(i.url),
-      title: i.title,
-      title_l: i.title.toLowerCase(),
+      title: title,
+      title_l: title.toLowerCase(),
       href: sub_hash(i.id, 1, 'newest'),
       like: i.like_c,
       total: i.total_feeds,
@@ -363,7 +364,9 @@
       ajax.sget('/api/subs/p/' + rss_link_id, function (sub) {
         // TODO refetch user subs
         if(sub && sub.title) {  // ok, title is fetched
-          call_if_fn(cb);
+          sub.group_name = null; // server return no group_name
+          subscriptions_cache.push(sub);
+          call_if_fn(cb, sub);
         } else {                // fetch again
           interval += 1500;
           times -= 1;
@@ -372,12 +375,16 @@
           }, interval);
         }
       });
+    } else {
+      call_if_fn(cb);
     }
   }
 
-  function add_subscription (url, cb) {
+  function add_subscription (url, added_cb, fetcher_finished) {
     ajax.jpost('/api/subs/add' , {link: url}, function (data) {
-      polling_rss_link(data.rss_link_id, POLLING_INTERVAL, POLLING_TIMES, cb);
+      polling_rss_link(data.rss_link_id,
+                       POLLING_INTERVAL, POLLING_TIMES, fetcher_finished);
+      call_if_fn(added_cb);
     });
   }
 
