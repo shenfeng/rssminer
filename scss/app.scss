@@ -242,7 +242,8 @@ ul { list-style: none; padding: 0; margin: 0; }
     .feed { border: 2px solid rgba(0,0,0,0);}
     .feeds {
         .title {
-            max-width: 75%;
+            max-width: 600px;
+            display: inline-block;
             @include overflow-ellipsis();
         }
         .date { right: 1em;}
