@@ -28,3 +28,4 @@ pom.xml
 tags
 /target
 /thirdparty
+/workspace

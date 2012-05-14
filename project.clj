@@ -17,7 +17,7 @@
                  [org.apache.lucene/lucene-analyzers "3.6.0"]
                  [org.apache.lucene/lucene-core "3.6.0"]
                  [org.clojure/data.json "0.1.2"]
-                 [org.clojure/java.jdbc "0.1.4"]
+                 [org.clojure/java.jdbc "0.2.1"]
                  [org.clojure/tools.cli "0.2.1"]
                  [org.clojure/tools.logging "0.2.3"]
                  [redis.clients/jedis "2.0.0"]
