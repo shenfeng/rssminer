@@ -27,8 +27,6 @@ JVM_ARGS="-server -Dsun.jnu.encoding=UTF-8 \
     -Dfile.encoding=UTF-8 \
     -Dsun.net.inetaddr.ttl=0 \
     -Djava.net.preferIPv4Stack=true \
-    -XX:+DisableExplicitGC \
-    -XX:+UseConcMarkSweepGC \
     -Xmx280m -Xms280m"
 
 JMX_OPTS="-Dcom.sun.management.jmxremote \
@@ -45,6 +43,7 @@ APP_ARGS="--index-path $INDEX_PATH \
     --proxy-server //p.rss-miner.com \
     --db-url jdbc:mysql://localhost/rssminer \
     --fetcher-queue 10 \
+    --ip 127.0.0.1
     --worker 2 \
     --port 8100"
 

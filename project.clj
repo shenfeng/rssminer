@@ -37,10 +37,7 @@
   :jvm-opts ["-Dclojure.compiler.disable-locals-clearing=true"
              "-Djava.net.preferIPv4Stack=true"
              "-Dsun.net.inetaddr.ttl=0"
-             "-XX:+DisableExplicitGC"
              "-XX:+TieredCompilation"
-             "-XX:+UseConcMarkSweepGC"
-             "-XX:ParallelGCThreads=2"
              "-Xms512m"
              "-Xmx512m"]
   ;; :jvm-opts ["-agentlib:hprof=cpu=samples,format=b,file=/tmp/profile.txt"]

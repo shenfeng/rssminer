@@ -30,7 +30,7 @@
 (defn start-server
   [{:keys [port index-path profile db-url worker fetcher-queue
            fetcher proxy fetch-size redis-host db-user
-           proxy-server static-server]}]
+           proxy-server static-server ip]}]
   (stop-server)
   (.removeShutdownHook (Runtime/getRuntime) shutdown-hook)
   (.addShutdownHook (Runtime/getRuntime) shutdown-hook)
@@ -46,6 +46,7 @@
                           (str static-server ":" port) static-server)
          :proxy (if proxy socks-proxy Proxy/NO_PROXY))
   (reset! server (run-server (app) {:port port
+                                    :ip ip
                                     :thread worker}))
   (use-index-writer! index-path)
   (when fetcher (start-fetcher)))
@@ -61,11 +62,12 @@
              ["--profile" "dev or prod" :default :dev :parse-fn keyword]
              ["--redis-host" "Redis for session store"
               :default "127.0.0.1"]
-             ["--proxy-server" "proxy server" :default "//127.0.0.1"]
-             ["--static-server" "static server" :default "//localhost"]
+             ["--proxy-server" "proxy server" :default "//192.168.1.2"]
+             ["--static-server" "static server" :default "//192.168.1.2"]
              ["--db-url" "Mysql Database url"
               :default "jdbc:mysql://localhost/rssminer"]
              ["--db-user" "Mysql Database user name" :default "feng"]
+             ["--ip" "Which ip to bind" :default "0.0.0.0"]
              ["--index-path" "Path to store lucene index"
               :default "/var/rssminer/index"]
              ["--[no-]fetcher" "Start rss fetcher" :default true]
