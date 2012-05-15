@@ -1,13 +1,19 @@
 (function () {
+  // cache
   var $win = $(window),
-      $nav = $('#navigation');
+      $nav = $('#navigation'),
+      $header = $('#header'),
+      $reading_area = $('#reading-area'),
+      $subs_list = $('#logo > ul');
 
   var SELECTED = 'selected';
 
+
   function layout () {
-    var height = $win.height() - $('#header').height();
+    var height = $win.height() - $header.height();
     $nav.height(height);
-    $("#reading-area").height(height);
+    $reading_area.height(height);
+    $subs_list.height(height);
   }
 
   function scroll_into_view ($me) {
@@ -36,10 +42,12 @@
   }
 
   $win.resize(_.debounce(layout, 100));
+
   layout();
 
   window.RM = $.extend(window.RM, {
     layout: {
+      relayout: layout,
       select: select,
       scroll_into_view: scroll_into_view
     }

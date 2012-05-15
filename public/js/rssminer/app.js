@@ -6,19 +6,17 @@
       layout = RM.layout,
       call_if_fn = util.call_if_fn;
 
-  var ANIMATION_TIME = 200,
+  var SHOW_NAV = 'show-nav',
       SHOW_IFRAME = 'show-iframe';
 
-  var current_subid,
-      current_feeds_cnt = 0,
-      mark_as_read_timer_id = 0,
-      current_nav_subs = true;
+  var mark_as_read_timer_id = 0;
 
   var $loader = $('#footer img'),
       $reading_area = $('#reading-area'),
       $navigation = $('#navigation'),
       $subs_list = $('#sub-list'),
       iframe = $('iframe')[0],
+      $logo = $('#logo'),
       $welcome_list = $('.welcome-list'),
       $feeds_list = $('#feed-list');
 
@@ -27,40 +25,13 @@
     $reading_area.removeClass(SHOW_IFRAME);
   }
 
-  function toggle_nav () {
-    if(current_nav_subs) {
-      switch_nav_to_feeds();
-    } else {
-      switch_nav_to_subs();
-    }
-  }
-
   function switch_nav_to_subs () {
-    if(!current_nav_subs) {
-      current_nav_subs = true;
-      $feeds_list.animate({opacity: 0}, ANIMATION_TIME, function () {
-        $feeds_list.hide().css({opacity: 1});
-        $subs_list.show();
-        layout.scroll_into_view($('#sub-list .selected'));
-      });
-    } else {
-      $feeds_list.hide();
-    }
+    $logo.addClass(SHOW_NAV);
   }
 
   function switch_nav_to_feeds (cb) {
-    if(current_nav_subs && current_feeds_cnt) {
-      current_nav_subs = false;
-      $subs_list.animate({opacity: 0}, ANIMATION_TIME, function () {
-        $subs_list.hide().css({opacity: 1});
-        $feeds_list.show();
-        call_if_fn(cb);
-        layout.scroll_into_view($('#feed-list .selected'));
-      });
-    } else {
-      $subs_list.hide();
-      call_if_fn(cb);
-    }
+    $logo.removeClass(SHOW_NAV);
+    call_if_fn(cb);
   }
 
   function set_document_title (title) {
@@ -73,7 +44,6 @@
   }
 
   function read_subscription (id, page, sort, callback) {
-    current_subid = id;
     page = page || 1;
     sort = sort || 'newest';
     $reading_area.removeClass(SHOW_IFRAME);
@@ -83,7 +53,6 @@
     }
     layout.select('#sub-list', "item-" + id);
     data.get_feeds(id, page, sort, function (data) {
-      current_feeds_cnt = data.feeds.length;
       data.title = sub.title;
       set_document_title(data.title);
       if(data.feeds.length) {
@@ -278,7 +247,6 @@
 
   util.delegate_events($(document), {
     'click #add-subscription': add_subscription,
-    'click #main .hover-switch': toggle_nav,
     'click #navigation .folder span': toggle_nav_foler,
     'click #save-settings': save_settings,
     'click .vote span.down': save_vote_down,
@@ -289,8 +257,9 @@
   function fetch_and_show_user_subs (cb) {
     data.get_user_subs(function (subs) {
       var html = tmpls.subs_nav({groups: subs});
-      $subs_list.empty().append(html);
-      $("#navigation .item img").each(util.favicon_error);
+      // $('#logo ul').append(html);
+      $subs_list.empty().append(html).find('img').each(util.favicon_error);
+      // $("#navigation .item img").each(util.favicon_error);
       // category sortable
       $subs_list.sortable({change: update_category_sort_order });
       $(".rss-category").sortable({ // subscription sortable with categories
@@ -301,7 +270,18 @@
     });
   }
 
+
   fetch_and_show_user_subs(function () { // app start here
+
+    $logo.mouseenter(function () {
+      $logo.addClass(SHOW_NAV);
+    }).mouseleave(function () {
+      // if reading feed
+      if(/#read\/\d+\/\d+/.test(location.hash)) {
+        $logo.removeClass(SHOW_NAV);
+      }
+    });
+
     RM.hashRouter({
       '': show_welcome,
       'settings': show_settings,
