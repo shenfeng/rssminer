@@ -10,21 +10,21 @@ import org.junit.Test;
 
 public class SearcherTest {
 
-    private String html;
-    Searcher searcher;
+	private String html;
+	Searcher searcher;
 
-    @Before
-    public void setup() throws FileNotFoundException, IOException {
-        html = IOUtils.toString(new FileInputStream(
-                "/tmp/What-s-new-in-Linux-3-2-1400680.html"));
-        searcher = Searcher.initGlobalSearcher("RAM");
-    }
+	@Before
+	public void setup() throws FileNotFoundException, IOException {
+		html = IOUtils.toString(new FileInputStream(
+				"/tmp/What-s-new-in-Linux-3-2-1400680.html"));
+		searcher = Searcher.initGlobalSearcher("RAM");
+	}
 
-    @Test
-    public void testUpdateFeed() {
-        for (int i = 0; i < 10000; i++) {
-            searcher.updateIndex(1, html);
-        }
-    }
+	@Test
+	public void testUpdateFeed() {
+		for (int i = 0; i < 10000; i++) {
+			searcher.updateIndex(1, 1, html);
+		}
+	}
 
 }

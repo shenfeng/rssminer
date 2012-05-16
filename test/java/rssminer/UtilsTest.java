@@ -1,14 +1,16 @@
 package rssminer;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
@@ -27,72 +29,56 @@ public class UtilsTest {
     public void setup() throws FileNotFoundException, IOException {
         html = IOUtils.toString(new FileInputStream(
                 "/home/feng/workspace/rssminer/test/index.html"));
+        // htmlWithBr = IOUtils.toString(new FileInputStream("/tmp/a.html"));
+
         htmlWithBr = IOUtils.toString(new FileInputStream(
                 "/home/feng/workspace/rssminer/test/python-iaq.html"));
+
     }
 
     @Test
-    public void testSoupBasedPerf() throws IOException, SAXException,
-            URISyntaxException {
-        String s = null;
-        for (int i = 0; i < 100; i++) {
-            s = Utils.rewrite(html, urlBase, proxyURi);
-        }
-        long start = System.currentTimeMillis();
+    public void testMinify() throws Exception {
 
-        for (int i = 0; i < 100; i++) {
-            s = Utils.rewrite(html, urlBase, proxyURi);
-        }
+        String html = IOUtils.toString(new FileInputStream(new File(
+                "/tmp/70468.html")));
 
-        System.out.println(s);
-        System.out.println(System.currentTimeMillis() - start);
+        String minified = Utils.minfiyHtml(html,
+                "http://www.alibuybuy.com/posts/70468.html");
+
+        System.out.println(minified);
+    }
+
+    @Test
+    public void testHtmlminfiy() throws IOException, SAXException {
+        String result1 = Utils.minfiyHtml(htmlWithBr, "http://google.com");
+        System.out.println(result1);
+        System.out.println(htmlWithBr.length() + "\t" + result1.length());
     }
 
     @Test
     public void testBrHr() throws IOException, SAXException,
             URISyntaxException {
-        String s = Utils.rewrite(htmlWithBr, urlBase, proxyURi);
+        String s = Utils.minfiyHtml(htmlWithBr, urlBase);
         Assert.assertEquals(-1, s.indexOf("</hr>"));
         Assert.assertEquals(-1, s.indexOf("</br>"));
     }
 
     @Test
-    public void testSoupBased() throws IOException, SAXException,
-            URISyntaxException {
-        String s = Utils.rewrite(htmlWithBr, urlBase, proxyURi);
-        IOUtils.write(s, new FileOutputStream("/tmp/result.html"));
-        System.out.println(htmlWithBr.length() + "\t" + s.length());
+    public void testRegex() {
+        String s = "<img id=\"image\" alt=\"\" onkeydown=\"if(event.keyCode==13)event.keyCode=9\"  src=\"getimage.jsp?ranstr=097144\"> ";
+        Pattern p = Pattern.compile("src=\"(.+?)\"", 2);
+
+        Matcher m = p.matcher(s);
+        while (m.find()) {
+            System.out.println(m.group());
+            System.out.println(m.group(1));
+        }
     }
 
     @Test
     public void testInteger() {
         String s = Integer.toString(Integer.MAX_VALUE - 100, 35);
         System.out.println(s);
-    }
-
-    @Test
-    public void testRewriteGoogleGroup() {
-        try {
-            String html = IOUtils.toString(new FileInputStream(
-                    "/tmp/4387.html"));
-            String result = Utils
-                    .rewrite(
-                            html,
-                            "http://groups.google.com/group/clojure-dev/browse_thread/thread/8b96a6d9dfc7c8f9/dce1e217c7201c17?show_docid=dce1e217c7201c17");
-            System.out.println(result);
-            IOUtils.write(result, new FileOutputStream("/tmp/result.html"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    public void testSoupBasedNoProxy() throws IOException, SAXException,
-            URISyntaxException {
-        String s = Utils.rewrite(html, urlBase);
-        IOUtils.write(s, new FileOutputStream("/tmp/result.html"));
-        System.out.println(html.length() + "\t" + s.length() + "\t"
-                + s.length() / (double) (html.length()));
     }
 
     static String getContent(String file) throws IOException {
@@ -116,10 +102,11 @@ public class UtilsTest {
 
     @Test
     public void testExtractFavicon() throws FileNotFoundException,
-            IOException, SAXException {
+            IOException, SAXException, URISyntaxException {
         String html = IOUtils.toString(new FileInputStream(
                 "/home/feng/workspace/rssminer/templates/index.html"));
-        String icon = Utils.extractFaviconUrl(html, "http://rssminer.net");
+        String icon = Utils.extractFaviconUrl(html,
+                new URI("http://rssminer.net")).toString();
 
         Assert.assertEquals("http://rssminer.net/imgs/16px-feed-icon.png",
                 icon);

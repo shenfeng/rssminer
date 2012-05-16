@@ -19,7 +19,6 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.Version;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,7 +29,7 @@ public class LuceneTest {
 
 	IndexSearcher searcher;
 
-	static final Analyzer analyzer = new KStemStopAnalyzer(Version.LUCENE_35);
+	static final Analyzer analyzer = new KStemStopAnalyzer();
 
 	@Before
 	public void setup() throws IOException {

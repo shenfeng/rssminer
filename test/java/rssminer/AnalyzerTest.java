@@ -1,9 +1,14 @@
 package rssminer;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import me.shenfeng.mmseg.BSDictionary;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -15,6 +20,16 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class AnalyzerTest {
+    
+    @Test
+    public void test() throws IOException {
+        URL url = BSDictionary.class.getClassLoader().getResource(
+                "data/words.dic");
+        
+        InputStream is = BSDictionary.class.getClassLoader().getResourceAsStream("data/words.dic");
+        System.out.println(is);
+//        new BSDictionary(new File(url.getFile()));
+    }
 
     private List<String> getTerms(Analyzer analyzer, String content)
             throws IOException {
@@ -72,7 +87,7 @@ public class AnalyzerTest {
 
     @Test
     public void testKStemStopAnalyzer() throws IOException {
-        Analyzer analyzer = new KStemStopAnalyzer(Version.LUCENE_33);
+        Analyzer analyzer = new KStemStopAnalyzer();
         String content = "against Lazy cats took catty 以下 1111.1 ";
 
         List<String> terms = getTerms(analyzer, content);
