@@ -227,7 +227,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 }
 
 .unread a { color: #00E; }
-.read, .sys-read { a { color: #444; } }
+.read, .sys-read { a { color: #222; } }
 
 #reading-area {
     overflow: hidden;
@@ -253,7 +253,7 @@ ul { list-style: none; padding: 0; margin: 0; }
         right: 1em;
     }
     .feed {
-        padding: 2px 3px;
+        padding: 2px 3px 3px 3px;
         border: 2px solid rgba(0,0,0,0);
         &:nth-child(even) { background: #f4fafb; }
     }
@@ -322,7 +322,6 @@ ul { list-style: none; padding: 0; margin: 0; }
     .title { margin-left: 17px; }
     > li {
         position: relative;
-        margin-bottom: 1px;
         a { display: block; }
         &:hover { background: $hover_color; }
     }

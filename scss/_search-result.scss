@@ -1,7 +1,17 @@
+@mixin selected () {
+    background: #7b9bf0;
+    a { color: white; }
+}
+
+
 #search-result {
-    a { padding: 3px 7px; display: block; }
+    font-size: 12px;
+    a { padding: 2px 7px; display: block; color: #111; }
     .tags { display: inline-block; }
-    .feed { padding: 1px 3px;}
+    .feed {
+        padding: 1px 3px 2px 3px;
+        &.selected { @include selected(); }
+    }
     .title {
         display: inline-block;
         max-width: 500px;
@@ -13,12 +23,18 @@
         width: 7px;
         left: 4px;
     }
-    .subs li {
-        position: relative;
-        &.selected, &:hover { background: $hover_color; }
+    .subs {
+        padding-bottom: 2px;
+        border-bottom: 1px solid #eee;
+        li {
+            position: relative;
+            &.selected {
+                @include selected();
+            }
+        }
     }
     .count { top: 9px; right: 7px; }
-    img { margin-top: 3px; }
+    img { margin-top: 2px; }
     .feeds { .title { margin-left: 12px; } }
     .date { top: 26px; right: 7px; }
     .author { margin: 0; }

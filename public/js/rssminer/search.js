@@ -72,7 +72,7 @@
     var html = tmpls.search_result(data);
     hide_search_result();
     $header.append(html).find('img').each(util.favicon_error);
-    $lis = $('#search-result > ul > li');
+    $lis = $('#search-result .subs > li, #search-result .feeds > li');
     $lis.mouseenter(function (e) {
       current_idx = _.indexOf($lis, this);
       select_by_index();
@@ -98,8 +98,7 @@
     'keyup #header input': do_search,
     'click': hide_search_result,
     'keydown #header input': navigation,
-    'keyup': hide_search_result_on_esc,
-    'click #search-result a': hide_search_result
+    'keyup': hide_search_result_on_esc
   });
 
 })();
