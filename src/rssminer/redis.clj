@@ -1,6 +1,7 @@
 (ns rssminer.redis
   (:use ring.middleware.session.store)
   (:import java.util.UUID
+           rssminer.RedisBackendSessionStore
            [redis.clients.jedis JedisPool Jedis JedisPoolConfig]))
 
 (defonce redis-client (atom nil))
@@ -14,38 +15,27 @@
     (str "z" (Integer/toString (- Integer/MAX_VALUE id) 35) "k")
     (str (UUID/randomUUID))))
 
-(deftype RedisStore [^JedisPool db ^int expire]
+(deftype RedisStore [^RedisBackendSessionStore db]
   SessionStore
   (read-session [_ key]
     (if (nil? key)
       {}
-      (let [^Jedis j (.getResource db)]
-        (try
-          (if-let [bs (.get j ^String key)]
-            (read-string bs)
-            {})
-          (finally
-           (.returnResource db j))))))
+      (if-let [bs (.get db ^String key)]
+        (read-string bs)
+        {})))
   (write-session [_ key data]
-    (let [^String key (or key (gen-key data))
-          ^Jedis j (.getResource db)]
-      (try
-        (.setex j key expire (pr-str data))
-        (finally
-         (.returnResource db j)))
+    (let [^String key (or key (gen-key data))]
+      (.put db key (pr-str data))
       key))
   (delete-session [_ key]
     (when-not (nil? key)
-      (let [^Jedis j (.getResource db)]
-        (try
-          (.del j ^"[Ljava.lang.String;" (into-array '(key)))
-          (finally
-           (.returnResource db j)))))))
+      (.delete db key))))
 
 (defn redis-store [expire]
   (when (nil? @redis-client)
     (set-redis-client! "127.0.0.1"))
-  (RedisStore. @redis-client expire))
+  (RedisStore. (RedisBackendSessionStore.
+                @redis-client expire)))
 
 (def ^String fetcher-key "fetcher-queue")
 

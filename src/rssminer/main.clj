@@ -40,6 +40,7 @@
          :fetcher-queue fetcher-queue
          :fetch-size fetch-size
          :redis-host redis-host
+         :worker worker
          :proxy-server (if (= :dev profile)
                          (str proxy-server ":" port) proxy-server)
          :static-server (if (= :dev profile)
