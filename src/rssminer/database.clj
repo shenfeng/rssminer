@@ -3,16 +3,13 @@
         [clojure.tools.logging :only [debug info]]
         [clojure.java.jdbc :only [with-connection do-commands]])
   (:require [clojure.string :as str])
-  (:import org.apache.commons.dbcp.BasicDataSource))
+  (:import me.shenfeng.dbcp.PerThreadDataSource))
 
 (defonce mysql-db-factory (atom {}))
 
 (defn use-mysql-database! [url user]
   (reset! mysql-db-factory
-          (let [ds (doto (BasicDataSource.)
-                     (.setUrl url)
-                     (.setUsername user)
-                     (.setPassword ""))]
+          (let [ds (PerThreadDataSource. url user "")]
             {:factory (fn [& args] (.getConnection ds))
              :ds ds})))
 
@@ -22,7 +19,7 @@
 
 (defn close-global-mysql-factory! []
   (if-let [ds (:ds @mysql-db-factory)]
-    (.close ^BasicDataSource ds)
+    (.close ^PerThreadDataSource ds)
     (reset! mysql-db-factory nil)))
 
 (defmacro with-mysql [& body]
