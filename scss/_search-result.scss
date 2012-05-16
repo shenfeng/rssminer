@@ -1,0 +1,39 @@
+#search-result {
+    a { padding: 3px 7px; display: block; }
+    .tags { display: inline-block; }
+    .feed { padding: 1px 3px;}
+    .title {
+        display: inline-block;
+        max-width: 500px;
+        @include overflow-ellipsis();
+    }
+    .indicator {
+        top: 5px;
+        height: 7px;
+        width: 7px;
+        left: 4px;
+    }
+    .subs li {
+        position: relative;
+        &.selected, &:hover { background: $hover_color; }
+    }
+    .count { top: 9px; right: 7px; }
+    img { margin-top: 3px; }
+    .feeds { .title { margin-left: 12px; } }
+    .date { top: 26px; right: 7px; }
+    .author { margin: 0; }
+    .meta {
+        font-size: 11px;
+        padding-left: 12px;
+        color: #666;
+        width: 440px;
+        @include overflow-ellipsis();
+    }
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .5);
+    position: absolute;
+    width: 540px;
+    top: 38px;
+    left: 230px;
+    background: white;
+    @include border-radius(0 0 5px 5px);
+}

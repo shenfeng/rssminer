@@ -17,13 +17,8 @@
       $subs_list = $('#sub-list'),
       iframe = $('iframe')[0],
       $logo = $('#logo'),
-      $welcome_list = $('.welcome-list'),
+      $welcome_list = $('#welcome-list'),
       $feeds_list = $('#feed-list');
-
-  function focus_first_feed () {
-    $($('.welcome-list li.feed')[0]).addClass('selected');
-    $reading_area.removeClass(SHOW_IFRAME);
-  }
 
   function switch_nav_to_subs () {
     $logo.addClass(SHOW_NAV);
@@ -48,6 +43,7 @@
     sort = sort || 'newest';
     $reading_area.removeClass(SHOW_IFRAME);
     var sub = data.get_subscription(id);
+    // just read subscription, not feed
     if(typeof callback !== 'function') {
       switch_nav_to_subs();
     }
@@ -60,7 +56,6 @@
         $feeds_list.empty().append(html);
         html = tmpls.sub_feeds(data);
         $welcome_list.empty().append(html);
-        focus_first_feed();
       }
       call_if_fn(callback);
     });
