@@ -247,7 +247,7 @@
 
   util.delegate_events($(document), {
     'click #add-subscription': add_subscription,
-    'click #navigation .folder span': toggle_nav_foler,
+    'click #sub-list .folder span': toggle_nav_foler,
     'click #save-settings': save_settings,
     'click .vote span.down': save_vote_down,
     'click .vote span.up': save_vote_up,
