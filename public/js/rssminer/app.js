@@ -17,8 +17,7 @@
       $subs_list = $('#sub-list'),
       iframe = $('iframe')[0],
       $logo = $('#logo'),
-      $welcome_list = $('#welcome-list'),
-      $feeds_list = $('#feed-list');
+      $welcome_list = $('#welcome-list');
 
   function switch_nav_to_subs () {
     $logo.addClass(SHOW_NAV);
@@ -52,8 +51,10 @@
       data.title = sub.title;
       set_document_title(data.title);
       if(data.feeds.length) {
+        data.title = sub.title;
+        data.url = sub.url;
         var html = tmpls.feeds_nav(data);
-        $feeds_list.empty().append(html);
+        $navigation.empty().append(html);
         html = tmpls.sub_feeds(data);
         $welcome_list.empty().append(html);
       }

@@ -125,13 +125,11 @@ body {
     font-size: 13px;
     overflow-x: hidden;
     overflow-y: scroll;
-    .feed .title {
-    /* display: inline-block; */
-    /* min-height: 40px; */
+    h3 {
+        a { color: #111; }
+        margin: 0; padding: 8px 0 8px 5px; @include overflow-ellipsis();
     }
-    .date {
-        margin-left: 4px;
-    }
+    .date { margin-left: 4px; }
 }
 
 #feed-list {                    /* navigation */

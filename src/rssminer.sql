@@ -132,7 +132,7 @@ CREATE PROCEDURE get_user_subs (user_id_p INT, like_s_p DOUBLE, neutral_s_p DOUB
 BEGIN
 SELECT us.rss_link_id              AS id,
        us.group_name,
-       l.url,
+       l.alternate as url,
        us.sort_index,
        us.title,
        l.title                     AS o_title,
