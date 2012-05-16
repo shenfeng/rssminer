@@ -18,7 +18,8 @@
       STATIC_SERVER = window._RM_.static_server,
       MAX_SORT_ORDER = 65535,
       INIT_SORT_ORDER = 256,
-      PER_PAGE_FEEDS = 25,
+      // per item 29 pixel, first feed to top 138px, 140 px for brower use
+      PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 29),
       LIKE_SCORE = user_conf.like_score || 1,
       NEUTRAL_SCORE = user_conf.neutral_score || 0; // db default 0
 

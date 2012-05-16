@@ -304,11 +304,9 @@ ul { list-style: none; padding: 0; margin: 0; }
 }
 
 .pager {                        /* in welcome-list */
+    margin-top: 6px;
     li {
-        &.current {
-            background: #ccc;
-            font-weight: bold;
-        }
+        &.current { background: #ccc; font-weight: bold; }
         float: left;
         background: #ECECEC;
         display: inline-block;
@@ -316,10 +314,7 @@ ul { list-style: none; padding: 0; margin: 0; }
         &:hover { background: #ccc; }
         margin-left: 6px;
         text-align: center;
-        a {
-            display: block;
-            padding: 0px 9px;
-        }
+        a { display: block; padding: 0px 12px; }
     }
 }
 
