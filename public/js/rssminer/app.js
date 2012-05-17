@@ -9,7 +9,8 @@
   var SHOW_NAV = 'show-nav',
       SHOW_IFRAME = 'show-iframe';
 
-  var mark_as_read_timer_id = 0;
+  var mark_as_read_timer_id = 0,
+      current_sub_id;
 
   var $loader = $('#footer img'),
       $reading_area = $('#reading-area'),
@@ -82,7 +83,7 @@
   }
 
   function read_feed (subid, feedid) {
-    read_subscription(subid, 1, 'newest', function () {
+    var read = function () {
       $reading_area.addClass(SHOW_IFRAME);
       var me = "feed-" + feedid,
           $me = $('#' + me);
@@ -104,7 +105,15 @@
         mark();
         $loader.css({visibility: 'hidden'});
       };
-    });
+    };
+    if(current_sub_id === subid) {
+      read();                   // just read feed
+    } else {
+      read_subscription(subid, 1, 'newest', function () {
+        current_sub_id = subid;
+        read();
+      });
+    }
   }
 
   function mark_as_read ($me, feedid, subid) {
@@ -266,9 +275,7 @@
     });
   }
 
-
   fetch_and_show_user_subs(function () { // app start here
-
     $logo.mouseenter(function () {
       $logo.addClass(SHOW_NAV);
     }).mouseleave(function () {

@@ -7,12 +7,16 @@
 
   var user = (_RM_ && _RM_.user) || {},
       user_conf = user.conf || {},
-      expire = user_conf.expire || 45,
-      subscriptions_cache,
-      feeds_cache = {};
+      expire = user_conf.expire || 45;
+
+  var subscriptions_cache,
+      feeds_cache = {},
+      cache_fixer = {};         // fix browser cache, inconsistency
 
   var CACHE_TIME = 1000 * 60 * 60 * 4, // 4 hour
       POLLING_TIMES = 4,
+      STORAGE_KEY = '_rm_',
+      MAX_PAGER = 9,
       POLLING_INTERVAL = 3000,
       PROXY_SERVER = window._RM_.proxy_server,
       STATIC_SERVER = window._RM_.static_server,
@@ -42,6 +46,14 @@
                             // "alibuybuy",
                             "javaworld" // for Readability
                                            ];
+
+  function save_to_cache_fixer (feedid, data) {
+    cache_fixer[feedid] = _.extend(data, cache_fixer[feedid]);
+    if(window.localStorage) {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(cache_fixer));
+    }
+  }
+
   function user_settings () {
     var expire_times = [];
     for(var i = 15; i <= 120; i += 15) {
@@ -70,7 +82,15 @@
   }
 
   function get_feed (feedid) {
-    return feeds_cache[feedid];
+    var feed;
+    for(var key in feeds_cache) {
+      var feeds = feeds_cache[key];
+      feed = _.find(feeds, function (f) {
+        return f.id === feedid;
+      });
+      if(feed) {  break; }
+    }
+    return feed || {};
   }
 
   function get_final_link (link, feedid) {
@@ -123,21 +143,6 @@
     return sub ? sub.total_feeds : 0;
   }
 
-  function get_cached_feeds (subid) {
-    return feeds_cache['sub_' + subid];
-  }
-
-  // TODO expire them, prevent OOM
-  function cache_feeds (feeds) {
-    var transform = transform_item();
-    _.each(feeds, function (feed) {
-      feed.read_date = feed.read_date || -1; // db
-      feed.vote_sys = feed.vote_sys || 0;
-      feed.vote_user = feed.vote_user || 0;
-      feeds_cache[feed.id] = transform(feed);
-    });
-  }
-
   function favicon_path (url) {
     var host = util.hostname(url),
         h = encodeURIComponent(host.split("").reverse().join(''));
@@ -181,10 +186,16 @@
     });
     // subid is undefined when used by parsewelcomelist
     return function (i) {
-      var sub_id = subid || i.rss_link_id;
+      var cf = cache_fixer[i.id],
+          sub_id = subid || i.rss_link_id;
+      if(cf) {
+        // try to fix outdated data, browser cache 1 hour
+        i.read_date = cf.read_date || i.read_date;
+        i.vote_user = cf.vote_user || i.vote_user;
+      }
       return {
         author: i.author,
-        sub: titles[sub_id],
+        sub: titles[sub_id],    // use to show search result
         cls: feed_css_class(i),
         date: subid ? ymdate(i, i.published_ts) : ymdate(i),
         href: 'read/' + sub_id + "/" + i.id,
@@ -259,7 +270,7 @@
     ajax.get('/api/welcome', function (resp) {
       var result = [];
       for(var section in TITLES) {
-        cache_feeds(resp[section]);
+        feeds_cache[section] = resp[section]; // cache un-processed data
         result.push({
           title: TITLES[section],
           feeds: _.map(resp[section], transform_item())
@@ -290,7 +301,7 @@
       sort: sort
     });
     ajax.get(url, function (resp) {
-      cache_feeds(resp); // for local lookup
+      feeds_cache['current_sub'] = resp;
       var feeds =  _.map(resp, transform_item(subid)),
           sort_data = [];
       for(var s in SORTINGS) {
@@ -308,6 +319,16 @@
     });
   }
 
+  function include (page_count, current, page) {
+    if(page_count < MAX_PAGER) {
+      return true;
+    } else if(page === 1 || page === page_count || page === current){
+      return true;
+    } else if(Math.abs(current - page) < Math.ceil(MAX_PAGER / 2)){
+      return true;
+    }
+  }
+
   function compute_paging (subid, sorting, total, page, per_page) {
     if(total <= per_page) {
       return false;
@@ -315,11 +336,13 @@
       var count = Math.ceil(total / per_page),
           pages = [];
       for(var i = 1; i < count + 1; i++) {
-        pages.push({
-          page: i,
-          current: i === page,
-          href: sub_hash(subid, i, sorting)
-        });
+        if(include(count, page, i)) {
+          pages.push({
+            page: i,
+            current: i === page,
+            href: sub_hash(subid, i, sorting)
+          });
+        }
       }
       return {
         count: count,
@@ -339,23 +362,14 @@
 
   function mark_as_read (feedid, cb) {
     ajax.spost('/api/feeds/' + feedid + '/read', function () {
-      var feed = get_feed(feedid);
-      feed.read_date = current_time();
-      call_if_fn(cb, feed);
+      save_to_cache_fixer(feedid, {read_date: current_time()});
+      call_if_fn(cb);
     });
   }
 
   function save_vote (feedid, vote, cb) {
     ajax.spost('/api/feeds/' + feedid  + '/vote', {vote: vote}, function () {
-      for(var key in feeds_cache) {
-        // TODO brute force
-        if(key.indexOf('sub_') === 0) {
-          var feed = _.find(feeds_cache[key], function (feed) {
-            return feed.id === feedid;
-          });
-          if(feed) { feed.vote_user = vote; break; }
-        }
-      }
+      save_to_cache_fixer(feedid, {vote_user: vote});
       call_if_fn(cb);
     });
   }
@@ -489,7 +503,7 @@
     if(q.length > 1) {
       limit = Math.max(17 - subs.length, 10);
       ajax.sget('/api/search?q=' + q + "&limit=" + limit, function (feeds) {
-        cache_feeds(feeds);
+        feeds_cache['search_result'] = feeds;
         cb({subs: subs, feeds: _.map(feeds, transform_item())});
       });
     } else {
@@ -515,4 +529,8 @@
       user_settings: user_settings
     }
   });
+
+  if(window.localStorage) {   // load data from localStorage
+    cache_fixer = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+  }
 })();
