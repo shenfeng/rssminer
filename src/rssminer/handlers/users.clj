@@ -1,6 +1,6 @@
 (ns rssminer.handlers.users
   (:use  [ring.util.response :only [redirect]]
-         (rssminer [util :only [session-get assoc-if md5-sum get-expire]]
+         (rssminer [util :only [session-get to-int md5-sum get-expire]]
                    [config :only [rssminer-conf]])
          [clojure.data.json :only [json-str read-json]])
   (:require [rssminer.db.user :as db]
@@ -52,10 +52,15 @@
        :session {:user (assoc user :conf updated)}})))
 
 (defn summary [req]
-  (let [u-id (:id (session-get req :user))]
-    {:body {:read (uf/fetch-recent-read u-id 30)
-            :voted (uf/fetch-recent-voted u-id 20)
-            :recommend (uf/fetch-system-voteup u-id 20)}
+  (let [u-id (:id (session-get req :user))
+        limit (to-int (or (-> req :params :limit) 20))
+        offset (to-int (or (-> req :params :offset) 0))
+        data (case (-> req :params :section)
+               "latest" (uf/fetch-newest u-id limit offset)
+               "voted" (uf/fetch-recent-voted u-id limit offset)
+               "read" (uf/fetch-recent-read u-id limit offset)
+               (uf/fetch-system-voteup u-id limit offset))]
+    {:body data
      ;; ok, just cache for half hour
      :headers {"Cache-Control" "private, max-age=1800"}}))
 

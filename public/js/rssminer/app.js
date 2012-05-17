@@ -128,10 +128,13 @@
     };
   }
 
-  function show_welcome () {
+  function show_welcome (section, page) {
+    section = section || 'recommand';
+    page = page || 1;
     if(data.is_user_has_subscription()) { // user has subscriptions
-      data.get_welcome_list(function (data) {
-        $welcome_list.empty().append(tmpls.welcome(data));
+      data.get_welcome_list(section, page, function (data) {
+        var html = tmpls.sub_feeds(data);
+        $welcome_list.empty().append(html);
         $reading_area.removeClass(SHOW_IFRAME);
         switch_nav_to_subs();
         set_document_title();
@@ -287,6 +290,7 @@
 
     RM.hashRouter({
       '': show_welcome,
+      '?s=:section&p=:p': show_welcome,
       'settings': show_settings,
       'add': show_add_sub_ui,
       'read/:id?p=:page&s=:sort': read_subscription,

@@ -16,23 +16,34 @@
        VALUES (%d, %d, %d) ON DUPLICATE KEY UPDATE read_date = %d"
                          user-id feed-id now now)))))
 
-(defn fetch-system-voteup [user-id limit]
-  (mysql-query ["SELECT f.id, f.title, f.author, f.tags, f.link, f.rss_link_id,
-              f.published_ts, uf.vote_user, uf.vote_sys
+(defn fetch-newest [user-id limit offset]
+  (mysql-query ["SELECT f.id, f.title, f.author, f.tags, f.link,
+         f.rss_link_id, f.published_ts, uf.vote_user, uf.vote_sys
               FROM feeds f JOIN user_feed uf ON uf.feed_id = f.id
-              WHERE uf.user_id = ? and uf.vote_user = 0
-              ORDER BY uf.vote_sys desc limit ?" user-id limit]))
+              WHERE uf.user_id = ? AND uf.read_date = -1
+              ORDER BY f.published_ts DESC LIMIT ? OFFSET ?"
+                user-id limit offset]))
 
-(defn fetch-recent-read [user-id limit]
-  (mysql-query ["SELECT f.id, f.title, f.author, f.link, f.tags, f.rss_link_id,
-              f.published_ts, uf.vote_user, uf.read_date, uf.vote_sys
+(defn fetch-system-voteup [user-id limit offset]
+  (mysql-query ["SELECT f.id, f.title, f.author, f.tags, f.link,
+         f.rss_link_id, f.published_ts, uf.vote_user, uf.vote_sys
               FROM feeds f JOIN user_feed uf ON uf.feed_id = f.id
-              WHERE uf.user_id = ? and uf.read_date > 0
-              ORDER BY uf.read_date desc limit ?" user-id limit]))
+              WHERE uf.user_id = ? AND uf.vote_user = 0
+              ORDER BY uf.vote_sys DESC LIMIT ? OFFSET ?"
+                user-id limit offset]))
 
-(defn fetch-recent-voted [user-id limit]
-  (mysql-query ["SELECT f.id, f.title, f.author, f.link, f.tags, f.rss_link_id,
-              f.published_ts, uf.vote_user, uf.read_date, uf.vote_sys
+(defn fetch-recent-read [user-id limit offset]
+  (mysql-query ["SELECT f.id, f.title, f.author, f.link, f.tags,
+    f.rss_link_id, f.published_ts, uf.vote_user, uf.read_date, uf.vote_sys
               FROM feeds f JOIN user_feed uf ON uf.feed_id = f.id
-              WHERE uf.user_id = ? and uf.vote_user != 0
-              ORDER BY uf.read_date desc limit ?" user-id limit]))
+              WHERE uf.user_id = ? AND uf.read_date > 0
+              ORDER BY uf.read_date DESC LIMIT ? OFFSET ?"
+                user-id limit offset]))
+
+(defn fetch-recent-voted [user-id limit offset]
+  (mysql-query ["SELECT f.id, f.title, f.author, f.link, f.tags,
+     f.rss_link_id, f.published_ts, uf.vote_user, uf.read_date, uf.vote_sys
+              FROM feeds f JOIN user_feed uf ON uf.feed_id = f.id
+              WHERE uf.user_id = ? AND uf.vote_user != 0
+              ORDER BY uf.read_date DESC LIMIT ? OFFSET ?"
+                user-id limit offset]))

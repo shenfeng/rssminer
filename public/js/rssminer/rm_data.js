@@ -27,11 +27,7 @@
       LIKE_SCORE = user_conf.like_score || 1,
       NEUTRAL_SCORE = user_conf.neutral_score || 0; // db default 0
 
-  var TITLES = {
-    recommend: 'Recommand for you',
-    voted: 'Recently voted',
-    read: 'Recently read'
-  };
+  var WELCOME_TAGS = ['recommand', 'latest', 'read', 'voted'];
 
   var SORTINGS = {
     'newest': util.cmp_by('published_ts', null, -1), // revert sort
@@ -266,19 +262,27 @@
     }
   }
 
-  function get_welcome_list (cb) { // no cache
-    ajax.get('/api/welcome', function (resp) {
-      var result = [];
-      for(var section in TITLES) {
-        feeds_cache[section] = resp[section]; // cache un-processed data
-        result.push({
-          title: TITLES[section],
-          feeds: _.map(resp[section], transform_item())
-        });
-      }
+  function get_welcome_list (section, page, cb) { // no cache
+    var params = util.params({
+      section: section,
+      limit: PER_PAGE_FEEDS,
+      offset: Math.max(0, page-1) * PER_PAGE_FEEDS
+    });
+
+    var sort_data = _.map(WELCOME_TAGS, function (tab) {
+      return {
+        text: tab,
+        selected: section === tab,
+        href: tab_hash(tab, 1)
+      };
+    });
+
+    ajax.get('/api/welcome?' + params, function (resp) {
+      feeds_cache[section] = resp;
       cb({
         title: 'Rssminer - an intelligent RSS reader',
-        section: result
+        feeds: _.map(resp, transform_item()),
+        sort: sort_data
       });
     });
   }
@@ -288,6 +292,10 @@
     if(page) { href = href + '?p='+ page; }
     if(sort) { href = href + "&s=" + sort; }
     return href;
+  }
+
+  function tab_hash (section, page) {
+    return '?s=' + section + '&p=' + page;
   }
 
   function get_feeds (subid, page, sort, cb) {
