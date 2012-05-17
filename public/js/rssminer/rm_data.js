@@ -84,7 +84,7 @@
       feed = _.find(feeds, function (f) {
         return f.id === feedid;
       });
-      if(feed) {  break; }
+      if(feed) { break; }
     }
     return feed || {};
   }
@@ -278,10 +278,11 @@
     });
 
     ajax.get('/api/welcome?' + params, function (resp) {
-      feeds_cache[section] = resp;
+      var feeds = _.map(resp, transform_item());
+      feeds_cache[section] = feeds;
       cb({
         title: 'Rssminer - an intelligent RSS reader',
-        feeds: _.map(resp, transform_item()),
+        feeds: feeds,
         sort: sort_data
       });
     });
@@ -309,9 +310,9 @@
       sort: sort
     });
     ajax.get(url, function (resp) {
-      feeds_cache['current_sub'] = resp;
       var feeds =  _.map(resp, transform_item(subid)),
           sort_data = [];
+      feeds_cache['current_sub'] = feeds;
       for(var s in SORTINGS) {
         sort_data.push({
           selected: !sort || s === sort,
@@ -511,8 +512,9 @@
     if(q.length > 1) {
       limit = Math.max(17 - subs.length, 10);
       ajax.sget('/api/search?q=' + q + "&limit=" + limit, function (feeds) {
+        feeds = _.map(feeds, transform_item());
         feeds_cache['search_result'] = feeds;
-        cb({subs: subs, feeds: _.map(feeds, transform_item())});
+        cb({subs: subs, feeds: feeds});
       });
     } else {
       cb({subs: subs});
