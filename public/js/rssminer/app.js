@@ -20,15 +20,6 @@
       $logo = $('#logo'),
       $welcome_list = $('#welcome-list');
 
-  function switch_nav_to_subs () {
-    $logo.addClass(SHOW_NAV);
-  }
-
-  function switch_nav_to_feeds (cb) {
-    $logo.removeClass(SHOW_NAV);
-    call_if_fn(cb);
-  }
-
   function set_document_title (title) {
     var rssminer = 'Rssminer, intelligent rss reader';
     if(title) {
@@ -43,22 +34,10 @@
     sort = sort || 'newest';
     $reading_area.removeClass(SHOW_IFRAME);
     var sub = data.get_subscription(id);
-    // just read subscription, not feed
-    if(typeof callback !== 'function') {
-      switch_nav_to_subs();
-    }
     layout.select('#sub-list', "item-" + id);
     data.get_feeds(id, page, sort, function (data) {
       data.title = sub.title;
-      set_document_title(data.title);
-      if(data.feeds.length) {
-        data.title = sub.title;
-        data.url = sub.url;
-        var html = tmpls.feeds_nav(data);
-        $navigation.empty().append(html);
-        html = tmpls.sub_feeds(data);
-        $welcome_list.empty().append(html);
-      }
+      show_feeds(data, sub.title, sub.url);
       call_if_fn(callback);
     });
   }
@@ -84,12 +63,12 @@
 
   function read_feed (subid, feedid) {
     var read = function () {
+      current_sub_id = subid;
       $reading_area.addClass(SHOW_IFRAME);
       var me = "feed-" + feedid,
           $me = $('#' + me);
-      switch_nav_to_feeds(function () {
-        layout.select('#feed-list', me);
-      });
+      $logo.removeClass(SHOW_NAV);
+      layout.select('#feed-list', me);
       var feed = data.get_feed(feedid),
           link = feed.link;
       feed.domain = util.hostname(link);
@@ -109,10 +88,11 @@
     if(current_sub_id === subid) {
       read();                   // just read feed
     } else {
-      read_subscription(subid, 1, 'newest', function () {
-        current_sub_id = subid;
-        read();
-      });
+      if(_.isNumber(subid)) {
+        read_subscription(subid, 1, 'newest', read);
+      } else {
+        show_welcome(subid, 1, read);
+      }
     }
   }
 
@@ -128,16 +108,25 @@
     };
   }
 
-  function show_welcome (section, page) {
+  function show_feeds (data, title, url) {
+    data.title = title;
+    data.url = url;
+    var html = tmpls.feeds_nav(data);
+    $navigation.empty().append(html);
+    html = tmpls.sub_feeds(data);
+    $welcome_list.empty().append(html);
+    set_document_title(title);
+    $reading_area.removeClass(SHOW_IFRAME);
+    $logo.addClass(SHOW_NAV);
+  }
+
+  function show_welcome (section, page, cb) {
     section = section || 'recommand';
     page = page || 1;
     if(data.is_user_has_subscription()) { // user has subscriptions
       data.get_welcome_list(section, page, function (data) {
-        var html = tmpls.sub_feeds(data);
-        $welcome_list.empty().append(html);
-        $reading_area.removeClass(SHOW_IFRAME);
-        switch_nav_to_subs();
-        set_document_title();
+        show_feeds(data, section);
+        call_if_fn(cb);
       });
     } else {
       location.hash = "add";

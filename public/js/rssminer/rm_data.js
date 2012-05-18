@@ -178,7 +178,7 @@
             day < 10 ? '0' + day : day].join('/');
   }
 
-  function transform_item (feed) {
+  function transform_item (feed, section) {
     var cf = cache_fixer[feed.id],
         sub_id = feed.rss_link_id;
     if(cf) {
@@ -191,7 +191,7 @@
       sub: sub_titles[sub_id],    // use to show search result
       cls: feed_css_class(feed),
       date: ymdate(feed),
-      href: 'read/' + sub_id + "/" + feed.id,
+      href: 'read/' + (section || sub_id) + "/" + feed.id,
       id: feed.id,
       link: feed.link,
       tags: split_tag(feed.tags),
@@ -280,7 +280,7 @@
     });
 
     ajax.get('/api/welcome?' + params, function (resp) {
-      var feeds = _.map(resp, transform_item);
+      var feeds = _.map(resp, function (f) { return transform_item(f, section); });
       feeds_cache[section] = feeds;
       cb({
         title: 'Rssminer - an intelligent RSS reader',
