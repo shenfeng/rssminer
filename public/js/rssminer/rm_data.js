@@ -17,6 +17,7 @@
       POLLING_TIMES = 4,
       STORAGE_KEY = '_rm_',
       MAX_PAGER = 9,
+      WELCOME_MAX_PAGE = 5,
       POLLING_INTERVAL = 3000,
       PROXY_SERVER = window._RM_.proxy_server,
       STATIC_SERVER = window._RM_.static_server,
@@ -27,7 +28,8 @@
       LIKE_SCORE = user_conf.like_score || 1,
       NEUTRAL_SCORE = user_conf.neutral_score || 0; // db default 0
 
-  var WELCOME_TAGS = ['recommand', 'latest', 'read', 'voted'];
+  // how many pages does each section has
+  var WELCOME_TAGS = {recommand: 1, latest: 1, read: 1, voted: 1};
 
   var SORTINGS = {
     'newest': util.cmp_by('published_ts', null, -1), // revert sort
@@ -268,8 +270,7 @@
       limit: PER_PAGE_FEEDS,
       offset: Math.max(0, page-1) * PER_PAGE_FEEDS
     });
-
-    var sort_data = _.map(WELCOME_TAGS, function (tab) {
+    var sort_data = _.map(_.keys(WELCOME_TAGS), function (tab) {
       return {
         text: tab,
         selected: section === tab,
@@ -283,6 +284,7 @@
       cb({
         title: 'Rssminer - an intelligent RSS reader',
         feeds: feeds,
+        pager: compute_welcome_paging(section, page, resp.length),
         sort: sort_data
       });
     });
@@ -323,12 +325,12 @@
       cb({
         feeds: feeds,
         sort: sort_data,
-        pager: compute_paging(subid, sort, total, page, PER_PAGE_FEEDS)
+        pager: compute_sub_paging(subid, sort, total, page, PER_PAGE_FEEDS)
       });
     });
   }
 
-  function include (page_count, current, page) {
+  function should_include (page_count, current, page) {
     if(page_count < MAX_PAGER) {
       return true;
     } else if(page === 1 || page === page_count || page === current){
@@ -336,16 +338,48 @@
     } else if(Math.abs(current - page) < Math.ceil(MAX_PAGER / 2)){
       return true;
     }
+    return false;
   }
 
-  function compute_paging (subid, sorting, total, page, per_page) {
+  function compute_welcome_paging (section, page, last_count) {
+    var has_more = last_count === PER_PAGE_FEEDS; // maybe has more
+    if(page >= WELCOME_MAX_PAGE) {
+      has_more = false;         // do not show too much
+    }
+    if(has_more) {
+      // how many pages
+      WELCOME_TAGS[section] = Math.max(WELCOME_TAGS[section], page + 1);
+    }
+    if(page === 1 && !has_more) {
+      return false;
+    } else {
+      var pages = [];
+      for(var i = 1; i <= WELCOME_TAGS[section]; i++) {
+        pages.push({
+          page: i,
+          current: i === page,
+          href: tab_hash(section, i)
+        });
+      }
+      if(has_more) {
+        pages.push({
+          page: 'next',
+          current: false,
+          href: tab_hash(section, page + 1)
+        });
+      }
+      return {pages: pages};
+    }
+  }
+
+  function compute_sub_paging (subid, sorting, total, page, per_page) {
     if(total <= per_page) {
       return false;
     } else {
       var count = Math.ceil(total / per_page),
           pages = [];
       for(var i = 1; i < count + 1; i++) {
-        if(include(count, page, i)) {
+        if(should_include(count, page, i)) {
           pages.push({
             page: i,
             current: i === page,
