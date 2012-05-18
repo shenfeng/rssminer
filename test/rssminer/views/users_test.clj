@@ -47,13 +47,10 @@
     (is (= 204 (:status resp)))))
 
 (deftest test-welcome-list
-  (let [resp (auth-app {:uri "/api/welcome"
-                        :request-method :get})
-        resp1 (auth-app {:uri "/api/welcome"
-                         :request-method :get
-                         :params {"section" "latest"
-                                  "limit" 100
-                                  "offset" 1}})]
-    (is (= 200 (:status resp)))
-    (is (= 200 (:status resp1)))))
+  (doseq [section ["latest" "voted" "read" "recommand"]]
+    (is (= 200 (:status (auth-app {:uri "/api/welcome"
+                                   :request-method :get
+                                   :params {"section" section
+                                            "limit" 100
+                                            "offset" 1}}))))))
 

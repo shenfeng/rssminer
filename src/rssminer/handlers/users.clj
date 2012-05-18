@@ -59,7 +59,7 @@
                "latest" (uf/fetch-newest u-id limit offset)
                "voted" (uf/fetch-recent-voted u-id limit offset)
                "read" (uf/fetch-recent-read u-id limit offset)
-               (uf/fetch-system-voteup u-id limit offset))]
+               "recommand" (uf/fetch-system-voteup u-id limit offset))]
     {:body data
      ;; ok, just cache for half hour
      :headers {"Cache-Control" "private, max-age=1800"}}))

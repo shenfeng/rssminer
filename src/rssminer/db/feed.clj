@@ -7,23 +7,23 @@
         [clojure.tools.logging :only [info trace]]
         [clojure.java.jdbc :only [update-values delete-rows do-commands]]))
 
+(defn- feed-exits [rss-id link]
+  (mysql-query ["SELECT id FROM feeds WHERE rss_link_id = ? AND link = ?"
+                rss-id link]))
+
 (defn save-feeds [feeds rss-id]
   (doseq [{:keys [link] :as feed} (:entries feeds)]
     (when (and link (not (blank? link)))
-      (try
+      ;; since link is what I cared, do not update this feed on mysql
+      (if-not (feed-exits rss-id link)
         (let [id (mysql-insert :feeds (assoc feed :rss_link_id rss-id))]
-          (index-feed id rss-id feed))
-        (catch java.sql.SQLException e      ;(link, rss_link_id) is unique
-          (trace (str "update id:" rss-id) link)
-          (with-mysql
-            (update-values :feeds ["link=? and rss_link_id = ?"
-                                   link rss-id] feed)))))))
+          (index-feed id rss-id feed))))))
 
 (defn update-total-feeds [rss-id]
   (with-mysql
     (do-commands (str "UPDATE rss_links SET total_feeds =
-(SELECT COUNT(*) FROM feeds where rss_link_id = " rss-id
-") WHERE id = " rss-id))))
+  (SELECT COUNT(*) FROM feeds where rss_link_id = " rss-id ") WHERE id = "
+  rss-id))))
 
 (defn fetch-by-rssid [user-id rss-id limit offset sort]
   (mysql-query
@@ -37,8 +37,6 @@
            "likest" "ORDER BY vote_sys DESC")
          " LIMIT ? OFFSET ?")
     user-id, rss-id, limit, offset]))
-
-
 
 (defn fetch-orginal [id]
   (first (mysql-query ["SELECT original, link

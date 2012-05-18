@@ -30,7 +30,9 @@
                          {:link "http://link1.com" :author "two"}]} 1)
   (save-feeds {:entries [{:link "http://link1.com" :author "three"}]} 2)
   (let [feeds (mysql-query ["select * from feeds"])]
-    (is (empty? (filter (fn [f] (= "one" (:author f))) feeds)))
+    ;; should not update
+    (is (empty? (filter (fn [f] (= "two" (:author f))) feeds)))
+    (is (seq (filter (fn [f] (= "one" (:author f))) feeds)))
     (is (= 2 (count feeds)))))
 
 (deftest test-fetch-rss-links
