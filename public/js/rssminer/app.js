@@ -111,6 +111,7 @@
   function show_feeds (data, title, url) {
     data.title = title;
     data.url = url;
+    iframe.src = 'about:blank';
     var html = tmpls.feeds_nav(data);
     $navigation.empty().append(html);
     html = tmpls.sub_feeds(data);
