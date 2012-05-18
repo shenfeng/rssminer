@@ -10,6 +10,7 @@
       expire = user_conf.expire || 45;
 
   var subscriptions_cache,
+      sub_titles = {},                // use by transform_item
       feeds_cache = {},
       cache_fixer = {};         // fix browser cache, inconsistency
 
@@ -177,47 +178,40 @@
             day < 10 ? '0' + day : day].join('/');
   }
 
-  function transform_item (subid) {
-    var titles = {};
-    _.each(subscriptions_cache, function (sub) {
-      titles[sub.id] = transorm_sub(sub);
-    });
-    // subid is undefined when used by parsewelcomelist
-    return function (i) {
-      var cf = cache_fixer[i.id],
-          sub_id = subid || i.rss_link_id;
-      if(cf) {
-        // try to fix outdated data, browser cache 1 hour
-        i.read_date = cf.read_date || i.read_date;
-        i.vote_user = cf.vote_user || i.vote_user;
-      }
-      return {
-        author: i.author,
-        sub: titles[sub_id],    // use to show search result
-        cls: feed_css_class(i),
-        date: subid ? ymdate(i, i.published_ts) : ymdate(i),
-        href: 'read/' + sub_id + "/" + i.id,
-        id: i.id,
-        link: i.link,
-        tags: split_tag(i.tags),
-        title: i.title
-      };
+  function transform_item (feed) {
+    var cf = cache_fixer[feed.id],
+        sub_id = feed.rss_link_id;
+    if(cf) {
+      // try to fix outdated data, browser cache 1 hour
+      feed.read_date = cf.read_date || feed.read_date;
+      feed.vote_user = cf.vote_user || feed.vote_user;
+    }
+    return {
+      author: feed.author,
+      sub: sub_titles[sub_id],    // use to show search result
+      cls: feed_css_class(feed),
+      date: ymdate(feed),
+      href: 'read/' + sub_id + "/" + feed.id,
+      id: feed.id,
+      link: feed.link,
+      tags: split_tag(feed.tags),
+      title: feed.title
     };
   }
 
-  function transorm_sub (i) {
-    var title = i.title || i.url;
+  function transorm_sub (sub) {
+    var title = sub.title || sub.url;
     return {
-      img: favicon_path(i.url),
+      img: favicon_path(sub.url),
       title: title,
       title_l: title.toLowerCase(),
-      href: sub_hash(i.id, 1, 'newest'),
-      like: i.like_c,
-      total: i.total_feeds,
-      index: i.sort_index,
-      dislike: i.dislike_c,
-      neutral: i.total_c - i.like_c - i.dislike_c,
-      id: i.id        // rss_link_id
+      href: sub_hash(sub.id, 1, 'newest'),
+      like: sub.like_c,
+      total: sub.total_feeds,
+      index: sub.sort_index,
+      dislike: sub.dislike_c,
+      neutral: sub.total_c - sub.like_c - sub.dislike_c,
+      id: sub.id        // rss_link_id
     };
   }
 
@@ -242,6 +236,12 @@
     return result;
   }
 
+  function gen_sub_titles () {
+    sub_titles = {};
+    _.each(subscriptions_cache, function (sub) {
+      sub_titles[sub.id] = transorm_sub(sub);
+    });
+  }
   // helper funciton end here
 
   // API
@@ -259,6 +259,7 @@
           });
         });
         subscriptions_cache = cache;
+        gen_sub_titles();
         cb(result);
       });
     }
@@ -279,7 +280,7 @@
     });
 
     ajax.get('/api/welcome?' + params, function (resp) {
-      var feeds = _.map(resp, transform_item());
+      var feeds = _.map(resp, transform_item);
       feeds_cache[section] = feeds;
       cb({
         title: 'Rssminer - an intelligent RSS reader',
@@ -312,7 +313,7 @@
       sort: sort
     });
     ajax.get(url, function (resp) {
-      var feeds =  _.map(resp, transform_item(subid)),
+      var feeds =  _.map(resp, transform_item),
           sort_data = [];
       feeds_cache['current_sub'] = feeds;
       for(var s in SORTINGS) {
@@ -424,6 +425,7 @@
         if(sub && sub.title) {  // ok, title is fetched
           sub.group_name = null; // server return no group_name
           subscriptions_cache.push(sub);
+          gen_sub_titles();
           call_if_fn(cb, sub);
         } else {                // fetch again
           interval += 1500;
@@ -455,6 +457,7 @@
         }
       });
       subscriptions_cache = cache;
+      gen_sub_titles();
       call_if_fn(cb);
     });
   }
@@ -546,7 +549,7 @@
     if(q.length > 1) {
       limit = Math.max(17 - subs.length, 10);
       ajax.sget('/api/search?q=' + q + "&limit=" + limit, function (feeds) {
-        feeds = _.map(feeds, transform_item());
+        feeds = _.map(feeds, transform_item);
         feeds_cache['search_result'] = feeds;
         cb({subs: subs, feeds: feeds});
       });

@@ -27,10 +27,10 @@
 
 (defn fetch-by-rssid [user-id rss-id limit offset sort]
   (mysql-query
-   [(str "SELECT id, author, link, title, tags, published_ts,
-          uf.read_date, uf.vote_user, uf.vote_sys FROM feeds
+   [(str "SELECT id, author, link, title, tags, published_ts, f.rss_link_id,
+          uf.read_date, uf.vote_user, uf.vote_sys FROM feeds f
           LEFT JOIN user_feed uf on user_id = ? and id = uf.feed_id
-      WHERE feeds.rss_link_id = ? "
+      WHERE f.rss_link_id = ? "
          (case sort
            "newest" "ORDER BY published_ts DESC"
            "oldest" "ORDER BY published_ts"
