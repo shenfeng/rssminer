@@ -273,7 +273,7 @@
       $logo.addClass(SHOW_NAV);
     }).mouseleave(function () {
       // if reading feed
-      if(/#read\/\d+\/\d+/.test(location.hash)) {
+      if(/#read\/.+\/\d+/.test(location.hash)) {
         $logo.removeClass(SHOW_NAV);
       }
     });
