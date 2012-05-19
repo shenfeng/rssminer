@@ -3,6 +3,8 @@ CREATE TABLE users (
   email VARCHAR(64) UNIQUE,
   name VARCHAR(64),
   conf VARCHAR(1024),           -- json string
+-- alter table users add scores varchar(32) after conf;
+  scores VARCHAR(32),            -- like score and
   `password` VARCHAR(32),
   provider VARCHAR(10),         -- openid provider, eg: google
   authen_token VARCHAR(32),

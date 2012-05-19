@@ -65,7 +65,10 @@
                    (filter #(second %) (partition 2 kvs)))]
     (if (seq kvs) (apply assoc map kvs) map)))
 
-(defn to-int [s] (if (integer? s) s (Long/parseLong s)))
+(defn to-int [s] (cond
+                  (instance? Integer s) s
+                  (instance? Long s) (.intValue ^Long s)
+                  :else (Integer/parseInt s)))
 
 (defn to-boolean [s] (Boolean/parseBoolean s))
 

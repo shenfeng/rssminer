@@ -8,6 +8,7 @@
                   [search :only [use-index-writer!
                                  close-global-index-writer!]]
                   [routes :only [app]]
+                  [classify :only [start-classify-daemon]]
                   [redis :only [set-redis-client!]]
                   [util :only [to-int]]
                   [fetcher :only [start-fetcher stop-fetcher]]
@@ -34,7 +35,7 @@
   (stop-server)
   (.removeShutdownHook (Runtime/getRuntime) shutdown-hook)
   (.addShutdownHook (Runtime/getRuntime) shutdown-hook)
-  (use-mysql-database! db-url db-user)
+  (start-classify-daemon (:ds (use-mysql-database! db-url db-user)))
   (set-redis-client! redis-host)
   (swap! rssminer-conf assoc :profile profile
          :fetcher-queue fetcher-queue

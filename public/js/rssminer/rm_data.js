@@ -5,7 +5,8 @@
       util = RM.util,
       call_if_fn = util.call_if_fn;
 
-  var user_conf = (_RM_ && _RM_.user && _RM_.user.conf) || {};
+  var user_data = (_RM_ && _RM_.user) || {},
+      user_conf = user_data.conf || {};
 
   var subscriptions_cache,
       sub_titles = {},                // use by transform_item
@@ -20,8 +21,14 @@
       STATIC_SERVER = window._RM_.static_server,
       // per item 29 pixel, first feed to top 138px, 140 px for brower use
       PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 29),
-      LIKE_SCORE = user_conf.like_score || 1,
-      NEUTRAL_SCORE = user_conf.neutral_score || 0; // db default 0
+      LIKE_SCORE = 1,           // default 1
+      NEUTRAL_SCORE =  0;       // db default 0
+
+  var __scores = user_data.scores;
+  if(__scores) {
+    LIKE_SCORE = parseFloat(__scores.split(',')[0]);
+    NEUTRAL_SCORE = parseFloat(__scores.split(',')[1]);
+  }
 
   // how many pages does each section has
   var WELCOME_TABS = {recommand: 1, latest: 1, read: 1, voted: 1};

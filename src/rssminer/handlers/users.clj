@@ -17,7 +17,7 @@
         return-url (or return-url "/a")]
     (if user
       (assoc (redirect return-url)
-        :session {:user (select-keys user [:id :email :name :conf])}
+        :session {:user (select-keys user [:id :email :name :conf :scores])}
         :session-cookie-attrs {:expires (get-expire 3)})
       (view/login-page return-url))))
 

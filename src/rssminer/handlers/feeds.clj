@@ -1,18 +1,16 @@
 (ns rssminer.handlers.feeds
-  (:use (rssminer [util :only [session-get to-int assoc-if get-expire]]))
+  (:use (rssminer [util :only [session-get to-int assoc-if get-expire]]
+                  [classify :only [on-user-vote]]))
   (:require [rssminer.db.user-feed :as uf]
             [rssminer.db.feed :as db]))
 
 (defn user-vote [req]
   (let [fid (-> req :params :id to-int)
         vote (-> req :body :vote to-int)
-        user (session-get req :user)]
-    (uf/insert-user-vote (:id user) fid vote)
-    (if (-> user :conf :updated)
-      {:status 204 :body nil}
-      {:status 204 :body nil
-       :session {:user (assoc user :conf
-                              (assoc (:conf user) :updated true))}})))
+        user-id (-> (session-get req :user) :id to-int)]
+    (uf/insert-user-vote user-id fid vote)
+    (on-user-vote user-id fid (= vote 1))
+    {:status 204 :body nil}))
 
 (defn mark-as-read [req]
   (let [fid (-> req :params :id to-int)

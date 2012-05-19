@@ -45,10 +45,15 @@
         }
       },
       error: function (xhr) {
-        try {
-          show_error_msg(JSON.parse(xhr.responseText).message);
-        } catch(e) {
-          show_error_msg(xhr.responseText);
+        var t = xhr.responseText;
+        if(t) {
+          try {
+            show_error_msg(JSON.parse(t).message);
+          } catch(e) {show_error_msg(t);}
+        } else if(xhr.status === 401) {
+          show_error_msg('Not Logined');
+        } else if(xhr.status === 400) {
+          show_error_msg('Bad Request');
         }
       }
     };

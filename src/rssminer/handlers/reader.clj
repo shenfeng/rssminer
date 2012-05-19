@@ -9,46 +9,18 @@
         [rssminer.db.user :only [fetch-conf]])
   (:require [rssminer.views.reader :as view]
             [rssminer.config :as cfg]
-            [clojure.string :as str])
-  (:import rssminer.classfier.UserSysVote))
+            [clojure.string :as str]))
 
 (defn landing-page [req]
   (view/landing-page))
 
-(defn- recompute-if-needed [updated user ts]
-  (or (and updated (let [v (UserSysVote. (:id user)
-                                         ts
-                                         (:ds @mysql-db-factory))
-                         result (.reCompute v)]
-                     (when result
-                       [(aget result 0) (aget result 1)])))
-      (let [like (-> user :conf :like_score)
-            neutral (-> user :conf :neutral_score)]
-        (when (and like neutral)
-          [like neutral]))
-      [1.0 0]))
-
 (defn app-page [req]
-  (let [user (session-get req :user)
-        ts (time-since user)
-        updated (-> user :conf :updated)]
-    (let [[like neutral] (recompute-if-needed updated user ts)
-          new-user (if updated (assoc user :conf
-                                      (assoc (dissoc (:conf user) :updated)
-                                        :like_score like
-                                        :neutral_score neutral))
-                       user)
-          resp (view/app-page {:rm {:user new-user
-                                    :proxy_server (:proxy-server
-                                                   @cfg/rssminer-conf)
-                                    :static_server (:static-server
-                                                    @cfg/rssminer-conf)}})]
-      (if updated
-        {:status 200
-         :body resp
-         :headers {"Content-Type" "text/html; charset=utf-8"}
-         :session {:user new-user}}
-        resp))))
+  (let [user (session-get req :user)]
+    (view/app-page {:rm {:user user
+                         :proxy_server (:proxy-server
+                                        @cfg/rssminer-conf)
+                         :static_server (:static-server
+                                         @cfg/rssminer-conf)}})))
 
 (defn dashboard-page [req]
   (view/dashboard-page))
