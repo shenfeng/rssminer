@@ -10,7 +10,7 @@
 
   var $lis,
       old_q,
-      has_result = true,
+      has_result = false,
       current_idx = 0;
 
   function select_by_index () {
@@ -90,13 +90,15 @@
 
   function hide_search_result_on_esc (e) {
     if(e.which === 27) {        // ESC
+      old_q = "";
       hide_search_result();
     }
   }
 
   util.delegate_events($(document), {
     'keyup #header input': do_search,
-    'click': hide_search_result,
+    'click #header input': function () { do_search({}); return false; },
+    'click': function () { old_q = ""; hide_search_result(); },
     'keydown #header input': navigation,
     'keyup': hide_search_result_on_esc
   });

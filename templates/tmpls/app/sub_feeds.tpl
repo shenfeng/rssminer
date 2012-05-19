@@ -2,10 +2,8 @@
 <div class="sort">
   <ul>
     {{#sort}}
-      <li>
-        <a {{#selected}} class="selected" {{/selected}} href="#{{href}}">
-          {{text}}
-        </a>
+      <li {{#selected}} class="selected" {{/selected}}>
+        <a href="#{{href}}"> {{text}} </a>
       </li>
     {{/sort}}
   </ul>

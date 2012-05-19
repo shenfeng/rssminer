@@ -21,6 +21,7 @@
       STATIC_SERVER = window._RM_.static_server,
       // per item 29 pixel, first feed to top 138px, 140 px for brower use
       PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 29),
+      SEARCH_RESUTL_COUNT = Math.floor((screen.height - 138 - 140) / 46),
       LIKE_SCORE = 1,           // default 1
       NEUTRAL_SCORE =  0;       // db default 0
 
@@ -90,7 +91,7 @@
   }
 
   function split_tag (tags) {
-    if(tags) { return sub_array(tags.split("; "), 0, 4); } // at most 4
+    if(tags) { return sub_array(tags.split("; "), 0, 3); } // at most 3
     else { return []; }
   }
 
@@ -429,7 +430,7 @@
       });
     });
     if(q.length > 1) {
-      limit = Math.max(17 - subs.length, 10);
+      limit = Math.max(SEARCH_RESUTL_COUNT - subs.length, 10);
       ajax.sget('/api/search?q=' + q + "&limit=" + limit, function (feeds) {
         feeds = _.map(feeds, transform_item);
         feeds_cache['search_result'] = feeds;

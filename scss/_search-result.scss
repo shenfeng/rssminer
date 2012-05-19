@@ -5,11 +5,12 @@
 
 
 #search-result {
-    font-size: 12px;
-    a { padding: 2px 7px; display: block; color: #111; }
+    /* font-size: 12px; */
+    a { padding: 2px 7px; display: block; color: black; }
     .tags { display: inline-block; }
     .feed {
         padding: 1px 3px 2px 3px;
+        &:nth-child(even) { background: $nth_child_color;}
         &.selected { @include selected(); }
     }
     .title {
@@ -28,9 +29,9 @@
         border-bottom: 1px solid #eee;
         li {
             position: relative;
-            &.selected {
-                @include selected();
-            }
+            padding-top: 2px;
+            &:nth-child(even) { background: $nth_child_color;}
+            &.selected { @include selected(); }
         }
     }
     .count { top: 9px; right: 7px; }
@@ -45,11 +46,10 @@
         width: 440px;
         @include overflow-ellipsis();
     }
-    box-shadow: 0 1px 4px rgba(0, 0, 0, .5);
-    position: absolute;
+    box-shadow: 0 1px 4px #aaa;
     width: 540px;
     top: 38px;
     left: 230px;
-    background: white;
+    background: #FFFFFD;
     @include border-radius(0 0 5px 5px);
 }
