@@ -8,6 +8,13 @@
       MSG_CLASS = 'message',
       ERROR_CLASS = 'error';
 
+  var ERROR_MESGS = {
+    400: 'Bad Request',
+    401: 'Not Logined',
+    502: 'Server updating, retry in few seconds',
+    0: 'Could not reach server'
+  };
+
   function show_msg(msg) {
     $p.html(msg).removeClass(ERROR_CLASS).addClass(MSG_CLASS);
     $nofity.css({ marginLeft: -$p.width() / 2, visibility: 'visible' });
@@ -45,15 +52,13 @@
         }
       },
       error: function (xhr) {
-        var t = xhr.responseText;
+        var t = xhr.responseText || ERROR_MESGS[xhr.status];
         if(t) {
           try {
             show_error_msg(JSON.parse(t).message);
-          } catch(e) {show_error_msg(t);}
-        } else if(xhr.status === 401) {
-          show_error_msg('Not Logined');
-        } else if(xhr.status === 400) {
-          show_error_msg('Bad Request');
+          } catch(e) {
+            show_error_msg(t);
+          }
         }
       }
     };
