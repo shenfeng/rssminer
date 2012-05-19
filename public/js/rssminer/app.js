@@ -164,7 +164,7 @@
   }
 
   function save_settings (e) {
-    var d = util.extractData( $('#settings') );
+    var d = util.extract_data( $('#settings') );
     for(var i in d) { if(!d[i]) { delete d[i]; } }
     d.expire = parseInt(d.expire, 10);
     if(d.password && d.password !== d.password2) {

@@ -9,29 +9,6 @@
     img.src = "http://sujitpal."+ src + new Date().getTime();
   }, 300);
 
-  var cmp_by = function (name, minor, reverse) { // reverse when -1
-    reverse = reverse || -1;
-    return function (o, p) {
-      var a, b;
-      if (o && p && typeof o === 'object' && typeof p === 'object') {
-        a = o[name];
-        b = p[name];
-        if (a === b) {
-          return typeof minor === 'function' ? minor(o, p) : 0;
-        }
-        if (typeof a === typeof b) {
-          return reverse * (a < b ? -1 : 1);
-        }
-        return reverse * (typeof a < typeof b ? -1 : 1);
-      } else {
-        throw {
-          name: 'Error',
-          message: 'Expected an object when sorting by ' + name
-        };
-      }
-    };
-  };
-
   var hostname = (function () {
     var l = document.createElement("a");
     return function (uri) {
@@ -40,7 +17,7 @@
     };
   })();
 
-  function extractData ($ele) {
+  function extract_data ($ele) {
     var data = {};
     $("input, select", $ele).each(function (index, e) {
       var $input = $(e),
@@ -50,33 +27,6 @@
       }
     });
     return data;
-  }
-
-  function interval (date) {
-    var seconds = date - new Date().getTime() / 1000,
-        data = {
-          year: 31536000,
-          month : 2592000,
-          day: 86400,
-          hour: 3600,
-          minute: 60,
-          second: 1
-        };
-    for(var attr in data) {
-      var i = Math.floor(seconds / data[attr]);
-      if(i > 1)
-        return "in " + i + " " +  attr + "s";
-      else if (i < -1) {
-        return -i + " " + attr + "s ago";
-      }
-    }
-  };
-
-  function snippet(html, length){
-    return html && html.replace(/<[^<>]+>/g, '')
-      .replace(/\s+/g, ' ')
-      .replace(/&[^&;]+;/g, '')
-      .slice(0, length || 200);
   }
 
   var eventSplitter = /^(\S+)\s*(.*)$/;
@@ -120,16 +70,9 @@
       favicon_error: favicon_error,
       call_if_fn: call_if_fn,
       params: params,
-      cmp_by: cmp_by,
-      extractData: extractData,
+      extract_data: extract_data,
       hostname: hostname,
-      enableProxy: function () { return enable_proxy;  },
-      snippet: snippet,
-      // one dom ele is within another dom, or they are just the same
-      within : function (child, parent) {
-        return $.contains(parent, child) || parent === child;
-      },
-      removeClass: function (c) { return $('.' + c).removeClass(c); }
+      enableProxy: function () { return enable_proxy; }
     }
   });
 })();

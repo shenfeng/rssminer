@@ -45,10 +45,10 @@
   }
 
   function do_search (e) {
-    var q = $.trim($q.val()),
-        $selected = $('#search-result .selected');
+    var q = $.trim($q.val());
     switch(e.which) {
     case 13:                    // enter
+      var $selected = $('#search-result .selected');
       if($selected.length) {
         location.hash = $('a', $selected).attr('href');
         hide_search_result();

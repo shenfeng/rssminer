@@ -1,4 +1,4 @@
-(function(){
+(function($, undefined){
   var $nofity = $('<div id="notification"><p></p></div>')
         .prependTo($('body')),
       $p = $('p', $nofity),
@@ -22,7 +22,7 @@
 
   function _clear_timer () {
     if(hide_timer_id) {
-      clearTimeout(hide_timer_id);
+      window.clearTimeout(hide_timer_id);
       hide_timer_id = undefined;
     }
   }
@@ -47,8 +47,7 @@
       error: function (xhr) {
         try {
           show_error_msg(JSON.parse(xhr.responseText).message);
-        }
-        catch(e) {
+        } catch(e) {
           show_error_msg(xhr.responseText);
         }
       }
@@ -93,4 +92,4 @@
   window.RM = $.extend(window.RM, {
     ajax: { sget: sget, spost: spost, get: get, jpost: jpost, del: sdelete }
   });
-})();
+})(window.jQuery);

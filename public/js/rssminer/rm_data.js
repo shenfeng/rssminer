@@ -30,21 +30,15 @@
       NEUTRAL_SCORE = user_conf.neutral_score || 0; // db default 0
 
   // how many pages does each section has
-  var WELCOME_TAGS = {recommand: 1, latest: 1, read: 1, voted: 1};
+  var WELCOME_TABS = {recommand: 1, latest: 1, read: 1, voted: 1};
 
-  var SORTINGS = {
-    'newest': util.cmp_by('published_ts', null, -1), // revert sort
-    'oldest': util.cmp_by('published_ts', null, 1),
-    'likest': util.cmp_by('vote_user', util.cmp_by('vote_sys', null, -1), -1)
-    // first by user's vote, then by sys's vote
-    // 'reading': util.cmp_by('read_date', null, -1)
-  };
+  var SORTINGS_TABS = { newest: 1, oldest: 1, likest: 1 }; // 1 means true
 
   var BYPASS_PROXY_SITES = ['groups.google', // X-Frame-Options
-                            "feedproxy",
+                            "feedproxy"
                             // "alibuybuy",
-                            "javaworld" // for Readability
-                                           ];
+                            // "javaworld" // for Readability
+                                              ];
 
   function save_to_cache_fixer (feedid, data) {
     cache_fixer[feedid] = _.extend(data, cache_fixer[feedid]);
@@ -133,13 +127,6 @@
       }
     }
     return result;
-  }
-
-  function get_feeds_count (subid) {
-    var sub =_.find(subscriptions_cache, function (sub) {
-      return sub.id === subid;
-    });
-    return sub ? sub.total_feeds : 0;
   }
 
   function favicon_path (url) {
@@ -271,7 +258,7 @@
       limit: PER_PAGE_FEEDS,
       offset: Math.max(0, page-1) * PER_PAGE_FEEDS
     });
-    var sort_data = _.map(_.keys(WELCOME_TAGS), function (tab) {
+    var sort_data = _.map(_.keys(WELCOME_TABS), function (tab) {
       return {
         text: tab,
         selected: section === tab,
@@ -311,10 +298,13 @@
   }
 
   function get_feeds (subid, page, sort, cb) {
-    var total = get_feeds_count(subid),
+    var sub =_.find(subscriptions_cache, function (sub) {
+      return sub.id === subid;
+    }),
+        total = sub ? sub.total_feeds : 0,
         offset = Math.max(0, page -1) * PER_PAGE_FEEDS;
 
-    sort = SORTINGS[sort] ? sort : 'newest';
+    sort = SORTINGS_TABS[sort] ? sort : 'newest';
     var url = '/api/subs/' + subid + '?' + util.params({
       offset: offset,
       limit: PER_PAGE_FEEDS,
@@ -324,7 +314,7 @@
       var feeds =  _.map(resp, transform_item),
           sort_data = [];
       feeds_cache['current_sub'] = feeds;
-      for(var s in SORTINGS) {
+      for(var s in SORTINGS_TABS) {
         sort_data.push({
           selected: !sort || s === sort,
           href: sub_hash(subid, 1, s),
@@ -357,13 +347,13 @@
     }
     if(has_more) {
       // how many pages
-      WELCOME_TAGS[section] = Math.max(WELCOME_TAGS[section], page + 1);
+      WELCOME_TABS[section] = Math.max(WELCOME_TABS[section], page + 1);
     }
     if(page === 1 && !has_more) {
       return false;
     } else {
       var pages = [];
-      for(var i = 1; i <= WELCOME_TAGS[section]; i++) {
+      for(var i = 1; i <= WELCOME_TABS[section]; i++) {
         pages.push({
           page: i,
           current: i === page,
