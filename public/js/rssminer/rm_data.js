@@ -5,24 +5,19 @@
       util = RM.util,
       call_if_fn = util.call_if_fn;
 
-  var user = (_RM_ && _RM_.user) || {},
-      user_conf = user.conf || {},
-      expire = user_conf.expire || 45;
+  var user_conf = (_RM_ && _RM_.user && _RM_.user.conf) || {};
 
   var subscriptions_cache,
       sub_titles = {},                // use by transform_item
       feeds_cache = {},
       cache_fixer = {};         // fix browser cache, inconsistency
 
-  var CACHE_TIME = 1000 * 60 * 60 * 4, // 4 hour
-      POLLING_TIMES = 4,
+  var POLLING_TIMES = 4,
+      POLLING_INTERVAL = 3000,
       STORAGE_KEY = '_rm_',
       MAX_PAGER = 9,
       WELCOME_MAX_PAGE = 5,
-      POLLING_INTERVAL = 3000,
       STATIC_SERVER = window._RM_.static_server,
-      MAX_SORT_ORDER = 65535,
-      INIT_SORT_ORDER = 256,
       // per item 29 pixel, first feed to top 138px, 140 px for brower use
       PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 29),
       LIKE_SCORE = user_conf.like_score || 1,
@@ -43,7 +38,7 @@
   function user_settings () {
     var expire_times = [];
     for(var i = 15; i <= 120; i += 15) {
-      expire_times.push({time: i, selected: i === expire});
+      expire_times.push({time: i, selected: i === user_conf.expire || 45});
     }
     return {
       expire_times: expire_times,
@@ -52,9 +47,11 @@
   }
 
   function get_subscription (subid) {
-    return _.find(subscriptions_cache, function (sub) {
+    var sub = _.find(subscriptions_cache, function (sub) {
       return subid === sub.id;
     });
+    sub.group_name = sub.group_name || 'null';
+    return sub;
   }
 
   function get_feed (feedid) {
@@ -344,14 +341,6 @@
     }
   }
 
-  function is_user_has_subscription () {
-    if(subscriptions_cache) {
-      return subscriptions_cache.length;
-    } else {
-      return false;
-    }
-  }
-
   function mark_as_read (feedid, cb) {
     ajax.spost('/api/feeds/' + feedid + '/read', function () {
       save_to_cache_fixer(feedid, {
@@ -418,70 +407,6 @@
     });
   }
 
-  function update_sort_order (moved_id, new_before, new_cat) {
-    var subs = subscriptions_cache;
-    var step = Math.min(Math.floor(MAX_SORT_ORDER / subs.length), 256);
-    var moved =  get_subscription(moved_id);
-    var old_idx = _.indexOf(subs, moved);
-    var before = get_subscription(new_before);
-    var before_idx = _.indexOf(subs, before);
-    var update_cat = moved.group_name !== new_cat;
-
-    if(update_cat) { moved.group_name = new_cat; }
-
-    var save_data = [],
-        generate_all = false,
-        self = update_cat ? {g: new_cat, id: moved.id}: {id: moved.id};
-
-    if(before_idx === -1) { // no prev element
-      if(subs[0].sort_index >= 2) {
-        self.o = Math.floor(subs[0].sort_index / 2);
-        save_data.push(self);
-      } else {
-        generate_all = true;
-      }
-    } else if (before_idx === subs.length - 2 ) { // the last one
-      if(before.sort_index + step < MAX_SORT_ORDER) {
-        self.o = before.sort_index + step;
-        save_data.push(self);
-      } else {
-        generate_all = true;
-      }
-    } else {
-      var gap = subs[before_idx + 1].sort_index - before.sort_index;
-      if( gap > 2 ) {
-        self.o = before.sort_index + Math.floor(gap / 2);
-        save_data.push(self);
-      } else {
-        generate_all = true;
-      }
-    }
-
-    if (generate_all){                    // regenerate all
-      var sort_index = INIT_SORT_ORDER;
-      for(var i = 0; i < subs.length; i++) {
-        if(old_idx !== i) {
-          save_data.push({id: subs[i].id, o: sort_index});
-          subs[i].sort_index = sort_index;
-          sort_index += step;
-          if(before_idx === i) {
-            self.o = sort_index;
-            save_data.push(self);
-            subs[old_idx].sort_index = sort_index;
-            sort_index += step;
-          }
-        }
-      }
-    }
-
-    if(self.o) { moved.sort_index = self.o; }    // update sort_index
-
-    subscriptions_cache = _.sortBy(subs, function (s) {
-      return s.sort_index;
-    });
-    ajax.spost('/api/subs/sort', save_data);
-  }
-
   function get_search_result (q, limit, cb) {
     var subs = [],
         count = 0,
@@ -515,13 +440,12 @@
       get_feeds: get_feeds,
       get_search_result: get_search_result,
       get_subscription: get_subscription,
+      get_subscriptions: function () { return subscriptions_cache || []; },
       get_user_subs: get_user_subs,
       get_welcome_list: get_welcome_list,
-      is_user_has_subscription: is_user_has_subscription,
       mark_as_read: mark_as_read,
       save_vote: save_vote,
       unsubscribe: unsubscribe,
-      update_sort_order: update_sort_order,
       user_settings: user_settings
     }
   });

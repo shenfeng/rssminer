@@ -124,7 +124,7 @@
   function show_welcome (section, page, cb) {
     section = section || 'recommand';
     page = page || 1;
-    if(data.is_user_has_subscription()) { // user has subscriptions
+    if(data.get_subscriptions().length) { // user has subscriptions
       data.get_welcome_list(section, page, function (data) {
         show_feeds(data, section);
         call_if_fn(cb);
@@ -202,22 +202,6 @@
   function save_vote_up (e) { save_user_vote(1, this); return false; }
   function save_vote_down (e) { save_user_vote(-1, this); return false; }
 
-  function update_subs_sort_order (event, ui) {
-    if(ui.sender) { // prevent be callded twice if move bettween categories
-      return;
-    }
-    var $moved = $(ui.item),
-        $before = $moved.prev(),
-        moved_id = parseInt($moved.attr('data-id')),
-        new_cat = $moved.closest('.rss-category').siblings('.folder').attr('data-name'),
-        new_before_id = $before.length ? parseInt($before.attr('data-id')) : null;
-    data.update_sort_order(moved_id, new_before_id, new_cat);
-  }
-
-  function update_category_sort_order () {
-
-  }
-
   function toggle_nav_foler (e) {
     $(this).closest('li').toggleClass('collapse');
     var collapsed = [];
@@ -259,10 +243,10 @@
       $subs_list.empty().append(html).find('img').each(util.favicon_error);
       // $("#navigation .item img").each(util.favicon_error);
       // category sortable
-      $subs_list.sortable({change: update_category_sort_order });
-      $(".rss-category").sortable({ // subscription sortable with categories
+      $subs_list.sortable({change: RM.update_category_sort_order });
+      $(".rss-category").sortable({ // subscription sortable with categoriesa
         connectWith: ".rss-category",
-        update: update_subs_sort_order
+        update: RM.update_subs_sort_order
       });
       util.call_if_fn(cb);
     });
