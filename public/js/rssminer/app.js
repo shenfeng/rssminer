@@ -157,7 +157,7 @@
     }
   }
 
-  function show_settings () {
+  function show_settings (section) {
     $reading_area.removeClass(SHOW_IFRAME);
     var html = tmpls.settings(data.user_settings());
     $welcome_list.empty().append(html).find('img').each(util.favicon_error);
@@ -266,6 +266,7 @@
       '': show_welcome,
       '?s=:section&p=:p': show_welcome,
       'settings': show_settings,
+      'settings/:section': show_settings,
       'add': show_add_sub_ui,
       'read/:id?p=:page&s=:sort': read_subscription,
       'read/:id?p=:page': read_subscription,
