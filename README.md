@@ -12,7 +12,7 @@
 `IBM developerWorks : Java technology`, `Peter Norvig`
 * Read blogspot, wordpress, feedburner etc in China
 * Learn from your `like` `dislike`, then rank feeds accordingly
-* Google Chrome plugin and add subscription
+* Google Chrome plugin to add subscription
 * Clean and compact code.
 
 ## Technologies
