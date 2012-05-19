@@ -2,6 +2,17 @@
 
   var enable_proxy = true;      // proxy reseted site?
 
+  var PROXY_SERVER = window._RM_.proxy_server;
+
+  var BYPASS_PROXY_SITES = ['groups.google', // X-Frame-Options
+                            "feedproxy"
+                            // "alibuybuy",
+                            // "javaworld" // for Readability
+                                              ];
+
+  var RESETED_SITES = ["wordpress", "appspot", 'emacsblog','blogger',
+                       "blogspot", 'mikemccandless'];
+
   setTimeout(function () {
     var img = new Image(),
         src = ["blog", "spot",".com/favicon.ico?t="].join("");
@@ -63,16 +74,35 @@
     return arr.join('&');
   }
 
+  function get_final_link (link, feedid) {
+    var h = hostname(link),
+        bypass = _.any(BYPASS_PROXY_SITES, function (site) {
+          return h.indexOf(site) !== -1;
+        }),
+        reseted = _.any(RESETED_SITES, function (site) {
+          return h.indexOf(site) !== -1;
+        }),
+        proxy = bypass;
+
+    if(!bypass && enable_proxy && reseted) { proxy = true; }
+
+    if(proxy) {
+      return PROXY_SERVER + "/f/o/" + feedid + "?p=1";
+    } else {
+      return link;
+    }
+  }
+
   // export
   window.RM = $.extend(window.RM || {}, {
     util: {
       delegate_events: delegate_events,
       favicon_error: favicon_error,
       call_if_fn: call_if_fn,
+      get_final_link: get_final_link,
       params: params,
       extract_data: extract_data,
-      hostname: hostname,
-      enableProxy: function () { return enable_proxy; }
+      hostname: hostname
     }
   });
 })();

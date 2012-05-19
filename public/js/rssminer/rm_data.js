@@ -20,7 +20,6 @@
       MAX_PAGER = 9,
       WELCOME_MAX_PAGE = 5,
       POLLING_INTERVAL = 3000,
-      PROXY_SERVER = window._RM_.proxy_server,
       STATIC_SERVER = window._RM_.static_server,
       MAX_SORT_ORDER = 65535,
       INIT_SORT_ORDER = 256,
@@ -33,12 +32,6 @@
   var WELCOME_TABS = {recommand: 1, latest: 1, read: 1, voted: 1};
 
   var SORTINGS_TABS = { newest: 1, oldest: 1, likest: 1 }; // 1 means true
-
-  var BYPASS_PROXY_SITES = ['groups.google', // X-Frame-Options
-                            "feedproxy"
-                            // "alibuybuy",
-                            // "javaworld" // for Readability
-                                              ];
 
   function save_to_cache_fixer (feedid, data) {
     cache_fixer[feedid] = _.extend(data, cache_fixer[feedid]);
@@ -58,16 +51,6 @@
     };
   }
 
-  var RESETED_SITES = ["wordpress", "appspot", 'emacsblog','blogger',
-                       "blogspot", 'mikemccandless'];
-
-  function is_bypass_proxy_site (link) {
-    var h = util.hostname(link);
-    return _.any(BYPASS_PROXY_SITES, function (site) {
-      return h.indexOf(site) !== -1;
-    });
-  }
-
   function get_subscription (subid) {
     return _.find(subscriptions_cache, function (sub) {
       return subid === sub.id;
@@ -84,39 +67,6 @@
       if(feed) { break; }
     }
     return feed || {};
-  }
-
-  function get_final_link (link, feedid) {
-    if(is_bypass_proxy_site(link)) {
-      return PROXY_SERVER + "/f/o/" + feedid + "?p=1";
-    } else {
-      if(util.enableProxy() && is_reseted_site(link)) {
-        return PROXY_SERVER + "/f/o/" + feedid + "?p=1";
-      }
-      return link;
-    }
-  }
-
-  function is_reseted_site (link) {
-    var h = util.hostname(link);
-    return _.any(RESETED_SITES, function (site) {
-      return h.indexOf(site) !== -1;
-    });
-  }
-
-  function shouldProxy (link) {
-    var hostname= util.hostname(link);
-    for(var i = 0; i < RESETED_SITES.length; i++) {
-      if(hostname.indexOf(RESETED_SITES[i]) != -1) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  // helper function
-  function current_time () {
-    return Math.round(new Date().getTime() / 1000);
   }
 
   function sub_array (list, offset, length) {
@@ -404,7 +354,9 @@
 
   function mark_as_read (feedid, cb) {
     ajax.spost('/api/feeds/' + feedid + '/read', function () {
-      save_to_cache_fixer(feedid, {read_date: current_time()});
+      save_to_cache_fixer(feedid, {
+        read_date: Math.round(new Date().getTime() / 1000)
+      });
       call_if_fn(cb);
     });
   }
@@ -561,7 +513,6 @@
       add_subscription: add_subscription,
       get_feed: get_feed,
       get_feeds: get_feeds,
-      get_final_link: get_final_link,
       get_search_result: get_search_result,
       get_subscription: get_subscription,
       get_user_subs: get_user_subs,

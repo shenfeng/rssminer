@@ -76,7 +76,7 @@
       var html = tmpls.footer_info(feed);
       $('#footer .feed').replaceWith(html);
       $loader.css({visibility: 'visible'});
-      iframe.src = data.get_final_link(link, feedid);
+      iframe.src = util.get_final_link(link, feedid);
       var mark = mark_as_read($me, feedid, subid);
       clear_timer();
       mark_as_read_timer_id = window.setTimeout(mark, 500);
