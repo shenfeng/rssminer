@@ -108,6 +108,7 @@ create table favicon (
 
 delimiter //
 
+-- TODO limit count
 -- mysql does not support EXCEPT operator, use left join
 CREATE PROCEDURE get_unvoted (user_id_p INT, published_ts_p INT)
 BEGIN
