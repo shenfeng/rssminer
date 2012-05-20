@@ -51,8 +51,9 @@ table { border-collapse: collapse; border-spacing: 0; }
 #signup-form {
     td { font-size: 13px; padding: 2px;}
     td:first-child { text-align: right; }
-    #reg-email, #reg-password { padding: 4px; width: 250px; }
 }
+
+#reg-email, #reg-password { padding: 4px; width: 236px; }
 
 #login-form {
     td { font-size: 11px; }
@@ -67,7 +68,7 @@ p {
 #main {
     margin: 0 auto;
     width: $page-width;
-    $left_width: 630px;
+    $left_width: 650px;
     .lfloat {
         padding: 0.5em 1em 1em 0;
         width: $left_width;
@@ -79,7 +80,8 @@ p {
         a { display: block; margin: 0 40px; }
         h3 {
             padding: 0.5em;
-            margin: 0.5em;
+            margin: 10px 0;
+            font-size: 14px;
             background-color: #D1E1FA;
             @include linear-gradient(#C5D7FB, #D8E1FF, true);
         }
@@ -135,8 +137,8 @@ p {
   Set to display none, prevents content flash
   */
 
-$slide_img_width: 610px;
-$slide_img_height: 360px;
+$slide_img_width: 630px;
+$slide_img_height: 370px;
 
 .slides_container {
     width: $slide_img_width;
