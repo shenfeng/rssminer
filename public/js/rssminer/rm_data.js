@@ -17,7 +17,7 @@
       POLLING_INTERVAL = 3000,
       STORAGE_KEY = '_rm_',
       MAX_PAGER = 9,
-      WELCOME_MAX_PAGE = 5,
+      WELCOME_MAX_PAGE = 7,
       STATIC_SERVER = window._RM_.static_server,
       // per item 29 pixel, first feed to top 138px, 140 px for brower use
       PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 29),
@@ -111,9 +111,8 @@
     return cls;
   }
 
-  function ymdate (i, force) {
-    var date = force || (i.read_date > 1 ? i.read_date : i.published_ts);
-    var d = new Date(date * 1000),
+  function ymdate (i) {
+    var d = new Date(i * 1000),
         m = d.getMonth() + 1,
         day = d.getDate();
     return [d.getFullYear(),
@@ -133,7 +132,7 @@
       author: feed.author,
       sub: sub_titles[sub_id],    // use to show search result
       cls: feed_css_class(feed),
-      date: ymdate(feed),
+      date: ymdate(feed.published_ts),
       href: feed_hash(sub_id, feed.id),
       id: feed.id,
       link: feed.link,
@@ -226,6 +225,9 @@
       var feeds = _.map(resp, function (feed) {
         var result = transform_item(feed);
         result.href = feed_hash(section, feed.id); // change href
+        if(section === 'read') { // read show read date
+          result.date = ymdate(feed.read_date);
+        }
         return result;
       });
       feeds_cache[section] = feeds;
