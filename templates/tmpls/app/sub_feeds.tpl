@@ -1,4 +1,9 @@
-<h2>{{ title }}</h2>
+<h2>
+  {{#url}}
+    <a href="{{url}}" target="_blank">{{ title }}</a>
+  {{/url}}
+  {{^url}}{{ title }}{{/url}}
+</h2>
 <div class="sort">
   <ul>
     {{#sort}}
