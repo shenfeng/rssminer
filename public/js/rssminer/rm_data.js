@@ -20,7 +20,7 @@
       WELCOME_MAX_PAGE = 7,
       STATIC_SERVER = window._RM_.static_server,
       // per item 29 pixel, first feed to top 138px, 140 px for brower use
-      PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 29),
+      PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 30),
       // show search result count according to screen height
       SEARCH_RESUTL_COUNT = Math.min(Math.floor((screen.height - 260) / 43), 17),
       LIKE_SCORE = 1,           // default 1
@@ -129,7 +129,7 @@
       feed.vote_user = cf.vote_user || feed.vote_user;
     }
     return {
-      author: feed.author,
+      author: feed.author || util.hostname(feed.link),
       sub: sub_titles[sub_id],    // use to show search result
       cls: feed_css_class(feed),
       date: ymdate(feed.published_ts),

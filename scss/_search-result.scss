@@ -1,13 +1,21 @@
 @mixin selected () {
     background: #7b9bf0;
-    a { color: white; }
 }
 
+.tags {
+    display: inline-block;
+    font-size: 9px;
+    li {
+        color: #222;
+        background: #efefef;
+        display: inline-block;
+        padding: 1px 2px;
+        @include border-radius(3px);
+    }
+}
 
 #search-result {
-    /* font-size: 12px; */
-    a { padding: 2px 7px; display: block; color: black; }
-    .tags { display: inline-block; }
+    a { padding: 2px 7px; display: block; }
     .feed {
         padding: 1px 3px 2px 3px;
         &:nth-child(even) { background: $nth_child_color;}
@@ -15,6 +23,7 @@
     }
     .title {
         display: inline-block;
+        color: black;
         max-width: 500px;
         @include overflow-ellipsis();
     }
@@ -38,14 +47,13 @@
     img { margin-top: 2px; }
     .feeds { .title { margin-left: 12px; } }
     .date { top: 26px; right: 7px; }
-    .author { margin: 0; }
+    .author { margin: 0; color: #111; }
     .meta {
-        font-size: 11px;
         padding-left: 12px;
-        color: #666;
         width: 440px;
         @include overflow-ellipsis();
     }
+    .sub { font-size: 9px; color: #333; }
     box-shadow: 0 1px 4px #aaa;
     width: 540px;
     top: 38px;
