@@ -231,6 +231,10 @@
     'click #add-subscription': add_subscription,
     'click #sub-list .folder span': toggle_nav_foler,
     'click #save-settings': save_settings,
+    'click #add-sub a': function () {
+      alert('Only avaiable when published, please wait a while');
+      return false;
+    },
     'click .vote span.down': save_vote_down,
     'click .vote span.up': save_vote_up,
     'click #settings .delete': unsubscribe
