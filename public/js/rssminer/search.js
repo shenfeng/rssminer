@@ -1,4 +1,4 @@
-(function () {
+(function (undefined) {
   var RM = window.RM,
       data = RM.data,
       tmpls = RM.tmpls,
@@ -9,7 +9,7 @@
   var SELECTED = 'selected';
 
   var $lis,
-      old_q,
+      old_q = '',
       has_result = false,
       current_idx = 0;
 
@@ -58,10 +58,15 @@
     case 27:                    // esc
       hide_search_result();
       break;
+    case 40:                    // ignore direction. down
+    case 38:                    // up
+    case 39:                    // right
+    case 37:                    // left
+      break;
     default:
       if(q !== old_q) {
         old_q = q;
-        data.get_search_result(q, 15, function (result) {
+        data.get_search_result(q, 18, function (result) {
           show_search_result(result);
         });
       }
@@ -90,17 +95,25 @@
 
   function hide_search_result_on_esc (e) {
     if(e.which === 27) {        // ESC
-      old_q = "";
       hide_search_result();
+      $q.blur();
+    } else if(e.which === 16) { // key / => shift + ?
+      $q.focus().click();
     }
   }
 
+  function search_on_click () {
+    old_q = undefined;
+    $q[0].select();
+    do_search({});
+    return false;
+  }
+
   util.delegate_events($(document), {
-    'keyup #header input': do_search,
-    'click #header input': function () { do_search({}); return false; },
-    'click': function () { old_q = ""; hide_search_result(); },
+    'click #header input': search_on_click,
+    'click': hide_search_result,
     'keydown #header input': navigation,
+    'keyup #header input': do_search,
     'keyup': hide_search_result_on_esc
   });
-
 })();

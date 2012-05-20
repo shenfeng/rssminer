@@ -21,7 +21,8 @@
       STATIC_SERVER = window._RM_.static_server,
       // per item 29 pixel, first feed to top 138px, 140 px for brower use
       PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 29),
-      SEARCH_RESUTL_COUNT = Math.floor((screen.height - 138 - 140) / 46),
+      // show search result count according to screen height
+      SEARCH_RESUTL_COUNT = Math.min(Math.floor((screen.height - 260) / 43), 17),
       LIKE_SCORE = 1,           // default 1
       NEUTRAL_SCORE =  0;       // db default 0
 
@@ -434,10 +435,10 @@
       ajax.sget('/api/search?q=' + q + "&limit=" + limit, function (feeds) {
         feeds = _.map(feeds, transform_item);
         feeds_cache['search_result'] = feeds;
-        cb({subs: subs, feeds: feeds});
+        cb({subs: subs, feeds: feeds, sub_cnt: subs.length});
       });
     } else {
-      cb({subs: subs});
+      cb({subs: subs, sub_cnt: subs.length});
     }
   }
 
