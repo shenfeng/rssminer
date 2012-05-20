@@ -66,6 +66,9 @@ restore_db () {
     fi
 }
 
+# online version
+# ssh deploy@rssminer.net 'sudo /etc/init.d/rssminer rebuild-index'
+
 rebuild_index () {
     log "rm -rf /var/rssminer/index/*"
     rm -rf /var/rssminer/index/*
