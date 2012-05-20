@@ -26,7 +26,7 @@
   (map :id (mysql-query ["SELECT rss_link_id AS id FROM user_subscription
                  WHERE user_id = ?" user-id])))
 
-(defn fetch-user-sub [id user-id mark-as-read-time like neutral]
+(defn fetch-user-sub [id]
   (first (mysql-query ["SELECT id, url, title, alternate
               FROM rss_links WHERE id = ?" id])))
 

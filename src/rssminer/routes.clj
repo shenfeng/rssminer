@@ -27,7 +27,7 @@
            (JPOST "/sort" [] subs/save-sort-order)
            (JPOST "/add" [] subs/add-subscription)
            (JGET "/:rss-id" [] feed/get-by-subscription)
-           (JGET "/p/:rss-id" [] subs/polling-subscription)
+           (JGET "/p/:rss-id" [] subs/polling-fetcher)
            (JDELETE "/:rss-id" [] subs/unsubscribe))
   (JGET "/search" [] reader/search)
   (JPOST "/settings" [] user/save-settings)

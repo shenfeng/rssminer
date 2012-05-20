@@ -26,10 +26,9 @@
   (view/dashboard-page))
 
 (defn search [req]
-  (let [{:keys [q limit ids] :or {limit 10}} (:params req)
-        user-id (:id (session-get req :user))]
+  (let [{:keys [q limit ids]} (:params req)
+        user-id (:id (session-get req :user))
+        limit (min 20 (to-int limit))]
     (if ids
-      (search* q (map to-int (str/split ids #","))
-               (to-int limit) :user-id user-id)
-      (search* q (fetch-user-subids user-id) (to-int limit)
-               :user-id user-id))))
+      (search* q user-id (map to-int (str/split ids #",")) limit)
+      (search* q user-id (fetch-user-subids user-id) limit))))

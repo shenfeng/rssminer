@@ -38,7 +38,7 @@
     (catch Exception e
       (println "updating index " id "error!!"))))
 
-(defn search* [term rss-ids limit & {:keys [user-id]}]
+(defn search* [term user-id rss-ids limit]
   (let [meta (.search ^Searcher @searcher term rss-ids limit)]
     {:body (if (seq meta)
              (fetch-feeds meta user-id)

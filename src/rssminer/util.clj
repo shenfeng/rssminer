@@ -66,9 +66,10 @@
     (if (seq kvs) (apply assoc map kvs) map)))
 
 (defn to-int [s] (cond
+                  (string? s) (Integer/parseInt s)
                   (instance? Integer s) s
                   (instance? Long s) (.intValue ^Long s)
-                  :else (Integer/parseInt s)))
+                  :else 0))
 
 (defn to-boolean [s] (Boolean/parseBoolean s))
 

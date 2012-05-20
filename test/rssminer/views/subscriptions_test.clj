@@ -39,11 +39,13 @@
 
 (deftest test-get-subscription
   (let [[_ subscription] (prepare)
-        resp (auth-app {:uri (str "/api/subs/" (:rss_link_id subscription))
-                        :request-method :get
-                        :params {"limit" "13" "offset" "0"}})
-        fetched-feeds (-> resp :body read-json)]
-    (is (= 200 (:status resp)))))
+        rss-id (:rss_link_id subscription)]
+    (doseq [s ["newest" "oldest" "likest"]]
+      (let [resp (auth-app {:uri (str "/api/subs/" rss-id)
+                            :request-method :get
+                            :params {"limit" "13" "offset" "0" "sort" s}})]
+        (is (nil? (-> resp :body read-json)))
+        (is (= 200 (:status resp)))))))
 
 (deftest test-unsubscripe
   (let [[_ subscription] (prepare)
@@ -53,3 +55,9 @@
     (is (= 200 (:status delete-resp)))
     (is (nil? (mysql-query ["select * from user_subscription"])))
     (is (nil? (mysql-query ["select * from user_feed"])))))
+
+(deftest test-poll-fetcher
+  (let [[_ subscription] (prepare)
+        resp (auth-app {:uri (str "/api/subs/p/" (:rss_link_id subscription))
+                        :request-method :get})]
+    (is (= 200 (:status resp)))))

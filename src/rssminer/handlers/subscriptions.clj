@@ -21,13 +21,9 @@
                                 :title title
                                 :rss_link_id (:id sub)}))))
 
-(defn polling-subscription [req]
-  (let [rss-id (-> req :params :rss-id to-int)
-        user (session-get req :user)]
-    (db/fetch-user-sub rss-id (:id user)
-                       (time-since user)
-                       (or (-> user :conf :like_score) 1.0)
-                       (or (-> user :conf :neutral_score) 0))))
+(defn polling-fetcher [req]             ;; wait for fetcher return
+  (let [rss-id (-> req :params :rss-id to-int)]
+    (db/fetch-user-sub rss-id)))
 
 (defn list-subscriptions [req]
   (let [user (session-get req :user)]
