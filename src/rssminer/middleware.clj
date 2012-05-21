@@ -61,9 +61,12 @@
                    {:status 500
                     :body {:message "Opps, an error occured"}}))]
       (if (contains? resp :body)
-        {:status (or (:status resp) 200)
-         :headers (merge json-resp-header (:headers resp))
-         :body (-> resp :body json-str)}
+        (let [r {:status (or (:status resp) 200)
+                 :headers (merge json-resp-header (:headers resp))
+                 :body (-> resp :body json-str)}]
+          (if (contains? resp :session)
+            (assoc r :session (:session resp))
+            r))
         {:status 200
          :headers json-resp-header
          :body (json-str resp)}))))

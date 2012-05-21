@@ -13,9 +13,7 @@
       feeds_cache = {},
       cache_fixer = {};         // fix browser cache, inconsistency
 
-  var POLLING_TIMES = 4,
-      POLLING_INTERVAL = 3000,
-      STORAGE_KEY = '_rm_',
+  var STORAGE_KEY = '_rm_',
       MAX_PAGER = 9,
       WELCOME_MAX_PAGE = 7,
       STATIC_SERVER = window._RM_.static_server,
@@ -147,6 +145,8 @@
     return {
       img: favicon_path(sub.url),
       title: title,
+      link: sub.url,
+      group: sub.group_name,
       title_l: title.toLowerCase(),
       href: sub_hash(sub.id, 1, 'newest'),
       like: sub.like_c,
@@ -374,7 +374,7 @@
       ajax.sget('/api/subs/p/' + rss_link_id, function (sub) {
         // TODO refetch user subs
         if(sub && sub.title) {  // ok, title is fetched
-          sub.group_name = null; // server return no group_name
+          sub.group_name = 'null'; // server return no group_name
           subscriptions_cache.push(sub);
           gen_sub_titles();
           call_if_fn(cb, sub);
@@ -392,9 +392,15 @@
   }
 
   function add_subscription (url, added_cb, fetcher_finished) {
+    var POLLING_INTERVAL = 3000,
+        POLLING_TIMES = 4;
+
     ajax.jpost('/api/subs/add' , {link: url}, function (data) {
-      polling_rss_link(data.rss_link_id,
-                       POLLING_INTERVAL, POLLING_TIMES, fetcher_finished);
+      window.setTimeout(function () {
+        var id = data.rss_link_id;
+        polling_rss_link(id, POLLING_INTERVAL, POLLING_TIMES,
+                         fetcher_finished);
+      }, 1000);
       call_if_fn(added_cb);
     });
   }
@@ -458,7 +464,8 @@
       mark_as_read: mark_as_read,
       save_vote: save_vote,
       unsubscribe: unsubscribe,
-      user_settings: user_settings
+      user_settings: user_settings,
+      save_settings: save_settings
     }
   });
 

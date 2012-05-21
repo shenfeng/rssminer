@@ -43,9 +43,8 @@
     (when-let [password (-> req :body :password)]
       (let [p (md5-sum (str (:email user) "+" password))]
         (db/update-user (:id user) {:password p})))
-    (let [updated (merge (:conf user)
-                         (select-keys (:body req)
-                                      [:nav :expire]))]
+    (let [updated (merge (:conf user) (select-keys (:body req)
+                                                   [:nav :expire]))]
       (db/update-user (:id user) {:conf (json-str updated)})
       {:status 204
        :body nil

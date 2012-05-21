@@ -19,7 +19,8 @@
     $p.html(msg).removeClass(ERROR_CLASS).addClass(MSG_CLASS);
     $nofity.css({ marginLeft: -$p.width() / 2, visibility: 'visible' });
     if(time) {
-      setTimeout(hide_notif, time);
+      _clear_timer();
+      hide_timer_id = setTimeout(hide_notif, time);
     }
   }
 

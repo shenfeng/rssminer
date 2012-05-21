@@ -164,15 +164,17 @@
   }
 
   function save_settings (e) {
-    var d = util.extract_data( $('#settings') );
+    var d = util.extract_data( $('#all-settings .account') );
     for(var i in d) { if(!d[i]) { delete d[i]; } }
     d.expire = parseInt(d.expire, 10);
     if(d.password && d.password !== d.password2) {
-      alert('2 password not match');
+      alert('password not match');
       return;
     }
     delete d.password2;
-    data.save_settings(d, function () { location = "/a"; });
+    data.save_settings(d, function () {
+      RM.notify.show_msg('Settings saved', 3000);
+    });
   }
 
   function add_subscription (e) {
@@ -182,7 +184,7 @@
           if(result) {
             fetch_and_show_user_subs(function () {
               // if user is waiting, just put he there
-              if(location.hash === '#add') {
+              if(location.hash === '#settings') {
                 location.hash = 'read/' + result.id;
               }
             });
@@ -196,18 +198,13 @@
     }
   }
 
-  function show_add_sub_ui () {
-    $reading_area.removeClass(SHOW_IFRAME);
-    $welcome_list.empty().append(tmpls.add());
-  }
-
   function save_vote_up (e) { save_user_vote(1, this); return false; }
   function save_vote_down (e) { save_user_vote(-1, this); return false; }
 
   function toggle_nav_foler (e) {
     $(this).closest('li').toggleClass('collapse');
     var collapsed = [];
-    $('#navigation li.collapse .folder').each(function (index, item) {
+    $('#sub-list li.collapse .folder').each(function (index, item) {
       collapsed.push($(item).attr('data-name'));
     });
     RM.ajax.spost('/api/settings', {nav: collapsed});
@@ -229,17 +226,26 @@
     }
   }
 
+  function switch_settings_tab () {
+    var $this = $(this),
+        text = $.trim($this.text());
+    $('.settings-sort li').removeClass('selected');
+    $this.addClass('selected');
+    $('#all-settings').removeClass().addClass('show-' + text);
+  }
+
   util.delegate_events($(document), {
     'click #add-subscription': add_subscription,
     'click #sub-list .folder span': toggle_nav_foler,
     'click #save-settings': save_settings,
+    'click .settings-sort li': switch_settings_tab,
     'click #add-sub a': function () {
       alert('Only avaiable when published, please wait a while');
       return false;
     },
     'click .vote span.down': save_vote_down,
     'click .vote span.up': save_vote_up,
-    'click #settings .delete': unsubscribe
+    'click #all-settings .delete': unsubscribe
   });
 
   function fetch_and_show_user_subs (cb) {
@@ -273,7 +279,6 @@
       '?s=:section&p=:p': show_welcome,
       'settings': show_settings,
       'settings/:section': show_settings,
-      'add': show_add_sub_ui,
       'read/:id?p=:page&s=:sort': read_subscription,
       'read/:id?p=:page': read_subscription,
       'read/:id/:id': read_feed,

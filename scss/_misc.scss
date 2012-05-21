@@ -1,5 +1,4 @@
-#settings, #add-sub {
-    padding: 1em 0 0 1em;
+#account, #add-sub {
     h2 { text-align: left; padding-left: 4em; }
     h4 { width: 130px; }
     section {
@@ -24,14 +23,11 @@
     }
 }
 
-#settings {
+#all-settings {
     table {
-        font-size: 13px;
-        tr {
-            &:hover {
-                background: $hover_color;
-            }
-        }
+        img { padding: 2px 4px;}
+        tr:nth-child(even) { background: $nth_child_color; }
+        tr:hover { background: $hover_color; }
         .title {
             @include overflow-ellipsis();
             max-width: 600px;
@@ -45,6 +41,10 @@
             padding: 3px 4px
         }
     }
+    .section { display: none; padding: 10px 0 0 15px; }
+    &.show-add .add-sub { display: block; }
+    &.show-account .account { display: block; }
+    &.show-subscriptions .subscriptions { display: block; }
 }
 
 #notification {
@@ -62,3 +62,4 @@
     .error { background: #FDD; }
     visibility: hidden;
 }
+
