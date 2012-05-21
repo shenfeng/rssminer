@@ -142,7 +142,8 @@
   }
 
   function transorm_sub (sub) {
-    var title = sub.title || sub.url;
+    // the url is site's alternate url
+    var title = sub.title || sub.url || '';
     return {
       img: favicon_path(sub.url),
       title: title,
