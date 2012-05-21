@@ -46,8 +46,8 @@
 
   function user_settings () {
     var expire_times = [];
-    for(var i = 15; i <= 120; i += 15) {
-      expire_times.push({time: i, selected: i === user_conf.expire || 45});
+    for(var i = 15; i <= 60; i += 15) {
+      expire_times.push({time: i, selected: i === (user_conf.expire || 30)});
     }
     return {
       expire_times: expire_times,
