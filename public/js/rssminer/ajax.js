@@ -15,9 +15,12 @@
     0: 'Could not reach server'
   };
 
-  function show_msg(msg) {
+  function show_msg(msg, time) {
     $p.html(msg).removeClass(ERROR_CLASS).addClass(MSG_CLASS);
     $nofity.css({ marginLeft: -$p.width() / 2, visibility: 'visible' });
+    if(time) {
+      setTimeout(hide_notif, time);
+    }
   }
 
   function show_error_msg(msg) {
@@ -100,6 +103,7 @@
   }
 
   window.RM = $.extend(window.RM, {
-    ajax: { sget: sget, spost: spost, get: get, jpost: jpost, del: sdelete }
+    ajax: { sget: sget, spost: spost, get: get, jpost: jpost, del: sdelete },
+    notify: { show_msg: show_msg }
   });
 })(window.jQuery);

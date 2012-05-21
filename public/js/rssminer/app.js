@@ -189,8 +189,10 @@
           }
         },
         added = function () { $input.val(''); };
-    if(url) {
+    if(url && url.indexOf('http://') === 0) {
       data.add_subscription(url, added, fetcher_finished);
+    } else {
+      RM.notify.show_msg('Not valid rss/atom link', 3000);
     }
   }
 
