@@ -6,11 +6,13 @@
       $q = $('#header input'),
       $header = $('#header .wrapper');
 
-  var SELECTED = 'selected';
+  var SELECTED = 'selected',
+      WAIT_BEFORE_SEARCH = 200;
 
   var $lis,
       old_q = '',
       has_result = false,
+      timer_id,
       current_idx = 0;
 
   function select_by_index () {
@@ -44,7 +46,7 @@
     return true;
   }
 
-  function do_search (e) {
+  function search_input_keyup (e) {
     var q = $.trim($q.val());
     switch(e.which) {
     case 13:                    // enter
@@ -66,9 +68,11 @@
     default:
       if(q !== old_q) {
         old_q = q;
-        data.get_search_result(q, 18, function (result) {
-          show_search_result(result);
-        });
+        if(timer_id) { window.clearTimeout(timer_id); }
+        timer_id = window.setTimeout(function () {
+          timer_id = undefined;
+          do_search(q);
+        }, WAIT_BEFORE_SEARCH);
       }
     }
   }
@@ -93,6 +97,12 @@
     $('#search-result').remove();
   }
 
+  function do_search (q) {
+    data.get_search_result(q, 18, function (result) {
+      show_search_result(result);
+    });
+  }
+
   function hide_search_result_on_esc (e) {
     if(e.which === 27) {        // ESC
       hide_search_result();
@@ -103,9 +113,8 @@
   }
 
   function search_on_click () {
-    old_q = undefined;
     $q[0].select();
-    do_search({});
+    do_search($.trim($q.val()));
     return false;
   }
 
@@ -113,7 +122,7 @@
     'click #header input': search_on_click,
     'click': hide_search_result,
     'keydown #header input': navigation,
-    'keyup #header input': do_search,
+    'keyup #header input': search_input_keyup,
     'keyup': hide_search_result_on_esc
   });
 })();
