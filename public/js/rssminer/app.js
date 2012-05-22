@@ -1,9 +1,11 @@
 (function () {
   var RM = window.RM,
       data = RM.data,
+      notify = RM.notify,
       tmpls = RM.tmpls,
       util = RM.util,
       layout = RM.layout,
+      location = window.location,
       call_if_fn = util.call_if_fn;
 
   var SHOW_NAV = 'show-nav',
@@ -173,28 +175,45 @@
     }
     delete d.password2;
     data.save_settings(d, function () {
-      RM.notify.show_msg('Settings saved', 3000);
+      notify.show_msg('Settings saved', 3000);
     });
+  }
+
+  function still_in_settings () {
+    return location.hash === '#settings';
+  }
+
+  function fetcher_finished (result) {
+    if(!result) { return ; }
+    if(result.refresh) {
+      fetch_and_show_user_subs(function () {
+        // if user is waiting, just put he there
+        if(still_in_settings()) {
+          location.hash = 'read/' + result.id;
+        }
+      });
+    } else if(still_in_settings()){
+      location.hash = 'read/' + result.id;
+    }
   }
 
   function add_subscription (e) {
     var $input = $("#rss_atom_url"),
         url = $.trim($input.val()),
-        fetcher_finished = function (result) {
-          if(result) {
-            fetch_and_show_user_subs(function () {
-              // if user is waiting, just put he there
-              if(location.hash === '#settings') {
-                location.hash = 'read/' + result.id;
-              }
-            });
-          }
-        },
-        added = function () { $input.val(''); };
+        added = function () {
+          $input.val('');
+          notify.show_msg('subscription added successfully', 400);
+          window.setTimeout(function () {
+            // if user is waiting, just put he there
+            if(still_in_settings()) {
+              notify.show_msg('working hard to fetch the feed...', 10000);
+            }
+          }, 1500);
+        };
     if(url && url.indexOf('http://') === 0) {
       data.add_subscription(url, added, fetcher_finished);
     } else {
-      RM.notify.show_msg('Not valid rss/atom link', 3000);
+      notify.show_msg('Not valid rss/atom link', 3000);
     }
   }
 

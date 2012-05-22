@@ -375,8 +375,14 @@
         // TODO refetch user subs
         if(sub && sub.title) {  // ok, title is fetched
           sub.group_name = null; // server return no group_name
-          subscriptions_cache.push(sub);
-          gen_sub_titles();
+          var find = _.find(subscriptions_cache, function (s) {
+            return s.id === sub.id;
+          });
+          if(!find) {
+            subscriptions_cache.push(sub);
+            gen_sub_titles();
+            sub.refresh = true;
+          }
           call_if_fn(cb, sub);
         } else {                // fetch again
           interval += 1500;
