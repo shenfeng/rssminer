@@ -80,7 +80,12 @@ public class ProxyFuture extends AbstractFuture {
         this.header = new TreeMap<String, String>(headers);
         this.callback = callback;
         try {
-            doIt(new URI(uri));
+            URI u = new URI(uri);
+            if (u.getScheme() == "http") {
+                doIt(u);
+            } else {
+                fail();
+            }
         } catch (URISyntaxException e) {
             fail();
         }
