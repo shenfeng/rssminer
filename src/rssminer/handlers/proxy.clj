@@ -1,7 +1,6 @@
 (ns rssminer.handlers.proxy
   (:use (rssminer [http :only [client]]
                   [util :only [assoc-if ignore-error]]
-                  [search :only [update-index]]
                   [config :only [rssminer-conf]])
         [clojure.tools.logging :only [debug error]]
         [rssminer.db.util :only [mysql-query mysql-insert]])
@@ -39,15 +38,14 @@
   (let [cb (fn [status headers html]     ; html is minified
              (let [final-uri (get headers Utils/FINAL_URI)]
                (if (= 200 status)
-                 (do (update-index id html)
-                     ;; save final_link if different
-                     (db/update-feed id (if (not= final-uri link)
-                                          {:original html
-                                           :final_link final-uri}
-                                          {:original html}))
-                     {:status 200
-                      :headers default-header
-                      :body (if proxy? (rewrite-html final-uri html) html)})
+                 (do ;; save final_link if different
+                   (db/update-feed id (if (not= final-uri link)
+                                        {:original html
+                                         :final_link final-uri}
+                                        {:original html}))
+                   {:status 200
+                    :headers default-header
+                    :body (if proxy? (rewrite-html final-uri html) html)})
                  (do
                    (debug link status)
                    {:status 404}))))]

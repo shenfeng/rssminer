@@ -31,12 +31,12 @@
       WHERE f.id in " "(" (str/join ", " feed-ids) ")")
     user-id]))
 
-(defn update-index [id html]
-  (try
-    ;; TODO replace 1 with real rss-id
-    (.updateIndex ^Searcher @searcher (to-int id) 1 html)
-    (catch Exception e
-      (println "updating index " id "error!!"))))
+;; (defn update-index [id html]
+;;   (try
+;;     ;; TODO replace 1 with real rss-id
+;;     (.updateIndex ^Searcher @searcher (to-int id) 1 html)
+;;     (catch Exception e
+;;       (println "updating index " id "error!!"))))
 
 (defn search* [term user-id rss-ids limit]
   (let [meta (.search ^Searcher @searcher term rss-ids limit)]
