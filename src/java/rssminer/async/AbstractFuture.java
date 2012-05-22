@@ -18,7 +18,11 @@ public class AbstractFuture implements IListenableFuture {
     public void addListener(Runnable listener) {
         if (this.listener != null)
             throw new RuntimeException("listener is already added");
-        this.listener = listener;
+        if (resp != null) {
+            listener.run();
+        } else {
+            this.listener = listener;
+        }
     }
 
     public Object get() {

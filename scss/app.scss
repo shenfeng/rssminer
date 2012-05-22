@@ -49,10 +49,11 @@ a { outline: 0; text-decoration: none;}
         overflow-y: auto;
         overflow-x: hidden;
         display: none;
+        margin-top: 4px;
     }
     &.show-nav > ul { display: block; }
     h1 {
-        margin: 6px 65px 3px 10px;
+        margin: 5px 65px 3px 26px;
         font-size: 26px;
         a { color: white; }
     }

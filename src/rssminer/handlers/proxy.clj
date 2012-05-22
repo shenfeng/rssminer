@@ -1,6 +1,7 @@
 (ns rssminer.handlers.proxy
   (:use (rssminer [http :only [client]]
                   [util :only [assoc-if ignore-error]]
+                  [redis :only [redis-client]]
                   [config :only [rssminer-conf]])
         [clojure.tools.logging :only [debug error]]
         [rssminer.db.util :only [mysql-query mysql-insert]])
@@ -24,6 +25,7 @@
     {:status 200
      :body (ProxyFuture. uri (compute-send-header req)
                          (:proxy @rssminer-conf)
+                         @redis-client
                          (fn [status h body]
                            {:status 200 :body body :headers h}))}))
 

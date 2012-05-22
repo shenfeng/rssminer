@@ -75,7 +75,7 @@ public class FetchFuture extends AbstractFuture {
         this.callback = callback;
         try {
             URI u = new URI(uri);
-            if (u.getScheme() == "http") {
+            if ("http".equals(u.getScheme())) {
                 doIt(u);
             } else {
                 fail();
