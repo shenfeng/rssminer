@@ -25,6 +25,7 @@
 
 #all-settings {
     table {
+        font-size: 14px;
         img { padding: 2px 4px;}
         tr:nth-child(even) { background: $nth_child_color; }
         tr:hover { background: $hover_color; }
@@ -41,7 +42,8 @@
             padding: 3px 4px
         }
     }
-    .section { display: none; padding: 10px 0 0 15px; }
+    .g { font-size: 13px; }
+    .section { display: none; padding: 10px 0 0 50px; }
     &.show-add .add-sub { display: block; }
     &.show-account .account { display: block; }
     &.show-subscriptions .subscriptions { display: block; }

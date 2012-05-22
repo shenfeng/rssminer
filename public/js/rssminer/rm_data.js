@@ -374,7 +374,7 @@
       ajax.sget('/api/subs/p/' + rss_link_id, function (sub) {
         // TODO refetch user subs
         if(sub && sub.title) {  // ok, title is fetched
-          sub.group_name = 'null'; // server return no group_name
+          sub.group_name = null; // server return no group_name
           subscriptions_cache.push(sub);
           gen_sub_titles();
           call_if_fn(cb, sub);
