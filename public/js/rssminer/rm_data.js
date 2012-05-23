@@ -223,6 +223,7 @@
     });
 
     ajax.get('/api/welcome?' + params, function (resp) {
+      resp = resp || [];
       var feeds = _.map(resp, function (feed) {
         var result = transform_item(feed);
         result.href = feed_hash(section, feed.id); // change href

@@ -132,7 +132,7 @@
         call_if_fn(cb);
       });
     } else {
-      location.hash = "add";
+      location.hash = "settings";
     }
   }
 
