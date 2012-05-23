@@ -446,7 +446,7 @@
         }
       });
     });
-    if(q.length > 2) {
+    if(q.length > 1) {
       limit = Math.max(SEARCH_RESUTL_COUNT - subs.length, 10);
       ajax.sget('/api/search?q=' + q + "&limit=" + limit, function (feeds) {
         feeds = _.map(feeds, transform_item);
