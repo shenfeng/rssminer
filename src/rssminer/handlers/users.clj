@@ -53,14 +53,17 @@
 (defn summary [req]
   (let [u-id (:id (session-get req :user))
         limit (min (-> req :params :limit to-int) 40)
-        offset (-> req :params :offset to-int)]
-    {:body (case (-> req :params :section)
-             "latest" (uf/fetch-newest u-id limit offset)
-             "voted" (uf/fetch-recent-voted u-id limit offset)
-             "read" (uf/fetch-recent-read u-id limit offset)
-             "recommand" (uf/fetch-system-voteup u-id limit offset))
-     ;; ok, just cache for half hour
-     :headers {"Cache-Control" "private, max-age=1800"}}))
+        offset (-> req :params :offset to-int)
+        data (case (-> req :params :section)
+               "latest" (uf/fetch-newest u-id limit offset)
+               "voted" (uf/fetch-recent-voted u-id limit offset)
+               "read" (uf/fetch-recent-read u-id limit offset)
+               "recommand" (uf/fetch-system-voteup u-id limit offset))]
+    (if data
+      {:body data       ;; ok, just cache for half hour
+       :headers {"Cache-Control" "private, max-age=1800"}}
+      data))) ;; no cache
+
 
 (defn google-openid [req]
   (let [spec "http://specs.openid.net/auth/2.0/identifier_select"
