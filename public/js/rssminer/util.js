@@ -1,17 +1,10 @@
 (function(){
-
   var enable_proxy = true;      // proxy reseted site?
 
-  var PROXY_SERVER = window._RM_.proxy_server;
-
-  var BYPASS_PROXY_SITES = ['groups.google', // X-Frame-Options
-                            "feedproxy"
-                            // "alibuybuy",
-                            // "javaworld" // for Readability
-                                              ];
-
-  var RESETED_SITES = ["wordpress", "appspot", 'emacsblog','blogger',
-                       "blogspot", 'mikemccandless'];
+  var _RM_ = window._RM_,
+      PROXY_SERVER = _RM_.proxy_server,
+      NO_IFRAME_SITES = _RM_.no_iframe, // X-Frame-Options, etc
+      RESETED_SITES = _RM_.reseted; // get tcp reseted in CN
 
   setTimeout(function () {
     var img = new Image(),
@@ -76,7 +69,7 @@
 
   function get_final_link (link, feedid) {
     var h = hostname(link),
-        bypass = _.any(BYPASS_PROXY_SITES, function (site) {
+        bypass = _.any(NO_IFRAME_SITES, function (site) {
           return h.indexOf(site) !== -1;
         }),
         reseted = _.any(RESETED_SITES, function (site) {

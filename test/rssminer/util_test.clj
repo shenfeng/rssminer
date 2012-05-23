@@ -2,7 +2,8 @@
   (:use rssminer.util
         clojure.data.json
         clojure.test)
-  (:import java.util.Date))
+  (:import java.util.Date
+           rssminer.Utils))
 
 (deftest test-md5-sum
   (is (= "e10adc3949ba59abbe56e057f20f883e" (md5-sum "123456"))))
@@ -44,3 +45,8 @@
   (is (nil? (if-lets [a 1
                       b false]
                      3))))
+
+(deftest test-should-proxy
+  (is (Utils/proxy "http://feedproxy.google.com/~r/Interface21TeamBlog/~3/pwLWS9HQ6is/"))
+  (is (not (Utils/proxy "http://shenfeng.me")))
+  (is (Utils/proxy "http://vanillajava.blogspot.com/2012/01/another-shifty-challenge.html")))

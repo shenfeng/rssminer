@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import me.shenfeng.http.client.HttpClient;
 import me.shenfeng.http.client.HttpClientConfig;
@@ -18,13 +22,26 @@ import rssminer.sax.ExtractFaviconHandler;
 import rssminer.sax.ExtractTextHandler;
 import rssminer.sax.HTMLMinfiyHandler;
 import rssminer.sax.RewriteHandler;
+import clojure.lang.Keyword;
 
 public class Utils {
     final static Logger logger = LoggerFactory.getLogger(Utils.class);
     public static final HttpClient CLIENT;
     public static final String USER_AGETNT = "Mozilla/5.0 (compatible; Rssminer/1.0; +http://rssminer.net)";
+    public static final String[] NO_IFRAME = new String[] { "groups.google" }; // X-Frame-Options
+    public static final String[] RESETED_DOMAINS = new String[] {
+            "wordpress", "appspot", "emacsblog", "blogger", "blogspot",
+            "mikemccandless", "feedproxy" };
 
     public static final String FINAL_URI = "X-final-uri";
+
+    // config key
+    public static final Keyword K_PROXY = Keyword.intern("proxy");
+    public static final Keyword K_PROXY_SERVER = Keyword
+            .intern("proxy-server");
+    public static final Keyword K_REDIS_SERVER = Keyword
+            .intern("redis-server");
+    public static final Keyword K_DATA_SOURCE = Keyword.intern("data-source");
 
     static {
         try {
@@ -32,6 +49,52 @@ public class Utils {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static boolean proxy(String uri) throws URISyntaxException {
+        return proxy(new URI(uri));
+    }
+
+    public static void closeQuietly(Connection con) {
+        if (con != null) {
+            try {
+                con.close();
+            } catch (SQLException ignore) {
+            }
+        }
+    }
+
+    public static void closeQuietly(Statement con) {
+        if (con != null) {
+            try {
+                con.close();
+            } catch (SQLException ignore) {
+            }
+        }
+    }
+    
+    public static void closeQuietly(ResultSet con) {
+        if (con != null) {
+            try {
+                con.close();
+            } catch (SQLException ignore) {
+            }
+        }
+    }
+
+    public static boolean proxy(URI uri) {
+        String host = uri.getHost();
+        for (String h : NO_IFRAME) {
+            if (host.contains(h)) {
+                return true;
+            }
+        }
+        for (String h : RESETED_DOMAINS) {
+            if (host.contains(h)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static final ThreadLocal<Parser> parser = new ThreadLocal<Parser>() {

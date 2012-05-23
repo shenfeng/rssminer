@@ -38,9 +38,8 @@
          " LIMIT ? OFFSET ?")
     user-id, rss-id, limit, offset]))
 
-(defn fetch-orginal [id]
-  (first (mysql-query ["SELECT original, link
-                     FROM feeds WHERE id = ?" id])))
+(defn fetch-link [id]
+  (:link (first (mysql-query ["SELECT link FROM feeds WHERE id = ?" id]))))
 
 (defn- safe-update-rss-link [id data]
   (with-mysql

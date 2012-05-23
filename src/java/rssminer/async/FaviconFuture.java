@@ -4,11 +4,14 @@ import static me.shenfeng.http.HttpUtils.LOCATION;
 import static rssminer.Utils.CLIENT;
 import static rssminer.Utils.extractFaviconUrl;
 
-import java.net.Proxy;
+import java.io.ByteArrayInputStream;
 import java.net.URI;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.TreeMap;
 
 import me.shenfeng.http.DynamicBytes;
 import me.shenfeng.http.client.BinaryRespListener;
@@ -19,13 +22,44 @@ import me.shenfeng.http.client.TextRespListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import clojure.lang.IFn;
+import rssminer.Utils;
+import clojure.lang.Keyword;
 
-public class FaviconFuture extends AbstractFuture {
+public class FaviconFuture extends CommonFuture {
 
     static Logger logger = LoggerFactory.getLogger(FaviconFuture.class);
 
-    private final String hostname;
+    private String hostname;
+
+    private void noIcon() {
+        finish(404, null, true); // cache failed
+    }
+
+    private void finish(int status, byte[] data, boolean cache) {
+        if (cache) {
+            Connection con = null;
+            PreparedStatement ps = null;
+            try {
+                con = dataSource.getConnection();
+                ps = con.prepareStatement("insert into favicon(favicon, code, hostname) values (?, ?, ?)");
+                ps.setBytes(1, data);
+                ps.setInt(2, status);
+                ps.setString(3, hostname);
+                ps.executeUpdate();
+            } catch (SQLException ignore) {
+            } finally {
+                Utils.closeQuietly(con);
+                Utils.closeQuietly(ps);
+            }
+        }
+        if (data != null) {
+            done(200, getHeaders("image/x-icon"), new ByteArrayInputStream(
+                    data));
+        } else {
+            // browser js will do it right
+            done(200, getHeaders(null), null);
+        }
+    }
 
     private class FaviconHandler implements IBinaryHandler {
         private final URI base;
@@ -41,16 +75,16 @@ public class FaviconFuture extends AbstractFuture {
                 if (loc != null) {
                     doIt(base.resolve(loc), true);
                 } else {
-                    fail();
+                    noIcon();
                 }
             } else {
-                done(status, headers,
-                        Arrays.copyOf(bytes.get(), bytes.length()));
+                byte[] data = Arrays.copyOf(bytes.get(), bytes.length());
+                finish(status, data, true);
             }
         }
 
         public void onThrowable(Throwable t) {
-            fail();
+            noIcon();
         }
     }
 
@@ -69,7 +103,7 @@ public class FaviconFuture extends AbstractFuture {
                 if (loc != null) {
                     doIt(base.resolve(loc), true);
                 } else {
-                    fail();
+                    noIcon();
                 }
             } else if (status == 200) {
                 try {
@@ -80,43 +114,73 @@ public class FaviconFuture extends AbstractFuture {
                     }
                     doIt(uri, true);
                 } catch (Exception e) {
-                    onThrowable(e);
+                    noIcon();
                 }
             }
         }
 
         public void onThrowable(Throwable t) {
-            fail();
+            noIcon();
         }
     }
 
     private void doIt(URI u, boolean img) {
-        if (++retryCount < MAX_RETRY) {
-            try {
-                TreeMap<String, String> header = new TreeMap<String, String>();
-                if (img) {
-                    CLIENT.get(u, header, proxy, new BinaryRespListener(
-                            new FaviconHandler(u)));
-                } else {
-                    CLIENT.get(u, header, proxy, new TextRespListener(
-                            new WebPageHandler(u)));
-                }
-            } catch (Exception e) {
-                fail();
+        if (++retryCount > MAX_RETRY) {
+            noIcon();
+            return;
+        }
+        try {
+            if (img) {
+                CLIENT.get(u, sendHeaders, proxy, new BinaryRespListener(
+                        new FaviconHandler(u)));
+            } else {
+                CLIENT.get(u, sendHeaders, proxy, new TextRespListener(
+                        new WebPageHandler(u)));
             }
-        } else {
-            fail();
+        } catch (Exception e) {
+            noIcon();
         }
     }
 
-    public FaviconFuture(String hostname, Proxy proxy, IFn callback) {
-        this.hostname = "http://" + hostname;
-        this.proxy = proxy;
-        this.callback = callback;
+    private boolean tryCache() {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
-            doIt(new URI(this.hostname), false);
-        } catch (Exception e) {
-            fail();
+            con = dataSource.getConnection();
+            ps = con.prepareStatement("SELECT favicon, code FROM favicon WHERE hostname = ?");
+            ps.setString(1, hostname);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int code = rs.getInt(2);
+                if (code == 200) {
+                    byte[] data = rs.getBytes(1);
+                    done(200, getHeaders("image/x-icon"),
+                            new ByteArrayInputStream(data));
+                } else {
+                    noIcon();
+                }
+                return true;
+            }
+        } catch (SQLException ignore) {
+        } finally {
+            Utils.closeQuietly(con);
+            Utils.closeQuietly(ps);
+            Utils.closeQuietly(rs);
+        }
+        return false;
+    }
+
+    public FaviconFuture(String hostname, Map<String, String> headers,
+            Map<Keyword, Object> config) {
+        super(config, headers);
+        this.hostname = hostname;
+        if (!tryCache()) {
+            try {
+                doIt(new URI("http://" + hostname), false);
+            } catch (Exception e) {
+                noIcon();
+            }
         }
     }
 }

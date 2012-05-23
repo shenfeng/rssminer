@@ -9,7 +9,8 @@
         [rssminer.db.user :only [fetch-conf]])
   (:require [rssminer.views.reader :as view]
             [rssminer.config :as cfg]
-            [clojure.string :as str]))
+            [clojure.string :as str])
+  (:import rssminer.Utils))
 
 (defn landing-page [req]
   (view/landing-page))
@@ -17,10 +18,10 @@
 (defn app-page [req]
   (let [user (session-get req :user)]
     (view/app-page {:rm {:user user
-                         :proxy_server (:proxy-server
-                                        @cfg/rssminer-conf)
-                         :static_server (:static-server
-                                         @cfg/rssminer-conf)}})))
+                         :no_iframe Utils/NO_IFRAME
+                         :reseted Utils/RESETED_DOMAINS
+                         :static_server (:static-server @cfg/rssminer-conf)
+                         :proxy_server (:proxy-server @cfg/rssminer-conf)}})))
 
 (defn dashboard-page [req]
   (view/dashboard-page))

@@ -35,18 +35,19 @@
   (stop-server)
   (.removeShutdownHook (Runtime/getRuntime) shutdown-hook)
   (.addShutdownHook (Runtime/getRuntime) shutdown-hook)
-  (start-classify-daemon (:ds (use-mysql-database! db-url db-user)))
-  (set-redis-client! redis-host)
-  (swap! rssminer-conf assoc :profile profile
-         :fetcher-queue fetcher-queue
-         :fetch-size fetch-size
-         :redis-host redis-host
-         :worker worker
-         :proxy-server (if (= :dev profile)
-                         (str proxy-server ":" port) proxy-server)
-         :static-server (if (= :dev profile)
-                          (str static-server ":" port) static-server)
-         :proxy (if proxy socks-proxy Proxy/NO_PROXY))
+  (let [ds (:ds (use-mysql-database! db-url db-user))]
+    (swap! rssminer-conf assoc :profile profile
+           :fetcher-queue fetcher-queue
+           :fetch-size fetch-size
+           :redis-server (set-redis-client! redis-host)
+           :data-source ds
+           :worker worker
+           :proxy-server (if (= :dev profile)
+                           (str proxy-server ":" port) proxy-server)
+           :static-server (if (= :dev profile)
+                            (str static-server ":" port) static-server)
+           :proxy (if proxy socks-proxy Proxy/NO_PROXY))
+    (start-classify-daemon ds))
   (reset! server (run-server (app) {:port port
                                     :ip ip
                                     :thread worker}))
