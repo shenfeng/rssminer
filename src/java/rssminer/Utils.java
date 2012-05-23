@@ -31,7 +31,7 @@ public class Utils {
     public static final String[] NO_IFRAME = new String[] { "groups.google" }; // X-Frame-Options
     public static final String[] RESETED_DOMAINS = new String[] {
             "wordpress", "appspot", "emacsblog", "blogger", "blogspot",
-            "mikemccandless", "feedproxy" };
+            "mikemccandless", "feedproxy", "blogblog"};
 
     public static final String FINAL_URI = "X-final-uri";
 
