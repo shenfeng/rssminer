@@ -17,14 +17,22 @@
        VALUES (%d, %d, %d) ON DUPLICATE KEY UPDATE read_date = %d"
                          user-id feed-id now now)))))
 
-;;; this is not right, if user_feed has no entry, then it's not fecthed
-(defn fetch-newest [user-id limit offset]
+;;; this is not right, if user_feed has no entry, then it's not
+;;; fecthed
+;;; old 2012/5/23
+(defn fetch-newest-1 [user-id limit offset]
   (mysql-query ["SELECT f.id, f.title, f.author, f.link,
          f.rss_link_id, f.published_ts, uf.vote_user, uf.vote_sys
           FROM feeds f JOIN user_feed uf ON uf.feed_id = f.id
               WHERE uf.user_id = ?
           ORDER BY f.published_ts DESC LIMIT ? OFFSET ?"
                 user-id limit offset]))
+
+(defn fetch-newest [user-id limit offset]
+  (mysql-query ["SELECT id, title, author, link, rss_link_id,
+           published_ts from feeds WHERE rss_link_id IN
+        (SELECT rss_link_id FROM user_subscription WHERE user_id = ?)
+       LIMIT ? OFFSET ?" user-id limit offset]))
 
 ;;; fetch unread, sort by vote_sys desc
 (defn fetch-system-voteup [user-id limit offset]
