@@ -132,7 +132,7 @@
     page = page || 1;
     if(data.get_subscriptions().length) { // user has subscriptions
       data.get_welcome_list(section, page, function (data) {
-        if(!data.length && d) {
+        if(!data.feeds.length && d) {
           // try to show something that has data
           location.hash = '?s=latest&p=1';
         } else {
