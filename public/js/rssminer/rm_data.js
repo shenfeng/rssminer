@@ -63,6 +63,7 @@
 
   function get_feed (feedid) {
     var feed;
+    feedid = parseInt(feedid);
     for(var key in feeds_cache) {
       var feeds = feeds_cache[key];
       feed = _.find(feeds, function (f) {

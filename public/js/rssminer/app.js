@@ -19,10 +19,7 @@
       $navigation = $('#navigation'),
       $subs_list = $('#sub-list'),
       iframe = $('iframe')[0],
-      $win = $(window),
       $logo = $('#logo'),
-      $ct_menu = $('#ct-menu'),
-      $last_menu_ui,
       $welcome_list = $('#welcome-list');
 
   function set_document_title (title) {
@@ -120,7 +117,7 @@
     var html = tmpls.feeds_nav(data);
     $navigation.empty().append(html);
     html = tmpls.sub_feeds(data);
-    $welcome_list.empty().append(html);
+    $welcome_list.empty().append(html).trigger('child_change.rm');
     set_document_title(title);
     $reading_area.removeClass(SHOW_IFRAME);
     $logo.addClass(SHOW_NAV);
@@ -229,15 +226,6 @@
   function save_vote_up (e) { save_user_vote(1, this); return false; }
   function save_vote_down (e) { save_user_vote(-1, this); return false; }
 
-  function toggle_sub_folder (e) {
-    $(this).closest('li').toggleClass('collapse');
-    var collapsed = [];
-    $('#sub-list li.collapse .folder').each(function (index, item) {
-      collapsed.push($(item).attr('data-name'));
-    });
-    RM.ajax.spost('/api/settings', {nav: collapsed});
-    return false;
-  }
 
   function unsubscribe () {
     var $tr = $(this).closest('tr'),
@@ -252,38 +240,6 @@
         });
       }
     }
-  }
-
-  function show_folder_context_menu (e) { // hide in search.js
-    $last_menu_ui = $(this);
-    var o = $logo.offset(),
-        html = tmpls.folder_ct_menu({});
-    $ct_menu.empty().append(html);
-    $ct_menu.css({
-      left: e.clientX - o.left,
-      top: e.clientY - o.top,
-      display: 'block'
-    });
-    return false;
-  }
-
-  function show_item_context_menu (e) { // hide in search.js
-    $last_menu_ui = $(this);
-    var o = $logo.offset(),
-        top = e.clientY - o.top,
-        left = e.clientX - o.left,
-        subid = parseInt($last_menu_ui.attr('data-id')),
-        html = tmpls.item_ct_menu({folders: data.list_folder_names(subid)});
-    $ct_menu.empty().append(html);
-    if($win.height() - e.clientY < $ct_menu.height()) {
-      top -= $ct_menu.height();
-    }
-    $ct_menu.css({
-      left: left,
-      top: top,
-      display: 'block'
-    });
-    return false;
   }
 
   function switch_settings_tab () {
@@ -310,26 +266,6 @@
     });
   }
 
-  function rename_folder_name () {
-    $ct_menu.hide();            //
-    var new_name = prompt('new name');
-    notify.show_msg('change not implemented, soon..', 1000);
-  }
-
-  function change_folder (e) {
-    notify.show_msg('change not implemented, soon..', 1000);
-  }
-
-  function unsubscribe_item () {
-    notify.show_msg('change not implemented, soon..', 1000);
-  }
-
-  function move_to_new_folder () {
-    $ct_menu.hide();            //
-    var new_name = prompt('new folder name');
-    notify.show_msg('change not implemented, soon..', 1000);
-  }
-
   util.delegate_events($(document), {
     'click #add-subscription': add_subscription,
     'click #save-settings': save_settings,
@@ -341,19 +277,6 @@
     'click .vote span.down': save_vote_down,
     'click .vote span.up': save_vote_up,
     'click #all-settings .delete': unsubscribe
-  });
-
-  util.delegate_events($subs_list, {
-    'click .folder': toggle_sub_folder,
-    'contextmenu .folder': show_folder_context_menu, // hide in search.js
-    'contextmenu .item': show_item_context_menu
-  });
-
-  util.delegate_events($ct_menu, {
-    'click .rename': rename_folder_name,
-    'click .folder': change_folder,
-    'click .new-folder': move_to_new_folder,
-    'click .unsubscribe': unsubscribe_item
   });
 
   fetch_and_show_user_subs(function () { // app start here
