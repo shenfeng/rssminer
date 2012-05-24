@@ -7,7 +7,8 @@
       $header = $('#header .wrapper');
 
   var SELECTED = 'selected',
-      $ct_menu = $('#ct-menu'),
+      $ct_menu = $('#sub-ct-menu'),
+      $feed_ct_menu = $('#feed-ct-menu'),
       WAIT_BEFORE_SEARCH = 200;
 
   var $lis,
@@ -54,12 +55,12 @@
       var $selected = $('#search-result .selected');
       if($selected.length) {
         location.hash = $('a', $selected).attr('href');
-        hide_search_result();
+        hide_search_context_menu();
         $q.val('');
       }
       break;
     case 27:                    // esc
-      hide_search_result();
+      hide_search_context_menu();
       break;
     case 40:                    // ignore direction. down
     case 38:                    // up
@@ -80,7 +81,7 @@
 
   function show_search_result (data) {
     var html = tmpls.search_result(data);
-    hide_search_result();
+    hide_search_context_menu();
     $header.append(html).find('img').each(util.favicon_error);
     $lis = $('#search-result .subs > li, #search-result .feeds > li');
     $lis.mouseenter(function (e) {
@@ -94,13 +95,15 @@
     }
   }
 
-  function hide_search_result (e) {
+  function hide_search_context_menu (e) {
     if(!e) {
       $('#search-result').remove();
       $ct_menu.hide();
+      $feed_ct_menu.hide();
     } else if(e.which === 1) {  // only left click
       $('#search-result').remove();
       $ct_menu.hide();
+      $feed_ct_menu.hide();
     }
   }
 
@@ -112,7 +115,7 @@
 
   function hide_search_result_on_esc (e) {
     if(e.which === 27) {        // ESC
-      hide_search_result();
+      hide_search_context_menu();
       $q.blur();
       $ct_menu.hide();
     } else if(e.which === 16) { // key / => shift + ?
@@ -128,7 +131,7 @@
 
   util.delegate_events($(document), {
     'click #header input': search_on_click,
-    'click': hide_search_result,
+    'click': hide_search_context_menu,
     'keydown #header input': navigation,
     'keyup #header input': search_input_keyup,
     'keyup': hide_search_result_on_esc

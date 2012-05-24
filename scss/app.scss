@@ -404,16 +404,32 @@ iframe {
     }
 }
 
-#ct-menu {
+.context-menu {
     $color: #dedede;
+    a { color: #222; }
+    span { color: #444; font-size: 12px; }
     li {
-        width: 180px;
-        padding: 2px 4px 2px 10px;
+        width: 270px;
+        margin: 1px 0;
+        padding: 1px 4px 1px 16px;
         cursor: pointer;
+        position: relative;
         &:hover { background: $search_result_selecte_color;}
+        @include overflow-ellipsis();
     }
     .selected { background: $selected_color; }
     .new-folder {
+    }
+    .icon {
+        position: absolute;
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        left: 0;
+    }
+    .folder .icon {
+        top: 3px;
+        background: url(/imgs/folder.png) no-repeat;
     }
     li.splitter {
         padding: 4px;
@@ -422,11 +438,18 @@ iframe {
         background: $color;
         padding: 0;
     }
+    .voteup .icon {
+        background: url(/imgs/vote.gif) no-repeat;
+    }
+    .votedown .icon {
+        background: url(/imgs/vote.gif) no-repeat -18px 0;
+    }
     background: white;
     border: 1px solid $color;
     display: none;
     position: absolute;
     border-radius: 3px;
+    z-index: 100;
     @include box-shadow(2px, 2px, 3px, $color);
 }
 

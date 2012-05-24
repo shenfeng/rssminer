@@ -5,20 +5,22 @@
       notify = RM.notify,
       util = RM.util;
 
-  var $ct_menu = $('#ct-menu'),
-      $subs_list = $('#sub-list'),
-      $win = $(window),
-      $navigation = $('#navigation'),
-      $welcome_list = $('#welcome-list'),
+  var $feed_ct_menu = $('#feed-ct-menu'),
+      $last_menu_ui,
       $logo = $('#logo'),
-      $last_menu_ui;
+      $main = $('#main'),
+      $navigation = $('#navigation'),
+      $subs_list = $('#sub-list'),
+      $welcome_list = $('#welcome-list'),
+      $win = $(window),
+      $sub_ct_menu = $('#sub-ct-menu');
 
   function show_folder_context_menu (e) { // hide in search.js
     $last_menu_ui = $(this);
     var o = $logo.offset(),
         html = tmpls.folder_ct_menu({});
-    $ct_menu.empty().append(html);
-    $ct_menu.css({
+    $sub_ct_menu.empty().append(html);
+    $sub_ct_menu.css({
       left: e.clientX - o.left,
       top: e.clientY - o.top,
       display: 'block'
@@ -32,12 +34,15 @@
         top = e.clientY - o.top,
         left = e.clientX - o.left,
         subid = parseInt($last_menu_ui.attr('data-id')),
-        html = tmpls.item_ct_menu({folders: data.list_folder_names(subid)});
-    $ct_menu.empty().append(html);
-    if($win.height() - e.clientY < $ct_menu.height()) {
-      top -= $ct_menu.height();
+        html = tmpls.sub_ct_menu({
+          folders: data.list_folder_names(subid),
+          sub: data.get_subscription(subid)
+        });
+    $sub_ct_menu.empty().append(html);
+    if($win.height() - e.clientY < $sub_ct_menu.height()) {
+      top -= $sub_ct_menu.height();
     }
-    $ct_menu.css({
+    $sub_ct_menu.css({
       left: left,
       top: top,
       display: 'block'
@@ -46,7 +51,7 @@
   }
 
   function rename_folder_name () {
-    $ct_menu.hide();            //
+    $sub_ct_menu.hide();            //
     var new_name = prompt('new name');
     notify.show_msg('change not implemented, soon..', 1000);
   }
@@ -60,7 +65,7 @@
   }
 
   function move_to_new_folder () {
-    $ct_menu.hide();            //
+    $sub_ct_menu.hide();            //
     var new_name = prompt('new folder name');
     notify.show_msg('change not implemented, soon..', 1000);
   }
@@ -90,15 +95,40 @@
   }
 
   function show_feed_context_menu (e) {
-
+    var feed = data.get_feed($(this).attr('data-id')),
+        html = tmpls.feed_ct_menu({
+          site: feed.sub.link,
+          orginal: feed.link
+        });
+    $feed_ct_menu.empty().append(html);
+    var o = $main.offset();
+    $feed_ct_menu.css({
+      top: e.clientY - o.top,
+      left: e.clientX - o.left,
+      display: 'block'
+    });
     return false;
   }
 
-  util.delegate_events($ct_menu, {
+  function feed_option_clicked (e) {
+    notify.show_msg('Not impleted yet, soon', 1000);
+  }
+
+  $welcome_list.bind('child_change.rm', function () { // rebind
+    $navigation.find('.feed > a').click(feed_clicked);
+    // middle button click does not work well with delegate
+    $welcome_list.find('.feed > a').click(feed_clicked);
+  });
+
+  util.delegate_events($sub_ct_menu, {
     'click .rename': rename_folder_name,
     'click .folder': change_folder,
     'click .new-folder': move_to_new_folder,
     'click .unsubscribe': unsubscribe_item
+  });
+
+  util.delegate_events($feed_ct_menu, {
+    'click li': feed_option_clicked
   });
 
   util.delegate_events($subs_list, {
@@ -107,13 +137,7 @@
     'contextmenu .item': show_item_context_menu
   });
 
-  $welcome_list.bind('child_change.rm', function () { // rebind
-    $navigation.find('.feed > a').click(feed_clicked);
-    // middle button click does not work well with delegate
-    $welcome_list.find('.feed > a').click(feed_clicked);
-  });
-
-  util.delegate_events($welcome_list, {
-    // 'contextmenu .feed': show_feed_context_menu
+  util.delegate_events($main, {
+    'contextmenu .feed': show_feed_context_menu
   });
 })();
