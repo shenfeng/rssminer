@@ -76,6 +76,7 @@
   }
 
   function feed_clicked (e) {
+    // Chrome works fine, firefox does not work
     // middle button, // left button with ctrl
     if((e.which === 1 && e.ctrlKey) || e.which === 2)   {
       var $a = $(this),

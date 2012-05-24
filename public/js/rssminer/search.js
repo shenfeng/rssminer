@@ -95,8 +95,13 @@
   }
 
   function hide_search_result (e) {
-    $('#search-result').remove();
-    $ct_menu.hide();
+    if(!e) {
+      $('#search-result').remove();
+      $ct_menu.hide();
+    } else if(e.which === 1) {  // only left click
+      $('#search-result').remove();
+      $ct_menu.hide();
+    }
   }
 
   function do_search (q) {
