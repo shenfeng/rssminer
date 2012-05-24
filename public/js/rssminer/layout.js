@@ -4,7 +4,7 @@
       $nav = $('#navigation'),
       $header = $('#header'),
       $reading_area = $('#reading-area'),
-      $subs_list = $('#logo > ul');
+      $subs_list = $('#sub-list');
 
   var SELECTED = 'selected';
 

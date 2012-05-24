@@ -458,6 +458,21 @@
     }
   }
 
+  function list_folder_names (subid) {
+    var names = {},
+        me;
+    _.each(subscriptions_cache, function (sub) {
+      names[sub.group_name] = true;
+      if(sub.id === subid) { me = sub.group_name; }
+    });
+    if(me === null) { me = 'null'; } // map null => null
+    var result = [];
+    _.each(_.keys(names), function (name) {
+      result.push({name: name, selected: me === name});
+    });
+    return result;
+  }
+
   window.RM = $.extend(window.RM, {
     data: {
       add_subscription: add_subscription,
@@ -470,6 +485,7 @@
       get_welcome_list: get_welcome_list,
       mark_as_read: mark_as_read,
       save_vote: save_vote,
+      list_folder_names: list_folder_names,
       unsubscribe: unsubscribe,
       user_settings: user_settings,
       save_settings: save_settings

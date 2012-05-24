@@ -7,6 +7,7 @@
       $header = $('#header .wrapper');
 
   var SELECTED = 'selected',
+      $ct_menu = $('#ct-menu'),
       WAIT_BEFORE_SEARCH = 200;
 
   var $lis,
@@ -93,8 +94,9 @@
     }
   }
 
-  function hide_search_result () {
+  function hide_search_result (e) {
     $('#search-result').remove();
+    $ct_menu.hide();
   }
 
   function do_search (q) {
@@ -107,6 +109,7 @@
     if(e.which === 27) {        // ESC
       hide_search_result();
       $q.blur();
+      $ct_menu.hide();
     } else if(e.which === 16) { // key / => shift + ?
       $q.focus().click();
     }
