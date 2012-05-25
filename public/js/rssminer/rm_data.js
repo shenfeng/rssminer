@@ -54,11 +54,12 @@
   }
 
   function get_subscription (subid) {
+    subid = parseInt(subid);
     var sub = _.find(subscriptions_cache, function (sub) {
       return subid === sub.id;
     });
     sub.group_name = sub.group_name || 'null';
-    return sub;
+    return transorm_sub(sub);
   }
 
   function get_feed (feedid) {
@@ -194,15 +195,9 @@
       cb(parse_subs(subscriptions_cache));
     } else {
       ajax.get('/api/subs', function (resp) {
-        var result = parse_subs(resp),
-            cache = [];
-        _.each(result, function (group) { // for the first time, all sort_index is 0
-          _.each(group.subs, function (sub) {
-            // keep them in sort order
-            cache.push(_.find(resp, function (i) { return i.id === sub.id; }));
-          });
-        });
-        subscriptions_cache = cache;
+        try_sync_with_storage(resp);
+        var result = parse_subs(resp);
+        subscriptions_cache = resp;
         gen_sub_titles();
         cb(result);
       });
@@ -459,6 +454,27 @@
     }
   }
 
+  function try_sync_with_storage (subscriptions) {
+    if(localStorage) {
+      var data = JSON.parse(localStorage.getItem('__sort__'));
+      if(data) {
+        update_subscrption(subscriptions, data);
+      }
+    }
+  }
+
+  function update_subscrption (subscriptions, data) {
+    var index = 1;
+    _.each(data, function (group) {
+      _.each(group.ids, function (id) {
+        var s = _.find(subscriptions, function (sub) { return id === sub.id;});
+        s.sort_index = index;
+        index += 1;
+        s.group_name = group.g;
+      });
+    });
+  }
+
   function list_folder_names (subid) {
     var names = {},
         me;
@@ -491,6 +507,10 @@
       user_settings: user_settings,
       save_settings: save_settings
     }
+  });
+
+  $(RM).bind('sub-sorted.rm',function (e, data) {
+    update_subscrption(subscriptions_cache, data);
   });
 
   if(window.localStorage) {   // load data from localStorage

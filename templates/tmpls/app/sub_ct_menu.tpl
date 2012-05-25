@@ -7,7 +7,7 @@
 <li class="splitter"></li>
 <li class="unsubscribe">unsubscribe</li>
 <li>
-  <a href="{{sub.url}}" target="_blank">
-    visite <span>{{sub.url}}</span>
+  <a href="{{sub.link}}" target="_blank">
+    visite <span>{{sub.link}}</span>
   </a>
 </li>

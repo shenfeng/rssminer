@@ -5,16 +5,21 @@
       notify = RM.notify,
       util = RM.util;
 
+  var SORTING_KEYS = '__sort__',
+      DELAY_TIME = 1000 * 60;   // wait 1 min
+
+  var save_timer_id,
+      sorting_data;
+
   var $ct_menu = $('#ct-menu'),
       $last_menu_ui,
-      $logo = $('#logo'),
-      $main = $('#main'),
       $navigation = $('#navigation'),
       $subs_list = $('#sub-list'),
       $welcome_list = $('#welcome-list'),
       $win = $(window);
 
   function show_folder_context_menu (e) { // hide in search.js
+    dump_saving_sorting();
     $last_menu_ui = $(this);
     var html = tmpls.folder_ct_menu({});
     $ct_menu.empty().append(html).css({
@@ -23,6 +28,34 @@
       display: 'block'
     });
     return false;
+  }
+
+  function save_sorting_data_to_save () {
+    save_timer_id = undefined;
+    if(localStorage) {
+      localStorage.removeItem(SORTING_KEYS);
+    }
+    RM.ajax.spost('/api/subs/sort', sorting_data);
+  }
+
+  function dump_saving_sorting () {
+    sorting_data = [];
+    $('>li', $subs_list).each(function (idx, li) {
+      var name = $.trim($('.folder span', li).text()),
+          ids = [];
+      $('.rss-category li', li).each(function (idx, item) {
+        var id = parseInt($(item).attr('data-id'));
+        ids.push(id);
+      });
+      if(!name) { name = 'null'; }
+      sorting_data.push({g:name, ids: ids});
+    });
+    if(save_timer_id) { clearTimeout(save_timer_id); }
+    if(localStorage) {
+      localStorage.setItem(SORTING_KEYS, JSON.stringify(sorting_data));
+    }
+    $(RM).trigger('sub-sorted.rm', [sorting_data]);
+    save_timer_id = setTimeout(save_sorting_data_to_save, DELAY_TIME);
   }
 
   function show_item_context_menu (e) { // hide in search.js
@@ -61,12 +94,23 @@
   }
 
   function rename_folder_name () {
+    $ct_menu.hide();
     var new_name = prompt('new name');
-    notify.show_msg('change not implemented, soon..', 1000);
+    if(new_name) {
+      $last_menu_ui.find('span').text(new_name);
+      dump_saving_sorting();
+    }
   }
 
   function change_folder (e) {
-    notify.show_msg('change not implemented, soon..', 1000);
+    var new_folder = $.trim($(this).text());
+    $('>li', $subs_list).each(function (idx, li) {
+      var name = $.trim($('.folder span', li).text());
+      if(name === new_folder) {
+        $('.rss-category', li).prepend($last_menu_ui);
+      }
+    });
+    dump_saving_sorting();
   }
 
   function unsubscribe_item () {
@@ -74,8 +118,28 @@
   }
 
   function move_to_new_folder () {
-    var new_name = prompt('new folder name');
-    notify.show_msg('change not implemented, soon..', 1000);
+    $ct_menu.hide();
+    var new_folder = prompt('new folder name');
+    if(!new_folder) { return; }
+    var find = false;
+    $('>li', $subs_list).each(function (idx, li) {
+      var name = $.trim($('.folder span', li).text());
+      if(name === new_folder) {
+        find = true;
+        $('.rss-category', li).prepend($last_menu_ui);
+      }
+    });
+    if(!find) {
+      var subid = $last_menu_ui.attr('data-id'),
+          sub = data.get_subscription(subid);
+      var html = tmpls.subs_nav({
+        groups: [{subs: [sub], group: new_folder}]
+      });
+      $last_menu_ui.remove();
+      $subs_list.append(html).find('img').each(util.favicon_error);
+      $subs_list.trigger('refresh.rm');
+    }
+    dump_saving_sorting();
   }
 
   function toggle_sub_folder (e) {
@@ -131,7 +195,20 @@
     'contextmenu .item': show_item_context_menu
   });
 
-  util.delegate_events($main, {
+  util.delegate_events($('#main'), {
     'contextmenu .feed': show_feed_context_menu
+  });
+
+  $subs_list.sortable({
+    update: dump_saving_sorting,
+    handle: '.folder'
+  });
+
+  $subs_list.bind('refresh.rm', function () {
+    // subscription sortable within categories
+    $(".rss-category").sortable({
+      connectWith: ".rss-category",
+      update: dump_saving_sorting
+    });
   });
 })();

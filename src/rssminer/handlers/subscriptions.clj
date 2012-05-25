@@ -41,8 +41,12 @@
     (subscribe link user-id nil nil)))
 
 (defn save-sort-order [req]
-  (db/update-sort-order (:id (session-get req :user)) (:body req))
-  {:status 204})
+  (let [uid (:id (session-get req :user))
+        ;; [{:g group :ids [id, id, id]}]
+        data (mapcat (fn [{:keys [ids g]}]
+                       (map (fn [id] {:g g :id id}) ids)) (:body req))]
+    (db/update-sort-order uid data)
+    {:status 204}))
 
 (defn unsubscribe [req]
   (let [user-id (:id (session-get req :user))
