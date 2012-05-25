@@ -1,10 +1,13 @@
-(function (RM) {
-  var ajax = RM.ajax,
+(function () {
+  var RM = window.RM,
+      ajax = RM.ajax,
       data = RM.data,
       get_subscription = data.get_subscription;
 
   var MAX_SORT_ORDER = 65535,
       INIT_SORT_ORDER = 256;
+
+  var $subs_list = $('#sub-list');
 
   function update_sort_order (moved_id, new_before, new_cat) {
     var subs = data.get_subscriptions();
@@ -70,19 +73,36 @@
     ajax.spost('/api/subs/sort', save_data);
   }
 
+  function sort_group (e, ui) {
+    // console.log('group', e, ui);
+  }
+
 
   function update_subs_sort_order (event, ui) {
+    // console.log('sub', event, ui);
     if(ui.sender) { // prevent be callded twice if move bettween categories
       return;
     }
     var $moved = $(ui.item),
         $before = $moved.prev(),
         moved_id = parseInt($moved.attr('data-id')),
-        new_cat = $moved.closest('.rss-category').siblings('.folder').attr('data-name'),
-        new_before_id = $before.length ? parseInt($before.attr('data-id')) : null;
+        $parent = $moved.closest('.rss-category').siblings('.folder'),
+        new_cat = $parent.attr('data-name'),
+        new_before_id = parseInt($before.attr('data-id'));
     update_sort_order(moved_id, new_before_id, new_cat);
   }
 
-  RM.update_subs_sort_order = update_subs_sort_order; // export
-  RM.update_category_sort_order = function () {  }; // export
-})(window.RM);
+  $subs_list.sortable({
+    update: sort_group,
+    // items: '.rss-category',
+    handle: '.folder'
+  });
+
+  $subs_list.bind('refresh.rm', function () {
+    // subscription sortable within categories
+    $(".rss-category").sortable({
+      connectWith: ".rss-category",
+      update: update_subs_sort_order
+    });
+  });
+})();

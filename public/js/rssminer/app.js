@@ -142,9 +142,8 @@
     }
   }
 
-  function save_user_vote (vote, ele) {
-    var $feed = $(ele).closest('.feed'),
-        id = $feed.attr('data-id');
+  function save_user_vote (vote, $feed) {
+    var id = $feed.attr('data-id');
     if(!$feed.hasClass('sys')) {
       if(($feed.hasClass('dislike') && vote === -1)
          || ($feed.hasClass('like') && vote === 1)) {
@@ -154,6 +153,7 @@
     if(id) {
       id = parseInt(id, 10);
       data.save_vote(id, vote, function () {
+        notify.show_msg('Saved', 1000);
         if(vote === 1) {
           $feed.addClass('like').removeClass('dislike neutral sys');
         } else if(vote === -1) {
@@ -223,9 +223,15 @@
     }
   }
 
-  function save_vote_up (e) { save_user_vote(1, this); return false; }
-  function save_vote_down (e) { save_user_vote(-1, this); return false; }
+  function save_vote_up (e) {
+    save_user_vote(1, $(this).closest('.feed'));
+    return false;
+  }
 
+  function save_vote_down (e) {
+    save_user_vote(-1, $(this).closest('.feed'));
+    return false;
+  }
 
   function unsubscribe () {
     var $tr = $(this).closest('tr'),
@@ -253,18 +259,15 @@
   function fetch_and_show_user_subs (cb) {
     data.get_user_subs(function (subs) {
       var html = tmpls.subs_nav({groups: subs});
-      // $('#logo ul').append(html);
       $subs_list.empty().append(html).find('img').each(util.favicon_error);
-      // $("#navigation .item img").each(util.favicon_error);
-      // category sortable
-      $subs_list.sortable({change: RM.update_category_sort_order });
-      $(".rss-category").sortable({ // subscription sortable with categoriesa
-        connectWith: ".rss-category",
-        update: RM.update_subs_sort_order
-      });
+      $subs_list.trigger('refresh.rm');
       util.call_if_fn(cb);
     });
   }
+
+  window.RM = _.extend(window.RM, {
+    app: {save_user_vote: save_user_vote}
+  });
 
   util.delegate_events($(document), {
     'click #add-subscription': add_subscription,

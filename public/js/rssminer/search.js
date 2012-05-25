@@ -7,8 +7,7 @@
       $header = $('#header .wrapper');
 
   var SELECTED = 'selected',
-      $ct_menu = $('#sub-ct-menu'),
-      $feed_ct_menu = $('#feed-ct-menu'),
+      $ct_menu = $('#ct-menu'),
       WAIT_BEFORE_SEARCH = 200;
 
   var $lis,
@@ -99,11 +98,9 @@
     if(!e) {
       $('#search-result').remove();
       $ct_menu.hide();
-      $feed_ct_menu.hide();
-    } else if(e.which === 1) {  // only left click
+    } else if(e.which !== 3) {  // not right click
       $('#search-result').remove();
       $ct_menu.hide();
-      $feed_ct_menu.hide();
     }
   }
 
