@@ -32,7 +32,7 @@
   (mysql-query ["SELECT id, title, author, link, rss_link_id,
            published_ts from feeds WHERE rss_link_id IN
         (SELECT rss_link_id FROM user_subscription WHERE user_id = ?)
-       LIMIT ? OFFSET ?" user-id limit offset]))
+        ORDER BY published_ts DESC LIMIT ? OFFSET ?" user-id limit offset]))
 
 ;;; fetch unread, sort by vote_sys desc
 (defn fetch-system-voteup [user-id limit offset]
