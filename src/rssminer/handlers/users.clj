@@ -46,9 +46,7 @@
     (let [updated (merge (:conf user) (select-keys (:body req)
                                                    [:nav :expire]))]
       (db/update-user (:id user) {:conf (json-str updated)})
-      {:status 204
-       :body nil
-       :session {:user (assoc user :conf updated)}})))
+      {:status 204 :body nil})))
 
 (defn summary [req]
   (let [u-id (:id (session-get req :user))

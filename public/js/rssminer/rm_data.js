@@ -451,7 +451,7 @@
       limit = Math.max(SEARCH_RESUTL_COUNT - subs.length, 10);
       ajax.sget('/api/search?q=' + q + "&limit=" + limit, function (resp) {
         feeds_cache['search_result'] = resp; // cache unchanged
-        var feeds = _.map(feeds, transform_item);
+        var feeds = _.map(resp, transform_item);
         cb({subs: subs, feeds: feeds, sub_cnt: subs.length});
       });
     } else {
