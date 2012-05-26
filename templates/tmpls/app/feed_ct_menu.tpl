@@ -1,8 +1,10 @@
 <li>
-  <a href="{{orginal}}" target="_blank">
-    visite <span>{{orginal}}</span>
+  <a href="{{link}}" target="_blank">
+    visite <span>{{link}}</span>
   </a>
 </li>
 <li class="splitter"></li>
-<li class="voteup" title="You vote, System will learn from your vote to sort feeds">vote up</li>
-<li class="votedown" title="You vote, System will learn from your vote to sort feeds">vote down</li>
+<li class="voteup {{#user_like}}selected{{/user_like}}"
+  title="You vote, System will learn from your vote to sort feeds">vote up</li>
+  <li class="votedown {{#user_dislike}}selected{{/user_dislike}}"
+    title="You vote, System will learn from your vote to sort feeds">vote down</li>

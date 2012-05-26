@@ -81,10 +81,7 @@
   function show_feed_context_menu (e) {
     $last_menu_ui = $(this);
     var feed = data.get_feed($last_menu_ui.attr('data-id')),
-        html = tmpls.feed_ct_menu({
-          site: feed.sub.link,
-          orginal: feed.link
-        });
+        html = tmpls.feed_ct_menu(feed);
     $ct_menu.empty().append(html).css({
       top: e.clientY,
       left: e.clientX,

@@ -16,7 +16,6 @@
   var STORAGE_KEY = '_rm_',
       MAX_PAGER = 9,
       WELCOME_MAX_PAGE = 7,
-      STATIC_SERVER = window._RM_.static_server,
       // per item 29 pixel, first feed to top 138px, 140 px for brower use
       PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 30),
       // show search result count according to screen height
@@ -36,7 +35,7 @@
   var SORTINGS_TABS = { newest: 1, oldest: 1, likest: 1 }; // 1 means true
 
   function save_to_cache_fixer (feedid, data) {
-    cache_fixer[feedid] = _.extend(data, cache_fixer[feedid]);
+    cache_fixer[feedid] = _.extend(cache_fixer[feedid] || {}, data);
     if(window.localStorage) {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(cache_fixer));
     }
@@ -71,7 +70,7 @@
       });
       if(feed) { break; }
     }
-    return feed || {};
+    return feed ? transform_item(feed) : {};
   }
 
   function sub_array (list, offset, length) {
@@ -87,7 +86,7 @@
   function favicon_path (url) {
     var host = util.hostname(url),
         h = encodeURIComponent(host.split("").reverse().join(''));
-    return STATIC_SERVER + '/fav?h=' + h;
+    return  _RM_.static_server + '/fav?h=' + h;
   }
 
   function split_tag (tags) {
@@ -124,13 +123,19 @@
         sub_id = feed.rss_link_id;
     if(cf) {
       // try to fix outdated data, browser cache 1 hour
-      feed.read_date = cf.read_date || feed.read_date;
-      feed.vote_user = cf.vote_user || feed.vote_user;
+      feed.read_date = 'read_date' in cf ? cf.read_date : feed.read_date;
+      feed.vote_user = 'vote_user' in cf ? cf.vote_user : feed.vote_user;
+    }
+    var info = [];              // used in context menu
+    if(feed.read_date > 1) {
+      info.push({text: 'You read it in ' + ymdate(feed.read_date)});
     }
     return {
       author: feed.author || util.hostname(feed.link),
       sub: sub_titles[sub_id],    // use to show search result
       cls: feed_css_class(feed),
+      user_like: feed.vote_user > 0,
+      user_dislike: feed.vote_user < 0,
       date: ymdate(feed.published_ts),
       href: feed_hash(sub_id, feed.id),
       id: feed.id,
@@ -219,6 +224,7 @@
 
     ajax.get('/api/welcome?' + params, function (resp) {
       resp = resp || [];
+      feeds_cache[section] = resp; // cache unchanged
       var feeds = _.map(resp, function (feed) {
         var result = transform_item(feed);
         result.href = feed_hash(section, feed.id); // change href
@@ -227,7 +233,6 @@
         }
         return result;
       });
-      feeds_cache[section] = feeds;
       cb({
         title: 'Rssminer - an intelligent RSS reader',
         feeds: feeds,
@@ -266,9 +271,9 @@
       sort: sort
     });
     ajax.get(url, function (resp) {
+      feeds_cache['current_sub'] = resp;
       var feeds =  _.map(resp, transform_item),
           sort_data = [];
-      feeds_cache['current_sub'] = feeds;
       for(var s in SORTINGS_TABS) {
         sort_data.push({
           selected: !sort || s === sort,
@@ -444,9 +449,9 @@
     });
     if(q.length > 1) {
       limit = Math.max(SEARCH_RESUTL_COUNT - subs.length, 10);
-      ajax.sget('/api/search?q=' + q + "&limit=" + limit, function (feeds) {
-        feeds = _.map(feeds, transform_item);
-        feeds_cache['search_result'] = feeds;
+      ajax.sget('/api/search?q=' + q + "&limit=" + limit, function (resp) {
+        feeds_cache['search_result'] = resp; // cache unchanged
+        var feeds = _.map(feeds, transform_item);
         cb({subs: subs, feeds: feeds, sub_cnt: subs.length});
       });
     } else {

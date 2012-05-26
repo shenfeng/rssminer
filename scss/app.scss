@@ -418,31 +418,12 @@ iframe {
         @include overflow-ellipsis();
     }
     .selected { background: $selected_color; }
-    .new-folder {
-    }
-    .icon {
-        position: absolute;
-        display: inline-block;
-        width: 18px;
-        height: 18px;
-        left: 0;
-    }
-    .folder .icon {
-        top: 3px;
-        background: url(/imgs/folder.png) no-repeat;
-    }
     li.splitter {
         padding: 4px;
         height: 1px;
         width: 100%;
         background: $color;
         padding: 0;
-    }
-    .voteup .icon {
-        background: url(/imgs/vote.gif) no-repeat;
-    }
-    .votedown .icon {
-        background: url(/imgs/vote.gif) no-repeat -18px 0;
     }
     background: white;
     border: 1px solid $color;
