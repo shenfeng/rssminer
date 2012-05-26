@@ -3,7 +3,7 @@
         [clojure.data.json :only [read-json]]
         [clojure.tools.logging :only [info error]]
         [ring.util.response :only [redirect]]
-        (rssminer [util :only [session-get]]
+        (rssminer [util :only [user-id-from-session]]
                   [http :only [client parse-response]]
                   [config :only [rssminer-conf]]))
   (:import java.net.URI
@@ -26,7 +26,7 @@
 
 (defn opml-import [req]
   (let [^File file (-> req :params :file :tempfile)
-        user-id (:id (session-get req :user))]
+        user-id (user-id-from-session req)]
     (if (and file (> (.length file) 10))
       (subscribe-all user-id (Parser/parseOPML (slurp file)))
       {:status 400
@@ -34,7 +34,7 @@
 
 (defn oauth2callback [req]
   (let [code (-> req :params :code)
-        user-id (:id (session-get req :user))
+        user-id (user-id-from-session req)
         resp (-> client (.execPost token-ep {} (assoc oauth2 "code" code))
                  .get parse-response)]
     (if user-id

@@ -16,6 +16,11 @@
     (assoc user :conf
            (when-let [conf (:conf user)] (read-json conf)))))
 
+(defn find-user-by-id [id]
+  (first
+   (mysql-query ["SELECT name, email, conf, scores FROM users WHERE id = ?"
+                 id])))
+
 (defn authenticate [email plain-password]
   (if-let [user (find-user {:email email})]
     (when (= (md5-sum (str email "+" plain-password)) (:password user))
@@ -23,8 +28,3 @@
 
 (defn update-user [id data]
   (with-mysql (update-values :users ["id = ?" id] data)))
-
-(defn fetch-conf [user-id]
-  (-> (mysql-query ["SELECT conf FROM users WHERE id = ?"
-                    user-id])
-      first :conf ))

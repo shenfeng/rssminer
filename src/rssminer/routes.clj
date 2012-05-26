@@ -1,5 +1,6 @@
 (ns rssminer.routes
   (:use [compojure.core :only [defroutes GET POST DELETE ANY context]]
+        ring.middleware.session.store
         (ring.middleware [keyword-params :only [wrap-keyword-params]]
                          [file-info :only [wrap-file-info make-http-format]]
                          [params :only [wrap-params]]
@@ -10,8 +11,7 @@
         (rssminer [middleware :only [wrap-auth wrap-cache-header
                                      wrap-failsafe
                                      wrap-request-logging-in-dev
-                                     JPOST JPUT JDELETE JGET]]
-                  [redis :only [redis-store]]))
+                                     JPOST JPUT JDELETE JGET]]))
   (:require [compojure.route :as route]
             [rssminer.import :as import]
             (rssminer.handlers [reader :as reader]
@@ -61,12 +61,33 @@
   (route/files "") ;; files under public folder
   (route/not-found "<h1>Page not found.</h1>" ))
 
+(defn gen-key [data]
+  (if-let [id (-> data :id)]
+    (str "zk" (Integer/toString (- Integer/MAX_VALUE id) 35))
+    "__noop__"))
+
+(defn decode-key [^String key]
+  (if (and key (.startsWith key "zk"))
+    (- Integer/MAX_VALUE
+       (Integer/valueOf (.substring key 2) 35))
+    nil))
+
+(deftype CookieSessionStore []
+  SessionStore
+  (read-session [_ key]
+    (decode-key key))
+  (write-session [_ key data]
+    (or key (gen-key data)))
+  (delete-session [_ key]
+    ;; noop
+    ))
+
 ;;; The last one in the list is the first one get the request,
 ;;; the last one get the response
 (defn app []
   (-> #'all-routes
       wrap-auth
-      (wrap-session {:store (redis-store (* 3600 24 3))
+      (wrap-session {:store (CookieSessionStore.)
                      :cookie-name "_id_"
                      :cookie-attrs {:http-only true}})
       wrap-cache-header

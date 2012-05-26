@@ -40,8 +40,8 @@
 (extend Timestamp Write-JSON
         {:write-json write-json-date})
 
-(defn ^:dynamic session-get [req key] ;; for test code easy mock
-  (-> req :session key))
+(defn ^:dynamic user-id-from-session [req] ;; for test code easy mock
+  (:session req))
 
 (defn extract-text [html]
   (when html

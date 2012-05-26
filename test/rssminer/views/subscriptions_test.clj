@@ -47,6 +47,10 @@
         (is (nil? (-> resp :body read-json)))
         (is (= 200 (:status resp)))))))
 
+(deftest test-list-subscription
+  (is (= 200 (:status (auth-app {:uri "/api/subs"
+                                 :request-method :get})))))
+
 (deftest test-unsubscripe
   (let [[_ subscription] (prepare)
         delete-resp (auth-app {:uri (str "/api/subs/"

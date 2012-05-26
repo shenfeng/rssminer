@@ -208,7 +208,7 @@ public class Searcher {
         return IndexReader.open(indexer, false);
     }
 
-    private Query buildQuery(String text, List<Long> rssids)
+    private Query buildQuery(String text, List<Integer> rssids)
             throws IOException {
         TokenStream stream = analyzer.tokenStream("", new StringReader(text));
 
@@ -232,7 +232,7 @@ public class Searcher {
         }
 
         BooleanQuery ids = new BooleanQuery();
-        for (Long rid : rssids) {
+        for (Integer rid : rssids) {
             ids.add(new TermQuery(RSS_ID_TERM.createTerm(rid.toString())),
                     Occur.SHOULD);
         }
@@ -245,7 +245,7 @@ public class Searcher {
     }
 
     // return feed ids
-    public String[] search(String term, List<Long> rssids, int count)
+    public String[] search(String term, List<Integer> rssids, int count)
             throws CorruptIndexException, IOException, ParseException {
         IndexReader reader = getReader();
         IndexSearcher searcher = new IndexSearcher(reader);

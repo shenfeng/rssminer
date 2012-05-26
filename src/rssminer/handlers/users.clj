@@ -1,6 +1,7 @@
 (ns rssminer.handlers.users
   (:use  [ring.util.response :only [redirect]]
-         (rssminer [util :only [session-get to-int md5-sum get-expire]]
+         (rssminer [util :only [user-id-from-session to-int
+                                md5-sum get-expire]]
                    [config :only [rssminer-conf]])
          [clojure.data.json :only [json-str read-json]])
   (:require [rssminer.db.user :as db]
@@ -17,7 +18,7 @@
         return-url (or return-url "/a")]
     (if user
       (assoc (redirect return-url)
-        :session {:user (select-keys user [:id :email :name :conf :scores])}
+        :session {:id (:id user)}
         :session-cookie-attrs {:expires (get-expire 3)})
       (view/login-page return-url))))
 
@@ -32,14 +33,14 @@
       (let [user (db/create-user {:email email
                                   :password password})]
         (assoc (redirect "/a")           ; no conf currently
-          :session {:user (select-keys user [:id :email :name])})))))
+          :session {:id (:id user)})))))
 
 ;;; :nav => show and hide of left nav
 ;;; :expire => feed mark as read after X days
 ;;; :like_threshhold => more than it mean like
 ;;; :dislike_threshhold => less than it mean dislike
 (defn save-settings [req]
-  (let [user (session-get req :user)]
+  (let [user (db/find-user-by-id (user-id-from-session req))]
     (when-let [password (-> req :body :password)]
       (let [p (md5-sum (str (:email user) "+" password))]
         (db/update-user (:id user) {:password p})))
@@ -49,7 +50,7 @@
       {:status 204 :body nil})))
 
 (defn summary [req]
-  (let [u-id (:id (session-get req :user))
+  (let [u-id (user-id-from-session req)
         limit (min (-> req :params :limit to-int) 40)
         offset (-> req :params :offset to-int)
         data (case (-> req :params :section)
@@ -88,9 +89,7 @@
 (defn checkauth [req]
   (if-let [email ((:params req) "openid.ext1.value.email")]
     (assoc (redirect "/a")
-      :session {:user (select-keys
-                       (or (db/find-user {:email email})
-                           (db/create-user {:email email
-                                            :provider "google"}))
-                       [:id :email :name :conf])})
+      :session {:id (:id (or (db/find-user {:email email})
+                             (db/create-user {:email email
+                                              :provider "google"})))})
     (redirect "/")))

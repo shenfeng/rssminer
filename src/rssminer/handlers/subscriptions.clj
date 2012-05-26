@@ -1,10 +1,12 @@
 (ns rssminer.handlers.subscriptions
   (:use (rssminer [redis :only [fetcher-enqueue]]
-                  [util :only [to-int session-get time-since]])
+                  [util :only [to-int user-id-from-session time-since]])
         [rssminer.db.util :only [mysql-insert-and-return]]
-        [clojure.tools.logging :only [info]])
+        [clojure.tools.logging :only [info]]
+        [rssminer.db.user :only [find-user-by-id]])
   (:require [rssminer.db.subscription :as db]
-            [rssminer.db.feed :as fdb]))
+            [rssminer.db.feed :as fdb]
+            [clojure.string :as str]))
 
 (def ^{:private true} enqueue-keys [:id :url :check_interval :last_modified])
 
@@ -26,22 +28,24 @@
     (db/fetch-user-sub rss-id)))
 
 (defn list-subscriptions [req]
-  (let [user (session-get req :user)]
+  (let [uid (user-id-from-session req)]
     (if (-> req :params :only_url)
-      (map :url (db/fetch-user-subsurls (:id user))) ; for extension
-      (let [like (or (-> user :conf :like_score) 1)
-            neutral (or (-> user :conf :neutral_score) 0)]
-        (db/fetch-user-subs (:id user) like neutral)))))
+      (map :url (db/fetch-user-subsurls uid)) ; for extension
+      (let [scores (if-let [s (:scores (find-user-by-id uid))]
+                     (str/split s #","))
+            like (if scores (Double/parseDouble (first scores)) 1.0)
+            neutral (if scores (Double/parseDouble (second scores)) 0)]
+        (db/fetch-user-subs uid like neutral)))))
 
 (defn add-subscription [req]
   (let [link  (-> req :body :link)
-        user-id (:id (session-get req :user))]
+        user-id (user-id-from-session req)]
     (info (str "user: " user-id " add subscription: " link))
     ;; enqueue, client need to poll for result
     (subscribe link user-id nil nil)))
 
 (defn save-sort-order [req]
-  (let [uid (:id (session-get req :user))
+  (let [uid (user-id-from-session req)
         ;; [{:g group :ids [id, id, id]}]
         data (mapcat (fn [{:keys [ids g]}]
                        (map (fn [id] {:g g :id id}) ids)) (:body req))]
@@ -49,6 +53,6 @@
     {:status 204}))
 
 (defn unsubscribe [req]
-  (let [user-id (:id (session-get req :user))
+  (let [user-id (user-id-from-session req)
         rss-id (-> req :params :rss-id to-int)]
     (db/delete-subscription user-id rss-id)))

@@ -1,5 +1,5 @@
 (ns rssminer.middleware
-  (:use [rssminer.util :only [session-get]]
+  (:use [rssminer.util :only [user-id-from-session]]
         [ring.util.response :only [redirect]]
         [clojure.tools.logging :only [debug error]]
         [compojure.core :only [GET POST DELETE PUT]]
@@ -9,9 +9,8 @@
 
 (defn wrap-auth [handler]
   (fn [req]
-    (let [user (session-get req :user)
-          uri (:uri req)]
-      (if user
+    (let [uri (:uri req)]
+      (if (user-id-from-session req)
         (handler req)
         (if (or (= uri "/a") (= uri "/dashboard") ;;  login required
                 (.startsWith ^String uri "/api"))

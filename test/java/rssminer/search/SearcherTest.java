@@ -15,23 +15,23 @@ import rssminer.Searcher;
 
 public class SearcherTest {
 
-	Searcher searcher;
+    Searcher searcher;
 
-	@Before
-	public void setup() throws IOException {
-		searcher = Searcher.initGlobalSearcher("/var/rssminer/index");
-	}
+    @Before
+    public void setup() throws IOException {
+        searcher = Searcher.initGlobalSearcher("/var/rssminer/index");
+    }
 
-	@Test
-	public void testSearch() throws CorruptIndexException, IOException,
-			ParseException {
-		List<Long> rssids = new ArrayList<Long>();
-		Random r = new Random();
-		int count = r.nextInt(450);
-		for (long i = 1; i < count; i++) {
-			rssids.add(i);
-		}
-		String[] result = searcher.search("java technology", rssids, 10);
-		System.out.println(Arrays.toString(result));
-	}
+    @Test
+    public void testSearch() throws CorruptIndexException, IOException,
+            ParseException {
+        List<Integer> rssids = new ArrayList<Integer>();
+        Random r = new Random();
+        int count = r.nextInt(450);
+        for (int i = 1; i < count; i++) {
+            rssids.add(i);
+        }
+        String[] result = searcher.search("java technology", rssids, 10);
+        System.out.println(Arrays.toString(result));
+    }
 }

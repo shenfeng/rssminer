@@ -7,7 +7,7 @@
         [rssminer.handlers.subscriptions :only [subscribe]]
         (rssminer [search :only [use-index-writer!
                                  close-global-index-writer!]]
-                  [util :only [session-get]]
+                  [util :only [user-id-from-session]]
                   [parser :only [parse-feed]]
                   [redis :only [fetcher-enqueue fetcher-dequeue]]
                   [http :only [download-rss]])
@@ -24,10 +24,12 @@
 
 (def test-user {:name "feng"
                 :password "123456"
+                :scores "1.0,1"
                 :email "shenedu@gmail.com"})
 
 (def test-user2 {:name "feng"
                  :password "123456"
+                 :scores "1.0,1"
                  :email "feng@gmail.com"})
 
 (defn user-fixture [test-fn]
@@ -39,16 +41,12 @@
 
 (def auth-app
   (fn [& args]
-    (binding [session-get (fn [req key]
-                            (if (= key :user) (select-keys user1 session-keys)
-                                (throw (Exception. "session-get error"))))]
+    (binding [user-id-from-session (fn [req] (:id user1))]
       (apply (app) args))))
 
 (def auth-app2
   (fn [& args]
-    (binding [session-get (fn [req key]
-                            (if (= key :user) (select-keys user2 session-keys)
-                                (throw (Exception. "session-get error"))))]
+    (binding [user-id-from-session (fn [req] (:id user2))]
       (apply (app) args))))
 
 (defn mk-feeds-fixtrue [resource]
