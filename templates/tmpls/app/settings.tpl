@@ -4,7 +4,6 @@
 <div class="sort settings-sort">
   <ul>
     <li class="selected">add</li>
-    <li>subscriptions</li>
     <li>account</li>
   </ul>
 </div>
@@ -31,23 +30,6 @@
         <button id="add-subscription">add</button>
       </section>
     </div>
-  </li>
-  <li class="section subscriptions">
-    <table >
-      {{#groups}}
-        {{#subs}}
-          <tr data-id="{{id}}">
-            <td><img width="16" height="16" src="{{img}}"/></td>
-            <td class="title">
-              <a href="{{link}}" target="_blank">{{ title }}</a>
-            </td>
-            <td class="c" title="{{total}} feeds">{{ total }}</td>
-            <td class="g">{{ group }}</td>
-            <td class="delete" title="unsubscribe">X</td>
-          </tr>
-        {{/subs}}
-      {{/groups}}
-    </table>
   </li>
   <li class="section account">
     <div id="account">

@@ -114,7 +114,15 @@
   }
 
   function unsubscribe_item () {
-    notify.show_msg('change not implemented, soon..', 1000);
+    var subid = $last_menu_ui.attr('data-id'),
+        sub = data.get_subscription(subid);
+    $ct_menu.remove();
+    if(confirm('unsubscribe "' + sub.title + '"')) {
+      data.unsubscribe(subid, function () {
+        $last_menu_ui.remove();
+        notify.show_msg('unsubscribed', 1000);
+      });
+    }
   }
 
   function move_to_new_folder () {

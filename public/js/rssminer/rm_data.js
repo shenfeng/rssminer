@@ -48,8 +48,7 @@
       expire_times.push({time: i, selected: i === (user_conf.expire || 30)});
     }
     return {
-      expire_times: expire_times,
-      groups: parse_subs(subscriptions_cache)
+      expire_times: expire_times
     };
   }
 
@@ -409,6 +408,7 @@
   }
 
   function unsubscribe (id, cb) {
+    id = parseInt(id);
     ajax.del('/api/subs/' + id, function (resp) {
       var cache = [];
       _.each(subscriptions_cache, function (sub) {

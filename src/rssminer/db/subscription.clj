@@ -51,4 +51,4 @@
                                 " , group_name = '" (:g d) "'"
                                 " WHERE user_id = " user-id
                                 " AND rss_link_id = " (:id d)))
-                data (range 1 200000 4)))))
+                data (range 400 200000 4)))))

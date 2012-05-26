@@ -233,21 +233,6 @@
     return false;
   }
 
-  function unsubscribe () {
-    var $tr = $(this).closest('tr'),
-        id = $tr.attr('data-id');
-    if(id) {
-      id = parseInt(id, 10);
-      var sub = data.get_subscription(id);
-      if(confirm('unsubscribe "' + sub.title + '"')) {
-        data.unsubscribe(id, function () {
-          $tr.remove();
-          $('#item-' + id).remove();
-        });
-      }
-    }
-  }
-
   function switch_settings_tab () {
     var $this = $(this),
         text = $.trim($this.text());
@@ -278,8 +263,7 @@
       return false;
     },
     'click .vote span.down': save_vote_down,
-    'click .vote span.up': save_vote_up,
-    'click #all-settings .delete': unsubscribe
+    'click .vote span.up': save_vote_up
   });
 
   fetch_and_show_user_subs(function () { // app start here

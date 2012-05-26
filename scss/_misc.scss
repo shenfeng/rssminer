@@ -24,29 +24,9 @@
 }
 
 #all-settings {
-    table {
-        font-size: 14px;
-        img { padding: 2px 4px;}
-        tr:nth-child(even) { background: $nth_child_color; }
-        tr:hover { background: $hover_color; }
-        .title {
-            @include overflow-ellipsis();
-            max-width: 600px;
-        }
-        .delete {
-            cursor: pointer;
-            padding: 3px 7px;
-            &:hover { color: red; }
-        }
-        td {
-            padding: 3px 4px
-        }
-    }
-    .g { font-size: 13px; }
     .section { display: none; padding: 10px 0 0 50px; }
     &.show-add .add-sub { display: block; }
     &.show-account .account { display: block; }
-    &.show-subscriptions .subscriptions { display: block; }
 }
 
 #notification {
