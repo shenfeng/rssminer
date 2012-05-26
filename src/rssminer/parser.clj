@@ -44,7 +44,9 @@
                                     (:categories e)))
             :fetched_ts (now-seconds)
             :updated_ts (:updatedDate e)
-            :published_ts (or (:publishedDate e) (now-seconds))))
+            :published_ts (or (:publishedDate e)
+                              (:updatedDate e)
+                              (now-seconds))))
 
 (defn parse-feed [str]
   (when str
