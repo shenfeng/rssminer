@@ -1,0 +1,24 @@
+static final int USER_ID_START = 100000;
+static final int USER_ID_END = USER_ID_START + 10000;
+
+static final int SUB_ID_START = 10000;
+static int NUM_SUBS_PER_USER = 40;
+
+static int NUM_TEST = 1000;
+
+-----------redis-----------
+data: Insert 63s
+      Total 9.9s
+      FewSubs 27s
+      PerSub  0.64s
+      used_memory_human:241.28M
+      feed: 8021364
+
+----------mysql------------
+data: Insert 367s
+      Total 1.5s
+      FewSubs 8.059
+      PerfSub 0.430
+      DB_size: 854m
+      feed: 8061899
+
