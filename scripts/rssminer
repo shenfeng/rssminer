@@ -41,7 +41,7 @@ APP_ARGS="--index-path $INDEX_PATH \
     --fetcher \
     --static-server //s.rss-miner.com \
     --proxy-server //p.rss-miner.com \
-    --db-url jdbc:mysql://localhost/rssminer \
+    --db-url jdbc:mysql://localhost/rssminer?maintainTimeStats=false&dontTrackOpenResources=true \
     --fetcher-queue 10 \
     --ip 127.0.0.1
     --worker 2 \
