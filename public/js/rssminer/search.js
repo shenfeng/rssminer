@@ -8,7 +8,7 @@
 
   var SELECTED = 'selected',
       $ct_menu = $('#ct-menu'),
-      WAIT_BEFORE_SEARCH = 200;
+      WAIT_BEFORE_SEARCH = 100;
 
   var $lis,
       old_q = '',

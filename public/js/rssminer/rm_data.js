@@ -6,7 +6,7 @@
       call_if_fn = util.call_if_fn;
 
   var user_data = (_RM_ && _RM_.user) || {},
-      user_conf = user_data.conf || {};
+      user_conf = JSON.parse(user_data.conf || "{}");
 
   var subscriptions_cache,
       sub_titles = {},                // use by transform_item
@@ -433,6 +433,7 @@
     });
   }
 
+  var last_search_ajax;
   function get_search_result (q, limit, cb) {
     var subs = [],
         count = 0,
@@ -449,7 +450,10 @@
     });
     if(q.length > 1) {
       limit = Math.max(SEARCH_RESUTL_COUNT - subs.length, 10);
-      ajax.sget('/api/search?q=' + q + "&limit=" + limit, function (resp) {
+      if(last_search_ajax) { last_search_ajax.abort(); }
+      var url = '/api/search?q=' + q + "&limit=" + limit;
+      last_search_ajax = ajax.sget(url, function (resp) {
+        last_search_ajax = undefined;
         feeds_cache['search_result'] = resp; // cache unchanged
         var feeds = _.map(resp, transform_item);
         cb({subs: subs, feeds: feeds, sub_cnt: subs.length});

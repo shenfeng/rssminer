@@ -11,8 +11,8 @@
   var ERROR_MESGS = {
     400: 'Bad Request',
     401: 'Not Logined',
-    502: 'Server updating, retry in few seconds',
-    0: 'Could not reach server'
+    502: 'Server updating, retry in few seconds'
+    // 0: 'Could not reach server'
   };
 
   function show_msg(msg, time) {
