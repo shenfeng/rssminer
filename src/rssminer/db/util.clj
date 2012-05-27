@@ -5,7 +5,6 @@
   (:require [clojure.string :as str])
   (:import java.text.SimpleDateFormat
            java.util.Locale
-           java.sql.Clob
            java.sql.Timestamp))
 
 (defn select-sql-params

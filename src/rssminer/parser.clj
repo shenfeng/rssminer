@@ -1,6 +1,5 @@
 (ns rssminer.parser
-  (:use [rssminer.util :only [assoc-if]]
-        [rssminer.time :only [now-seconds]]
+  (:use [rssminer.util :only [assoc-if now-seconds]]
         [clojure.tools.logging :only [error trace]])
   (:require [clojure.string :as s])
   (:import [com.sun.syndication.io SyndFeedInput ParsingFeedException]

@@ -59,7 +59,7 @@
            (POST "/" [] user/signup))
   (context "/api" [] api-routes)
   (route/files "") ;; files under public folder
-  (route/not-found "<h1>Page not found.</h1>" ))
+  (route/not-found "<p>Page not found.</p>" ))
 
 (defn gen-key [data]
   (if-let [id (-> data :id)]

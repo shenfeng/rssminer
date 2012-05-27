@@ -4,7 +4,7 @@
         [rssminer.database :only [mysql-db-factory]]
         [rssminer.db.util :only [mysql-query mysql-insert-and-return]]
         (rssminer [test-common :only [user1 app-fixture mk-feeds-fixtrue]]
-                  [time :only [now-seconds]]))
+                  [util :only [now-seconds]]))
   (:require [rssminer.db.user-feed :as uf])
   (:import rssminer.classfier.UserSysVote))
 

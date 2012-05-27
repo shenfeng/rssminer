@@ -8,14 +8,38 @@
 
 (use-fixtures :each app-fixture (mk-feeds-fixtrue "test/scottgu-atom.xml"))
 
+(defn- vote [fid vote]
+  (auth-app {:uri (str "/api/feeds/" fid "/vote")
+             :request-method :post
+             :body (json-body {"vote" vote})}))
+
+(defn- get-user-feed [fid]
+  (first (mysql-query
+          ["SELECT * FROM user_feed WHERE
+                    user_id = ? AND feed_id = ?" (:id user1) fid])))
+
+(defn- first-feedid []
+  (-> (mysql-query ["select id from feeds"]) first :id))
+
 (deftest test-user-vote
-  (let [fid (-> (mysql-query ["select id from feeds"]) first :id)
-        resp (auth-app {:uri (str "/api/feeds/" fid "/vote")
-                        :request-method :post
-                        :body (json-body {"vote" "1"})})]
-    (is (= 204 (:status resp)))
-    (is (= 1 (-> (mysql-query
-                  ["SELECT vote_user FROM user_feed WHERE
-                    user_id = ? AND feed_id = ?" (:id user1) fid])
-                 first :vote_user)))))
+  (let [fid (first-feedid)]
+    (is (= 204 (:status (vote fid "1"))))
+    (is (= 1 (:vote_user (get-user-feed fid))))
+    (is (> (:vote_date (get-user-feed fid)) 0))
+    ;; vote again
+    (is (= 204 (:status (vote fid "-1"))))
+    (is (= -1 (:vote_user (get-user-feed fid))))))
+
+(deftest test-mark-as-read
+  (let [fid (first-feedid)]
+    ;; mark as read
+    (is (= 204 (:status (auth-app {:uri (str "/api/feeds/" fid "/read")
+                                   :request-method :post}))))
+    (is (= (:vote_user (get-user-feed fid)) 0))
+    ;; vote the just read feed
+    (is (= 204 (:status (vote fid "1"))))
+    ;; vote should saved
+    (is (= (:vote_user (get-user-feed fid)) 1))
+    ;; vote date should be updated
+    (is (> (:vote_date (get-user-feed fid)) 1))))
 

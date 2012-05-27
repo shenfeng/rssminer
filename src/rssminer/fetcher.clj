@@ -1,8 +1,7 @@
 (ns rssminer.fetcher
   (:use [clojure.tools.logging :only [trace]]
-        (rssminer [util :only [assoc-if]]
+        (rssminer [util :only [assoc-if now-seconds]]
                   [parser :only [parse-feed]]
-                  [time :only [now-seconds]]
                   [redis :only [fetcher-dequeue fetcher-enqueue]]
                   [http :only [parse-response]]
                   [config :only [rssminer-conf]]))

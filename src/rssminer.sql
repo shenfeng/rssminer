@@ -74,14 +74,18 @@ CREATE TABLE user_subscription (
 create table user_feed (
     user_id INT UNSIGNED,
     feed_id INT UNSIGNED,
+    rss_link_id int UNSIGNED NOT NULL default 0,
+
     -- tiny int require 1 bytes, -128 127
     -- like 1, dislike -1, no pref 0
     vote_user TINYINT default 0,
-    rss_link_id int UNSIGNED NOT NULL default 0,
     -- alter table user_feed change vote_sys vote_sys DOUBLE default 0;
     -- float => double 2012/4/30
-    vote_sys DOUBLE default 0,    -- learn by program
-    read_date INT default -1,    -- the reading date, -1, unread
+    vote_sys DOUBLE default 0,  -- learn by program
+    read_date INT default -1,   -- the reading date, -1, unread
+    -- 2012/5/27
+    -- alter table user_feed add vote_date int default -1 after read_date
+    vote_date INT default -1,   -- the user vote date
     -- 2012/4/29 --replace index with unique index to support upsert
     -- insert into user_feed (user_id, feed_id, vote_user) values (1, 557, 1) on duplicate key update vote_user = 10;
     -- alter table user_feed drop index user_feed_id

@@ -1,8 +1,7 @@
 (ns rssminer.db.feed
   (:use [rssminer.db.util :only [mysql-query with-mysql mysql-insert]]
         (rssminer [search :only [index-feed]]
-                  [time :only [now-seconds]]
-                  [util :only [ignore-error]])
+                  [util :only [ignore-error now-seconds]])
         [clojure.string :only [blank?]]
         [clojure.tools.logging :only [info trace]]
         [clojure.java.jdbc :only [update-values delete-rows do-commands]]))

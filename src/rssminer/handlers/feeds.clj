@@ -17,7 +17,7 @@
   (let [fid (-> req :params :id to-int)
         user-id (user-id-from-session req)]
     (uf/mark-as-read user-id fid)
-    {:status 200 :body nil}))
+    {:status 204 :body nil}))
 
 (defn get-by-subscription [req]
   (let [{:keys [rss-id limit sort offset]} (:params req)

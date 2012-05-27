@@ -23,6 +23,9 @@
   (is (= 3 (to-int 3)))
   (is (= 3 (to-int "3"))))
 
+(deftest test-now-seconds
+  (is (now-seconds)))
+
 (deftest test-when-lets
   (is (= 6 (when-lets [a 1
                        [b c] [2 3]]

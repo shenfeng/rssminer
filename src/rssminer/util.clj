@@ -2,7 +2,6 @@
   (:use [clojure.data.json :only [json-str Write-JSON]]
         [clojure.tools.logging :only [error info]]
         [ring.middleware.file-info :only [make-http-format]]
-        [rssminer.time :only [now-seconds]]
         [clojure.pprint :only [pprint]])
   (:require [clojure.string :as str])
   (:import java.util.Date
@@ -42,6 +41,9 @@
 
 (defn ^:dynamic user-id-from-session [req] ;; for test code easy mock
   (:session req))
+
+(definline now-seconds []
+  `(quot (System/currentTimeMillis) 1000))
 
 (defn extract-text [html]
   (when html

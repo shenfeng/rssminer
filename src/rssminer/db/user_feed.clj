@@ -1,14 +1,17 @@
 (ns rssminer.db.user-feed
   (:use [rssminer.db.util :only [mysql-query with-mysql]]
-        [rssminer.time :only [now-seconds]]
+        [rssminer.util :only [now-seconds]]
         [clojure.java.jdbc :only [do-commands]]))
 
 ;;; vote time is not recoreded
 (defn insert-user-vote [user-id feed-id vote]
-  (with-mysql (do-commands ;; rss_link_id default 0, which is ok
-               (format "INSERT INTO user_feed (user_id, feed_id, vote_user)
-             VALUES (%d, %d, %d) ON DUPLICATE KEY UPDATE vote_user = %d"
-                       user-id feed-id vote vote))))
+  (let [n (now-seconds)]
+    (with-mysql (do-commands ;; rss_link_id default 0, which is ok
+                 (format "INSERT INTO user_feed
+                      (user_id, feed_id, vote_user, vote_date)
+             VALUES (%d, %d, %d, %d) ON DUPLICATE KEY
+             UPDATE vote_user = %d, vote_date = %d"
+                         user-id feed-id vote n vote n)))))
 
 (defn mark-as-read [user-id feed-id]
   (let [now (now-seconds)]

@@ -4,7 +4,7 @@
         [rssminer.db.util :only [mysql-query mysql-insert]]
         (rssminer [test-common :only [auth-app auth-app2 app-fixture
                                       user1 json-body]]
-                  [time :only [now-seconds]])))
+                  [util :only [now-seconds]])))
 
 (use-fixtures :each app-fixture)
 

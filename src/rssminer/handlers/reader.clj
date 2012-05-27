@@ -1,6 +1,6 @@
 (ns rssminer.handlers.reader
-  (:use (rssminer [util :only [user-id-from-session to-int time-since]]
-                  [time :only [now-seconds]]
+  (:use (rssminer [util :only [user-id-from-session to-int time-since
+                               now-seconds]]
                   [database :only [mysql-db-factory]]
                   [search :only [search*]])
         [ring.util.response :only [redirect]]

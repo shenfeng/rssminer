@@ -2,7 +2,7 @@
   (:use clojure.test
         rssminer.fetcher
         rssminer.db.feed
-        [rssminer.time :only [now-seconds]]
+        [rssminer.util :only [now-seconds]]
         [rssminer.db.util :only [mysql-query mysql-insert]]
         [rssminer.test-common :only [mysql-fixture]])
   (:import me.shenfeng.http.HttpUtils))
