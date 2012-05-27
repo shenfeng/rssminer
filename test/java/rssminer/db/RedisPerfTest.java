@@ -1,4 +1,4 @@
-package rssminer;
+package rssminer.db;
 
 import java.util.Random;
 

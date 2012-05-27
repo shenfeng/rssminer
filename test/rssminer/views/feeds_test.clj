@@ -43,3 +43,4 @@
     ;; vote date should be updated
     (is (> (:vote_date (get-user-feed fid)) 1))))
 
+

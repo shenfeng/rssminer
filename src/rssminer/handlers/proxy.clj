@@ -20,7 +20,7 @@
         link (db/fetch-link id)]
     (if link
       {:status 200
-       :body (FeedFuture. id link (req-headers req) @rssminer-conf)}
+       :body (FeedFuture. link (req-headers req) @rssminer-conf)}
       {:status 404
        :body "Not found"})))
 

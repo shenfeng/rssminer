@@ -40,18 +40,21 @@ CREATE TABLE feeds (
   author VARCHAR(24),
   link VARCHAR(220),
   title VARCHAR(256),
-  -- saved in lucene index, updated by orginal if fetched.
-  summary MEDIUMTEXT,           -- rss summary
-  original MEDIUMTEXT,          -- max 16m, orignal web page
+  -- 2012/5/27
+  -- alter table feeds drop original
+  -- alter table feeds drop final_link
+  -- original MEDIUMTEXT,          -- max 16m, orignal web page
   -- 2012/4/18
   -- ALTER TABLE feeds ADD COLUMN original MEDIUMTEXT
   -- ALTER TABLE feeds ADD COLUMN summary MEDIUMTEXT
-  final_link VARCHAR(256),
+  -- final_link VARCHAR(256),
   tags VARCHAR(128),
   updated_ts INT UNSIGNED,
   published_ts INT UNSIGNED,
   fetched_ts INT UNSIGNED,
   rss_link_id INT UNSIGNED,
+  summary MEDIUMTEXT,           -- rss summary, given by download rss
+
              -- REFERENCES rss_links ON UPDATE CASCADE ON DELETE CASCADE,
   UNIQUE rss_link_id_link (rss_link_id, link)
 );
@@ -85,6 +88,7 @@ create table user_feed (
     read_date INT default -1,   -- the reading date, -1, unread
     -- 2012/5/27
     -- alter table user_feed add vote_date int default -1 after read_date
+    -- alter table user_feed change rss_link_id rss_link_id int unsigned not null default 0 after feed_id;
     vote_date INT default -1,   -- the user vote date
     -- 2012/4/29 --replace index with unique index to support upsert
     -- insert into user_feed (user_id, feed_id, vote_user) values (1, 557, 1) on duplicate key update vote_user = 10;

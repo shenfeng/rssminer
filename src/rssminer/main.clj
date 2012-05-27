@@ -65,15 +65,15 @@
              ["--profile" "dev or prod" :default :dev :parse-fn keyword]
              ["--redis-host" "Redis for session store"
               :default "127.0.0.1"]
-             ["--proxy-server" "proxy server" :default "//192.168.1.2"]
-             ["--static-server" "static server" :default "//192.168.1.2"]
+             ["--proxy-server" "proxy server" :default "//192.168.1.3"]
+             ["--static-server" "static server" :default "//192.168.1.3"]
              ["--db-url" "Mysql Database url"
               :default "jdbc:mysql://localhost/rssminer"]
              ["--db-user" "Mysql Database user name" :default "feng"]
              ["--ip" "Which ip to bind" :default "0.0.0.0"]
              ["--index-path" "Path to store lucene index"
               :default "/var/rssminer/index"]
-             ["--[no-]fetcher" "Start rss fetcher" :default true]
+             ["--[no-]fetcher" "Start rss fetcher" :default false]
              ["--[no-]proxy" "Enable Socks proxy" :default true]
              ["--[no-]help" "Print this help"])]
     (when (:help options) (println banner) (System/exit 0))
