@@ -26,10 +26,10 @@
     (.getStat ^HttpTaskRunner @fetcher)))
 
 (defn- slower [last-interval]
-  (min (int (* last-interval 1.4)) (* 3600 24 3))) ;3 days
+  (min (int (* last-interval 1.4)) (* 3600 24 4))) ;4 days
 
 (defn- quicker [last-interval]
-  (max 14400 (int (/ last-interval 1.4)))) ; min 4h
+  (max (* 3600 6) (int (/ last-interval 1.4)))) ; min 6h
 
 (defn- next-check [last-interval status headers]
   (if-let [location (get headers HttpUtils/LOCATION)]
@@ -94,8 +94,8 @@
   (reset! fetcher (doto (HttpTaskRunner.
                          (doto (HttpTaskRunnerConf.)
                            ;; poll database
-                           (.setBulkCheckInterval (* 15  60  1000)) ; 15 min
-                           (.setBlockingTimeOut 20) ; 20 second
+                           (.setBulkCheckInterval (* 20  60  1000)) ; 20 min
+                           (.setBlockingTimeOut 25) ; 25 second
                            (.setBulkProvider (mk-provider))
                            (.setBlockingProvider (mk-blocking-provider))
                            (.setQueueSize (:fetcher-queue @rssminer-conf))
