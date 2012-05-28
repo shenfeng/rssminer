@@ -6,6 +6,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import javax.sound.midi.SysexMessage;
+
+import junit.framework.Assert;
+
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.queryParser.ParseException;
 import org.junit.Before;
@@ -33,5 +37,29 @@ public class SearcherTest {
         }
         String[] result = searcher.search("java technology", rssids, 10);
         System.out.println(Arrays.toString(result));
+    }
+
+    @Test
+    public void testSpaceSplit() {
+        List<String> results = Searcher.simpleSplit("  a  b   c");
+        System.out.println(results);
+        for (String str : results) {
+            System.out.println(str.length());
+        }
+        Assert.assertEquals(3, results.size());
+        results = Searcher.simpleSplit("what; are you doing;");
+        System.out.println(results);
+        Assert.assertEquals(4, results.size());
+        results = Searcher.simpleSplit("我所在的是10号车厢，满载118人，分排坐");
+        System.out.println(results);
+        Assert.assertEquals(3, results.size());
+        results = Searcher.simpleSplit("a");
+        Assert.assertEquals(1, results.size());
+
+        results = Searcher.simpleSplit(" a ");
+        Assert.assertEquals(1, results.size());
+
+        results = Searcher.simpleSplit("");
+        Assert.assertEquals(0, results.size());
     }
 }

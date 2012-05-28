@@ -1,5 +1,7 @@
 package rssminer;
 
+import static java.lang.Character.OTHER_PUNCTUATION;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -154,6 +156,30 @@ public class Searcher {
         indexer.addDocument(doc);
     }
 
+    public static List<String> simpleSplit(String str) {
+        ArrayList<String> strs = new ArrayList<String>(2);
+        int start = -1;
+        boolean splitter = true;
+        char ch;
+        for (int i = 0; i < str.length(); ++i) {
+            ch = str.charAt(i);
+            if (Character.isWhitespace(ch)
+                    || Character.getType(ch) == OTHER_PUNCTUATION) {
+                if (splitter == false) {
+                    strs.add(str.substring(start + 1, i));
+                }
+                splitter = true;
+                start = i;
+            } else {
+                splitter = false;
+            }
+        }
+        if (start != str.length() - 1) {
+            strs.add(str.substring(start + 1));
+        }
+        return strs;
+    }
+
     private Document createDocument(int feeId, int rssID, String author,
             String title, String summary, String tags) throws IOException {
         Document doc = new Document();
@@ -167,18 +193,30 @@ public class Searcher {
         doc.add(rid);
 
         if (author != null && author.length() > 0) {
-            // TODO why NOT_ANALYZED searched nothing?
-            Field a = new Field(AUTHOR, false, author, Store.NO,
-                    Index.ANALYZED, TermVector.YES);
-            a.setBoost(1.7f);
-            doc.add(a);
+            List<String> as = simpleSplit(author);
+            for (String au : as) {
+                Field a = new Field(AUTHOR, false, au.toLowerCase(),
+                        Store.NO, Index.NOT_ANALYZED, TermVector.YES);
+                a.setBoost(2f);
+                doc.add(a);
+            }
         }
 
         if (title != null) {
             Field t = new Field(TITLE, false, title, Store.NO,
                     Index.ANALYZED, TermVector.YES);
-            t.setBoost(2.5f);
+            t.setBoost(3f);
             doc.add(t);
+        }
+
+        if (tags != null && tags.length() > 0) {
+            List<String> ts = simpleSplit(tags);
+            for (String tag : ts) {
+                Field f = new Field(TAG, false, tag.toLowerCase(), Store.NO,
+                        Index.NOT_ANALYZED, TermVector.YES);
+                f.setBoost(2);
+                doc.add(f);
+            }
         }
 
         if (summary != null) {
@@ -188,17 +226,6 @@ public class Searcher {
                         Index.ANALYZED, TermVector.YES);
                 doc.add(c);
             } catch (SAXException ignore) {
-            }
-        }
-        if (tags != null) {
-            String[] ts = tags.split("; ");
-            for (String tag : ts) {
-                if (tag.length() > 0) {
-                    Field f = new Field(TAG, false, tag.toLowerCase(),
-                            Store.NO, Index.NOT_ANALYZED, TermVector.YES);
-                    f.setBoost(2);
-                    doc.add(f);
-                }
             }
         }
         return doc;
