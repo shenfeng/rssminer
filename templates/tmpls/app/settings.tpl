@@ -45,10 +45,7 @@
       <section>
         <h4>Expire time</h4>
         <div>
-          <select name="expire"
-            title="System automatically mark feed as read when
-            expires, calculated from author publish it.
-            Google Reader is 30 day.">
+          <select name="expire">
             {{#expire_times}}
               {{#selected}}
                 <option selected value="{{time}}">{{time}} day</option>
@@ -58,6 +55,9 @@
               {{/selected}}
             {{/expire_times}}
           </select>
+          <span class="tip">System automatically mark feed as read when
+            expires, calculated from author publish it.
+            Google Reader is 30 day.</span>
         </div>
       </section>
       <section>
