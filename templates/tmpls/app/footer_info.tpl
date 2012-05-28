@@ -7,3 +7,4 @@
   </span>
   <span class="indicator"></span>
 </div>
+<img src="/imgs/loader.gif"/>

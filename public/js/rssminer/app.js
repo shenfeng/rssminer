@@ -14,7 +14,7 @@
   var mark_as_read_timer_id = 0,
       current_sub_id;
 
-  var $loader = $('#footer img'),
+  var $footer = $('#footer'),
       $reading_area = $('#reading-area'),
       $navigation = $('#navigation'),
       $subs_list = $('#sub-list'),
@@ -75,15 +75,14 @@
           link = feed.link;
       feed.domain = util.hostname(link);
       set_document_title(feed.title);
-      var html = tmpls.footer_info(feed);
-      $('#footer .feed').replaceWith(html);
-      $loader.css({visibility: 'visible'});
+      $footer.empty().append(tmpls.footer_info(feed));
+      var $loader = $footer.find('> img');
       iframe.src = util.get_final_link(link, feedid);
-      var mark = mark_as_read($me, feedid, subid);
+      var mark_read = mark_feed_as_read($me, feedid, subid);
       clear_timer();
-      mark_as_read_timer_id = window.setTimeout(mark, 500);
+      mark_as_read_timer_id = window.setTimeout(mark_read, 500);
       iframe.onload = function () {
-        mark();
+        mark_read();
         $loader.css({visibility: 'hidden'});
       };
     };
@@ -98,7 +97,7 @@
     }
   }
 
-  function mark_as_read ($me, feedid, subid) {
+  function mark_feed_as_read ($me, feedid, subid) {
     var called = false;
     return function () {
       if(!called && !$me.hasClass('read')) {
