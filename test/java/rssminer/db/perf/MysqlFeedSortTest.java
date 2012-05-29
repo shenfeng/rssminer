@@ -19,10 +19,10 @@ public class MysqlFeedSortTest extends AbstractPerfTest {
         con = DriverManager.getConnection("jdbc:mysql://localhost/rssminer",
                 "feng", "");
     }
-    
+
     // used_memory_human:241.37M => 8021364
 
-    /////////////////
+    // ///////////////
 
     // used_memory_human:486.77M, 411916
     // insert 1245991 => 59s
@@ -68,7 +68,7 @@ public class MysqlFeedSortTest extends AbstractPerfTest {
             while (rs.next()) {
                 count++;
             }
-//            System.out.println(count);
+            // System.out.println(count);
             rs.close();
         }
     }
@@ -93,7 +93,7 @@ public class MysqlFeedSortTest extends AbstractPerfTest {
             while (rs.next()) {
                 count++;
             }
-//            System.out.println(count);
+            // System.out.println(count);
             rs.close();
         }
     }
@@ -115,11 +115,17 @@ public class MysqlFeedSortTest extends AbstractPerfTest {
             while (rs.next()) {
                 int feedid = rs.getInt("feed_id");
                 double vote = rs.getDouble("vote_sys");
-//                System.out.println(feedid + "\t" + vote);
+                // System.out.println(feedid + "\t" + vote);
                 count++;
             }
-//            System.out.println(count);
+            // System.out.println(count);
             rs.close();
         }
+    }
+
+    @Override
+    public void testCountPerf() throws Exception {
+        // TODO Auto-generated method stub
+
     }
 }

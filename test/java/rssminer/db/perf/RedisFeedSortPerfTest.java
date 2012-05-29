@@ -1,5 +1,8 @@
 package rssminer.db.perf;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Before;
@@ -8,6 +11,7 @@ import org.junit.Test;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.Response;
 import redis.clients.jedis.Tuple;
 
 public class RedisFeedSortPerfTest extends AbstractPerfTest {
@@ -72,7 +76,7 @@ public class RedisFeedSortPerfTest extends AbstractPerfTest {
             jedis.zunionstore(gen_key(userid), keys);
             Set<Tuple> result = jedis.zrevrangeWithScores(gen_key(userid), 0,
                     29);
-//            System.out.println(result.size());
+            // System.out.println(result.size());
             jedis.del(gen_key(userid));
         }
 
@@ -96,7 +100,7 @@ public class RedisFeedSortPerfTest extends AbstractPerfTest {
             Set<Tuple> result = jedis.zrevrangeWithScores(
                     test_tmp_key.getBytes(), 0, 29);
             jedis.del(test_tmp_key.getBytes());
-//            System.out.println(result.size());
+            // System.out.println(result.size());
         }
     }
 
@@ -113,9 +117,48 @@ public class RedisFeedSortPerfTest extends AbstractPerfTest {
             for (Tuple tuple : a) {
                 String e = tuple.getElement();
                 double s = tuple.getScore();
-//                System.out.println(e + "\t" + s);
+                // System.out.println(e + "\t" + s);
             }
         }
         pool.returnResource(jedis);
+    }
+
+    @Test
+    public void testCountPerf() throws Exception {
+        Jedis jedis = pool.getResource();
+        for (int userid = USER_ID_START; userid < USER_ID_START + NUM_TEST; userid++) {
+            int subcount = getSubsPerUser();
+            Pipeline pipeline = jedis.pipelined();
+            List<Response<Long>> results = new ArrayList<Response<Long>>(
+                    subcount * 2);
+            for (int i = 0; i < subcount; i++) {
+                byte[] key = gen_key(userid, i + SUB_ID_START);
+                results.add(pipeline.zcount(key, 70, 100));
+                results.add(pipeline.zcount(key, 40, 70));
+            }
+            pipeline.sync();
+            long[] count = new long[results.size()];
+            for (int i = 0; i < results.size(); i++) {
+                count[i] = results.get(i).get();
+            }
+            System.out.println(Arrays.toString(count));
+        }
+    }
+
+    @Test
+    public void testCountPerf2() throws Exception {
+        Jedis jedis = pool.getResource();
+        for (int userid = USER_ID_START; userid < USER_ID_START + NUM_TEST; userid++) {
+            int subcount = getSubsPerUser();
+            long[] count = new long[subcount * 2];
+
+            for (int i = 0; i < subcount; i++) {
+                byte[] key = gen_key(userid, i + SUB_ID_START);
+                count[i * 2] = jedis.zcount(key, 70, 100);
+                count[i * 2 + 1] = jedis.zcount(key, 40, 70);
+            }
+
+            System.out.println(Arrays.toString(count));
+        }
     }
 }

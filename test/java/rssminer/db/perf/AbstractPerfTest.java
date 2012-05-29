@@ -12,7 +12,7 @@ public abstract class AbstractPerfTest {
     static final int SUB_ID_START = 10000;
     static int NUM_SUBS_PER_USER = 40;
 
-    static int NUM_TEST = 1000;
+    static int NUM_TEST = 6000;
 
     public double getScore() {
         return random.nextDouble() * 100;
@@ -46,4 +46,6 @@ public abstract class AbstractPerfTest {
     public abstract void testPerSubPerf() throws Exception;
 
     public abstract void testFewSubsPerf() throws Exception;
+    
+    public abstract void testCountPerf() throws Exception;
 }
