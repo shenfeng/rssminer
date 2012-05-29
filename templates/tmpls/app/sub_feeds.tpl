@@ -30,7 +30,7 @@
   {{/feeds}}
 </ul>
 {{#pager}}
-  <ul class="pager clearfix">
+  <ul class="pager">
     {{#pages}}
       {{#current}}
         <li class="current"><a href="#{{href}}">{{ page }}</a></li>

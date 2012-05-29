@@ -11,8 +11,10 @@
   var SHOW_NAV = 'show-nav',
       SHOW_IFRAME = 'show-iframe';
 
-  var mark_as_read_timer_id = 0,
-      current_sub_id;
+  var gmark_as_read_timer_id = 0,
+      gcur_page,
+      gcur_sort,
+      gcur_sub_id;
 
   var $footer = $('#footer'),
       $reading_area = $('#reading-area'),
@@ -32,16 +34,29 @@
   }
 
   function read_subscription (id, page, sort, callback) {
-    page = page || 1;
-    sort = sort || 'newest';
     $reading_area.removeClass(SHOW_IFRAME);
-    var sub = data.get_subscription(id);
     layout.select('#sub-list', "item-" + id);
     data.get_feeds(id, page, sort, function (data) {
-      data.title = sub.title;
-      show_feeds(data, sub.title, sub.url);
+      show_feeds(data);
       call_if_fn(callback);
     });
+  }
+
+  function load_feeds_into_left_nav () {
+    data.get_feeds(gcur_sub_id, gcur_page, gcur_sort, function (data) {
+      $navigation.empty().append(tmpls.feeds_nav(data));
+      $navigation.scrollTop(0);
+    });
+  }
+
+  function load_next_page () {
+    gcur_page += 1;
+    load_feeds_into_left_nav();
+  }
+
+  function load_prev_page () {
+    gcur_page -= 1;
+    load_feeds_into_left_nav();
   }
 
   function decrement_number ($just_read, subid) {
@@ -57,15 +72,17 @@
   }
 
   function clear_timer () {
-    if(mark_as_read_timer_id) {
-      window.clearTimeout(mark_as_read_timer_id);
-      mark_as_read_timer_id = null;
+    if(gmark_as_read_timer_id) {
+      window.clearTimeout(gmark_as_read_timer_id);
+      gmark_as_read_timer_id = null;
     }
   }
 
-  function read_feed (subid, feedid) {
+  function read_feed (subid, feedid, page, sort) {
     var read = function () {
-      current_sub_id = subid;
+      gcur_sub_id = subid;
+      gcur_sort = sort;
+      gcur_page = page;
       $reading_area.addClass(SHOW_IFRAME);
       var me = "feed-" + feedid,
           $me = $('#' + me);
@@ -80,19 +97,19 @@
       iframe.src = util.get_final_link(link, feedid);
       var mark_read = mark_feed_as_read($me, feedid, subid);
       clear_timer();
-      mark_as_read_timer_id = window.setTimeout(mark_read, 500);
+      gmark_as_read_timer_id = window.setTimeout(mark_read, 500);
       iframe.onload = function () {
         mark_read();
         $loader.css({visibility: 'hidden'});
       };
     };
-    if(current_sub_id === subid) {
+    if(gcur_sub_id === subid) {
       read();                   // just read feed
     } else {
       if(_.isNumber(subid)) {
-        read_subscription(subid, 1, 'newest', read);
+        read_subscription(subid, page, sort, read);
       } else {
-        show_welcome(subid, 1, read);
+        show_welcome(subid, page, read);
       }
     }
   }
@@ -109,15 +126,13 @@
     };
   }
 
-  function show_feeds (data, title, url) {
-    data.title = title;
-    data.url = url;
+  function show_feeds (data) {
     iframe.src = 'about:blank';
     var html = tmpls.feeds_nav(data);
     $navigation.empty().append(html);
     html = tmpls.sub_feeds(data);
     $welcome_list.empty().append(html).trigger('child_change.rm');
-    set_document_title(title);
+    set_document_title(data.title);
     $reading_area.removeClass(SHOW_IFRAME);
     $logo.addClass(SHOW_NAV);
   }
@@ -164,7 +179,7 @@
     }
   }
 
-  function show_settings (section) {
+  function show_settings () {
     $reading_area.removeClass(SHOW_IFRAME);
     var html = tmpls.settings(data.user_settings());
     $welcome_list.empty().append(html).find('img').each(util.favicon_error);
@@ -257,6 +272,8 @@
     'click #add-subscription': add_subscription,
     'click #save-settings': save_settings,
     'click .settings-sort li': switch_settings_tab,
+    'click #nav-pager .next': load_next_page,
+    'click #nav-pager .prev': load_prev_page,
     'click #add-sub a': function () {
       alert('Only avaiable when published, please wait a while');
       return false;
@@ -279,11 +296,8 @@
       '': show_welcome,
       '?s=:section&p=:p': show_welcome,
       'settings': show_settings,
-      'settings/:section': show_settings,
       'read/:id?p=:page&s=:sort': read_subscription,
-      'read/:id?p=:page': read_subscription,
-      'read/:id/:id': read_feed,
-      'read/:id': read_subscription
+      'read/:id/:id?p=:page&s=:sort': read_feed
     });
   });
 })();

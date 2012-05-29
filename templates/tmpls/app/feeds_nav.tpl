@@ -20,3 +20,13 @@
     </li>
   {{/feeds}}
 </ul>
+{{#pager}}
+  <div id="nav-pager" class="pager">
+    {{#prev}}
+      <li class="prev">prev</li>
+    {{/prev}}
+    {{#next}}
+      <li class="next">next</li>
+    {{/next}}
+  </div>
+{{/pager}}

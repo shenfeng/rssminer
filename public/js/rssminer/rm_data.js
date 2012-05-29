@@ -118,9 +118,10 @@
             day < 10 ? '0' + day : day].join('/');
   }
 
-  function transform_item (feed) {
+  function transform_item (feed, page, sort, section) {
     var cf = cache_fixer[feed.id],
-        sub_id = feed.rss_link_id;
+        rss_link_id = feed.rss_link_id;
+    section = section || rss_link_id;
     if(cf) {
       // try to fix outdated data, browser cache 1 hour
       feed.read_date = 'read_date' in cf ? cf.read_date : feed.read_date;
@@ -132,12 +133,13 @@
     }
     return {
       author: feed.author || util.hostname(feed.link),
-      sub: sub_titles[sub_id],    // use to show search result
+      sub: sub_titles[rss_link_id],    // use to show search result
+      rss_link_id: rss_link_id,
       cls: feed_css_class(feed),
       user_like: feed.vote_user > 0,
       user_dislike: feed.vote_user < 0,
       date: ymdate(feed.published_ts),
-      href: feed_hash(sub_id, feed.id),
+      href: feed_hash(section, feed.id, page, sort),
       id: feed.id,
       link: feed.link,
       tags: split_tag(feed.tags),
@@ -226,15 +228,14 @@
       resp = resp || [];
       feeds_cache[section] = resp; // cache unchanged
       var feeds = _.map(resp, function (feed) {
-        var result = transform_item(feed);
-        result.href = feed_hash(section, feed.id); // change href
+        var result = transform_item(feed, page, 'score', section);
         if(section === 'read') { // read show read date
           result.date = ymdate(feed.read_date);
         }
         return result;
       });
       cb({
-        title: 'Rssminer - an intelligent RSS reader',
+        title: section + ' - Rssminer, an intelligent RSS reader',
         feeds: feeds,
         pager: compute_welcome_paging(section, page, resp.length),
         sort: sort_data
@@ -253,8 +254,10 @@
     return '?s=' + section + '&p=' + page;
   }
 
-  function feed_hash (sub, id) {
-    return 'read/' + sub + "/" + id;
+  function feed_hash (sub, id, page, sort) {
+    var h = 'read/' + sub + "/" + id;
+    if(page) { h += '?p=' + page + '&s=' + sort; }
+    return h;
   }
 
   function get_feeds (subid, page, sort, cb) {
@@ -272,7 +275,9 @@
     });
     ajax.get(url, function (resp) {
       feeds_cache['current_sub'] = resp;
-      var feeds =  _.map(resp, transform_item),
+      var feeds = _.map(resp, function (feed) {
+        return transform_item(feed, page, sort);
+      }),
           sort_data = [];
       for(var s in SORTINGS_TABS) {
         sort_data.push({
@@ -282,6 +287,8 @@
         });
       }
       cb({
+        title: sub.title,
+        url: sub.url,
         feeds: feeds,
         sort: sort_data,
         pager: compute_sub_paging(subid, sort, total, page, PER_PAGE_FEEDS)
@@ -349,7 +356,9 @@
       return {
         count: count,
         page: page,
-        pages: pages
+        pages: pages,
+        prev: page > 1,         // has prev page
+        next: count > page      // has next page
       };
     }
   }
@@ -455,7 +464,11 @@
       last_search_ajax = ajax.sget(url, function (resp) {
         last_search_ajax = undefined;
         feeds_cache['search_result'] = resp; // cache unchanged
-        var feeds = _.map(resp, transform_item);
+        var feeds = _.map(resp, function (feed) {
+          // no dedicated url and page, since I can just click the search box,
+          // and get the result again
+          return transform_item(feed, 1, 'score');
+        });
         cb({subs: subs, feeds: feeds, sub_cnt: subs.length});
       });
     } else {
