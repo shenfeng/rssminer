@@ -113,7 +113,7 @@
   function unsubscribe_item () {
     var subid = $last_menu_ui.attr('data-id'),
         sub = data.get_subscription(subid);
-    $ct_menu.remove();
+    $ct_menu.hide();
     if(confirm('unsubscribe "' + sub.title + '"')) {
       data.unsubscribe(subid, function () {
         $last_menu_ui.remove();
@@ -201,7 +201,7 @@
   });
 
   util.delegate_events($('#main'), {
-    'contextmenu .feed': show_feed_context_menu
+    'contextmenu .feeds .feed': show_feed_context_menu
   });
 
   $subs_list.sortable({

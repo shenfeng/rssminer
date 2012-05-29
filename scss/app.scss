@@ -245,7 +245,7 @@ ul { list-style: none; padding: 0; margin: 0; }
     margin: 3px 2px 2px 0;
     h2 {
         a { color: black; }
-        text-align: center; margin: 14px 0 12px 0;
+        text-align: center; margin: 14px 0 8px 0;
     }
     .date {
         position: absolute;
@@ -376,6 +376,7 @@ iframe {
         max-width: 670px;
         font-weight: bold;
         color: white;
+        margin-left: 15px;
         @include overflow-ellipsis();
         &:hover { text-decoration: underline; }
     }
@@ -389,7 +390,7 @@ iframe {
     .like .vote span.up { visibility: visible; }
     .dislike .vote span.down { visibility: visible; }
     .neutral, .sys { span { visibility: visible; } }
-    .domain { color: white; padding: 0 10px 30px 40px ; font-size: 12px;}
+    .domain { color: white; padding: 0 10px 30px 10px ; font-size: 12px;}
     .indicator {
         top: 7px; right: 65px;
         height: 12px;
