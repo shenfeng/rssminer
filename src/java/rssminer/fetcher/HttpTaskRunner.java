@@ -1,4 +1,4 @@
-package rssminer.task;
+package rssminer.fetcher;
 
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;

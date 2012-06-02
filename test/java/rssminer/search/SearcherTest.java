@@ -15,7 +15,6 @@ import org.apache.lucene.queryParser.ParseException;
 import org.junit.Before;
 import org.junit.Test;
 
-import rssminer.Searcher;
 
 public class SearcherTest {
 

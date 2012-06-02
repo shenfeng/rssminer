@@ -1,6 +1,6 @@
-(ns rssminer.db.util-test
+(ns rssminer.database-test
   (:use clojure.test
-        [rssminer.db.util :only [select-sql-params]])
+        [rssminer.database :only [select-sql-params]])
   (:require [clojure.string :as str]))
 
 (deftest test-select-sql-params

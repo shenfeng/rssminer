@@ -19,6 +19,8 @@ import org.apache.lucene.util.Version;
 import org.junit.Assert;
 import org.junit.Test;
 
+import rssminer.search.KStemStopAnalyzer;
+
 public class AnalyzerTest {
     
     @Test

@@ -1,5 +1,5 @@
 (ns rssminer.db.feed
-  (:use [rssminer.db.util :only [mysql-query with-mysql mysql-insert]]
+  (:use [rssminer.database :only [mysql-query with-mysql mysql-insert]]
         (rssminer [search :only [index-feed]]
                   [util :only [ignore-error now-seconds]])
         [clojure.string :only [blank?]]
@@ -24,19 +24,6 @@
   (SELECT COUNT(*) FROM feeds where rss_link_id = " rss-id ") WHERE id = "
   rss-id))))
 
-(defn fetch-by-rssid [user-id rss-id limit offset sort]
-  (mysql-query
-   [(str "SELECT id, author, link, title, published_ts, f.rss_link_id,
-          uf.read_date, uf.vote_user, uf.vote_sys FROM feeds f
-          LEFT JOIN user_feed uf on user_id = ? and id = uf.feed_id
-      WHERE f.rss_link_id = ? "
-         (case sort
-           "newest" "ORDER BY published_ts DESC"
-           "oldest" "ORDER BY published_ts"
-           "likest" "ORDER BY vote_sys DESC")
-         " LIMIT ? OFFSET ?")
-    user-id, rss-id, limit, offset]))
-
 (defn fetch-link [id]
   (:link (first (mysql-query ["SELECT link FROM feeds WHERE id = ?" id]))))
 
@@ -55,8 +42,8 @@
                          {:rss_link_id saved-id})
           (update-values :feeds ["rss_link_id = ?" id]
                          {:rss_link_id saved-id})
-          (update-values :user_feed ["rss_link_id = ?" id]
-                         {:rss_link_id saved-id})
+          ;; (update-values :user_feed ["rss_link_id = ?" id]
+          ;;                {:rss_link_id saved-id})
           (delete-rows :rss_links ["id = ?" id])))
       (safe-update-rss-link id data))
     (safe-update-rss-link id data)))

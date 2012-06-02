@@ -10,6 +10,8 @@ import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.util.Version;
 
+import rssminer.search.StopFilter;
+
 public class PorterStopAnalyzer extends Analyzer {
 
     private final Version v;

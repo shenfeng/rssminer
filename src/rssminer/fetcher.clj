@@ -6,7 +6,7 @@
                   [http :only [parse-response]]
                   [config :only [rssminer-conf]]))
   (:require [rssminer.db.feed :as db])
-  (:import [rssminer.task HttpTaskRunner IHttpTask IHttpTasksProvder
+  (:import [rssminer.fetcher HttpTaskRunner IHttpTask IHttpTasksProvder
             HttpTaskRunnerConf IBlockingTaskProvider]
            me.shenfeng.http.HttpUtils))
 
@@ -98,7 +98,8 @@
                            (.setBlockingTimeOut 25) ; 25 second
                            (.setBulkProvider (mk-provider))
                            (.setBlockingProvider (mk-blocking-provider))
-                           (.setQueueSize (:fetcher-queue @rssminer-conf))
+                           (.setQueueSize (:fetcher-concurrency
+                                           @rssminer-conf))
                            (.setProxy (:proxy @rssminer-conf))
                            (.setName "Fetcher")))
                     (.start))))

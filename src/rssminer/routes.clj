@@ -24,9 +24,9 @@
 (defroutes api-routes
   (context "/subs" []
            (JGET "/" [] subs/list-subscriptions)
+           (JGET "/:rss-id" [] feed/get-by-subscription)
            (JPOST "/sort" [] subs/save-sort-order)
            (JPOST "/add" [] subs/add-subscription)
-           (JGET "/:rss-id" [] feed/get-by-subscription)
            (JGET "/p/:rss-id" [] subs/polling-fetcher)
            (JDELETE "/:rss-id" [] subs/unsubscribe))
   (JGET "/search" [] reader/search)
@@ -34,9 +34,7 @@
   (JGET "/welcome" [] user/summary)
   (context "/feeds/:id" []
            (JPOST "/vote" [] feed/user-vote)
-           (POST "/read" [] feed/mark-as-read))
-  (JPOST "/import/opml" [] import/opml-import)
-  (JGET "/export/opml" [] "TODO"))
+           (POST "/read" [] feed/mark-as-read)))
 
 (defroutes all-routes
   (GET "/" [] reader/landing-page)

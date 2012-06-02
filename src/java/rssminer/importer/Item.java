@@ -33,5 +33,4 @@ public class Item {
         return "Item [title=" + title + ", url=" + url + ", category="
                 + category + "]";
     }
-
 }

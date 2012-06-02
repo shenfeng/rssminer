@@ -3,7 +3,7 @@
         rssminer.fetcher
         rssminer.db.feed
         [rssminer.util :only [now-seconds]]
-        [rssminer.db.util :only [mysql-query mysql-insert]]
+        [rssminer.database :only [mysql-query mysql-insert]]
         [rssminer.test-common :only [mysql-fixture]])
   (:import me.shenfeng.http.HttpUtils))
 
@@ -14,7 +14,7 @@
                 (test-fn)))
 
 (deftest test-mk-provider
-  (let [provider ^rssminer.task.IHttpTasksProvder (mk-provider)
+  (let [provider ^rssminer.fetcher.IHttpTasksProvder (mk-provider)
         task (first (.getTasks provider))]
     (is (.getUri task))
     (let [header (.getHeaders task)]

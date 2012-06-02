@@ -13,24 +13,15 @@ import org.xml.sax.SAXException;
 
 public class Parser {
 
-    private static List<Item> parse(AbstractHandler handler, String input)
-            throws SAXException, IOException, ParserConfigurationException {
+    public static List<Item> parseGReaderSubs(String input)
+            throws ParserConfigurationException, SAXException, IOException {
+
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser parser = factory.newSAXParser();
 
+        GoogleExportHandler handler = new GoogleExportHandler();
         parser.parse(new InputSource(new StringReader(input)), handler);
 
         return handler.getItems();
     }
-
-    public static List<Item> parseOPML(String input)
-            throws ParserConfigurationException, SAXException, IOException {
-        return parse(new OPMLHandler(), input);
-    }
-
-    public static List<Item> parseGReaderSubs(String input)
-            throws ParserConfigurationException, SAXException, IOException {
-        return parse(new GoogleExportHandler(), input);
-    }
-
 }

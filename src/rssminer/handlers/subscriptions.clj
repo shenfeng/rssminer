@@ -1,7 +1,7 @@
 (ns rssminer.handlers.subscriptions
   (:use (rssminer [redis :only [fetcher-enqueue]]
                   [util :only [to-int user-id-from-session time-since]])
-        [rssminer.db.util :only [mysql-insert-and-return]]
+        [rssminer.database :only [mysql-insert-and-return]]
         [clojure.tools.logging :only [info]]
         [rssminer.db.user :only [find-user-by-id]])
   (:require [rssminer.db.subscription :as db]
@@ -28,14 +28,7 @@
     (db/fetch-user-sub rss-id)))
 
 (defn list-subscriptions [req]
-  (let [uid (user-id-from-session req)]
-    (if (-> req :params :only_url)
-      (map :url (db/fetch-user-subsurls uid)) ; for extension
-      (let [scores (if-let [s (:scores (find-user-by-id uid))]
-                     (str/split s #","))
-            like (if scores (Double/parseDouble (first scores)) 1.0)
-            neutral (if scores (Double/parseDouble (second scores)) 0)]
-        (db/fetch-user-subs uid like neutral)))))
+  (db/fetch-user-subs (user-id-from-session req))  )
 
 (defn add-subscription [req]
   (let [link  (-> req :body :link)

@@ -1,4 +1,4 @@
-package rssminer;
+package rssminer.search;
 
 import static java.lang.Character.OTHER_PUNCTUATION;
 
@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import rssminer.Utils;
 import rssminer.sax.ExtractMainTextHandler;
 
 public class Searcher {
@@ -67,21 +68,7 @@ public class Searcher {
     private IndexWriter indexer = null;
     private final String path;
 
-    public void toggleInfoStream(boolean toggle) throws IOException {
-        if (toggle) {
-            indexer.setInfoStream(System.out);
-        } else {
-            indexer.setInfoStream(null);
-        }
-    }
-
     public static Searcher SEARCHER; // global
-
-    public static Searcher initGlobalSearcher(String path) throws IOException {
-        closeGlobalSearcher();
-        SEARCHER = new Searcher(path);
-        return SEARCHER;
-    }
 
     public static void closeGlobalSearcher() {
         if (SEARCHER != null) {
@@ -93,67 +80,10 @@ public class Searcher {
         }
     }
 
-    private Searcher(String path) throws IOException {
-        final IndexWriterConfig cfg = new IndexWriterConfig(V, analyzer);
-        this.path = path;
-        cfg.setOpenMode(OpenMode.CREATE_OR_APPEND);
-        Directory dir = null;
-        if (path.equals("RAM")) {
-            dir = new RAMDirectory();
-        } else {
-            dir = FSDirectory.open(new File(path));
-        }
-        indexer = new IndexWriter(dir, cfg);
-    }
-
-    public String toString() {
-        return "Searcher@" + path;
-    }
-
-    public void clear() throws IOException {
-        indexer.deleteAll();
-        indexer.commit();
-    }
-
-    public void close() throws CorruptIndexException, IOException {
-        if (indexer != null) {
-            logger.info("close Searcher@" + path);
-            indexer.close();
-            indexer = null;
-        }
-    }
-
-    public void updateIndex(int feedid, int rssID, String html) {
-        if (html != null && !html.isEmpty()) {
-            Parser p = Utils.parser.get();
-            ExtractMainTextHandler h = new ExtractMainTextHandler();
-            p.setContentHandler(h);
-            try {
-                p.parse(new InputSource(new StringReader(html)));
-                String content = h.getContent();
-                String title = h.getTitle();
-                indexer.updateDocument(
-                        FEED_ID_TERM.createTerm(Integer.toString(feedid)),
-                        createDocument(feedid, rssID, null, title, content,
-                                null));
-            } catch (Exception e) {
-                logger.info(e.getMessage(), e);
-            }
-        }
-    }
-
-    public void index(int feeID, int rssID, String author, String title,
-            String summary, String tags) throws CorruptIndexException,
-            IOException {
-        try {
-            if (summary != null)
-                summary = Utils.extractText(summary);
-        } catch (SAXException ignore) {
-        }
-        Document doc = createDocument(feeID, rssID, author, title, summary,
-                tags);
-
-        indexer.addDocument(doc);
+    public static Searcher initGlobalSearcher(String path) throws IOException {
+        closeGlobalSearcher();
+        SEARCHER = new Searcher(path);
+        return SEARCHER;
     }
 
     public static List<String> simpleSplit(String str) {
@@ -178,6 +108,68 @@ public class Searcher {
             strs.add(str.substring(start + 1));
         }
         return strs;
+    }
+
+    private Searcher(String path) throws IOException {
+        final IndexWriterConfig cfg = new IndexWriterConfig(V, analyzer);
+        this.path = path;
+        cfg.setOpenMode(OpenMode.CREATE_OR_APPEND);
+        Directory dir = null;
+        if (path.equals("RAM")) {
+            dir = new RAMDirectory();
+        } else {
+            dir = FSDirectory.open(new File(path));
+        }
+        indexer = new IndexWriter(dir, cfg);
+    }
+
+    private Query buildQuery(String text, List<Integer> rssids)
+            throws IOException {
+        TokenStream stream = analyzer.tokenStream("", new StringReader(text));
+
+        CharTermAttribute c = stream.getAttribute(CharTermAttribute.class);
+        List<String> terms = new ArrayList<String>(4);
+        while (stream.incrementToken()) {
+            String term = new String(c.buffer(), 0, c.length());
+            terms.add(term);
+        }
+
+        BooleanQuery q = new BooleanQuery();
+
+        for (Term t : TERMS) {
+            BooleanQuery part = new BooleanQuery();
+            for (String term : terms) {
+                part.add(new TermQuery(t.createTerm(term)), Occur.MUST);
+            }
+            // boost is set at index time
+            // part.setBoost(2);
+            q.add(part, Occur.SHOULD);
+        }
+
+        BooleanQuery ids = new BooleanQuery();
+        for (Integer rid : rssids) {
+            ids.add(new TermQuery(RSS_ID_TERM.createTerm(rid.toString())),
+                    Occur.SHOULD);
+        }
+
+        BooleanQuery query = new BooleanQuery();
+        query.add(q, Occur.MUST);
+        query.add(ids, Occur.MUST);
+
+        return query;
+    }
+
+    public void clear() throws IOException {
+        indexer.deleteAll();
+        indexer.commit();
+    }
+
+    public void close() throws CorruptIndexException, IOException {
+        if (indexer != null) {
+            logger.info("close Searcher@" + path);
+            indexer.close();
+            indexer = null;
+        }
     }
 
     private Document createDocument(int feeId, int rssID, String author,
@@ -231,44 +223,45 @@ public class Searcher {
         return doc;
     }
 
+    public int feedID2DocID(IndexSearcher searcher, int feedid)
+            throws CorruptIndexException, IOException {
+        TermQuery query = new TermQuery(FEED_ID_TERM.createTerm(Integer
+                .toString(feedid)));
+        TopDocs docs = searcher.search(query, 1);
+        if (docs.totalHits == 1) {
+            return docs.scoreDocs[0].doc;
+        } else {
+            return -1; // return -1, not found
+        }
+    }
+
+    public int[] feedID2DocIDs(List<Integer> feeds)
+            throws CorruptIndexException, IOException {
+        int[] array = new int[feeds.size()];
+        IndexSearcher searcher = new IndexSearcher(getReader());
+        for (int i = 0; i < feeds.size(); i++) {
+            int l = feeds.get(i);
+            array[i] = feedID2DocID(searcher, l);
+        }
+        return array;
+    }
+
     public IndexReader getReader() throws CorruptIndexException, IOException {
         return IndexReader.open(indexer, false);
     }
 
-    private Query buildQuery(String text, List<Integer> rssids)
-            throws IOException {
-        TokenStream stream = analyzer.tokenStream("", new StringReader(text));
-
-        CharTermAttribute c = stream.getAttribute(CharTermAttribute.class);
-        List<String> terms = new ArrayList<String>(4);
-        while (stream.incrementToken()) {
-            String term = new String(c.buffer(), 0, c.length());
-            terms.add(term);
+    public void index(int feeID, int rssID, String author, String title,
+            String summary, String tags) throws CorruptIndexException,
+            IOException {
+        try {
+            if (summary != null)
+                summary = Utils.extractText(summary);
+        } catch (SAXException ignore) {
         }
+        Document doc = createDocument(feeID, rssID, author, title, summary,
+                tags);
 
-        BooleanQuery q = new BooleanQuery();
-
-        for (Term t : TERMS) {
-            BooleanQuery part = new BooleanQuery();
-            for (String term : terms) {
-                part.add(new TermQuery(t.createTerm(term)), Occur.MUST);
-            }
-            // boost is set at index time
-            // part.setBoost(2);
-            q.add(part, Occur.SHOULD);
-        }
-
-        BooleanQuery ids = new BooleanQuery();
-        for (Integer rid : rssids) {
-            ids.add(new TermQuery(RSS_ID_TERM.createTerm(rid.toString())),
-                    Occur.SHOULD);
-        }
-
-        BooleanQuery query = new BooleanQuery();
-        query.add(q, Occur.MUST);
-        query.add(ids, Occur.MUST);
-
-        return query;
+        indexer.addDocument(doc);
     }
 
     // return feed ids
@@ -287,21 +280,34 @@ public class Searcher {
         return array;
     }
 
-    public int[] feedID2DocIDs(List<Integer> feeds)
-            throws CorruptIndexException, IOException {
-        int[] array = new int[feeds.size()];
-        IndexSearcher searcher = new IndexSearcher(getReader());
-        for (int i = 0; i < feeds.size(); i++) {
-            int l = feeds.get(i);
-            TermQuery query = new TermQuery(new Term(FEED_ID,
-                    Integer.toString(l)));
-            TopDocs docs = searcher.search(query, 1);
-            if (docs.totalHits == 1) {
-                array[i] = docs.scoreDocs[0].doc;
-            } else {
-                array[i] = -1; // return -1, not found
+    public void toggleInfoStream(boolean toggle) throws IOException {
+        if (toggle) {
+            indexer.setInfoStream(System.out);
+        } else {
+            indexer.setInfoStream(null);
+        }
+    }
+
+    public String toString() {
+        return "Searcher@" + path;
+    }
+
+    public void updateIndex(int feedid, int rssID, String html) {
+        if (html != null && !html.isEmpty()) {
+            Parser p = Utils.parser.get();
+            ExtractMainTextHandler h = new ExtractMainTextHandler();
+            p.setContentHandler(h);
+            try {
+                p.parse(new InputSource(new StringReader(html)));
+                String content = h.getContent();
+                String title = h.getTitle();
+                indexer.updateDocument(
+                        FEED_ID_TERM.createTerm(Integer.toString(feedid)),
+                        createDocument(feedid, rssID, null, title, content,
+                                null));
+            } catch (Exception e) {
+                logger.info(e.getMessage(), e);
             }
         }
-        return array;
     }
 }

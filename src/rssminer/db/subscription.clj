@@ -1,7 +1,9 @@
 (ns rssminer.db.subscription
-  (:use [rssminer.db.util :only [select-sql-params mysql-insert-and-return
-                                 mysql-query with-mysql]]
-        [clojure.java.jdbc :only [delete-rows update-values do-commands]]))
+  (:use [rssminer.database :only [select-sql-params mysql-insert-and-return
+                                  mysql-query with-mysql]]
+        [rssminer.config :only [rssminer-conf]]
+        [clojure.java.jdbc :only [delete-rows update-values do-commands]])
+  (:import rssminer.db.MinerDAO))
 
 (defn fetch-rss-link [map]
   (first
@@ -11,16 +13,6 @@
   (-> (mysql-query ["SELECT COUNT(*) as count
                 FROM feeds WHERE rss_link_id = ?" rss-id])
       first :count))
-
-(defn fetch-user-subs [user-id like neutral]
-  (map (fn [{:keys [o_title title] :as s}]
-         (dissoc (assoc s :title (or title o_title))
-                 :o_title))
-       (mysql-query ["call get_user_subs(?, ?, ?)" user-id like neutral])))
-
-(defn fetch-user-subsurls [user-id]     ; only url
-  (mysql-query ["SELECT url FROM rss_links r JOIN user_subscription s
-                 ON r.id = s.rss_link_id WHERE s.user_id = ?" user-id]))
 
 (defn fetch-user-subids [user-id]
   (map :id (mysql-query ["SELECT rss_link_id AS id FROM user_subscription
@@ -52,3 +44,7 @@
                                 " WHERE user_id = " user-id
                                 " AND rss_link_id = " (:id d)))
                 data (range 400 200000 4)))))
+
+(defn fetch-user-subs [userid]
+  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+    (.fetchUserSubs db userid)))

@@ -1,6 +1,5 @@
-(ns rssminer.db.util
-  (:use [rssminer.database :only [mysql-db-factory]]
-        [clojure.java.jdbc :only [with-connection with-query-results
+(ns rssminer.database
+  (:use [clojure.java.jdbc :only [with-connection with-query-results
                                   insert-record as-identifier]])
   (:require [clojure.string :as str])
   (:import java.text.SimpleDateFormat

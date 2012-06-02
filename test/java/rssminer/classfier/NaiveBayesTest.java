@@ -14,7 +14,7 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.junit.Before;
 import org.junit.Test;
 
-import rssminer.Searcher;
+import rssminer.search.Searcher;
 import clojure.lang.ArraySeq;
 
 public class NaiveBayesTest {

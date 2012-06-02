@@ -10,6 +10,7 @@
            java.text.SimpleDateFormat
            java.net.URI
            me.shenfeng.http.HttpUtils
+           [rssminer.db Feed Subscription]
            [java.io StringWriter PrintWriter StringReader]
            [java.security NoSuchAlgorithmException MessageDigest]))
 
@@ -34,10 +35,20 @@
 (defn- write-json-date [^Date d ^PrintWriter out escape-unicode?]
   (.print out (int (/ (.getTime d) 1000))))
 
+(defn- write-json-feed [^Feed f ^PrintWriter out escape-unicode?]
+  (.print out (json-str (dissoc (bean f) :class))))
+
+(defn- write-json-sub [^Subscription f ^PrintWriter out escape-unicode?]
+  (.print out (json-str (dissoc (bean f) :class))))
+
 (extend Date Write-JSON
         {:write-json write-json-date})
 (extend Timestamp Write-JSON
         {:write-json write-json-date})
+(extend Feed Write-JSON
+        {:write-json write-json-feed})
+(extend Subscription Write-JSON
+        {:write-json write-json-sub})
 
 (defn ^:dynamic user-id-from-session [req] ;; for test code easy mock
   (:session req))

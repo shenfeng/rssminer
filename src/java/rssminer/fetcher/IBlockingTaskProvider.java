@@ -1,4 +1,4 @@
-package rssminer.task;
+package rssminer.fetcher;
 
 public interface IBlockingTaskProvider {
 

@@ -1,4 +1,4 @@
-package rssminer;
+package rssminer.search;
 
 import java.io.IOException;
 import java.io.InputStream;

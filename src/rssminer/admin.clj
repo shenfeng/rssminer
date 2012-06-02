@@ -1,8 +1,8 @@
 (ns rssminer.admin
   (:gen-class)
   (:use (rssminer [search :only [index-feed use-index-writer!
-                                 close-global-index-writer!]])
-        (rssminer.db [util :only [mysql-query with-mysql mysql-insert]])
+                                 close-global-index-writer!]]
+                  [database :only [mysql-query with-mysql mysql-insert]])
         (clojure.tools [logging :only [info]]
                        [cli :only [cli]])
         [clojure.java.jdbc :only [with-query-results]])

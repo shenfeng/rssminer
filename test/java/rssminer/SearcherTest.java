@@ -8,6 +8,8 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 
+import rssminer.search.Searcher;
+
 public class SearcherTest {
 
 	private String html;

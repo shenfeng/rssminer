@@ -1,17 +1,20 @@
 (ns rssminer.classify
+  (:use [rssminer.config :only [rssminer-conf]])
   (:import rssminer.classfier.SysVoteDaemon))
 
 (defonce daemon (atom nil))
 
-(defn start-classify-daemon [datasource]
+(defn start-classify-daemon []
   (when (nil? @daemon)
-    (reset! daemon (doto (SysVoteDaemon. datasource)
+    (reset! daemon (doto (SysVoteDaemon. @rssminer-conf)
                      (.start)))))
 
 (defn stop-classify-daemon []
   (when-not (nil? @daemon)
-    (.stop ^SysVoteDaemon @daemon)))
+    (.stop ^SysVoteDaemon @daemon)
+    (reset! daemon nil)))
 
-(defn on-user-vote [user-id feed-id like]
-  (when-not (nil? @daemon)
-    (.onUserVote ^SysVoteDaemon @daemon user-id feed-id like)))
+(defn on-fetcher-event [subid feedids])
+
+(defn on-feed-event [user-id feed-id]
+  (.onFeedEvent ^SysVoteDaemon @daemon user-id feed-id))

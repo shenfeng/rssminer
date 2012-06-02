@@ -2,7 +2,7 @@
   (:require [rssminer.db.dashboard :as db]
             (rssminer [config :as conf]
                       [fetcher :as f]))
-  (:import [rssminer.task HttpTaskRunner]))
+  (:import [rssminer.fetcher HttpTaskRunner]))
 
 (defn get-stat [req]
   {:rss_links (db/rss-links-count)

@@ -1,6 +1,6 @@
 package rssminer.classfier;
 
-import static rssminer.Searcher.SEARCHER;
+import static rssminer.search.Searcher.SEARCHER;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,8 +15,9 @@ import java.util.Map.Entry;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.TermFreqVector;
+import org.apache.lucene.search.IndexSearcher;
 
-import rssminer.Searcher;
+import rssminer.search.Searcher;
 
 class Holder implements Comparable<Holder> {
 
@@ -125,6 +126,14 @@ public class NaiveBayes {
             }
         }
         return result;
+    }
+
+    public static double classify(Map<String, Map<String, Double>> model,
+            int feedid) throws CorruptIndexException, IOException {
+        IndexReader reader = SEARCHER.getReader();
+        IndexSearcher searcher = new IndexSearcher(reader);
+        int docid = SEARCHER.feedID2DocID(searcher, feedid);
+        return classfiy(model, reader, docid);
     }
 
     public static Map<String, Map<String, Double>> train(List<Integer> like,

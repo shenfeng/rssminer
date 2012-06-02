@@ -1,8 +1,8 @@
 (ns rssminer.search
   (:use [clojure.tools.logging :only [info]]
         [rssminer.util :only [to-int ignore-error]]
-        [rssminer.db.util :only [mysql-query]])
-  (:import rssminer.Searcher)
+        [rssminer.database :only [mysql-query]])
+  (:import rssminer.search.Searcher)
   (:require [clojure.string :as str]))
 
 (defonce searcher (atom nil))
@@ -26,7 +26,7 @@
 (defn fetch-feeds [feed-ids user-id]
   (mysql-query
    [(str "SELECT id, author, link, title, tags, published_ts, f.rss_link_id,
-          uf.read_date, uf.vote_user, uf.vote_sys FROM feeds f
+          uf.read_date, uf.vote_user FROM feeds f
           LEFT JOIN user_feed uf on user_id = ? and id = uf.feed_id
       WHERE f.id in " "(" (str/join ", " feed-ids) ")")
     user-id]))

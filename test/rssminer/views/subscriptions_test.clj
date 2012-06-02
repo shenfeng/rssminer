@@ -1,7 +1,7 @@
 (ns rssminer.views.subscriptions-test
   (:use clojure.test
         [clojure.data.json :only [read-json]]
-        [rssminer.db.util :only [mysql-query mysql-insert]]
+        [rssminer.database :only [mysql-query mysql-insert]]
         (rssminer [test-common :only [auth-app auth-app2 app-fixture
                                       user1 json-body]]
                   [util :only [now-seconds]])))
@@ -17,7 +17,9 @@
         subscription (-> resp :body read-json)]
     (mysql-insert :user_feed {:user_id (:id user1)
                               :rss_link_id (:rss_link_id subscription)})
-    [resp subscription]))
+    [resp subscription
+     (mysql-query ["select * from user_subscription"])
+     (mysql-query ["select * from user_feed"])]))
 
 (deftest test-add-feedsource
   (let [c (count (mysql-query ["select * from rss_links"]))
@@ -44,7 +46,8 @@
       (let [resp (auth-app {:uri (str "/api/subs/" rss-id)
                             :request-method :get
                             :params {"limit" "13" "offset" "0" "sort" s}})]
-        (is (nil? (-> resp :body read-json)))
+        ;; test has some data
+        (is (empty? (-> resp :body read-json)))
         (is (= 200 (:status resp)))))))
 
 (deftest test-list-subscription
@@ -52,13 +55,15 @@
                                  :request-method :get})))))
 
 (deftest test-unsubscripe
-  (let [[_ subscription] (prepare)
+  (let [[_ subscription subscriptions user-feeds] (prepare)
         delete-resp (auth-app {:uri (str "/api/subs/"
                                          (:rss_link_id subscription))
                                :request-method :delete})]
     (is (= 200 (:status delete-resp)))
-    (is (nil? (mysql-query ["select * from user_subscription"])))
-    (is (nil? (mysql-query ["select * from user_feed"])))))
+    (is (= 1 (- (count subscriptions)
+                (count (mysql-query ["select * from user_subscription"])))))
+    (is (nil? (mysql-query ["select * from user_feed where rss_link_id = ?"
+                            (:rss_link_id subscription)])))))
 
 (deftest test-poll-fetcher
   (let [[_ subscription] (prepare)

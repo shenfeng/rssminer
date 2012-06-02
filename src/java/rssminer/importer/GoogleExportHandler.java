@@ -1,9 +1,19 @@
 package rssminer.importer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
-public class GoogleExportHandler extends AbstractHandler {
+public class GoogleExportHandler extends DefaultHandler{
+
+    protected List<Item> items = new ArrayList<Item>(8);
+
+    public List<Item> getItems() {
+        return items;
+    }
 
     private int objectDepth = 0;
     private boolean isTitle = false;

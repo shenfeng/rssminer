@@ -24,14 +24,6 @@
     (let [{:keys [title url category]} (bean sub)]
       (subscribe url user-id title category))))
 
-(defn opml-import [req]
-  (let [^File file (-> req :params :file :tempfile)
-        user-id (user-id-from-session req)]
-    (if (and file (> (.length file) 10))
-      (subscribe-all user-id (Parser/parseOPML (slurp file)))
-      {:status 400
-       :body {:message "Please choose a file"}})))
-
 (defn oauth2callback [req]
   (let [code (-> req :params :code)
         user-id (user-id-from-session req)

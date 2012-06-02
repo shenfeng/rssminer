@@ -55,9 +55,9 @@
         offset (-> req :params :offset to-int)
         data (case (-> req :params :section)
                "latest" (uf/fetch-newest u-id limit offset)
-               "voted" (uf/fetch-recent-voted u-id limit offset)
+               "voted" (uf/fetch-recent-vote u-id limit offset)
                "read" (uf/fetch-recent-read u-id limit offset)
-               "recommand" (uf/fetch-system-voteup u-id limit offset))]
+               "recommand" (uf/fetch-likest u-id limit offset))]
     (if data
       {:body data       ;; ok, just cache for half hour
        :headers {"Cache-Control" "private, max-age=1800"}}

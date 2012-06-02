@@ -1,4 +1,4 @@
-package rssminer.async;
+package rssminer.proxy;
 
 import static me.shenfeng.http.HttpUtils.CACHE_CONTROL;
 import static me.shenfeng.http.HttpUtils.CONTENT_TYPE;

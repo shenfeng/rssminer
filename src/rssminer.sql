@@ -3,8 +3,14 @@ CREATE TABLE users (
   email VARCHAR(64) UNIQUE,
   name VARCHAR(64),
   conf VARCHAR(1024),           -- json string
--- alter table users add scores varchar(32) after conf;
-  scores VARCHAR(32),            -- like score and
+  -- 2012/5/29
+  -- alter table users add like_score double not null after conf
+  -- alter table users add neutral_score double not null after like_score;
+  -- alter table drop scores;
+  like_score DOUBLE NOT NULL default 1.0,
+  neutral_score DOUBLE NOT NULL default 0,
+  -- alter table users add scores varchar(32) after conf;
+  -- scores VARCHAR(32),            -- like score and
   `password` VARCHAR(32),
   provider VARCHAR(10),         -- openid provider, eg: google
   authen_token VARCHAR(32),
@@ -84,7 +90,7 @@ create table user_feed (
     vote_user TINYINT default 0,
     -- alter table user_feed change vote_sys vote_sys DOUBLE default 0;
     -- float => double 2012/4/30
-    vote_sys DOUBLE default 0,  -- learn by program
+    -- vote_sys DOUBLE default 0,  -- learn by program
     read_date INT default -1,   -- the reading date, -1, unread
     -- 2012/5/27
     -- alter table user_feed add vote_date int default -1 after read_date
@@ -94,8 +100,14 @@ create table user_feed (
     -- insert into user_feed (user_id, feed_id, vote_user) values (1, 557, 1) on duplicate key update vote_user = 10;
     -- alter table user_feed drop index user_feed_id
     -- alter table user_feed add unique index user_feed_id(user_id, feed_id)
-    UNIQUE user_feed_id(user_id, feed_id),
-    INDEX user_rsslink(user_id, rss_link_id)
+    -- 2012/5/29
+    -- alter table user_feed drop index user_feed_id;
+    -- alter table user_feed add primary key (user_id, feed_id);
+    -- alter table user_feed drop column vote_sys
+    -- alter table user_feed drop index user_rsslink
+    PRIMARY KEY(user_id, feed_id)
+    -- UNIQUE user_feed_id(user_id, feed_id),
+    -- INDEX user_rsslink(user_id, rss_link_id)
     -- REFERENCES users ON UPDATE CASCADE ON DELETE CASCADE,
     -- REFERENCES feeds ON UPDATE CASCADE ON DELETE CASCADE,
     -- FOREIGN KEY (user_id) REFERENCES
@@ -130,45 +142,8 @@ FROM   (SELECT f.id,
         WHERE  f.published_ts > published_ts_p) p
        LEFT JOIN (SELECT feed_id
                   FROM   user_feed
-                  WHERE  user_id = user_id_p
-                         AND ( vote_user != 0
-                                OR read_date > 0 )) q
+                  WHERE  user_id = user_id_p) q
          ON p.id = q.feed_id
 WHERE  q.feed_id IS NULL;
 
 END //
-
--- DROP PROCEDURE IF EXISTS `get_user_subs`;
-CREATE PROCEDURE get_user_subs (user_id_p INT, like_s_p DOUBLE, neutral_s_p DOUBLE)
-BEGIN
-SELECT us.rss_link_id              AS id,
-       us.group_name,
-       l.alternate as url,
-       us.sort_index,
-       us.title,
-       l.title                     AS o_title,
-       l.total_feeds,
-       (SELECT Count(*)
-        FROM   user_feed
-        WHERE  user_id = user_id_p
-               AND rss_link_id = us.rss_link_id
-               AND vote_sys > like_s_p
-               AND read_date = -1) AS like_c,
-       (SELECT Count(*)
-        FROM   user_feed
-        WHERE  user_id = user_id_p
-               AND rss_link_id = us.rss_link_id
-               AND vote_sys < neutral_s_p
-               AND read_date = -1) AS dislike_c,
-       (SELECT Count(*)
-        FROM   user_feed
-        WHERE  user_id = user_id_p
-               AND rss_link_id = us.rss_link_id
-               AND read_date = -1) AS total_c
-FROM   user_subscription us
-       JOIN rss_links l
-         ON l.id = us.rss_link_id
-WHERE  us.user_id = user_id_p;
-END //
-
-delimiter ;

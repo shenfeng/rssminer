@@ -1,4 +1,4 @@
-package rssminer.async;
+package rssminer.proxy;
 
 import java.io.ByteArrayInputStream;
 import java.net.URI;

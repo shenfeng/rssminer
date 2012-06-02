@@ -1,7 +1,7 @@
 (ns rssminer.views.feeds-test
   (:use clojure.test
         rssminer.db.feed
-        [rssminer.db.util :only [mysql-query with-mysql
+        [rssminer.database :only [mysql-query with-mysql
                                  mysql-insert-and-return]]
         (rssminer [test-common :only [user1 app-fixture auth-app json-body
                                       mk-feeds-fixtrue]])))
@@ -19,7 +19,7 @@
                     user_id = ? AND feed_id = ?" (:id user1) fid])))
 
 (defn- first-feedid []
-  (-> (mysql-query ["select id from feeds"]) first :id))
+  (-> (mysql-query ["select id from feeds"]) last :id))
 
 (deftest test-user-vote
   (let [fid (first-feedid)]

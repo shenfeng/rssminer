@@ -2,11 +2,13 @@
   (:use clojure.test
         [rssminer.db.feed :only [save-feeds]]
         [rssminer.database :only [mysql-db-factory]]
-        [rssminer.db.util :only [mysql-query mysql-insert-and-return]]
+        [rssminer.database :only [mysql-query mysql-insert-and-return]]
         (rssminer [test-common :only [user1 app-fixture mk-feeds-fixtrue]]
                   [util :only [now-seconds]]))
   (:require [rssminer.db.user-feed :as uf])
-  (:import rssminer.classfier.UserSysVote))
+  (:import rssminer.classfier.SysVoteDaemon))
+
+(use-fixtures :each app-fixture (mk-feeds-fixtrue "test/atom.xml" ))
 
 (defn prepare-insert-feeds [test-fn]
   (let [rss-id (-> (mysql-query ["SELECT rss_link_id FROM user_subscription"])
@@ -31,22 +33,24 @@
     (test-fn)))
 
 (use-fixtures :each app-fixture
-              (mk-feeds-fixtrue "test/scottgu-atom.xml")
+              (mk-feeds-fixtrue "test/atom.xml")
               prepare-insert-feeds)
 
-(defn- re-compute-sysvote [user-id]
-  (let [v (UserSysVote. user-id
-                        0
-                        (:ds @mysql-db-factory))]
-    (.reCompute v)))
+;; (deftest test-)
 
-(deftest test-recompute-sysvote
-  (let [u-id (:id user1)
-        feed-ids (map :id (mysql-query ["select id from feeds"]))]
-    (uf/insert-user-vote u-id (first feed-ids) 1)
-    (is (not (re-compute-sysvote u-id)))
-    (uf/insert-user-vote u-id (second feed-ids) -1)
-    (is (re-compute-sysvote u-id))
-    (re-compute-sysvote u-id)
-    (let [all (mysql-query ["select * from user_feed"])]
-      (is (= 4 (count all))))))
+;; (defn- re-compute-sysvote [user-id]
+;;   (let [v (UserSysVote. user-id
+;;                         0
+;;                         (:ds @mysql-db-factory))]
+;;     (.reCompute v)))
+
+;; (deftest test-recompute-sysvote
+;;   (let [u-id (:id user1)
+;;         feed-ids (map :id (mysql-query ["select id from feeds"]))]
+;;     (uf/insert-user-vote u-id (first feed-ids) 1)
+;;     (is (not (re-compute-sysvote u-id)))
+;;     (uf/insert-user-vote u-id (second feed-ids) -1)
+;;     (is (re-compute-sysvote u-id))
+;;     (re-compute-sysvote u-id)
+;;     (let [all (mysql-query ["select * from user_feed"])]
+;;       (is (= 4 (count all))))))

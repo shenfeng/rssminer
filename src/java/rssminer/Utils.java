@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import me.shenfeng.http.HttpUtils;
 import me.shenfeng.http.client.HttpClient;
 import me.shenfeng.http.client.HttpClientConfig;
 
@@ -31,7 +32,7 @@ public class Utils {
     public static final String[] NO_IFRAME = new String[] { "groups.google" }; // X-Frame-Options
     public static final String[] RESETED_DOMAINS = new String[] {
             "wordpress", "appspot", "emacsblog", "blogger", "blogspot",
-            "mikemccandless", "feedproxy", "blogblog"};
+            "mikemccandless", "feedproxy", "blogblog" };
 
     public static final String FINAL_URI = "X-final-uri";
 
@@ -43,6 +44,9 @@ public class Utils {
             .intern("redis-server");
     public static final Keyword K_DATA_SOURCE = Keyword.intern("data-source");
 
+    public static final Keyword K_EVENTS_THRESHOLD = Keyword
+            .intern("events-threshold");
+
     static {
         try {
             CLIENT = new HttpClient(new HttpClientConfig(50000, USER_AGETNT));
@@ -51,11 +55,27 @@ public class Utils {
         }
     }
 
-    public static boolean proxy(String uri) throws URISyntaxException {
-        return proxy(new URI(uri));
-    }
+    public static final ThreadLocal<Parser> parser = new ThreadLocal<Parser>() {
+        protected Parser initialValue() {
+            Parser p = new Parser();
+            try {
+                p.setFeature(Parser.defaultAttributesFeature, false);
+            } catch (Exception ignore) {
+            }
+            return p;
+        }
+    };
 
     public static void closeQuietly(Connection con) {
+        if (con != null) {
+            try {
+                con.close();
+            } catch (SQLException ignore) {
+            }
+        }
+    }
+
+    public static void closeQuietly(ResultSet con) {
         if (con != null) {
             try {
                 con.close();
@@ -72,14 +92,44 @@ public class Utils {
             }
         }
     }
-    
-    public static void closeQuietly(ResultSet con) {
-        if (con != null) {
-            try {
-                con.close();
-            } catch (SQLException ignore) {
-            }
-        }
+
+    public static URI extractFaviconUrl(String html, URI base)
+            throws IOException, SAXException {
+        Parser p = parser.get();
+        ExtractFaviconHandler h = new ExtractFaviconHandler(base);
+        p.setContentHandler(h);
+        p.parse(new InputSource(new StringReader(html)));
+        return h.get();
+    }
+
+    public static String extractText(String html) throws IOException,
+            SAXException {
+        Parser p = parser.get();
+        ExtractTextHandler h = new ExtractTextHandler();
+        p.setContentHandler(h);
+        p.parse(new InputSource(new StringReader(html)));
+        return h.getText();
+    }
+
+    public static byte[] genKey(int userID) {
+        return ("fs:all:u_" + userID).getBytes(HttpUtils.UTF_8);
+    }
+
+    public static byte[] genKey(int userID, int rssID) {
+        return ("fs:u_" + userID + "_s_" + rssID).getBytes(HttpUtils.UTF_8);
+    }
+
+    public static String minfiyHtml(String html, String url)
+            throws IOException, SAXException {
+        Parser p = parser.get();
+        HTMLMinfiyHandler m = new HTMLMinfiyHandler(html, url);
+        p.setContentHandler(m);
+        p.parse(new InputSource(new StringReader(html)));
+        return m.get();
+    }
+
+    public static boolean proxy(String uri) throws URISyntaxException {
+        return proxy(new URI(uri));
     }
 
     public static boolean proxy(URI uri) {
@@ -97,33 +147,12 @@ public class Utils {
         return false;
     }
 
-    public static final ThreadLocal<Parser> parser = new ThreadLocal<Parser>() {
-        protected Parser initialValue() {
-            Parser p = new Parser();
-            try {
-                p.setFeature(Parser.defaultAttributesFeature, false);
-            } catch (Exception ignore) {
-            }
-            return p;
+    public static String reverse(String str) {
+        if (str != null) {
+            return new StringBuilder(str).reverse().toString();
+        } else {
+            return null;
         }
-    };
-
-    public static URI extractFaviconUrl(String html, URI base)
-            throws IOException, SAXException {
-        Parser p = parser.get();
-        ExtractFaviconHandler h = new ExtractFaviconHandler(base);
-        p.setContentHandler(h);
-        p.parse(new InputSource(new StringReader(html)));
-        return h.get();
-    }
-
-    public static String minfiyHtml(String html, String url)
-            throws IOException, SAXException {
-        Parser p = parser.get();
-        HTMLMinfiyHandler m = new HTMLMinfiyHandler(html, url);
-        p.setContentHandler(m);
-        p.parse(new InputSource(new StringReader(html)));
-        return m.get();
     }
 
     public static String rewrite(String html, String urlBase, String proxyURI)
@@ -135,20 +164,4 @@ public class Utils {
         return h.get();
     }
 
-    public static String reverse(String str) {
-        if (str != null) {
-            return new StringBuilder(str).reverse().toString();
-        } else {
-            return null;
-        }
-    }
-
-    public static String extractText(String html) throws IOException,
-            SAXException {
-        Parser p = parser.get();
-        ExtractTextHandler h = new ExtractTextHandler();
-        p.setContentHandler(h);
-        p.parse(new InputSource(new StringReader(html)));
-        return h.getText();
-    }
 }

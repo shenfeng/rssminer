@@ -120,25 +120,25 @@
 
   function transform_item (feed, page, sort, section) {
     var cf = cache_fixer[feed.id],
-        rss_link_id = feed.rss_link_id;
-    section = section || rss_link_id;
+        rssid = feed.rssid;
+    section = section || rssid;
     if(cf) {
       // try to fix outdated data, browser cache 1 hour
-      feed.read_date = 'read_date' in cf ? cf.read_date : feed.read_date;
-      feed.vote_user = 'vote_user' in cf ? cf.vote_user : feed.vote_user;
+      feed.readts = 'readts' in cf ? cf.readts : feed.readts;
+      feed.vote = 'vote' in cf ? cf.vote : feed.vote;
     }
     var info = [];              // used in context menu
-    if(feed.read_date > 1) {
-      info.push({text: 'You read it in ' + ymdate(feed.read_date)});
+    if(feed.read > 1) {
+      info.push({text: 'You read it in ' + ymdate(feed.read)});
     }
     return {
       author: feed.author || util.hostname(feed.link),
-      sub: sub_titles[rss_link_id],    // use to show search result
-      rss_link_id: rss_link_id,
+      sub: sub_titles[rssid],    // use to show search result
+      rssid: rssid,
       cls: feed_css_class(feed),
-      user_like: feed.vote_user > 0,
-      user_dislike: feed.vote_user < 0,
-      date: ymdate(feed.published_ts),
+      user_like: feed.vote > 0,
+      user_dislike: feed.vote < 0,
+      date: ymdate(feed.publishedts),
       href: feed_hash(section, feed.id, page, sort),
       id: feed.id,
       link: feed.link,
@@ -154,25 +154,24 @@
       img: favicon_path(sub.url),
       title: title,
       link: sub.url,
-      group: sub.group_name,
+      group: sub.group,
       title_l: title.toLowerCase(),
       href: sub_hash(sub.id, 1, 'newest'),
-      like: sub.like_c,
-      total: sub.total_feeds,
-      index: sub.sort_index,
-      dislike: sub.dislike_c,
-      neutral: sub.total_c - sub.like_c - sub.dislike_c,
+      like: sub.like,
+      total: sub.total,
+      index: sub.index,
+      neutral: sub.neutral,
       id: sub.id        // rss_link_id
     };
   }
 
   function parse_subs (subs) {
-    var grouped = _.groupBy(subs, 'group_name'),
+    var grouped = _.groupBy(subs, 'group'),
         result = [],
         collapsed = user_conf.nav || [];
     for(var group in grouped) {
       var list = _(grouped[group]).chain()
-            .sortBy(function (i) { return i.sort_index; })
+            .sortBy(function (i) { return i.index; })
             .map(transorm_sub).value();
       list = _.filter(list, function (i) { return i.title; });
       if(list.length) {
@@ -230,7 +229,9 @@
       var feeds = _.map(resp, function (feed) {
         var result = transform_item(feed, page, 'score', section);
         if(section === 'read') { // read show read date
-          result.date = ymdate(feed.read_date);
+          result.date = ymdate(feed.readts);
+        } else if(section === 'voted') {
+          result.date = ymdate(feed.votets);
         }
         return result;
       });
@@ -264,7 +265,7 @@
     var sub =_.find(subscriptions_cache, function (sub) {
       return sub.id === subid;
     }),
-        total = sub ? sub.total_feeds : 0,
+        total = sub ? sub.total : 0,
         offset = Math.max(0, page -1) * PER_PAGE_FEEDS;
 
     sort = SORTINGS_TABS[sort] ? sort : 'newest';
@@ -366,7 +367,7 @@
   function mark_as_read (feedid, cb) {
     ajax.spost('/api/feeds/' + feedid + '/read', function () {
       save_to_cache_fixer(feedid, {
-        read_date: Math.round(new Date().getTime() / 1000)
+        readts: Math.round(new Date().getTime() / 1000)
       });
       call_if_fn(cb);
     });
@@ -374,7 +375,7 @@
 
   function save_vote (feedid, vote, cb) {
     ajax.spost('/api/feeds/' + feedid  + '/vote', {vote: vote}, function () {
-      save_to_cache_fixer(feedid, {vote_user: vote});
+      save_to_cache_fixer(feedid, {vote: vote});
       call_if_fn(cb);
     });
   }

@@ -3,8 +3,7 @@
                   [config :only [rssminer-conf]]))
   (:require [clojure.string :as str]
             [rssminer.db.feed :as db])
-  (:import [rssminer.async ProxyFuture FeedFuture FaviconFuture]
-           rssminer.Utils))
+  (:import [rssminer.proxy ProxyFuture FeedFuture FaviconFuture]))
 
 (defn- req-headers [req] {"User-Agent" ((:headers req) "user-agent")})
 

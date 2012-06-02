@@ -1,4 +1,4 @@
-package rssminer.async;
+package rssminer.proxy;
 
 import static me.shenfeng.http.HttpUtils.LOCATION;
 import static rssminer.Utils.CLIENT;

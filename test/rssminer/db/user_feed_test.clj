@@ -1,7 +1,8 @@
 (ns rssminer.db.user-feed-test
   (:use clojure.test
         rssminer.db.user-feed
-        [rssminer.db.util :only [mysql-query with-mysql mysql-insert-and-return]]
+        [rssminer.database :only [mysql-query with-mysql
+                                 mysql-insert-and-return]]
         [clojure.java.jdbc :only [delete-rows]]
         (rssminer [test-common :only [user1 app-fixture mk-feeds-fixtrue]])))
 
