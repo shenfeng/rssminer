@@ -2,8 +2,7 @@
   (:use (rssminer [redis :only [fetcher-enqueue]]
                   [util :only [to-int user-id-from-session time-since]])
         [rssminer.database :only [mysql-insert-and-return]]
-        [clojure.tools.logging :only [info]]
-        [rssminer.db.user :only [find-user-by-id]])
+        [clojure.tools.logging :only [info]])
   (:require [rssminer.db.subscription :as db]
             [rssminer.db.feed :as fdb]
             [clojure.string :as str]))

@@ -18,7 +18,7 @@
 
 (defn find-user-by-id [id]
   (first
-   (mysql-query ["SELECT name, email, conf, like_score, neutral_score
+   (mysql-query ["SELECT email, conf, like_score, neutral_score
                   FROM users WHERE id = ?" id])))
 
 (defn authenticate [email plain-password]
