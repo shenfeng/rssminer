@@ -59,6 +59,7 @@
     (getUri [this] (java.net.URI. url))
     (getProxy [this] (:proxy @rssminer-conf))
     (onThrowable [this t]
+      (info (str "id:" (:id link)) url (.getMessage ^Throwable t))
       (db/update-rss-link (:id link)
                           (let [interval (slower (:check_interval link))]
                             {:check_interval interval
