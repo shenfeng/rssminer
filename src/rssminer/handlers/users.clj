@@ -40,14 +40,14 @@
 ;;; :like_threshhold => more than it mean like
 ;;; :dislike_threshhold => less than it mean dislike
 (defn save-settings [req]
-  (let [user (db/find-user-by-id (user-id-from-session req))]
+  (let [uid (user-id-from-session req)]
     (when-let [password (-> req :body :password)]
-      (let [p (md5-sum (str (:email user) "+" password))]
-        (db/update-user (:id user) {:password p})))
-    (let [updated (merge (:conf user) (select-keys (:body req)
-                                                   [:nav :expire]))]
-      (db/update-user (:id user) {:conf (json-str updated)})
-      {:status 204 :body nil})))
+      (let [user (db/find-user-by-id uid)
+            p (md5-sum (str (:email user) "+" password))]
+        (db/update-user uid {:password p})))
+    (when-let [nav (-> req :body :nav)]
+      (db/update-user uid {:conf (json-str {:nav nav})}))
+    {:status 204 :body nil}))
 
 (defn summary [req]
   (let [u-id (user-id-from-session req)

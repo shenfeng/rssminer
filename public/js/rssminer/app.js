@@ -181,7 +181,7 @@
 
   function show_settings () {
     $reading_area.removeClass(SHOW_IFRAME);
-    var html = tmpls.settings(data.user_settings());
+    var html = tmpls.settings();
     $welcome_list.empty().append(html).find('img').each(util.favicon_error);
   }
 
@@ -209,11 +209,11 @@
       fetch_and_show_user_subs(function () {
         // if user is waiting, just put he there
         if(still_in_settings()) {
-          location.hash = 'read/' + result.id;
+          location.hash = 'read/' + result.id + '?p=1&s=newest';
         }
       });
     } else if(still_in_settings()){
-      location.hash = 'read/' + result.id;
+      location.hash = 'read/' + result.id + '?p=1&s=newest';
     }
   }
 

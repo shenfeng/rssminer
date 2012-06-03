@@ -41,22 +41,12 @@
     }
   }
 
-  function user_settings () {
-    var expire_times = [];
-    for(var i = 15; i <= 60; i += 15) {
-      expire_times.push({time: i, selected: i === (user_conf.expire || 30)});
-    }
-    return {
-      expire_times: expire_times
-    };
-  }
-
   function get_subscription (subid) {
     subid = parseInt(subid);
     var sub = _.find(subscriptions_cache, function (sub) {
       return subid === sub.id;
     });
-    sub.group_name = sub.group_name || 'null';
+    sub.group = sub.group || 'null';
     return transorm_sub(sub);
   }
 
@@ -385,7 +375,7 @@
       ajax.sget('/api/subs/p/' + rss_link_id, function (sub) {
         // TODO refetch user subs
         if(sub && sub.title) {  // ok, title is fetched
-          sub.group_name = null; // server return no group_name
+          sub.group = null; // server return no group_name
           var find = _.find(subscriptions_cache, function (s) {
             return s.id === sub.id;
           });
@@ -493,7 +483,7 @@
         var s = _.find(subscriptions, function (sub) { return id === sub.id;});
         s.sort_index = index;
         index += 1;
-        s.group_name = group.g;
+        s.group = group.g;
       });
     });
   }
@@ -502,8 +492,8 @@
     var names = {},
         me;
     _.each(subscriptions_cache, function (sub) {
-      names[sub.group_name] = true;
-      if(sub.id === subid) { me = sub.group_name; }
+      names[sub.group] = true;
+      if(sub.id === subid) { me = sub.group; }
     });
     if(me === null) { me = 'null'; } // map null => null
     var result = [];
@@ -527,7 +517,6 @@
       save_vote: save_vote,
       list_folder_names: list_folder_names,
       unsubscribe: unsubscribe,
-      user_settings: user_settings,
       save_settings: save_settings
     }
   });

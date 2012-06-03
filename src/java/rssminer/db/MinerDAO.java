@@ -107,7 +107,6 @@ public class MinerDAO {
                 try {
                     feeds.get(i).setScore(scores.get(i).get());
                 } catch (Exception ignore) {
-                    feeds.get(i).setScore(0);
                     // TODO, should return nil when no key instead of EXCEPTION
                 }
             }
@@ -328,17 +327,8 @@ public class MinerDAO {
                     pipeline.sync();
                     int idx = 0;
                     for (Subscription s : subs) {
-                        try {
-                            s.setLike(scores.get(idx++).get().intValue());
-                        } catch (Exception ignore) {
-                            // TODO: No Exception
-                        }
-
-                        try {
-                            s.setNeutral(scores.get(idx++).get().intValue());
-                        } catch (Exception ignore) {
-                            // TODO: No Exception
-                        }
+                        s.setLike(scores.get(idx++).get().intValue());
+                        s.setNeutral(scores.get(idx++).get().intValue());
                     }
                 } finally {
                     jedis.returnResource(redis);
