@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -u                          # Treat unset variables as an error
+set -e #  Exit immediately if a simple command exits with a non-zero status
+
 ABSOLUTE_PATH=$(readlink -f $0)
 HOME="${ABSOLUTE_PATH%/*/*}"
 DB_NAME='rssminer'
@@ -43,7 +46,7 @@ init_db() {
 }
 
 backup_db() {
-    if [ ! -d "$BACKUP_SQL" ]; then
+    if [ ! -d $BACKUP_FOLDER ]; then
         sudo mkdir -p $BACKUP_FOLDER
         sudo chown -R feng:feng $BACKUP_FOLDER
     fi
