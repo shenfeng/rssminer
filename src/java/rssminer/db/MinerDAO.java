@@ -79,6 +79,7 @@ public class MinerDAO {
                 }
                 feeds.add(f);
             }
+            Utils.closeQuietly(rs);
             Utils.closeQuietly(stat);
             return feeds;
         } finally {
@@ -305,6 +306,7 @@ public class MinerDAO {
             }
             String sql = "select like_score,neutral_score from users where id = "
                     + userID;
+            Utils.closeQuietly(rs);
             rs = stat.executeQuery(sql);
             if (rs.next()) {
                 double like = rs.getDouble(1);
@@ -342,6 +344,8 @@ public class MinerDAO {
                     jedis.returnResource(redis);
                 }
             }
+            Utils.closeQuietly(rs);
+            Utils.closeQuietly(stat);
             return subs;
         } finally {
             Utils.closeQuietly(con);
