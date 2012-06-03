@@ -78,10 +78,8 @@
         test-user "feng_test"]
     (try
       (run-admin "init-db" ["-d" test-db-name "-u" test-user])
-      (swap! rssminer-conf assoc
-             :data-source (:ds (db/use-mysql-database!
-                                (str "jdbc:mysql://localhost/" test-db-name)
-                                test-user)))
+      (db/use-mysql-database! (str "jdbc:mysql://localhost/" test-db-name)
+                              test-user)
       (test-fn)
       (catch SQLException e
         (print-sql-exception-chain e)
@@ -90,9 +88,8 @@
 
 (defn redis-fixture [test-fn]
   (sh "redis-cli" "flushdb")            ; just clean all
-  (swap! rssminer-conf assoc
-         :events-threshold (int 3)
-         :redis-server (set-redis-pool! "127.0.0.1"))
+  (set-redis-pool! "127.0.0.1")
+  (swap! rssminer-conf assoc :events-threshold (int 3))
   (test-fn)
   (sh "redis-cli" "flushdb"))
 

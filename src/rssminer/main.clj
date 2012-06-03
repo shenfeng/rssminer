@@ -35,12 +35,12 @@
   (stop-server)
   (.removeShutdownHook (Runtime/getRuntime) shutdown-hook)
   (.addShutdownHook (Runtime/getRuntime) shutdown-hook)
+  (use-mysql-database! db-url db-user)
+  (set-redis-pool! redis-host)
   (swap! rssminer-conf assoc
          :profile profile
          :fetcher-concurrency fetcher-concurrency
          :fetch-size fetch-size
-         :redis-server (set-redis-pool! redis-host)
-         :data-source (:ds (use-mysql-database! db-url db-user))
          :worker worker
          :events-threshold events-threshold
          :proxy-server (if (= :dev profile)

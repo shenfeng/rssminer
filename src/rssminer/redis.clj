@@ -1,5 +1,5 @@
 (ns rssminer.redis
-  (:use ring.middleware.session.store)
+  (:use [rssminer.config :only [rssminer-conf]])
   (:import [redis.clients.jedis JedisPool Jedis JedisPoolConfig]))
 
 (defonce redis-pool (atom nil))
@@ -7,7 +7,9 @@
 (defn set-redis-pool! [^String host] ;; called when app start
   (if-let [p ^JedisPool @redis-pool]
     (.destroy p))
-  (reset! redis-pool (JedisPool. (JedisPoolConfig.) host)))
+  (let [pool (JedisPool. (JedisPoolConfig.) host)]
+    (swap! rssminer-conf assoc :redis-server pool)
+    (reset! redis-pool pool)))
 
 (def ^String fetcher-key "fetcher-queue")
 

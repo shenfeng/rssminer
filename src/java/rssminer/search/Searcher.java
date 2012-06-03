@@ -131,7 +131,7 @@ public class Searcher {
 
         this.ds = (DataSource) config.get(K_DATA_SOURCE);
         if (this.ds == null) {
-            throw new NullPointerException("jedis and ds can not be null");
+            throw new NullPointerException("ds can not be null");
         }
 
         cfg.setOpenMode(OpenMode.CREATE_OR_APPEND);

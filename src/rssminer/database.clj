@@ -1,6 +1,7 @@
 (ns rssminer.database
   (:use [clojure.java.jdbc :only [with-connection do-commands]]
         [clojure.tools.logging :only [debug info]]
+        [rssminer.config :only [rssminer-conf]]
         [clojure.java.jdbc :only [with-connection do-commands
                                   as-identifier
                                   with-query-results insert-record]])
@@ -13,10 +14,10 @@
 (defonce mysql-db-factory (atom {}))
 
 (defn use-mysql-database! [url user]
-  (reset! mysql-db-factory
-          (let [ds (PerThreadDataSource. url user "")]
-            {:factory (fn [& args] (.getConnection ds))
-             :ds ds})))
+  (let [ds (PerThreadDataSource. url user "")]
+    (swap! rssminer-conf assoc :data-source ds)
+    (reset! mysql-db-factory {:factory (fn [& args] (.getConnection ds))
+                              :ds ds})))
 
 (defn do-mysql-commands [& commands]
   (with-connection @mysql-db-factory
