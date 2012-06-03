@@ -41,7 +41,6 @@
             :link (-> e :link trim)
             :tags (s/join "; " (map #(-> % :name trim)
                                     (:categories e)))
-            :fetched_ts (now-seconds)
             :updated_ts (:updatedDate e)
             :published_ts (or (:publishedDate e)
                               (:updatedDate e)

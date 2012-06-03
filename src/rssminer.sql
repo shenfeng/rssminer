@@ -57,7 +57,7 @@ CREATE TABLE feeds (
   tags VARCHAR(128),
   updated_ts INT UNSIGNED,
   published_ts INT UNSIGNED,
-  fetched_ts INT UNSIGNED,
+  -- fetched_ts INT UNSIGNED,
   rss_link_id INT UNSIGNED,
   summary MEDIUMTEXT,           -- rss summary, given by download rss
 
