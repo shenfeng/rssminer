@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -61,8 +60,9 @@ public class SysVoteDaemon implements Runnable {
 
     private void computeAddSaveScore(int userID) throws SQLException,
             CorruptIndexException, IOException {
-        long start = System.currentTimeMillis();
+        Watch w = new Watch().start();
         Map<String, Map<String, Double>> model = trainModel(userID);
+        logger.info("train model for user {} takes {}ms", userID, w.time());
         if (model != null) {
             List<FeedScore> unVoted = DBHelper.getUnvotedFeeds(ds, userID);
             if (!unVoted.isEmpty()) {
@@ -80,7 +80,7 @@ public class SysVoteDaemon implements Runnable {
             }
         }
         logger.info("compute and save score for user {}, takes {}ms", userID,
-                System.currentTimeMillis() - start);
+                w.time());
     }
 
     private Map<String, Map<String, Double>> getModel(int userID)
@@ -123,14 +123,13 @@ public class SysVoteDaemon implements Runnable {
 
     public void handlerUserEvent(UserEvent e) throws CorruptIndexException,
             SQLException, IOException {
-
         Integer c = combineEvents.get(e.userID);
         if (c == null) {
             c = 0;
         }
         c += 1;
         if (c <= eventsThreashold) {
-            // pending
+            // buffer
             combineEvents.put(e.userID, c);
         } else {
             // clear counter
@@ -219,7 +218,8 @@ public class SysVoteDaemon implements Runnable {
         deamonThread.setName("score-daemon");
         deamonThread.setDaemon(true);
         deamonThread.start();
-        logger.debug("score daemon started");
+        logger.info("score daemon started, eventsThreashold: "
+                + eventsThreashold);
     }
 
     public void stop() {
@@ -229,20 +229,12 @@ public class SysVoteDaemon implements Runnable {
 
     private Map<String, Map<String, Double>> trainModel(int userID)
             throws SQLException, CorruptIndexException, IOException {
-        Connection con = ds.getConnection();
+        List<Integer>[] voted = DBHelper.fetchVotedIds(ds, userID);
+        List<Integer> ups = voted[0];
+        List<Integer> downs = voted[1];
         Map<String, Map<String, Double>> model = null;
-        try {
-            Statement stat = con.createStatement();
-            List<Integer> downs = DBHelper.fetchDownIDs(stat, userID);
-            List<Integer> ups = DBHelper.fetchUpIDs(stat, userID);
-            // List<Integer> reads = DataHelper.fetchRecentRead(stat,
-            // userID);
-            if (ups.size() > 0 && downs.size() > 0) {
-                model = train(ups, downs);
-            }
-            stat.close();
-        } finally {
-            Utils.closeQuietly(con);
+        if (ups.size() > 0 && downs.size() > 0) {
+            model = train(ups, downs);
         }
         return model;
     }

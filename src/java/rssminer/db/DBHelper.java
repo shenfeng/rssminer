@@ -1,7 +1,5 @@
 package rssminer.db;
 
-import static java.lang.System.currentTimeMillis;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,6 +13,52 @@ import rssminer.Utils;
 import rssminer.classfier.FeedScore;
 
 public class DBHelper {
+    public static List<Integer> fetchRecentRead(Statement stat, int userID)
+            throws SQLException {
+        String sql = String
+                .format("SELECT feed_id FROM user_feed WHERE user_id = %d AND read_date > 0 order by read_date desc limit 100",
+                        userID);
+        return getIDS(stat, sql);
+    }
+
+    public static List<Integer> fetchUserIDsBySubID(DataSource ds, int subid)
+            throws SQLException {
+        Connection con = ds.getConnection();
+        try {
+            String sql = "select user_id, vote from user_subscription where rss_link_id = "
+                    + subid;
+            Statement stat = con.createStatement();
+            List<Integer> ids = getIDS(stat, sql);
+            Utils.closeQuietly(stat);
+            return ids;
+        } finally {
+            Utils.closeQuietly(con);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<Integer>[] fetchVotedIds(DataSource ds, int userID)
+            throws SQLException {
+        Connection con = ds.getConnection();
+        try {
+            Statement stat = con.createStatement();
+            String sql = "select feed_id, vote_user from user_feed where vote_user != 0 and user_id = "
+                    + userID + " order by vote_date desc limit 100";
+            ResultSet rs = stat.executeQuery(sql);
+            ArrayList<Integer> ups = new ArrayList<Integer>();
+            ArrayList<Integer> downs = new ArrayList<Integer>();
+            while (rs.next()) {
+                if (rs.getInt(2) > 0) {
+                    ups.add(rs.getInt(1));
+                } else {
+                    downs.add(rs.getInt(1));
+                }
+            }
+            return new ArrayList[] { ups, downs };
+        } finally {
+            Utils.closeQuietly(con);
+        }
+    }
 
     private static List<Integer> getIDS(Statement stat, String sql)
             throws SQLException {
@@ -27,20 +71,26 @@ public class DBHelper {
         return ids;
     }
 
-    public static List<Integer> fetchDownIDs(Statement stat, int userID)
+    public static List<FeedScore> getUnvotedFeeds(DataSource ds, int userID)
             throws SQLException {
-        String sql = String
-                .format("SELECT feed_id FROM user_feed WHERE user_id = %d AND vote_user = -1 order by vote_date desc limit 100",
-                        userID);
-        return getIDS(stat, sql);
-    }
-
-    public static List<Integer> fetchRecentRead(Statement stat, int userID)
-            throws SQLException {
-        String sql = String
-                .format("SELECT feed_id FROM user_feed WHERE user_id = %d AND read_date > 0 order by read_date desc limit 100",
-                        userID);
-        return getIDS(stat, sql);
+        Connection con = ds.getConnection();
+        try {
+            Statement stat = con.createStatement();
+            String sql = "select f.id, f.rss_link_id from feeds f join"
+                    + " user_subscription us on f.rss_link_id = us.rss_link_id"
+                    + " and us.user_id =" + userID
+                    + " order by published_ts desc limit 4000";
+            List<FeedScore> unVoted = new ArrayList<FeedScore>(1024);
+            ResultSet rs = stat.executeQuery(sql);
+            while (rs.next()) {
+                unVoted.add(new FeedScore(rs.getInt(1), rs.getInt(2)));
+            }
+            Utils.closeQuietly(rs);
+            Utils.closeQuietly(stat);
+            return unVoted;
+        } finally {
+            Utils.closeQuietly(con);
+        }
     }
 
     public static List<Integer> getUserSubIDS(DataSource ds, int userID)
@@ -53,52 +103,6 @@ public class DBHelper {
             List<Integer> ids = getIDS(stat, sql);
             Utils.closeQuietly(stat);
             return ids;
-        } finally {
-            Utils.closeQuietly(con);
-        }
-    }
-
-    public static List<Integer> fetchUpIDs(Statement stat, int userID)
-            throws SQLException {
-        String sql = String
-                .format("SELECT feed_id FROM user_feed WHERE user_id = %d AND vote_user = 1 order by vote_date desc limit 100",
-                        userID);
-        return getIDS(stat, sql);
-    }
-
-    public static List<Integer> fetchUserIDsBySubID(DataSource ds, int subid)
-            throws SQLException {
-        Connection con = ds.getConnection();
-        try {
-            String sql = "select user_id from user_subscription where rss_link_id = "
-                    + subid;
-            Statement stat = con.createStatement();
-            List<Integer> ids = getIDS(stat, sql);
-            Utils.closeQuietly(stat);
-            return ids;
-        } finally {
-            Utils.closeQuietly(con);
-        }
-    }
-
-    public static List<FeedScore> getUnvotedFeeds(DataSource ds, int userID)
-            throws SQLException {
-        Connection con = ds.getConnection();
-        try {
-            long start = currentTimeMillis();
-            int ts = (int) (start / 1000) - 3600 * 24 * 30;
-            Statement stat = con.createStatement();
-            String sql = String
-                    .format("call get_unvoted(%d, %d)", userID, ts);
-            List<FeedScore> unVoted = new ArrayList<FeedScore>();
-            ResultSet rs = stat.executeQuery(sql);
-            while (rs.next()) {
-                unVoted.add(new FeedScore(rs.getInt("id"), rs
-                        .getInt("rss_link_id")));
-            }
-            Utils.closeQuietly(rs);
-            Utils.closeQuietly(stat);
-            return unVoted;
         } finally {
             Utils.closeQuietly(con);
         }

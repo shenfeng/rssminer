@@ -125,25 +125,3 @@ create table favicon (
      -- SMALLINT, 0, 35536, 2 bytes storage
      code SMALLINT UNSIGNED     -- fetch result's http status code
 );
-
-delimiter //
-
--- TODO limit count
--- mysql does not support EXCEPT operator, use left join
-CREATE PROCEDURE get_unvoted (user_id_p INT, published_ts_p INT)
-BEGIN
-SELECT p.*
-FROM   (SELECT f.id,
-               f.rss_link_id
-        FROM   feeds f
-               JOIN user_subscription us
-                 ON f.rss_link_id = us.rss_link_id
-                    AND us.user_id = user_id_p
-        WHERE  f.published_ts > published_ts_p) p
-       LEFT JOIN (SELECT feed_id
-                  FROM   user_feed
-                  WHERE  user_id = user_id_p) q
-         ON p.id = q.feed_id
-WHERE  q.feed_id IS NULL;
-
-END //
