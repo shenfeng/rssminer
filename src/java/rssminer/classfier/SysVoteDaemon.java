@@ -87,13 +87,13 @@ public class SysVoteDaemon implements Runnable {
             throws SQLException, CorruptIndexException, IOException {
         Map<String, Map<String, Double>> cache = modelCache.get(userID);
         if (cache != null) {
-            return cache;
-        } else {
-            Map<String, Map<String, Double>> model = trainModel(userID);
-            if (model != null) {
-                modelCache.put(userID, model);
+            if (cache == noModel) {
+                return null;
+            } else {
+                return cache;
             }
-            return model;
+        } else {
+            return trainModel(userID);
         }
     }
 
@@ -235,6 +235,10 @@ public class SysVoteDaemon implements Runnable {
         Map<String, Map<String, Double>> model = null;
         if (ups.size() > 0 && downs.size() > 0) {
             model = train(ups, downs);
+            modelCache.put(userID, noModel);
+        } else {
+            // TODO strategy to expire cache
+            modelCache.put(userID, model);
         }
         return model;
     }

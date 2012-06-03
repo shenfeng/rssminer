@@ -77,8 +77,8 @@
               :default (int 2) :parse-fn to-int]
              ["--index-path" "Path to store lucene index"
               :default "/var/rssminer/index"]
-             ["--[no-]fetcher" "Start rss fetcher" :default true]
-             ["--[no-]proxy" "Enable Socks proxy" :default true]
+             ["--[no-]fetcher" "Start rss fetcher" :default false]
+             ["--[no-]proxy" "Enable Socks proxy" :default false]
              ["--[no-]help" "Print this help"])]
     (when (:help options) (println banner) (System/exit 0))
     (start-server options)))

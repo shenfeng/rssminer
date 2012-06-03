@@ -1,28 +1,37 @@
 (ns rssminer.db.feed
   (:use [rssminer.database :only [mysql-query with-mysql mysql-insert]]
         (rssminer [search :only [index-feed]]
-                  [util :only [ignore-error now-seconds]])
+                  [util :only [ignore-error to-int now-seconds]]
+                  [classify :only [on-fetcher-event]])
         [clojure.string :only [blank?]]
         [clojure.tools.logging :only [info trace]]
         [clojure.java.jdbc :only [update-values delete-rows do-commands]]))
 
-(defn- feed-exits [rss-id link]
+(defn- feed-exits [rssid link]
   (mysql-query ["SELECT id FROM feeds WHERE rss_link_id = ? AND link = ?"
-                rss-id link]))
+                rssid link]))
 
-(defn save-feeds [feeds rss-id]
-  (doseq [{:keys [link] :as feed} (:entries feeds)]
-    (when (and link (not (blank? link)))
-      ;; since link is what I cared, do not update this feed on mysql
-      (if-not (feed-exits rss-id link)
-        (let [id (mysql-insert :feeds (assoc feed :rss_link_id rss-id))]
-          (index-feed id rss-id feed))))))
-
-(defn update-total-feeds [rss-id]
+(defn update-total-feeds [rssid]
   (with-mysql
     (do-commands (str "UPDATE rss_links SET total_feeds =
-  (SELECT COUNT(*) FROM feeds where rss_link_id = " rss-id ") WHERE id = "
-  rss-id))))
+  (SELECT COUNT(*) FROM feeds where rss_link_id = " rssid ") WHERE id = "
+  rssid))))
+
+(defn save-feeds [feeds rssid]
+  (let [ids (map (fn [{:keys [link] :as feed}]
+                   (when (and link (not (blank? link)))
+                     ;; since link is what I cared,
+                     ;; do not update this feed on mysql
+                     (if-not (feed-exits rssid link)
+                       (let [id (mysql-insert :feeds (assoc feed
+                                                       :rss_link_id rssid))]
+                         (index-feed id rssid feed)
+                         id))))        ; return id
+                 (:entries feeds))
+        inserted (filter identity (doall ids))]
+    (when (seq inserted)
+      (on-fetcher-event rssid (map to-int inserted))
+      (update-total-feeds rssid))))
 
 (defn fetch-link [id]
   (:link (first (mysql-query ["SELECT link FROM feeds WHERE id = ?" id]))))

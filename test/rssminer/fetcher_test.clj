@@ -4,10 +4,10 @@
         rssminer.db.feed
         [rssminer.util :only [now-seconds]]
         [rssminer.database :only [mysql-query mysql-insert]]
-        [rssminer.test-common :only [mysql-fixture]])
+        [rssminer.test-common :only [app-fixture]])
   (:import me.shenfeng.http.HttpUtils))
 
-(use-fixtures :each mysql-fixture
+(use-fixtures :each app-fixture
               (fn [test-fn]
                 (mysql-insert :rss_links
                               {:url "http://aria42.com/blog/?feed=rss2"})
@@ -28,7 +28,7 @@
                  200
                  {"Last-Modified" "Sat, 23 Jul 2011 01:40:16 GMT"}
                  (slurp "test/scottgu-atom.xml"))
-    (is (= (count (mysql-query ["select * from feeds"])) 1))
+    (is (= 1 (- (count (mysql-query ["select * from feeds"])) (count feeds))))
     (is (= 1 (- (count links) (count (fetch-rss-links 1000)))))))
 
 (deftest test-insert-rss-link

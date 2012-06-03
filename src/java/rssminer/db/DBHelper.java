@@ -25,7 +25,7 @@ public class DBHelper {
             throws SQLException {
         Connection con = ds.getConnection();
         try {
-            String sql = "select user_id, vote from user_subscription where rss_link_id = "
+            String sql = "select user_id from user_subscription where rss_link_id = "
                     + subid;
             Statement stat = con.createStatement();
             List<Integer> ids = getIDS(stat, sql);

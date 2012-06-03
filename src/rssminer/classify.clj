@@ -14,7 +14,8 @@
     (.stop ^SysVoteDaemon @daemon)
     (reset! daemon nil)))
 
-(defn on-fetcher-event [subid feedids])
+(defn on-fetcher-event [rssid feedids]
+  (.onFecherEvent ^SysVoteDaemon @daemon rssid feedids))
 
 (defn on-feed-event [user-id feed-id]
   (.onFeedEvent ^SysVoteDaemon @daemon user-id feed-id))
