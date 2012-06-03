@@ -74,7 +74,7 @@
              ["--bind-ip" "Which ip to bind" :default "0.0.0.0"]
              ["--events-threshold"
               "How many user feed events buffered before procesing"
-              :default (int 2) :parse-fn to-array]
+              :default (int 2) :parse-fn to-int]
              ["--index-path" "Path to store lucene index"
               :default "/var/rssminer/index"]
              ["--[no-]fetcher" "Start rss fetcher" :default false]
