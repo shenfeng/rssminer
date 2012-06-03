@@ -1,5 +1,5 @@
 (ns rssminer.fetcher
-  (:use [clojure.tools.logging :only [trace]]
+  (:use [clojure.tools.logging :only [trace info]]
         (rssminer [util :only [assoc-if now-seconds]]
                   [parser :only [parse-feed]]
                   [redis :only [fetcher-dequeue fetcher-enqueue]]
@@ -49,8 +49,8 @@
                           :last_status status
                           :description (:description feeds)
                           :title (:title feeds))]
-    ;; (trace (str "id:" id) status url
-    ;;        (str "[" (-> feeds :entries count) "] feeds"))
+    (info (str "id:" id) status url
+          (str "[" (-> feeds :entries count) "] feeds"))
     (db/update-rss-link id updated)
     (when feeds (db/save-feeds feeds id))))
 
