@@ -1,15 +1,9 @@
 (ns rssminer.handlers.reader
-  (:use (rssminer [util :only [user-id-from-session to-int time-since
-                               now-seconds]]
-                  [database :only [mysql-db-factory]]
-                  [search :only [search*]])
-        [ring.util.response :only [redirect]]
-        [rssminer.db.subscription :only [fetch-user-subs fetch-user-subids]]
-        [clojure.data.json :only [read-json]]
+  (:use (rssminer [util :only [user-id-from-session to-int]]
+                  [search :only [search* search-within-subs]])
         [rssminer.db.user :only [find-user-by-id]])
   (:require [rssminer.views.reader :as view]
-            [rssminer.config :as cfg]
-            [clojure.string :as str])
+            [rssminer.config :as cfg])
   (:import rssminer.Utils))
 
 (defn landing-page [req]
@@ -31,5 +25,5 @@
         user-id (user-id-from-session req)
         limit (min 20 (to-int limit))]
     (if ids
-      (search* q user-id (str/split ids #",") limit)
-      (search* q user-id (fetch-user-subids user-id) limit))))
+      (search-within-subs q (clojure.string/split ids #",") limit)
+      (search* q (user-id-from-session req) limit))))

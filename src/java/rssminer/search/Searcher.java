@@ -1,12 +1,18 @@
 package rssminer.search;
 
 import static java.lang.Character.OTHER_PUNCTUATION;
+import static rssminer.Utils.K_DATA_SOURCE;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
+
+import javax.sql.DataSource;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -40,7 +46,11 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import rssminer.Utils;
+import rssminer.db.DBHelper;
+import rssminer.db.Feed;
+import rssminer.db.MinerDAO;
 import rssminer.sax.ExtractMainTextHandler;
+import clojure.lang.Keyword;
 
 public class Searcher {
 
@@ -67,6 +77,8 @@ public class Searcher {
 
     private IndexWriter indexer = null;
     private final String path;
+    private Map<Keyword, Object> config;
+    private DataSource ds;
 
     public static Searcher SEARCHER; // global
 
@@ -80,9 +92,10 @@ public class Searcher {
         }
     }
 
-    public static Searcher initGlobalSearcher(String path) throws IOException {
+    public static Searcher initGlobalSearcher(String path,
+            Map<Keyword, Object> config) throws IOException {
         closeGlobalSearcher();
-        SEARCHER = new Searcher(path);
+        SEARCHER = new Searcher(config, path);
         return SEARCHER;
     }
 
@@ -110,9 +123,17 @@ public class Searcher {
         return strs;
     }
 
-    private Searcher(String path) throws IOException {
+    private Searcher(Map<Keyword, Object> config, String path)
+            throws IOException {
         final IndexWriterConfig cfg = new IndexWriterConfig(V, analyzer);
         this.path = path;
+        this.config = config;
+
+        this.ds = (DataSource) config.get(K_DATA_SOURCE);
+        if (this.ds == null) {
+            throw new NullPointerException("jedis and ds can not be null");
+        }
+
         cfg.setOpenMode(OpenMode.CREATE_OR_APPEND);
         Directory dir = null;
         if (path.equals("RAM")) {
@@ -123,7 +144,7 @@ public class Searcher {
         indexer = new IndexWriter(dir, cfg);
     }
 
-    private Query buildQuery(String text, List<Integer> rssids)
+    private Query buildQuery(String text, List<String> rssids)
             throws IOException {
         TokenStream stream = analyzer.tokenStream("", new StringReader(text));
 
@@ -147,9 +168,8 @@ public class Searcher {
         }
 
         BooleanQuery ids = new BooleanQuery();
-        for (Integer rid : rssids) {
-            ids.add(new TermQuery(RSS_ID_TERM.createTerm(rid.toString())),
-                    Occur.SHOULD);
+        for (String rid : rssids) {
+            ids.add(new TermQuery(RSS_ID_TERM.createTerm(rid)), Occur.SHOULD);
         }
 
         BooleanQuery query = new BooleanQuery();
@@ -265,26 +285,36 @@ public class Searcher {
     }
 
     // return feed ids
-    public String[] search(String term, List<Integer> rssids, int count)
-            throws CorruptIndexException, IOException, ParseException {
+    public List<Feed> search(String term, int userID, int limit)
+            throws CorruptIndexException, IOException, ParseException,
+            SQLException {
+        List<Integer> subids = DBHelper.getUserSubIDS(ds, userID);
+        List<String> strs = new ArrayList<String>();
+        for (Integer id : subids) {
+            strs.add(Integer.toString(id));
+        }
+        return searchInSubIDs(term, strs, limit);
+    }
+
+    // return feed ids
+    public List<Feed> searchInSubIDs(String term, List<String> subids,
+            int limit) throws CorruptIndexException, IOException,
+            ParseException, SQLException {
         IndexReader reader = getReader();
         IndexSearcher searcher = new IndexSearcher(reader);
-        Query q = buildQuery(term, rssids);
-        TopDocs docs = searcher.search(q, count);
-        String[] array = new String[docs.scoreDocs.length];
+        Query q = buildQuery(term, subids);
+        TopDocs docs = searcher.search(q, limit);
+        List<Integer> feedids = new ArrayList<Integer>(docs.scoreDocs.length);
         for (int i = 0; i < docs.scoreDocs.length; i++) {
             int docid = docs.scoreDocs[i].doc;
             Document doc = searcher.doc(docid);
-            array[i] = doc.get(FEED_ID);
+            feedids.add(Integer.valueOf(doc.get(FEED_ID)));
         }
-        return array;
-    }
-
-    public void toggleInfoStream(boolean toggle) throws IOException {
-        if (toggle) {
-            indexer.setInfoStream(System.out);
+        if (feedids.isEmpty()) {
+            return new ArrayList<Feed>(0);
         } else {
-            indexer.setInfoStream(null);
+            return new MinerDAO(config).fetchFeeds(new TreeSet<Integer>(
+                    feedids));
         }
     }
 

@@ -19,7 +19,7 @@ public class SearcherTest {
 	public void setup() throws FileNotFoundException, IOException {
 		html = IOUtils.toString(new FileInputStream(
 				"/tmp/What-s-new-in-Linux-3-2-1400680.html"));
-		searcher = Searcher.initGlobalSearcher("RAM");
+		searcher = Searcher.initGlobalSearcher("RAM", null);
 	}
 
 	@Test

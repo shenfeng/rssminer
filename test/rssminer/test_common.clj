@@ -141,10 +141,10 @@
            (mocking #'fetcher-dequeue (fn [& args])
                     (test-fn))))
 
-(def app-fixture (join-fixtures [lucene-fixture
-                                 mysql-fixture
+(def app-fixture (join-fixtures [mysql-fixture
                                  user-fixture
                                  redis-fixture
+                                 lucene-fixture
                                  redis-queue-fixture
                                  feeds-score-fixture]))
 

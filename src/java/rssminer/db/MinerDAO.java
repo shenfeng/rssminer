@@ -44,7 +44,7 @@ public class MinerDAO {
         }
     }
 
-    private List<Feed> fetchFeeds(Set<Integer> feedids) throws SQLException {
+    public List<Feed> fetchFeeds(Set<Integer> feedids) throws SQLException {
         StringBuilder sb = new StringBuilder(SELECT_FIELDS.length()
                 + feedids.size() * 8);
         sb.append(SELECT_FIELDS);
