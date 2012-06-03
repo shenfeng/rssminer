@@ -61,6 +61,7 @@ public class SysVoteDaemon implements Runnable {
 
     private void computeAddSaveScore(int userID) throws SQLException,
             CorruptIndexException, IOException {
+        long start = System.currentTimeMillis();
         Map<String, Map<String, Double>> model = trainModel(userID);
         if (model != null) {
             List<FeedScore> unVoted = DBHelper.getUnvotedFeeds(ds, userID);
@@ -78,6 +79,8 @@ public class SysVoteDaemon implements Runnable {
                 saveScoresToMysql(userID, results);
             }
         }
+        logger.info("compute and save score for user {}, takes {}ms", userID,
+                System.currentTimeMillis() - start);
     }
 
     private Map<String, Map<String, Double>> getModel(int userID)
