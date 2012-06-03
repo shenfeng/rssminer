@@ -40,7 +40,8 @@
                       (-> e :description :value trim))
             :link (-> e :link trim)
             :tags (s/join "; " (map #(-> % :name trim)
-                                    (:categories e)))
+                                    ;; drop remaining
+                                    (take 7 (:categories e))))
             :updated_ts (:updatedDate e)
             :published_ts (or (:publishedDate e)
                               (:updatedDate e)

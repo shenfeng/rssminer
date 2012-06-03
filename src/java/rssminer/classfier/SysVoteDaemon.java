@@ -60,10 +60,9 @@ public class SysVoteDaemon implements Runnable {
 
     private void computeAddSaveScore(int userID) throws SQLException,
             CorruptIndexException, IOException {
-        Watch w = new Watch().start();
         Map<String, Map<String, Double>> model = trainModel(userID);
-        logger.info("train model for user {} takes {}ms", userID, w.time());
         if (model != null) {
+            Watch w = new Watch().start();
             List<FeedScore> unVoted = DBHelper.getUnvotedFeeds(ds, userID);
             if (!unVoted.isEmpty()) {
                 List<Integer> unVotedIDs = new ArrayList<Integer>(
@@ -78,9 +77,9 @@ public class SysVoteDaemon implements Runnable {
                 saveScoresToRedis(userID, unVoted);
                 saveScoresToMysql(userID, results);
             }
+            logger.info("compute and save score for user {}, takes {}ms",
+                    userID, w.time());
         }
-        logger.info("compute and save score for user {}, takes {}ms", userID,
-                w.time());
     }
 
     private Map<String, Map<String, Double>> getModel(int userID)
@@ -99,6 +98,7 @@ public class SysVoteDaemon implements Runnable {
 
     public void handlerFetcherEvent(FetcherEvent e) throws SQLException,
             CorruptIndexException, IOException {
+        Watch w = new Watch().start();
         List<Integer> userIDs = DBHelper.fetchUserIDsBySubID(ds, e.subid);
         Jedis redis = jedis.getResource();
         try {
@@ -119,6 +119,8 @@ public class SysVoteDaemon implements Runnable {
         } finally {
             jedis.returnResource(redis);
         }
+        logger.info("rss:{}, feeds:{}, {} users, take {}ms", new Object[] {
+                e.subid, e.feedids.size(), userIDs.size(), w.time() });
     }
 
     public void handlerUserEvent(UserEvent e) throws CorruptIndexException,
@@ -229,6 +231,7 @@ public class SysVoteDaemon implements Runnable {
 
     private Map<String, Map<String, Double>> trainModel(int userID)
             throws SQLException, CorruptIndexException, IOException {
+        Watch w = new Watch().start();
         List<Integer>[] voted = DBHelper.fetchVotedIds(ds, userID);
         List<Integer> ups = voted[0];
         List<Integer> downs = voted[1];
@@ -240,6 +243,7 @@ public class SysVoteDaemon implements Runnable {
             // TODO strategy to expire cache
             modelCache.put(userID, model);
         }
+        logger.info("train model for user {} takes {}ms", userID, w.time());
         return model;
     }
 }

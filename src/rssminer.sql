@@ -43,7 +43,7 @@ CREATE TABLE rss_links (
 
 CREATE TABLE feeds (
   id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-  author VARCHAR(24),
+  author VARCHAR(64),
   link VARCHAR(220),
   title VARCHAR(256),
   -- 2012/5/27
