@@ -96,14 +96,14 @@
 
   function feed_css_class (i) {
     var cls;
-    if(i.read_date === 1) { cls = 'sys-read'; }
-    else if(i.read_date > 1) { cls = 'read';}
+    if(i.readts === 1) { cls = 'sys-read'; }
+    else if(i.readts > 1) { cls = 'read';}
     else {cls = 'unread';}
 
-    if (i.vote_user < 0) { cls += ' dislike'; }
-    else if (i.vote_user > 0) { cls += ' like'; }
-    else if(i.vote_sys > LIKE_SCORE) { cls += ' like sys'; }
-    else if(i.vote_sys < NEUTRAL_SCORE) { cls += ' dislike sys';}
+    if (i.vote < 0) { cls += ' dislike'; }
+    else if (i.vote > 0) { cls += ' like'; }
+    else if(i.score > LIKE_SCORE) { cls += ' like sys'; }
+    else if(i.score < NEUTRAL_SCORE) { cls += ' dislike sys';}
     else { cls += ' neutral sys'; }
 
     return cls;

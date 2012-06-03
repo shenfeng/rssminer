@@ -173,8 +173,8 @@ public class SysVoteDaemon implements Runnable {
         try {
             PreparedStatement ps = con
                     .prepareStatement("update users set like_score = ?, neutral_score =? where id = ?");
-            ps.setDouble(1, neutral);
-            ps.setDouble(2, like);
+            ps.setDouble(1, like);
+            ps.setDouble(2, neutral);
             ps.setInt(3, usreID);
             ps.executeUpdate();
             Utils.closeQuietly(ps);
