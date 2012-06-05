@@ -28,6 +28,7 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Pipeline;
 import rssminer.Utils;
 import rssminer.db.DBHelper;
+import rssminer.db.Vote;
 import clojure.lang.Keyword;
 
 public class SysVoteDaemon implements Runnable {
@@ -119,7 +120,7 @@ public class SysVoteDaemon implements Runnable {
         } finally {
             jedis.returnResource(redis);
         }
-        logger.info("rss:{}, feeds:{}, {} users, take {}ms", new Object[] {
+        logger.info("rss:{}, feed cnt:{}, {} users, take {}ms", new Object[] {
                 e.subid, e.feedids.size(), userIDs.size(), w.time() });
     }
 
@@ -232,18 +233,18 @@ public class SysVoteDaemon implements Runnable {
     private Map<String, Map<String, Double>> trainModel(int userID)
             throws SQLException, CorruptIndexException, IOException {
         Watch w = new Watch().start();
-        List<Integer>[] voted = DBHelper.fetchVotedIds(ds, userID);
-        List<Integer> ups = voted[0];
-        List<Integer> downs = voted[1];
+        List<Vote> votes = DBHelper.fetchVotedIds(ds, userID);
         Map<String, Map<String, Double>> model = null;
-        if (ups.size() > 0 && downs.size() > 0) {
-            model = train(ups, downs);
+        if (votes.size() > 0) {
+            model = train(votes);
             modelCache.put(userID, noModel);
         } else {
             // TODO strategy to expire cache
             modelCache.put(userID, model);
         }
-        logger.info("train model for user {} takes {}ms", userID, w.time());
+        // System.out.println(model);
+        logger.info("train model for user {} with {} feeds takes {}ms",
+                new Object[] { userID, votes.size(), w.time() });
         return model;
     }
 }

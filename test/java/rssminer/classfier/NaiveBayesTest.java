@@ -120,7 +120,7 @@ public class NaiveBayesTest {
 		}
 		System.out.println("train like: " + trainLikeIds.size()
 				+ "\t dislike: " + trainDisLikeIds.size());
-		model = NaiveBayes.train(trainLikeIds, trainDisLikeIds);
+//		model = NaiveBayes.train(trainLikeIds, trainDisLikeIds);
 
 		printModelDetail(model);
 	}

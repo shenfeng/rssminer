@@ -17,16 +17,18 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.TermFreqVector;
 import org.apache.lucene.search.IndexSearcher;
 
+import rssminer.db.Vote;
 import rssminer.search.Searcher;
 
 class Holder implements Comparable<Holder> {
 
-    double like = 0.3;
-    double dislike = 0.3;
+    int like = 0;
+    int dislike = 0;
+    int read = 0;
 
     public int compareTo(Holder o) {
-        double left = Math.abs(Math.log(getRatio()));
-        double right = Math.abs(Math.log(o.getRatio()));
+        double left = Math.abs(getLogScore());
+        double right = Math.abs(o.getLogScore());
         if (left > right) {
             return 1;
         } else if (left == right) {
@@ -36,15 +38,26 @@ class Holder implements Comparable<Holder> {
         }
     }
 
-    public double getRatio() {
-        return like / dislike;
+    public double getLogScore() {
+        return Math.log(getScore());
+    }
+
+    private double getScore() {
+        double l = 0.3, dis = 0.3; // default 0.3;
+
+        if (like != 0 || read != 0) {
+            l = like + read * 0.1;
+        }
+        if (dislike != 0) {
+            dis = dislike;
+        }
+        return l / dis;
     }
 
     public String toString() {
-        return "[like=" + like + ", dislike=" + dislike + ", ratio="
-                + getRatio() + "]";
+        return String.format("[l=%d, r=%d, dis=%d, r=%.4f, t=%.4f]\n", like,
+                read, dislike, getLogScore(), getScore());
     }
-
 }
 
 public class NaiveBayes {
@@ -52,7 +65,7 @@ public class NaiveBayes {
     static final int MAX_FEATURE = 512;
 
     static Map<String, Double> calculate(Map<String, Holder> map,
-            double totalLike, double totalDislike) {
+            double totalLike, double totalDislike, int totalRead) {
 
         // keep most
         int size = map.size() < MAX_FEATURE ? map.size() : MAX_FEATURE;
@@ -62,7 +75,7 @@ public class NaiveBayes {
         if (map.size() < MAX_FEATURE) {
             for (Entry<String, Holder> e : map.entrySet()) {
                 Holder h = e.getValue();
-                double r = h.getRatio();
+                double r = h.getLogScore();
                 result.put(e.getKey(), r);
             }
         } else {
@@ -74,7 +87,7 @@ public class NaiveBayes {
 
             for (Entry<String, Holder> e : choosen) {
                 Holder h = e.getValue();
-                double r = h.getRatio();
+                double r = h.getLogScore();
                 result.put(e.getKey(), r);
             }
         }
@@ -95,7 +108,7 @@ public class NaiveBayes {
                     Double w = submodel.get(term);
                     if (w != null) {
                         // result *= (w * freqs[i]); Infinite
-                        result += Math.log(w) * freqs[i];
+                        result += w * freqs[i];
                     }
                 }
             }
@@ -136,70 +149,65 @@ public class NaiveBayes {
         return classfiy(model, reader, docid);
     }
 
-    public static Map<String, Map<String, Double>> train(List<Integer> like,
-            List<Integer> dislike) throws CorruptIndexException, IOException {
-        int[] likes = SEARCHER.feedID2DocIDs(like);
-        int[] dislikes = SEARCHER.feedID2DocIDs(dislike);
+    public static Map<String, Map<String, Double>> train(List<Vote> votes)
+            throws CorruptIndexException, IOException {
+        // get ids
+        List<Integer> feedids = new ArrayList<Integer>(votes.size());
+        for (Vote vote : votes) {
+            feedids.add(vote.feedID);
+        }
+        int[] docIDs = SEARCHER.feedID2DocIDs(feedids);
+        for (int i = 0; i < docIDs.length; i++) {
+            votes.get(i).setDocID(docIDs[i]);
+        }
         IndexReader reader = SEARCHER.getReader();
+
         Map<String, Map<String, Double>> result = new HashMap<String, Map<String, Double>>();
         for (String field : Searcher.FIELDS) {
-            Map<String, Double> sub = trainField(reader, likes, dislikes,
-                    field);
+            Map<String, Double> sub = trainField(reader, votes, field);
             result.put(field, sub);
         }
         return result;
     }
 
     private static Map<String, Double> trainField(IndexReader reader,
-            int[] likes, int[] dislikes, String field) throws IOException,
+            List<Vote> votes, String field) throws IOException,
             CorruptIndexException {
-        Map<String, Holder> map = new HashMap<String, Holder>();
+        Map<String, Holder> map = new HashMap<String, Holder>(2048);
         int toalLike = 0;
-        for (int id : likes) {
-            if (id != -1) {
-                TermFreqVector termVector = reader.getTermFreqVector(id,
-                        field);
-                if (termVector != null) {
-                    String[] terms = termVector.getTerms();
-                    int[] freqs = termVector.getTermFrequencies();
-                    for (int j = 0; j < freqs.length; j++) {
-                        String term = terms[j];
-                        int count = freqs[j];
-                        Holder h = map.get(term);
-                        if (h == null) {
-                            h = new Holder();
-                        }
-                        toalLike += count;
-                        h.like += count;
-                        map.put(term, h);
-                    }
-                }
-            }
-        }
-
+        int totalRead = 0;
         int totalDislike = 0;
-        for (int id : dislikes) {
-            if (id != -1) {
-                TermFreqVector termVector = reader.getTermFreqVector(id,
-                        field);
-                if (termVector != null) {
-                    String[] terms = termVector.getTerms();
-                    int[] freqs = termVector.getTermFrequencies();
-                    for (int j = 0; j < freqs.length; j++) {
-                        String term = terms[j];
-                        int count = freqs[j];
-                        Holder h = map.get(term);
-                        if (h == null) {
-                            h = new Holder();
-                        }
+        for (Vote vote : votes) {
+            if (vote.docID == -1) {
+                continue;
+            }
+            TermFreqVector termVector = reader.getTermFreqVector(vote.docID,
+                    field);
+            if (termVector != null) {
+                String[] terms = termVector.getTerms();
+                int[] freqs = termVector.getTermFrequencies();
+                for (int j = 0; j < freqs.length; j++) {
+                    String term = terms[j];
+                    int count = freqs[j];
+                    Holder h = map.get(term);
+                    if (h == null) {
+                        h = new Holder();
+                    }
+                    if (vote.vote == 1) { // like
+                        h.like += count;
+                        toalLike += count;
+                    } else if (vote.vote == -1) { // dislike
                         h.dislike += count;
                         totalDislike += count;
-                        map.put(term, h);
+                    } else { // read
+                        totalRead += count;
+                        h.read += count;
                     }
+                    map.put(term, h);
                 }
             }
         }
-        return calculate(map, toalLike, totalDislike);
+        return calculate(map, toalLike, totalDislike, totalRead);
     }
 }
 

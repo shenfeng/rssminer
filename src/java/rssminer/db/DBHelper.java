@@ -13,14 +13,6 @@ import rssminer.Utils;
 import rssminer.classfier.FeedScore;
 
 public class DBHelper {
-    public static List<Integer> fetchRecentRead(Statement stat, int userID)
-            throws SQLException {
-        String sql = String
-                .format("SELECT feed_id FROM user_feed WHERE user_id = %d AND read_date > 0 order by read_date desc limit 100",
-                        userID);
-        return getIDS(stat, sql);
-    }
-
     public static List<Integer> fetchUserIDsBySubID(DataSource ds, int subid)
             throws SQLException {
         Connection con = ds.getConnection();
@@ -36,25 +28,27 @@ public class DBHelper {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public static List<Integer>[] fetchVotedIds(DataSource ds, int userID)
+    public static List<Vote> fetchVotedIds(DataSource ds, int userID)
             throws SQLException {
         Connection con = ds.getConnection();
         try {
             Statement stat = con.createStatement();
-            String sql = "select feed_id, vote_user from user_feed where vote_user != 0 and user_id = "
-                    + userID + " order by vote_date desc limit 100";
-            ResultSet rs = stat.executeQuery(sql);
-            ArrayList<Integer> ups = new ArrayList<Integer>();
-            ArrayList<Integer> downs = new ArrayList<Integer>();
+            StringBuilder sb = new StringBuilder(200);
+            sb.append("(select feed_id, vote_user from user_feed where vote_user != 0 and user_id = ");
+            sb.append(userID);
+            sb.append(" order by vote_date desc limit 100) union");
+            sb.append(" (SELECT feed_id, vote_user FROM user_feed WHERE user_id = ");
+            sb.append(userID);
+            sb.append(" AND read_date > 0 order by read_date desc limit 100)");
+            ResultSet rs = stat.executeQuery(sb.toString());
+            List<Vote> votes = new ArrayList<Vote>(100);
+
             while (rs.next()) {
-                if (rs.getInt(2) > 0) {
-                    ups.add(rs.getInt(1));
-                } else {
-                    downs.add(rs.getInt(1));
-                }
+                votes.add(new Vote(rs.getInt(1), rs.getInt(2)));
             }
-            return new ArrayList[] { ups, downs };
+            Utils.closeQuietly(stat);
+            Utils.closeQuietly(rs);
+            return votes;
         } finally {
             Utils.closeQuietly(con);
         }
