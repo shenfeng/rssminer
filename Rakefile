@@ -69,15 +69,6 @@ task :deps => ["thirdparty/#{jscompiler}",
                "thirdparty/#{luke}",
                "thirdparty/#{htmlcompressor}"]
 
-dashboard_jss = FileList['public/js/lib/jquery.flot.js',
-                         'public/js/lib/jquery.flot.pie.js',
-                         'public/js/lib/underscore.js',
-                         'public/js/lib/mustache.js',
-                         'public/js/gen/dashboard-tmpls.js',
-                         'public/js/rssminer/util.js',
-                         'public/js/rssminer/plot.js',
-                         'public/js/rssminer/dashboard.js']
-
 landing_jss = FileList['public/js/lib/slides.min.jquery.js',
                        'public/js/rssminer/landing.js']
 
@@ -136,7 +127,6 @@ namespace :js do
   desc "Generate template js resouces"
   task :tmpls => :html_compress do
     mkdir_p "public/js/gen"
-    gen_jstempls("dashboard");
     gen_jstempls("app");
     gen_jstempls("chrome");
     sh 'mv public/js/gen/chrome-tmpls.js chrome/tmpls.js'
@@ -144,7 +134,6 @@ namespace :js do
 
   desc 'Combine all js into one, minify it using google closure'
   task :minify => [:tmpls, :deps] do
-    minify_js("public/js/dashboard-min.js", dashboard_jss);
     minify_js("public/js/app-min.js", app_jss);
     minify_js("public/js/landing-min.js", landing_jss);
   end

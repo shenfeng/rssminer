@@ -18,7 +18,6 @@
                                [subscriptions :as subs]
                                [proxy :as proxy]
                                [users :as user]
-                               [dashboard :as dashboard]
                                [feeds :as feed])))
 
 (defroutes api-routes
@@ -42,9 +41,6 @@
   (GET "/p" []  proxy/handle-proxy)
   (GET "/f/o/:id" [] proxy/proxy-feed)
   (GET "/a" [] reader/app-page)
-  (JGET "/stat" [] dashboard/get-stat)
-  (context "/dashboard" []
-           (GET "/" [] reader/dashboard-page))
   (context "/login" []
            (GET "/" [] user/show-login-page)
            (POST "/" [] user/login)

@@ -1,5 +1,6 @@
 (ns rssminer.classify
-  (:use [rssminer.config :only [rssminer-conf]])
+  (:use [rssminer.config :only [rssminer-conf]]
+        [rssminer.util :only [to-int]])
   (:import rssminer.classfier.SysVoteDaemon))
 
 (defonce daemon (atom nil))
@@ -17,5 +18,5 @@
 (defn on-fetcher-event [rssid feedids]
   (.onFecherEvent ^SysVoteDaemon @daemon rssid feedids))
 
-(defn on-feed-event [user-id feed-id]
-  (.onFeedEvent ^SysVoteDaemon @daemon user-id feed-id))
+(defn on-feed-event [userid feedid]
+  (.onFeedEvent ^SysVoteDaemon @daemon userid feedid))
