@@ -131,7 +131,7 @@ public class SysVoteDaemon implements Runnable {
             c = 0;
         }
         c += 1;
-        if (c <= eventsThreashold) {
+        if (c <= eventsThreashold && e.feedID != -1) { // -1 => compute now
             // buffer
             combineEvents.put(e.userID, c);
         } else {

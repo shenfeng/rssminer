@@ -1,6 +1,7 @@
 (ns rssminer.views.reader-test
   (use clojure.test
-       [rssminer.test-common :only [test-app auth-app app-fixture]]))
+       [rssminer.test-common :only [test-app auth-app auth-app2
+                                    app-fixture]]))
 
 (use-fixtures :each app-fixture)
 
@@ -18,7 +19,14 @@
     (is (= 200 (:status js-resp)))
     (is (= 200 (:status resp)))))
 
-(deftest test-dashboar-page
-  (let [resp (test-app {:uri "/dashboard"
+(deftest test-admin-recompute-scores
+  (let [resp (test-app {:uri "/admin/re-compute"
                         :request-method :get})]
-    (is (= 302 (:status resp)))))
+    (is (= 401 (:status resp))))
+  (let [resp (auth-app2 {:uri "/admin/re-compute"
+                         :request-method :get})]
+    (is (= 401 (:status resp))))
+  (let [resp (auth-app {:uri "/admin/re-compute"
+                        :request-method :get
+                        :params {"id" 1}})]
+    (is (= 200 (:status resp)))))

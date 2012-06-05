@@ -2,6 +2,8 @@
   (:gen-class)
   (:use (rssminer [search :only [index-feed use-index-writer!
                                  close-global-index-writer!]]
+                  [util :only [user-id-from-session to-int]]
+                  [classify :only [on-feed-event]]
                   [database :only [mysql-query with-mysql mysql-insert]])
         (clojure.tools [logging :only [info]]
                        [cli :only [cli]])
@@ -16,6 +18,14 @@
         (index-feed (:id feed) (:rss_link_id feed) feed))))
   (close-global-index-writer!)
   (info "Rebuild index OK"))
+
+(defn recompute-scores [req]
+  (let [uid (-> req :params :id)
+        me (user-id-from-session req)]
+    (if (and (= me 1) uid) ;; user-id 1 is myself, who has admin right
+      (do (on-feed-event (to-int uid) (to-int -1))
+          {:status 200 :body "ok"})
+      {:status 401 :body "error"})))
 
 (defn -main [& args]
   "Rssminer admin"

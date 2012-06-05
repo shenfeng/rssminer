@@ -14,6 +14,7 @@
                                      JPOST JPUT JDELETE JGET]]))
   (:require [compojure.route :as route]
             [rssminer.import :as import]
+            rssminer.admin
             (rssminer.handlers [reader :as reader]
                                [subscriptions :as subs]
                                [proxy :as proxy]
@@ -46,6 +47,7 @@
            (POST "/" [] user/login)
            (GET "/google" [] user/google-openid)
            (GET "/checkauth" [] user/checkauth))
+  (GET "/admin/re-compute" [] rssminer.admin/recompute-scores)
   (GET "/oauth2callback" [] import/oauth2callback)
   (GET "/import/google" [] import/greader-import)
   (context "/signup" []
