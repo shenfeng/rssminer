@@ -20,14 +20,8 @@
       PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 30),
       // show search result count according to screen height
       SEARCH_RESUTL_COUNT = Math.min(Math.floor((screen.height - 260) / 43), 17),
-      LIKE_SCORE = 1,           // default 1
-      NEUTRAL_SCORE =  0;       // db default 0
-
-  var __scores = user_data.scores;
-  if(__scores) {
-    LIKE_SCORE = parseFloat(__scores.split(',')[0]);
-    NEUTRAL_SCORE = parseFloat(__scores.split(',')[1]);
-  }
+      LIKE_SCORE = user_data.like_score,        // default 1
+      NEUTRAL_SCORE =  user_data.neutral_score;    // db default 0
 
   // how many pages does each section has
   var WELCOME_TABS = {recommand: 1, latest: 1, read: 1, voted: 1};
