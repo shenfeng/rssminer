@@ -17,9 +17,6 @@
                          :static_server (:static-server @cfg/rssminer-conf)
                          :proxy_server (:proxy-server @cfg/rssminer-conf)}})))
 
-(defn dashboard-page [req]
-  (view/dashboard-page))
-
 (defn search [req]
   (let [{:keys [q limit ids]} (:params req)
         uid (user-id-from-session req)

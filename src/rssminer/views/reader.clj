@@ -7,6 +7,3 @@
   [:head] (html/append (html/html-snippet (serialize-to-js data))))
 
 (deftemplate landing-page "templates/landing.html" [] )
-
-(deftemplate dashboard-page "templates/dashboard.html" [] )
-
