@@ -22,8 +22,8 @@
 
 (defn search [req]
   (let [{:keys [q limit ids]} (:params req)
-        user-id (user-id-from-session req)
+        uid (user-id-from-session req)
         limit (min 20 (to-int limit))]
     (if ids
-      (search-within-subs q (clojure.string/split ids #",") limit)
-      (search* q (user-id-from-session req) limit))))
+      (search-within-subs q uid (clojure.string/split ids #",") limit)
+      (search* q uid limit))))

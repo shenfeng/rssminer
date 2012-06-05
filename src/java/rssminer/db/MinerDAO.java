@@ -44,6 +44,32 @@ public class MinerDAO {
         }
     }
 
+    private void addScore(int userID, List<Feed> feeds) {
+        Jedis redis = jedis.getResource();
+        try {
+            Pipeline pipeline = redis.pipelined();
+            List<Response<Double>> scores = new ArrayList<Response<Double>>(
+                    feeds.size());
+            for (Feed f : feeds) {
+                byte[] member = Integer.toString(f.getId()).getBytes(
+                        HttpUtils.UTF_8);
+                Response<Double> score = pipeline.zscore(
+                        Utils.genKey(userID, f.getRssid()), member);
+                scores.add(score);
+            }
+            pipeline.sync();
+            for (int i = 0; i < feeds.size(); i++) {
+                try {
+                    feeds.get(i).setScore(scores.get(i).get());
+                } catch (Exception ignore) {
+                    // TODO, should return nil when no key instead of EXCEPTION
+                }
+            }
+        } finally {
+            jedis.returnResource(redis);
+        }
+    }
+
     public List<Feed> fetchFeeds(Set<Integer> feedids) throws SQLException {
         StringBuilder sb = new StringBuilder(SELECT_FIELDS.length()
                 + feedids.size() * 8);
@@ -87,32 +113,17 @@ public class MinerDAO {
         }
     }
 
+    public List<Feed> fetchFeedsWithScore(int userID, Set<Integer> feedids)
+            throws SQLException {
+        List<Feed> feeds = fetchFeeds(feedids);
+        addScore(userID, feeds);
+        return feeds;
+    }
+
     private List<Feed> fetchFeedsWithScore(int userID, String sql)
             throws SQLException {
         List<Feed> feeds = fetchFeeds(sql);
-        Jedis redis = jedis.getResource();
-        try {
-            Pipeline pipeline = redis.pipelined();
-            List<Response<Double>> scores = new ArrayList<Response<Double>>(
-                    feeds.size());
-            for (Feed f : feeds) {
-                byte[] member = Integer.toString(f.getId()).getBytes(
-                        HttpUtils.UTF_8);
-                Response<Double> score = pipeline.zscore(
-                        Utils.genKey(userID, f.getRssid()), member);
-                scores.add(score);
-            }
-            pipeline.sync();
-            for (int i = 0; i < feeds.size(); i++) {
-                try {
-                    feeds.get(i).setScore(scores.get(i).get());
-                } catch (Exception ignore) {
-                    // TODO, should return nil when no key instead of EXCEPTION
-                }
-            }
-        } finally {
-            jedis.returnResource(redis);
-        }
+        addScore(userID, feeds);
         return feeds;
     }
 

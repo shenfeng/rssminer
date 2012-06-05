@@ -3,7 +3,6 @@ package rssminer.search;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -34,7 +33,7 @@ public class SearcherTest {
         for (int i = 1; i < count; i++) {
             rssids.add(i + "");
         }
-        List<Feed> result = searcher.searchInSubIDs("java technology",
+        List<Feed> result = searcher.searchInSubIDs("java technology", 1,
                 rssids, 10);
         // System.out.println(Arrays.toString(result));
     }

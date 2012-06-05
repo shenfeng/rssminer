@@ -87,8 +87,10 @@
     if (i.vote < 0) { cls += ' dislike'; }
     else if (i.vote > 0) { cls += ' like'; }
     else if(i.score > LIKE_SCORE) { cls += ' like sys'; }
-    else if(i.score < NEUTRAL_SCORE) { cls += ' dislike sys';}
-    else { cls += ' neutral sys'; }
+    // score === 0 means server give no score info
+    else if(i.score > NEUTRAL_SCORE || i.score === 0) {
+      cls +=' neutral sys';
+    } else { cls += ' dislike sys';}
 
     return cls;
   }

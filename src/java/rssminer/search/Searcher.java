@@ -289,17 +289,17 @@ public class Searcher {
             throws CorruptIndexException, IOException, ParseException,
             SQLException {
         List<Integer> subids = DBHelper.getUserSubIDS(ds, userID);
-        List<String> strs = new ArrayList<String>();
+        List<String> subs = new ArrayList<String>();
         for (Integer id : subids) {
-            strs.add(Integer.toString(id));
+            subs.add(Integer.toString(id));
         }
-        return searchInSubIDs(term, strs, limit);
+        return searchInSubIDs(term, userID, subs, limit);
     }
 
     // return feed ids
-    public List<Feed> searchInSubIDs(String term, List<String> subids,
-            int limit) throws CorruptIndexException, IOException,
-            ParseException, SQLException {
+    public List<Feed> searchInSubIDs(String term, int userID,
+            List<String> subids, int limit) throws CorruptIndexException,
+            IOException, ParseException, SQLException {
         IndexReader reader = getReader();
         IndexSearcher searcher = new IndexSearcher(reader);
         Query q = buildQuery(term, subids);
@@ -313,7 +313,8 @@ public class Searcher {
         if (feedids.isEmpty()) {
             return new ArrayList<Feed>(0);
         } else {
-            return new MinerDAO(config).fetchFeeds(new TreeSet<Integer>(
+            MinerDAO db = new MinerDAO(config);
+            return db.fetchFeedsWithScore(userID, new TreeSet<Integer>(
                     feedids));
         }
     }
