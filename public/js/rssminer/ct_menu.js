@@ -19,7 +19,6 @@
       $win = $(window);
 
   function show_folder_context_menu (e) { // hide in search.js
-    dump_saving_sorting();
     $last_menu_ui = $(this);
     var html = tmpls.folder_ct_menu({});
     $ct_menu.empty().append(html).css({
@@ -38,7 +37,7 @@
     RM.ajax.spost('/api/subs/sort', sorting_data);
   }
 
-  function dump_saving_sorting () {
+  function dump_and_saving_sorting () {
     sorting_data = [];
     $('>li', $subs_list).each(function (idx, li) {
       var name = $.trim($('.folder span', li).text()),
@@ -95,7 +94,7 @@
     var new_name = prompt('new name');
     if(new_name) {
       $last_menu_ui.find('span').text(new_name);
-      dump_saving_sorting();
+      dump_and_saving_sorting();
     }
   }
 
@@ -107,7 +106,7 @@
         $('.rss-category', li).prepend($last_menu_ui);
       }
     });
-    dump_saving_sorting();
+    dump_and_saving_sorting();
   }
 
   function unsubscribe_item () {
@@ -144,7 +143,7 @@
       $subs_list.append(html).find('img').each(util.favicon_error);
       $subs_list.trigger('refresh.rm');
     }
-    dump_saving_sorting();
+    dump_and_saving_sorting();
   }
 
   function toggle_sub_folder (e) {
@@ -205,7 +204,7 @@
   });
 
   $subs_list.sortable({
-    update: dump_saving_sorting,
+    update: dump_and_saving_sorting,
     handle: '.folder'
   });
 
@@ -213,7 +212,7 @@
     // subscription sortable within categories
     $(".rss-category").sortable({
       connectWith: ".rss-category",
-      update: dump_saving_sorting
+      update: dump_and_saving_sorting
     });
   });
 })();

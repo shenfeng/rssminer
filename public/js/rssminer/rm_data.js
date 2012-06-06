@@ -9,7 +9,7 @@
       user_conf = JSON.parse(user_data.conf || "{}");
 
   var subscriptions_cache,
-      sub_titles = {},                // use by transform_item
+      sub_titles = {},          // use by transform_item
       feeds_cache = {},
       cache_fixer = {};         // fix browser cache, inconsistency
 
