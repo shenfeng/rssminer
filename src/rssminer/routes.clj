@@ -42,6 +42,7 @@
   (GET "/p" []  proxy/handle-proxy)
   (GET "/f/o/:id" [] proxy/proxy-feed)
   (GET "/a" [] reader/app-page)
+  (GET "/demo" [] reader/demo-page)
   (context "/login" []
            (GET "/" [] user/show-login-page)
            (POST "/" [] user/login)

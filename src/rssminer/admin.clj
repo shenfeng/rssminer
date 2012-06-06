@@ -20,9 +20,8 @@
   (info "Rebuild index OK"))
 
 (defn recompute-scores [req]
-  (let [uid (-> req :params :id)
-        me (user-id-from-session req)]
-    (if (and (= me 1) uid) ;; user-id 1 is myself, who has admin right
+  (let [uid (-> req :params :id)]
+    (if (and (= 1 (:session req)) uid) ;; 1 is myself, who has admin right
       (do (on-feed-event (to-int uid) (to-int -1))
           {:status 200 :body "ok"})
       {:status 401 :body "error"})))

@@ -4,6 +4,8 @@
       $p = $('p', $nofity),
       hide_timer_id;
 
+  var is_demo = _RM_.demo;
+
   var LOADING = 'Loading...',
       MSG_CLASS = 'message',
       ERROR_CLASS = 'error';
@@ -79,6 +81,14 @@
   }
 
   function jpost(url, data, success, silent) {
+    if(is_demo) {
+      if(/read/.test(url)) {
+        show_msg('This is demo only, please login to save reading history', 3000);
+      } else {
+        show_msg('This is demo only, please login to save', 3000);
+      }
+      return false;
+    }
     if(!silent) {
       show_msg(LOADING);
     }
@@ -96,6 +106,7 @@
   }
 
   function sdelete (url, success) {
+    if(is_demo) { return false; }
     return $.ajax(handler(url, 'DELETE', success, true));
   }
 

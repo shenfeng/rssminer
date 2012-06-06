@@ -17,6 +17,18 @@
                          :static_server (:static-server @cfg/rssminer-conf)
                          :proxy_server (:proxy-server @cfg/rssminer-conf)}})))
 
+(defn demo-page [req]
+  {:body (view/app-page
+          ;; 1 is me
+          {:rm {:user (assoc (find-user-by-id 1) :email "demo@rssminer.net")
+                :no_iframe Utils/NO_IFRAME
+                :demo true
+                :reseted Utils/RESETED_DOMAINS
+                :static_server (:static-server @cfg/rssminer-conf)
+                :proxy_server (:proxy-server @cfg/rssminer-conf)}})
+   :status 200
+   :session {:id 0}})
+
 (defn search [req]
   (let [{:keys [q limit ids]} (:params req)
         uid (user-id-from-session req)

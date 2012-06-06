@@ -29,4 +29,11 @@
   (let [resp (auth-app {:uri "/admin/re-compute"
                         :request-method :get
                         :params {"id" 1}})]
+    ;; should be 401
+    (is (= 401 (:status resp)))))
+
+(deftest test-demo-page
+  (let [resp (test-app {:uri "/demo"
+                        :request-method :get})]
     (is (= 200 (:status resp)))))
+

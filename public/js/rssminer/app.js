@@ -300,4 +300,8 @@
       'read/:id/:id?p=:page&s=:sort': read_feed
     });
   });
+
+  if(_RM_.demo) {
+    $('h1').append('<sub>demo</sub>');
+  }
 })();
