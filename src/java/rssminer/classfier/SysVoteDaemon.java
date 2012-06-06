@@ -198,6 +198,7 @@ public class SysVoteDaemon implements Runnable {
             Arrays.sort(scores);
             byte[] lastKey = null;
             int lastSubID = -1;
+            pipelined.del(Utils.genKey(userID));
             for (FeedScore fs : scores) {
                 if (fs.subid != lastSubID) {
                     if (lastKey != null) {
