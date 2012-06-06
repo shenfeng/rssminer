@@ -79,7 +79,7 @@ public class SysVoteDaemon implements Runnable {
                 saveScoresToMysql(userID, results);
             }
             logger.info(
-                    "compute and save score for user {}, {}feeds, takes {}ms",
+                    "compute and save score for user {}, {} feeds, takes {}ms",
                     new Object[] { userID, unVoted.size(), w.time() });
         }
     }
@@ -239,10 +239,10 @@ public class SysVoteDaemon implements Runnable {
         Map<String, Map<String, Double>> model = null;
         if (votes.size() > 0) {
             model = train(votes);
-            modelCache.put(userID, noModel);
+            modelCache.put(userID, model);
         } else {
             // TODO strategy to expire cache
-            modelCache.put(userID, model);
+            modelCache.put(userID, noModel);
         }
         // System.out.println(model);
         logger.info("train model for user {} with {} feeds takes {}ms",

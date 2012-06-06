@@ -3,6 +3,7 @@
 ABSOLUTE_PATH=$(readlink -f $0)
 HOME="${ABSOLUTE_PATH%/*/*}"
 cd "${HOME}" && java -server \
+    -Xdebug -Xrunjdwp:transport=dt_socket,address=9092,server=y,suspend=n \
     -Dfile.encoding=UTF-8 \
     -Djava.net.preferIPv4Stack=true \
     -Dsun.jnu.encoding=UTF-8 \
