@@ -24,6 +24,8 @@ import redis.clients.jedis.Tuple;
 import rssminer.Utils;
 import clojure.lang.Keyword;
 
+// TODO mysql in does not respect order, so, should sort after fetched
+
 public class MinerDAO {
     private JedisPool jedis;
     private DataSource ds;

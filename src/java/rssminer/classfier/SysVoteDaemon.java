@@ -78,8 +78,9 @@ public class SysVoteDaemon implements Runnable {
                 saveScoresToRedis(userID, unVoted);
                 saveScoresToMysql(userID, results);
             }
-            logger.info("compute and save score for user {}, takes {}ms",
-                    userID, w.time());
+            logger.info(
+                    "compute and save score for user {}, {}feeds, takes {}ms",
+                    new Object[] { userID, unVoted.size(), w.time() });
         }
     }
 
