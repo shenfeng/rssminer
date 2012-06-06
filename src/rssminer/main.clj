@@ -60,7 +60,8 @@
   (let [[options _ banner]
         (cli args
              ["-p" "--port" "Port to listen" :default 9090 :parse-fn to-int]
-             ["--worker" "Http worker count" :default 2 :parse-fn to-int]
+             ["--worker" "Http worker thread count" :default 2
+              :parse-fn to-int]
              ["--fetcher-concurrency" "" :default 20 :parse-fn to-int]
              ["--fetch-size" "Bulk fetch size" :default 100 :parse-fn to-int]
              ["--profile" "dev or prod" :default :dev :parse-fn keyword]
@@ -73,7 +74,7 @@
              ["--db-user" "Mysql Database user name" :default "feng"]
              ["--bind-ip" "Which ip to bind" :default "0.0.0.0"]
              ["--events-threshold"
-              "How many user feed events buffered before procesing"
+              "How many user feed events buffered before recompute again"
               :default (int 2) :parse-fn to-int]
              ["--index-path" "Path to store lucene index"
               :default "/var/rssminer/index"]

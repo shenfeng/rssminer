@@ -1,6 +1,6 @@
 # RSSMiner
 
-* Rssminer - an intelligent RSS reader
+* Rssminer - an simple, but intelligent RSS reader
 * Live version [http://rssminer.net](http://rssminer.net)
 * Write in Clojure & Javascript & Java, by [shen feng](http://shenfeng.me)
 * Simple, fast, Responsive UI. Features combines naturally, and make
@@ -11,7 +11,7 @@
 * Read the original, not the provided `abstract`: eg: `Hacker news`,
 `IBM developerWorks : Java technology`, `Peter Norvig`
 * Read blogspot, wordpress, feedburner etc in China
-* Learn from your `like` `dislike`, then rank feeds accordingly
+* Learn from your reading history, your vote `like` `dislike`, rank feeds accordingly. Realtime.
 * Google Chrome plugin to add subscription
 * Clean and compact code.
 
@@ -32,7 +32,7 @@
 * [mmseg](https://github.com/shenfeng/mmseg), A java implementation of
   MMSEG. Especially written for Rssminer
 * [MySQL](http://www.mysql.com/), data store
-* [Redis](http://redis.io/), session store, Message Queue
+* [Redis](http://redis.io/), Message Queue; Per user per feed score Store. Proxy cache.
 
 ### Client-side
 * [jQuery](http://jquery.com/), nicer API
@@ -56,13 +56,13 @@ mysql-server, [sass](http://sass-lang.com/), rake
 git clone git://github.com/shenfeng/rssminer.git && cd rssminer && lein deps
 ```
 
-3. Initialize database, create user, import schema
+2. Initialize database, create user, import schema
 
 ```sh
 cd rssminer && ./scripts/admin init-db
 ```
 
-4. Run it
+3. Run it
 
 ```sh
 rake run:dev # run server in dev profile, view it: http://127.0.0.1:9090
@@ -83,27 +83,25 @@ rake mysql_dev # replace my.cnf will a dev one, run mysql in /tmp, run it after 
 
 ### Command line args
 
-```sh
-./scripts/run --help
-
 Usage:
 
  Switches                 Default                          Desc
  --------                 -------                          ----
  -p, --port               9090                             Port to listen
- --worker                 2                                Http worker count
- --fetcher-queue          20                               queue size
+ --worker                 2                                Http worker thread count
+ --fetcher-concurrency    20
  --fetch-size             100                              Bulk fetch size
  --profile                :dev                             dev or prod
  --redis-host             127.0.0.1                        Redis for session store
- --proxy-server           //192.168.1.2                    proxy server
- --static-server          //192.168.1.2                    static server
+ --proxy-server           //192.168.1.3                    proxy server
+ --static-server          //192.168.1.3                    static server
  --db-url                 jdbc:mysql://localhost/rssminer  Mysql Database url
  --db-user                feng                             Mysql Database user name
- --ip                     0.0.0.0                          Which ip to bind
+ --bind-ip                0.0.0.0                          Which ip to bind
+ --events-threshold       2                                How many user feed events buffered before recompute again
  --index-path             /var/rssminer/index              Path to store lucene index
- --no-fetcher, --fetcher  true                             Start rss fetcher
- --no-proxy, --proxy      true                             Enable Socks proxy
+ --no-fetcher, --fetcher  false                            Start rss fetcher
+ --no-proxy, --proxy      false                            Enable Socks proxy
  --no-help, --help        false                            Print this help
 
 ```
