@@ -83,6 +83,7 @@ rake mysql_dev # replace my.cnf will a dev one, run mysql in /tmp, run it after 
 
 ### Command line args
 
+```sh
 Usage:
 
  Switches                 Default                          Desc
