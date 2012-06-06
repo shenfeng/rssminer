@@ -26,7 +26,7 @@
   // how many pages does each section has
   var WELCOME_TABS = {recommand: 1, latest: 1, read: 1, voted: 1};
 
-  var SORTINGS_TABS = { newest: 1, oldest: 1, likest: 1 }; // 1 means true
+  var SORTINGS_TABS = { likest: 1, newest: 1, oldest: 1 }; // 1 means true
 
   function save_to_cache_fixer (feedid, data) {
     cache_fixer[feedid] = _.extend(cache_fixer[feedid] || {}, data);

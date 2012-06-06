@@ -1,6 +1,6 @@
 package rssminer.db;
 
-public class Feed {
+public class Feed implements Comparable<Feed> {
     private int id;
     private int rssid;
     private double score;
@@ -99,6 +99,14 @@ public class Feed {
 
     public void setVotets(int votets) {
         this.votets = votets;
+    }
+
+    public int compareTo(Feed o) {
+        if (o.score > score)
+            return 1;
+        else if (score > o.score)
+            return -1;
+        return 0;
     }
 
 }

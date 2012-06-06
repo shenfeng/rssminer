@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,8 +24,6 @@ import redis.clients.jedis.Response;
 import redis.clients.jedis.Tuple;
 import rssminer.Utils;
 import clojure.lang.Keyword;
-
-// TODO mysql in does not respect order, so, should sort after fetched
 
 public class MinerDAO {
     private JedisPool jedis;
@@ -145,6 +144,7 @@ public class MinerDAO {
             for (Feed feed : feeds) {
                 feed.setScore(map.get(feed.getId()));
             }
+            Collections.sort(feeds); // sort by score
             return feeds;
         }
     }
