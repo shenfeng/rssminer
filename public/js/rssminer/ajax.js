@@ -106,7 +106,10 @@
   }
 
   function sdelete (url, success) {
-    if(is_demo) { return false; }
+    if(is_demo) {
+      show_msg('This is demo only, please login to save', 3000);
+      return false;
+    }
     return $.ajax(handler(url, 'DELETE', success, true));
   }
 

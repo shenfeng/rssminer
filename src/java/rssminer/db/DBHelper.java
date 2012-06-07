@@ -73,7 +73,7 @@ public class DBHelper {
             String sql = "select f.id, f.rss_link_id from feeds f join"
                     + " user_subscription us on f.rss_link_id = us.rss_link_id"
                     + " and us.user_id =" + userID
-                    + " order by published_ts desc limit 4000";
+                    + " order by published_ts desc limit 5000";
             List<FeedScore> unVoted = new ArrayList<FeedScore>(1024);
             ResultSet rs = stat.executeQuery(sql);
             while (rs.next()) {
