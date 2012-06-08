@@ -4,7 +4,6 @@ import static rssminer.search.Searcher.SEARCHER;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -20,13 +19,13 @@ import org.apache.lucene.search.IndexSearcher;
 import rssminer.db.Vote;
 import rssminer.search.Searcher;
 
-class Holder implements Comparable<Holder> {
+class TermFeature implements Comparable<TermFeature> {
 
-    int like = 0;
-    int dislike = 0;
-    int read = 0;
+    double like = 0;
+    double dislike = 0;
+    double read = 0;
 
-    public int compareTo(Holder o) {
+    public int compareTo(TermFeature o) {
         double left = Math.abs(getLogScore());
         double right = Math.abs(o.getLogScore());
         if (left > right) {
@@ -43,8 +42,10 @@ class Holder implements Comparable<Holder> {
     }
 
     private double getScore() {
-        double l = 0.3, dis = 0.3; // default 0.3;
-
+        // term frequency => term / Math.sqrt(length)
+        // if a doc has lot of terms, then term frequency may be low. has some
+        // read, but no dislike, the score should not be negative
+        double l = 0.018, dis = 0.018; // default 0.018; 3086 terms
         if (like != 0 || read != 0) {
             l = like + read * 0.1;
         }
@@ -55,8 +56,8 @@ class Holder implements Comparable<Holder> {
     }
 
     public String toString() {
-        return String.format("[l=%d, r=%d, dis=%d, r=%.4f, t=%.4f]\n", like,
-                read, dislike, getLogScore(), getScore());
+        return String.format("[l=%.4f, r=%.4f, dis=%.4f, r=%.4f, t=%.4f]",
+                like, read, dislike, getLogScore(), getScore());
     }
 }
 
@@ -64,29 +65,26 @@ public class NaiveBayes {
 
     static final int MAX_FEATURE = 512;
 
-    static Map<String, Double> calculate(Map<String, Holder> map,
-            double totalLike, double totalDislike, int totalRead) {
-
-        // keep most
-        int size = map.size() < MAX_FEATURE ? map.size() : MAX_FEATURE;
-
+    static Map<String, Double> pick(Map<String, TermFeature> map) {
         Map<String, Double> result = new HashMap<String, Double>(
-                (int) (size / 0.75f) + 2); // load factor
+                (int) (MAX_FEATURE / 0.75f) + 2); // load factor
         if (map.size() < MAX_FEATURE) {
-            for (Entry<String, Holder> e : map.entrySet()) {
-                Holder h = e.getValue();
+            for (Entry<String, TermFeature> e : map.entrySet()) {
+                TermFeature h = e.getValue();
                 double r = h.getLogScore();
                 result.put(e.getKey(), r);
             }
         } else {
-            List<Entry<String, Holder>> list = new ArrayList<Map.Entry<String, Holder>>(
+            List<Entry<String, TermFeature>> list = new ArrayList<Map.Entry<String, TermFeature>>(
                     map.entrySet());
             Collections.sort(list, new ReverseValueCmp());
-            List<Entry<String, Holder>> choosen = list
-                    .subList(0, MAX_FEATURE);
-
-            for (Entry<String, Holder> e : choosen) {
-                Holder h = e.getValue();
+            List<Entry<String, TermFeature>> choosen = list.subList(0,
+                    MAX_FEATURE);
+            // for (Entry<String, TermFeature> entry : choosen) {
+            // System.out.println(entry.getKey() + "\t" + entry.getValue());
+            // }
+            for (Entry<String, TermFeature> e : choosen) {
+                TermFeature h = e.getValue();
                 double r = h.getLogScore();
                 result.put(e.getKey(), r);
             }
@@ -102,27 +100,20 @@ public class NaiveBayes {
             TermFreqVector vetor = reader.getTermFreqVector(docid, field);
             if (vetor != null) {
                 String[] terms = vetor.getTerms();
+                double n = Math.sqrt(terms.length); // try to normalize term
+                                                    // length
                 int[] freqs = vetor.getTermFrequencies();
                 for (int i = 0; i < freqs.length; i++) {
                     String term = terms[i];
                     Double w = submodel.get(term);
                     if (w != null) {
                         // result *= (w * freqs[i]); Infinite
-                        result += w * freqs[i];
+                        result += w * freqs[i] / n;
                     }
                 }
             }
         }
         return result;
-    }
-
-    public static double[] pick(double[] prefs, double likeRatio,
-            double dislikeRatio) {
-        int likeIndex = prefs.length - (int) (prefs.length * likeRatio);
-        int disLikeIndex = (int) (prefs.length * dislikeRatio);
-        likeIndex = likeIndex == prefs.length ? prefs.length - 1 : likeIndex;
-        Arrays.sort(prefs);
-        return new double[] { prefs[likeIndex], prefs[disLikeIndex] };
     }
 
     public static double[] classify(Map<String, Map<String, Double>> model,
@@ -173,10 +164,12 @@ public class NaiveBayes {
     private static Map<String, Double> trainField(IndexReader reader,
             List<Vote> votes, String field) throws IOException,
             CorruptIndexException {
-        Map<String, Holder> map = new HashMap<String, Holder>(2048);
-        int toalLike = 0;
-        int totalRead = 0;
-        int totalDislike = 0;
+        Map<String, TermFeature> map = null;
+        if (Searcher.CONTENT.equals(field)) {
+            map = new HashMap<String, TermFeature>(10240);
+        } else {
+            map = new HashMap<String, TermFeature>(768);
+        }
         for (Vote vote : votes) {
             if (vote.docID == -1) {
                 continue;
@@ -186,33 +179,39 @@ public class NaiveBayes {
             if (termVector != null) {
                 String[] terms = termVector.getTerms();
                 int[] freqs = termVector.getTermFrequencies();
+
+                // make terms length less impact
+                double n = SEARCHER.getBoost().get(field)
+                        / Math.sqrt(terms.length); // try to normalize
+                // // data
+                // System.out.println(field + "\t" + n + "\t" + terms.length
+                // + "\t" + boost);
                 for (int j = 0; j < freqs.length; j++) {
                     String term = terms[j];
                     int count = freqs[j];
-                    Holder h = map.get(term);
+                    TermFeature h = map.get(term);
                     if (h == null) {
-                        h = new Holder();
+                        h = new TermFeature();
                     }
                     if (vote.vote == 1) { // like
-                        h.like += count;
-                        toalLike += count;
+                        h.like += count * n;
                     } else if (vote.vote == -1) { // dislike
-                        h.dislike += count;
-                        totalDislike += count;
+                        h.dislike += count * n;
                     } else { // read
-                        totalRead += count;
-                        h.read += count;
+                        h.read += count * n;
                     }
                     map.put(term, h);
                 }
             }
         }
-        return calculate(map, toalLike, totalDislike, totalRead);
+        // System.out.println(field + "\t" + map.size());
+        return pick(map);
     }
 }
 
-class ReverseValueCmp implements Comparator<Map.Entry<String, Holder>> {
-    public int compare(Entry<String, Holder> o1, Entry<String, Holder> o2) {
+class ReverseValueCmp implements Comparator<Map.Entry<String, TermFeature>> {
+    public int compare(Entry<String, TermFeature> o1,
+            Entry<String, TermFeature> o2) {
         return -o1.getValue().compareTo(o2.getValue());
     }
 }

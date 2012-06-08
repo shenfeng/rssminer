@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.sql.DataSource;
@@ -56,13 +57,19 @@ public class Searcher {
 
     static final Version V = Version.LUCENE_35;
     static final Analyzer analyzer = new KStemStopAnalyzer();
-    static final Logger logger = LoggerFactory.getLogger(Searcher.class);
-    static final String FEED_ID = "id";
-    static final String RSS_ID = "rid";
-    static final String AUTHOR = "author";
-    static final String TITLE = "title";
-    static final String CONTENT = "content";
-    static final String TAG = "tag";
+    public static final Logger logger = LoggerFactory
+            .getLogger(Searcher.class);
+    public static final String FEED_ID = "id";
+    public static final String RSS_ID = "rid";
+    public static final String AUTHOR = "author";
+    public static final String TITLE = "title";
+    public static final String CONTENT = "content";
+    public static final String TAG = "tag";
+
+    static final float AUTHOR_BOOST = 2;
+    static final float TITLE_BOOST = 3;
+    static final float TAG_BOOST = 2;
+    static final float CONTENT_BOOST = 1;
 
     public static String[] FIELDS = new String[] { AUTHOR, TITLE, CONTENT,
             TAG };
@@ -80,6 +87,8 @@ public class Searcher {
     private Map<Keyword, Object> config;
     private DataSource ds;
 
+    private Map<String, Float> boost = new TreeMap<String, Float>();
+
     public static Searcher SEARCHER; // global
 
     public static void closeGlobalSearcher() {
@@ -90,6 +99,10 @@ public class Searcher {
             }
             SEARCHER = null;
         }
+    }
+
+    public Map<String, Float> getBoost() {
+        return boost;
     }
 
     public static Searcher initGlobalSearcher(String path,
@@ -141,6 +154,12 @@ public class Searcher {
         } else {
             dir = FSDirectory.open(new File(path));
         }
+        // used by classifier
+        boost.put(AUTHOR, AUTHOR_BOOST);
+        boost.put(TITLE, TITLE_BOOST);
+        boost.put(CONTENT, CONTENT_BOOST);
+        boost.put(TAG, TAG_BOOST);
+
         indexer = new IndexWriter(dir, cfg);
     }
 
@@ -205,20 +224,20 @@ public class Searcher {
         doc.add(rid);
 
         if (author != null && author.length() > 0) {
-            List<String> as = simpleSplit(author);
-            for (String au : as) {
-                Field a = new Field(AUTHOR, false, au.toLowerCase(),
-                        Store.NO, Index.NOT_ANALYZED, TermVector.YES);
-                a.setBoost(2f);
-                doc.add(a);
+            List<String> authors = simpleSplit(author);
+            for (String a : authors) {
+                Field f = new Field(AUTHOR, false, a.toLowerCase(), Store.NO,
+                        Index.NOT_ANALYZED, TermVector.YES);
+                f.setBoost(AUTHOR_BOOST);
+                doc.add(f);
             }
         }
 
         if (title != null) {
-            Field t = new Field(TITLE, false, title, Store.NO,
+            Field f = new Field(TITLE, false, title, Store.NO,
                     Index.ANALYZED, TermVector.YES);
-            t.setBoost(3f);
-            doc.add(t);
+            f.setBoost(TITLE_BOOST);
+            doc.add(f);
         }
 
         if (tags != null && tags.length() > 0) {
@@ -226,7 +245,7 @@ public class Searcher {
             for (String tag : ts) {
                 Field f = new Field(TAG, false, tag.toLowerCase(), Store.NO,
                         Index.NOT_ANALYZED, TermVector.YES);
-                f.setBoost(2);
+                f.setBoost(TAG_BOOST);
                 doc.add(f);
             }
         }
@@ -234,9 +253,9 @@ public class Searcher {
         if (summary != null) {
             try {
                 String content = Utils.extractText(summary);
-                Field c = new Field(CONTENT, false, content, Store.NO,
+                Field f = new Field(CONTENT, false, content, Store.NO,
                         Index.ANALYZED, TermVector.YES);
-                doc.add(c);
+                doc.add(f);
             } catch (SAXException ignore) {
             }
         }

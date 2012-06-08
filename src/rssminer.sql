@@ -125,3 +125,32 @@ create table favicon (
      -- SMALLINT, 0, 35536, 2 bytes storage
      code SMALLINT UNSIGNED     -- fetch result's http status code
 );
+
+delimiter //
+
+create PROCEDURE get_unvoted (p_uid INT)
+BEGIN
+SELECT f.id, f.rss_link_id
+FROM feeds f
+JOIN user_subscription us ON f.rss_link_id = us.rss_link_id AND us.user_id = p_uid
+where f.id not in (select feed_id from user_feed where user_id = p_uid )
+ORDER BY published_ts DESC
+LIMIT 5000;
+
+END //
+
+-- delimiter //
+CREATE PROCEDURE get_voted (p_uid INT) BEGIN
+(
+SELECT feed_id, vote_user
+FROM user_feed
+WHERE vote_user != 0 AND user_id = p_uid
+ORDER BY vote_date DESC
+LIMIT 100) UNION (
+SELECT feed_id, vote_user
+FROM user_feed
+WHERE user_id = p_uid AND read_date > 0
+ORDER BY read_date DESC
+LIMIT 100);
+
+END //
