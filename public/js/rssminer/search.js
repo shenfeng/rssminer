@@ -1,4 +1,4 @@
-(function (undefined) {
+(function () {
   var RM = window.RM,
       data = RM.data,
       tmpls = RM.tmpls,
@@ -71,7 +71,7 @@
         old_q = q;
         if(timer_id) { window.clearTimeout(timer_id); }
         timer_id = window.setTimeout(function () {
-          timer_id = undefined;
+          timer_id = 0;
           do_search(q);
         }, WAIT_BEFORE_SEARCH);
       }
@@ -95,7 +95,7 @@
   }
 
   function hide_search_context_menu (e) {
-    if(!e) {
+    if(!e) {                    // call by others
       $('#search-result').remove();
       $ct_menu.hide();
     } else if(e.which !== 3) {  // not right click
@@ -106,7 +106,10 @@
 
   function do_search (q) {
     data.get_search_result(q, 18, function (result) {
-      show_search_result(result);
+      // if no result, wait for result
+      if(result.sub_cnt || (result.feeds && result.feeds.length)) {
+        show_search_result(result);
+      }
     });
   }
 
