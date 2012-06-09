@@ -419,7 +419,7 @@ iframe {
     a { color: #222; }
     span { color: #444; font-size: 12px; }
     li {
-        width: 270px;
+        width: 220px;
         margin: 1px 0;
         padding: 1px 4px 1px 16px;
         cursor: pointer;
@@ -433,8 +433,10 @@ iframe {
         height: 1px;
         width: 100%;
         background: $color;
+        border: 1px solid white;
         padding: 0;
     }
+    font-size: 13px;
     background: white;
     border: 1px solid $color;
     display: none;

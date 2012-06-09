@@ -26,8 +26,6 @@
   // how many pages does each section has
   var WELCOME_TABS = {recommand: 1, latest: 1, read: 1, voted: 1};
 
-  var SORTINGS_TABS = { likest: 1, newest: 1, oldest: 1 }; // 1 means true
-
   function save_to_cache_fixer (feedid, data) {
     cache_fixer[feedid] = _.extend(cache_fixer[feedid] || {}, data);
     if(window.localStorage) {
@@ -188,10 +186,10 @@
     } else {
       ajax.get('/api/subs', function (resp) {
         try_sync_with_storage(resp);
-        var result = parse_subs(resp);
-        subscriptions_cache = resp;
+        // exclude subscription that has no title
+        subscriptions_cache = _.filter(resp, function (s) { return s.title; });
         gen_sub_titles();
-        cb(result);
+        get_user_subs(cb);
       });
     }
   }
@@ -252,11 +250,10 @@
   function get_feeds (subid, page, sort, cb) {
     var sub =_.find(subscriptions_cache, function (sub) {
       return sub.id === subid;
-    }),
-        total = sub ? sub.total : 0,
-        offset = Math.max(0, page -1) * PER_PAGE_FEEDS;
+    }) || {};
+    var total = sort === 'likest' ? sub.like || 0 : sub.total || 0;
+    var offset = Math.max(0, page -1) * PER_PAGE_FEEDS;
 
-    sort = SORTINGS_TABS[sort] ? sort : 'newest';
     var url = '/api/subs/' + subid + '?' + util.params({
       offset: offset,
       limit: PER_PAGE_FEEDS,
@@ -266,15 +263,15 @@
       feeds_cache['current_sub'] = resp;
       var feeds = _.map(resp, function (feed) {
         return transform_item(feed, page, sort);
-      }),
-          sort_data = [];
-      for(var s in SORTINGS_TABS) {
+      });
+      var sort_data = [];
+      _.each(['likest', 'newest', 'oldest'], function (s) {
         sort_data.push({
           selected: !sort || s === sort,
           href: sub_hash(subid, 1, s),
           text: s
         });
-      }
+      });
       cb({
         title: sub.title,
         url: sub.url,
@@ -456,7 +453,7 @@
         var feeds = _.map(resp, function (feed) {
           // no dedicated url and page, since I can just click the search box,
           // and get the result again
-          return transform_item(feed, 1, 'score');
+          return transform_item(feed, 1, 'newest');
         });
         cb({subs: subs, feeds: feeds, sub_cnt: subs.length});
       });
