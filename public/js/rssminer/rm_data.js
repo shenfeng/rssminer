@@ -142,7 +142,8 @@
       link: sub.url,
       group: sub.group,
       title_l: title.toLowerCase(),
-      href: sub_hash(sub.id, 1, 'newest'),
+      // sort by likest if has likest
+      href: sub_hash(sub.id, 1, sub.like ? 'likest' : 'newest'),
       like: sub.like,
       total: sub.total,
       index: sub.index,
