@@ -18,7 +18,7 @@
     <li class="feed {{cls}}" data-id="{{id}}">
       <a href="#{{href}}">
         <span class="indicator"></span>
-        <span class="title">{{title}}</span>
+        <span class="title">{{{title}}}</span>
         <span class="author" title="author">{{author}}</span>
         <span class="vote">
           <span class="up" title="I like it"></span>

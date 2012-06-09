@@ -129,7 +129,7 @@
       id: feed.id,
       link: feed.link,
       tags: split_tag(feed.tags),
-      title: feed.title
+      title: feed.title || feed.link
     };
   }
 
@@ -221,6 +221,7 @@
         }
         return result;
       });
+      // feeds = _.filter(feeds, function (f) { return f.title; });
       cb({
         title: section + ' - Rssminer, an intelligent RSS reader',
         feeds: feeds,

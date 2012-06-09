@@ -71,7 +71,7 @@ public class MinerDAO {
         }
     }
 
-    public List<Feed> fetchFeeds(Set<Integer> feedids) throws SQLException {
+    public List<Feed> fetchFeeds(List<Integer> feedids) throws SQLException {
         StringBuilder sb = new StringBuilder(SELECT_FIELDS.length()
                 + feedids.size() * 8);
         sb.append(SELECT_FIELDS);
@@ -114,11 +114,21 @@ public class MinerDAO {
         }
     }
 
-    public List<Feed> fetchFeedsWithScore(int userID, Set<Integer> feedids)
+    public List<Feed> fetchFeedsWithScore(int userID, List<Integer> feedids)
             throws SQLException {
         List<Feed> feeds = fetchFeeds(feedids);
-        addScore(userID, feeds);
-        return feeds;
+        // sort by search result by lucene score
+        List<Feed> result = new ArrayList<Feed>(feeds.size());
+        for (Integer id : feedids) {
+            for (Feed f : feeds) {
+                if (id.equals(f.getId())) {
+                    result.add(f);
+                    break;
+                }
+            }
+        }
+        addScore(userID, result);
+        return result;
     }
 
     private List<Feed> fetchFeedsWithScore(int userID, String sql)
@@ -140,7 +150,7 @@ public class MinerDAO {
         if (map.isEmpty()) {
             return new ArrayList<Feed>(0);
         } else {
-            List<Feed> feeds = fetchFeeds(map.keySet());
+            List<Feed> feeds = fetchFeeds(new ArrayList<Integer>(map.keySet()));
             for (Feed feed : feeds) {
                 feed.setScore(map.get(feed.getId()));
             }

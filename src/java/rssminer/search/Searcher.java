@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import javax.sql.DataSource;
 
@@ -333,8 +332,7 @@ public class Searcher {
             return new ArrayList<Feed>(0);
         } else {
             MinerDAO db = new MinerDAO(config);
-            return db.fetchFeedsWithScore(userID, new TreeSet<Integer>(
-                    feedids));
+            return db.fetchFeedsWithScore(userID, feedids);
         }
     }
 
