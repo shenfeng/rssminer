@@ -251,7 +251,7 @@
     var sub =_.find(subscriptions_cache, function (sub) {
       return sub.id === subid;
     }) || {};
-    var total = sort === 'likest' ? sub.like || 0 : sub.total || 0;
+    var total = sort === 'likest' ? sub.like + sub.neutral : sub.total;
     var offset = Math.max(0, page -1) * PER_PAGE_FEEDS;
 
     var url = '/api/subs/' + subid + '?' + util.params({
