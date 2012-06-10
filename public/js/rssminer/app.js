@@ -159,29 +159,6 @@
     }
   }
 
-  function save_user_vote (vote, $feed) {
-    var id = $feed.attr('data-id');
-    if(!$feed.hasClass('sys')) {
-      if(($feed.hasClass('dislike') && vote === -1)
-         || ($feed.hasClass('like') && vote === 1)) {
-        vote = 0;                 // reset
-      }
-    }
-    if(id) {
-      id = parseInt(id, 10);
-      data.save_vote(id, vote, function () {
-        notify.show_msg('Saved', 1000);
-        if(vote === 1) {
-          $feed.addClass('like').removeClass('dislike neutral sys');
-        } else if(vote === -1) {
-          $feed.addClass('dislike').removeClass('like neutral sys');
-        } else if(vote === 0) {
-          $feed.addClass('neutral sys').removeClass('like dislike');
-        }
-      });
-    }
-  }
-
   function show_settings () {
     $reading_area.removeClass(SHOW_IFRAME);
     var html = tmpls.settings();
@@ -240,16 +217,6 @@
     }
   }
 
-  function save_vote_up (e) {
-    save_user_vote(1, $(this).closest('.feed'));
-    return false;
-  }
-
-  function save_vote_down (e) {
-    save_user_vote(-1, $(this).closest('.feed'));
-    return false;
-  }
-
   function switch_settings_tab () {
     var $this = $(this),
         text = $.trim($this.text());
@@ -279,18 +246,12 @@
     }
   }
 
-  window.RM = _.extend(window.RM, {
-    app: {save_user_vote: save_user_vote}
-  });
-
   util.delegate_events($(document), {
     'click #add-subscription': add_subscription,
     'click #save-settings': save_settings,
     'click .settings-sort li': switch_settings_tab,
     'click #nav-pager .next': load_next_page,
     'click #nav-pager .prev': load_prev_page,
-    'click .vote span.down': save_vote_down,
-    'click .vote span.up': save_vote_up,
     'mouseenter #logo': function () { $logo.addClass(SHOW_NAV); },
     'mouseout #logo': function () {
       // if reading feed

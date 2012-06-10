@@ -170,12 +170,37 @@
     }
   }
 
-  function vote_up () {
-    RM.app.save_user_vote(1, $last_menu_ui);
+  function save_vote_up (e) {
+    var $feed = $(this).closest('.feed');
+    save_user_vote(1, $feed.length ? $feed : $last_menu_ui);
   }
 
-  function vote_down () {
-    RM.app.save_user_vote(-1, $last_menu_ui);
+  function save_vote_down (e) {
+    var $feed = $(this).closest('.feed');
+    save_user_vote(-1, $feed.length ? $feed : $last_menu_ui);
+  }
+
+  function save_user_vote (vote, $feed) {
+    var id = $feed.attr('data-id');
+    if(!$feed.hasClass('sys')) {
+      if(($feed.hasClass('dislike') && vote === -1)
+         || ($feed.hasClass('like') && vote === 1)) {
+        vote = 0;                 // reset
+      }
+    }
+    if(id) {
+      id = parseInt(id, 10);
+      data.save_vote(id, vote, function () {
+        notify.show_msg('Saved', 1000);
+        if(vote === 1) {
+          $feed.addClass('like').removeClass('dislike neutral sys');
+        } else if(vote === -1) {
+          $feed.addClass('dislike').removeClass('like neutral sys');
+        } else if(vote === 0) {
+          $feed.addClass('neutral sys').removeClass('like dislike');
+        }
+      });
+    }
   }
 
   $welcome_list.bind('child_change.rm', function () { // rebind
@@ -189,8 +214,8 @@
     'click .folder': change_folder,
     'click .new-folder': move_to_new_folder,
     'click .unsubscribe': unsubscribe_item,
-    'click .voteup': vote_up,
-    'click .votedown': vote_down
+    'click .voteup': save_vote_up,
+    'click .votedown': save_vote_down
   });
 
   util.delegate_events($subs_list, {
@@ -200,6 +225,8 @@
   });
 
   util.delegate_events($('#main'), {
+    'click .vote span.down': save_vote_down,
+    'click .vote span.up': save_vote_up,
     'contextmenu .feeds .feed': show_feed_context_menu
   });
 
