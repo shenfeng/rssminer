@@ -28,6 +28,10 @@
     .section { display: none; padding: 10px 0 0 50px; }
     &.show-add .add-sub { display: block; }
     &.show-account .account { display: block; }
+    &.show-about .about { display: block; }
+    ul {
+        list-style: disc;
+    }
 }
 
 #notification {
