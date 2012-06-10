@@ -2,13 +2,10 @@ package rssminer.fetcher;
 
 import java.net.Proxy;
 
-import me.shenfeng.http.HttpClient;
-
 public class HttpTaskRunnerConf {
 
     IHttpTasksProvder bulkProvider;
     IBlockingTaskProvider blockingProvider;
-    HttpClient client;
     int queueSize = 300;
     int bulkCheckInterval = 15 * 60 * 1000; // 15 min, mills
     int blockingTimeOut = 5; // blocking provider timeout, ie redis blpop.
@@ -31,10 +28,6 @@ public class HttpTaskRunnerConf {
 
     public void setBulkProvider(IHttpTasksProvder bulkProvider) {
         this.bulkProvider = bulkProvider;
-    }
-
-    public void setClient(HttpClient client) {
-        this.client = client;
     }
 
     public void setName(String name) {

@@ -3,55 +3,48 @@
         [clojure.data.json :only [read-json]]
         [clojure.tools.logging :only [info error]]
         [ring.util.response :only [redirect]]
-        (rssminer [util :only [user-id-from-session]]
-                  [http :only [client parse-response]]
-                  [config :only [rssminer-conf]]))
-  (:import java.net.URI
-           java.io.File
-           rssminer.importer.Parser))
+        (rssminer [util :only [user-id-from-session ignore-error]]
+                  [http :only [request]]))
+  (:import rssminer.importer.Parser))
 
-(def oauth2 {"redirect_uri" "http://localhost:9090/oauth2callback"
+(def oauth2 {"redirect_uri" "http://rssminer.net/oauth2callback"
              "client_secret" "gQ-exryYQvjEW9OV_lqeh-uQ"
              "client_id" "1062014352023.apps.googleusercontent.com"
              "grant_type" "authorization_code"})
 
-(def scope "https://www.google.com/reader/api/")
-(def token-ep (URI. "https://accounts.google.com/o/oauth2/token"))
-(def list-dp (URI. "https://www.google.com/reader/api/0/subscription/list"))
+(def token-ep "https://accounts.google.com/o/oauth2/token")
+(def list-dp "https://www.google.com/reader/api/0/subscription/list")
 
-(defn subscribe-all [user-id items]
+(defn subscribe-all [uid items]
   (doseq [sub items]
     (let [{:keys [title url category]} (bean sub)]
-      (subscribe url user-id title category))))
+      (subscribe url uid title category))))
+
+(defn- finish-import [data]
+  (if (= 200 (:status data))
+    (redirect "/a?gw=1")                ; google import wait
+    (redirect (str "/a?ge=" (or (:body data) data)))))
 
 (defn oauth2callback [req]
-  (let [code (-> req :params :code)
-        user-id (user-id-from-session req)
-        resp (-> client (.execPost token-ep {} (assoc oauth2 "code" code))
-                 .get parse-response)]
-    (if user-id
+  (if-let [code (-> req :params :code)]
+    (let [uid (user-id-from-session req)
+          resp (request {:url token-ep :post (assoc oauth2 "code" code)})]
       (if (= 200 (:status resp))
         (let [{:keys [access_token refresh_token]} (read-json (:body resp))
-              data (-> client (.execGet list-dp {"Authorization"
-                                                 (str "OAuth " access_token)})
-                       .get parse-response)]
-          (if (= 200 (:status data))
+              data (request {:url list-dp
+                             :headers {"Authorization"
+                                       (str "OAuth " access_token)}})]
+          (if (= 200 (:status data))    ; do import
             (let [items (Parser/parseGReaderSubs (:body data))]
-              (info user-id "import greader" (count items))
-              (subscribe-all user-id items)
-              (redirect "/a"))
-            (do (error "import greader" (:status data) "; code" code)
-                (redirect "/"))))
-        (do (error "get greader code" (:status resp))
-            (redirect "/")))
-      (redirect "/login"))))
+              (info uid "import greader" (count items))
+              (subscribe-all uid items)))
+          (finish-import data))
+        (finish-import resp)))          ; error
+    (finish-import "import failed")))
 
 (defn greader-import [req]
-  (let [host (if (= (@rssminer-conf :profile) :dev)
-               "localhost:9090/" "rssminer.net/")]
-    (redirect
-     (str
-      "https://accounts.google.com/o/oauth2/auth?redirect_uri=http://"
-      host "oauth2callback&response_type=code"
-      "&client_id=1062014352023.apps.googleusercontent.com"
-      "&scope=https://www.google.com/reader/api/&access_type=offline"))))
+  (redirect
+   (str "https://accounts.google.com/o/oauth2/auth"
+        "?redirect_uri=http://rssminer.net/oauth2callback&response_type=code"
+        "&client_id=1062014352023.apps.googleusercontent.com"
+        "&scope=https://www.google.com/reader/api/&access_type=offline")))

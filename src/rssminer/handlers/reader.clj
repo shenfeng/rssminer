@@ -13,6 +13,8 @@
   (let [uid (user-id-from-session req)]
     (view/app-page {:rm {:user (find-user-by-id uid)
                          :no_iframe Utils/NO_IFRAME
+                         :gw (-> req :params :gw) ; google import wait
+                         :ge (-> req :params :ge) ; google import error
                          :reseted Utils/RESETED_DOMAINS
                          :static_server (:static-server @cfg/rssminer-conf)
                          :proxy_server (:proxy-server @cfg/rssminer-conf)}})))

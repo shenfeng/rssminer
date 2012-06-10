@@ -9,6 +9,3 @@
 (defn in-prod? [] (= (:profile @rssminer-conf) :prod))
 
 (defn in-dev? [] (= (:profile @rssminer-conf) :dev))
-
-(def rssminer-agent
-  "Mozilla/5.0 (compatible; Rssminer/1.0; +http://rssminer.net)")

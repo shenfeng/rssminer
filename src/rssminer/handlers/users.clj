@@ -66,8 +66,6 @@
 
 (defn google-openid [req]
   (let [spec "http://specs.openid.net/auth/2.0/identifier_select"
-        host (if (= (@rssminer-conf :profile) :dev)
-               "localhost:9090/" "rssminer.net/")
         url (str "https://www.google.com/accounts/o8/ud"
                  "?openid.ns=http://specs.openid.net/auth/2.0"
                  "&openid.ns.pape=http://specs.openid.net/extensions/pape/1.0"
@@ -82,8 +80,8 @@
                  "&openid.ax.mode=fetch_request"
                  "&openid.ax.type.email=http://axschema.org/contact/email"
                  "&openid.ax.required=email"
-                 "&openid.return_to=http://" (str host "login/checkauth")
-                 (str "&openid.realm=http://" host))]
+                 "&openid.return_to=http://rssminer.net/login/checkauth"
+                 "&openid.realm=http://rssminer.net/")]
     (redirect url)))
 
 (defn checkauth [req]

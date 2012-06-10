@@ -3,7 +3,6 @@
         (rssminer [util :only [assoc-if now-seconds]]
                   [parser :only [parse-feed]]
                   [redis :only [fetcher-dequeue fetcher-enqueue]]
-                  [http :only [parse-response]]
                   [config :only [rssminer-conf]]))
   (:require [rssminer.db.feed :as db])
   (:import [rssminer.fetcher HttpTaskRunner IHttpTask IHttpTasksProvder
@@ -54,7 +53,7 @@
     (db/update-rss-link id updated)
     (when feeds (db/save-feeds feeds id))))
 
-(defn- mk-task [{:keys [url last_modified etag] :as link}]
+(defn- mk-fetcher-task [{:keys [url last_modified etag] :as link}]
   (reify IHttpTask
     (getUri [this] (java.net.URI. url))
     (getProxy [this] (:proxy @rssminer-conf))
@@ -76,7 +75,8 @@
 (defn mk-provider []
   (reify IHttpTasksProvder
     (getTasks [this]
-      (map mk-task (db/fetch-rss-links (:fetch-size @rssminer-conf))))))
+      (map mk-fetcher-task (db/fetch-rss-links
+                            (:fetch-size @rssminer-conf))))))
 
 (defn refetch-rss-link [id]
   (if-let [rss (db/fetch-rss-link id)]
@@ -86,7 +86,7 @@
   (reify IBlockingTaskProvider
     (getTask [this timeout]
       (when-let [d (fetcher-dequeue timeout)] ; seconds
-        (mk-task d)))))
+        (mk-fetcher-task d)))))
 
 (defn start-fetcher []
   (stop-fetcher)

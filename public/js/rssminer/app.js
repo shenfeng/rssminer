@@ -1,5 +1,6 @@
 (function () {
-  var RM = window.RM,
+  var _RM_ = window._RM_ || {},
+      RM = window.RM,
       data = RM.data,
       notify = RM.notify,
       tmpls = RM.tmpls,
@@ -127,6 +128,7 @@
   }
 
   function show_feeds (data) {
+    show_server_message();
     iframe.src = 'about:blank';
     var html = tmpls.feeds_nav(data);
     $navigation.empty().append(html);
@@ -153,6 +155,7 @@
       });
     } else {
       location.hash = "settings";
+      show_server_message();
     }
   }
 
@@ -264,6 +267,18 @@
     });
   }
 
+  function show_server_message () {
+    if(_RM_.gw) {               // google import wait
+      var msg = 'Busy importing from google reader, refresh in a few seconds';
+      notify.show_msg(msg, 10000);
+      _RM_.gw = 0;
+    }
+    if(_RM_.ge) {
+      notify.show_msg('Error import from google reader : ' + _RM_.ge, 4000);
+      _RM_.ge = 0;
+    }
+  }
+
   window.RM = _.extend(window.RM, {
     app: {save_user_vote: save_user_vote}
   });
@@ -274,24 +289,18 @@
     'click .settings-sort li': switch_settings_tab,
     'click #nav-pager .next': load_next_page,
     'click #nav-pager .prev': load_prev_page,
-    'click #add-sub a': function () {
-      alert('Only avaiable when published, please wait a while');
-      return false;
-    },
     'click .vote span.down': save_vote_down,
-    'click .vote span.up': save_vote_up
-  });
-
-  fetch_and_show_user_subs(function () { // app start here
-    $logo.mouseenter(function () {
-      $logo.addClass(SHOW_NAV);
-    }).mouseleave(function () {
+    'click .vote span.up': save_vote_up,
+    'mouseenter #logo': function () { $logo.addClass(SHOW_NAV); },
+    'mouseout #logo': function () {
       // if reading feed
       if(/#read\/.+\/\d+/.test(location.hash)) {
         $logo.removeClass(SHOW_NAV);
       }
-    });
+    }
+  });
 
+  fetch_and_show_user_subs(function () { // app start here
     RM.hashRouter({
       '': show_welcome,
       '?s=:section&p=:p': show_welcome,

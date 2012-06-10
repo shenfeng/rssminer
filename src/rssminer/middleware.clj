@@ -12,7 +12,7 @@
     (let [uri (:uri req)]
       (if (user-id-from-session req)
         (handler req)
-        (if (or (= uri "/a") (= uri "/dashboard") ;;  login required
+        (if (or (= uri "/a") (= uri "/import/google") ;;  login required
                 (.startsWith ^String uri "/api"))
           (if (= "XMLHttpRequest" (-> req :headers (get "x-requested-with")))
             {:status 401} ;; easier for script to handle

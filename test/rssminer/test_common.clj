@@ -11,8 +11,7 @@
                   [parser :only [parse-feed]]
                   [redis :only [fetcher-enqueue set-redis-pool!
                                 redis-pool fetcher-dequeue]]
-                  [config :only [rssminer-conf]]
-                  [http :only [download-rss]])
+                  [config :only [rssminer-conf]])
         (rssminer.db [user :only [create-user]]
                      [feed :only [save-feeds]])
 
