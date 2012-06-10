@@ -476,9 +476,11 @@
     _.each(data, function (group) {
       _.each(group.ids, function (id) {
         var s = _.find(subscriptions, function (sub) { return id === sub.id;});
-        s.sort_index = index;
-        index += 1;
-        s.group = group.g;
+        if(s) {
+          s.sort_index = index;
+          index += 1;
+          s.group = group.g;
+        }
       });
     });
   }
