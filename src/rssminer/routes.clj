@@ -54,6 +54,7 @@
   (context "/signup" []
            (GET "/" [] user/show-signup-page)
            (POST "/" [] user/signup))
+  (GET "/logout" [] user/logout)
   (context "/api" [] api-routes)
   (route/files "") ;; files under public folder
   (route/not-found "<p>Page not found.</p>" ))
@@ -75,8 +76,7 @@
     (decode-key key))
   (write-session [_ key data]
     (or key (gen-key data)))
-  (delete-session [_ key] ;; noop
-    ))
+  (delete-session [_ key] "")) ;; noop
 
 ;;; The last one in the list is the first one get the request,
 ;;; the last one get the response

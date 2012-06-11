@@ -1,7 +1,6 @@
 (ns rssminer.handlers.users
   (:use  [ring.util.response :only [redirect]]
-         (rssminer [util :only [user-id-from-session to-int
-                                md5-sum get-expire]]
+         (rssminer [util :only [user-id-from-session to-int md5-sum]]
                    [config :only [rssminer-conf]])
          [clojure.data.json :only [json-str read-json]])
   (:require [rssminer.db.user :as db]
@@ -18,12 +17,17 @@
         return-url (or return-url "/a")]
     (if user
       (assoc (redirect return-url)
-        :session {:id (:id user)}
-        :session-cookie-attrs {:expires (get-expire 3)})
+        :session {:id (:id user)}      ; IE does not persistent cookie
+        :session-cookie-attrs {:max-age (* 3600 24 7)})
       (view/login-page return-url))))
 
 (defn show-signup-page [req]
   (view/signup-page))
+
+(defn logout [req]
+  (assoc (redirect "/")
+    :session nil ;; delete cookie
+    :session-cookie-attrs {:max-age -1}))
 
 (defn signup [req]
   (let [{:keys [email password]} (:params req)]

@@ -34,7 +34,7 @@
                                :uri "/login"})]
     ;; (is (not (re-find #"Expires="
     ;;                   (first ((:headers login) "Set-Cookie")))))
-    (is (re-find #"Expires="
+    (is (re-find #"Max-Age="
                  (first ((:headers remerber-me) "Set-Cookie"))))
     (is (= 302 (:status signup)))
     (is (= 302 (:status login)))))

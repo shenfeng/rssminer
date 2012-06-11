@@ -1,0 +1,5 @@
+#! /bin/bash
+cd /home/feng/workspace/rssminer
+
+rake db:backup_prod 
+rake db:restore_db 

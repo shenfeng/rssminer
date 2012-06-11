@@ -1,6 +1,5 @@
 (ns rssminer.handlers.feeds
-  (:use (rssminer [util :only [user-id-from-session to-int
-                               assoc-if get-expire]]
+  (:use (rssminer [util :only [user-id-from-session to-int assoc-if]]
                   [classify :only [on-feed-event]]))
   (:require [rssminer.db.user-feed :as uf]
             [rssminer.db.feed :as db]))

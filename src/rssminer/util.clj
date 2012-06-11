@@ -6,20 +6,11 @@
   (:require [clojure.string :as str])
   (:import java.util.Date
            java.sql.Timestamp
-           [java.util Locale Calendar TimeZone Date]
-           java.text.SimpleDateFormat
            java.net.URI
            me.shenfeng.http.HttpUtils
            [rssminer.db Feed Subscription]
            [java.io StringWriter PrintWriter StringReader]
            [java.security NoSuchAlgorithmException MessageDigest]))
-
-(defn get-expire "get string for http expire header" [days]
-  (let [^SimpleDateFormat f (make-http-format)
-        c (doto (Calendar/getInstance)
-            (.add Calendar/DAY_OF_YEAR days))
-        d (.getTime c)]
-    (.format f d)))
 
 (defn md5-sum
   "Compute the hex MD5 sum of a string."

@@ -74,6 +74,19 @@ a { outline: 0; text-decoration: none;}
     background: $header_color;
     height: $header_height;
     width: 100%;
+    .links {                    /* in wrapper */
+        font-size: 12px;
+        right: 20px;
+        top: 15px;
+        li {
+            display: inline-block;
+            padding: 2px 4px;
+            a {
+                color: white;
+                &:hover { text-decoration: underline; }
+            }
+        }
+    }
     .wrapper {
         width: $body_width;
         margin: 0 auto;
@@ -88,15 +101,6 @@ a { outline: 0; text-decoration: none;}
         margin-top: 6px;
         @include border-radius(5px);
     }
-}
-
-#show-settings {
-    display: inline-block;
-    font-size: 12px;
-    right: 20px;
-    top: 15px;
-    color: white;
-    &:hover { text-decoration: underline; }
 }
 
 #main {
