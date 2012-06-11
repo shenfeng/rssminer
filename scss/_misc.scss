@@ -35,6 +35,20 @@
     }
 }
 
+#warn-msg {
+    display: none;
+    right: 150px;
+    background: yellow;
+    height: 30px;
+    a {
+        color: blue;
+    }
+    p {
+        display: none;
+        margin: 6px 4px;
+    }
+}
+
 #notification {
     position: absolute;
     top: 0;

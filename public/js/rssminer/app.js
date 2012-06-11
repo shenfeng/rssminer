@@ -254,8 +254,7 @@
     'click #nav-pager .prev': load_prev_page,
     'mouseenter #logo': function () { $logo.addClass(SHOW_NAV); },
     'mouseout #logo': function () {
-      // if reading feed
-      if(/#read\/.+\/\d+/.test(location.hash)) {
+      if(/#read\/.+\/\d+/.test(location.hash)) { // if reading feed
         $logo.removeClass(SHOW_NAV);
       }
     }
@@ -271,7 +270,10 @@
     });
   });
 
-  if(_RM_.demo) {
-    $('h1').append('<sub>demo</sub>');
+  // show for ie first
+  if(/msie/i.test(navigator.userAgent)) {
+    $('#warn-msg, #warn-msg .support').show();
+  } else if(_RM_.demo) {
+    $('#warn-msg, #warn-msg .demo').show();
   }
 })();
