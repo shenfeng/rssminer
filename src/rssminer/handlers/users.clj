@@ -87,7 +87,7 @@
 (defn checkauth [req]
   (if-let [email ((:params req) "openid.ext1.value.email")]
     (assoc (redirect "/a")
-      :session {:id (:id (or (db/find-user {:email email})
+      :session {:id (:id (or (db/find-user-by-email email)
                              (db/create-user {:email email
                                               :provider "google"})))})
     (redirect "/")))

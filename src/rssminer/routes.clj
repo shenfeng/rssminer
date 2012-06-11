@@ -75,8 +75,7 @@
     (decode-key key))
   (write-session [_ key data]
     (or key (gen-key data)))
-  (delete-session [_ key]
-    ;; noop
+  (delete-session [_ key] ;; noop
     ))
 
 ;;; The last one in the list is the first one get the request,

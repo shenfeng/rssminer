@@ -51,9 +51,7 @@
         {:write-json write-json-sub})
 
 (defn ^:dynamic user-id-from-session [req] ;; for test code easy mock
-  (if-let [uid (:session req)]
-    ;; 1 for demo use
-    (if (> uid 0) uid 1)))
+  (:session req))
 
 (definline now-seconds []
   `(quot (System/currentTimeMillis) 1000))

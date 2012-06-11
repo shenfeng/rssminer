@@ -1,7 +1,7 @@
 (ns rssminer.handlers.reader
   (:use (rssminer [util :only [user-id-from-session to-int]]
                   [search :only [search* search-within-subs]])
-        [rssminer.db.user :only [find-user-by-id]])
+        [rssminer.db.user :only [find-user-by-email find-user-by-id]])
   (:require [rssminer.views.reader :as view]
             [rssminer.config :as cfg])
   (:import rssminer.Utils))
@@ -20,16 +20,16 @@
                          :proxy_server (:proxy-server @cfg/rssminer-conf)}})))
 
 (defn demo-page [req]
-  {:body (view/app-page
-          ;; 1 is me
-          {:rm {:user (assoc (find-user-by-id 1) :email "demo@rssminer.net")
-                :no_iframe Utils/NO_IFRAME
-                :demo true
-                :reseted Utils/RESETED_DOMAINS
-                :static_server (:static-server @cfg/rssminer-conf)
-                :proxy_server (:proxy-server @cfg/rssminer-conf)}})
-   :status 200
-   :session {:id 0}})
+  (let [user (find-user-by-email "demo@rssminer.net")]
+    {:body (view/app-page
+            {:rm {:user (dissoc user :password)
+                  :no_iframe Utils/NO_IFRAME
+                  :demo true
+                  :reseted Utils/RESETED_DOMAINS
+                  :static_server (:static-server @cfg/rssminer-conf)
+                  :proxy_server (:proxy-server @cfg/rssminer-conf)}})
+     :status 200
+     :session user}))
 
 (defn search [req]
   (let [{:keys [q limit ids]} (:params req)
