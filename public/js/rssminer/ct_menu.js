@@ -171,13 +171,17 @@
   }
 
   function save_vote_up (e) {
-    var $feed = $(this).closest('.feed');
-    save_user_vote(1, $feed.length ? $feed : $last_menu_ui);
+    var $parent = $(this).closest('.feed');
+    var $feed = $parent.length ? $parent : $last_menu_ui;
+    save_user_vote(1, $feed);
+    if($parent.length) { return false; } // do not click on feed link
   }
 
   function save_vote_down (e) {
-    var $feed = $(this).closest('.feed');
-    save_user_vote(-1, $feed.length ? $feed : $last_menu_ui);
+    var $parent = $(this).closest('.feed');
+    var $feed = $parent.length ? $parent : $last_menu_ui;
+    save_user_vote(-1, $feed);
+    if($parent.length) { return false; } // do not click on feed link
   }
 
   function save_user_vote (vote, $feed) {

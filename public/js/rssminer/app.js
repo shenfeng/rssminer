@@ -253,7 +253,7 @@
     'click #nav-pager .next': load_next_page,
     'click #nav-pager .prev': load_prev_page,
     'mouseenter #logo': function () { $logo.addClass(SHOW_NAV); },
-    'mouseout #logo': function () {
+    'mouseleave #logo': function () {
       if(/#read\/.+\/\d+/.test(location.hash)) { // if reading feed
         $logo.removeClass(SHOW_NAV);
       }
