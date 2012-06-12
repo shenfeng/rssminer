@@ -55,16 +55,6 @@
     return feed ? transform_item(feed) : {};
   }
 
-  function sub_array (list, offset, length) {
-    var result = [];
-    if(list.length) {
-      for(var i = offset; i < list.length && i < offset + length; i++) {
-        result.push(list[i]);
-      }
-    }
-    return result;
-  }
-
   function favicon_path (url) {
     var host = util.hostname(url),
         h = encodeURIComponent(host.split("").reverse().join(''));
@@ -72,7 +62,7 @@
   }
 
   function split_tag (tags) {
-    if(tags) { return sub_array(tags.split("; "), 0, 3); } // at most 3
+    if(tags) { return tags.split("; ").slice(0, 3); } // at most 3
     else { return []; }
   }
 
