@@ -37,12 +37,12 @@
            (POST "/read" [] feed/mark-as-read)))
 
 (defroutes all-routes
-  (GET "/" [] reader/landing-page)
+  (GET "/" [] reader/show-landing-page)
   (GET "/fav" [] proxy/get-favicon)
   (GET "/p" []  proxy/handle-proxy)
   (GET "/f/o/:id" [] proxy/proxy-feed)
-  (GET "/a" [] reader/app-page)
-  (GET "/demo" [] reader/demo-page)
+  (GET "/a" [] reader/show-app-page)
+  (GET "/demo" [] reader/show-demo-page)
   (context "/login" []
            (GET "/" [] user/show-login-page)
            (POST "/" [] user/login)

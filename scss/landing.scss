@@ -86,6 +86,19 @@ p {
             @include linear-gradient(#C5D7FB, #D8E1FF, true);
         }
     }
+    #demo a {
+        text-align: center;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+        display: inline-block;
+        background-color: #2F96B4;
+        text-decoration: none;
+        color: white;
+        vertical-align: middle;
+        padding: 9px 27px;
+        font-size: 15px;
+        line-height: normal;
+        border-radius: 5px;
+    }
 }
 
 #footer {
@@ -191,3 +204,4 @@ $slide_img_height: 370px;
         }
     }
 }
+

@@ -1,15 +1,17 @@
 (ns rssminer.handlers.users
   (:use  [ring.util.response :only [redirect]]
+         [rssminer.views.layouts :only [login-page signup-page]]
          (rssminer [util :only [user-id-from-session to-int md5-sum]]
                    [config :only [rssminer-conf]])
          [clojure.data.json :only [json-str read-json]])
   (:require [rssminer.db.user :as db]
             [rssminer.db.user-feed :as uf]
-            [clojure.string :as str]
-            [rssminer.views.users :as view]))
+            [clojure.string :as str]))
 
 (defn show-login-page [req]
-  (view/login-page "/a"))
+  (login-page (or (-> req :params :return_url) "/a")))
+
+(defn show-signup-page [req] (signup-page))
 
 (defn login [req]
   (let [{:keys [email password return-url persistent]} (:params req)
@@ -19,10 +21,7 @@
       (assoc (redirect return-url)
         :session {:id (:id user)}      ; IE does not persistent cookie
         :session-cookie-attrs {:max-age (* 3600 24 7)})
-      (view/login-page return-url))))
-
-(defn show-signup-page [req]
-  (view/signup-page))
+      (login-page return-url))))
 
 (defn logout [req]
   (assoc (redirect "/")
