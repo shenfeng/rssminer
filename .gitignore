@@ -8,6 +8,7 @@ pom.xml
 .cake
 .project
 .classpath
+*psd
 bin/
 .settings
 public/css/

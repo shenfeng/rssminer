@@ -5,6 +5,7 @@
 .lein-failures
 .idea
 .project
+**/*.psd
 /chrome
 /.settings
 /.git
