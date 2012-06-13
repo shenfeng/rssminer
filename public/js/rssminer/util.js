@@ -79,6 +79,9 @@
 
     if(!bypass && enable_proxy && reseted) { proxy = true; }
 
+    // https proxy is not supported yet
+    if(link.indexOf('https://') === 0) { proxy = false; }
+
     if(proxy) {
       return PROXY_SERVER + "/f/o/" + feedid + "?p=1";
     } else {

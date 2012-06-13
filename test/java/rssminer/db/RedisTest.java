@@ -38,12 +38,14 @@ public class RedisTest {
 
     }
 
+
     private void putToRedis(int status, String type) {
         Jedis redis = pool.getResource();
         Map<byte[], byte[]> m = new HashMap<byte[], byte[]>();
         m.put(STATUS, (status + "|" + type).getBytes());
         m.put(BODY, "body".getBytes());
         m.put("t".getBytes(), "".getBytes());
+        m.put("tt".getBytes(), null); // NPE
         redis.hmset(KEY.getBytes(), m);
         // redis.hmset(key, hash)
         pool.returnResource(redis);

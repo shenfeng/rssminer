@@ -45,6 +45,9 @@ public abstract class AbstractFuture extends CommonFuture {
             if (ct == null) {
                 ct = "";
             }
+            if (body == null) { // redis throw NPE when body is null;
+                body = new byte[0];
+            }
             Map<byte[], byte[]> m = new HashMap<byte[], byte[]>(4);
             m.put(STATUS, Integer.toString(status).getBytes());
             m.put(BODY, body);
