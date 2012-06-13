@@ -60,10 +60,9 @@ public class MinerDAO {
             }
             pipeline.sync();
             for (int i = 0; i < feeds.size(); i++) {
-                try {
-                    feeds.get(i).setScore(scores.get(i).get());
-                } catch (Exception ignore) {
-                    // TODO, should return nil when no key instead of EXCEPTION
+                Double d = scores.get(i).get();
+                if (d != null) {
+                    feeds.get(i).setScore(d);
                 }
             }
         } finally {

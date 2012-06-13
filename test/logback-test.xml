@@ -16,7 +16,7 @@
 
 	<!-- <logger name="rssminer.database" level="OFF" /> -->
 	<logger name="rssminer.Searcher" level="OFF" />
-	<logger name="rssminer.classfier.SysVoteDaemon" level="INFO" />
+	<logger name="rssminer.classfier.SysVoteDaemon" level="ERROR" />
 	<logger name="rssminer.search" level="OFF" />
 
 	<logger name="rssminer" level="ALL">
