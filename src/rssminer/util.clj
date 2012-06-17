@@ -1,5 +1,5 @@
 (ns rssminer.util
-  (:use [clojure.data.json :only [json-str Write-JSON]]
+  (:use [clojure.data.json :only [json-str Write-JSON write-json]]
         [clojure.tools.logging :only [error info]]
         [ring.middleware.file-info :only [make-http-format]]
         [clojure.pprint :only [pprint]])
@@ -26,8 +26,24 @@
 (defn- write-json-date [^Date d ^PrintWriter out escape-unicode?]
   (.print out (int (/ (.getTime d) 1000))))
 
-(defn- write-json-feed [^Feed f ^PrintWriter out escape-unicode?]
+(defn- write-json-feed2 [^Feed f ^PrintWriter out escape-unicode?]
   (.print out (json-str (dissoc (bean f) :class))))
+
+;;; 1861 req/s vs 1606 req/s compare with reflection
+(defn- write-json-feed [^Feed f ^PrintWriter out escape-unicode?]
+  (.print out \{)
+  (.print out "\"id\":") (.print out (.getId f))
+  (.print out ",\"rssid\":") (.print out (.getRssid f))
+  (.print out ",\"score\":") (.print out (.getScore f))
+  (.print out ",\"vote\":") (.print out (.getVote f))
+  (.print out ",\"link\":") (write-json (.getLink f) out escape-unicode?)
+  (.print out ",\"title\":") (write-json (.getTitle f) out escape-unicode?)
+  (.print out ",\"author\":") (write-json (.getAuthor f) out escape-unicode?)
+  (.print out ",\"tags\":") (write-json (.getTags f) out escape-unicode?)
+  (.print out ",\"publishedts\":") (.print out (.getPublishedts f))
+  (.print out ",\"readts\":") (.print out (.getReadts f))
+  (.print out ",\"votets\":") (.print out (.getVotets f))
+  (.print out \}))
 
 (defn- write-json-sub [^Subscription f ^PrintWriter out escape-unicode?]
   (.print out (json-str (dissoc (bean f) :class))))
