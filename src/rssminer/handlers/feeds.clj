@@ -28,7 +28,7 @@
         data (case sort
                "newest" (uf/fetch-sub-newest userid rssid limit offset)
                "oldest" (uf/fetch-sub-oldest userid rssid limit offset)
-               "likest" (uf/fetch-sub-likest userid rssid limit offset))]
+               "recommand" (uf/fetch-sub-likest userid rssid limit offset))]
     (if data
       {:body data
        :headers {"Cache-Control" "private, max-age=3600"} }

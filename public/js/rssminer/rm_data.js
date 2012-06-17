@@ -131,7 +131,7 @@
       group: sub.group,
       title_l: title.toLowerCase(),
       // sort by likest if has likest
-      href: sub_hash(sub.id, 1, sub.like ? 'likest' : 'newest'),
+      href: sub_hash(sub.id, 1, sub.like ? 'recommand' : 'newest'),
       like: sub.like,
       total: sub.total,
       index: sub.index,
@@ -241,7 +241,7 @@
     var sub =_.find(subscriptions_cache, function (sub) {
       return sub.id === subid;
     }) || {};
-    var total = sort === 'likest' ? sub.like + sub.neutral : sub.total;
+    var total = sort === 'recommand' ? sub.like + sub.neutral : sub.total;
     var offset = Math.max(0, page -1) * PER_PAGE_FEEDS;
 
     var url = '/api/subs/' + subid + '?' + util.params({
@@ -255,7 +255,7 @@
         return transform_item(feed, page, sort);
       });
       var sort_data = [];
-      _.each(['likest', 'newest', 'oldest'], function (s) {
+      _.each(['recommand', 'newest', 'oldest'], function (s) {
         sort_data.push({
           selected: !sort || s === sort,
           href: sub_hash(subid, 1, s),
