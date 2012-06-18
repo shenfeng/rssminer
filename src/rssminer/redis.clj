@@ -19,7 +19,9 @@
   (let [^JedisPool client @redis-pool
         ^Jedis j (.getResource client)]
     (try
-      (.rpush j fetcher-key (pr-str data)) ; tail
+      (.rpush j fetcher-key ^"[Ljava.lang.String;"
+              (into-array (list
+                           (pr-str data)))) ; tail
       (finally (.returnResource client j)))))
 
 (defn fetcher-dequeue [timeout]         ; seconds
