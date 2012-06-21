@@ -51,8 +51,6 @@
                          {:rss_link_id saved-id})
           (update-values :feeds ["rss_link_id = ?" id]
                          {:rss_link_id saved-id})
-          ;; (update-values :user_feed ["rss_link_id = ?" id]
-          ;;                {:rss_link_id saved-id})
           (delete-rows :rss_links ["id = ?" id])))
       (safe-update-rss-link id data))
     (safe-update-rss-link id data)))

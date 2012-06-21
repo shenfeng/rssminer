@@ -43,9 +43,9 @@ CREATE TABLE rss_links (
 
 CREATE TABLE feeds (
   id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-  author VARCHAR(64),
-  link VARCHAR(220),
-  title VARCHAR(256),
+  author VARCHAR(64) NOT NULL default '',
+  link VARCHAR(220) NOT NULL,
+  title VARCHAR(256) NOT NULL default '',
   -- 2012/5/27
   -- alter table feeds drop original
   -- alter table feeds drop final_link
@@ -54,11 +54,11 @@ CREATE TABLE feeds (
   -- ALTER TABLE feeds ADD COLUMN original MEDIUMTEXT
   -- ALTER TABLE feeds ADD COLUMN summary MEDIUMTEXT
   -- final_link VARCHAR(256),
-  tags VARCHAR(128),
-  updated_ts INT UNSIGNED,
-  published_ts INT UNSIGNED,
+  tags VARCHAR(128) NOT NULL default '',
+  updated_ts INT UNSIGNED NOT NULL default 0,
+  published_ts INT UNSIGNED NOT NULL default 0,
   -- fetched_ts INT UNSIGNED,
-  rss_link_id INT UNSIGNED,
+  rss_link_id INT UNSIGNED NOT NULL,
   summary MEDIUMTEXT,           -- rss summary, given by download rss
 
              -- REFERENCES rss_links ON UPDATE CASCADE ON DELETE CASCADE,
@@ -87,15 +87,15 @@ create table user_feed (
 
     -- tiny int require 1 bytes, -128 127
     -- like 1, dislike -1, no pref 0
-    vote_user TINYINT default 0,
+    vote_user TINYINT NOT NULL default 0,
     -- alter table user_feed change vote_sys vote_sys DOUBLE default 0;
     -- float => double 2012/4/30
     -- vote_sys DOUBLE default 0,  -- learn by program
-    read_date INT default -1,   -- the reading date, -1, unread
+    read_date INT NOT NULL default -1,   -- the reading date, -1, unread
     -- 2012/5/27
     -- alter table user_feed add vote_date int default -1 after read_date
     -- alter table user_feed change rss_link_id rss_link_id int unsigned not null default 0 after feed_id;
-    vote_date INT default -1,   -- the user vote date
+    vote_date INT NOT NULL default -1,   -- the user vote date
     -- 2012/4/29 --replace index with unique index to support upsert
     -- insert into user_feed (user_id, feed_id, vote_user) values (1, 557, 1) on duplicate key update vote_user = 10;
     -- alter table user_feed drop index user_feed_id
@@ -146,7 +146,7 @@ SELECT feed_id, vote_user
 FROM user_feed
 WHERE vote_user != 0 AND user_id = p_uid
 ORDER BY vote_date DESC
-LIMIT 100) UNION (
+LIMIT 100) UNION ALL (
 SELECT feed_id, vote_user
 FROM user_feed
 WHERE user_id = p_uid AND read_date > 0
