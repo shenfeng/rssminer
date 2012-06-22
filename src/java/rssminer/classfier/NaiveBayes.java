@@ -4,12 +4,12 @@ import static rssminer.search.Searcher.SEARCHER;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
@@ -42,12 +42,9 @@ class TermFeature implements Comparable<TermFeature> {
     }
 
     private double getScore() {
-        // term frequency => term / Math.sqrt(length)
-        // if a doc has lot of terms, then term frequency may be low. has some
-        // read, but no dislike, the score should not be negative
-        double l = 0.018, dis = 0.018; // default 0.018; 3086 terms
+        double l = 0.1, dis = 0.1; //
         if (like != 0 || read != 0) {
-            l = like + read * 0.1;
+            l = like + read * 0.15;
         }
         if (dislike != 0) {
             dis = dislike;
@@ -58,6 +55,29 @@ class TermFeature implements Comparable<TermFeature> {
     public String toString() {
         return String.format("[l=%.4f, r=%.4f, dis=%.4f, r=%.4f, t=%.4f]",
                 like, read, dislike, getLogScore(), getScore());
+    }
+}
+
+class TermScoreEntry implements Comparable<TermScoreEntry> {
+    String term;
+    double score;
+
+    public int compareTo(TermScoreEntry o) {
+        if (o.score > score) {
+            return 1;
+        } else if (o.score < score) {
+            return -1;
+        }
+        return 0;
+    }
+
+    public TermScoreEntry(String term, double score) {
+        this.term = term;
+        this.score = score;
+    }
+
+    public String toString() {
+        return term + ":" + score;
     }
 }
 
@@ -75,18 +95,18 @@ public class NaiveBayes {
                 result.put(e.getKey(), r);
             }
         } else {
-            List<Entry<String, TermFeature>> list = new ArrayList<Map.Entry<String, TermFeature>>(
-                    map.entrySet());
-            Collections.sort(list, new ReverseValueCmp());
-            List<Entry<String, TermFeature>> choosen = list.subList(0,
-                    MAX_FEATURE);
-            // for (Entry<String, TermFeature> entry : choosen) {
-            // System.out.println(entry.getKey() + "\t" + entry.getValue());
-            // }
-            for (Entry<String, TermFeature> e : choosen) {
-                TermFeature h = e.getValue();
-                double r = h.getLogScore();
-                result.put(e.getKey(), r);
+            TermScoreEntry all[] = new TermScoreEntry[map.size()];
+            Set<Entry<String, TermFeature>> entries = map.entrySet();
+            int index = 0;
+            for (Entry<String, TermFeature> e : entries) {
+                all[index] = new TermScoreEntry(e.getKey(), e.getValue()
+                        .getLogScore());
+                index += 1;
+            }
+            Arrays.sort(all);
+            for (int j = 0; j < MAX_FEATURE; j++) {
+                TermScoreEntry e = all[j];
+                result.put(e.term, e.score);
             }
         }
         return result;
@@ -99,18 +119,18 @@ public class NaiveBayes {
             Map<String, Double> submodel = model.get(field);
             TermFreqVector vetor = reader.getTermFreqVector(docid, field);
             if (vetor != null) {
+                double score = 1.0D;
                 String[] terms = vetor.getTerms();
-                double n = Math.sqrt(terms.length); // try to normalize term
-                                                    // length
                 int[] freqs = vetor.getTermFrequencies();
                 for (int i = 0; i < freqs.length; i++) {
                     String term = terms[i];
                     Double w = submodel.get(term);
                     if (w != null) {
-                        // result *= (w * freqs[i]); Infinite
-                        result += w * freqs[i] / n;
+                        score += w * freqs[i];
                     }
                 }
+                score *= SEARCHER.getBoost().get(field); // boost
+                result += score;
             }
         }
         return result;
@@ -166,7 +186,7 @@ public class NaiveBayes {
             CorruptIndexException {
         Map<String, TermFeature> map = null;
         if (Searcher.CONTENT.equals(field)) {
-            map = new HashMap<String, TermFeature>(10240);
+            map = new HashMap<String, TermFeature>(20480);
         } else {
             map = new HashMap<String, TermFeature>(768);
         }
@@ -180,12 +200,6 @@ public class NaiveBayes {
                 String[] terms = termVector.getTerms();
                 int[] freqs = termVector.getTermFrequencies();
 
-                // make terms length less impact
-                double n = SEARCHER.getBoost().get(field)
-                        / Math.sqrt(terms.length); // try to normalize
-                // // data
-                // System.out.println(field + "\t" + n + "\t" + terms.length
-                // + "\t" + boost);
                 for (int j = 0; j < freqs.length; j++) {
                     String term = terms[j];
                     int count = freqs[j];
@@ -194,24 +208,16 @@ public class NaiveBayes {
                         h = new TermFeature();
                     }
                     if (vote.vote == 1) { // like
-                        h.like += count * n;
+                        h.like += count;
                     } else if (vote.vote == -1) { // dislike
-                        h.dislike += count * n;
+                        h.dislike += count;
                     } else { // read
-                        h.read += count * n;
+                        h.read += count;
                     }
                     map.put(term, h);
                 }
             }
         }
-        // System.out.println(field + "\t" + map.size());
         return pick(map);
-    }
-}
-
-class ReverseValueCmp implements Comparator<Map.Entry<String, TermFeature>> {
-    public int compare(Entry<String, TermFeature> o1,
-            Entry<String, TermFeature> o2) {
-        return -o1.getValue().compareTo(o2.getValue());
     }
 }
