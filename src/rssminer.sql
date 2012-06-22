@@ -130,12 +130,12 @@ delimiter //
 
 create PROCEDURE get_unvoted (p_uid INT)
 BEGIN
-SELECT f.id, f.rss_link_id
+SELECT f.id, f.rss_link_id, f.published_ts
 FROM feeds f
 JOIN user_subscription us ON f.rss_link_id = us.rss_link_id AND us.user_id = p_uid
 where f.id not in (select feed_id from user_feed where user_id = p_uid )
 ORDER BY published_ts DESC
-LIMIT 5000;
+LIMIT 6000;
 
 END //
 
@@ -151,6 +151,6 @@ SELECT feed_id, vote_user
 FROM user_feed
 WHERE user_id = p_uid AND read_date > 0
 ORDER BY read_date DESC
-LIMIT 100);
+LIMIT 150);
 
 END //

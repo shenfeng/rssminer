@@ -65,10 +65,11 @@ public class DBHelper {
         try {
             CallableStatement call = con.prepareCall("call get_unvoted(?)");
             call.setInt(1, userID);
-            List<FeedScore> unVoted = new ArrayList<FeedScore>(1024);
+            List<FeedScore> unVoted = new ArrayList<FeedScore>(2500);
             ResultSet rs = call.executeQuery();
             while (rs.next()) {
-                unVoted.add(new FeedScore(rs.getInt(1), rs.getInt(2)));
+                unVoted.add(new FeedScore(rs.getInt(1), rs.getInt(2), rs
+                        .getInt(3)));
             }
             Utils.closeQuietly(rs);
             Utils.closeQuietly(call);

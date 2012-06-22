@@ -3,6 +3,7 @@ package rssminer.classfier;
 public class FeedScore implements Comparable<FeedScore> {
     public final int feedID;
     public final int subid;
+    public final int publishTs;
     double score;
 
     public void setScore(double score) {
@@ -13,9 +14,10 @@ public class FeedScore implements Comparable<FeedScore> {
         return score;
     }
 
-    public FeedScore(int feedID, int subid) {
+    public FeedScore(int feedID, int subid, int publishTs) {
         this.feedID = feedID;
         this.subid = subid;
+        this.publishTs = publishTs;
     }
 
     // sort by rssLinkID to group commit, delete from redis

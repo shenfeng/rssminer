@@ -72,8 +72,17 @@ public class SysVoteDaemon implements Runnable {
                     unVotedIDs.add(feed.feedID);
                 }
                 double[] results = classify(model, unVotedIDs);
+                int now = (int) (System.currentTimeMillis() / 1000);
                 for (int i = 0; i < results.length; ++i) {
-                    unVoted.get(i).setScore(results[i]); // add score to it
+                    FeedScore feed = unVoted.get(i);
+                    if (results[i] > 0) {
+                        // kind of news site, the newer, the better.
+                        // per 4 hour, +2 for always positive
+                        double t = Math.log((double) (now - feed.publishTs)
+                                / (3600 * 4) + 2);
+                        results[i] /= t;
+                    }
+                    feed.setScore(results[i]); // add score to it
                 }
                 saveScoresToRedis(userID, unVoted);
                 saveScoresToMysql(userID, results);
