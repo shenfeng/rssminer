@@ -53,9 +53,9 @@
     case 13:                    // enter
       var $selected = $('#search-result .selected');
       if($selected.length) {
-        location.hash = $('a', $selected).attr('href');
         hide_search_context_menu();
-        $q.val('');
+        $q.blur();
+        location.hash = $('a', $selected).attr('href');
       }
       break;
     case 27:                    // esc
