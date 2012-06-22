@@ -96,8 +96,8 @@ Usage:
  --redis-host             127.0.0.1                        Redis for session store
  --proxy-server           //192.168.1.3                    proxy server
  --static-server          //192.168.1.3                    static server
- --db-url                 jdbc:mysql://localhost/rssminer  Mysql Database url
- --db-user                feng                             Mysql Database user name
+ --db-url                 jdbc:mysql://localhost/rssminer  jdbc url
+ --db-user                feng                             MySQL Database user name
  --bind-ip                0.0.0.0                          Which ip to bind
  --events-threshold       2                                How many user feed events buffered before recompute again
  --index-path             /var/rssminer/index              Path to store lucene index
