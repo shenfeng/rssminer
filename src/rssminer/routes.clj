@@ -48,7 +48,7 @@
            (POST "/" [] user/login)
            (GET "/google" [] user/google-openid)
            (GET "/checkauth" [] user/checkauth))
-  (GET "/admin/re-compute" [] rssminer.admin/recompute-scores)
+  (GET "/admin/compute" [] rssminer.admin/recompute-scores)
   (GET "/oauth2callback" [] import/oauth2callback)
   (GET "/import/google" [] import/greader-import)
   (context "/signup" []

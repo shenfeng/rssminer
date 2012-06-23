@@ -20,13 +20,13 @@
     (is (= 200 (:status resp)))))
 
 (deftest test-admin-recompute-scores
-  (let [resp (test-app {:uri "/admin/re-compute"
+  (let [resp (test-app {:uri "/admin/compute"
                         :request-method :get})]
     (is (= 401 (:status resp))))
-  (let [resp (auth-app2 {:uri "/admin/re-compute"
+  (let [resp (auth-app2 {:uri "/admin/compute"
                          :request-method :get})]
     (is (= 401 (:status resp))))
-  (let [resp (auth-app {:uri "/admin/re-compute"
+  (let [resp (auth-app {:uri "/admin/compute"
                         :request-method :get
                         :params {"id" 1}})]
     ;; should be 401

@@ -20,11 +20,16 @@
   (info "Rebuild index OK"))
 
 (defn recompute-scores [req]
-  (let [uid (-> req :params :id)]
-    (if (and (= 1 (:session req)) uid) ;; 1 is myself, who has admin right
-      (do (on-feed-event (to-int uid) (to-int -1))
-          {:status 200 :body "ok"})
-      {:status 401 :body "error"})))
+  (if (= 1 (:session req)) ;; 1 is myself, who is admin
+    (if-let [id (-> req :params :u)]
+      (do
+        (on-feed-event (to-int id) (to-int -1))
+        {:status 200 :body id})
+      (let [users (map :id (mysql-query ["select id from users"]))]
+        (doseq [id users]
+          (on-feed-event (to-int id) (to-int -1)))
+        {:status 200 :body (map str (interpose ", " users))}))
+    {:status 401 :body "error"}))
 
 (defn -main [& args]
   "Rssminer admin"
