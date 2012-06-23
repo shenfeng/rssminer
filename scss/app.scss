@@ -76,12 +76,13 @@ a { outline: 0; text-decoration: none;}
     width: 100%;
     .links {                    /* in wrapper */
         font-size: 12px;
-        right: 20px;
+        right: 10px;
         top: 15px;
         li {
             display: inline-block;
-            padding: 2px 4px;
+            padding: 2px 0 2px 10px;
             a {
+                text-transform: capitalize;
                 color: white;
                 &:hover { text-decoration: underline; }
             }
@@ -278,16 +279,11 @@ ul { list-style: none; padding: 0; margin: 0; }
     }
 }
 
-.settings-sort li {
-    text-transform:capitalize;
-    cursor: pointer;
-}
-
 .sort {                         /* in welcome-list*/
     $border_color: #bbb;
     border-bottom: 1px solid $border_color;
     padding-right: 65px;
-    font-size: 14px;
+    font-size: 15px;
     ul {
         padding: 0;
         margin: 0;
@@ -295,14 +291,16 @@ ul { list-style: none; padding: 0; margin: 0; }
     }
     li {
         display: inline-block;
+        min-width: 40px;
+        text-align: center;
         padding: 3px 10px;
         &.selected {
             background: lighten($header_color, 13%);
-            border-radius: 6px 6px 0 0;
+            border-radius: 5px 5px 0 0;
             color: white;
             a { color: white; }
         }
-        a { color: #222; }
+        a { color: #222;  }
     }
 }
 

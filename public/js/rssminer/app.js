@@ -154,15 +154,22 @@
         }
       });
     } else {
-      location.hash = "settings";
+      location.hash = "s/add";
       show_server_message();
     }
   }
 
-  function show_settings () {
+  function show_settings (section) {
     $reading_area.removeClass(SHOW_IFRAME);
-    var html = tmpls.settings();
-    $welcome_list.empty().append(html).find('img').each(util.favicon_error);
+    var sections = ['add', 'account', 'about'];
+    var d = {
+      selected: section,
+      tabs: _.map(sections, function (s) {
+        return { n: s, s: s === section };
+      })
+    };
+    var html = tmpls.settings(d);
+    $welcome_list.empty().append(html);
   }
 
   function save_settings (e) {
@@ -217,14 +224,6 @@
     }
   }
 
-  function switch_settings_tab () {
-    var $this = $(this),
-        text = $.trim($this.text());
-    $('.settings-sort li').removeClass('selected');
-    $this.addClass('selected');
-    $('#all-settings').removeClass().addClass('show-' + text);
-  }
-
   function fetch_and_show_user_subs (cb) {
     data.get_user_subs(function (subs) {
       var html = tmpls.subs_nav({groups: subs});
@@ -249,7 +248,6 @@
   util.delegate_events($(document), {
     'click #add-subscription': add_subscription,
     'click #save-settings': save_settings,
-    'click .settings-sort li': switch_settings_tab,
     'click #nav-pager .next': load_next_page,
     'click #nav-pager .prev': load_prev_page,
     'mouseenter #logo': function () { $logo.addClass(SHOW_NAV); },
@@ -264,7 +262,7 @@
     RM.hashRouter({
       '': show_welcome,
       '?s=:section&p=:p': show_welcome,
-      'settings': show_settings,
+      's/:section': show_settings,
       'read/:id?p=:page&s=:sort': read_subscription,
       'read/:id/:id?p=:page&s=:sort': read_feed
     });

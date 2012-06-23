@@ -1,14 +1,16 @@
 <h2>
   Settings - Rssminer
 </h2>
-<div class="sort settings-sort">
+<div class="sort">
   <ul>
-    <li class="selected">add</li>
-    <li>account</li>
-    <li>about</li>
+    {{#tabs}}
+      <li {{#s}} class="selected" {{/s}}>
+        <a href="#s/{{ n }}">{{ n }}</a>
+      </li>
+    {{/tabs}}
   </ul>
 </div>
-<ul id="all-settings" class="show-add">
+<ul id="all-settings" class="show-{{selected}}">
   <li class="section add-sub">
     <div id="add-sub">
       <section>
