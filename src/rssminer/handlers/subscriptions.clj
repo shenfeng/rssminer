@@ -30,11 +30,11 @@
   (db/fetch-user-subs (user-id-from-session req))  )
 
 (defn add-subscription [req]
-  (let [link  (-> req :body :link)
+  (let [{:keys [link g]}  (-> req :body)
         user-id (user-id-from-session req)]
     (info (str "user: " user-id " add subscription: " link))
     ;; enqueue, client need to poll for result
-    (subscribe link user-id nil nil)))
+    (subscribe link user-id nil g)))
 
 (defn save-sort-order [req]
   (let [uid (user-id-from-session req)

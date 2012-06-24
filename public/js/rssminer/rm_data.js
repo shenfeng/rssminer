@@ -355,12 +355,21 @@
     });
   }
 
+  function get_first_group () {
+    var grouped = parse_subs(subscriptions_cache),
+        group = null;
+    if(grouped && grouped.length) {
+      group = grouped[0].group;
+    }
+    return group;
+  }
+
   function polling_rss_link (rss_link_id, interval, times, cb) {
     if(times > 0) {
       ajax.sget('/api/subs/p/' + rss_link_id, function (sub) {
         // TODO refetch user subs
         if(sub && sub.title) {  // ok, title is fetched
-          sub.group = null; // server return no group_name
+          sub.group = get_first_group(); // server return no group_name
           var find = _.find(subscriptions_cache, function (s) {
             return s.id === sub.id;
           });
@@ -384,10 +393,10 @@
   }
 
   function add_subscription (url, added_cb, fetcher_finished) {
-    var POLLING_INTERVAL = 3000,
+    var POLLING_INTERVAL = 2000,
         POLLING_TIMES = 4;
 
-    ajax.jpost('/api/subs/add' , {link: url}, function (data) {
+    ajax.jpost('/api/subs/add' , {link: url, g: get_first_group() }, function (data) {
       window.setTimeout(function () {
         var id = data.rss_link_id;
         polling_rss_link(id, POLLING_INTERVAL, POLLING_TIMES,

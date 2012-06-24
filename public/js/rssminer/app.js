@@ -187,7 +187,7 @@
   }
 
   function still_in_settings () {
-    return location.hash === '#settings';
+    return location.hash === "#s/add";
   }
 
   function fetcher_finished (result) {
