@@ -1,6 +1,7 @@
 (ns rssminer.handlers.users
   (:use  [ring.util.response :only [redirect]]
-         [rssminer.views.layouts :only [login-page signup-page]]
+         [clojure.java.io :only [resource]]
+         me.shenfeng.mustache
          (rssminer [util :only [user-id-from-session to-int md5-sum]]
                    [config :only [rssminer-conf]])
          [clojure.data.json :only [json-str read-json]])
@@ -8,10 +9,13 @@
             [rssminer.db.user-feed :as uf]
             [clojure.string :as str]))
 
-(defn show-login-page [req]
-  (login-page (or (-> req :params :return_url) "/a")))
+(deftemplate login-page (slurp (resource "templates/login.tpl")))
+(deftemplate signup-page (slurp (resource "templates/signup.tpl")))
 
-(defn show-signup-page [req] (signup-page))
+(defn show-login-page [req]
+  (to-html login-page {:return_url (or (-> req :params :return_url) "/a")}))
+
+(defn show-signup-page [req] (to-html signup-page nil))
 
 (defn login [req]
   (let [{:keys [email password return-url persistent]} (:params req)

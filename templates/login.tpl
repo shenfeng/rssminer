@@ -37,7 +37,7 @@
             </td>
           </tr>
         </table>
-        <input id="return-url" name="return-url" type="hidden" />
+        <input value="{{{return_url}}}" name="return-url" type="hidden" />
       </form>
       <div class="openid">
         <h3>Already have an Google account?</h3>
