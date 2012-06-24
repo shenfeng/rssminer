@@ -29,7 +29,7 @@
 
         </h4>
         <div>
-          <input id="rss_atom_url" placeholder="atom/rss url"/>
+          <input id="rss_atom_url" placeholder="paste atom/rss url here"/>
           <ul class="help">
             <li>
               <a target="_blank" title="RSS - Wikipedia, the free encyclopedia"
@@ -58,6 +58,7 @@
         <div>
           <input type="password" placeholder="new password"
           name="password"/>
+          <br>
           <input type="password" placeholder="retype password"
           name="password2" id="password2"/>
         </div>

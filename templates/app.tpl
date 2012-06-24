@@ -37,7 +37,7 @@
             are better supported browsers.</p>
         </div>
         <input id="q" autocomplete="off"
-               placeholder="search subscription, feed"/>
+               placeholder="type to search subscriptions, articles"/>
         <ul class="links">
           <li><a href="#s/add">add</a></li>
           <li><a href="#s/account">account</a></li>
