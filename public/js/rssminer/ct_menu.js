@@ -6,7 +6,7 @@
       util = RM.util;
 
   var SORTING_KEYS = '__sort__',
-      DELAY_TIME = 1000 * 60;   // wait 1 min
+      DELAY_TIME = 1000 * 15;   // wait 15 seconds
 
   var save_timer_id,
       sorting_data;
