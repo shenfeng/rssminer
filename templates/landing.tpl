@@ -4,13 +4,14 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Rssminer - an intelligent RSS reader</title>
-    <link rel="stylesheet" href="/css/landing.css?{VERSION}">
     <meta name="keywords" content="RSS miner, Rssminer, RSS aggregator,
                                    intelligent RSS reader">
     <meta name="description"
           content="Rssminer is an intelligent web-based RSS reader. By
                    machine learning, Rssminer highlight stories you
                    like, and help discover stories you may like.">
+    {{#prod}}<style type="text/css">{{{ css }}}</style>{{/prod}}
+    {{#dev}}<link rel="stylesheet" href="/css/landing.css">{{/dev}}
   </head>
   <body>
     <a target="_blank"
@@ -137,11 +138,11 @@
     </div>   <!-- page-wrap -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     {{#dev}}
-      <script src="/js/lib/slides.min.jquery.js"></script>
-      <script src="/js/rssminer/landing.js"></script>
+    <script src="/js/lib/slides.min.jquery.js"></script>
+    <script src="/js/rssminer/landing.js"></script>
     {{/dev}}
     {{#prod}}
-      <script src="/js/landing-min.js?{VERSION}"></script>
+    <script src="/js/landing-min.js?{VERSION}"></script>
     {{/prod}}
   </body>
 </html>

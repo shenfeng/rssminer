@@ -11,9 +11,13 @@
 
 (deftemplate app-page (slurp (resource "templates/app.tpl")))
 
+(def landing-css (slurp "public/css/landing.css"))
+(def app-css (slurp "public/css/app.css"))
+
 (defn show-landing-page [req]
   (to-html landing-page {:dev (cfg/in-dev?)
-                         :prod (cfg/in-prod?)}))
+                         :prod (cfg/in-prod?)
+                         :css landing-css}))
 
 (defn show-app-page [req]
   (let [uid (user-id-from-session req)
@@ -26,6 +30,7 @@
                    :proxy_server (:proxy-server @cfg/rssminer-conf)}}]
     (to-html app-page {:dev (cfg/in-dev?)
                        :prod (cfg/in-prod?)
+                       :css app-css
                        :data (serialize-to-js data)})))
 
 (defn show-demo-page [req]
@@ -38,6 +43,7 @@
                    :proxy_server (:proxy-server @cfg/rssminer-conf)}}]
     {:body (to-html app-page {:dev (cfg/in-dev?)
                               :prod (cfg/in-prod?)
+                              :css app-css
                               :data (serialize-to-js data)})
      :status 200
      :session user}))
