@@ -232,7 +232,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 }
 
 #all-settings {
-    .section { display: none; padding: 10px 0 0 50px; }
+    .section { display: none; padding: 10px 0 20px 50px; }
     &.show-add .add-sub { display: block; }
     &.show-account .account { display: block; }
     &.show-about .about { display: block; }
@@ -247,6 +247,7 @@ ul { list-style: none; padding: 0; margin: 0; }
     .like .bar { background: $like_color; }
     .dislike .bar { background: $dislike_color; }
     .neutral .bar { background: $neutral_color; }
+    h3 { margin: 10px 0; }
     .help {
         display: inline-block;
         list-style: none;

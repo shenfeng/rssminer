@@ -25,12 +25,12 @@
 
 #warn-msg {
     display: none;
-    right: 150px;
+    right: 200px;
     background: yellow;
-    height: 30px;
-    a {
-        color: blue;
-    }
+    height: 29px;
+    font-size: 13px;
+    top: 8px;
+    a { color: blue; }
     p {
         display: none;
         margin: 6px 4px;
