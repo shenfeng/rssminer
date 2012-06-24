@@ -11,6 +11,10 @@ $body_width: 1250px;
 $nth_child_color: #f4fafb;
 $search_result_selecte_color: #7b9bf0;
 
+$like_color: #449d4e;
+$neutral_color: #f5d85f;
+$dislike_color: #c28561;
+
 ::-webkit-scrollbar {
     width: 9px;
     height: 8px;
@@ -206,24 +210,50 @@ ul { list-style: none; padding: 0; margin: 0; }
     }
 }
 
-.unread-like { background-color: #449d4e; color: #ffffff; }
-.unread-neutral { background-color: #f5d85f; color: #303030; }
-.unread-dislike { background-color: #c28561; color: #ffffff; }
+.unread-like { background-color: $like_color; color: #ffffff; }
+.unread-neutral { background-color: $neutral_color; color: #303030; }
+.unread-dislike { background-color: $dislike_color; color: #ffffff; }
 .total { background: #999; color: white; }
 
 .feed {
     .vote { right: 80px; }
     &.like {
-        .indicator { background: #449d4e; }
+        .indicator { background: $like_color; }
         &:hover .vote span.up { visibility: visible; }
     }
     &.neutral {
-        .indicator { background: #f5d85f; }
+        .indicator { background: $neutral_color; }
         &:hover .vote span { visibility: visible; }
     }
     &.dislike {
-        .indicator { background: #c28561; }
+        .indicator { background: $dislike_color; }
         &:hover .vote span.down { visibility: visible; }
+    }
+}
+
+#all-settings {
+    .section { display: none; padding: 10px 0 0 50px; }
+    &.show-add .add-sub { display: block; }
+    &.show-account .account { display: block; }
+    &.show-about .about { display: block; }
+    .vote { display: inline-block; position: relative; }
+    span { visibility: visible; }
+    ul {
+        list-style: disc;
+        padding-left: 16px;
+    }
+    .about li { padding: 2px 0;}
+    .bar { display:inline-block; width: 20px; height: 13px; }
+    .like .bar { background: $like_color; }
+    .dislike .bar { background: $dislike_color; }
+    .neutral .bar { background: $neutral_color; }
+    .help {
+        display: inline-block;
+        list-style: none;
+        li {
+            display: inline-block;
+            padding-right: 10px;
+        }
     }
 }
 

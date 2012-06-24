@@ -185,6 +185,7 @@
   }
 
   function save_user_vote (vote, $feed) {
+    if(!$feed || !$feed.length) { return; }
     var id = $feed.attr('data-id');
     if(!$feed.hasClass('sys')) {
       if(($feed.hasClass('dislike') && vote === -1)

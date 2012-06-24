@@ -12,21 +12,38 @@
 </div>
 <ul id="all-settings" class="show-{{selected}}">
   <li class="section add-sub">
-    <div id="add-sub">
+    <div>
       <section>
         <h4>Import</h4>
         <div>
           <p>
-            <a href="/import/google">
+            <a href="/import/google"
+            title="Import all you google reader subscriptions:">
             <img src="/imgs/import-greader.png"/>
             </a>
           </p>
         </div>
       </section>
       <section>
-        <h4>URL</h4>
+        <h4>URL
+
+        </h4>
         <div>
           <input id="rss_atom_url" placeholder="atom/rss url"/>
+          <ul class="help">
+            <li>
+              <a target="_blank" title="RSS - Wikipedia, the free encyclopedia"
+                href="http://en.wikipedia.org/wiki/RSS">
+                <img src="/imgs/wiki.ico"/>
+              </a>
+            </li>
+            <li>
+              <a target="_blank" title="简易信息聚合"
+                href="http://baike.baidu.com/view/1644.htm">
+                <img src="/imgs/bk.ico"/>
+              </a>
+            </li>
+          </ul>
         </div>
       </section>
       <section>
@@ -35,7 +52,7 @@
     </div>
   </li>
   <li class="section account">
-    <div id="account">
+    <div>
       <section>
         <h4>Password</h4>
         <div>
@@ -52,29 +69,51 @@
   </li>
   <li class="section about">
     <div>
-      <h3>关于Rssminer</h3>
-      <p>首先感谢选用Rssminer来作为阅读工具。阅读是一件很认真的事。希望Rssminer能尽微薄之力，使此轻松一点， 有效一点。</p>
-
-      <h3>搜索和排序</h3>
-      <p>搜索，能快速找到相关文章；排序，能使感兴趣的文章排前面。Rsssminer提供：</p>
+      <h3>What are the colors for?</h3>
+      <p>All the unread articles are sorted.</p>
       <ul>
-        <li>实时搜索（search as you type）</li>
-        <li>实时对所有没有读过的文章，按照你个人的阅读历史和对文章的喜好，评分排序
+        <li class="like">
+          <span class="bar"></span>
+          The Top 20%. Having little time? try read them first.
+          <span class="vote"><span class="down"></span></span>
+          If you want to correct Rssminer.
         </li>
-        <li>按时间先后排序</li>
+        <li class="neutral">
+          <span class="bar"></span>
+          20% ~ 50%. If you not in a hurry, they may be the choice
+        </li>
+        <li class="dislike">
+          <span class="bar"></span>
+          The remaining 50%.
+          <span class="vote"><span class="up"></span></span>
+          if one actually worth
+          reading, Rssminer will learn the lession</li>
       </ul>
-      <p>读原文，里面可能还有评论。</p>
-      <p>读过是读过，没读是没有读，不标记为已读。</p>
-      <h3>阅读笔记</h3>
-      <p>Rssminer暂时没有提供做笔记的功能。但并不是我认为这件事情不
-        重要。恰恰相反，这件事情很重要。不动笔墨不读书。读书的同时，做做
-        笔记，供日后参考。我正在解决这个问题。请稍等
-      </p>
-      <h3>Bug report， 功能建议</h3>
-      <p>
-        发邮件给我 shenedu at gmail.com。或者自己改代码
-        <a href="https://github.com/shenfeng/rssminer">https://github.com/shenfeng/rssminer</a>
-      </p>
+      <h3>How articles are sorted?</h3>
+      <ul>
+        <li>Every unread article is given a score</li>
+        <li>The score is computed for you by learn from your recent
+          reading history and explit
+          vote: <span class="vote"><span class="down"></span></span>
+          <span class="vote"><span class="up"></span></span>
+        </li>
+        <li>Newer articles trend to have a higher score than older
+          ones
+        </li>
+        <li>Articles are sorted by the score</li>
+        <li>The scores are updated as you read or vote, automatically</li>
+      </ul>
+      <h3>Reading Note, Sharing</h3>
+      <p>I am working on it...</p>
+      <h3>Bug report, Feature sugesstion</h3>
+      Email me: shenedu@gmail.com
+      <h3>Blog</h3>
+      <a target="_blank" href="http://shenfeng.me">http://shenfeng.me</a>
+      <h3>Open source</h3>
+      <a target="_blank"
+        href="https://github.com/shenfeng/rssminer">
+        https://github.com/shenfeng/rssminer
+      </a>
     </div>
   </li>
 </ul>
