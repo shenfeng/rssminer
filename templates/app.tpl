@@ -22,11 +22,19 @@
           <ul id="sub-list"></ul>
         </div>
         <div id="warn-msg">
-          <p class="demo">You are viewing a demo account, <a href="/logout">create</a> one for youself</p>
+          <p class="demo">
+            You are viewing a demo account,
+            <a href="/logout">create</a>
+            one for youself
+          </p>
           <p class="support">
-            <a target="_blank" href="https://www.google.com/intl/en/chrome/browser/">Chrome</a>,
-            <a target="_blank" href="http://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
-            <a target="_blank" href="http://www.apple.com.cn/safari/">Safari</a> are better supported browsers.</p>
+            <a target="_blank"
+               href="https://www.google.com/intl/en/chrome/browser/">Chrome</a>,
+            <a target="_blank"
+               href="http://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
+            <a target="_blank"
+               href="http://www.apple.com.cn/safari/">Safari</a>
+            are better supported browsers.</p>
         </div>
         <input id="q" autocomplete="off"
                placeholder="search subscription, feed"/>
@@ -69,8 +77,6 @@
     <script src="/js/rssminer/ct_menu.js"></script>
     <script src="/js/rssminer/app.js"></script>
     {{/dev}}
-    {{#prod}}
-    <script src="/js/app-min.js?{VERSION}"></script>
-    {{/prod}}
+    {{#prod}}<script src="/js/app-min.js?{VERSION}"></script>{{/prod}}
   </body>
 </html>

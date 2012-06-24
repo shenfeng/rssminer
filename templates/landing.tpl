@@ -141,8 +141,6 @@
     <script src="/js/lib/slides.min.jquery.js"></script>
     <script src="/js/rssminer/landing.js"></script>
     {{/dev}}
-    {{#prod}}
-    <script src="/js/landing-min.js?{VERSION}"></script>
-    {{/prod}}
+    {{#prod}}<script src="/js/landing-min.js?{VERSION}"></script>{{/prod}}
   </body>
 </html>
