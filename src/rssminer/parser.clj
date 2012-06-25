@@ -39,9 +39,9 @@
                       (-> e :contents first :value trim)
                       (-> e :description :value trim))
             :link (-> e :link trim)
-            :tags (s/join "; " (map #(-> % :name trim)
-                                    ;; drop remaining
-                                    (take 7 (:categories e))))
+            :tags (let [^String t (s/join "; " (map #(-> % :name trim)
+                                                    (:categories e)))]
+                    (if (> (.length t) 128) (.substring t 128) t))
             :updated_ts (:updatedDate e)
             :published_ts (or (:publishedDate e)
                               (:updatedDate e)
