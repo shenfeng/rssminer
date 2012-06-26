@@ -25,7 +25,8 @@
       (assoc (redirect return-url)
         :session {:id (:id user)}      ; IE does not persistent cookie
         :session-cookie-attrs {:max-age (* 3600 24 7)})
-      (login-page return-url))))
+      (to-html login-page {:return_url return-url
+                           :msg "Login failed, Email or password error"}))))
 
 (defn logout [req]
   (assoc (redirect "/")

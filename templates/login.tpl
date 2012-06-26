@@ -13,6 +13,7 @@
   <body>
     <div id="accouts-div">
       <h1><a href="/"> Rssminer</a> Login </h1>
+      {{#msg}}<p id="error">{{{ msg }}}</p>{{/msg}}
       <form action="/login" method="post" class="post-form">
         <table>
           <tr>

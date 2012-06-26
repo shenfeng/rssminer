@@ -42,6 +42,11 @@ table { border-collapse: collapse; border-spacing: 0; }
     a { color: #303030; text-decoration: none; }
 }
 
+#error {
+    text-align: center;
+    color: red;
+}
+
 #header {
     .content { width: $page-width; margin: 0 auto; }
     background-color: #F7F7F7;

@@ -10,17 +10,18 @@
 (def ^{:private true} enqueue-keys [:id :url :check_interval :last_modified])
 
 (defn subscribe [url user-id title group-name]
-  (let [sub (or (db/fetch-rss-link {:url url})
-                (mysql-insert-and-return :rss_links {:url url
-                                                     :user_id user-id}))]
-    (fetcher-enqueue (select-keys sub enqueue-keys))
-    (if-let [us (db/fetch-subscription user-id (:id sub))]
-      us
-      (mysql-insert-and-return :user_subscription
-                               {:user_id user-id
-                                :group_name group-name
-                                :title title
-                                :rss_link_id (:id sub)}))))
+  (when url
+    (let [sub (or (db/fetch-rss-link {:url url})
+                  (mysql-insert-and-return :rss_links {:url url
+                                                       :user_id user-id}))]
+      (fetcher-enqueue (select-keys sub enqueue-keys))
+      (if-let [us (db/fetch-subscription user-id (:id sub))]
+        us
+        (mysql-insert-and-return :user_subscription
+                                 {:user_id user-id
+                                  :group_name group-name
+                                  :title title
+                                  :rss_link_id (:id sub)})))))
 
 (defn polling-fetcher [req]             ;; wait for fetcher return
   (let [rss-id (-> req :params :rss-id to-int)]
