@@ -89,6 +89,6 @@
       wrap-cache-header
       wrap-request-logging-in-dev
       wrap-keyword-params
-      wrap-multipart-params
+      ;; wrap-multipart-params
       wrap-params
       wrap-failsafe))
