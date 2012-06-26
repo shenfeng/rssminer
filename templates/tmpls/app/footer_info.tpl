@@ -1,5 +1,5 @@
 <div class="feed {{cls}}" data-id="{{id}}">
-  <a href="{{ link }}" target="_blank">{{ title }}</a>
+  <a href="{{{ link }}}" target="_blank">{{{ title }}}</a>
   <span class="domain">{{ domain }}</span>
   <span class="vote">
     <span class="up" title="vote up"></span>

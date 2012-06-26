@@ -2,14 +2,14 @@
   <li {{#collapse}} class="collapse" {{/collapse}}>
     <div class="folder" data-name="{{group}}">
       <img src="/imgs/folder.png"/>
-      <span>{{group}}</span>
+      <span>{{{group}}}</span>
     </div>
     <ul class="rss-category">
       {{#subs}}
         <li class="item" id="item-{{id}}" data-id="{{id}}" title="{{title}}">
           <a href="#{{href}}">
             <img src="{{img}}" width="16" height="16" />
-            <span class="title"> {{title}} </span>
+            <span class="title"> {{{title}}} </span>
             <span class="count">
               {{#dislike}}
                 <span class="unread-dislike"

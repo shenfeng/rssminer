@@ -5,7 +5,7 @@
         <li>
           <a href="#{{href}}">
             <img src="{{img}}" width="15" height="15" />
-            <span class="title"> {{title}} </span>
+            <span class="title"> {{{title}}} </span>
             <span class="count">
               {{#dislike}}
                 <span class="unread-dislike"
@@ -31,9 +31,9 @@
       <li class="feed {{cls}}">
         <a href="#{{href}}">
           <span class="indicator"></span>
-          <span class="title" title="{{title}}">{{title}}</span>
+          <span class="title" title="{{{title}}}">{{{title}}}</span>
           <div class="meta">
-            <span class="author" title="author">{{author}}</span>
+            <span class="author" title="author">{{{author}}}</span>
             <ul class="tags">
               {{#tags}}
                 <li title="tag">{{.}}</li>
