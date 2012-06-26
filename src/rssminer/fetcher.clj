@@ -1,5 +1,5 @@
 (ns rssminer.fetcher
-  (:use [clojure.tools.logging :only [trace info error]]
+  (:use [clojure.tools.logging :only [warn info error]]
         (rssminer [util :only [assoc-if now-seconds]]
                   [parser :only [parse-feed]]
                   [redis :only [fetcher-dequeue fetcher-enqueue]]
@@ -58,21 +58,21 @@
   (reify IHttpTask
     (getUri [this] (java.net.URI. url))
     (getProxy [this] (:proxy @rssminer-conf))
-    (onThrowable [this t]
-      (info (str "id:" (:id link)) url (.getMessage ^Throwable t))
+    (onThrowable [this ^Throwable t]
+      (warn (str "id:" (:id link)) url (.getMessage t))
       (try
         (db/update-rss-link (:id link)
                             (let [interval (slower (:check_interval link))]
                               {:check_interval interval
                                :next_check_ts (+ (now-seconds) interval)
-                               :error_msg (.getMessage ^Throwable t)}))
-        (catch Exception e (error e url))))
+                               :error_msg (.getMessage t)}))
+        (catch Exception e (error e url)))) ; mysql fail
     (getHeaders [this]
       {HttpUtils/IF_MODIFIED_SINCE last_modified
        HttpUtils/IF_NONE_MATCH etag})
     (doTask [this status headers body]
       (try (handle-resp link status headers body)
-           (catch Exception e (error e url))))
+           (catch Exception e (error e (str "id:" (:id link) url)))))
     (toString [this]
       (str (.getUri this) " " (.getHeaders this)))))
 
