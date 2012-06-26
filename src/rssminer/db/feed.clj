@@ -42,17 +42,20 @@
 
 (defn update-rss-link [id data]
   (if-let [url (:url data)]
-    (if-let [saved-id (-> (mysql-query
-                           ["SELECT id FROM rss_links WHERE url = ?"
-                            (:url data)]) first :id)]
-      (do
+    (if-let [sid (-> (mysql-query ["SELECT id FROM rss_links WHERE url = ?"
+                                   (:url data)]) first :id)]
+      (let [old (mysql-query ["SELECT id FROM user_subscription WHERE
+                               rss_link_id = ?" id])]
+        (doseq [id old]
+          (with-mysql
+            (try (update-values :user_subscription ["id = ?" (:id id)]
+                                {:rss_link_id sid})
+                 (catch Exception e      ;duplicate, already subscribed
+                   (delete-rows :user_subscription ["id=?" (:id id)])))))
         (with-mysql
-          (update-values :user_subscription ["rss_link_id = ?" id]
-                         {:rss_link_id saved-id})
-          (update-values :feeds ["rss_link_id = ?" id]
-                         {:rss_link_id saved-id})
+          (delete-rows :feeds ["rss_link_id = ?" id])
           (delete-rows :rss_links ["id = ?" id])))
-      (safe-update-rss-link id data))
+      (safe-update-rss-link id data))   ;no saved, just update this one
     (safe-update-rss-link id data)))
 
 (defn update-feed [id data]

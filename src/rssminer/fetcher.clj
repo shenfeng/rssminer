@@ -51,6 +51,7 @@
     (info (str "id:" id) status url
           (str "[" (-> feeds :entries count) "] feeds"))
     (db/update-rss-link id updated)
+    ;; if url is updated, feeds should be nil
     (when feeds (db/save-feeds feeds id))))
 
 (defn- mk-fetcher-task [{:keys [url last_modified etag] :as link}]
