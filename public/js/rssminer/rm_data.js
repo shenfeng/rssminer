@@ -124,6 +124,7 @@
   function transorm_sub (sub) {
     // the url is site's alternate url
     var title = sub.title || sub.url || '';
+    var s = sub.like + sub.neutral > 5 ? 'recommand' : 'newest';
     return {
       img: favicon_path(sub.url),
       title: title,
@@ -131,7 +132,7 @@
       group: sub.group,
       title_l: title.toLowerCase(),
       // sort by likest if has likest
-      href: sub_hash(sub.id, 1, sub.like ? 'recommand' : 'newest'),
+      href: sub_hash(sub.id, 1, s),
       like: sub.like,
       total: sub.total,
       index: sub.index,
