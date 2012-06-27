@@ -63,7 +63,7 @@
              ["--worker" "Http worker thread count" :default 2
               :parse-fn to-int]
              ["--fetcher-concurrency" "" :default 20 :parse-fn to-int]
-             ["--fetch-size" "Bulk fetch size" :default 100 :parse-fn to-int]
+             ["--fetch-size" "Bulk fetch size" :default 10 :parse-fn to-int]
              ["--profile" "dev or prod" :default :dev :parse-fn keyword]
              ["--redis-host" "Redis for session store"
               :default "127.0.0.1"]

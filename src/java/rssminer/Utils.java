@@ -49,7 +49,7 @@ public class Utils {
 
     static {
         try {
-            CLIENT = new HttpClient(new HttpClientConfig(50000, USER_AGETNT));
+            CLIENT = new HttpClient(new HttpClientConfig(60000, USER_AGETNT));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -46,6 +46,7 @@
                           :etag (get headers HttpUtils/ETAG)
                           :alternate (:link feeds)
                           :last_status status
+                          :error_msg ""
                           :description (:description feeds)
                           :title (:title feeds))]
     (info (str "id:" id) status url

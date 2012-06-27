@@ -200,6 +200,11 @@ public class HttpTaskRunner {
         while (mTaskQueue.isEmpty()) {
             long currentTime = currentTimeMillis();
 
+            IHttpTask high = mBlockingProvider.getTask(1);
+            if (high != null) { // high priority
+                mTaskQueue.offer(high);
+                break;
+            }
             // first bulk fetch, since it fast, then blocking get
             if (lastBulkCheckTs + mBulkCheckInterval < currentTime) {
                 List<IHttpTask> tasks = mBulkProvider.getTasks();
