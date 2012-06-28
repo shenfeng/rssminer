@@ -31,6 +31,9 @@
 (definline trim [^String s]
   `(when ~s (s/trim ~s)))
 
+;; http://hi.baidu.com/maczhijia/rss 0 feeds
+;;; http://blogs.innodb.com/wp/feed/
+
 (defn- parse-entry [e]
   (assoc-if {}
             :author (-> e :author trim)
@@ -41,7 +44,7 @@
             :link (-> e :link trim)
             :tags (let [^String t (s/join "; " (map #(-> % :name trim)
                                                     (:categories e)))]
-                    (if (> (.length t) 128) (.substring t 128) t))
+                    (if (> (.length t) 128) (.substring t 0 128) t))
             :updated_ts (:updatedDate e)
             :published_ts (or (:publishedDate e)
                               (:updatedDate e)
