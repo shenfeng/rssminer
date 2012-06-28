@@ -164,9 +164,9 @@ public class FaviconFuture extends CommonFuture {
             }
         } catch (SQLException ignore) {
         } finally {
-            Utils.closeQuietly(con);
-            Utils.closeQuietly(ps);
             Utils.closeQuietly(rs);
+            Utils.closeQuietly(ps);
+            Utils.closeQuietly(con);
         }
         return false;
     }

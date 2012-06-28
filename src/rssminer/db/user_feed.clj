@@ -2,25 +2,25 @@
   (:use [rssminer.database :only [mysql-query with-mysql]]
         [rssminer.util :only [now-seconds]]
         [rssminer.config :only [rssminer-conf]]
-        [clojure.java.jdbc :only [do-commands]])
+        [clojure.java.jdbc :only [do-prepared]])
   (:import rssminer.db.MinerDAO))
 
-;;; vote time is not recoreded
+;;; TODO. when autoCommit=false this complete,
+;;; other threads does not see the change
 (defn insert-user-vote [user-id feed-id vote]
-  (let [n (now-seconds)]
-    (with-mysql (do-commands ;; rss_link_id default 0, which is ok
-                 (format "INSERT INTO user_feed
-                      (user_id, feed_id, vote_user, vote_date)
-             VALUES (%d, %d, %d, %d) ON DUPLICATE KEY
-             UPDATE vote_user = %d, vote_date = %d"
-                         user-id feed-id vote n vote n)))))
+  (let [now (now-seconds)]
+    (with-mysql (do-prepared ;; rss_link_id default 0, which is ok
+                 "INSERT INTO user_feed
+                  (user_id, feed_id, vote_user, vote_date) VALUES(?, ?, ?, ?)
+                 ON DUPLICATE KEY UPDATE vote_user = ?, vote_date = ?"
+                 [user-id feed-id vote now vote now]))))
 
 (defn mark-as-read [user-id feed-id]
   (let [now (now-seconds)]
-    (with-mysql (do-commands ;; rss_link_id default 0
-                 (format "INSERT INTO user_feed (user_id, feed_id, read_date)
-       VALUES (%d, %d, %d) ON DUPLICATE KEY UPDATE read_date = %d"
-                         user-id feed-id now now)))))
+    (with-mysql (do-prepared ;; rss_link_id default 0
+                 "INSERT INTO user_feed (user_id, feed_id, read_date)
+       VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE read_date = ?"
+                 [user-id feed-id now now]))))
 
 (defn fetch-newest [userid limit offset]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]

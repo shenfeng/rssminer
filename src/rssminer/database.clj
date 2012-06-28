@@ -13,8 +13,20 @@
 
 (defonce mysql-db-factory (atom {}))
 
+(defn- jdbc-params []                   ; default jdbc params
+  (apply str (interpose "&" (map (fn [[k v]] (str k "=" v))
+                                 {"useLocalSessionState" true
+                                  "cacheCallableStmts" true
+                                  "prepStmtCacheSize" 100 ; default 25
+                                  ;; "useCursorFetch" true
+                                  ;; "defaultFetchSize" 400
+                                  "cachePrepStmts" true
+                                  "useServerPrepStmts" true
+                                  "maintainTimeStats" false}))))
+
 (defn use-mysql-database! [url user]
-  (let [ds (PerThreadDataSource. url user "")]
+  (let [url (str url "?" (jdbc-params))
+        ds (PerThreadDataSource. url user "")]
     (swap! rssminer-conf assoc :data-source ds)
     (reset! mysql-db-factory {:factory (fn [& args] (.getConnection ds))
                               :ds ds})))

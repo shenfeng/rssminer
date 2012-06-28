@@ -124,3 +124,7 @@ usage
 
 # clear root password
 # update mysql.user set password=null where user='root';
+
+*/1 * * * *   wget --header "Cookie:_id_={{id}}" http://127.0.0.1:8100/admin/compute > /tmp/compute.log
+
+

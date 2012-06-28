@@ -192,6 +192,9 @@ public class SysVoteDaemon implements Runnable {
             ps.setDouble(2, neutral);
             ps.setInt(3, usreID);
             ps.executeUpdate();
+            if (con.getAutoCommit() == false) {
+                con.commit();
+            }
             Utils.closeQuietly(ps);
         } finally {
             Utils.closeQuietly(con);

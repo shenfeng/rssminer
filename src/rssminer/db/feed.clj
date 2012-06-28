@@ -5,17 +5,16 @@
                   [classify :only [on-fetcher-event]])
         [clojure.string :only [blank?]]
         [clojure.tools.logging :only [info trace]]
-        [clojure.java.jdbc :only [update-values delete-rows do-commands]]))
+        [clojure.java.jdbc :only [update-values delete-rows do-prepared]]))
 
 (defn- feed-exits [rssid link]
   (mysql-query ["SELECT id FROM feeds WHERE rss_link_id = ? AND link = ?"
                 rssid link]))
 
 (defn update-total-feeds [rssid]
-  (with-mysql
-    (do-commands (str "UPDATE rss_links SET total_feeds =
-  (SELECT COUNT(*) FROM feeds where rss_link_id = " rssid ") WHERE id = "
-  rssid))))
+  (with-mysql (do-prepared "UPDATE rss_links SET total_feeds =
+                 (SELECT COUNT(*) FROM feeds where rss_link_id = ?)
+                 WHERE id = ?" [rssid rssid])))
 
 (defn save-feeds [feeds rssid]
   (let [ids (map (fn [{:keys [link] :as feed}]
