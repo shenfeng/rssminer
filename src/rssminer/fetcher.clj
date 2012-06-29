@@ -25,10 +25,10 @@
     (.getStat ^HttpTaskRunner @fetcher)))
 
 (defn- slower [last-interval]
-  (min (int (* last-interval 1.4)) (* 3600 24 4))) ;4 days
+  (min (int (* last-interval 1.4)) (* 3600 24 2))) ;2 days
 
 (defn- quicker [last-interval]
-  (max (* 3600 6) (int (/ last-interval 1.4)))) ; min 6h
+  (max (* 3600 5) (int (/ last-interval 1.4)))) ; min 5h
 
 (defn- next-check [last-interval status headers]
   (if-let [location (get headers HttpUtils/LOCATION)]
