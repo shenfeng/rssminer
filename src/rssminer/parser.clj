@@ -31,20 +31,24 @@
 (definline trim [^String s]
   `(when ~s (s/trim ~s)))
 
+(defn most-len [^String s len]
+  (when s
+    (if (> (.length s) len) (.substring s 0 len) s)))
+
 ;; http://hi.baidu.com/maczhijia/rss 0 feeds
 ;;; http://blogs.innodb.com/wp/feed/
 
 (defn- parse-entry [e]
   (assoc-if {}
-            :author (-> e :author trim)
-            :title (-> e :title trim)
+            :author (most-len (-> e :author trim) 64)
+            :title (most-len (-> e :title trim) 256)
             :summary (or
                       (-> e :contents first :value trim)
                       (-> e :description :value trim))
-            :link (-> e :link trim)
-            :tags (let [^String t (s/join "; " (map #(-> % :name trim)
-                                                    (:categories e)))]
-                    (if (> (.length t) 128) (.substring t 0 128) t))
+            :link (most-len (-> e :link trim) 512) ; most 512 chars
+            :tags (let [t (s/join "; " (map #(-> % :name trim)
+                                            (:categories e)))]
+                    (most-len t 128))
             :updated_ts (:updatedDate e)
             :published_ts (or (:publishedDate e)
                               (:updatedDate e)

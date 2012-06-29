@@ -18,6 +18,11 @@
          :link
          :published_ts)))
 
+(deftest test-most-len
+  (is (<= 3 (count (most-len "abc" 3))))
+  (is (<= 3 (count (most-len "abc" 6))))
+  (is (<= 2 (count (most-len "abcdef" 2)))))
+
 (deftest test-scottgu-atom
   (let [feed (parse-feed (slurp "test/scottgu-atom.xml"))]
     (is (= "ScottGu's Blog" (:title feed)))

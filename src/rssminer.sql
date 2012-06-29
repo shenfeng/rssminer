@@ -44,7 +44,9 @@ CREATE TABLE rss_links (
 CREATE TABLE feeds (
   id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
   author VARCHAR(64) NOT NULL default '',
-  link VARCHAR(220) NOT NULL,
+
+  --  ALTER TABLE feeds MODIFY link VARCHAR(512) NOT NULL
+  link VARCHAR(512) NOT NULL,
   title VARCHAR(256) NOT NULL default '',
   -- 2012/5/27
   -- alter table feeds drop original
@@ -61,8 +63,10 @@ CREATE TABLE feeds (
   rss_link_id INT UNSIGNED NOT NULL,
   summary MEDIUMTEXT,           -- rss summary, given by download rss
 
+  -- alter table feeds drop index rss_link_id_link;
+  -- alter table feeds add index rss_link_id_link(rss_link_id, link);
              -- REFERENCES rss_links ON UPDATE CASCADE ON DELETE CASCADE,
-  UNIQUE rss_link_id_link (rss_link_id, link)
+  key rss_link_id_link (rss_link_id, link)
 );
 
 CREATE TABLE user_subscription (
