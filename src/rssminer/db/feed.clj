@@ -4,7 +4,7 @@
                   [util :only [ignore-error to-int now-seconds]]
                   [classify :only [on-fetcher-event]])
         [clojure.string :only [blank?]]
-        [clojure.tools.logging :only [info trace]]
+        [clojure.tools.logging :only [warn]]
         [clojure.java.jdbc :only [update-values delete-rows do-prepared]]))
 
 (defn- feed-exits [rssid link]
@@ -19,13 +19,15 @@
 (defn save-feeds [feeds rssid]
   (let [ids (map (fn [{:keys [link] :as feed}]
                    (when (and link (not (blank? link)))
-                     ;; since link is what I cared,
-                     ;; do not update this feed on mysql
+                     ;; link is the only cared,
                      (if-not (feed-exits rssid link)
-                       (let [id (mysql-insert :feeds (assoc feed
-                                                       :rss_link_id rssid))]
-                         (index-feed id rssid feed)
-                         id))))        ; return id
+                       (try
+                         (let [id (mysql-insert
+                                   :feeds (assoc feed :rss_link_id rssid))]
+                           (index-feed id rssid feed)
+                           id)
+                         (catch Exception e
+                           (warn "insert for rss" rssid e)))))) ; return id
                  (:entries feeds))
         inserted (filter identity (doall ids))]
     (when (seq inserted)
