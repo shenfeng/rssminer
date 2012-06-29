@@ -98,8 +98,8 @@
   (reset! fetcher (doto (HttpTaskRunner.
                          (doto (HttpTaskRunnerConf.)
                            ;; poll database
-                           (.setBulkCheckInterval (* 20  60  1000)) ; 20 min
-                           (.setBlockingTimeOut 25) ; 25 second
+
+                           (.setBlockingTimeOut 30) ; 30 second
                            (.setBulkProvider (mk-provider))
                            (.setBlockingProvider (mk-blocking-provider))
                            (.setQueueSize (:fetcher-concurrency

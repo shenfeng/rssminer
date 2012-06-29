@@ -2,7 +2,6 @@ package rssminer.fetcher;
 
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
-import static java.util.concurrent.TimeUnit.HOURS;
 import static me.shenfeng.http.HttpUtils.LOCATION;
 import static rssminer.Utils.CLIENT;
 
@@ -122,17 +121,12 @@ public class HttpTaskRunner {
     private Thread mWorkerThread;
     private final Semaphore mConcurrent; // limit concurrent http get
 
-    private final int mBulkCheckInterval;
     private final int mBlockingGetTimeout;
-    private final long DUMP_STATS_INTERVAL = HOURS.toMillis(6);
-    private long lastBulkCheckTs = 0;
-    private long lastDumpStatTs = currentTimeMillis();
 
     private final ConcurrentHashMap<Object, Object> mStat;
 
     public HttpTaskRunner(HttpTaskRunnerConf conf) {
         mBlockingGetTimeout = conf.blockingTimeOut;
-        mBulkCheckInterval = conf.bulkCheckInterval;
         mBulkProvider = conf.bulkProvider;
         mBlockingProvider = conf.blockingProvider;
         if (mBulkProvider == null) {
@@ -198,27 +192,18 @@ public class HttpTaskRunner {
 
     void tryFillTask() {
         while (mTaskQueue.isEmpty()) {
-            long currentTime = currentTimeMillis();
-
             IHttpTask high = mBlockingProvider.getTask(1);
             if (high != null) { // high priority
                 mTaskQueue.offer(high);
                 break;
             }
             // first bulk fetch, since it fast, then blocking get
-            if (lastBulkCheckTs + mBulkCheckInterval < currentTime) {
-                List<IHttpTask> tasks = mBulkProvider.getTasks();
-                lastBulkCheckTs = currentTime;
-                if (tasks != null && tasks.size() != 0) {
-                    for (IHttpTask t : tasks) {
-                        mTaskQueue.offer(t);
-                    }
-                    break;
+            List<IHttpTask> tasks = mBulkProvider.getTasks();
+            if (tasks != null && tasks.size() != 0) {
+                for (IHttpTask t : tasks) {
+                    mTaskQueue.offer(t);
                 }
-            }
-            if (lastDumpStatTs + DUMP_STATS_INTERVAL < currentTime) {
-                lastDumpStatTs = currentTime;
-                logger.info(toString());
+                break;
             }
             IHttpTask task = mBlockingProvider.getTask(mBlockingGetTimeout);
             if (task != null) {

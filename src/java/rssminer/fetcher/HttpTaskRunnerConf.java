@@ -7,7 +7,6 @@ public class HttpTaskRunnerConf {
     IHttpTasksProvder bulkProvider;
     IBlockingTaskProvider blockingProvider;
     int queueSize = 300;
-    int bulkCheckInterval = 15 * 60 * 1000; // 15 min, mills
     int blockingTimeOut = 5; // blocking provider timeout, ie redis blpop.
                              // seconds
 
@@ -20,10 +19,6 @@ public class HttpTaskRunnerConf {
 
     public void setBlockingTimeOut(int blockingTimeOut) {
         this.blockingTimeOut = blockingTimeOut;
-    }
-
-    public void setBulkCheckInterval(int bulkCheckInterval) {
-        this.bulkCheckInterval = bulkCheckInterval;
     }
 
     public void setBulkProvider(IHttpTasksProvder bulkProvider) {
