@@ -15,9 +15,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Semaphore;
 
 import me.shenfeng.http.client.ITextHandler;
 import me.shenfeng.http.client.TextRespListener;
@@ -32,6 +32,9 @@ public class HttpTaskRunner {
         private IHttpTask task;
 
         public TextHandler(IHttpTask task) {
+            if (task == null) {
+                throw new NullPointerException("task can not be null");
+            }
             this.task = task;
         }
 
@@ -86,7 +89,8 @@ public class HttpTaskRunner {
             while (mRunning) {
                 try {
                     tryFillTask();
-                    final IHttpTask task = mTaskQueue.take();
+                    mConcurrent.acquire(); // limit concurrency
+                    final IHttpTask task = mTaskQueue.poll(); // can not be null
                     try {
                         TextRespListener listener = new TextRespListener(
                                 new TextHandler(task));
@@ -98,8 +102,7 @@ public class HttpTaskRunner {
                     } catch (UnknownHostException e) {
                         task.onThrowable(e);
                     }
-                } catch (InterruptedException e) {
-                    // die
+                } catch (InterruptedException e) { // die
                 }
             }
             mRunning = false;
@@ -110,7 +113,8 @@ public class HttpTaskRunner {
     private final IHttpTasksProvder mBulkProvider;
     private final IBlockingTaskProvider mBlockingProvider;
     private final String mName;
-    private final BlockingQueue<IHttpTask> mTaskQueue;
+    private final ConcurrentLinkedQueue<IHttpTask> mTaskQueue;
+    private final Semaphore mConcurrent;
 
     private volatile int mCounter = 0;
     private volatile long startTime;
@@ -130,7 +134,8 @@ public class HttpTaskRunner {
         }
         // consumer and producer need access concurrently,
         // prevent too many concurrent HTTP request
-        mTaskQueue = new ArrayBlockingQueue<IHttpTask>(conf.queueSize);
+        mTaskQueue = new ConcurrentLinkedQueue<IHttpTask>();
+        mConcurrent = new Semaphore(conf.queueSize);
 
         mName = conf.name;
         mStat = new ConcurrentHashMap<Object, Object>(24, 0.75f, 2);
@@ -139,6 +144,7 @@ public class HttpTaskRunner {
 
     private Map<Object, Object> computeStat() {
         mStat.put("Total", mCounter);
+        mStat.put("Remain", mTaskQueue.size());
         double m = (double) (currentTimeMillis() - startTime) / 60000;
         mStat.put("PerMiniute", mCounter / m);
         DateFormat format = new SimpleDateFormat("MM-dd HH:mm:ss");
@@ -186,28 +192,28 @@ public class HttpTaskRunner {
 
     private void onTaskReturn(IHttpTask task, int status) {
         ++mCounter;
+        mConcurrent.release();
         recordStat(status);
         synchronized (runningTasks) {
             runningTasks.remove(task.getUri());
         }
     }
 
-    private boolean addTask(IHttpTask task) throws InterruptedException {
+    private boolean addTask(IHttpTask task) {
         if (task == null) {
             return false;
         }
         synchronized (runningTasks) {
             if (runningTasks.contains(task.getUri())) {
                 return false;
-            } else {
-                runningTasks.add(task.getUri());
-                mTaskQueue.put(task);
-                return true;
             }
+            runningTasks.add(task.getUri());
         }
+        mTaskQueue.add(task);
+        return true;
     }
 
-    void tryFillTask() throws InterruptedException {
+    void tryFillTask() {
         while (mTaskQueue.isEmpty()) {
             // slow things down a bit
             if (addTask(mBlockingProvider.getTask(1))) {// high priority
