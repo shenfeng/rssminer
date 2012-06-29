@@ -11,12 +11,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Semaphore;
 
 import me.shenfeng.http.client.ITextHandler;
 import me.shenfeng.http.client.TextRespListener;
@@ -34,12 +35,10 @@ public class HttpTaskRunner {
             this.task = task;
         }
 
-        // run in the http client loop thread
+        // run in the HTTP client loop thread
         public void onSuccess(int status, Map<String, String> headers,
                 String body) {
-            ++mCounter;
-            mConcurrent.release();
-            recordStat(status);
+            onTaskReturn(task, status);
             if (status == 301) {
                 String l = headers.get(LOCATION);
                 if (l == null) {
@@ -48,7 +47,7 @@ public class HttpTaskRunner {
                     return;
                 } else {
                     l = task.getUri().resolve(l).toString();
-                    headers.put(LOCATION, l);
+                    headers.put(LOCATION, l); // convert to full path
                     task.doTask(status, headers, body);
                 }
             } else if (status == 302) {
@@ -61,8 +60,11 @@ public class HttpTaskRunner {
                 URI loc = task.getUri().resolve(l);
                 RetryHttpTask retry = new RetryHttpTask(task, loc);
                 if (retry.retryTimes() < 4) {
-                    // different thread
-                    mTaskQueue.offer(retry);
+                    try {
+                        addTask(retry);
+                    } catch (InterruptedException e) {
+                        logger.warn("retry task interrupted", e);
+                    } // different thread
                 } else {
                     task.onThrowable(new Exception(
                             "redirect more than 4 times"));
@@ -74,23 +76,17 @@ public class HttpTaskRunner {
 
         public void onThrowable(Throwable t) {
             logger.debug(task.getUri().toString(), t);
-            ++mCounter;
-            recordStat(600); // 600 is error
-            mConcurrent.release();
+            onTaskReturn(task, 600);
             task.onThrowable(t);
         }
     }
 
     class Worker implements Runnable {
         public void run() {
-            try {
-                while (mRunning) {
+            while (mRunning) {
+                try {
                     tryFillTask();
-                    mConcurrent.acquire();
-                    final IHttpTask task = mTaskQueue.poll();
-                    if (task == null) {
-                        break; // no job, die. can't happen => filled
-                    }
+                    final IHttpTask task = mTaskQueue.take();
                     try {
                         TextRespListener listener = new TextRespListener(
                                 new TextHandler(task));
@@ -102,8 +98,9 @@ public class HttpTaskRunner {
                     } catch (UnknownHostException e) {
                         task.onThrowable(e);
                     }
+                } catch (InterruptedException e) {
+                    // die
                 }
-            } catch (InterruptedException ignore) {
             }
             mRunning = false;
         }
@@ -113,15 +110,14 @@ public class HttpTaskRunner {
     private final IHttpTasksProvder mBulkProvider;
     private final IBlockingTaskProvider mBlockingProvider;
     private final String mName;
-    private final ConcurrentLinkedQueue<IHttpTask> mTaskQueue;
+    private final BlockingQueue<IHttpTask> mTaskQueue;
 
     private volatile int mCounter = 0;
     private volatile long startTime;
     private volatile boolean mRunning;
     private Thread mWorkerThread;
-    private final Semaphore mConcurrent; // limit concurrent http get
-
     private final int mBlockingGetTimeout;
+    private final HashSet<URI> runningTasks = new HashSet<URI>();
 
     private final ConcurrentHashMap<Object, Object> mStat;
 
@@ -132,11 +128,10 @@ public class HttpTaskRunner {
         if (mBulkProvider == null) {
             throw new NullPointerException("bulk provider can not be null");
         }
-        // consumer and producer need access concurrently
-        mTaskQueue = new ConcurrentLinkedQueue<IHttpTask>();
-
+        // consumer and producer need access concurrently,
         // prevent too many concurrent HTTP request
-        mConcurrent = new Semaphore(conf.queueSize);
+        mTaskQueue = new ArrayBlockingQueue<IHttpTask>(conf.queueSize);
+
         mName = conf.name;
         mStat = new ConcurrentHashMap<Object, Object>(24, 0.75f, 2);
         mStat.put("QueueSize", conf.queueSize);
@@ -146,7 +141,6 @@ public class HttpTaskRunner {
         mStat.put("Total", mCounter);
         double m = (double) (currentTimeMillis() - startTime) / 60000;
         mStat.put("PerMiniute", mCounter / m);
-        mStat.put("QueuePermits", mConcurrent.availablePermits());
         DateFormat format = new SimpleDateFormat("MM-dd HH:mm:ss");
         mStat.put("StartTime", format.format(new Date(startTime)));
         return mStat;
@@ -190,24 +184,49 @@ public class HttpTaskRunner {
         return format("%s: %s", mName, computeStat());
     }
 
-    void tryFillTask() {
+    private void onTaskReturn(IHttpTask task, int status) {
+        ++mCounter;
+        recordStat(status);
+        synchronized (runningTasks) {
+            runningTasks.remove(task.getUri());
+        }
+    }
+
+    private boolean addTask(IHttpTask task) throws InterruptedException {
+        if (task == null) {
+            return false;
+        }
+        synchronized (runningTasks) {
+            if (runningTasks.contains(task.getUri())) {
+                return false;
+            } else {
+                runningTasks.add(task.getUri());
+                mTaskQueue.put(task);
+                return true;
+            }
+        }
+    }
+
+    void tryFillTask() throws InterruptedException {
         while (mTaskQueue.isEmpty()) {
-            IHttpTask high = mBlockingProvider.getTask(1);
-            if (high != null) { // high priority
-                mTaskQueue.offer(high);
+            // slow things down a bit
+            if (addTask(mBlockingProvider.getTask(1))) {// high priority
                 break;
             }
             // first bulk fetch, since it fast, then blocking get
             List<IHttpTask> tasks = mBulkProvider.getTasks();
-            if (tasks != null && tasks.size() != 0) {
+            if (tasks != null) {
+                boolean add = false;
                 for (IHttpTask t : tasks) {
-                    mTaskQueue.offer(t);
+                    if (addTask(t)) {
+                        add = true;
+                    }
                 }
-                break;
+                if (add) {
+                    break;
+                }
             }
-            IHttpTask task = mBlockingProvider.getTask(mBlockingGetTimeout);
-            if (task != null) {
-                mTaskQueue.offer(task);
+            if (addTask(mBlockingProvider.getTask(mBlockingGetTimeout))) {
                 break;
             }
         }
