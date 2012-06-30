@@ -63,11 +63,7 @@ public class HttpTaskRunner {
                 URI loc = task.getUri().resolve(l);
                 RetryHttpTask retry = new RetryHttpTask(task, loc);
                 if (retry.retryTimes() < 4) {
-                    try {
-                        addTask(retry);
-                    } catch (InterruptedException e) {
-                        logger.warn("retry task interrupted", e);
-                    } // different thread
+                    addTask(retry);
                 } else {
                     task.onThrowable(new Exception(
                             "redirect more than 4 times"));
