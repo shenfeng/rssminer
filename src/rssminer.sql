@@ -19,7 +19,7 @@ CREATE TABLE users (
 
 CREATE TABLE rss_links (
   id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-  url VARCHAR(220) UNIQUE,
+  url VARCHAR(512),
   title VARCHAR(1024),
   description VARCHAR(1024),
   alternate VARCHAR(220),       -- usually, the site's link
@@ -38,6 +38,7 @@ CREATE TABLE rss_links (
   -- alter table rss_links add etag varchar(64)
   etag varchar(64),
   user_id INT UNSIGNED,      -- who first add it, REFERENCES users(no index)
+  INDEX url(url),
   INDEX idx_rss_check_ts (next_check_ts)
 );
 
