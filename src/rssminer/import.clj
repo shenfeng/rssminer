@@ -22,8 +22,12 @@
 
 (defn- finish-import [data]
   (if (= 200 (:status data))
-    (redirect "/a?gw=1")                ; google import wait
-    (redirect (str "/a?ge=" (or (:body data) data)))))
+    (do
+      (info "import from greader success")
+      (redirect "/a?gw=1"))              ; google import wait
+    (let [msg (or (:body data) data)]
+      (error "import from greader failed" msg)
+      (redirect (str "/a?ge=" msg)))))
 
 (defn oauth2callback [req]
   (if-let [code (-> req :params :code)]

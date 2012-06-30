@@ -233,7 +233,7 @@
     });
   }
 
-  function show_server_message () {
+  function show_server_message () { // only show once
     if(_RM_.gw) {               // google import wait
       var msg = 'Busy importing from google reader, refresh in a few seconds';
       notify.show_msg(msg, 10000);
