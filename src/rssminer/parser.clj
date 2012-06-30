@@ -63,7 +63,7 @@
          :link (-> feed :link trim)
          :language (-> feed :link trim)
          :published_ts (:publishedDate feed)
-         :description (-> feed :description trim)
+         :description (most-len (-> feed :description trim) 1024)
          :entries (map parse-entry (:entries feed))})
       (catch ParsingFeedException e
         (trace "ParsingFeedException" e))
