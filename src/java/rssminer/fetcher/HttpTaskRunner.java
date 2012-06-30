@@ -41,42 +41,48 @@ public class HttpTaskRunner {
         // run in the HTTP client loop thread
         public void onSuccess(int status, Map<String, String> headers,
                 String body) {
-            onTaskReturn(task, status);
-            if (status == 301) {
-                String l = headers.get(LOCATION);
-                if (l == null) {
-                    task.onThrowable(new Exception(
-                            "301: but has no location header"));
-                    return;
+            try {
+                if (status == 301) {
+                    String l = headers.get(LOCATION);
+                    if (l == null) {
+                        task.onThrowable(new Exception(
+                                "301: but has no location header"));
+                        return;
+                    } else {
+                        l = task.getUri().resolve(l).toString();
+                        headers.put(LOCATION, l); // convert to full path
+                        task.doTask(status, headers, body);
+                    }
+                } else if (status == 302) {
+                    String l = headers.get(LOCATION);
+                    if (l == null) {
+                        task.onThrowable(new Exception(
+                                "302: but has no location header"));
+                        return;
+                    }
+                    URI loc = task.getUri().resolve(l);
+                    RetryHttpTask retry = new RetryHttpTask(task, loc);
+                    if (retry.retryTimes() < 4) {
+                        addTask(retry);
+                    } else {
+                        task.onThrowable(new Exception(
+                                "redirect more than 4 times"));
+                    }
                 } else {
-                    l = task.getUri().resolve(l).toString();
-                    headers.put(LOCATION, l); // convert to full path
                     task.doTask(status, headers, body);
                 }
-            } else if (status == 302) {
-                String l = headers.get(LOCATION);
-                if (l == null) {
-                    task.onThrowable(new Exception(
-                            "302: but has no location header"));
-                    return;
-                }
-                URI loc = task.getUri().resolve(l);
-                RetryHttpTask retry = new RetryHttpTask(task, loc);
-                if (retry.retryTimes() < 4) {
-                    addTask(retry);
-                } else {
-                    task.onThrowable(new Exception(
-                            "redirect more than 4 times"));
-                }
-            } else {
-                task.doTask(status, headers, body);
+            } finally {
+                finishTask(task, status);
             }
         }
 
         public void onThrowable(Throwable t) {
-            logger.debug(task.getUri().toString(), t);
-            onTaskReturn(task, 600);
-            task.onThrowable(t);
+            try {
+                logger.debug(task.getUri().toString(), t);
+                task.onThrowable(t);
+            } finally {
+                finishTask(task, 600);
+            }
         }
     }
 
@@ -186,7 +192,7 @@ public class HttpTaskRunner {
         return format("%s: %s", mName, computeStat());
     }
 
-    private void onTaskReturn(IHttpTask task, int status) {
+    private void finishTask(IHttpTask task, int status) {
         ++mCounter;
         mConcurrent.release();
         recordStat(status);

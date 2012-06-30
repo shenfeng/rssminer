@@ -19,7 +19,7 @@ CREATE TABLE users (
 
 CREATE TABLE rss_links (
   id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-  url VARCHAR(512),
+  url VARCHAR(512) NOT NULL,
   title VARCHAR(1024),
   description VARCHAR(1024),
   alternate VARCHAR(220),       -- usually, the site's link
