@@ -20,3 +20,6 @@
 * sudo gem install sass && add /var/lib/gems/1.9.1/bin to PATH
 * install jenkins # http://pkg.jenkins-ci.org/debian/
 * install lein
+
+
+** need auto start rssminer on server reboot
