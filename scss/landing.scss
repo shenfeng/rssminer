@@ -26,14 +26,6 @@ img { border: 0;}
 a { outline: none; }
 table { border-collapse: collapse; border-spacing: 0; }
 
-.eg {
-    background-color:#DDD;
-    padding: 0.3em 0.5em;
-    font-size: 90%;
-    color: #444;
-    @include border-radius(3px);
-}
-
 #header {
     padding: 0.8em 0.5em 0em 0.5em;
     text-indent: 1em;
@@ -58,7 +50,7 @@ table { border-collapse: collapse; border-spacing: 0; }
     td:first-child { text-align: right; }
 }
 
-#reg-email, #reg-password { padding: 4px; width: 236px; }
+#reg-email, #reg-password { padding: 4px; width: 229px; }
 
 #login-form {
     td { font-size: 11px; }
@@ -82,26 +74,30 @@ p {
     .rfloat {
         padding-top: 1em;
         width: $page-width - $left_width - 30px;
-        a { display: block; margin: 0 40px; }
+        >span, a { display: block; margin: 0 40px; cursor: pointer; }
         h3 {
             padding: 0.5em;
             margin: 10px 0;
             font-size: 14px;
             background-color: #D1E1FA;
             @include linear-gradient(#C5D7FB, #D8E1FF, true);
+            a {
+                font-size: 12px;
+                display: inline;
+                margin: 0;
+                font-weight: normal;
+            }
         }
     }
     #demo a {
         text-align: center;
-        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
         display: inline-block;
         background-color: #2F96B4;
         text-decoration: none;
         color: white;
-        vertical-align: middle;
-        padding: 9px 27px;
-        font-size: 15px;
-        line-height: normal;
+        padding: 5px 24px;
+        font-weight: bold;
+        font-size: 18px;
         border-radius: 5px;
     }
 }
@@ -110,7 +106,8 @@ p {
     .content {
         width: $page-width;
         margin: 0 auto;
-        padding: 0.3em;
+        font-size: 12px;
+    /* padding: 0.3em; */
     }
     /* background: #464646; */
     border-top: 1px solid #FFFFFF;

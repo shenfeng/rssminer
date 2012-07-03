@@ -14,8 +14,7 @@
     {{#dev}}<link rel="stylesheet" href="/css/landing.css">{{/dev}}
   </head>
   <body>
-    <a target="_blank"
-       href="https://github.com/shenfeng/rssminer">
+    <a href="https://github.com/shenfeng/rssminer">
       <img style="position: absolute; top: 0; left: 0; border: 0;"
            src="https://s3.amazonaws.com/github/ribbons/forkme_left_gray_6d6d6d.png"
            alt="Fork me on GitHub">
@@ -23,8 +22,7 @@
     <div id="page-wrap">
       <div id="header" class="clearfix">
         <div class="content">
-          <h1 class="lfloat">
-            <a href="/">Rssminer</a></h1>
+          <h1 class="lfloat"><a href="/">Rssminer</a></h1>
           <form action="/login" method="post"
                 id="login-form" class="rfloat">
             <table>
@@ -40,17 +38,18 @@
                            name="persistent">
                   <label for="persistent">Keep me logged in</label>
                 </td>
-                <td colspan="1"><a href="/recover">
-                    Forget password</a></td></tr>
+              </tr>
             </table>
             <input type="hidden" name="return-url" value="/a"/>
+          </form>
         </div>
-      </form></div> <!-- header -->
+      </div> <!-- header -->
       <div id="content">
         <div id="main" class="clearfix">
           <div class="lfloat">
-            <p>Rssminer is an intelligent RSS reader. By
-              machine learning, Rssminer highlights stories you
+            <p>Rssminer is an intelligent
+              <a href="http://en.wikipedia.org/wiki/RSS">RSS</a>
+              reader. By machine learning, Rssminer highlights stories you
               like, and helps discover stories you may like.</p>
             <br>
             <div id="slides">
@@ -68,26 +67,51 @@
             <div class="clearfix"></div>
             <h3>why another one? </h3>
             <p>There are so many good readers out there, like google
-              reader. Why bother do another one?
-              Rssminer want to solve a few problems: </p>
+              reader. Why bother do another one?</p>
             <ol>
               <li>Just sort by time is not good enough.
-                <p>Anyway, we are surrounded by so much information,
-                  Rssminer want to make interesting feeds appear on the
-                  top of list.
+                <p>
+                  There are so many feeds coming out each day.
+                  Rssminer sort them by learning from your reading
+                  history. Make interesting ones appere on the top of
+                  the list.
                 </p>
               </li>
-              <li>Some sites are not accessible in China.</li>
-              <li>Reading the orignal is better than provided
-                abstract.
-                <p>Some sites's abstract are just too abstract. eg:
-                  <span class="eg">Hacker news</span>
-                  <span class="eg">IBM developerWorks :Java
-                    technology</span> ,
-                  <span class="eg">Peter Norvig</span>
+              <li>Reading the orignal
+                <p>The orignal may have valuable comment </p>
+                <p>Some blog's RSS output are not complete:
+                  <ul>
+                    <li>
+                      <a href="/demo#read/35?p=1&s=newest">
+                        Hacker news
+                      </a>
+                    </li>
+                    <li>
+                      <a href="/demo#read/160/151848?p=1&s=newest">
+                        Peter Norvig
+                      </a>
+                    </li>
+                    <li>
+                      <a href="/demo#read/39?p=1&s=newest">
+                        IBM developerWorks :Java technology
+                      </a>
+                    </li>
+                  </ul>
                 </p>
               </li>
-              <li>Clean Compact Simple Fast UI;</li>
+              <li>
+                Some blogs are not accessible in China.
+                <p>Rssminer
+                  <a href="http://en.wikipedia.org/wiki/Proxy_server">
+                    transparently help you get rid of it
+                  </a>
+                </p>
+              </li>
+              <li>
+                Instant fulltext search
+                <p>The faster, the better. Rssminer do it in realtime</p>
+              </li>
+              <li>Concise UI</li>
             </ol>
           </div>
           <div class="rfloat">
@@ -95,8 +119,13 @@
             <div id="demo">
               <a href="/demo">demo</a>
             </div>
-            <h3>Already have an Google account?</h3>
-            <a href="/login/google">
+            <h3>Already have an Google account?
+              <a target="_blank"
+                 title="what is OpenID?"
+                 href="http://en.wikipedia.org/wiki/OpenID">OpenID</a>
+            </h3>
+            <a href="/login/google"
+               title=" Secure and convenient: Google protect your password">
               <img src="/imgs/openid_google.png"/>
             </a>
             <h3>Create an account</h3>
@@ -112,14 +141,15 @@
                              placeholder="Password" type="password"/></td></tr>
                 <tr>
                   <td></td>
-                  <td><input type="submit" disabled value="Sign up"/></td></tr>
+                  <td><input type="submit" disabled
+                             title="Log in with google OpenID is encouraged"
+                             value="Sign up"/></td></tr>
               </table>
             </form>
             <h3>Google Chrome extension</h3>
-            <a onclick="alert('Not ready, please wait a while'); return false"
-               href="/rssminer.crx" title="Easy add subscription">
+            <span title="Easy way to add subscription, not ready, please wait a while">
               <img src="/imgs/icon48.png"/>
-            </a>
+            </span>
           </div> <!-- right, login form -->
         </div>
       </div>
@@ -127,10 +157,9 @@
       <div id="footer">
         <div class="content clearfix">
           <ul>
-            <li><a target="_blank" href="http://shenfeng.me">Blog</a></li>
+            <li><a href="http://shenfeng.me">Blog</a></li>
             <li>
-              <a target="_blank"
-                 href="https://github.com/shenfeng/rssminer">Code</a>
+              <a href="https://github.com/shenfeng/rssminer">Code</a>
             </li>
           </ul>
         </div>
