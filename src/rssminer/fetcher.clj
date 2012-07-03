@@ -28,7 +28,7 @@
   (min (int (* last-interval 1.4)) (* 3600 24 3))) ;3 days
 
 (defn- quicker [last-interval]
-  (max (* 3600 6) (int (/ last-interval 1.4)))) ; min 6h
+  (max (* 3600 12) (int (/ last-interval 1.4)))) ; min 12h
 
 (defn- next-check [last-interval status headers]
   (if-let [location (get headers HttpUtils/LOCATION)]
