@@ -36,7 +36,9 @@
     (let [interval (if (= 200 status)
                      (quicker last-interval) (slower last-interval))]
       {:check_interval interval
-       :next_check_ts (+ (now-seconds) interval)})))
+       :next_check_ts (+ (now-seconds) interval
+                         ;; to seperate them out, 30 minutes
+                         (- 900 (rand-int 1800)))})))
 
 (defn handle-resp [{:keys [id url check_interval last_modified url]}
                    status headers body]
