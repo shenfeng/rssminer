@@ -18,14 +18,16 @@
                                  {"useLocalSessionState" true
                                   "cacheCallableStmts" true
                                   "prepStmtCacheSize" 100 ; default 25
+                                  ;; for rebuild index
                                   ;; "useCursorFetch" true
                                   ;; "defaultFetchSize" 400
                                   "cachePrepStmts" true
                                   "useServerPrepStmts" true
                                   "maintainTimeStats" false}))))
 
-(defn use-mysql-database! [url user]
-  (let [url (str url "?" (jdbc-params))
+(defn use-mysql-database! [^String url user]
+  (let [url (if (= -1 (.indexOf url (int \?)))
+              (str url "?" (jdbc-params)) (str url "&" (jdbc-params)))
         ds (PerThreadDataSource. url user "")]
     (swap! rssminer-conf assoc :data-source ds)
     (reset! mysql-db-factory {:factory (fn [& args] (.getConnection ds))

@@ -103,7 +103,12 @@ public class StopFilter extends FilteringTokenFilter {
                 "no", "not", "of", "on", "or", "such", "that", "the",
                 "their", "then", "there", "these", "they", "this", "to",
                 "was", "will", "with", "一", "与", "且", "个", "为", "么", "乎",
-                "了", "从", "吗", "吧", "的", "也", "要", "也");
+                "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "上", "中",
+                "于", "人", "以", "们", "会", "但", "你", "到", "后", "对", "将", "就",
+                "年", "我", "时", "是", "有", "来", "用", "而", "被", "这", "都", "在",
+                "和", "了", "从", "吗", "吧", "的", "也", "要", "也", "里", "或", "该",
+                "能", "把", "它", "地", "等", "是一", "一些", "这样", "如果", "我们", "一个",
+                "可以", "这个", "已经");
 
         final CharArraySet stopSet = new CharArraySet(Version.LUCENE_33,
                 stopWords.size(), false);
@@ -117,18 +122,9 @@ public class StopFilter extends FilteringTokenFilter {
         super(true, input);
     }
 
-    private static boolean hasLetter(char[] buffer, int length) {
-        for (int i = 0; i < length; ++i) {
-            if (Character.isLetter(buffer[i]))
-                return true;
-        }
-        return false;
-    }
-
     @Override
     protected boolean accept() throws IOException {
         return !STOP_WORDS_SET
                 .contains(termAtt.buffer(), 0, termAtt.length());
-        // && hasLetter(termAtt.buffer(), termAtt.length());
     }
 }

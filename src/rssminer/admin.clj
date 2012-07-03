@@ -44,7 +44,8 @@
              ["--[no-]help" "Print this help"])]
     (when (:help options) (println banner) (System/exit 0))
     (if (= (:command options) :rebuild-index)
-      (do (db/use-mysql-database! (:db-url options)
+      (do (db/use-mysql-database! (str (:db-url options)
+                                       "?useCursorFetch=true&defaultFetchSize=400")
                                   (:db-user options))
           (use-index-writer! (:index-path options))
           (rebuild-index)))))

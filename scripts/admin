@@ -78,10 +78,7 @@ rebuild_index () {
     cd "${HOME}" && java \
         -Dfile.encoding=UTF-8 \
         -Dsun.jnu.encoding=UTF-8 \
-        -Dsun.net.inetaddr.ttl=0 \
-        -XX:+DisableExplicitGC \
-        -XX:ParallelGCThreads=2 \
-        -Xms386m -Xmx386m \
+        -Xms150m -Xmx150m \
         -server -cp "classes:lib/*:src/" clojure.main \
         -m rssminer.admin -c rebuild-index
 }
