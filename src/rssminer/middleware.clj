@@ -1,7 +1,7 @@
 (ns rssminer.middleware
   (:use [rssminer.util :only [user-id-from-session]]
         [ring.util.response :only [redirect]]
-        [clojure.tools.logging :only [debug error]]
+        [clojure.tools.logging :only [debug error info]]
         [compojure.core :only [GET POST DELETE PUT]]
         [clojure.data.json :only [json-str]])
   (:require [rssminer.config :as conf]
@@ -76,8 +76,10 @@
       (let [start (System/currentTimeMillis)
             resp (handler req)
             finish (System/currentTimeMillis)]
-        (debug (name request-method) (:status resp) uri
-               (str (- finish start) "ms"))
+        (info (name request-method) (:status resp)
+              (if-let [qs (:query-string req)]
+                (str uri "?" qs) uri)
+              (str (- finish start) "ms"))
         resp))
     handler))
 
