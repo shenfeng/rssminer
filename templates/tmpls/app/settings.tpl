@@ -108,6 +108,9 @@
       <p>I am working on it...</p>
       <h3>Bug report, Feature sugesstion</h3>
       Email me: shenedu@gmail.com
+      <h3>English Dictionary</h3>
+      An <a target="_blank" href="http://dict.shenfeng.me"> English-English dictionary </a>
+      to help you reading
       <h3>Blog</h3>
       <a target="_blank" href="http://shenfeng.me">http://shenfeng.me</a>
       <h3>Open source</h3>
