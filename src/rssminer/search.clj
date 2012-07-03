@@ -23,8 +23,8 @@
 
 (defn search* [term userid limit]
   {:body (.search ^Searcher @searcher term userid limit)
-   :headers {"Cache-Control" "private, max-age=3600"}})
+   :headers {"Cache-Control" "private, max-age=600"}})
 
 (defn search-within-subs [term uid subids limit]
   {:body (.searchInSubIDs ^Searcher @searcher term uid subids limit)
-   :headers {"Cache-Control" "private, max-age=3600"}})
+   :headers {"Cache-Control" "private, max-age=600"}})

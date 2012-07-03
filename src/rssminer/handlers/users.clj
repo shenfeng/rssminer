@@ -67,8 +67,8 @@
                "read" (uf/fetch-recent-read u-id limit offset)
                "recommand" (uf/fetch-likest u-id limit offset))]
     (if data
-      {:body data       ;; ok, just cache for half hour
-       :headers {"Cache-Control" "private, max-age=1800"}}
+      {:body data       ;; ok, just cache for 10 miniutes
+       :headers {"Cache-Control" "private, max-age=600"}}
       data))) ;; no cache
 
 

@@ -31,6 +31,6 @@
                "recommand" (uf/fetch-sub-likest userid rssid limit offset))]
     (if data
       {:body data
-       :headers {"Cache-Control" "private, max-age=3600"} }
+       :headers {"Cache-Control" "private, max-age=600"} }
       data))) ;; cache one hour
 
