@@ -69,16 +69,16 @@
             <p>There are so many good readers out there, like google
               reader. Why bother do another one?</p>
             <ol>
-              <li>Just sort by time is not good enough.
+              <li>Sorting unread feeds according to your personal taste
                 <p>
                   There are so many feeds coming out each day.
                   Rssminer sort them by learning from your reading
-                  history. Make interesting ones appere on the top of
+                  history. Make interesting ones appear on the top of
                   the list.
                 </p>
               </li>
               <li>Reading the orignal
-                <p>The orignal may have valuable comment </p>
+                <p>There may have valuable comment. </p>
                 <p>Some blog's RSS output are not complete:
                   <ul>
                     <li>
