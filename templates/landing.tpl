@@ -66,7 +66,7 @@
             </div>
             <div class="clearfix"></div>
             <h3>why another one? </h3>
-            <p>There are so many good readers out there, like google
+            <p>There are many good readers out there, like google
               reader. Why bother do another one?</p>
             <ol>
               <li>Sorting unread feeds according to your personal taste
@@ -115,11 +115,11 @@
             </ol>
           </div>
           <div class="rfloat">
-            <h3>Not sure what it does?</h3>
+            <h3>Try with a live demo</h3>
             <div id="demo">
               <a href="/demo">demo</a>
             </div>
-            <h3>Already have an Google account?
+            <h3>Already have a Google account?
               <a target="_blank"
                  title="what is OpenID?"
                  href="http://en.wikipedia.org/wiki/OpenID">OpenID</a>
