@@ -1,14 +1,17 @@
 {{#groups}}
   <li {{#collapse}} class="collapse" {{/collapse}}>
     <div class="folder" data-name="{{group}}">
-      <img src="/imgs/folder.png"/>
+      <i class="icon-folder-open"></i>
+      <i class="icon-folder-close"></i>
       <span>{{{group}}}</span>
     </div>
     <ul class="rss-category">
       {{#subs}}
-        <li class="item" id="item-{{id}}" data-id="{{id}}" title="{{title}}">
+        <li class="item ficon-error"
+            id="item-{{id}}" data-id="{{id}}" title="{{title}}">
           <a href="#{{href}}">
             <img src="{{img}}" width="16" height="16" />
+            <i class="icon-rss"></i>
             <span class="title"> {{{title}}} </span>
             <span class="count">
               {{#dislike}}

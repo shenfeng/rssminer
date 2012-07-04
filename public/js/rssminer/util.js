@@ -56,7 +56,10 @@
   }
 
   function favicon_error (idx, img) {
-    img.onerror = function () { img.src="/imgs/16px-feed-icon.png"; };
+    img.onload = function () {
+      var c = 'ficon-error';
+      $(img).closest('.' + c).removeClass(c).addClass('ficon-ok');
+    };
   }
 
   function params (p) {

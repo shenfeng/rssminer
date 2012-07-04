@@ -228,7 +228,7 @@ namespace :run do
 
   desc "Run server in production profile"
   task :prod => :prepare_prod do
-    sh 'rm classes -rf && lein javac && scripts/run --profile prod'
+    sh 'rm classes -rf && lein javac && scripts/run --profile prod --static-server //s.rss-miner.com --proxy-server //p.rss-miner.com'
   end
 
   desc "Restore db from latest backup, Run server in dev profile"

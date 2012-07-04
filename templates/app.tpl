@@ -38,11 +38,28 @@
         </div>
         <input id="q" autocomplete="off"
                placeholder="type to search subscriptions, articles"/>
+        <i class="icon-search"></i>
         <ul class="links">
-          <li><a href="#s/add">add</a></li>
-          <li><a href="#s/account">account</a></li>
-          <li><a href="#s/about">about</a></li>
-          <li><a href="/logout">logout</a></li>
+          <li>
+            <a href="#s/add" title="Add subscription" class="btn">
+              <i class="icon-edit"></i><span>Add</span>
+            </a>
+          </li>
+          <li>
+            <a href="#s/account" title="Account settings">
+              <i class="icon-user"></i>
+            </a>
+          </li>
+          <li>
+            <a href="#s/about" title="About">
+              <i class="icon-info-sign"></i>
+            </a>
+          </li>
+          <li>
+            <a href="/logout" title="Logout">
+              <i class="icon-off"></i>
+            </a>
+          </li>
         </ul>
       </div>
     </div>

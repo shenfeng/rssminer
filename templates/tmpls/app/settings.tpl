@@ -4,9 +4,9 @@
 <div class="sort">
   <ul>
     {{#tabs}}
-      <li {{#s}} class="selected" {{/s}}>
-        <a href="#s/{{ n }}">{{ n }}</a>
-      </li>
+    <li {{#s}} class="selected" {{/s}}>
+      <a href="#s/{{ n }}">{{ n }}</a>
+    </li>
     {{/tabs}}
   </ul>
 </div>
@@ -18,28 +18,27 @@
         <div>
           <p>
             <a href="/import/google"
-            title="Import all you google reader subscriptions:">
-            <img src="/imgs/import-greader.png"/>
+               title="Import all you google reader subscriptions:">
+              <img src="/imgs/import-greader.png"/>
             </a>
           </p>
         </div>
       </section>
       <section>
-        <h4>URL
-
-        </h4>
+        <h4>URL</h4>
         <div>
           <input id="rss_atom_url" placeholder="paste atom/rss url here"/>
           <ul class="help">
             <li>
-              <a target="_blank" title="RSS - Wikipedia, the free encyclopedia"
-                href="http://en.wikipedia.org/wiki/RSS">
+              <a target="_blank"
+                 title="RSS - Wikipedia, the free encyclopedia"
+                 href="http://en.wikipedia.org/wiki/RSS">
                 <img src="/imgs/wiki.ico"/>
               </a>
             </li>
             <li>
               <a target="_blank" title="简易信息聚合"
-                href="http://baike.baidu.com/view/1644.htm">
+                 href="http://baike.baidu.com/view/1644.htm">
                 <img src="/imgs/bk.ico"/>
               </a>
             </li>
@@ -57,10 +56,10 @@
         <h4>Password</h4>
         <div>
           <input type="password" placeholder="new password"
-          name="password"/>
+                 name="password"/>
           <br>
           <input type="password" placeholder="retype password"
-          name="password2" id="password2"/>
+                 name="password2" id="password2"/>
         </div>
       </section>
       <section>
@@ -76,7 +75,7 @@
         <li class="like">
           <span class="bar"></span>
           The Top 20%. Having little time? try read them first.
-          <span class="vote"><span class="down"></span></span>
+          <i class="icon-thumbs-down"></i>
           If you want to correct Rssminer.
         </li>
         <li class="neutral">
@@ -86,7 +85,7 @@
         <li class="dislike">
           <span class="bar"></span>
           The remaining 50%.
-          <span class="vote"><span class="up"></span></span>
+          <i class="icon-thumbs-up"></i>
           if one actually worth
           reading, Rssminer will learn the lession</li>
       </ul>
@@ -95,8 +94,8 @@
         <li>Every unread article is given a score</li>
         <li>The score is computed for you by learn from your recent
           reading history and explit
-          vote: <span class="vote"><span class="down"></span></span>
-          <span class="vote"><span class="up"></span></span>
+          vote: <i class="icon-thumbs-down"></i>
+          <i class="icon-thumbs-up"></i>
         </li>
         <li>Newer articles trend to have a higher score than older
           ones
@@ -104,18 +103,23 @@
         <li>Articles are sorted by the score</li>
         <li>The scores are updated as you read or vote, automatically</li>
       </ul>
-      <h3>Reading Note, Sharing</h3>
+      <h3>
+        Reading Note <i class="icon-comment"></i>,
+        Sharing <i class="icon-share"></i>
+      </h3>
       <p>I am working on it...</p>
       <h3>Bug report, Feature sugesstion</h3>
-      Email me: shenedu@gmail.com
+      <i class="icon-envelope"></i>Email me: shenedu@gmail.com
       <h3>English Dictionary</h3>
-      An <a target="_blank" href="http://dict.shenfeng.me"> English-English dictionary </a>
+      An <a target="_blank" href="http://dict.shenfeng.me">
+        English-English dictionary
+      </a>
       to help you reading
       <h3>Blog</h3>
       <a target="_blank" href="http://shenfeng.me">http://shenfeng.me</a>
-      <h3>Open source</h3>
+      <h3>Open source <i class="icon-github"></i> </h3>
       <a target="_blank"
-        href="https://github.com/shenfeng/rssminer">
+         href="https://github.com/shenfeng/rssminer">
         https://github.com/shenfeng/rssminer
       </a>
     </div>

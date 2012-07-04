@@ -185,7 +185,6 @@
   }
 
   function save_user_vote (vote, $feed) {
-    if(!$feed || !$feed.length) { return; }
     var id = $feed.attr('data-id');
     if(!$feed.hasClass('sys')) {
       if(($feed.hasClass('dislike') && vote === -1)
@@ -230,8 +229,8 @@
   });
 
   util.delegate_events($('#main'), {
-    'click .vote span.down': save_vote_down,
-    'click .vote span.up': save_vote_up,
+    'click .thumbs .icon-thumbs-down': save_vote_down,
+    'click .thumbs .icon-thumbs-up': save_vote_up,
     'contextmenu .feeds .feed': show_feed_context_menu
   });
 

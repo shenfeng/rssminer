@@ -76,8 +76,8 @@ query_cache_size        = 0
 # Be aware that this log type is a performance killer.
 # As of 5.1 you can enable the log at runtime!
 # general_log_file        = /var/log/mysql/mysql.log
-general_log_file        = /tmp/mysql.log
-general_log             = 1
+# general_log_file        = /tmp/mysql.log
+# general_log             = 1
 #
 # Error logging goes to syslog due to /etc/mysql/conf.d/mysqld_safe_syslog.cnf.
 #

@@ -1,4 +1,5 @@
 @import "css3";
+@import "font-awesome";
 
 $nav_width: 265px;
 $footer_height: 230px;
@@ -79,16 +80,16 @@ a { outline: 0; text-decoration: none;}
     height: $header_height;
     width: 100%;
     .links {                    /* in wrapper */
-        font-size: 12px;
+        font-size: 19px;
         right: 10px;
-        top: 15px;
+        top: 9px;
+        span { font-size: 14px;}
         li {
             display: inline-block;
             padding: 2px 0 2px 10px;
             a {
-                text-transform: capitalize;
                 color: white;
-                &:hover { text-decoration: underline; }
+                &:hover { color: black; }
             }
         }
     }
@@ -97,6 +98,12 @@ a { outline: 0; text-decoration: none;}
         margin: 0 auto;
         position: relative;
         > * { position: absolute; }
+    }
+    .icon-search {
+        left: 517px;
+        top: 9px;
+        font-size: 19px;
+        color: #727270;
     }
     input {
         left: 230px;
@@ -157,8 +164,27 @@ body {
 
 ul { list-style: none; padding: 0; margin: 0; }
 
+.icon-rss {
+    font-size: 14px;
+    color: white;
+    background: #F60;
+    width: 17px;
+    height: 17px;
+    border-radius: 2px;
+}
+
+.ficon-error img { display: none; }
+.ficon-ok .icon-rss { display: none; }
+
 #sub-list {                     /* in navigation */
-    li.collapse  > ul { display: none; }
+    .icon-folder-close { display: none; }
+    i, img { position: absolute; top: 6px; }
+    li.collapse {
+        /* show close icon when folder is closed */
+        .icon-folder-open { display: none; }
+        .icon-folder-close { display: inline-block; }
+        > ul { display: none; }
+    }
     .folder, .item {
         cursor: pointer;
         &.selected { background: $selected_color; }
@@ -170,11 +196,10 @@ ul { list-style: none; padding: 0; margin: 0; }
         a { display: block; padding: 5px 0 3px 0; }
         img { left: 2em; }
     }
-    img { position: absolute; top: 6px; }
     .folder {
         position: relative;
         span { padding: 7px 0 0 22px; display: inline-block; }
-        img { left: 3px; }
+        i { left: 3px; font-size: 16px; color: #15757E;}
     }
     .title {
         @include overflow-ellipsis();
@@ -215,19 +240,34 @@ ul { list-style: none; padding: 0; margin: 0; }
 .unread-dislike { background-color: $dislike_color; color: #ffffff; }
 .total { background: #999; color: white; }
 
+.thumbs {
+    position: absolute;
+    top: 1px;
+    right: 90px;
+    font-size: 20px;
+    i {
+        display: inline-block;
+        cursor: pointer;
+        visibility: hidden;
+        &:hover { color: red; }
+    }
+}
+
 .feed {
-    .vote { right: 80px; }
     &.like {
         .indicator { background: $like_color; }
-        &:hover .vote span.up { visibility: visible; }
+        &:hover .icon-thumbs-up { visibility: visible; }
     }
     &.neutral {
         .indicator { background: $neutral_color; }
-        &:hover .vote span { visibility: visible; }
+        &:hover .thumbs i { visibility: visible; }
     }
     &.dislike {
         .indicator { background: $dislike_color; }
-        &:hover .vote span.down { visibility: visible; }
+        &:hover .icon-thumbs-down { visibility: visible; }
+    }
+    &.sys {
+        &:hover .thumbs i { visibility: visible; }
     }
 }
 
@@ -236,8 +276,6 @@ ul { list-style: none; padding: 0; margin: 0; }
     &.show-add .add-sub { display: block; }
     &.show-account .account { display: block; }
     &.show-about .about { display: block; }
-    .vote { display: inline-block; position: relative; }
-    span { visibility: visible; }
     ul {
         list-style: disc;
         padding-left: 16px;
@@ -248,6 +286,7 @@ ul { list-style: none; padding: 0; margin: 0; }
     .dislike .bar { background: $dislike_color; }
     .neutral .bar { background: $neutral_color; }
     h3 { margin: 10px 0; }
+    i { font-size: 16px; cursor:pointer; &:hover { color: red; } }
     .help {
         display: inline-block;
         list-style: none;
@@ -255,12 +294,6 @@ ul { list-style: none; padding: 0; margin: 0; }
             display: inline-block;
             padding-right: 10px;
         }
-    }
-}
-
-.feeds .feed.sys {
-    &.dislike, &.like {
-        &:hover .vote span { visibility: visible; }
     }
 }
 
@@ -366,19 +399,6 @@ ul { list-style: none; padding: 0; margin: 0; }
     }
 }
 
-span.vote {
-    position: absolute;
-    span {
-        display: inline-block;
-        visibility: hidden;
-        cursor: pointer;
-        width: 18px;
-        height: 18px;
-        background: url(/imgs/vote.gif);
-    }
-    .down { background-position: -18px 0; }
-}
-
 .author {
     font-size: 10px;
     margin-left: 10px;
@@ -426,9 +446,14 @@ iframe {
         right: 24px;
         top: 6px;
     }
-    .like .vote span.up { visibility: visible; }
-    .dislike .vote span.down { visibility: visible; }
-    .neutral, .sys { span { visibility: visible; } }
+    .like .icon-thumbs-up { visibility: visible; }
+    .dislike .icon-thumbs-up { visibility: visible; }
+    .neutral, .sys { .thumbs i { visibility: visible; } }
+    .thumbs i {
+        padding: 0 4px;
+        color: white;
+        &:hover { color: red; }
+    }
     .domain { color: white; padding: 0 10px 30px 10px ; font-size: 12px;}
     .indicator {
         top: 7px; right: 65px;
@@ -441,10 +466,6 @@ iframe {
         width: 9px;
         top: 7px;
         @include border-radius(5px);
-    }
-    .vote {
-        right: 85px;
-        span { display: inline-block; }
     }
 }
 

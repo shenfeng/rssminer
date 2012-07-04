@@ -2,9 +2,10 @@
   {{#sub_cnt}}
     <ul class="subs">
       {{#subs}}
-        <li>
+        <li class="ficon-error">
           <a href="#{{href}}">
             <img src="{{img}}" width="15" height="15" />
+            <i class="icon-rss"></i>
             <span class="title"> {{{title}}} </span>
             <span class="count">
               {{#dislike}}
