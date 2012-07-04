@@ -89,7 +89,7 @@ a { outline: 0; text-decoration: none;}
             padding: 2px 0 2px 10px;
             a {
                 color: white;
-                &:hover { color: black; }
+                &:hover { color: #ffe662; }
             }
         }
     }
@@ -199,7 +199,7 @@ ul { list-style: none; padding: 0; margin: 0; }
     .folder {
         position: relative;
         span { padding: 7px 0 0 22px; display: inline-block; }
-        i { left: 3px; font-size: 16px; color: #15757E;}
+        i { left: 3px; font-size: 16px; color: #2390d6;}
     }
     .title {
         @include overflow-ellipsis();
@@ -244,6 +244,7 @@ ul { list-style: none; padding: 0; margin: 0; }
     position: absolute;
     top: 1px;
     right: 90px;
+    z-index: 20;
     font-size: 20px;
     i {
         display: inline-block;
