@@ -8,7 +8,7 @@
         [clojure.java.jdbc :only [update-values delete-rows do-prepared]]))
 
 (defn- feed-exits [rssid link]
-  (mysql-query ["SELECT id FROM feeds WHERE rss_link_id = ? AND link = ?"
+  (mysql-query ["SELECT 1 FROM feeds WHERE rss_link_id = ? AND link = ?"
                 rssid link]))
 
 (defn update-total-feeds [rssid]
