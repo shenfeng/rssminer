@@ -226,6 +226,11 @@ namespace :run do
     sh 'rm classes -rf && lein javac && scripts/run --profile dev'
   end
 
+  desc "Compile and run"
+  task :aot do
+    sh 'scripts/aot-run'
+  end
+
   desc "Run server in production profile"
   task :prod => :prepare_prod do
     sh 'rm classes -rf && lein javac && scripts/run --profile prod --static-server //s.rss-miner.com --proxy-server //p.rss-miner.com'

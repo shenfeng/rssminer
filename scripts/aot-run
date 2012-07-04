@@ -18,9 +18,11 @@ java -Dsun.jnu.encoding=UTF-8 \
     -Dfile.encoding=UTF-8 \
     -Dsun.net.inetaddr.ttl=0 \
     -Djava.net.preferIPv4Stack=true \
-    -Xmx256m -Xms256m \
+    -Xmx150m -Xms150m \
     -cp rssminer.jar:lib/* rssminer.main \
     --index-path /var/rssminer/index \
+    --static-server //s.rss-miner.com \
+    --proxy-server //p.rss-miner.com \
     --profile prod \
-    --worker 4 \
+    --worker 2 \
     --port 9090 \
