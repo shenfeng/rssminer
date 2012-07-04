@@ -16,7 +16,7 @@
     (with-query-results rs ["select * from feeds"]
       (doseq [feed rs]
         (index-feed (:id feed) (:rss_link_id feed) feed))))
-  (close-global-index-writer!)
+  (close-global-index-writer! :optimize true)
   (info "Rebuild index OK"))
 
 (defn recompute-scores [req]

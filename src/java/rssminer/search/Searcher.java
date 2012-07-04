@@ -93,7 +93,7 @@ public class Searcher {
     public static void closeGlobalSearcher() {
         if (SEARCHER != null) {
             try {
-                SEARCHER.close();
+                SEARCHER.close(false);
             } catch (Exception ignore) {
             }
             SEARCHER = null;
@@ -197,13 +197,13 @@ public class Searcher {
         return query;
     }
 
-    public void clear() throws IOException {
-        indexer.deleteAll();
-        indexer.commit();
-    }
-
-    public void close() throws CorruptIndexException, IOException {
+    public void close(boolean optimize) throws CorruptIndexException,
+            IOException {
         if (indexer != null) {
+            if(optimize) {
+                logger.info("optimize index");
+                indexer.forceMerge(1);
+            }
             logger.info("close Searcher@" + path);
             indexer.close();
             indexer = null;

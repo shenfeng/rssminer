@@ -6,9 +6,9 @@
 
 (defonce searcher (atom nil))
 
-(defn close-global-index-writer! []
+(defn close-global-index-writer! [& {:keys [optimize]}]
   (when-not (nil? @searcher)
-    (.close ^Searcher @searcher)
+    (.close ^Searcher @searcher (= optimize true))
     (reset! searcher nil)))
 
 (defn use-index-writer! [path]
