@@ -80,6 +80,7 @@ public class HttpTaskRunner {
         }
 
         public void finish(String body, Map<String, String> headers) {
+            int status = 200;
             String ct = headers.get(HttpUtils.CONTENT_TYPE);
             if (ct != null && ct.toLowerCase().indexOf("html") != -1) {
                 try {
@@ -87,6 +88,7 @@ public class HttpTaskRunner {
                     if (rss != null) {
                         headers.clear();
                         headers.put(LOCATION, rss);
+                        status = 301;
                         logger.info("{} html, extract {}", task.getUri(), rss);
                     } else {
                         logger.warn("{} {} no rss link", task.getUri(), ct);
@@ -95,7 +97,7 @@ public class HttpTaskRunner {
                     logger.error("try to extract rss link", e);
                 }
             }
-            task.doTask(200, headers, body);
+            task.doTask(status, headers, body);
         }
 
         public void onThrowable(Throwable t) {
