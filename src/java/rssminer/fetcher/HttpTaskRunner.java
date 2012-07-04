@@ -19,11 +19,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
+import me.shenfeng.http.HttpUtils;
 import me.shenfeng.http.client.ITextHandler;
 import me.shenfeng.http.client.TextRespListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import rssminer.Utils;
 
 public class HttpTaskRunner {
 
@@ -69,11 +72,30 @@ public class HttpTaskRunner {
                                 "redirect more than 4 times"));
                     }
                 } else {
-                    task.doTask(status, headers, body);
+                    finish(body, headers);
                 }
             } finally {
                 finishTask(task, status);
             }
+        }
+
+        public void finish(String body, Map<String, String> headers) {
+            String ct = headers.get(HttpUtils.CONTENT_TYPE);
+            if (ct != null && ct.toLowerCase().indexOf("html") != -1) {
+                try {
+                    String rss = Utils.extractRssUrl(body, task.getUri());
+                    if (rss != null) {
+                        headers.clear();
+                        headers.put(LOCATION, rss);
+                        logger.info("{} html, extract {}", task.getUri(), rss);
+                    } else {
+                        logger.warn("{} {} no rss link", task.getUri(), ct);
+                    }
+                } catch (Exception e) {
+                    logger.error("try to extract rss link", e);
+                }
+            }
+            task.doTask(200, headers, body);
         }
 
         public void onThrowable(Throwable t) {

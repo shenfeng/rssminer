@@ -20,6 +20,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import rssminer.sax.ExtractFaviconHandler;
+import rssminer.sax.ExtractRssHandler;
 import rssminer.sax.ExtractTextHandler;
 import rssminer.sax.HTMLMinfiyHandler;
 import rssminer.sax.RewriteHandler;
@@ -100,6 +101,15 @@ public class Utils {
         p.setContentHandler(h);
         p.parse(new InputSource(new StringReader(html)));
         return h.get();
+    }
+
+    public static String extractRssUrl(String html, URI base)
+            throws IOException, SAXException {
+        Parser p = parser.get();
+        ExtractRssHandler h = new ExtractRssHandler(base);
+        p.setContentHandler(h);
+        p.parse(new InputSource(new StringReader(html)));
+        return h.getRss();
     }
 
     public static String extractText(String html) throws IOException,

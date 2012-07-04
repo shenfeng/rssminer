@@ -1,6 +1,6 @@
 (ns rssminer.parser
   (:use [rssminer.util :only [assoc-if now-seconds]]
-        [clojure.tools.logging :only [error trace]])
+        [clojure.tools.logging :only [error warn]])
   (:require [clojure.string :as s])
   (:import [com.sun.syndication.io SyndFeedInput ParsingFeedException]
            java.util.Date
@@ -65,7 +65,7 @@
          :published_ts (:publishedDate feed)
          :description (most-len (-> feed :description trim) 1024)
          :entries (map parse-entry (:entries feed))})
-      (catch ParsingFeedException e
-        (trace "ParsingFeedException" e))
+      ;; (catch ParsingFeedException e
+      ;;   (warn "ParsingFeedException" (.getMessage e)))
       (catch Exception e
-        (trace e "parse rss error")))))
+        (warn "parse feed exception:" (.getMessage e))))))
