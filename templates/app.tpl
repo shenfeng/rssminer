@@ -13,6 +13,7 @@
     {{#prod}}<style type="text/css">{{{ css }}}</style>{{/prod}}
     {{#dev}}<link rel="stylesheet" href="/css/app.css">{{/dev}}
     {{{ data }}}
+    <!--[if lt IE 8 ]><script>location.href="/browser"</script><![endif]-->
   </head>
   <body>
     <div id="header">
@@ -22,19 +23,8 @@
           <ul id="sub-list"></ul>
         </div>
         <div id="warn-msg">
-          <p class="demo">
-            You are viewing a demo account,
-            <a href="/logout">create</a>
-            one for youself
-          </p>
-          <p class="support">
-            <a target="_blank"
-               href="https://www.google.com/intl/en/chrome/browser/">Chrome</a>,
-            <a target="_blank"
-               href="http://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
-            <a target="_blank"
-               href="http://www.apple.com.cn/safari/">Safari</a>
-            are better supported browsers.</p>
+          You are viewing a demo account,
+          <a href="/logout">create one for youself</a>
         </div>
         <input id="q" autocomplete="off"
                placeholder="type to search subscriptions, articles"/>

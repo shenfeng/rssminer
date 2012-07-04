@@ -11,8 +11,16 @@
 
 (deftemplate app-page (slurp (resource "templates/app.tpl")))
 
+(deftemplate unsupported-page (slurp (resource "templates/browser.tpl")))
+
 (def landing-css (slurp "public/css/landing.css"))
 (def app-css (slurp "public/css/app.css"))
+
+
+(defn show-unsupported-page [req]
+  (to-html unsupported-page {:dev (cfg/in-dev?)
+                             :prod (cfg/in-prod?)
+                             :css landing-css}))
 
 (defn show-landing-page [req]
   (to-html landing-page {:dev (cfg/in-dev?)

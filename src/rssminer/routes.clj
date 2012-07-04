@@ -40,6 +40,7 @@
   (GET "/" [] reader/show-landing-page)
   (GET "/fav" [] proxy/get-favicon)
   (GET "/p" []  proxy/handle-proxy)
+  (GET "/browser" []  reader/show-unsupported-page)
   (GET "/f/o/:id" [] proxy/proxy-feed)
   (GET "/a" [] reader/show-app-page)
   (GET "/demo" [] reader/show-demo-page)

@@ -27,14 +27,10 @@
     display: none;
     right: 200px;
     background: yellow;
-    height: 29px;
     font-size: 13px;
     top: 8px;
-    a { color: blue; }
-    p {
-        display: none;
-        margin: 6px 4px;
-    }
+    padding: 6px 4px;
+    a { color: blue; font-weight: bold;}
 }
 
 #notification {

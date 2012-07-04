@@ -269,10 +269,7 @@
     });
   });
 
-  // show for ie first
-  if(/msie/i.test(navigator.userAgent)) {
-    $('#warn-msg, #warn-msg .support').show();
-  } else if(_RM_.demo) {
-    $('#warn-msg, #warn-msg .demo').show();
+  if(_RM_.demo) {
+    $('#warn-msg').show();
   }
 })();
