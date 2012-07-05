@@ -85,7 +85,7 @@ public class HttpTaskRunner {
             if (ct != null && ct.toLowerCase().indexOf("html") != -1) {
                 try {
                     String rss = Utils.extractRssUrl(body, task.getUri());
-                    if (rss != null) {
+                    if (rss != null && rss.length() > 0) {
                         headers.clear();
                         headers.put(LOCATION, rss);
                         status = 301;

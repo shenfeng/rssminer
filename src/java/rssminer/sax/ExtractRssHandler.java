@@ -21,6 +21,7 @@ public class ExtractRssHandler extends DefaultHandler {
     final static String HREF = "href";
     final static String LINK = "link";
     final static String RSS = "application/rss+xml";
+    final static String ATOM = "application/atom+xml";
     final static String TITLE = "title";
     final static String TYPE = "type";
 
@@ -34,9 +35,11 @@ public class ExtractRssHandler extends DefaultHandler {
         if (LINK.equalsIgnoreCase(qName)) {
             int index = attrs.getIndex(TYPE);
             if (index != -1) {
-                if (RSS.equalsIgnoreCase(attrs.getValue(index))) {
+                String type = attrs.getValue(index);
+                if (RSS.equalsIgnoreCase(type) || ATOM.equalsIgnoreCase(type)) {
                     String href = attrs.getValue(HREF);
                     String title = attrs.getValue(TITLE);
+                    // ignore comment
                     if (!comment.matcher(href).find()
                             && !comment.matcher(title).find()) {
                         // TODO last one
