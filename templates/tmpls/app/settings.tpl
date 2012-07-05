@@ -13,6 +13,13 @@
 <ul id="all-settings" class="show-{{selected}}">
   <li class="section add-sub">
     <div>
+      {{#demo}}
+      <p class="demo-warn">
+        This is a demo account, please
+        <a href="/logout">create an account</a>
+        to add subscription.
+      </p>
+      {{/demo}}
       <section>
         <h4>Import</h4>
         <div>

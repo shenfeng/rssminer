@@ -168,6 +168,7 @@
         return { n: s, s: s === section };
       })
     };
+    d.demo = _RM_.demo;
     var html = tmpls.settings(d);
     $welcome_list.empty().append(html);
   }
@@ -204,6 +205,13 @@
     }
   }
 
+  function import_from_greader (e) {
+    if(_RM_.demo) {
+      alert('This is a demo account');
+      return false;
+    }
+  }
+
   function add_subscription (e) {
     var $input = $("#rss_atom_url"),
         url = $.trim($input.val()),
@@ -213,11 +221,16 @@
           window.setTimeout(function () {
             // if user is waiting, just put he there
             if(still_in_settings()) {
-              notify.show_msg('working hard to fetch the feed...', 10000);
+              notify.show_msg('working hard to fetch the feeds...', 10000);
             }
           }, 1500);
         };
+
     if(url && url.indexOf('http://') === 0) {
+      if(_RM_.demo) {
+        alert('This is a demo account');
+        return;
+      }
       data.add_subscription(url, added, fetcher_finished);
     } else {
       notify.show_msg('Not valid rss/atom link', 3000);
@@ -247,6 +260,7 @@
   }
 
   util.delegate_events($(document), {
+    'click .add-sub a': import_from_greader,
     'click #add-subscription': add_subscription,
     'click #save-settings': save_settings,
     'click #nav-pager .next': load_next_page,
