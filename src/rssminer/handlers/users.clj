@@ -97,5 +97,6 @@
     (assoc (redirect "/a")
       :session {:id (:id (or (db/find-user-by-email email)
                              (db/create-user {:email email
-                                              :provider "google"})))})
+                                              :provider "google"})))}
+      :session-cookie-attrs {:max-age (* 3600 24 7)})
     (redirect "/")))
