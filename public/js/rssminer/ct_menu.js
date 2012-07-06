@@ -91,7 +91,8 @@
 
   function rename_folder_name () {
     $ct_menu.hide();
-    var new_name = prompt('new name');
+    var val = $last_menu_ui.attr('data-name'),
+        new_name = prompt('new folder name', val);
     if(new_name) {
       $last_menu_ui.find('span').text(new_name);
       dump_and_saving_sorting();
