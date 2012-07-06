@@ -24,8 +24,7 @@
           <ul id="sub-list"></ul>
         </div>
         <div id="warn-msg">
-          You are viewing a demo account,
-          <a href="/">create one for youself</a>
+          this is a demo account, <a href="/">create one for youself</a>
         </div>
         <input id="q" autocomplete="off"
                placeholder="type to search subscriptions, articles"/>

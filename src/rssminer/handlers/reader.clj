@@ -23,14 +23,16 @@
                              :css landing-css}))
 
 (defn show-landing-page [req]
-  (let [html (to-html landing-page {:dev (cfg/in-dev?)
-                                    :prod (cfg/in-prod?)
-                                    :css landing-css})]
-    (if (cfg/demo-user? req) {:status 200
-                              :session nil ;; delete cookie
-                              :session-cookie-attrs {:max-age -1}
-                              :body html}
-        html)))
+  (if (= (-> req :params :r) "d")       ; redirect to /demo
+    (redirect "/demo")
+    (let [html (to-html landing-page {:dev (cfg/in-dev?)
+                                      :prod (cfg/in-prod?)
+                                      :css landing-css})]
+      (if (cfg/demo-user? req) {:status 200
+                                :session nil ;; delete cookie
+                                :session-cookie-attrs {:max-age -1}
+                                :body html}
+          html))))
 
 (defn show-app-page [req]
   (if (cfg/demo-user? req)
@@ -49,20 +51,25 @@
                          :data (serialize-to-js data)}))))
 
 (defn show-demo-page [req]
-  (swap! cfg/rssminer-conf assoc :demo-user
-         (find-user-by-email "demo@rssminer.net"))
-  (let [data {:rm {:user (:demo-user @cfg/rssminer-conf)
-                   :no_iframe Utils/NO_IFRAME
-                   :demo true
-                   :reseted Utils/RESETED_DOMAINS
-                   :static_server (:static-server @cfg/rssminer-conf)
-                   :proxy_server (:proxy-server @cfg/rssminer-conf)}}]
-    {:body (to-html app-page {:dev (cfg/in-dev?)
-                              :prod (cfg/in-prod?)
-                              :css app-css
-                              :data (serialize-to-js data)})
-     :status 200
-     :session (:demo-user @cfg/rssminer-conf)}))
+  (if (and (user-id-from-session req)
+           (not (cfg/demo-user? req)))
+    (assoc (redirect "/?r=d") :session nil ;; delete cookie
+           :session-cookie-attrs {:max-age -1})
+    (do
+      (swap! cfg/rssminer-conf assoc :demo-user
+             (find-user-by-email "demo@rssminer.net"))
+      (let [data {:rm {:user (:demo-user @cfg/rssminer-conf)
+                       :no_iframe Utils/NO_IFRAME
+                       :demo true
+                       :reseted Utils/RESETED_DOMAINS
+                       :static_server (:static-server @cfg/rssminer-conf)
+                       :proxy_server (:proxy-server @cfg/rssminer-conf)}}]
+        {:body (to-html app-page {:dev (cfg/in-dev?)
+                                  :prod (cfg/in-prod?)
+                                  :css app-css
+                                  :data (serialize-to-js data)})
+         :status 200
+         :session (:demo-user @cfg/rssminer-conf)}))))
 
 (defn search [req]
   (let [{:keys [q limit ids]} (:params req)

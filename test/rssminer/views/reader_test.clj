@@ -14,6 +14,13 @@
                            :request-method :get
                            :headers {}})]
     (is (= 302 (:status app-resp)))
+    (is (= "/demo" (get-in (test-app {:uri "/"
+                                      :params {"r" "d"}
+                                      :request-method :get})
+                           [:headers "Location"])))
+    (is (= "/?r=d" (get-in (auth-app {:uri "/demo"
+                                      :request-method :get})
+                           [:headers "Location"])))
     (is (= "no-cache" ((:headers resp) "Cache-Control")))
     (is (= "text/html; charset=utf-8" ((:headers resp) "Content-Type")))
     (is (= 200 (:status js-resp)))
