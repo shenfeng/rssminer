@@ -81,7 +81,7 @@ a { outline: 0; text-decoration: none;}
     width: 100%;
     .links {                    /* in wrapper */
         font-size: 19px;
-        right: 10px;
+        right: 30px;
         top: 9px;
         span { font-size: 14px;}
         li {
@@ -450,10 +450,14 @@ iframe {
     .like .icon-thumbs-up { visibility: visible; }
     .dislike .icon-thumbs-up { visibility: visible; }
     .neutral, .sys { .thumbs i { visibility: visible; } }
-    .thumbs i {
-        padding: 0 4px;
-        color: white;
-        &:hover { color: red; }
+    .thumbs {
+        top: -2px;
+        font-size: 24px;
+        i {
+            padding: 0 5px;
+            color: white;
+            &:hover { color: red; }
+        }
     }
     .domain { color: white; padding: 0 10px 30px 10px ; font-size: 12px;}
     .indicator {
@@ -470,9 +474,7 @@ iframe {
     }
 }
 
-.demo-warn {
-    font-size: 16px;
-}
+.demo-warn { font-size: 16px; }
 
 #ct-menu {
     $color: #dfdfdf;

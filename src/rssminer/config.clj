@@ -1,4 +1,5 @@
 (ns rssminer.config
+  (:use rssminer.util)
   (:import [java.net Proxy Proxy$Type InetSocketAddress]))
 
 (defonce rssminer-conf (atom {:fetch-size 100}))
@@ -9,3 +10,7 @@
 (defn in-prod? [] (= (:profile @rssminer-conf) :prod))
 
 (defn in-dev? [] (= (:profile @rssminer-conf) :dev))
+
+(defn demo-user? [req]
+  (when-let [user (:demo-user @rssminer-conf)]
+    (= (user-id-from-session req) (:id user))))

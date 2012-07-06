@@ -30,12 +30,13 @@
     font-size: 13px;
     top: 8px;
     padding: 6px 4px;
-    a { color: blue; font-weight: bold;}
+    font-weight: bold;
+    a { color: blue; }
 }
 
 #notification {
     position: absolute;
-    top: 0;
+    top: 8px;
     left: 50%;
     z-index: 1000;
     overflow: hidden;

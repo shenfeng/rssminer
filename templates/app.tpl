@@ -24,7 +24,7 @@
         </div>
         <div id="warn-msg">
           You are viewing a demo account,
-          <a href="/logout">create one for youself</a>
+          <a href="/">create one for youself</a>
         </div>
         <input id="q" autocomplete="off"
                placeholder="type to search subscriptions, articles"/>
