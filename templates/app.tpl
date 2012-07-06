@@ -15,7 +15,8 @@
     {{{ data }}}
     <!--[if lt IE 8 ]><script>location.href="/browser"</script><![endif]-->
   </head>
-  <body>
+  <!--[if IE 8]><body class="ie8"> <![endif]-->
+  <!--[if !IE]><!--><body><!--<![endif]-->
     <div id="header">
       <div class="wrapper">
         <div id="logo" class="show-nav">
