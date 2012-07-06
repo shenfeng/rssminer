@@ -65,7 +65,7 @@
                "latest" (uf/fetch-newest u-id limit offset)
                "voted" (uf/fetch-recent-vote u-id limit offset)
                "read" (uf/fetch-recent-read u-id limit offset)
-               "recommand" (uf/fetch-likest u-id limit offset))]
+               "recommend" (uf/fetch-likest u-id limit offset))]
     (if data
       {:body data       ;; ok, just cache for 10 miniutes
        :headers {"Cache-Control" "private, max-age=600"}}

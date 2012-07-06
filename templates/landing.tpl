@@ -54,7 +54,7 @@
             <br>
             <div id="slides">
               <div class="slides_container">
-                <img src="/imgs/s/img2.png">
+                <img src="/imgs/s/a.png">
                 <img src="/imgs/s/img1.png">
                 <img src="/imgs/s/img3.png">
                 <img src="/imgs/s/img4.png">

@@ -141,7 +141,7 @@
 
   function show_welcome (section, page, cb) {
     var d = !section && !page;
-    section = section || 'recommand';
+    section = section || 'recommend';
     page = page || 1;
     if(data.get_subscriptions().length) { // user has subscriptions
       data.get_welcome_list(section, page, function (data) {

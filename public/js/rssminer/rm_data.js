@@ -24,7 +24,7 @@
       NEUTRAL_SCORE =  user_data.neutral_score;    // db default 0
 
   // how many pages does each section has
-  var WELCOME_TABS = {recommand: 1, latest: 1, read: 1, voted: 1};
+  var WELCOME_TABS = {recommend: 1, latest: 1, read: 1, voted: 1};
 
   function save_to_cache_fixer (feedid, data) {
     cache_fixer[feedid] = _.extend(cache_fixer[feedid] || {}, data);
@@ -124,7 +124,7 @@
   function transorm_sub (sub) {
     // the url is site's alternate url
     var title = sub.title || sub.url || '';
-    var s = sub.like + sub.neutral > 5 ? 'recommand' : 'newest';
+    var s = sub.like + sub.neutral > 5 ? 'recommend' : 'newest';
     return {
       img: favicon_path(sub.url),
       title: title,
@@ -242,7 +242,7 @@
     var sub =_.find(subscriptions_cache, function (sub) {
       return sub.id === subid;
     }) || {};
-    var total = sort === 'recommand' ? sub.like + sub.neutral : sub.total;
+    var total = sort === 'recommend' ? sub.like + sub.neutral : sub.total;
     var offset = Math.max(0, page -1) * PER_PAGE_FEEDS;
 
     var url = '/api/subs/' + subid + '?' + util.params({
@@ -256,7 +256,7 @@
         return transform_item(feed, page, sort);
       });
       var sort_data = [];
-      _.each(['recommand', 'newest', 'oldest'], function (s) {
+      _.each(['recommend', 'newest', 'oldest'], function (s) {
         sort_data.push({
           selected: !sort || s === sort,
           href: sub_hash(subid, 1, s),
