@@ -14,3 +14,6 @@
 (defn demo-user? [req]
   (when-let [user (:demo-user @rssminer-conf)]
     (= (user-id-from-session req) (:id user))))
+
+(defn real-user? [req]
+  (and (user-id-from-session req) (not (demo-user? req))))

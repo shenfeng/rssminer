@@ -25,14 +25,16 @@
 (defn show-landing-page [req]
   (if (= (-> req :params :r) "d")       ; redirect to /demo
     (redirect "/demo")
-    (let [html (to-html landing-page {:dev (cfg/in-dev?)
-                                      :prod (cfg/in-prod?)
-                                      :css landing-css})]
-      (if (cfg/demo-user? req) {:status 200
-                                :session nil ;; delete cookie
-                                :session-cookie-attrs {:max-age -1}
-                                :body html}
-          html))))
+    (if (cfg/real-user? req)
+      (redirect "/a")
+      (let [body (to-html landing-page {:dev (cfg/in-dev?)
+                                        :prod (cfg/in-prod?)
+                                        :css landing-css})]
+        (if (cfg/demo-user? req) {:status 200
+                                  :session nil ;; delete cookie
+                                  :session-cookie-attrs {:max-age -1}
+                                  :body body}
+            body)))))
 
 (defn show-app-page [req]
   (if (cfg/demo-user? req)
@@ -51,8 +53,7 @@
                          :data (serialize-to-js data)}))))
 
 (defn show-demo-page [req]
-  (if (and (user-id-from-session req)
-           (not (cfg/demo-user? req)))
+  (if (cfg/real-user? req)
     (assoc (redirect "/?r=d") :session nil ;; delete cookie
            :session-cookie-attrs {:max-age -1})
     (do
