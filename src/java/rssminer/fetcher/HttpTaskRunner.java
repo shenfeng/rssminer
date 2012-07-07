@@ -30,18 +30,6 @@ import rssminer.Utils;
 
 public class HttpTaskRunner {
 
-    public static String trimRemoveBom(String html) {
-        html = html.trim();
-        if (html.length() > 0) {
-            char c = html.charAt(0);
-            // bom, magic number
-            if((int)c == 65279) {
-                html = html.substring(1);
-            }
-        }
-        return html;
-    }
-
     class TextHandler implements ITextHandler {
 
         private IHttpTask task;
@@ -51,6 +39,28 @@ public class HttpTaskRunner {
                 throw new NullPointerException("task can not be null");
             }
             this.task = task;
+        }
+
+        public void finish(String body, Map<String, String> headers) {
+            int status = 200;
+            body = trimRemoveBom(body);
+            String ct = headers.get(HttpUtils.CONTENT_TYPE);
+            if (ct != null && ct.toLowerCase().indexOf("html") != -1) {
+                try {
+                    String rss = Utils.extractRssUrl(body, task.getUri());
+                    if (rss != null && rss.length() > 0) {
+                        headers.clear();
+                        headers.put(LOCATION, rss);
+                        status = 301;
+                        logger.info("{} html, extract {}", task.getUri(), rss);
+                    } else {
+                        logger.warn("{} {} no rss link", task.getUri(), ct);
+                    }
+                } catch (Exception e) {
+                    logger.error("try to extract rss link", e);
+                }
+            }
+            task.doTask(status, headers, body);
         }
 
         // run in the HTTP client loop thread
@@ -91,28 +101,6 @@ public class HttpTaskRunner {
             }
         }
 
-        public void finish(String body, Map<String, String> headers) {
-            int status = 200;
-            body = trimRemoveBom(body);
-            String ct = headers.get(HttpUtils.CONTENT_TYPE);
-            if (ct != null && ct.toLowerCase().indexOf("html") != -1) {
-                try {
-                    String rss = Utils.extractRssUrl(body, task.getUri());
-                    if (rss != null && rss.length() > 0) {
-                        headers.clear();
-                        headers.put(LOCATION, rss);
-                        status = 301;
-                        logger.info("{} html, extract {}", task.getUri(), rss);
-                    } else {
-                        logger.warn("{} {} no rss link", task.getUri(), ct);
-                    }
-                } catch (Exception e) {
-                    logger.error("try to extract rss link", e);
-                }
-            }
-            task.doTask(status, headers, body);
-        }
-
         public void onThrowable(Throwable t) {
             try {
                 logger.debug(task.getUri().toString(), t);
@@ -149,6 +137,18 @@ public class HttpTaskRunner {
     }
 
     static Logger logger = LoggerFactory.getLogger(HttpTaskRunner.class);
+
+    public static String trimRemoveBom(String html) {
+        html = html.trim();
+        if (html.length() > 0) {
+            char c = html.charAt(0);
+            // bom, magic number
+            if((int)c == 65279) {
+                html = html.substring(1);
+            }
+        }
+        return html;
+    }
     private final IHttpTasksProvder mBulkProvider;
     private final IBlockingTaskProvider mBlockingProvider;
     private final String mName;
@@ -181,6 +181,20 @@ public class HttpTaskRunner {
         mStat.put("QueueSize", conf.queueSize);
     }
 
+    private boolean addTask(IHttpTask task) {
+        if (task == null) {
+            return false;
+        }
+        synchronized (runningTasks) {
+            if (runningTasks.contains(task.getUri())) {
+                return false;
+            }
+            runningTasks.add(task.getUri());
+        }
+        mTaskQueue.add(task);
+        return true;
+    }
+
     private Map<Object, Object> computeStat() {
         mStat.put("Total", mCounter);
         mStat.put("Remain", mTaskQueue.size());
@@ -189,6 +203,15 @@ public class HttpTaskRunner {
         DateFormat format = new SimpleDateFormat("MM-dd HH:mm:ss");
         mStat.put("StartTime", format.format(new Date(startTime)));
         return mStat;
+    }
+
+    private void finishTask(IHttpTask task, int status) {
+        ++mCounter;
+        mConcurrent.release();
+        recordStat(status);
+        synchronized (runningTasks) {
+            runningTasks.remove(task.getUri());
+        }
     }
 
     public Map<Object, Object> getStat() {
@@ -227,29 +250,6 @@ public class HttpTaskRunner {
 
     public String toString() {
         return format("%s: %s", mName, computeStat());
-    }
-
-    private void finishTask(IHttpTask task, int status) {
-        ++mCounter;
-        mConcurrent.release();
-        recordStat(status);
-        synchronized (runningTasks) {
-            runningTasks.remove(task.getUri());
-        }
-    }
-
-    private boolean addTask(IHttpTask task) {
-        if (task == null) {
-            return false;
-        }
-        synchronized (runningTasks) {
-            if (runningTasks.contains(task.getUri())) {
-                return false;
-            }
-            runningTasks.add(task.getUri());
-        }
-        mTaskQueue.add(task);
-        return true;
     }
 
     void tryFillTask() {

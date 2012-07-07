@@ -115,6 +115,7 @@ end
 desc "Run unit test"
 task :test => :prepare do
   sh 'rm classes -rf && lein javac && lein test'
+  sh './scripts/junit_test'
 end
 
 desc "Generate TAGS using etags for clj"

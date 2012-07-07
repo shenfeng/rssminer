@@ -24,6 +24,8 @@ public class ExtractRssHandler extends DefaultHandler {
     final static String ATOM = "application/atom+xml";
     final static String TITLE = "title";
     final static String TYPE = "type";
+    final static String REL = "rel";
+    final static String ALTERNATE = "alternate";
 
     private String rssLink;
 
@@ -32,22 +34,25 @@ public class ExtractRssHandler extends DefaultHandler {
 
     public void startElement(String uri, String localName, String qName,
             Attributes attrs) throws SAXException {
-        if (LINK.equalsIgnoreCase(qName)) {
-            int index = attrs.getIndex(TYPE);
-            if (index != -1) {
-                String type = attrs.getValue(index);
-                if (RSS.equalsIgnoreCase(type) || ATOM.equalsIgnoreCase(type)) {
-                    String href = attrs.getValue(HREF);
-                    String title = attrs.getValue(TITLE);
-                    // ignore comment
-                    if (!comment.matcher(href).find()
-                            && !comment.matcher(title).find()) {
-                        // TODO last one
-                        rssLink = base.resolve(href).toString();
-                    }
-                }
+        if (!LINK.equalsIgnoreCase(qName)
+                || !ALTERNATE.equalsIgnoreCase(attrs.getValue(REL))) {
+            return;
+        }
+        String type = attrs.getValue(TYPE);
+        if (RSS.equalsIgnoreCase(type) || ATOM.equalsIgnoreCase(type)) {
+            String href = attrs.getValue(HREF);
+            String title = attrs.getValue(TITLE);
+            if (title == null) {
+                title = "";
+            }
+            // ignore comment
+            if (href != null && !comment.matcher(href).find()
+                    && !comment.matcher(title).find()) {
+                // TODO last one
+                rssLink = base.resolve(href).toString();
             }
         }
+
     }
 
     public String getRss() {

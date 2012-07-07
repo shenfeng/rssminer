@@ -1,0 +1,1869 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html dir='ltr' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<head>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
+<script type="text/javascript">(function() { var a=window,c="jstiming",d="tick";var e=function(b){this.t={};this.tick=function(b,o,f){f=void 0!=f?f:(new Date).getTime();this.t[b]=[f,o]};this[d]("start",null,b)},h=new e;a.jstiming={Timer:e,load:h};if(a.performance&&a.performance.timing){var i=a.performance.timing,j=a[c].load,k=i.navigationStart,l=i.responseStart;0<k&&l>=k&&(j[d]("_wtsrt",void 0,k),j[d]("wtsrt_","_wtsrt",l))}
+try{var m=null;a.chrome&&a.chrome.csi&&(m=Math.floor(a.chrome.csi().pageT));null==m&&a.gtbExternal&&(m=a.gtbExternal.pageT());null==m&&a.external&&(m=a.external.pageT);m&&(a[c].pt=m)}catch(n){};a.tickAboveFold=function(b){var g=0;if(b.offsetParent){do g+=b.offsetTop;while(b=b.offsetParent)}b=g;750>=b&&a[c].load[d]("aft")};var p=!1;function q(){p||(p=!0,a[c].load[d]("firstScrollTime"))}a.addEventListener?a.addEventListener("scroll",q,!1):a.attachEvent("onscroll",q);
+ })();</script>
+<meta content='true' name='MSSmartTagsPreventParsing'/>
+<meta content='blogger' name='generator'/>
+<link href='http://blog.golang.org/favicon.ico' rel='icon' type='image/x-icon'/>
+<link href='http://blog.golang.org/' rel='canonical'/>
+<link rel="alternate" type="application/atom+xml" title="The Go Programming Language Blog - Atom" href="http://blog.golang.org/feeds/posts/default" />
+<link rel="alternate" type="application/rss+xml" title="The Go Programming Language Blog - RSS" href="http://blog.golang.org/feeds/posts/default?alt=rss" />
+<link rel="service.post" type="application/atom+xml" title="The Go Programming Language Blog - Atom" href="http://www.blogger.com/feeds/891002498403287956/posts/default" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.blogger.com/rsd.g?blogID=891002498403287956" />
+<link rel="openid.server" href="http://www.blogger.com/openid-server.g" />
+<link rel="openid.delegate" href="http://blog.golang.org/" />
+<!--[if IE]> <script> (function() { var html5 = ("abbr,article,aside,audio,canvas,datalist,details," + "figure,footer,header,hgroup,mark,menu,meter,nav,output," + "progress,section,time,video").split(','); for (var i = 0; i < html5.length; i++) { document.createElement(html5[i]); } try { document.execCommand('BackgroundImageCache', false, true); } catch(e) {} })(); </script> <![endif]-->
+<title>The Go Programming Language Blog</title>
+<link type='text/css' rel='stylesheet' href='http://www.blogger.com/static/v1/widgets/2314545039-widget_css_bundle.css' />
+<link type="text/css" rel="stylesheet" href="http://www.blogger.com/dyn-css/authorization.css?targetBlogID=891002498403287956&zx=c2e26072-f746-4a75-b135-cdbe2dd20df2"/>
+<style type="text/css">
+#navbar-iframe { display:block }
+</style>
+<style id='page-skin-1' type='text/css'><!--
+/*
+-----------------------------------------------
+Blogger Template Style
+Name:     Minima
+Date:     26 Feb 2004
+Updated by: Blogger Team
+----------------------------------------------- */
+/* Variable definitions
+====================
+<Variable name="bgcolor" description="Page Background Color"
+type="color" default="#fff">
+<Variable name="textcolor" description="Text Color"
+type="color" default="#333">
+<Variable name="linkcolor" description="Link Color"
+type="color" default="#58a">
+<Variable name="pagetitlecolor" description="Blog Title Color"
+type="color" default="#666">
+<Variable name="descriptioncolor" description="Blog Description Color"
+type="color" default="#999">
+<Variable name="titlecolor" description="Post Title Color"
+type="color" default="#c60">
+<Variable name="bordercolor" description="Border Color"
+type="color" default="#ccc">
+<Variable name="sidebarcolor" description="Sidebar Title Color"
+type="color" default="#999">
+<Variable name="sidebartextcolor" description="Sidebar Text Color"
+type="color" default="#666">
+<Variable name="visitedlinkcolor" description="Visited Link Color"
+type="color" default="#ccc">
+<Variable name="bodyfont" description="Text Font"
+type="font" default="normal normal 100% Georgia, Serif">
+<Variable name="headerfont" description="Sidebar Title Font"
+type="font"
+default="normal normal 78% 'Trebuchet MS',Trebuchet,Arial,Verdana,Sans-serif">
+<Variable name="pagetitlefont" description="Blog Title Font"
+type="font"
+default="normal normal 200% Georgia, Serif">
+<Variable name="descriptionfont" description="Blog Description Font"
+type="font"
+default="normal normal 78% 'Trebuchet MS', Trebuchet, Arial, Verdana, Sans-serif">
+<Variable name="postfooterfont" description="Post Footer Font"
+type="font"
+default="normal normal 78% 'Trebuchet MS', Trebuchet, Arial, Verdana, Sans-serif">
+<Variable name="startSide" description="Side where text starts in blog language"
+type="automatic" default="left">
+<Variable name="endSide" description="Side where text ends in blog language"
+type="automatic" default="right">
+*/
+/* Use this with templates/template-twocol.html */
+body {
+background:#ffffff;
+margin:0;
+color:#333333;
+font:x-small Georgia Serif;
+font-size/* */:/**/small;
+font-size: /**/small;
+text-align: center;
+}
+a:link {
+color:#5588aa;
+text-decoration:none;
+}
+a:visited {
+color:#2a4455;
+text-decoration:none;
+}
+a:hover {
+color:#5588aa;
+text-decoration:underline;
+}
+a img {
+border-width:0;
+}
+pre {
+margin: 0;
+}
+pre, code {
+font-size: 110%;
+}
+/* Header
+-----------------------------------------------
+*/
+#header-wrapper {
+width:800px;
+margin:0 auto 10px;
+border:1px solid #ffffff;
+}
+#header-inner {
+background-position: center;
+margin-left: auto;
+margin-right: auto;
+}
+#header {
+margin: 5px;
+border: 1px solid #ffffff;
+text-align: left;
+color:#0d0600;
+float: left;
+}
+#header h1 {
+font: normal normal 180% Arial, sans-serif;
+}
+#header-wrapper img {
+float: left;
+margin-left: -30px;
+}
+#header a {
+color:#0d0600;
+text-decoration:none;
+}
+#header a:hover {
+color:#0d0600;
+}
+#header .description {
+margin:0 5px 5px;
+padding:0 20px 15px;
+max-width:800px;
+text-transform:uppercase;
+letter-spacing:.2em;
+line-height: 1.4em;
+font: normal normal 78% Arial, sans-serif;
+color: #999999;
+}
+#header img {
+margin-left: auto;
+margin-right: auto;
+}
+/* Outer-Wrapper
+----------------------------------------------- */
+#outer-wrapper {
+width: 800px;
+margin:0 auto;
+padding:10px;
+text-align:left;
+font: normal normal 100% Arial, sans-serif;
+}
+#main-wrapper {
+width: 550px;
+float: left;
+word-wrap: break-word; /* fix for long text breaking sidebar float in IE */
+overflow: hidden;     /* fix for long non-text content breaking IE sidebar float */
+}
+#sidebar-wrapper {
+width: 220px;
+float: right;
+word-wrap: break-word; /* fix for long text breaking sidebar float in IE */
+overflow: hidden;      /* fix for long non-text content breaking IE sidebar float */
+}
+/* Headings
+----------------------------------------------- */
+h2 {
+margin:1.5em 0 .75em;
+font:normal normal 78% Arial, sans-serif;
+line-height: 1.4em;
+text-transform:uppercase;
+letter-spacing:.2em;
+color:#999999;
+}
+/* Posts
+-----------------------------------------------
+*/
+h2.date-header {
+margin:1.5em 0 .5em;
+}
+.post {
+margin:.5em 0 1.5em;
+border-bottom:1px dotted #ffffff;
+padding-bottom:1.5em;
+}
+.post h3 {
+margin:.25em 0 0;
+padding:0 0 4px;
+font-size:140%;
+font-weight:normal;
+line-height:1.4em;
+color:#5588aa;
+}
+.post h3 a, .post h3 a:visited, .post h3 strong {
+display:block;
+text-decoration:none;
+color:#5588aa;
+font-weight:normal;
+}
+.post h3 strong, .post h3 a:hover {
+color:#333333;
+}
+.post-body {
+margin:0 0 .75em;
+line-height:1.6em;
+}
+.post-body blockquote {
+line-height:1.3em;
+}
+.post-footer {
+margin: .75em 0;
+color:#999999;
+text-transform:uppercase;
+letter-spacing:.1em;
+font: normal normal 78% Arial, sans-serif;
+line-height: 1.4em;
+}
+.comment-link {
+margin-left:.6em;
+}
+.post img, table.tr-caption-container {
+padding:4px;
+border:1px solid #ffffff;
+}
+.tr-caption-container img {
+border: none;
+padding: 0;
+}
+.post blockquote {
+margin:1em 20px;
+}
+.post blockquote p {
+margin:.75em 0;
+}
+/* Comments
+----------------------------------------------- */
+#comments h4 {
+margin:1em 0;
+font-weight: bold;
+line-height: 1.4em;
+text-transform:uppercase;
+letter-spacing:.2em;
+color: #999999;
+}
+#comments-block {
+margin:1em 0 1.5em;
+line-height:1.6em;
+}
+#comments-block .comment-author {
+margin:.5em 0;
+}
+#comments-block .comment-body {
+margin:.25em 0 0;
+}
+#comments-block .comment-footer {
+margin:-.25em 0 2em;
+line-height: 1.4em;
+text-transform:uppercase;
+letter-spacing:.1em;
+}
+#comments-block .comment-body p {
+margin:0 0 .75em;
+}
+.deleted-comment {
+font-style:italic;
+color:gray;
+}
+#blog-pager-newer-link {
+float: left;
+}
+#blog-pager-older-link {
+float: right;
+}
+#blog-pager {
+text-align: center;
+}
+.feed-links {
+clear: both;
+line-height: 2.5em;
+}
+/* Sidebar Content
+----------------------------------------------- */
+.sidebar {
+color: #666666;
+line-height: 1.5em;
+}
+.sidebar ul {
+list-style:none;
+margin:0 0 0;
+padding:0 0 0;
+}
+.sidebar li {
+margin:0;
+padding-top:0;
+padding-right:0;
+padding-bottom:.25em;
+padding-left:15px;
+text-indent:-15px;
+line-height:1.5em;
+}
+.sidebar .widget, .main .widget {
+border-bottom:1px dotted #ffffff;
+margin:0 0 1.5em;
+padding:0 0 1.5em;
+}
+.main .Blog {
+border-bottom-width: 0;
+}
+/* Profile
+----------------------------------------------- */
+.profile-img {
+float: left;
+margin-top: 0;
+margin-right: 5px;
+margin-bottom: 5px;
+margin-left: 0;
+padding: 4px;
+border: 1px solid #ffffff;
+}
+.profile-data {
+margin:0;
+text-transform:uppercase;
+letter-spacing:.1em;
+font: normal normal 78% Arial, sans-serif;
+color: #999999;
+font-weight: bold;
+line-height: 1.6em;
+}
+.profile-datablock {
+margin:.5em 0 .5em;
+}
+.profile-textblock {
+margin: 0.5em 0;
+line-height: 1.6em;
+}
+.profile-link {
+font: normal normal 78% Arial, sans-serif;
+text-transform: uppercase;
+letter-spacing: .1em;
+}
+/* Footer
+----------------------------------------------- */
+#footer {
+width:660px;
+clear:both;
+margin:0 auto;
+padding-top:15px;
+line-height: 1.6em;
+text-transform:uppercase;
+letter-spacing:.1em;
+text-align: center;
+}
+
+--></style>
+<script type="text/javascript">var a=navigator,b="userAgent",c="indexOf",f="&m=1",g="(^|&)m=",h="?",i="?m=1";function j(){var d=window.location.href,e=d.split(h);switch(e.length){case 1:return d+i;case 2:return 0<=e[1].search(g)?null:d+f;default:return null}}if(-1!=a[b][c]("Mobile")&&-1!=a[b][c]("WebKit")&&-1==a[b][c]("iPad")||-1!=a[b][c]("Opera Mini")||-1!=a[b][c]("IEMobile")){var k=j();k&&window.location.replace(k)};
+</script><script type="text/javascript">
+if (window.jstiming) window.jstiming.load.tick('headEnd');
+</script></head>
+<body>
+<div class='navbar section' id='navbar'><div class='widget Navbar' id='Navbar1'><script type="text/javascript">
+    function setAttributeOnload(object, attribute, val) {
+      if(window.addEventListener) {
+        window.addEventListener('load',
+          function(){ object[attribute] = val; }, false);
+      } else {
+        window.attachEvent('onload', function(){ object[attribute] = val; });
+      }
+    }
+  </script>
+<iframe src="//www.blogger.com/navbar.g?targetBlogID=891002498403287956&amp;blogName=The+Go+Programming+Language+Blog&amp;publishMode=PUBLISH_MODE_HOSTED&amp;navbarType=BLUE&amp;layoutType=LAYOUTS&amp;searchRoot=http://blog.golang.org/search&amp;blogLocale=en&amp;v=1&amp;homepageUrl=http://blog.golang.org/&amp;vt=-4543363231741042594" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" height="30px" width="100%" id="navbar-iframe" allowtransparency="true" title="Blogger Navigation and Search"></iframe>
+<div></div><script type="text/javascript">
+(function() {
+var script = document.createElement('script');
+script.type = 'text/javascript';
+script.src = '//pagead2.googlesyndication.com/pagead/js/google_top_exp.js';
+var head = document.getElementsByTagName('head')[0];
+if (head) {
+head.appendChild(script);
+}})();
+</script>
+</div></div>
+<div id='outer-wrapper'><div id='wrap2'>
+<!-- skip links for text browsers -->
+<span id='skiplinks' style='display:none;'>
+<a href='#main'>skip to main </a> |
+      <a href='#sidebar'>skip to sidebar</a>
+</span>
+<div id='header-wrapper'>
+<img src='http://golang.org/doc/logo-153x55.png'/>
+<div class='header section' id='header'><div class='widget Header' id='Header1'>
+<div id='header-inner'>
+<div class='titlewrapper'>
+<h1 class='title'>
+The Go Programming Language Blog
+</h1>
+</div>
+<div class='descriptionwrapper'>
+<p class='description'><span>
+</span></p>
+</div>
+</div>
+</div></div>
+</div>
+<div id='content-wrapper'>
+<div id='crosscol-wrapper' style='text-align:center'>
+<div class='crosscol section' id='crosscol'></div>
+</div>
+<div id='main-wrapper'>
+<div class='main section' id='main'><div class='widget Blog' id='Blog1'>
+<div class='blog-posts hfeed'>
+<!-- google_ad_section_start(name=default) -->
+
+          <div class="date-outer">
+        
+<h2 class='date-header'><span>Monday, July 2, 2012</span></h2>
+
+          <div class="date-posts">
+        
+<div class='post-outer'>
+<div class='post hentry'>
+<a name='8449075452479113811'></a>
+<h3 class='post-title entry-title'>
+<a href='http://blog.golang.org/2012/07/go-videos-from-google-io-2012.html'>Go videos from Google I/O 2012</a>
+</h3>
+<div class='post-header'>
+<div class='post-header-line-1'></div>
+</div>
+<div class='post-body entry-content'>
+Phew! Google I/O is over for another year, and what an event it was. Thanks to our guest speakers and everyone who attended the four Go sessions. It was a lot of fun.<br />
+<br />
+Here are the session videos:<br />
+<br />
+<b>Go concurrency patterns</b> by Rob Pike<br />
+<br />
+<i>Concurrency is the key to designing high performance network services. Go's concurrency primitives (goroutines and channels) provide a simple and efficient means of expressing concurrent execution. In this talk we see how tricky concurrency problems can be solved gracefully with simple Go code.</i><br />
+<br />
+<iframe width="540" height="304" src="http://www.youtube.com/embed/f6kdp27TYZs" frameborder="0" allowfullscreen></iframe><br />
+<br />
+<b>Go in production</b><br />
+<br />
+<i>Since Go's release in 2009 many companies (besides Google, of course) have used the language to build cool stuff. In this session Gustavo Niemeyer (Canonical), Keith Rarick (Heroku), Evan Shaw (Iron.io), and Patrick Crosby (StatHat) share their first-hand experience using Go in production environments.</i><br />
+<br />
+<iframe width="540" height="304" src="http://www.youtube.com/embed/kKQLhGZVN4A" frameborder="0" allowfullscreen></iframe><br />
+<br />
+<b>Meet the Go team</b><br />
+<br />
+<i>A panel discussion with David Symonds, Robert Griesemer, Rob Pike, Ken Thompson, Andrew Gerrand, and Brad Fitzpatrick.</i><br />
+<br />
+<iframe width="540" height="304" src="http://www.youtube.com/embed/sln-gJaURzk" frameborder="0" allowfullscreen></iframe><br />
+<br />
+<b>Computing Map Tiles with Go on App Engine</b> by Chris Broadfoot and Andrew Gerrand<br />
+<br />
+<i>In this talk we use the Maps API and Go on App Engine to build an app to build custom tile sets for Google Maps. The app demonstrates using Go's suitability for computation in the cloud and App Engine's key scalability features, such as Task Queues and Backends.</i><br />
+<br />
+<iframe width="540" height="304" src="http://www.youtube.com/embed/sPagpg0b7no" frameborder="0" allowfullscreen></iframe><br />
+<br />
+<div style='clear: both;'></div>
+</div>
+<div class='post-footer'>
+<div class='post-footer-line post-footer-line-1'><span class='post-author vcard'>
+Posted by
+<span class='fn'>Andrew Gerrand</span>
+</span>
+<span class='post-timestamp'>
+</span>
+<span class='post-icons'>
+<span class='item-control blog-admin pid-2079280389'>
+<a href='http://www.blogger.com/post-edit.g?blogID=891002498403287956&postID=8449075452479113811&from=pencil' title='Edit Post'>
+<img alt='' class='icon-action' height='18' src='http://img2.blogblog.com/img/icon18_edit_allbkg.gif' width='18'/>
+</a>
+</span>
+</span>
+</div>
+<div class='post-footer-line post-footer-line-2'><span class='post-labels'>
+</span>
+</div>
+<div class='post-footer-line post-footer-line-3'><span class='post-location'>
+</span>
+</div>
+</div>
+</div>
+</div>
+
+            </div></div>
+          
+
+          <div class="date-outer">
+        
+<h2 class='date-header'><span>Wednesday, March 28, 2012</span></h2>
+
+          <div class="date-posts">
+        
+<div class='post-outer'>
+<div class='post hentry'>
+<a name='8538947736732401453'></a>
+<h3 class='post-title entry-title'>
+<a href='http://blog.golang.org/2012/03/go-version-1-is-released.html'>Go version 1 is released</a>
+</h3>
+<div class='post-header'>
+<div class='post-header-line-1'></div>
+</div>
+<div class='post-body entry-content'>
+<div style="float: left; margin-right: 20px"><img src="http://3.bp.blogspot.com/-HYvxB0YqCEQ/T3JlGrhEgcI/AAAAAAAAAGM/197_O-LtIyI/s1600/gophermega.jpg"></div>Today marks a major milestone in the development of the Go programming language. We're announcing Go version 1, or Go 1 for short, which defines a language and a set of core libraries to provide a stable foundation for creating reliable products, projects, and publications.<br />
+<div style="clear: left"></div>Go 1 is the first release of Go that is available in supported binary distributions. They are available for Linux, FreeBSD, Mac OS X and, we are thrilled to announce, Windows.<br />
+<br />
+The driving motivation for Go 1 is stability for its users. People who write Go 1 programs can be confident that those programs will continue to compile and run without change, in many environments, on a time scale of years. Similarly, authors who write books about Go 1 can be sure that their examples and explanations will be helpful to readers today and into the future.<br />
+<br />
+Forward compatibility is part of stability. Code that compiles in Go 1 should, with few exceptions, continue to compile and run throughout the lifetime of that version, even as we issue updates and bug fixes such as Go version 1.1, 1.2, and so on. The <a href="http://golang.org/doc/go1compat.html">Go 1 compatibility document</a> explains the compatibility guidelines in more detail.<br />
+<br />
+Go 1 is a representation of Go as it is used today, not a major redesign. In its planning, we focused on cleaning up problems and inconsistencies and improving portability. There had long been many changes to Go that we had designed and prototyped but not released because they were backwards-incompatible. Go 1 incorporates these changes, which provide significant improvements to the language and libraries but sometimes introduce incompatibilities for old programs. Fortunately, the <a href="http://golang.org/cmd/go/#Run_go_tool_fix_on_packages">go fix</a> tool can automate much of the work needed to bring programs up to the Go 1 standard.<br />
+<br />
+Go 1 introduces changes to the language (such as new types for <a href="http://golang.org/doc/go1.html#rune">Unicode characters</a> and <a href="http://golang.org/doc/go1.html#errors">errors</a>) and the standard library (such as the new <a href="http://golang.org/doc/go1.html#time">time package</a> and renamings in the <a href="http://golang.org/doc/go1.html#strconv">strconv package</a>). Also, the package hierarchy has been rearranged to group related items together, such as moving the networking facilities, for instance the <a href="http://golang.org/pkg/net/rpc/">rpc package</a>, into subdirectories of net. A complete list of changes is documented in the <a href="http://golang.org/doc/go1.html">Go 1 release notes</a>. That document is an essential reference for programmers migrating code from earlier versions of Go.<br />
+<br />
+We also restructured the Go tool suite around the new <a href="http://golang.org/doc/go1.html#cmd_go">go command</a>, a program for fetching, building, installing and maintaining Go code. The go command eliminates the need for Makefiles to write Go code because it uses the Go program source itself to derive the build instructions. No more build scripts! <br />
+<br />
+Finally, the release of Go 1 triggers a new release of the <a href="https://developers.google.com/appengine/docs/go">Google App Engine SDK</a>. A similar process of revision and stabilization has been applied to the App Engine libraries, providing a base for developers to build programs for App Engine that will run for years.<br />
+<br />
+Go 1 is the result of a major effort by the core Go team and our many contributors from the open source community. We thank everyone who helped make this happen.<br />
+<br />
+There has never been a better time to be a Go programmer. Everything you need to get started is at <a href="http://golang.org/">golang.org</a>.
+<div style='clear: both;'></div>
+</div>
+<div class='post-footer'>
+<div class='post-footer-line post-footer-line-1'><span class='post-author vcard'>
+Posted by
+<span class='fn'>Andrew Gerrand</span>
+</span>
+<span class='post-timestamp'>
+</span>
+<span class='post-icons'>
+<span class='item-control blog-admin pid-2079280389'>
+<a href='http://www.blogger.com/post-edit.g?blogID=891002498403287956&postID=8538947736732401453&from=pencil' title='Edit Post'>
+<img alt='' class='icon-action' height='18' src='http://img2.blogblog.com/img/icon18_edit_allbkg.gif' width='18'/>
+</a>
+</span>
+</span>
+</div>
+<div class='post-footer-line post-footer-line-2'><span class='post-labels'>
+</span>
+</div>
+<div class='post-footer-line post-footer-line-3'><span class='post-location'>
+</span>
+</div>
+</div>
+</div>
+</div>
+
+            </div></div>
+          
+
+          <div class="date-outer">
+        
+<h2 class='date-header'><span>Wednesday, December 21, 2011</span></h2>
+
+          <div class="date-posts">
+        
+<div class='post-outer'>
+<div class='post hentry'>
+<a name='6022389222427866794'></a>
+<h3 class='post-title entry-title'>
+<a href='http://blog.golang.org/2011/12/getting-to-know-go-community.html'>Getting to know the Go community</a>
+</h3>
+<div class='post-header'>
+<div class='post-header-line-1'></div>
+</div>
+<div class='post-body entry-content'>
+Over the past couple of years Go has attracted a lot of users and contributors, and I've had a great time meeting and talking with many of you. However, for every Gopher I know there are dozens I know nothing about. In order to address this imbalance I've prepared a survey for Go users everywhere.<br />
+<br />
+The survey is short. It asks about you, your involvement with Go, and and your interest in Go-related events. Among other things, this data will help myself and the rest of the Go team plan future Go events and schedule conference appearances.<br />
+<br />
+Please take a minute to <a href="https://docs.google.com/spreadsheet/viewform?hl=en_US&amp;formkey=dFdxOTU1Mm92VFA3eHdkekFPamJjUnc6MQ#gid=0">complete the survey now</a>.<br />
+<br />
+Thanks!<br />
+Andrew
+<div style='clear: both;'></div>
+</div>
+<div class='post-footer'>
+<div class='post-footer-line post-footer-line-1'><span class='post-author vcard'>
+Posted by
+<span class='fn'>Andrew Gerrand</span>
+</span>
+<span class='post-timestamp'>
+</span>
+<span class='post-icons'>
+<span class='item-control blog-admin pid-2079280389'>
+<a href='http://www.blogger.com/post-edit.g?blogID=891002498403287956&postID=6022389222427866794&from=pencil' title='Edit Post'>
+<img alt='' class='icon-action' height='18' src='http://img2.blogblog.com/img/icon18_edit_allbkg.gif' width='18'/>
+</a>
+</span>
+</span>
+</div>
+<div class='post-footer-line post-footer-line-2'><span class='post-labels'>
+</span>
+</div>
+<div class='post-footer-line post-footer-line-3'><span class='post-location'>
+</span>
+</div>
+</div>
+</div>
+</div>
+
+            </div></div>
+          
+
+          <div class="date-outer">
+        
+<h2 class='date-header'><span>Monday, December 19, 2011</span></h2>
+
+          <div class="date-posts">
+        
+<div class='post-outer'>
+<div class='post hentry'>
+<a name='4874790252976560918'></a>
+<h3 class='post-title entry-title'>
+<a href='http://blog.golang.org/2011/12/building-stathat-with-go.html'>Building StatHat with Go</a>
+</h3>
+<div class='post-header'>
+<div class='post-header-line-1'></div>
+</div>
+<div class='post-body entry-content'>
+<p>
+My name is Patrick Crosby and I'm the founder of a company called Numerotron.
+We recently released <a href="http://www.stathat.com">StatHat</a>.  This post
+is about why we chose to develop StatHat in <a href="http://golang.org">Go</a>,
+including details about how we are using Go.
+</p>
+
+<p>
+<a href="http://www.stathat.com">StatHat</a> is a tool to track statistics and
+events in your code.  Everyone from HTML designers to backend engineers can use
+StatHat easily, as it supports sending stats from HTML, JavaScript, Go, and
+twelve other languages.
+</p>
+
+<p>
+You send your numbers to StatHat; it generates beautiful, fully-embeddable
+graphs of your data.  StatHat will alert you when specified triggers occur,
+send you daily email reports, and much more.  So instead of spending time
+writing tracking or reporting tools for your application, you can
+concentrate on the code.  While you do the real work, StatHat remains
+intensely vigilant, like an eagle in its mountaintop nest, or a babysitter
+on meth.
+</p>
+
+<p>
+Here's an example of a StatHat graph of the temperature in NYC, Chicago,
+and San Francisco:
+</p>
+
+<p>
+<div class="separator" style="clear: both; text-align: center;">
+<a href="http://3.bp.blogspot.com/-tjeZA4l2b9k/Tuld_bk2MWI/AAAAAAAAAEs/gXHOPRUutuA/s1600/weather.png" imageanchor="1" style=""><img border="0" height="277" width="400" src="http://3.bp.blogspot.com/-tjeZA4l2b9k/Tuld_bk2MWI/AAAAAAAAAEs/gXHOPRUutuA/s400/weather.png" /></a><br />
+<small>(click to enlarge)</small></div>
+</p>
+
+<p>
+<b>Architecture Overview</b>
+</p>
+
+<p>
+StatHat consists of two main services:  incoming statistic/event API calls
+and the web application for viewing and analyzing stats.  We wanted to keep
+these as separate as possible to isolate the data collection from the data
+interaction.   We did this for many reasons, but one major reason is that
+we anticipate handling a ton of automated incoming API HTTP requests and
+would thus have different optimization strategies for the API service than
+a web application interacting with humans.
+</p>
+
+<p>
+<img src="http://3.bp.blogspot.com/-yJiQlSjOTfo/TuleFyFgdFI/AAAAAAAAAE4/H7n3mamijlQ/s1600/stathat_architecture.png" />
+</p>
+
+<p>
+The web application service is multi-tiered.  The web server processes all
+requests and sends them to an interactor layer.  For simple tasks, the
+interactor will handle generating any necessary data.  For complex tasks,
+the interactor relies on multiple application servers to handle tasks like
+generating graphs or analyzing data sets.  After the interactor is
+finished, the web server sends the result to a presenter.  The presenter
+responds to the HTTP request with either HTML or JSON.  We can horizontally
+scale the web, API, application servers, and databases as the demand for
+services grows and changes over time.  There is no single point of failure
+as each application server has multiple copies running.  The interactor
+layer allows us to have different interfaces to the system:  http, command
+line, automated tests, mobile API.  StatHat uses MySQL for data storage.
+</p>
+
+<p>
+<b>Choosing Go</b>
+</p>
+
+<p>
+When we designed StatHat, we had the following check list for our
+development tools:
+</p>
+
+<ul>
+<li>same programming language for backend and frontend systems
+<li>good, fast HTML templating system
+<li>fast start-up, recompilation, testing for lots of tinkering
+<li>lots of connections on one machine
+<li>language tools for handling application-level concurrency
+<li>good performance
+<li>robust RPC layer to talk between tiers
+<li>lots of libraries
+<li>open source
+</ul>
+
+<p>
+We evaluated many popular and not-so-popular web technologies and ended up
+choosing to develop it in Go.
+</p>
+
+<p>
+When Go was released in November 2009, I immediately installed it and loved
+the fast compilation times, goroutines, channels, garbage collection, and
+all the packages that were available.  I was especially pleased with how
+few lines of code my applications were using.  I soon experimented with
+making a web app called <a href="http://langalot.com/">Langalot</a> that concurrently searched through five
+foreign language dictionaries as you typed in a query.  It was blazingly
+fast.  I put it online and it's been running since February, 2010.
+</p>
+
+<p>
+The following sections detail how Go meets StatHat's requirements and our
+experience using Go to solve our problems.
+</p>
+
+<p>
+<b>Runtime</b>
+</p>
+
+<p>
+We use the standard Go <a href="http://golang.org/pkg/http/">http package</a> for our API and web app
+servers.  All requests first go through Nginx and any non-file requests are
+proxied to the Go-powered http servers.  The backend servers are all
+written in Go and use the <a href="http://golang.org/pkg/rpc/">rpc package</a> to communicate with the frontend.
+</p>
+
+<p>
+<b>Templating</b>
+</p>
+
+<p>
+We built a template system using the standard <a href="http://golang.org/pkg/template/">template package</a>.  Our system
+adds layouts, some common formatting functions, and the ability to
+recompile templates on-the-fly during development.  We are very pleased
+with the performance and functionality of the Go templates.
+</p>
+
+<p>
+<b>Tinkering</b>
+</p>
+
+<p>
+In a previous job, I worked on a video game called Throne of Darkness that
+was written in C++.  We had a few header files that, when modified,
+required a full rebuild of the entire system, 20-30 minutes long.  If
+anyone ever changed `Character.h`, he would be subject to the wrath of
+every other programmer.  Besides this suffering, it also slowed down
+development time significantly.
+</p>
+
+<p>
+Since then, I've always tried to choose technologies that allowed fast,
+frequent tinkering.  With Go, compilation time is a non-issue.  We can
+recompile the entire system in seconds, not minutes.  The development web
+server starts instantly, tests complete in a few seconds.  As mentioned
+previously, templates are recompiled as they change.  The result is that
+the StatHat system is very easy to work with, and the compiler is not a
+bottleneck.
+</p>
+
+<p>
+<b>RPC</b>
+</p>
+
+<p>
+Since StatHat is a multi-tiered system, we wanted an RPC layer so that all
+communication was standard.  With Go, we are using the <a href="http://golang.org/pkg/rpc/">rpc package</a> and the
+<a href="http://golang.org/pkg/gob/">gob package</a> for encoding Go objects.  In Go, the RPC server just takes any
+Go object and registers its exported methods.  There is no need for an
+intermediary interface description language.  We've found it very easy to
+use and many of our core application servers are under 300 lines of code.
+</p>
+
+<p>
+<b>Libraries</b>
+</p>
+
+<p>
+We don't want to spend time rewriting libraries for things like SSL,
+database drivers, JSON/XML parsers.  Although Go is a young language, it
+has a lot of system packages and a growing number of user-contributed
+packages.  With only a few exceptions, we have found Go packages for
+everything we have needed.
+</p>
+
+<p>
+<b>Open source</b>
+</p>
+
+<p>
+In our experience, it has been invaluable to work with open source tools.
+If something is going awry, it is immensely helpful to be able to examine
+the source through every layer and not have any black boxes.  Having the
+code for the language, web server, packages, and tools allows us to
+understand how every piece of the system works.  Everything in Go is
+open source.  In the Go codebase, we frequently read the tests as they
+often give great examples of how to use packages and language features.
+</p>
+
+<p>
+<b>Performance</b>
+</p>
+
+<p>
+People rely on StatHat for up to the minute analysis of their data and we
+need the system to be as responsive as possible.  In our tests, Go's
+performance blew away most of the competition.  We tested it against Rails,
+Sinatra, OpenResty, and Node.  StatHat has always monitored itself by
+tracking all kinds of performance metrics about requests, the duration of
+certain tasks, the amount of memory in use.  Because of this, we were able
+to easily evaluate different technologies.  We've also taken advantage of
+the benchmark performance testing features of the Go testing package.
+</p>
+
+<p>
+<b>Application-Level Concurrency</b>
+</p>
+
+<p>
+In a former life, I was the CTO at OkCupid.  My experience there using OKWS
+taught me the importance of async programming, especially when it comes to
+dynamic web applications.  There is no reason you should ever do something
+like this synchronously:  load a user from the database, then find their
+stats, then find their alerts.  These should all be done concurrently, yet
+surprisingly, many popular frameworks have no async support.  Go supports
+this at the language level without any callback spaghetti.  StatHat uses
+goroutines extensively to run multiple functions concurrently and channels
+for sharing data between goroutines.
+</p>
+
+<p>
+<b>Hosting and Deployment</b>
+</p>
+
+<p>
+StatHat runs on Amazon's EC2 servers.  Our servers are divided into several
+types:
+</p>
+
+<ul>
+<li>API
+<li>Web
+<li>Application servers
+<li>Database
+</ul>
+
+<p>
+There are at least two of each type of server, and they are in different
+zones for high availability.  Adding a new server to the mix takes just a
+couple of minutes.
+</p>
+
+<p>
+To deploy, we first build the entire system into a time-stamped directory.
+Our packaging script builds the Go applications, compresses the CSS and JS
+files, and copies all the scripts and configuration files.  This directory
+is then distributed to all the servers, so they all have an identical
+distribution.  A script on each server queries its EC2 tags and determines
+what it is responsible for running and starts/stops/restarts any services.
+We frequently only deploy to a subset of the servers.
+</p>
+
+<p>
+<b>More</b>
+</p>
+
+<p>
+For more information on StatHat, please visit
+<a href="http://www.stathat.com">stathat.com</a>. 
+We are releasing some of the Go code we've written.
+Go to <a href="http://www.stathat.com/src">www.stathat.com/src</a>
+for all of the open source StatHat projects.
+</p>
+
+<p>
+To learn more about Go, visit <a href="http://golang.org/">golang.org</a>.
+</p>
+<div style='clear: both;'></div>
+</div>
+<div class='post-footer'>
+<div class='post-footer-line post-footer-line-1'><span class='post-author vcard'>
+Posted by
+<span class='fn'>Andrew Gerrand</span>
+</span>
+<span class='post-timestamp'>
+</span>
+<span class='post-icons'>
+<span class='item-control blog-admin pid-2079280389'>
+<a href='http://www.blogger.com/post-edit.g?blogID=891002498403287956&postID=4874790252976560918&from=pencil' title='Edit Post'>
+<img alt='' class='icon-action' height='18' src='http://img2.blogblog.com/img/icon18_edit_allbkg.gif' width='18'/>
+</a>
+</span>
+</span>
+</div>
+<div class='post-footer-line post-footer-line-2'><span class='post-labels'>
+Labels:
+<a href='http://blog.golang.org/search/label/guest' rel='tag'>guest</a>,
+<a href='http://blog.golang.org/search/label/rpc' rel='tag'>rpc</a>
+</span>
+</div>
+<div class='post-footer-line post-footer-line-3'><span class='post-location'>
+</span>
+</div>
+</div>
+</div>
+</div>
+
+            </div></div>
+          
+
+          <div class="date-outer">
+        
+<h2 class='date-header'><span>Tuesday, December 13, 2011</span></h2>
+
+          <div class="date-posts">
+        
+<div class='post-outer'>
+<div class='post hentry'>
+<a name='254114538233262349'></a>
+<h3 class='post-title entry-title'>
+<a href='http://blog.golang.org/2011/12/from-zero-to-go-launching-on-google.html'>From zero to Go: launching on the Google homepage in 24 hours</a>
+</h3>
+<div class='post-header'>
+<div class='post-header-line-1'></div>
+</div>
+<div class='post-body entry-content'>
+<p>
+<i>This article was written by Reinaldo Aguiar, a software engineer from the Search team at Google. He shares his experience developing his first Go program and launching it to an audience of millions - all in one day!</i>
+</p>
+
+<p>
+I was recently given the opportunity to collaborate on a small but highly visible "20% project": the <a href="http://www.google.com/logos/2011/thanksgiving.html">Thanksgiving 2011 Google Doodle</a>. The doodle features a turkey produced by randomly combining different styles of head, wings, feathers and legs. The user can customize it by clicking on the different parts of the turkey. This interactivity is implemented in the browser by a combination of JavaScript, CSS and of course HTML, creating turkeys on the fly.
+</p>
+
+<p>
+<img src="http://3.bp.blogspot.com/-zMg-g0i8USY/TufjpLaNgkI/AAAAAAAAAD8/3_gzbA2E4XA/s1600/image00.png">
+</p>
+
+<p>
+Once the user has created a personalized turkey it can be shared with friends and family by posting to Google+. Clicking a "Share" button (not pictured here) creates in the user's Google+ stream a post containing a snapshot of the turkey. The snapshot is a single image that matches the turkey the user created.
+</p>
+
+<p>
+With 13 alternatives for each of 8 parts of the turkey (heads, pairs of legs, distinct feathers, etc.) there are more than than 800 million possible snapshot images that could be generated. To pre-compute them all is clearly infeasible. Instead, we must generate the snapshots on the fly. Combining that problem with a need for immediate scalability and high availability, the choice of platform is obvious: Google App Engine!
+</p>
+
+<p>
+The next thing we needed to decide was which App Engine runtime to use. Image manipulation tasks are CPU-bound, so performance is the deciding factor in this case.
+</p>
+
+<p>
+To make an informed decision we ran a test. We quickly prepared a couple of equivalent demo apps for the new <a href="http://code.google.com/appengine/docs/python/python27/newin27.html">Python 2.7 runtime</a> (which provides <a href="http://www.pythonware.com/products/pil/">PIL</a>, a C-based imaging library) and the Go runtime. Each app generates an image composed of several small images, encodes the image as a JPEG, and sends the JPEG data as the HTTP response. The Python 2.7 app served requests with a median latency of 65 milliseconds, while the Go app ran with a median latency of just 32 milliseconds.
+</p>
+
+<p>
+This problem therefore seemed the perfect opportunity to try the experimental Go runtime.
+</p>
+
+<p>
+I had no previous experience with Go and the timeline was tight: two days to be production ready. This was intimidating, but I saw it as an opportunity to test Go from a different, often overlooked angle: development velocity. How fast can a person with no Go experience pick it up and build something that performs and scales?
+</p>
+
+<p>
+<b>Design</b>
+</p>
+
+<p>
+The approach was to encode the state of the turkey in the URL, drawing and encoding the snapshot on the fly.
+</p>
+
+<p>
+The base for every doodle is the background:
+</p>
+
+<p>
+<img src="http://4.bp.blogspot.com/-PSBglYfknwE/Tufj1I-SeBI/AAAAAAAAAEI/HR2qE5xVk_4/s1600/image01.jpg">
+</p>
+
+<p>
+A valid request URL might look like this: <a href="http://google-turkey.appspot.com/thumb/20332620">http://google-turkey.appspot.com/thumb/20332620</a>
+</p>
+
+<p>
+The alphanumeric string that follows "/thumb/" indicates (in hexadecimal) which choice to draw for each layout element, as illustrated by this image:
+</p>
+
+<p>
+<img src="http://2.bp.blogspot.com/-Un5APcocGtc/Tufj8_odUQI/AAAAAAAAAEU/-ZhuX_wjTHQ/s1600/image03.png">
+</p>
+
+<p>
+The program's request handler parses the URL to determine which element is selected for each component, draws the appropriate images on top of the background image, and serves the result as a JPEG. 
+</p>
+
+<p>
+If an error occurs, a default image is served. There's no point serving an error page because the user will never see it - the browser is almost certainly loading this URL into an image tag. 
+</p>
+
+<p>
+<b>Implementation</b>
+</p>
+
+<p>
+In the package scope we declare some data structures to describe the elements of the turkey, the location of the corresponding images, and where they should be drawn on the background image.
+</p>
+
+<pre>var (
+    // dirs maps each layout element to its location on disk.
+    dirs = map[string]string{
+        "h": "img/heads",
+        "b": "img/eyes_beak",
+        "i": "img/index_feathers",
+        "m": "img/middle_feathers",
+        "r": "img/ring_feathers",
+        "p": "img/pinky_feathers",
+        "f": "img/feet",
+        "w": "img/wing",
+    }
+
+    // urlMap maps each URL character position to
+    // its corresponding layout element.
+    urlMap = [...]string{"b", "h", "i", "m", "r", "p", "f", "w"}
+
+    // layoutMap maps each layout element to its position
+    // on the background image.
+    layoutMap = map[string]image.Rectangle{
+        "h": {image.Pt(109, 50), image.Pt(166, 152)},
+        "i": {image.Pt(136, 21), image.Pt(180, 131)},
+        "m": {image.Pt(159, 7), image.Pt(201, 126)},
+        "r": {image.Pt(188, 20), image.Pt(230, 125)},
+        "p": {image.Pt(216, 48), image.Pt(258, 134)},
+        "f": {image.Pt(155, 176), image.Pt(243, 213)},
+        "w": {image.Pt(169, 118), image.Pt(250, 197)},
+        "b": {image.Pt(105, 104), image.Pt(145, 148)},
+    }
+)</pre>
+
+<p>
+The geometry of the points above was calculated by measuring the actual location and size of each layout element within the image.
+</p>
+
+<p>
+Loading the images from disk on each request would be wasteful repetition, so we load all 106 images (13 * 8 elements + 1 background + 1 default) into global variables upon receipt of the first request.
+</p>
+
+<pre>var (
+    // elements maps each layout element to its images.
+    elements = make(map[string][]*image.RGBA)
+
+    // backgroundImage contains the background image data.
+    backgroundImage *image.RGBA
+
+    // defaultImage is the image that is served if an error occurs. 
+    defaultImage *image.RGBA
+
+    // loadOnce is used to call the load function only on the first request.
+    loadOnce <a href="http://golang.org/pkg/sync/#Once">sync.Once</a>
+)
+
+// load reads the various PNG images from disk and stores them in their
+// corresponding global variables.
+func load() {
+    defaultImage = loadPNG(defaultImageFile)
+    backgroundImage = loadPNG(backgroundImageFile)
+    for dirKey, dir := range dirs {
+        paths, err := filepath.Glob(dir + "/*.png")
+        if err != nil {
+            panic(err)
+        }
+        for _, p := range paths {
+            elements[dirKey] = append(elements[dirKey], loadPNG(p))
+        }
+    }
+}</pre>
+
+<p>
+Requests are handled in a straightforward sequence:
+</p>
+
+<p>
+<ol>
+<li>Parse the request URL, decoding the decimal value of each character in the path.</li>
+<li>Make a copy of the background image as the base for the final image.</li>
+<li>Draw each image element onto the background image using the layoutMap to determine where they should be drawn.</li>
+<li>Encode the image as a JPEG</li>
+<li>Return the image to user by writing the JPEG directly to the HTTP response writer.</li>
+</ol>
+</p>
+
+<p>
+Should any error occur, we serve the defaultImage to the user and log the error to the App Engine dashboard for later analysis.
+</p>
+
+<p>
+Here's the code for the request handler with explanatory comments:
+</p>
+
+<pre>func handler(w http.ResponseWriter, r *http.Request) {
+    // <a href="http://blog.golang.org/2010/08/defer-panic-and-recover.html">Defer</a> a function to recover from any panics.
+    // When recovering from a panic, log the error condition to
+    // the App Engine dashboard and send the default image to the user.
+    defer func() {
+        if err := recover(); err != nil {
+            c := appengine.NewContext(r)
+            c.Errorf("%s", err)
+            c.Errorf("%s", "Traceback: %s", r.RawURL)
+            if defaultImage != nil {
+                w.Header().Set("Content-type", "image/jpeg")
+                jpeg.Encode(w, defaultImage, &amp;imageQuality)
+            }
+        }
+    }()
+
+    // Load images from disk on the first request.
+    loadOnce.Do(load)
+
+    // Make a copy of the background to draw into.
+    bgRect := backgroundImage.Bounds()
+    m := image.NewRGBA(bgRect.Dx(), bgRect.Dy())
+    draw.Draw(m, m.Bounds(), backgroundImage, image.ZP, draw.Over)
+
+    // Process each character of the request string.
+    code := strings.ToLower(r.URL.Path[len(prefix):])
+    for i, p := range code {
+        // Decode hex character p in place.
+        if p &lt; 'a' {
+            // it's a digit
+            p = p - '0'
+        } else {
+            // it's a letter
+            p = p - 'a' + 10
+        }
+
+        t := urlMap[i]    // element type by index
+        em := elements[t] // element images by type
+        if p &gt;= len(em) {
+            panic(fmt.Sprintf("element index out of range %s: "+
+                "%d &gt;= %d", t, p, len(em)))
+        }
+
+        // Draw the element to m,
+        // using the layoutMap to specify its position.
+        draw.Draw(m, layoutMap[t], em[p], image.ZP, draw.Over)
+    }
+
+    // Encode JPEG image and write it as the response.
+    w.Header().Set("Content-type", "image/jpeg")
+    w.Header().Set("Cache-control", "public, max-age=259200")
+    jpeg.Encode(w, m, &amp;imageQuality)
+}</pre>
+
+<p>
+For brevity, I've omitted several helper functions from these code listings. See the <a href="http://code.google.com/p/go-thanksgiving/source/browse/">source code</a> for the full scoop.
+</p>
+
+<p>
+<b>Performance</b>
+</p>
+
+<p>
+<a href="http://3.bp.blogspot.com/-3dpdQWv1nzQ/TufkFj0bS-I/AAAAAAAAAEg/hONAssh_D9c/s1600/image02.png" imageanchor="1"><img border="0" height="99" width="400" src="http://3.bp.blogspot.com/-3dpdQWv1nzQ/TufkFj0bS-I/AAAAAAAAAEg/hONAssh_D9c/s400/image02.png" /></a>
+</p>
+
+<p>
+This chart - taken directly from the App Engine dashboard - shows average request latency during launch. As you can see, even under load it never exceeds 60 ms, with a median latency of 32 milliseconds. This is wicked fast, considering that our request handler is doing image manipulation and encoding on the fly.
+</p>
+
+<p>
+<b>Conclusions</b>
+</p>
+
+<p>
+I found Go's syntax to be intuitive, simple and clean. I have worked a lot with interpreted languages in the past, and although Go is instead a statically typed and compiled language, writing this app felt more like working with a dynamic, interpreted language. 
+</p>
+
+<p>
+The development server provided with the <a href="http://code.google.com/appengine/downloads.html#Google_App_Engine_SDK_for_Go">SDK</a> quickly recompiles the program after any change, so I could iterate as fast as I would with an interpreted language. It's dead simple, too - it took less than a minute to set up my development environment.
+</p>
+
+<p>
+Go's great documentation also helped me put this together fast. The docs are generated from the source code, so each function's documentation links directly to the associated source code. This not only allows the developer to understand very quickly what a particular function does but also encourages the developer to dig into the package implementation, making it easier to learn good style and conventions.
+</p>
+
+<p>
+In writing this application I used just three resources: App Engine's <a href="http://code.google.com/appengine/docs/go/gettingstarted/helloworld.html">Hello World Go example</a>, <a href="http://golang.org/pkg/">the Go packages documentation</a>, and <a href="http://blog.golang.org/2011/09/go-imagedraw-package.html">a blog post showcasing the Draw package</a>. Thanks to the rapid iteration made possible by the development server and the language itself, I was able to pick up the language and build a super fast, production ready, doodle generator in less than 24 hours.
+</p>
+
+<p>
+Download the full app source code (including images) at <a href="http://code.google.com/p/go-thanksgiving/source/browse/">the Google Code project</a>.
+</p>
+
+<p>
+Special thanks go to Guillermo Real and Ryan Germick who designed the doodle.
+<div style='clear: both;'></div>
+</div>
+<div class='post-footer'>
+<div class='post-footer-line post-footer-line-1'><span class='post-author vcard'>
+Posted by
+<span class='fn'>Andrew Gerrand</span>
+</span>
+<span class='post-timestamp'>
+</span>
+<span class='post-icons'>
+<span class='item-control blog-admin pid-2079280389'>
+<a href='http://www.blogger.com/post-edit.g?blogID=891002498403287956&postID=254114538233262349&from=pencil' title='Edit Post'>
+<img alt='' class='icon-action' height='18' src='http://img2.blogblog.com/img/icon18_edit_allbkg.gif' width='18'/>
+</a>
+</span>
+</span>
+</div>
+<div class='post-footer-line post-footer-line-2'><span class='post-labels'>
+Labels:
+<a href='http://blog.golang.org/search/label/appengine' rel='tag'>appengine</a>,
+<a href='http://blog.golang.org/search/label/google' rel='tag'>google</a>,
+<a href='http://blog.golang.org/search/label/guest' rel='tag'>guest</a>
+</span>
+</div>
+<div class='post-footer-line post-footer-line-3'><span class='post-location'>
+</span>
+</div>
+</div>
+</div>
+</div>
+
+            </div></div>
+          
+
+          <div class="date-outer">
+        
+<h2 class='date-header'><span>Thursday, November 10, 2011</span></h2>
+
+          <div class="date-posts">
+        
+<div class='post-outer'>
+<div class='post hentry'>
+<a name='2412118057829967138'></a>
+<h3 class='post-title entry-title'>
+<a href='http://blog.golang.org/2011/11/go-programming-language-turns-two.html'>The Go Programming Language turns two</a>
+</h3>
+<div class='post-header'>
+<div class='post-header-line-1'></div>
+</div>
+<div class='post-body entry-content'>
+Two years ago a small team at Google went public with their fledgling project - the Go Programming Language. They presented a language spec, two compilers, a modest standard library, some novel tools, and plenty of accurate (albeit succinct) documentation. They watched with excitement as programmers around the world began to play with Go. The team continued to iterate and improve on what they had built, and were gradually joined by dozens - and then hundreds - of programmers from the open source community.
+<p>
+The Go Authors went on to produce lots of libraries, new tools, and reams of <a href="http://golang.org/doc/docs.html">documentation</a>. They celebrated a successful year in the public eye with a <a href="http://blog.golang.org/2010/11/go-one-year-ago-today.html">blog post</a> last November that concluded "Go is certainly ready for production use, but there is still room for improvement. Our focus for the immediate future is making Go programs faster and more efficient in the context of high performance systems."
+<p>
+Today is the second anniversary of Go's release, and Go is faster and more stable than ever. Careful tuning of Go's code generators, concurrency primitives, garbage collector, and core libraries have increased the performance of Go programs, and native support for <a href="http://blog.golang.org/2011/06/profiling-go-programs.html">profiling</a> and <a href="http://blog.golang.org/2011/10/debugging-go-programs-with-gnu-debugger.html">debugging</a> makes it easier to detect and remove performance issues in user code. Go is also now easier to learn with <a href="http://tour.golang.org/">A Tour of Go</a>, an interactive tutorial you can take from the comfort of your web browser.
+<p>
+This year we introduced the experimental <a href="http://code.google.com/appengine/docs/go/">Go runtime</a> for Google's App Engine platform, and we have been steadily increasing the Go runtime's support for App Engine's APIs. Just this week we released <a href="http://code.google.com/appengine/downloads.html">version 1.6.0</a> of the Go App Engine SDK, which includes support for <a href="http://code.google.com/appengine/docs/go/backends/overview.html">backends</a> (long-running processes), finer control over datastore indexes, and various other improvements. Today, the Go runtime is near feature parity with - and is a viable alternative to - the Python and Java runtimes. In fact, we now serve <a href="http://golang.org/">golang.org</a> by running a version of <a href="http://golang.org/cmd/godoc/">godoc</a> on the App Engine service. 
+<p>
+While 2010 was a year of discovery and experimentation, 2011 was a year of fine tuning and planning for the future. This year we issued several "<a href="http://golang.org/doc/devel/release.html">release</a>" versions of Go that were more reliable and better supported than weekly snapshots. We also introduced <a href="http://golang.org/cmd/gofix/">gofix</a> to take the pain out of migrating to newer releases. Furthermore, last month we announced a <a href="http://blog.golang.org/2011/10/preview-of-go-version-1.html">plan for Go version 1</a> - a release that will be supported for years to come. Work toward Go 1 is already underway and you can observe our progress by the latest weekly snapshot at <a href="http://weekly.golang.org/pkg/">weekly.golang.org</a>.
+<p>
+The plan is to launch Go 1 in early 2012. We hope to bring the Go App Engine runtime out of "experimental" status at the same time.
+<p>
+<p>
+But that's not all. 2011 was an exciting year for the gopher, too. He has manifested himself as a plush toy (a highly prized gift at Google I/O and other Go talks) and in vinyl form (received by every attendee at OSCON and now available at the <a href="http://www.googlestore.com/Fun/Go+Gopher+Figurine.axd">Google Store</a>).
+<p>
+<img src="http://1.bp.blogspot.com/-Wo2tN9kQyas/TrxkB7WfioI/AAAAAAAAADk/qOzlWSIzrKQ/s1600/gophers.jpg" />
+<p>
+And, most surprisingly, at Halloween he made an appearance with his gopher girlfriend!
+<p>
+<img src="http://3.bp.blogspot.com/-_LT12eYgAbY/TrxkJFQY3bI/AAAAAAAAADw/fWCHEytwdec/s1600/costume.jpg" />
+<br><small>Photograph by <a href="https://plus.google.com/106640494112897458359/posts">Chris Nokleberg</a>.</small>
+<div style='clear: both;'></div>
+</div>
+<div class='post-footer'>
+<div class='post-footer-line post-footer-line-1'><span class='post-author vcard'>
+Posted by
+<span class='fn'>Andrew Gerrand</span>
+</span>
+<span class='post-timestamp'>
+</span>
+<span class='post-icons'>
+<span class='item-control blog-admin pid-2079280389'>
+<a href='http://www.blogger.com/post-edit.g?blogID=891002498403287956&postID=2412118057829967138&from=pencil' title='Edit Post'>
+<img alt='' class='icon-action' height='18' src='http://img2.blogblog.com/img/icon18_edit_allbkg.gif' width='18'/>
+</a>
+</span>
+</span>
+</div>
+<div class='post-footer-line post-footer-line-2'><span class='post-labels'>
+Labels:
+<a href='http://blog.golang.org/search/label/appengine' rel='tag'>appengine</a>,
+<a href='http://blog.golang.org/search/label/community' rel='tag'>community</a>,
+<a href='http://blog.golang.org/search/label/gopher' rel='tag'>gopher</a>
+</span>
+</div>
+<div class='post-footer-line post-footer-line-3'><span class='post-location'>
+</span>
+</div>
+</div>
+</div>
+</div>
+
+            </div></div>
+          
+
+          <div class="date-outer">
+        
+<h2 class='date-header'><span>Tuesday, November 1, 2011</span></h2>
+
+          <div class="date-posts">
+        
+<div class='post-outer'>
+<div class='post hentry'>
+<a name='4785765652966302237'></a>
+<h3 class='post-title entry-title'>
+<a href='http://blog.golang.org/2011/11/writing-scalable-app-engine.html'>Writing scalable App Engine applications</a>
+</h3>
+<div class='post-header'>
+<div class='post-header-line-1'></div>
+</div>
+<div class='post-body entry-content'>
+Back in May, we <a href="http://blog.golang.org/2011/05/go-and-google-app-engine.html">announced</a> the Go runtime for App Engine. Since then, we've opened it up for everyone to use, added many new APIs, and improved performance. We have been thrilled by all the interesting ways that people are using Go on App Engine.
+<p>
+One of the key benefits of the Go runtime, apart from working in a fantastic language, is that it has high performance. Go applications compile to native code, with no interpreter or virtual machine getting between your program and the machine.
+<p>
+Making your web application fast is important because it is well known that a web site's latency has a measurable impact on user happiness, and <a href="http://googlewebmastercentral.blogspot.com/2010/04/using-site-speed-in-web-search-ranking.html">Google web search uses it as a ranking factor</a>. Also announced in May was that App Engine would be <a href="http://googleappengine.blogspot.com/2011/05/year-ahead-for-google-app-engine.html">leaving its Preview status</a> and transitioning to a <a href="http://www.google.com/enterprise/cloud/appengine/pricing.html">new pricing model</a>, providing another reason to write efficient App Engine applications.
+<p>
+To make it easier for Go developers using App Engine to write highly efficient, scalable applications, we recently updated some existing App Engine articles to include snippets of Go source code and to link to relevant Go documentation.
+
+<ul>
+<li><a href="http://code.google.com/appengine/articles/scaling/overview.html">Best practices for writing scalable applications</a>
+<li><a href="http://code.google.com/appengine/articles/managing-resources.html">Managing Your App's Resource Usage</a>
+</ul>
+
+<i>By David Symonds, November 2011</i>
+<div style='clear: both;'></div>
+</div>
+<div class='post-footer'>
+<div class='post-footer-line post-footer-line-1'><span class='post-author vcard'>
+Posted by
+<span class='fn'>Andrew Gerrand</span>
+</span>
+<span class='post-timestamp'>
+</span>
+<span class='post-icons'>
+<span class='item-control blog-admin pid-2079280389'>
+<a href='http://www.blogger.com/post-edit.g?blogID=891002498403287956&postID=4785765652966302237&from=pencil' title='Edit Post'>
+<img alt='' class='icon-action' height='18' src='http://img2.blogblog.com/img/icon18_edit_allbkg.gif' width='18'/>
+</a>
+</span>
+</span>
+</div>
+<div class='post-footer-line post-footer-line-2'><span class='post-labels'>
+Labels:
+<a href='http://blog.golang.org/search/label/appengine' rel='tag'>appengine</a>,
+<a href='http://blog.golang.org/search/label/optimization' rel='tag'>optimization</a>
+</span>
+</div>
+<div class='post-footer-line post-footer-line-3'><span class='post-location'>
+</span>
+</div>
+</div>
+</div>
+</div>
+
+        </div></div>
+      
+<!-- google_ad_section_end -->
+</div>
+<div class='blog-pager' id='blog-pager'>
+<span id='blog-pager-older-link'>
+<a class='blog-pager-older-link' href='http://blog.golang.org/search?updated-max=2011-11-01T18:49:00-07:00&amp;max-results=7' id='Blog1_blog-pager-older-link' title='Older Posts'>Older Posts</a>
+</span>
+<a class='home-link' href='http://blog.golang.org/'>Home</a>
+</div>
+<div class='clear'></div>
+<div class='blog-feeds'>
+<div class='feed-links'>
+Subscribe to:
+<a class='feed-link' href='http://blog.golang.org/feeds/posts/default' target='_blank' type='application/atom+xml'>Posts (Atom)</a>
+</div>
+</div>
+<script type="text/javascript">window.___gcfg = {'lang': 'en'};window.___gapisync = false;(function() {var po = document.createElement('script');po.type = 'text/javascript';po.async = true;po.src = 'https://apis.google.com/js/plusone.js';var s = document.body.getElementsByTagName('script')[0];s.parentNode.insertBefore(po, s);})();</script>
+</div></div>
+</div>
+<div id='sidebar-wrapper'>
+<div class='sidebar section' id='sidebar'><div class='widget LinkList' id='LinkList1'>
+<div class='widget-content'>
+<ul>
+<li><a href='http://golang.org/'>Home</a></li>
+<li><a href='http://golang.org/doc/install.html'>How to Install Go</a></li>
+<li><a href='http://tour.golang.org/'>Learn Go</a></li>
+<li><a href='http://golang.org/doc/effective_go.html'>Effective Go</a></li>
+<li><a href='http://golang.org/doc/go_faq.html'>FAQ</a></li>
+<li><a href='http://golang.org/doc/go_spec.html'>Language Specification</a></li>
+<li><a href='http://groups.google.com/group/golang-nuts'>Go Nuts Mailing List</a></li>
+<li><a href='http://twitter.com/go_nuts'>go_nuts on Twitter</a></li>
+</ul>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=891002498403287956&widgetType=LinkList&widgetId=LinkList1&action=editWidget&sectionId=sidebar' onclick='return _WidgetManager._PopupConfig(document.getElementById("LinkList1"));' target='configLinkList1' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div>
+</div><div class='widget BlogArchive' id='BlogArchive1'>
+<h2>Blog Archive</h2>
+<div class='widget-content'>
+<div id='ArchiveList'>
+<div id='BlogArchive1_ArchiveList'>
+<ul class='hierarchy'>
+<li class='archivedate expanded'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy toggle-open'>&#9660;&#160;</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/search?updated-min=2012-01-01T00:00:00-08:00&amp;updated-max=2013-01-01T00:00:00-08:00&amp;max-results=2'>2012</a>
+<span class='post-count' dir='ltr'>(2)</span>
+<ul class='hierarchy'>
+<li class='archivedate expanded'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy toggle-open'>&#9660;&#160;</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/2012_07_01_archive.html'>July</a>
+<span class='post-count' dir='ltr'>(1)</span>
+<ul class='posts'>
+<li><a href='http://blog.golang.org/2012/07/go-videos-from-google-io-2012.html'>Go videos from Google I/O 2012</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/2012_03_01_archive.html'>March</a>
+<span class='post-count' dir='ltr'>(1)</span>
+<ul class='posts'>
+<li><a href='http://blog.golang.org/2012/03/go-version-1-is-released.html'>Go version 1 is released</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/search?updated-min=2011-01-01T00:00:00-08:00&amp;updated-max=2012-01-01T00:00:00-08:00&amp;max-results=29'>2011</a>
+<span class='post-count' dir='ltr'>(29)</span>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/2011_12_01_archive.html'>December</a>
+<span class='post-count' dir='ltr'>(3)</span>
+<ul class='posts'>
+<li><a href='http://blog.golang.org/2011/12/getting-to-know-go-community.html'>Getting to know the Go community</a></li>
+<li><a href='http://blog.golang.org/2011/12/building-stathat-with-go.html'>Building StatHat with Go</a></li>
+<li><a href='http://blog.golang.org/2011/12/from-zero-to-go-launching-on-google.html'>From zero to Go: launching on the Google homepage ...</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/2011_11_01_archive.html'>November</a>
+<span class='post-count' dir='ltr'>(2)</span>
+<ul class='posts'>
+<li><a href='http://blog.golang.org/2011/11/go-programming-language-turns-two.html'>The Go Programming Language turns two</a></li>
+<li><a href='http://blog.golang.org/2011/11/writing-scalable-app-engine.html'>Writing scalable App Engine applications</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/2011_10_01_archive.html'>October</a>
+<span class='post-count' dir='ltr'>(4)</span>
+<ul class='posts'>
+<li><a href='http://blog.golang.org/2011/10/debugging-go-programs-with-gnu-debugger.html'>Debugging Go programs with the GNU Debugger</a></li>
+<li><a href='http://blog.golang.org/2011/10/go-app-engine-sdk-155-released.html'>Go App Engine SDK 1.5.5 released</a></li>
+<li><a href='http://blog.golang.org/2011/10/preview-of-go-version-1.html'>A preview of Go version 1</a></li>
+<li><a href='http://blog.golang.org/2011/10/learn-go-from-your-browser.html'>Learn Go from your browser</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/2011_09_01_archive.html'>September</a>
+<span class='post-count' dir='ltr'>(4)</span>
+<ul class='posts'>
+<li><a href='http://blog.golang.org/2011/09/go-imagedraw-package.html'>The Go image/draw package</a></li>
+<li><a href='http://blog.golang.org/2011/09/go-image-package.html'>The Go image package</a></li>
+<li><a href='http://blog.golang.org/2011/09/laws-of-reflection.html'>The Laws of Reflection</a></li>
+<li><a href='http://blog.golang.org/2011/09/two-go-talks-lexical-scanning-in-go-and.html'>Two Go Talks: &quot;Lexical Scanning in Go&quot; and &quot;Cuddle...</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/2011_07_01_archive.html'>July</a>
+<span class='post-count' dir='ltr'>(2)</span>
+<ul class='posts'>
+<li><a href='http://blog.golang.org/2011/07/go-for-app-engine-is-now-generally.html'>Go for App Engine is now generally available</a></li>
+<li><a href='http://blog.golang.org/2011/07/error-handling-and-go.html'>Error handling and Go</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/2011_06_01_archive.html'>June</a>
+<span class='post-count' dir='ltr'>(3)</span>
+<ul class='posts'>
+<li><a href='http://blog.golang.org/2011/06/first-class-functions-in-go-and-new-go.html'>&quot;First Class Functions in Go&quot; and new Go course no...</a></li>
+<li><a href='http://blog.golang.org/2011/06/profiling-go-programs.html'>Profiling Go Programs</a></li>
+<li><a href='http://blog.golang.org/2011/06/spotlight-on-external-go-libraries.html'>Spotlight on external Go libraries</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/2011_05_01_archive.html'>May</a>
+<span class='post-count' dir='ltr'>(3)</span>
+<ul class='posts'>
+<li><a href='http://blog.golang.org/2011/05/gif-decoder-exercise-in-go-interfaces.html'>A GIF decoder: an exercise in Go interfaces</a></li>
+<li><a href='http://blog.golang.org/2011/05/go-at-google-io-2011-videos.html'>Go at Google I/O 2011: videos</a></li>
+<li><a href='http://blog.golang.org/2011/05/go-and-google-app-engine.html'>Go and Google App Engine</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/2011_04_01_archive.html'>April</a>
+<span class='post-count' dir='ltr'>(2)</span>
+<ul class='posts'>
+<li><a href='http://blog.golang.org/2011/04/go-at-heroku.html'>Go at Heroku</a></li>
+<li><a href='http://blog.golang.org/2011/04/introducing-gofix.html'>Introducing Gofix</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/2011_03_01_archive.html'>March</a>
+<span class='post-count' dir='ltr'>(4)</span>
+<ul class='posts'>
+<li><a href='http://blog.golang.org/2011/03/godoc-documenting-go-code.html'>Godoc: documenting Go code</a></li>
+<li><a href='http://blog.golang.org/2011/03/gobs-of-data.html'>Gobs of data</a></li>
+<li><a href='http://blog.golang.org/2011/03/c-go-cgo.html'>C? Go? Cgo!</a></li>
+<li><a href='http://blog.golang.org/2011/03/go-becomes-more-stable.html'>Go becomes more stable</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/2011_01_01_archive.html'>January</a>
+<span class='post-count' dir='ltr'>(2)</span>
+<ul class='posts'>
+<li><a href='http://blog.golang.org/2011/01/json-and-go.html'>JSON and Go</a></li>
+<li><a href='http://blog.golang.org/2011/01/go-slices-usage-and-internals.html'>Go Slices: usage and internals</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/search?updated-min=2010-01-01T00:00:00-08:00&amp;updated-max=2011-01-01T00:00:00-08:00&amp;max-results=16'>2010</a>
+<span class='post-count' dir='ltr'>(16)</span>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/2010_11_01_archive.html'>November</a>
+<span class='post-count' dir='ltr'>(2)</span>
+<ul class='posts'>
+<li><a href='http://blog.golang.org/2010/11/go-one-year-ago-today.html'>Go: one year ago today</a></li>
+<li><a href='http://blog.golang.org/2010/11/debugging-go-code-status-report.html'>Debugging Go code (a status report)</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/2010_10_01_archive.html'>October</a>
+<span class='post-count' dir='ltr'>(1)</span>
+<ul class='posts'>
+<li><a href='http://blog.golang.org/2010/10/real-go-projects-smarttwitter-and-webgo.html'>Real Go Projects: SmartTwitter and web.go</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/2010_09_01_archive.html'>September</a>
+<span class='post-count' dir='ltr'>(3)</span>
+<ul class='posts'>
+<li><a href='http://blog.golang.org/2010/09/go-concurrency-patterns-timing-out-and.html'>Go Concurrency Patterns: Timing out, moving on</a></li>
+<li><a href='http://blog.golang.org/2010/09/introducing-go-playground.html'>Introducing the Go Playground</a></li>
+<li><a href='http://blog.golang.org/2010/09/go-wins-2010-bossie-award.html'>Go Wins 2010 Bossie Award</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/2010_08_01_archive.html'>August</a>
+<span class='post-count' dir='ltr'>(1)</span>
+<ul class='posts'>
+<li><a href='http://blog.golang.org/2010/08/defer-panic-and-recover.html'>Defer, Panic, and Recover</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/2010_07_01_archive.html'>July</a>
+<span class='post-count' dir='ltr'>(2)</span>
+<ul class='posts'>
+<li><a href='http://blog.golang.org/2010/07/share-memory-by-communicating.html'>Share Memory By Communicating</a></li>
+<li><a href='http://blog.golang.org/2010/07/gos-declaration-syntax.html'>Go&#39;s Declaration Syntax</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/2010_06_01_archive.html'>June</a>
+<span class='post-count' dir='ltr'>(1)</span>
+<ul class='posts'>
+<li><a href='http://blog.golang.org/2010/06/go-programming-session-video-from.html'>Go Programming session video from Google I/O</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/2010_05_01_archive.html'>May</a>
+<span class='post-count' dir='ltr'>(3)</span>
+<ul class='posts'>
+<li><a href='http://blog.golang.org/2010/05/go-at-io-frequently-asked-questions.html'>Go at I/O: Frequently Asked Questions</a></li>
+<li><a href='http://blog.golang.org/2010/05/upcoming-google-io-go-events.html'>Upcoming Google I/O Go Events</a></li>
+<li><a href='http://blog.golang.org/2010/05/new-talk-and-tutorials.html'>New Talk and Tutorials</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/2010_04_01_archive.html'>April</a>
+<span class='post-count' dir='ltr'>(2)</span>
+<ul class='posts'>
+<li><a href='http://blog.golang.org/2010/04/json-rpc-tale-of-interfaces.html'>JSON-RPC: a tale of interfaces</a></li>
+<li><a href='http://blog.golang.org/2010/04/third-party-libraries-goprotobuf-and.html'>Third-party libraries: goprotobuf and beyond</a></li>
+</ul>
+</li>
+</ul>
+<ul class='hierarchy'>
+<li class='archivedate collapsed'>
+<a class='toggle' href='javascript:void(0)'>
+<span class='zippy'>
+
+          &#9658;&#160;
+        
+</span>
+</a>
+<a class='post-count-link' href='http://blog.golang.org/2010_03_01_archive.html'>March</a>
+<span class='post-count' dir='ltr'>(1)</span>
+<ul class='posts'>
+<li><a href='http://blog.golang.org/2010/03/go-whats-new-in-march-2010.html'>Go: What&#39;s New in March 2010</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='http://www.blogger.com/rearrange?blogID=891002498403287956&widgetType=BlogArchive&widgetId=BlogArchive1&action=editWidget&sectionId=sidebar' onclick='return _WidgetManager._PopupConfig(document.getElementById("BlogArchive1"));' target='configBlogArchive1' title='Edit'>
+<img alt='' height='18' src='http://img1.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div>
+</div></div>
+</div>
+<!-- spacer for skins that want sidebar and main to be the same height-->
+<div class='clear'>&#160;</div>
+</div>
+<!-- end content-wrapper -->
+<div id='footer-wrapper'>
+<div class='footer section' id='footer'></div>
+</div>
+</div></div>
+<!-- end outer-wrapper -->
+<script type='text/javascript'>
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type='text/javascript'>
+try {
+var pageTracker = _gat._getTracker("UA-11222381-3");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<script type="text/javascript">
+if (window.jstiming) window.jstiming.load.tick('widgetJsBefore');
+</script><script type="text/javascript" src="http://www.blogger.com/static/v1/widgets/295479852-widgets.js"></script>
+<script type='text/javascript'>
+if (typeof(BLOG_attachCsiOnload) != 'undefined' && BLOG_attachCsiOnload != null) { window['blogger_templates_experiment_id'] = "templatesV1";window['blogger_blog_id'] = '891002498403287956';BLOG_attachCsiOnload(''); }_WidgetManager._Init('http://www.blogger.com/rearrange?blogID\x3d891002498403287956','http://blog.golang.org/','891002498403287956');
+_WidgetManager._SetPageActionUrl('http://www.blogger.com/display?blogID\x3d891002498403287956','APq4FmDeVmocYqruY1Z8CjS6-mkfvGGBbVRY5VJCe_5m3vKv107VYbG8Axx_T4FyVQqz-YvTAIi62CCTw1e2Lkm4Nyc027cOA86fRhbRKjcErmrPb0yn2OU\x3d','AOuZoY5n2RLeLARAnMwP6C0SxJm6FY_2yg:1341265449705');
+_WidgetManager._SetDataContext([{'name': 'blog', 'data': {'blogId': '891002498403287956', 'bloggerUrl': 'http://www.blogger.com', 'title': 'The Go Programming Language Blog', 'pageType': 'index', 'url': 'http://blog.golang.org/', 'canonicalUrl': 'http://blog.golang.org/', 'canonicalHomepageUrl': 'http://blog.golang.org/', 'homepageUrl': 'http://blog.golang.org/', 'blogspotFaviconUrl': 'http://blog.golang.org/favicon.ico', 'enabledCommentProfileImages': true, 'adultContent': false, 'analyticsAccountNumber': '', 'searchLabel': '', 'searchQuery': '', 'pageName': '', 'pageTitle': 'The Go Programming Language Blog', 'encoding': 'UTF-8', 'locale': 'en', 'isPrivate': false, 'isMobile': false, 'mobileClass': '', 'isPrivateBlog': false, 'languageDirection': 'ltr', 'feedLinks': '\74link rel\75\42alternate\42 type\75\42application/atom+xml\42 title\75\42The Go Programming Language Blog - Atom\42 href\75\42http://blog.golang.org/feeds/posts/default\42 /\76\n\74link rel\75\42alternate\42 type\75\42application/rss+xml\42 title\75\42The Go Programming Language Blog - RSS\42 href\75\42http://blog.golang.org/feeds/posts/default?alt\75rss\42 /\76\n\74link rel\75\42service.post\42 type\75\42application/atom+xml\42 title\75\42The Go Programming Language Blog - Atom\42 href\75\42http://www.blogger.com/feeds/891002498403287956/posts/default\42 /\76\n\74link rel\75\42EditURI\42 type\75\42application/rsd+xml\42 title\75\42RSD\42 href\75\42http://www.blogger.com/rsd.g?blogID\75891002498403287956\42 /\076', 'meTag': '', 'openIdOpTag': '\74link rel\75\42openid.server\42 href\75\42http://www.blogger.com/openid-server.g\42 /\76\n\74link rel\75\42openid.delegate\42 href\75\42http://blog.golang.org/\42 /\76\n', 'imageSrcTag': '', 'latencyHeadScript': '\74script type\75\42text/javascript\42\76(function() { var a\75window,c\75\42jstiming\42,d\75\42tick\42;var e\75function(b){this.t\75{};this.tick\75function(b,o,f){f\75void 0!\75f?f:(new Date).getTime();this.t[b]\75[f,o]};this[d](\42start\42,null,b)},h\75new e;a.jstiming\75{Timer:e,load:h};if(a.performance\46\46a.performance.timing){var i\75a.performance.timing,j\75a[c].load,k\75i.navigationStart,l\75i.responseStart;0\74k\46\46l\76\75k\46\46(j[d](\42_wtsrt\42,void 0,k),j[d](\42wtsrt_\42,\42_wtsrt\42,l))}\ntry{var m\75null;a.chrome\46\46a.chrome.csi\46\46(m\75Math.floor(a.chrome.csi().pageT));null\75\75m\46\46a.gtbExternal\46\46(m\75a.gtbExternal.pageT());null\75\75m\46\46a.external\46\46(m\75a.external.pageT);m\46\46(a[c].pt\75m)}catch(n){};a.tickAboveFold\75function(b){var g\0750;if(b.offsetParent){do g+\75b.offsetTop;while(b\75b.offsetParent)}b\75g;750\76\75b\46\46a[c].load[d](\42aft\42)};var p\75!1;function q(){p||(p\75!0,a[c].load[d](\42firstScrollTime\42))}a.addEventListener?a.addEventListener(\42scroll\42,q,!1):a.attachEvent(\42onscroll\42,q);\n })();\74/script\076', 'mobileHeadScript': '', 'view': '', 'dynamicViewsCommentsSrc': '//www.blogblog.com/dynamicviews/4224c15c4e7c9321/js/comments.js', 'dynamicViewsScriptSrc': '//www.blogblog.com/dynamicviews/fd3d7a59ef034be3'}}, {'name': 'skin', 'data': {'vars': {'sidebartextcolor': '#666666', 'linkcolor': '#5588aa', 'visitedlinkcolor': '#2a4455', 'textcolor': '#333333', 'headerfont': 'normal normal 78% Arial, sans-serif', 'pagetitlefont': 'normal normal 180% Arial, sans-serif', 'bgcolor': '#ffffff', 'descriptioncolor': '#999999', 'titlecolor': '#5588aa', 'bordercolor': '#ffffff', 'postfooterfont': 'normal normal 78% Arial, sans-serif', 'pagetitlecolor': '#0d0600', 'bodyfont': 'normal normal 100% Arial, sans-serif', 'endSide': 'right', 'startSide': 'left', 'descriptionfont': 'normal normal 78% Arial, sans-serif', 'sidebarcolor': '#999999'}, 'override': ''}}, {'name': 'view', 'data': {'classic': {'name': 'classic', 'url': '/?view\75classic'}, 'flipcard': {'name': 'flipcard', 'url': '/?view\75flipcard'}, 'magazine': {'name': 'magazine', 'url': '/?view\75magazine'}, 'mosaic': {'name': 'mosaic', 'url': '/?view\75mosaic'}, 'sidebar': {'name': 'sidebar', 'url': '/?view\75sidebar'}, 'snapshot': {'name': 'snapshot', 'url': '/?view\75snapshot'}, 'timeslide': {'name': 'timeslide', 'url': '/?view\75timeslide'}}}]);
+_WidgetManager._RegisterWidget('_LinkListView', new _WidgetInfo('LinkList1', 'sidebar', null, document.getElementById('LinkList1'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_BlogArchiveView', new _WidgetInfo('BlogArchive1', 'sidebar', null, document.getElementById('BlogArchive1'), {'languageDirection': 'ltr'}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HeaderView', new _WidgetInfo('Header1', 'header', null, document.getElementById('Header1'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_NavbarView', new _WidgetInfo('Navbar1', 'navbar', null, document.getElementById('Navbar1'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_BlogView', new _WidgetInfo('Blog1', 'main', null, document.getElementById('Blog1'), {'cmtInteractionsEnabled': false, 'lightboxEnabled': true, 'lightboxModuleUrl': 'http://www.blogger.com/static/v1/jsbin/2291035035-lbx.js', 'lightboxCssUrl': 'http://www.blogger.com/static/v1/v-css/228702327-lightbox_bundle.css'}, 'displayModeFull'));
+</script>
+</body>
+</html>
