@@ -3,6 +3,7 @@ package rssminer.fetcher;
 import java.net.Proxy;
 import java.net.URI;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class RetryHttpTask implements IHttpTask {
 
@@ -21,7 +22,8 @@ public class RetryHttpTask implements IHttpTask {
     }
 
     public Map<String, String> getHeaders() {
-        return mTask.getHeaders();
+        // with empty header to retry (302)
+        return new TreeMap<String, String>();
     }
 
     public Proxy getProxy() {

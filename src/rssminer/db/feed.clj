@@ -37,9 +37,16 @@
 (defn fetch-link [id]
   (:link (first (mysql-query ["SELECT link FROM feeds WHERE id = ?" id]))))
 
+(defn- nil-fill [data key]
+  (if (contains? data key)
+    data
+    (assoc data key nil)))
+
+;;; make sure last_modified and :etag are always updated
 (defn- safe-update-rss-link [id data]
-  (with-mysql
-    (update-values :rss_links ["id = ?" id] data)))
+  (let [data (nil-fill (nil-fill data :last_modified) :etag)]
+    (with-mysql
+      (update-values :rss_links ["id = ?" id] data))))
 
 (defn update-rss-link [id data]
   (if-let [url (:url data)]

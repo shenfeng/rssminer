@@ -30,12 +30,15 @@
 (defn- quicker [last-interval]
   (max (* 3600 12) (int (/ last-interval 1.4)))) ; min 12h
 
+;; TODO better last_modified and etag policy
 (defn- next-check [last-interval status headers]
   (if-let [location (get headers HttpUtils/LOCATION)]
     {:url location :next_check_ts (rand-int 100000)}
     (let [interval (if (= 200 status)
                      (quicker last-interval) (slower last-interval))]
       {:check_interval interval
+       :last_modified (get headers HttpUtils/LAST_MODIFIED)
+       :etag (get headers HttpUtils/ETAG)
        :next_check_ts (+ (now-seconds) interval
                          ;; to seperate them out, 30 minutes
                          (- 3600 (rand-int 7200)))})))
@@ -44,8 +47,6 @@
                    status headers body]
   (let [feeds (when (and (= 200 status) body) (parse-feed body))
         updated (assoc-if (next-check check_interval status headers)
-                          :last_modified (get headers HttpUtils/LAST_MODIFIED)
-                          :etag (get headers HttpUtils/ETAG)
                           :alternate (:link feeds)
                           :last_status status
                           :error_msg ""

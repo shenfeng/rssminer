@@ -41,8 +41,8 @@ public class HttpTaskRunner {
             this.task = task;
         }
 
-        public void finish(String body, Map<String, String> headers) {
-            int status = 200;
+        public void finish(int status, String body,
+                Map<String, String> headers) {
             body = Utils.trimRemoveBom(body);
             String ct = headers.get(HttpUtils.CONTENT_TYPE);
             if (ct != null && ct.toLowerCase().indexOf("html") != -1) {
@@ -94,10 +94,10 @@ public class HttpTaskRunner {
                                 "redirect more than 4 times"));
                     }
                 } else {
-                    finish(body, headers);
+                    finish(status, body, headers);
                 }
             } finally {
-                finishTask(task, status);
+                taskFinished(task, status);
             }
         }
 
@@ -106,7 +106,7 @@ public class HttpTaskRunner {
                 logger.debug(task.getUri().toString(), t);
                 task.onThrowable(t);
             } finally {
-                finishTask(task, 600);
+                taskFinished(task, 600);
             }
         }
     }
@@ -194,7 +194,7 @@ public class HttpTaskRunner {
         return mStat;
     }
 
-    private void finishTask(IHttpTask task, int status) {
+    private void taskFinished(IHttpTask task, int status) {
         ++mCounter;
         mConcurrent.release();
         recordStat(status);
