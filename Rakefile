@@ -103,8 +103,8 @@ desc "Prepare for production"
 task :prepare_prod => [:css_compile, "js:minify"]
 
 desc "lein swank"
-task :swank do
-  sh "rm classes -rf && lein javac && lein swank"
+task :swank => :javac do
+  sh "lein swank"
 end
 
 desc 'Deploy to production'
@@ -112,10 +112,23 @@ task :deploy => [:clean, :chrome, :test, :prepare_prod] do
   sh "scripts/deploy"
 end
 
-desc "Run unit test"
-task :test => :prepare do
-  sh 'rm classes -rf && lein javac && lein test'
+desc "Javac"
+task :javac do
+  sh 'rm classes -rf && mkdir classes'
+  sh 'find src/java -name "*.java" | xargs javac -Xlint:unchecked -cp "classes:lib/*:src/"  -d classes -sourcepath src/java/'
+end
+
+desc "Run junit test"
+task :junit => [:prepare, :javac] do
   sh './scripts/junit_test'
+end
+
+desc "Run all test"
+task :all_test => [:test, :junit]
+
+desc "Run lein unit test"
+task :test => [:prepare, :javac] do
+  sh 'lein test'
 end
 
 desc "Generate TAGS using etags for clj"
@@ -202,29 +215,26 @@ task :luke do
 end
 
 desc "Rebuild index"
-task :rebuild_index do
-  sh 'rm classes -rf && lein javac'
+task :rebuild_index => :javac do
   sh './scripts/admin rebuild-index'
 end
 
 namespace :db do
   desc "Reload database with production data"
-  task :backup_prod do
-    sh 'rm classes -rf && lein javac'
+  task :backup_prod => :javac do
     sh './scripts/admin backup-db && ./scripts/admin restore-db && ./scripts/admin rebuild-index'
   end
 
   desc "Restore db from latest backup"
-  task :restore_db do
-    sh 'rm classes -rf && lein javac'
+  task :restore_db => :javac do
     sh './scripts/admin restore-db && ./scripts/admin rebuild-index'
   end
 end
 
 namespace :run do
   desc "Run server in dev profile"
-  task :dev => :prepare do
-    sh 'rm classes -rf && lein javac && scripts/run --profile dev'
+  task :dev => [:prepare, :javac] do
+    sh 'scripts/run --profile dev'
   end
 
   desc "Compile and run"
@@ -233,8 +243,8 @@ namespace :run do
   end
 
   desc "Run server in production profile"
-  task :prod => :prepare_prod do
-    sh 'rm classes -rf && lein javac && scripts/run --profile prod --static-server //s.rss-miner.com --proxy-server //p.rss-miner.com'
+  task :prod => [:prepare_prod, :javac] do
+    sh 'scripts/run --profile prod --static-server //s.rss-miner.com --proxy-server //p.rss-miner.com'
   end
 
   desc "Restore db from latest backup, Run server in dev profile"

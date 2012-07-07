@@ -17,6 +17,7 @@ import org.junit.Test;
 import rssminer.search.Searcher;
 import clojure.lang.ArraySeq;
 
+@SuppressWarnings("unchecked")
 public class NaiveBayesTest {
 
 	static final File TRAIN = new File(
@@ -145,7 +146,7 @@ public class NaiveBayesTest {
 
 	private boolean debug = false;
 
-	@Test
+    @Test
 	public void testBayes() throws CorruptIndexException, IOException {
 		int count = 0;
 		double guard = (double) trainLikeIds.size()
