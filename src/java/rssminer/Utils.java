@@ -56,6 +56,18 @@ public class Utils {
         }
     }
 
+    public static String trimRemoveBom(String html) {
+        html = html.trim();
+        if (html.length() > 0) {
+            char c = html.charAt(0);
+            // bom, magic number
+            if((int)c == 65279) {
+                html = html.substring(1);
+            }
+        }
+        return html;
+    }
+
     public static final ThreadLocal<Parser> parser = new ThreadLocal<Parser>() {
         protected Parser initialValue() {
             Parser p = new Parser();

@@ -4,7 +4,7 @@
                  [commons-codec "1.5"]
                  [commons-io "2.1"]
                  [compojure "1.1.0"]
-                 [me.shenfeng/http-kit "1.0.0-SNAPSHOT"]
+                 [me.shenfeng/http-kit "1.0.0"]
                  [me.shenfeng/mustache "0.0.1"]
                  [me.shenfeng/mmseg "0.0.1"]
                  [me.shenfeng/dbcp "0.0.1"]

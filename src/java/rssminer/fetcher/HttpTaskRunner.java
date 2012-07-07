@@ -43,7 +43,7 @@ public class HttpTaskRunner {
 
         public void finish(String body, Map<String, String> headers) {
             int status = 200;
-            body = trimRemoveBom(body);
+            body = Utils.trimRemoveBom(body);
             String ct = headers.get(HttpUtils.CONTENT_TYPE);
             if (ct != null && ct.toLowerCase().indexOf("html") != -1) {
                 try {
@@ -138,17 +138,6 @@ public class HttpTaskRunner {
 
     static Logger logger = LoggerFactory.getLogger(HttpTaskRunner.class);
 
-    public static String trimRemoveBom(String html) {
-        html = html.trim();
-        if (html.length() > 0) {
-            char c = html.charAt(0);
-            // bom, magic number
-            if((int)c == 65279) {
-                html = html.substring(1);
-            }
-        }
-        return html;
-    }
     private final IHttpTasksProvder mBulkProvider;
     private final IBlockingTaskProvider mBlockingProvider;
     private final String mName;

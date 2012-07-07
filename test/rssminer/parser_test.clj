@@ -1,7 +1,11 @@
 (ns rssminer.parser-test
-  (use clojure.pprint
-       clojure.test
-       rssminer.parser))
+  (:use clojure.pprint
+        clojure.test
+        rssminer.util
+        rssminer.test-common
+        rssminer.parser)
+  (:require [rssminer.db.feed :as db])
+  (:import rssminer.Utils))
 
 (deftest test-ppurl-rss
   (let [feed (parse-feed (slurp "test/ppurl-rss.xml"))]
@@ -39,3 +43,20 @@
          :link
          :updated_ts
          :published_ts)))
+
+(def folder (java.io.File. "test/failed_rss/"))
+
+(def fixture (join-fixtures [mysql-fixture lucene-fixture]))
+
+(defn import-failed-rss []
+  (fixture (fn [] (let [success (atom 1)]
+                   (doseq [file (file-seq folder)]
+                     (if (.isFile file)
+                       (let [id (to-int (.getName file))
+                             rss (Utils/trimRemoveBom (slurp file))
+                             feeds (parse-feed rss)]
+                         (when (and feeds (> (count (:entries feeds)) 1))
+                           (println "ok" id)
+                           (swap! success inc))
+                         (db/save-feeds feeds id))))
+                   (println "successed feeds" @success)))))

@@ -50,9 +50,10 @@
                                             (:categories e)))]
                     (most-len t 128))
             :updated_ts (:updatedDate e)
-            :published_ts (or (:publishedDate e)
-                              (:updatedDate e)
-                              (now-seconds))))
+            :published_ts (let [s (or (:publishedDate e)
+                                      (:updatedDate e)
+                                      (now-seconds))]
+                            (if (< s 0) (now-seconds) s))))
 
 (defn parse-feed [str]
   (when str

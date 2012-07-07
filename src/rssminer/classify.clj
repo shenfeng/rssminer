@@ -16,7 +16,9 @@
     (reset! daemon nil)))
 
 (defn on-fetcher-event [rssid feedids]
-  (.onFecherEvent ^SysVoteDaemon @daemon rssid feedids))
+  (when-not (nil? @daemon)
+    (.onFecherEvent ^SysVoteDaemon @daemon rssid feedids)))
 
 (defn on-feed-event [userid feedid]
-  (.onFeedEvent ^SysVoteDaemon @daemon userid feedid))
+  (when-not (nil? @daemon)
+    (.onFeedEvent ^SysVoteDaemon @daemon userid feedid)))
