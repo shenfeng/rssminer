@@ -20,6 +20,7 @@ PID_DIR="/var/run/${APP_NAME}"
 LOG_DIR="/var/log/${APP_NAME}"
 
 INDEX_PATH=/var/rssminer/index
+TMP_INDEX_PATH=/var/rssminer/index2
 
 JAVA=`which java`
 
@@ -109,13 +110,16 @@ case "$1" in
         $0 start
         ;;
     rebuild-index)
+        rm -rfv $TMP_INDEX_PATH
+        su $AS_USER -c "mkdir -p $TMP_INDEX_PATH"
+        su $AS_USER -c "$JAVA $JVM_ARGS -cp $CLASSPATH rssminer.admin -c rebuild-index --index-path $TMP_INDEX_PATH"
         while running
         do
             $0 stop
             sleep 1;
         done
-        rm $INDEX_PATH/* -fv
-        su $AS_USER -c "$JAVA $JVM_ARGS -cp $CLASSPATH rssminer.admin -c rebuild-index"
+        rm $INDEX_PATH -fvr
+        mv $TMP_INDEX_PATH $INDEX_PATH
         ls -lh $INDEX_PATH
         $0 start
         ;;
