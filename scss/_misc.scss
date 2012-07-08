@@ -23,10 +23,20 @@
     }
 }
 
+$demo_warn_bg_color: #fcfcac;
+
+.demo-warn {
+    font-size: 16px;
+    background: $demo_warn_bg_color;
+    padding: 8px;
+    margin: 0;
+    display: inline-block;
+}
+
 #warn-msg {
     display: none;
     right: 250px;
-    background: yellow;
+    background: $demo_warn_bg_color;
     font-size: 13px;
     top: 8px;
     padding: 6px 4px;
@@ -37,6 +47,7 @@
 #notification {
     position: absolute;
     top: 8px;
+    font-size: 12px;
     left: 50%;
     z-index: 1000;
     overflow: hidden;
