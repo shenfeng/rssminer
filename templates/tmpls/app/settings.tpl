@@ -81,17 +81,17 @@
       <ul>
         <li class="like">
           <span class="bar"></span>
-          The Top 20%. Having little time? try read them first.
+          The Top 20%: having little time? Try reading them first.
           <i class="icon-thumbs-down"></i>
           If you want to correct Rssminer.
         </li>
         <li class="neutral">
           <span class="bar"></span>
-          20% ~ 50%. If you not in a hurry, they may be the choice
+          20% ~ 50%: if you not in a hurry, they may be the choice
         </li>
         <li class="dislike">
           <span class="bar"></span>
-          The remaining 50%.
+          The remaining 50%:
           <i class="icon-thumbs-up"></i>
           if one actually worth
           reading, Rssminer will learn the lession</li>

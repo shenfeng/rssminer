@@ -33,9 +33,9 @@ import clojure.lang.Keyword;
 
 public class SysVoteDaemon implements Runnable {
 
-    public static final int expireSeconds = 3600 * 24 * 10; // 10 days
-    public static final double likeRatio = 0.2;
-    public static final double dislikeRatio = 0.3;
+    public static final int EXPIRE_SECONDS = 3600 * 24 * 10; // 10 days
+    public static final double LIKE_RATIO = 0.2;
+    public static final double DISLIKE_RATIO = 0.5;
     private static final Logger logger = LoggerFactory
             .getLogger(SysVoteDaemon.class);
 
@@ -181,8 +181,8 @@ public class SysVoteDaemon implements Runnable {
     private void saveScoresToMysql(int usreID, double[] results)
             throws SQLException {
         Arrays.sort(results);
-        double neutral = results[(int) (results.length * dislikeRatio)];
-        double like = results[(int) (results.length * (1 - likeRatio))];
+        double neutral = results[(int) (results.length * DISLIKE_RATIO)];
+        double like = results[(int) (results.length * (1 - LIKE_RATIO))];
 
         Connection con = ds.getConnection();
         try {
@@ -214,7 +214,7 @@ public class SysVoteDaemon implements Runnable {
             for (FeedScore fs : scores) {
                 if (fs.subid != lastSubID) {
                     if (lastKey != null) {
-                        pipelined.expire(lastKey, expireSeconds);
+                        pipelined.expire(lastKey, EXPIRE_SECONDS);
                     }
                     lastKey = Utils.genKey(userID, fs.subid);
                     pipelined.del(lastKey); // delete it

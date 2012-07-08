@@ -26,6 +26,8 @@ import rssminer.Utils;
 import clojure.lang.Keyword;
 
 public class MinerDAO {
+    static final int COMBINED_KEY_EXPIRE = 3600;
+
     private JedisPool jedis;
     private DataSource ds;
 
@@ -172,7 +174,7 @@ public class MinerDAO {
                     keys[i] = Utils.genKey(userID, subIDS.get(i));
                 }
                 redis.zunionstore(key, keys);
-                redis.expire(key, 3600);
+                redis.expire(key, COMBINED_KEY_EXPIRE);
             }
             Set<Tuple> scores = redis.zrevrangeWithScores(key, offset, offset
                     + limit - 1);
