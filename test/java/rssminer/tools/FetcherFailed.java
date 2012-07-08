@@ -3,9 +3,7 @@ package rssminer.tools;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.net.Proxy.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
@@ -23,6 +21,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import me.shenfeng.http.HttpUtils;
 import me.shenfeng.http.client.HttpClient;
 import me.shenfeng.http.client.HttpClientConfig;
 import me.shenfeng.http.client.ITextHandler;
@@ -33,35 +32,46 @@ import org.slf4j.LoggerFactory;
 
 class TextHandler implements ITextHandler {
 
-    private File filename;
     private Semaphore semaphore;
-    private String url;
+    private ConcurrentLinkedQueue<Job> jobs;
+    private Job job;
 
-    public TextHandler(File filename, Semaphore s, String url) {
-        this.filename = filename;
+    public TextHandler(Job job, ConcurrentLinkedQueue<Job> jobs, Semaphore s) {
+        this.job = job;
         this.semaphore = s;
-        this.url = url;
+        this.jobs = jobs;
     }
 
     static Logger logger = LoggerFactory.getLogger(TextHandler.class);
 
     public void onSuccess(int status, Map<String, String> headers, String body) {
         semaphore.release();
-        logger.info("{}, {}", status, url);
+        logger.info("{}, {}:{}", new Object[] { status, job.id, job.url });
         if (status == 200) {
             try {
-                FileOutputStream fo = new FileOutputStream(filename);
+                FileOutputStream fo = new FileOutputStream(job.file);
                 fo.write(body.getBytes());
                 fo.close();
             } catch (Exception e) {
-                logger.error(url, e);
+                logger.error(job.url, e);
+            }
+        } else if (status == 302 || status == 301) {
+            String location = headers.get(HttpUtils.LOCATION);
+            if (location != null) {
+                try {
+                    location = new URI(job.url).resolve(location).toString();
+                    jobs.add(new Job(location, job.id, job.file));
+                } catch (URISyntaxException e) {
+                    logger.error("resove", e);
+                }
+                // jobs.add(new Ojb)
             }
         }
     }
 
     public void onThrowable(Throwable t) {
         semaphore.release();
-        logger.error(url, t);
+        logger.error(job.url, t);
     }
 
 }
@@ -69,10 +79,12 @@ class TextHandler implements ITextHandler {
 class Job {
     final String url;
     final String id;
+    final File file;
 
-    public Job(String url, String id) {
+    public Job(String url, String id, File file) {
         this.url = url;
         this.id = id;
+        this.file = file;
     }
 }
 
@@ -83,11 +95,11 @@ public class FetcherFailed {
 
     static final int PRODUCER = 5;
     static final int HTTP_CONCURRENCY = 5;
-    static final String DEST_FOLDER = "test/failed_rss/";
 
-    static Proxy PROXY = new Proxy(Type.SOCKS, new InetSocketAddress(
-            "127.0.0.1", 3128));
-//    static Proxy PROXY = Proxy.NO_PROXY;
+    // static Proxy PROXY = new Proxy(Type.SOCKS, new InetSocketAddress(
+    // "127.0.0.1", 3128));
+    static Proxy PROXY = Proxy.NO_PROXY;
+    static final String DEST_FOLDER = "test/failed_rss/";
 
     private static List<Job> getAllFailed() throws SQLException {
         Connection con = DriverManager.getConnection(JDBC_URL, "feng", "");
@@ -98,8 +110,13 @@ public class FetcherFailed {
         while (rs.next()) {
             String id = rs.getString("id");
             String url = rs.getString("url");
-            Job job = new Job(url, id);
-            jobs.add(job);
+            File file = new File(DEST_FOLDER + id);
+            Job job = new Job(url, id, file);
+            if (file.exists()) {
+                logger.info("{}:{} already downloaded", job.id, job.url);
+            } else {
+                jobs.add(job);
+            }
         }
         con.close();
         return jobs;
@@ -122,15 +139,9 @@ public class FetcherFailed {
                     while (job != null) {
                         try {
                             Map<String, String> map = new TreeMap<String, String>();
-                            File file = new File(DEST_FOLDER + job.id);
-                            if (file.exists()) {
-                                logger.info("{}:{} already downloaded",
-                                        job.id, job.url);
-                                continue;
-                            }
-                            TextRespListener listener = new TextRespListener(
-                                    new TextHandler(file, s, job.url));
 
+                            TextRespListener listener = new TextRespListener(
+                                    new TextHandler(job, jobs, s));
                             s.acquire();
                             client.get(new URI(job.url), map, PROXY, listener);
                         } catch (Exception e) {
