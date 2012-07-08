@@ -50,7 +50,7 @@
     (is (= 204 (:status resp)))))
 
 (deftest test-welcome-list
-  (doseq [section ["latest" "voted" "read" "recommend"]]
+  (doseq [section ["newest" "voted" "read" "recommend"]]
     (is (= 200 (:status (auth-app {:uri "/api/welcome"
                                    :request-method :get
                                    :params {"section" section

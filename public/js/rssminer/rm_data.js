@@ -24,7 +24,7 @@
       NEUTRAL_SCORE =  user_data.neutral_score;    // db default 0
 
   // how many pages does each section has
-  var WELCOME_TABS = {recommend: 1, latest: 1, read: 1, voted: 1};
+  var WELCOME_TABS = {recommend: 1, newest: 1, read: 1, voted: 1};
 
   function save_to_cache_fixer (feedid, data) {
     cache_fixer[feedid] = _.extend(cache_fixer[feedid] || {}, data);

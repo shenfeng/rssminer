@@ -62,7 +62,7 @@
         limit (min (-> req :params :limit to-int) 40)
         offset (-> req :params :offset to-int)
         data (case (-> req :params :section)
-               "latest" (uf/fetch-newest u-id limit offset)
+               "newest" (uf/fetch-newest u-id limit offset)
                "voted" (uf/fetch-recent-vote u-id limit offset)
                "read" (uf/fetch-recent-read u-id limit offset)
                "recommend" (uf/fetch-likest u-id limit offset))]
