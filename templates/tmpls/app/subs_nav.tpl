@@ -1,14 +1,16 @@
 {{#groups}}
   <li {{#collapse}} class="collapse" {{/collapse}}>
-    <div class="folder" data-name="{{group}}">
-      <i class="icon-folder-open"></i>
-      <i class="icon-folder-close"></i>
-      <span>{{{group}}}</span>
-    </div>
+    {{#group}}
+      <a class="folder" data-name="{{name}}" href="#{{hash}}">
+        <i class="icon-folder-open"></i>
+        <i class="icon-folder-close"></i>
+        <span>{{{name}}}</span>
+      </a>
+    {{/group}}
     <ul class="rss-category">
       {{#subs}}
         <li class="item ficon-error"
-            id="item-{{id}}" data-id="{{id}}" title="{{title}}">
+          id="item-{{id}}" data-id="{{id}}" title="{{title}}">
           <a href="#{{href}}">
             <img src="{{img}}" width="16" height="16" />
             <i class="icon-rss"></i>

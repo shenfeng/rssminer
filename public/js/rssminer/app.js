@@ -1,7 +1,7 @@
 (function () {
   var _RM_ = window._RM_ || {},
       RM = window.RM,
-      data = RM.data,
+      data_api = RM.data,
       notify = RM.notify,
       tmpls = RM.tmpls,
       util = RM.util,
@@ -15,6 +15,7 @@
   var gmark_as_read_timer_id = 0,
       gcur_page,
       gcur_sort,
+      gcur_is_group = false,
       gcur_sub_id;
 
   var $footer = $('#footer'),
@@ -35,16 +36,28 @@
   }
 
   function read_subscription (id, page, sort, callback) {
+    gcur_is_group = false;
     $reading_area.removeClass(SHOW_IFRAME);
-    layout.select('#sub-list', "item-" + id);
-    data.get_feeds(id, page, sort, function (data) {
+    layout.select('#sub-list', $("#item-" + id));
+    data_api.fetch_sub_feeds(id, page, sort, function (data) {
+      show_feeds(data);
+      call_if_fn(callback);
+    });
+  }
+
+  function read_group_subs (group, page, sort, callback) {
+    gcur_is_group = true;
+    layout.select('#sub-list', $("[data-name='" + group + "']"));
+    data_api.fetch_group_feeds(group, page, sort, function (data) {
       show_feeds(data);
       call_if_fn(callback);
     });
   }
 
   function load_feeds_into_left_nav () {
-    data.get_feeds(gcur_sub_id, gcur_page, gcur_sort, function (data) {
+    var fn = gcur_is_group ? data_api.fetch_group_feeds :
+          data_api.fetch_sub_feeds;
+    fn(gcur_sub_id, gcur_page, gcur_sort, function (data) {
       $navigation.empty().append(tmpls.feeds_nav(data));
       $navigation.scrollTop(0);
     });
@@ -72,47 +85,50 @@
     else { $n.text(n-1); }
   }
 
-  function clear_timer () {
+  function reset_markread_timer (mark_read) {
     if(gmark_as_read_timer_id) {
       window.clearTimeout(gmark_as_read_timer_id);
-      gmark_as_read_timer_id = null;
     }
+    gmark_as_read_timer_id = window.setTimeout(mark_read, 500);
   }
 
-  function read_feed (subid, feedid, page, sort) {
-    var read = function () {
+  function read_feed (subid, feedid, page, sort, folder) {
+    var read_cb = function () {
       gcur_sub_id = subid;
       gcur_sort = sort;
       gcur_page = page;
       $reading_area.addClass(SHOW_IFRAME);
-      var me = "feed-" + feedid,
-          $me = $('#' + me);
+      var $me = $('#feed-' + feedid);
       $logo.removeClass(SHOW_NAV);
-      layout.select('#feed-list', me);
-      var feed = data.get_feed(feedid),
+      layout.select('#feed-list', $me);
+      var feed = data_api.get_feed(feedid),
           link = feed.link;
       feed.domain = util.hostname(link);
       set_document_title(feed.title);
       $footer.empty().append(tmpls.footer_info(feed));
-      var $loader = $footer.find('> img');
       iframe.src = util.get_final_link(link, feedid);
       var mark_read = mark_feed_as_read($me, feedid, subid);
-      clear_timer();
-      gmark_as_read_timer_id = window.setTimeout(mark_read, 500);
+      reset_markread_timer(mark_read);
       iframe.onload = function () {
         mark_read();
-        $loader.css({visibility: 'hidden'});
+        $footer.find('> img').css({visibility: 'hidden'});
       };
     };
     if(gcur_sub_id === subid) {
-      read();                   // just read feed
+      read_cb();                   // just read feed
     } else {
       if(_.isNumber(subid)) {
-        read_subscription(subid, page, sort, read);
+        read_subscription(subid, page, sort, read_cb);
+      } else if(folder) {
+        read_group_subs(subid, page, sort, read_cb);
       } else {
-        show_welcome(subid, page, read);
+        show_welcome(subid, page, read_cb);
       }
     }
+  }
+
+  function read_group_feed (group, feedid, page, sort) {
+    read_feed(group, feedid, page, sort, page, true);
   }
 
   function mark_feed_as_read ($me, feedid, subid) {
@@ -120,8 +136,9 @@
     return function () {
       if(!called && !$me.hasClass('read')) {
         called = true;
-        data.mark_as_read(feedid);
+        data_api.mark_as_read(feedid);
         decrement_number($me, subid);
+        gmark_as_read_timer_id = null;
         $me.removeClass('unread sys-read').addClass('read');
       }
     };
@@ -143,8 +160,8 @@
     var d = !section && !page;
     section = section || 'recommend';
     page = page || 1;
-    if(data.get_subscriptions().length) { // user has subscriptions
-      data.get_welcome_list(section, page, function (data) {
+    if(data_api.get_subscriptions().length) { // user has subscriptions
+      data_api.get_welcome_list(section, page, function (data) {
         if(!data.feeds.length && d) {
           // try to show something that has data
           location.hash = '?s=newest&p=1';
@@ -182,7 +199,7 @@
       return;
     }
     delete d.password2;
-    data.save_settings(d, function () {
+    data_api.save_settings(d, function () {
       notify.show_msg('Settings saved', 3000);
     });
   }
@@ -231,14 +248,14 @@
         alert('This is a demo account');
         return;
       }
-      data.add_subscription(url, added, fetcher_finished);
+      data_api.add_subscription(url, added, fetcher_finished);
     } else {
       notify.show_msg('Not valid rss/atom link', 3000);
     }
   }
 
   function fetch_and_show_user_subs (cb) {
-    data.get_user_subs(function (subs) {
+    data_api.get_user_subs(function (subs) {
       var html = tmpls.subs_nav({groups: subs});
       $subs_list.empty().append(html).find('img').each(util.favicon_error);
       $subs_list.trigger('refresh.rm');
@@ -278,12 +295,12 @@
       '': show_welcome,
       '?s=:section&p=:p': show_welcome,
       's/:section': show_settings,
+      'read/f_:group?p=:page&s=:sort': read_group_subs,
       'read/:id?p=:page&s=:sort': read_subscription,
+      'read/f_:group/:id?p=:page&s=:sort': read_group_feed,
       'read/:id/:id?p=:page&s=:sort': read_feed
     });
   });
 
-  if(_RM_.demo) {
-    $('#warn-msg').show();
-  }
+  if(_RM_.demo) { $('#warn-msg').show(); }
 })();

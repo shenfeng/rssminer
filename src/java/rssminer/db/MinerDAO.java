@@ -35,7 +35,7 @@ public class MinerDAO {
             + "f.published_ts FROM feeds f";
 
     // sub newest, oldest
-    static final String WITH_SCORE = "SELECT f.id,f.rss_link_id,f.title,f.author,f.link,tags,"
+    static final String WITH_READ_DATE_VOTE = "SELECT f.id,f.rss_link_id,f.title,f.author,f.link,tags,"
             + "f.published_ts,uf.read_date,uf.vote_user FROM feeds "
             + "f LEFT JOIN user_feed uf ON uf.feed_id = f.id and uf.user_id =";
 
@@ -80,7 +80,7 @@ public class MinerDAO {
         for (int id : feedids) {
             sb.append(id).append(',');
         }
-        sb.setLength(sb.length() - 1); // remove last ,
+        sb.setLength(sb.length() - 1); // remove last ','
         sb.append(')');
         return fetchFeeds(sb.toString());
     }
@@ -158,6 +158,63 @@ public class MinerDAO {
             Collections.sort(feeds); // sort by score
             return feeds;
         }
+    }
+
+    // for click on folder
+    public List<Feed> fetchFolderLikest(int userID, List<Integer> rssIDs,
+            int limit, int offset) throws SQLException {
+        Jedis redis = jedis.getResource();
+        rssIDs = new ArrayList<Integer>(rssIDs);
+        byte[] key = Utils.genKey(userID, rssIDs);
+        try {
+            if (!redis.exists(key)) {
+                int count = rssIDs.size();
+                byte[][] keys = new byte[count][];
+                for (int i = 0; i < count; i++) {
+                    keys[i] = Utils.genKey(userID, rssIDs.get(i));
+                }
+                redis.zunionstore(key, keys);
+                redis.expire(key, COMBINED_KEY_EXPIRE);
+            }
+            Set<Tuple> scores = redis.zrevrangeWithScores(key, offset, offset
+                    + limit - 1);
+            return fetchFeedsWithScore(scores);
+        } finally {
+            jedis.returnResource(redis);
+        }
+    }
+
+    public List<Feed> fetchFolderNewest(int userID, List<Integer> rssIDs,
+            int limit, int offset) throws SQLException {
+        StringBuilder sb = new StringBuilder(240 + rssIDs.size() * 5);
+        sb.append(WITH_READ_DATE_VOTE).append(userID);
+        sb.append(" WHERE f.rss_link_id in (");
+        for (Integer id : rssIDs) {
+            sb.append(id).append(',');
+        }
+        sb.setLength(sb.length() - 1); // remove last ','
+        sb.append(") order by published_ts desc");
+        sb.append(" limit ").append(limit);
+        sb.append(" offset ");
+        sb.append(offset);
+        return fetchFeedsWithScore(userID, sb.toString());
+    }
+
+    // for folder
+    public List<Feed> fetchFolderOldest(int userID, List<Integer> rssIDs,
+            int limit, int offset) throws SQLException {
+        StringBuilder sb = new StringBuilder(240 + rssIDs.size() * 5);
+        sb.append(WITH_READ_DATE_VOTE).append(userID);
+        sb.append(" WHERE f.rss_link_id in (");
+        for (Integer id : rssIDs) {
+            sb.append(id).append(',');
+        }
+        sb.setLength(sb.length() - 1); // remove last ','
+        sb.append(") order by published_ts ");
+        sb.append(" limit ").append(limit);
+        sb.append(" offset ");
+        sb.append(offset);
+        return fetchFeedsWithScore(userID, sb.toString());
     }
 
     // global
@@ -285,7 +342,7 @@ public class MinerDAO {
     public List<Feed> fetchSubNewest(int userID, int subID, int limit,
             int offset) throws SQLException {
         StringBuilder sb = new StringBuilder(240);
-        sb.append(WITH_SCORE).append(userID);
+        sb.append(WITH_READ_DATE_VOTE).append(userID);
         sb.append(" WHERE f.rss_link_id = ").append(subID);
         sb.append(" order by published_ts desc ");
         sb.append(" limit ").append(limit);
@@ -297,7 +354,7 @@ public class MinerDAO {
     public List<Feed> fetchSubOldest(int userID, int subID, int limit,
             int offset) throws SQLException {
         StringBuilder sb = new StringBuilder(240);
-        sb.append(WITH_SCORE).append(userID);
+        sb.append(WITH_READ_DATE_VOTE).append(userID);
         sb.append(" WHERE f.rss_link_id = ").append(subID);
         sb.append(" order by published_ts ");
         sb.append(" limit ").append(limit);

@@ -21,6 +21,7 @@
       // show search result count according to screen height
       SEARCH_RESUTL_COUNT = Math.min(Math.floor((screen.height - 260) / 43), 17),
       LIKE_SCORE = user_data.like_score,        // default 1
+      MIN_COUNT = 5,
       NEUTRAL_SCORE =  user_data.neutral_score;    // db default 0
 
   // how many pages does each section has
@@ -121,10 +122,16 @@
     };
   }
 
+  function default_sort (like, neutral) {
+    if(like + neutral > MIN_COUNT) {
+      return 'recommend';
+    }
+    return 'newest';
+  }
+
   function transorm_sub (sub) {
     // the url is site's alternate url
     var title = sub.title || sub.url || '';
-    var s = sub.like + sub.neutral > 5 ? 'recommend' : 'newest';
     return {
       img: favicon_path(sub.url),
       title: title,
@@ -132,7 +139,7 @@
       group: sub.group,
       title_l: title.toLowerCase(),
       // sort by likest if has likest
-      href: sub_hash(sub.id, 1, s),
+      href: sub_hash(sub.id, 1, default_sort(sub.like, sub.neutral)),
       like: sub.like,
       total: sub.total,
       index: sub.index,
@@ -150,9 +157,12 @@
             .sortBy(function (i) { return i.index; })
             .map(transorm_sub).value();
       list = _.filter(list, function (i) { return i.title; });
+      var like = _.reduce(list, function (m, sub) { return sub.like + m; }, 0),
+          neutral = _.reduce(list, function (m, sub) { return sub.neutral + m; }, 0),
+          hash = sub_hash('f_' + group, 1, default_sort(like, neutral));
       if(list.length) {
         result.push({
-          group: group,
+          group: {name: group, like: like, neutral: neutral, hash: hash},
           subs: list,
           collapse: _.include(collapsed, group)
         });
@@ -238,7 +248,7 @@
     return h;
   }
 
-  function get_feeds (subid, page, sort, cb) {
+  function fetch_sub_feeds (subid, page, sort, cb) {
     var sub =_.find(subscriptions_cache, function (sub) {
       return sub.id === subid;
     }) || {};
@@ -360,9 +370,58 @@
     var grouped = parse_subs(subscriptions_cache),
         group = null;
     if(grouped && grouped.length) {
-      group = grouped[0].group;
+      group = grouped[0].group.name;
     }
     return group;
+  }
+
+  function get_subids_for_group (group) {
+    var grouped = parse_subs(subscriptions_cache);
+    var result = _.find(grouped, function (g) { return g.group.name === group; });
+    return result;
+  }
+
+  function fetch_group_feeds (group, page, sort, cb) {
+    var grouped = get_subids_for_group(group);
+    if(grouped && grouped.subs.length > 1) {
+      var g = grouped.group;
+      var all = _.reduce(grouped.subs, function (m, sub) {
+        return m + sub.total;
+      }, 0);
+      var total = sort === 'recommend' ? g.like + g.neutral : all;
+      var offset = Math.max(0, page -1) * PER_PAGE_FEEDS;
+      var ids = _.pluck(grouped.subs, 'id');
+      var section = 'f_' + group;
+      ids = ids.sort(function (a, b) { return a -b; });
+      var url = '/api/subs/' + ids.join('-') + '?' + util.params({
+        offset: offset,
+        limit: PER_PAGE_FEEDS,
+        sort: sort
+      });
+      ajax.get(url, function (resp) {
+        feeds_cache['current_sub'] = resp;
+        var feeds = _.map(resp, function (feed) {
+          return transform_item(feed, page, sort, section);
+        });
+        var sort_data = [];
+        _.each(['recommend', 'newest', 'oldest'], function (s) {
+          sort_data.push({
+            selected: !sort || s === sort,
+            href: sub_hash(section, 1, s),
+            text: s
+          });
+        });
+        cb({
+          title: group,
+          feeds: feeds,
+          sort: sort_data,
+          pager: compute_sub_paging(section, sort, total, page, PER_PAGE_FEEDS)
+        });
+      });
+    } else {
+      var id = grouped.subs[0].id;
+      fetch_sub_feeds(id, page, sort, cb);
+    }
   }
 
   function polling_rss_link (rss_link_id, interval, times, cb) {
@@ -504,9 +563,10 @@
     data: {
       add_subscription: add_subscription,
       get_feed: get_feed,
-      get_feeds: get_feeds,
       get_search_result: get_search_result,
       get_subscription: get_subscription,
+      fetch_sub_feeds: fetch_sub_feeds,
+      fetch_group_feeds: fetch_group_feeds,
       get_subscriptions: function () { return subscriptions_cache || []; },
       get_user_subs: get_user_subs,
       get_welcome_list: get_welcome_list,

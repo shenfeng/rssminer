@@ -8,6 +8,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import me.shenfeng.http.HttpUtils;
 import me.shenfeng.http.client.HttpClient;
@@ -61,7 +64,7 @@ public class Utils {
         if (html.length() > 0) {
             char c = html.charAt(0);
             // bom, magic number
-            if((int)c == 65279) {
+            if ((int) c == 65279) {
                 html = html.substring(1);
             }
         }
@@ -139,6 +142,16 @@ public class Utils {
 
     public static byte[] genKey(int userID, int rssID) {
         return ("fs:u_" + userID + "_s_" + rssID).getBytes(HttpUtils.UTF_8);
+    }
+
+    public static byte[] genKey(int userID, List<Integer> rssIDs) {
+        Collections.sort(rssIDs);
+        StringBuilder sb = new StringBuilder(rssIDs.size() * 5 + 10);
+        sb.append("fs:u_").append(userID);
+        for (Integer id : rssIDs) {
+            sb.append("_").append(id);
+        }
+        return sb.toString().getBytes(HttpUtils.UTF_8);
     }
 
     public static String minfiyHtml(String html, String url)

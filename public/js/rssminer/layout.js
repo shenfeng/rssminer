@@ -26,8 +26,7 @@
     }
   }
 
-  function select (context, id) {
-    var $me = $('#' + id);
+  function select (context, $me) {
     scroll_into_view($me);
     if(!$me.hasClass(SELECTED)) {
       $("." + SELECTED, context).removeClass(SELECTED);

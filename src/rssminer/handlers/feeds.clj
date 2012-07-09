@@ -2,7 +2,8 @@
   (:use (rssminer [util :only [user-id-from-session to-int assoc-if]]
                   [classify :only [on-feed-event]]))
   (:require [rssminer.db.user-feed :as uf]
-            [rssminer.db.feed :as db]))
+            [rssminer.db.feed :as db]
+            [clojure.string :as str]))
 
 (defn user-vote [req]
   (let [fid (-> req :params :id to-int)
@@ -20,15 +21,21 @@
     {:status 204 :body nil}))
 
 (defn get-by-subscription [req]
-  (let [{:keys [rss-id limit sort offset]} (:params req)
-        userid (user-id-from-session req)
-        rssid (to-int rss-id)
+  (let [{:keys [rid limit sort offset]} (:params req)
+        uid (user-id-from-session req)
         limit (to-int limit)
         offset (to-int offset)
-        data (case sort
-               "newest" (uf/fetch-sub-newest userid rssid limit offset)
-               "oldest" (uf/fetch-sub-oldest userid rssid limit offset)
-               "recommend" (uf/fetch-sub-likest userid rssid limit offset))]
+        data (if (= -1 (.indexOf ^String rid (int \-)))
+               (let [rssid (to-int rid)]
+                 (case sort
+                   "newest" (uf/fetch-sub-newest uid rssid limit offset)
+                   "oldest" (uf/fetch-sub-oldest uid rssid limit offset)
+                   "recommend" (uf/fetch-sub-likest uid rssid limit offset)))
+               (let [ids (map to-int (str/split rid #"-"))]
+                 (case sort
+                   "newest" (uf/fetch-folder-newest uid ids limit offset)
+                   "oldest" (uf/fetch-folder-oldest uid ids limit offset)
+                   "recommend" (uf/fetch-folder-likest uid ids limit offset))))]
     (if data
       {:body data
        :headers {"Cache-Control" "private, max-age=600"} }

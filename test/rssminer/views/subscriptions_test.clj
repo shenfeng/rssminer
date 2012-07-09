@@ -45,10 +45,15 @@
     (doseq [s ["newest" "oldest" "recommend"]]
       (let [resp (auth-app {:uri (str "/api/subs/" rss-id)
                             :request-method :get
-                            :params {"limit" "13" "offset" "0" "sort" s}})]
+                            :params {"limit" "13" "offset" "0" "sort" s}})
+            resp2 (auth-app {:uri (str "/api/subs/" rss-id "-" (inc rss-id))
+                             :request-method :get
+                             :params {"limit" "13" "offset" "0" "sort" s}})]
         ;; test has some data
         (is (empty? (-> resp :body read-json)))
-        (is (= 200 (:status resp)))))))
+        (is (= 200 (:status resp)))
+        (is (empty? (-> resp2 :body read-json)))
+        (is (= 200 (:status resp2)))))))
 
 (deftest test-list-subscription
   (is (= 200 (:status (auth-app {:uri "/api/subs"

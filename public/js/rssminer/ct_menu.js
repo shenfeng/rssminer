@@ -224,7 +224,7 @@
   });
 
   util.delegate_events($subs_list, {
-    'click .folder': toggle_sub_folder,
+    'click .folder i': toggle_sub_folder,
     'contextmenu .folder': show_folder_context_menu, // hide in search.js
     'contextmenu .item': show_item_context_menu
   });
