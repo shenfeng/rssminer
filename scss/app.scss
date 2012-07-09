@@ -233,6 +233,7 @@ ul { list-style: none; padding: 0; margin: 0; }
     right: 2px;
     top: 8px;
     font-size: 10px;
+    font-family: sans-serif;
     span {
         padding: 3px 2px 1px 2px;
         @include border-radius(2px);
