@@ -224,7 +224,7 @@
 
   function import_from_greader (e) {
     if(_RM_.demo) {
-      alert('This is a demo account');
+      alert('If you like it, please login in with Google OpenID, then import. This is a public account');
       return false;
     }
   }
@@ -277,7 +277,7 @@
   }
 
   util.delegate_events($(document), {
-    'click .add-sub a': import_from_greader,
+    'click .add-sub a.import': import_from_greader,
     'click #add-subscription': add_subscription,
     'click #save-settings': save_settings,
     'click #nav-pager .next': load_next_page,

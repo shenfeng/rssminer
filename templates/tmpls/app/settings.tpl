@@ -15,8 +15,8 @@
     <div>
       {{#demo}}
       <p class="demo-warn">
-        This is a demo account, please
-        <a href="/logout">create an account</a>
+        This is a public account, please
+        <a href="/logout">create a private one</a>
         to add subscription.
       </p>
       {{/demo}}
@@ -24,7 +24,7 @@
         <h4>Import</h4>
         <div>
           <p>
-            <a href="/import/google"
+            <a href="/import/google" class="import"
                title="Import all you google reader subscriptions:">
               <img src="/imgs/import-greader.png"/>
             </a>
