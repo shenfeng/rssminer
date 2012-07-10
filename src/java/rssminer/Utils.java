@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -137,20 +136,21 @@ public class Utils {
     }
 
     public static byte[] genKey(int userID) {
-        return ("fs:all:u_" + userID).getBytes(HttpUtils.UTF_8);
+        return ("fs:all:u" + userID).getBytes(HttpUtils.UTF_8);
     }
 
     public static byte[] genKey(int userID, int rssID) {
-        return ("fs:u_" + userID + "_s_" + rssID).getBytes(HttpUtils.UTF_8);
+        return ("fs:u" + userID + ":s" + rssID).getBytes(HttpUtils.UTF_8);
     }
 
     public static byte[] genKey(int userID, List<Integer> rssIDs) {
         Collections.sort(rssIDs);
         StringBuilder sb = new StringBuilder(rssIDs.size() * 5 + 10);
-        sb.append("fs:u_").append(userID);
+        sb.append("fs:u").append(userID).append(":");
         for (Integer id : rssIDs) {
-            sb.append("_").append(id);
+            sb.append(id).append("_");
         }
+        sb.setLength(sb.length() - 1); // remove last _
         return sb.toString().getBytes(HttpUtils.UTF_8);
     }
 

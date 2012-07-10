@@ -26,7 +26,7 @@ import rssminer.Utils;
 import clojure.lang.Keyword;
 
 public class MinerDAO {
-    static final int COMBINED_KEY_EXPIRE = 3600;
+    static final int COMBINED_KEY_EXPIRE = 1800; // cache half an hour
 
     private JedisPool jedis;
     private DataSource ds;
