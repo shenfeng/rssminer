@@ -5,13 +5,14 @@ set -e
 ABSOLUTE_PATH=$(readlink -f $0)
 RSSMINER_CODE_ROOT="${ABSOLUTE_PATH%/*/*}"
 
-rm bin classes -rf && lein compile
-cp src/templates classes -r
-cp src/logback.xml classes/logback.xml
-cp src/words.dic classes/words.dic
-rm classes/templates/tmpls/ -r
-cd classes
-jar -cf ../rssminer.jar *
+# rm bin classes -rf && lein compile
+# cp src/templates classes -r
+# cp src/logback.xml classes/logback.xml
+# cp src/words.dic classes/words.dic
+# rm classes/templates/tmpls/ -r
+# cd classes
+# jar -cf ../rssminer.jar *
+lein uberjar
 cd $RSSMINER_CODE_ROOT
 
 # FRONTEND_HOST="192.168.1.117"
@@ -41,6 +42,6 @@ remote_run "sudo cp ${TARGET_DIR}/conf/nginx/gzip.conf /etc/nginx/conf.d"
 remote_run "cd /etc/nginx/sites-enabled  && sudo ln -f -s /etc/nginx/sites-available/rssminer"
 remote_run "sudo service nginx restart"
 
-rm rssminer.jar
+# rm .jar
 exit 0
 

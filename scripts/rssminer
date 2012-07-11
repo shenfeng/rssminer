@@ -51,13 +51,12 @@ APP_ARGS="--index-path $INDEX_PATH \
     --port 8100"
 
 
-CLASSPATH=$APP_HOME/rssminer.jar:$APP_HOME/lib/*
+CLASSPATH=$APP_HOME/rssminer-standalone.jar
 JAVA_CONFIG="$JVM_ARGS -cp $CLASSPATH rssminer.main $APP_ARGS"
 
 daemon_args="--name $APP_NAME \
     --user $AS_USER --pidfile $PID_DIR/pid \
-    --stdout=$LOG_DIR/output.log \
-    --stderr=$LOG_DIR/error.log \
+    --stdout=$LOG_DIR/output.log --stderr=$LOG_DIR/error.log \
     --chdir $APP_HOME"
 
 function running() {
