@@ -276,11 +276,13 @@ public class Searcher {
     public int[] feedID2DocIDs(List<Integer> feeds)
             throws CorruptIndexException, IOException {
         int[] array = new int[feeds.size()];
-        IndexSearcher searcher = new IndexSearcher(getReader());
+        IndexReader reader = getReader();
+        IndexSearcher searcher = new IndexSearcher(reader);
         for (int i = 0; i < feeds.size(); i++) {
             int l = feeds.get(i);
             array[i] = feedID2DocID(searcher, l);
         }
+        reader.close();
         return array;
     }
 
@@ -319,7 +321,7 @@ public class Searcher {
             List<String> subids, int limit) throws CorruptIndexException,
             IOException, ParseException, SQLException {
         IndexReader reader = getReader();
-        IndexSearcher searcher = new IndexSearcher(reader);
+        IndexSearcher searcher = new IndexSearcher(getReader());
         Query q = buildQuery(term, subids);
         TopDocs docs = searcher.search(q, limit);
         List<Integer> feedids = new ArrayList<Integer>(docs.scoreDocs.length);
@@ -328,6 +330,7 @@ public class Searcher {
             Document doc = searcher.doc(docid);
             feedids.add(Integer.valueOf(doc.get(FEED_ID)));
         }
+        reader.close();
         if (feedids.isEmpty()) {
             return new ArrayList<Feed>(0);
         } else {

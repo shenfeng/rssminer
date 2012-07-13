@@ -149,6 +149,7 @@ public class NaiveBayes {
                 result[i] = 1;
             }
         }
+        reader.close();
         return result;
     }
 
@@ -157,7 +158,9 @@ public class NaiveBayes {
         IndexReader reader = SEARCHER.getReader();
         IndexSearcher searcher = new IndexSearcher(reader);
         int docid = SEARCHER.feedID2DocID(searcher, feedid);
-        return classfiy(model, reader, docid);
+        double score = classfiy(model, reader, docid);
+        reader.close();
+        return score;
     }
 
     public static Map<String, Map<String, Double>> train(List<Vote> votes)
@@ -178,6 +181,7 @@ public class NaiveBayes {
             Map<String, Double> sub = trainField(reader, votes, field);
             result.put(field, sub);
         }
+        reader.close();
         return result;
     }
 
