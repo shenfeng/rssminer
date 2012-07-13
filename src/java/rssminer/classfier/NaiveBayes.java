@@ -130,6 +130,10 @@ public class NaiveBayes {
                     }
                 }
                 score *= SEARCHER.getBoost().get(field); // boost
+                int length = terms.length;
+                if (length > 1) {
+                    score = score / Math.log(length);
+                }
                 result += score;
             }
         }
