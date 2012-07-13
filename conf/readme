@@ -14,6 +14,11 @@
   sudo add-apt-repository ppa:schwuk/redis
   https://launchpad.net/~schwuk/+archive/redis
 
+  sudo apt-get install sysstat, iotop
+
+  # edit /etc/security/limits.conf
+  * - nofile 9999
+
 ## for dev and build
 
 * sudo apt-get install rake rubygems1.9.1 inotify-tools
