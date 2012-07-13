@@ -412,7 +412,7 @@
           });
         });
         cb({
-          title: group,
+          title: "Folder: " + group,
           feeds: feeds,
           sort: sort_data,
           pager: compute_sub_paging(section, sort, total, page, PER_PAGE_FEEDS)
