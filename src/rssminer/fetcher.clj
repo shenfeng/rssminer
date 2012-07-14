@@ -38,7 +38,9 @@
                      (quicker last-interval) (slower last-interval))]
       {:check_interval interval
        :last_modified (get headers HttpUtils/LAST_MODIFIED)
-       :etag (get headers HttpUtils/ETAG)
+       :etag (if-let [^String etag (get headers HttpUtils/ETAG)]
+               (when (< (.length etag) 64)
+                 etag))
        :next_check_ts (+ (now-seconds) interval
                          ;; to seperate them out, 30 minutes
                          (- 3600 (rand-int 7200)))})))
