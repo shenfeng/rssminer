@@ -30,12 +30,16 @@
                  (case sort
                    "newest" (uf/fetch-sub-newest uid rssid limit offset)
                    "oldest" (uf/fetch-sub-oldest uid rssid limit offset)
-                   "recommend" (uf/fetch-sub-likest uid rssid limit offset)))
+                   "recommend" (uf/fetch-sub-likest uid rssid limit offset)
+                   "read" (uf/fetch-sub-read uid rssid limit offset)
+                   "voted" (uf/fetch-sub-vote uid rssid limit offset)))
                (let [ids (map to-int (str/split rid #"-"))]
                  (case sort
                    "newest" (uf/fetch-folder-newest uid ids limit offset)
                    "oldest" (uf/fetch-folder-oldest uid ids limit offset)
-                   "recommend" (uf/fetch-folder-likest uid ids limit offset))))]
+                   "recommend" (uf/fetch-folder-likest uid ids limit offset)
+                   "read" (uf/fetch-folder-read uid ids limit offset)
+                   "voted" (uf/fetch-folder-vote uid ids limit offset))))]
     (if data
       {:body data
        :headers {"Cache-Control" "private, max-age=600"} }

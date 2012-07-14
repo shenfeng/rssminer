@@ -26,6 +26,12 @@
 
   // how many pages does each section has
   var WELCOME_TABS = {recommend: 1, newest: 1, read: 1, voted: 1};
+  var RECOMMEND_TAB = 'recommend',
+      NEWEST_TAB = 'newest',
+      OLDEST_TAB = 'oldest',
+      READ_TAB = 'read',
+      VOTED_TAB = 'voted';
+  var SUB_TABS = [RECOMMEND_TAB, NEWEST_TAB, OLDEST_TAB, READ_TAB, VOTED_TAB];
 
   function save_to_cache_fixer (feedid, data) {
     cache_fixer[feedid] = _.extend(cache_fixer[feedid] || {}, data);
@@ -102,9 +108,15 @@
       feed.readts = 'readts' in cf ? cf.readts : feed.readts;
       feed.vote = 'vote' in cf ? cf.vote : feed.vote;
     }
-    var info = [];              // used in context menu
-    if(feed.read > 1) {
-      info.push({text: 'You read it in ' + ymdate(feed.read)});
+    // var info = [];              // used in context menu
+    // if(feed.read > 1) {
+    //   info.push({text: 'You read it in ' + ymdate(feed.read)});
+    // }
+    var date = ymdate(feed.publishedts);
+    if(section === READ_TAB || sort === READ_TAB) {
+      date = ymdate(feed.readts);
+    } else if(section === VOTED_TAB || sort === VOTED_TAB) {
+      date = ymdate(feed.votets);
     }
     return {
       author: feed.author || util.hostname(feed.link),
@@ -113,7 +125,7 @@
       cls: feed_css_class(feed),
       user_like: feed.vote > 0,
       user_dislike: feed.vote < 0,
-      date: ymdate(feed.publishedts),
+      date: date,
       href: feed_hash(section, feed.id, page, sort),
       id: feed.id,
       link: feed.link,
@@ -124,9 +136,9 @@
 
   function default_sort (like, neutral) {
     if(like + neutral > MIN_COUNT) {
-      return 'recommend';
+      return RECOMMEND_TAB;
     }
-    return 'newest';
+    return NEWEST_TAB;
   }
 
   function transorm_sub (sub) {
@@ -214,11 +226,6 @@
       feeds_cache[section] = resp; // cache unchanged
       var feeds = _.map(resp, function (feed) {
         var result = transform_item(feed, page, 'score', section);
-        if(section === 'read') { // read show read date
-          result.date = ymdate(feed.readts);
-        } else if(section === 'voted') {
-          result.date = ymdate(feed.votets);
-        }
         return result;
       });
       // feeds = _.filter(feeds, function (f) { return f.title; });
@@ -252,9 +259,7 @@
     var sub =_.find(subscriptions_cache, function (sub) {
       return sub.id === subid;
     }) || {};
-    var total = sort === 'recommend' ? sub.like + sub.neutral : sub.total;
     var offset = Math.max(0, page -1) * PER_PAGE_FEEDS;
-
     var url = '/api/subs/' + subid + '?' + util.params({
       offset: offset,
       limit: PER_PAGE_FEEDS,
@@ -265,8 +270,14 @@
       var feeds = _.map(resp, function (feed) {
         return transform_item(feed, page, sort);
       });
+      var total = sub.like + sub.neutral; // recommand
+      if(sort === NEWEST_TAB || sort === OLDEST_TAB) {
+        total = sub.total;
+      } else if(sort === READ_TAB || sort === VOTED_TAB) {
+        total = resp.length === PER_PAGE_FEEDS;
+      }
       var sort_data = [];
-      _.each(['recommend', 'newest', 'oldest'], function (s) {
+      _.each(SUB_TABS, function (s) {
         sort_data.push({
           selected: !sort || s === sort,
           href: sub_hash(subid, 1, s),
@@ -278,7 +289,7 @@
         url: sub.url,
         feeds: feeds,
         sort: sort_data,
-        pager: compute_sub_paging(subid, sort, total, page, PER_PAGE_FEEDS)
+        pager: compute_sub_paging(subid, sort, total, page)
       });
     });
   }
@@ -299,8 +310,7 @@
     if(page >= WELCOME_MAX_PAGE) {
       has_more = false;         // do not show too much
     }
-    if(has_more) {
-      // how many pages
+    if(has_more) {      // how many pages
       WELCOME_TABS[section] = Math.max(WELCOME_TABS[section], page + 1);
     }
     if(page === 1 && !has_more) {
@@ -325,29 +335,44 @@
     }
   }
 
-  function compute_sub_paging (subid, sorting, total, page, per_page) {
-    if(total <= per_page) {
+  function compute_sub_paging (subid, sorting, total, page) {
+    var pages = [],
+        count = page,
+        has_more = false;
+    if(total === false) {
+      if(page === 1) {
+        return false;
+      }
+    } else if(total === true) {
+      has_more = true;
+    } else if (total <= PER_PAGE_FEEDS) {
       return false;
     } else {
-      var count = Math.ceil(total / per_page),
-          pages = [];
-      for(var i = 1; i < count + 1; i++) {
-        if(should_include(count, page, i)) {
-          pages.push({
-            page: i,
-            current: i === page,
-            href: sub_hash(subid, i, sorting)
-          });
-        }
-      }
-      return {
-        count: count,
-        page: page,
-        pages: pages,
-        prev: page > 1,         // has prev page
-        next: count > page      // has next page
-      };
+      count = Math.ceil(total / PER_PAGE_FEEDS);
     }
+    for(var i = 1; i < count + 1; i++) {
+      if(should_include(count, page, i)) {
+        pages.push({
+          page: i,
+          current: i === page,
+          href: sub_hash(subid, i, sorting)
+        });
+      }
+    }
+    if(has_more) {
+      pages.push({
+        page: 'next',
+        current: false,
+        href: sub_hash(subid, i, sorting)
+      });
+    }
+    return {
+      count: count,
+      page: page,
+      pages: pages,
+      prev: page > 1,         // has prev page
+      next: count > page      // has next page
+    };
   }
 
   function mark_as_read (feedid, cb) {
@@ -385,10 +410,6 @@
     var grouped = get_subids_for_group(group);
     if(grouped && grouped.subs.length > 1) {
       var g = grouped.group;
-      var all = _.reduce(grouped.subs, function (m, sub) {
-        return m + sub.total;
-      }, 0);
-      var total = sort === 'recommend' ? g.like + g.neutral : all;
       var offset = Math.max(0, page -1) * PER_PAGE_FEEDS;
       var ids = _.pluck(grouped.subs, 'id');
       var section = 'f_' + group;
@@ -404,18 +425,26 @@
           return transform_item(feed, page, sort, section);
         });
         var sort_data = [];
-        _.each(['recommend', 'newest', 'oldest'], function (s) {
+        _.each(SUB_TABS, function (s) {
           sort_data.push({
             selected: !sort || s === sort,
             href: sub_hash(section, 1, s),
             text: s
           });
         });
+        var total = g.like + g.neutral; // recommand
+        if(sort === NEWEST_TAB || sort === OLDEST_TAB) {
+          total =  _.reduce(grouped.subs, function (m, sub) {
+            return m + sub.total;
+          }, 0);
+        } else if(sort === READ_TAB || sort === VOTED_TAB) {
+          total = resp.length === PER_PAGE_FEEDS;
+        }
         cb({
           title: "Folder: " + group,
           feeds: feeds,
           sort: sort_data,
-          pager: compute_sub_paging(section, sort, total, page, PER_PAGE_FEEDS)
+          pager: compute_sub_paging(section, sort, total, page)
         });
       });
     } else {
@@ -512,7 +541,7 @@
         var feeds = _.map(resp, function (feed) {
           // no dedicated url and page, since I can just click the search box,
           // and get the result again
-          return transform_item(feed, 1, 'newest');
+          return transform_item(feed, 1, NEWEST_TAB);
         });
         cb({subs: subs, feeds: feeds, sub_cnt: subs.length});
       });

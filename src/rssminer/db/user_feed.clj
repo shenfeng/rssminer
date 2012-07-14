@@ -50,6 +50,14 @@
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
     (.fetchSubLikest db userid subid limit offset)))
 
+(defn fetch-sub-read [userid subid limit offset]
+  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+    (.fetchSubRead db userid subid limit offset)))
+
+(defn fetch-sub-vote [userid subid limit offset]
+  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+    (.fetchSubVote db userid subid limit offset)))
+
 (defn fetch-folder-newest [userid subids limit offset]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
     (.fetchFolderNewest db userid subids limit offset)))
@@ -61,3 +69,11 @@
 (defn fetch-folder-likest [userid subids limit offset]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
     (.fetchFolderLikest db userid subids limit offset)))
+
+(defn fetch-folder-read [userid subids limit offset]
+  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+    (.fetchFolderRead db userid subids limit offset)))
+
+(defn fetch-folder-vote [userid subids limit offset]
+  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+    (.fetchFolderVote db userid subids limit offset)))
