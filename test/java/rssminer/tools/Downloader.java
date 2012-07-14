@@ -7,11 +7,11 @@ import java.net.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -78,39 +78,39 @@ class TextHandler implements ITextHandler {
 
 class Job {
     final String url;
-    final String id;
+    final int id;
     final File file;
 
-    public Job(String url, String id, File file) {
+    public Job(String url, int id, File file) {
         this.url = url;
         this.id = id;
         this.file = file;
     }
 }
 
-public class FetcherFailed {
-    static Logger logger = LoggerFactory.getLogger(FetcherFailed.class);
+public class Downloader {
+    static Logger logger = LoggerFactory.getLogger(Downloader.class);
 
-    static String JDBC_URL = "jdbc:mysql://localhost/rssminer";
-
-    static final int PRODUCER = 5;
-    static final int HTTP_CONCURRENCY = 5;
-
+    static final private String userAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.11 (KHTML, like Gecko) Chrome/20.0.1132.47 Safari/536.11";
+    static Proxy PROXY = Proxy.NO_PROXY;
     // static Proxy PROXY = new Proxy(Type.SOCKS, new InetSocketAddress(
     // "127.0.0.1", 3128));
-    static Proxy PROXY = Proxy.NO_PROXY;
-    static final String DEST_FOLDER = "test/failed_rss/";
 
-    private static List<Job> getAllFailed() throws SQLException {
-        Connection con = DriverManager.getConnection(JDBC_URL, "feng", "");
+    int producerCount = 5;
+    int concurrency = 5;
+    String sql;
+    String destFolder = "test/failed_rss/";
+
+    private List<Job> getAllFailed() throws SQLException {
+        Connection con = Utils.getRssminerDB();
         Statement state = con.createStatement();
-        ResultSet rs = state
-                .executeQuery("select id, url from rss_links where total_feeds  = 0");
+        // "select id, url from rss_links where total_feeds  = 0"
+        ResultSet rs = state.executeQuery(sql);
         List<Job> jobs = new ArrayList<Job>();
         while (rs.next()) {
-            String id = rs.getString("id");
-            String url = rs.getString("url");
-            File file = new File(DEST_FOLDER + id);
+            int id = rs.getInt(1);
+            String url = rs.getString(2);
+            File file = new File(destFolder + id);
             Job job = new Job(url, id, file);
             if (file.exists()) {
                 logger.info("{}:{} already downloaded", job.id, job.url);
@@ -119,20 +119,28 @@ public class FetcherFailed {
             }
         }
         con.close();
+        Collections.shuffle(jobs);
         return jobs;
     }
 
-    public static void main(String[] args) throws IOException,
-            InterruptedException, URISyntaxException, SQLException {
-        final HttpClient client = new HttpClient(new HttpClientConfig());
-        final Semaphore s = new Semaphore(HTTP_CONCURRENCY);
+    public Downloader(String destFoder, String sql, int concurrency) {
+        this.destFolder = destFoder;
+        this.sql = sql;
+        this.concurrency = concurrency;
+    }
+
+    public void start() throws IOException, InterruptedException,
+            URISyntaxException, SQLException {
+        final HttpClient client = new HttpClient(new HttpClientConfig(60000,
+                userAgent));
+        final Semaphore s = new Semaphore(concurrency);
         final ConcurrentLinkedQueue<Job> jobs = new ConcurrentLinkedQueue<Job>(
                 getAllFailed());
         logger.info("get {} jobs", jobs.size());
 
         // DNS is slow
-        ExecutorService execs = Executors.newFixedThreadPool(PRODUCER);
-        for (int i = 0; i < PRODUCER; i++) {
+        ExecutorService execs = Executors.newFixedThreadPool(producerCount);
+        for (int i = 0; i < producerCount; i++) {
             execs.submit(new Runnable() {
                 public void run() {
                     Job job = jobs.poll();
@@ -145,6 +153,7 @@ public class FetcherFailed {
                             s.acquire();
                             client.get(new URI(job.url), map, PROXY, listener);
                         } catch (Exception e) {
+                            s.release();
                             logger.info("exception...", e);
                         } finally {
                             job = jobs.poll();
