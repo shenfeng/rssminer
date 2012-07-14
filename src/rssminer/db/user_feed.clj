@@ -5,22 +5,28 @@
         [clojure.java.jdbc :only [do-prepared]])
   (:import rssminer.db.MinerDAO))
 
+(defn- get-rssid-by-feedid [id]
+  (-> (mysql-query ["select rss_link_id from feeds where id = ?" id])
+      first :rss_link_id))
+
 ;;; TODO. when autoCommit=false this complete,
 ;;; other threads does not see the change
 (defn insert-user-vote [user-id feed-id vote]
-  (let [now (now-seconds)]
+  (let [now (now-seconds)
+        rssid (get-rssid-by-feedid feed-id)]
     (with-mysql (do-prepared ;; rss_link_id default 0, which is ok
                  "INSERT INTO user_feed
-                  (user_id, feed_id, vote_user, vote_date) VALUES(?, ?, ?, ?)
+                  (user_id, feed_id, rss_link_id, vote_user, vote_date) VALUES(?, ?, ?, ?, ?)
                  ON DUPLICATE KEY UPDATE vote_user = ?, vote_date = ?"
-                 [user-id feed-id vote now vote now]))))
+                 [user-id feed-id rssid vote now vote now]))))
 
 (defn mark-as-read [user-id feed-id]
-  (let [now (now-seconds)]
+  (let [now (now-seconds)
+        rssid (get-rssid-by-feedid feed-id)]
     (with-mysql (do-prepared ;; rss_link_id default 0
-                 "INSERT INTO user_feed (user_id, feed_id, read_date)
-       VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE read_date = ?"
-                 [user-id feed-id now now]))))
+                 "INSERT INTO user_feed (user_id, feed_id, rss_link_id, read_date)
+       VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE read_date = ?"
+                 [user-id feed-id rssid now now]))))
 
 (defn fetch-newest [userid limit offset]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
