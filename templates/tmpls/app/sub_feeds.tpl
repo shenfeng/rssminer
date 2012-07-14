@@ -32,6 +32,7 @@
       </a>
     </li>
   {{/feeds}}
+  {{^feeds}}<h2>No entries</h2>{{/feeds}}
 </ul>
 {{#pager}}
   <ul class="pager">
