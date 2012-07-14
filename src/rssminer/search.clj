@@ -1,7 +1,7 @@
 (ns rssminer.search
   (:use [clojure.tools.logging :only [info]]
         [rssminer.util :only [ignore-error]]
-        [rssminer.config :only [rssminer-conf]])
+        [rssminer.config :only [rssminer-conf cache-control]])
   (:import rssminer.search.Searcher))
 
 (defonce searcher (atom nil))
@@ -23,8 +23,8 @@
 
 (defn search* [term userid limit]
   {:body (.search ^Searcher @searcher term userid limit)
-   :headers {"Cache-Control" "private, max-age=600"}})
+   :headers cache-control})
 
 (defn search-within-subs [term uid subids limit]
   {:body (.searchInSubIDs ^Searcher @searcher term uid subids limit)
-   :headers {"Cache-Control" "private, max-age=600"}})
+   :headers cache-control})

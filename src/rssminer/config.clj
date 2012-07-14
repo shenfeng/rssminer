@@ -15,5 +15,7 @@
   (when-let [user (:demo-user @rssminer-conf)]
     (= (user-id-from-session req) (:id user))))
 
+(def cache-control {"Cache-Control" "private, max-age=600"})
+
 (defn real-user? [req]
   (and (user-id-from-session req) (not (demo-user? req))))

@@ -1,6 +1,7 @@
 (ns rssminer.handlers.feeds
   (:use (rssminer [util :only [user-id-from-session to-int assoc-if]]
-                  [classify :only [on-feed-event]]))
+                  [classify :only [on-feed-event]]
+                  [config :only [cache-control]]))
   (:require [rssminer.db.user-feed :as uf]
             [rssminer.db.feed :as db]
             [clojure.string :as str]))
@@ -40,8 +41,8 @@
                    "recommend" (uf/fetch-folder-likest uid ids limit offset)
                    "read" (uf/fetch-folder-read uid ids limit offset)
                    "voted" (uf/fetch-folder-vote uid ids limit offset))))]
-    (if data
+    (if (and data (not= "read" sort) (not= "voted" sort))
       {:body data
-       :headers {"Cache-Control" "private, max-age=600"} }
+       :headers cache-control }
       data))) ;; cache one hour
 

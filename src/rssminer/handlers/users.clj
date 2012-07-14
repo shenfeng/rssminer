@@ -3,7 +3,7 @@
          [clojure.java.io :only [resource]]
          me.shenfeng.mustache
          (rssminer [util :only [user-id-from-session to-int md5-sum]]
-                   [config :only [rssminer-conf]])
+                   [config :only [rssminer-conf cache-control]])
          [clojure.data.json :only [json-str read-json]])
   (:require [rssminer.db.user :as db]
             [rssminer.db.user-feed :as uf]
@@ -61,14 +61,15 @@
   (let [u-id (user-id-from-session req)
         limit (min (-> req :params :limit to-int) 40)
         offset (-> req :params :offset to-int)
-        data (case (-> req :params :section)
+        sort (-> req :params :section)
+        data (case sort
                "newest" (uf/fetch-newest u-id limit offset)
                "voted" (uf/fetch-recent-vote u-id limit offset)
                "read" (uf/fetch-recent-read u-id limit offset)
                "recommend" (uf/fetch-likest u-id limit offset))]
-    (if data
+    (if (and data (not= "read" sort) (not= "voted" sort))
       {:body data       ;; ok, just cache for 10 miniutes
-       :headers {"Cache-Control" "private, max-age=600"}}
+       :headers cache-control}
       data))) ;; no cache
 
 
