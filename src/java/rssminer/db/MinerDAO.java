@@ -84,9 +84,9 @@ public class MinerDAO {
 
     private StringBuilder createBuilder(List<Integer> ids) {
         if (ids == null) {
-            return new StringBuilder(240);
+            return new StringBuilder(245);
         } else {
-            return new StringBuilder(240 + ids.size() * 5);
+            return new StringBuilder(245 + ids.size() * 5);
         }
     }
 
@@ -235,7 +235,7 @@ public class MinerDAO {
             int limit, int offset) throws SQLException {
         StringBuilder sb = createBuilder(rssIDs);
         sb.append(SELECT_FIELD).append(userID);
-        sb.append(" where uf.vote_date > 0 and uf.rss_link_id in ");
+        sb.append(" where uf.vote_date > 0 and uf.vote_user != 0 and uf.rss_link_id in ");
         appendIn(sb, rssIDs);
         sb.append(" order by uf.vote_date desc ");
         appendLimitOffset(sb, limit, offset);
@@ -292,7 +292,7 @@ public class MinerDAO {
             throws SQLException {
         StringBuilder sb = new StringBuilder(240);
         sb.append(SELECT_FIELD).append(userID);
-        sb.append(" where uf.vote_date > 0 order by uf.vote_date desc ");
+        sb.append(" where uf.vote_date > 0 and uf.vote_user != 0 order by uf.vote_date desc ");
         appendLimitOffset(sb, limit, offset);
         return fetchFeeds(sb.toString());
     }
@@ -345,7 +345,7 @@ public class MinerDAO {
             int offset) throws SQLException {
         StringBuilder sb = createBuilder(null);
         sb.append(SELECT_FIELD).append(userID);
-        sb.append(" where uf.vote_date > 0 and uf.rss_link_id = ");
+        sb.append(" where uf.vote_date > 0 and uf.vote_user != 0 and uf.rss_link_id = ");
         sb.append(subID);
         sb.append(" order by uf.vote_date desc ");
         appendLimitOffset(sb, limit, offset);
