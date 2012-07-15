@@ -67,7 +67,7 @@
                "voted" (uf/fetch-recent-vote u-id limit offset)
                "read" (uf/fetch-recent-read u-id limit offset)
                "recommend" (uf/fetch-likest u-id limit offset))]
-    (if (and data (not= "read" sort) (not= "voted" sort))
+    (if (and (seq data) (not= "read" sort) (not= "voted" sort))
       {:body data       ;; ok, just cache for 10 miniutes
        :headers cache-control}
       data))) ;; no cache

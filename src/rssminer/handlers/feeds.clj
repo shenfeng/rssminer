@@ -41,7 +41,7 @@
                    "recommend" (uf/fetch-folder-likest uid ids limit offset)
                    "read" (uf/fetch-folder-read uid ids limit offset)
                    "voted" (uf/fetch-folder-vote uid ids limit offset))))]
-    (if (and data (not= "read" sort) (not= "voted" sort))
+    (if (and (seq data) (not= "read" sort) (not= "voted" sort))
       {:body data
        :headers cache-control }
       data))) ;; cache one hour
