@@ -285,7 +285,7 @@
         });
       });
       cb({
-        title: sub.title,
+        title: sort + ' - ' + sub.title,
         url: sub.url,
         feeds: feeds,
         sort: sort_data,
@@ -441,7 +441,7 @@
           total = resp.length === PER_PAGE_FEEDS;
         }
         cb({
-          title: "Folder: " + group,
+          title: sort + " - " + group + ' [folder]',
           feeds: feeds,
           sort: sort_data,
           pager: compute_sub_paging(section, sort, total, page)

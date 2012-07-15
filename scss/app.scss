@@ -324,8 +324,13 @@ ul { list-style: none; padding: 0; margin: 0; }
     height: 100%;
     margin: 3px 2px 2px 0;
     h2 {
-        a { color: black; }
-        text-align: center; margin: 14px 0 8px 0;
+        a {
+            color: #02060e;
+            @include overflow-ellipsis();
+            max-width: 800px;
+            display: inline-block;
+        }
+        text-align: center; margin: 14px 0;
     }
     .date {
         position: absolute;
