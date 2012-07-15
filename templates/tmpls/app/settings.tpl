@@ -14,7 +14,7 @@
   <li class="section add-sub">
     <div>
       {{#demo}}
-      <p class="demo-warn">
+      <p class="warn">
         This is a public account, please
         <a href="/logout">create a private one</a>
         to add subscription.
@@ -59,6 +59,15 @@
   </li>
   <li class="section account">
     <div>
+      <p class="warn">
+        Login in with Google OpenID is encouraged. But if...
+      </p>
+      <p>
+        You have trouble login with Google OpenID. For example, In China,
+        Google sometimes get reseted. You can set a password to login.
+        The username is your email address.
+      </p>
+      <p>You can always login with Google OpenID, even after you set the password</p>
       <section>
         <h4>Password</h4>
         <div>
