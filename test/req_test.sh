@@ -26,7 +26,7 @@ URLS=(
 URL_COUNT=${#URLS[@]}
 
 function ab_test() {
-    QPS=$(ab -n 3000 -c 10 -C _id_=$ID $1 2>&1 | grep "Requests")
+    QPS=$(ab -n 3000 -c 20 -C _id_=$ID $1 2>&1 | grep "Requests")
     echo -e $1 ":\t"  $QPS
 }
 
@@ -37,7 +37,7 @@ for i in {1..200}; do
 
     if [ $IDX -eq 6 ]; then
         echo "recompute all"
-        wget --header "Cookie:_id_=$ID" "http://127.0.0.1:$PORT/admin/compute" > /dev/null 2>&1
+        wget --header "Cookie:_id_=$ID" "http://127.0.0.1:$PORT/admin/compute" -O /dev/null
     fi
 
     IDX=$(expr $i % $URL_COUNT)

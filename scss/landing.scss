@@ -15,9 +15,9 @@
 .rfloat { float: right; }
 
 body {
-    font: 400 14px/1.431 'Lucida Grande', 'Helvetica Neue', "Microsoft YaHei", Helvetica, Arial, sans-serif;
+    font: 400 15px/1.431 'Lucida Grande', 'Helvetica Neue', "Microsoft YaHei", Helvetica, Arial, sans-serif;
     /* background: transparent url('/imgs/bg-site.png') repeat center top; */
-    background: #F6F6F6 url('/imgs/background.png') repeat center top;
+    /* background: #F6F6F6 url('/imgs/background.png') repeat center top; */
     color: #222;
     margin: 0;
     padding: 0;
@@ -27,22 +27,27 @@ a { outline: none; }
 table { border-collapse: collapse; border-spacing: 0; }
 
 #header {
-    padding: 0.8em 0.5em 0em 0.5em;
+    /* text-shadow: 1px 1px 0px #E0E0E0; */
     text-indent: 1em;
-    text-shadow: 1px 1px 0px #E0E0E0;
-    h1 { margin: 0; font-size: 40px;}
-    a { color: #303030; text-decoration: none; }
+    h1 { margin: 5px 0; font-size: 40px;}
+    /* a { color: #303030; text-decoration: none; } */
+    .content { width: $page-width; margin: 0 auto; }
+    /* background-color: #f7f7f7; */
+    /* color: #222; */
+    background: #eee;
+    /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1); */
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+    form {
+        padding: 10px 0 0 0;
+    }
+/* @include linear-gradient(#E9EAEF, #F3F6F9, true); */
 }
+
+h2 { font-size: 20px; font-weight: normal; margin: 20px 0 2px 0; }
 
 #error {
     text-align: center;
     color: red;
-}
-
-#header {
-    .content { width: $page-width; margin: 0 auto; }
-    background-color: #F7F7F7;
-    @include linear-gradient(#E9EAEF, #F3F6F9, true);
 }
 
 #signup-form {
@@ -70,6 +75,7 @@ p {
         padding: 0.5em 1em 1em 0;
         width: $left_width;
         border-right: 1px solid #E0E0E0;
+    /* box-shadow: 4px 0px 5px -2px rgba(0, 0, 0, 0.3); */
     }
     .rfloat {
         padding-top: 1em;
@@ -79,8 +85,11 @@ p {
             padding: 0.5em;
             margin: 10px 0;
             font-size: 14px;
-            background-color: #D1E1FA;
-            @include linear-gradient(#C5D7FB, #D8E1FF, true);
+            background: #eee;
+            /* background: #D1E1FA; */
+            /* background: #C5D7FB; */
+            /* background-color: #D1E1FA; */
+            /* @include linear-gradient(#C5D7FB, #D8E1FF, true); */
             a {
                 font-size: 12px;
                 display: inline;
@@ -92,7 +101,10 @@ p {
     #demo a {
         text-align: center;
         display: inline-block;
-        background-color: #2F96B4;
+        background-image: -moz-linear-gradient(top,#049CDB,#0064CD);
+        background-image: -ms-linear-gradient(top,#049CDB,#0064CD);
+        background-image: -webkit-linear-gradient(top,#049CDB,#0064CD);
+        background-color: #049CDB;
         text-decoration: none;
         color: white;
         padding: 5px 24px;

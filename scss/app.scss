@@ -7,12 +7,14 @@ $hover_color: #E5ECF9; // #DDD;
 $selected_color: #D6E9F8;
 /* $selected_color: #4498e1; */
 $header_height: 46px;
-$header_color: #3D5877;
+/* $header_color: #3D5877; */
+$header_color: #3d668f;
 $body_width: 1250px;
 $nth_child_color: #f4fafb;
 $search_result_selecte_color: #7b9bf0;
 
 $like_color: #449d4e;
+/* $like_color: #7CC127; */
 $neutral_color: #f5d85f;
 $dislike_color: #c28561;
 
@@ -71,7 +73,8 @@ a { outline: 0; text-decoration: none;}
     left: 0;
     z-index: 1;
     background: $header_color;
-    height: $header_height;
+    /* background: #3d668f; */
+    Height: $header_height;
     width: 100%;
     .links {                    /* in wrapper */
         font-size: 19px;
@@ -371,7 +374,7 @@ ul { list-style: none; padding: 0; margin: 0; }
         text-align: center;
         padding: 3px 10px;
         &.selected {
-            background: lighten($header_color, 13%);
+            background: lighten($header_color, 8%);
             border-radius: 5px 5px 0 0;
             color: white;
             a { color: white; }

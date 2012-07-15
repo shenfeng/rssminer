@@ -21,8 +21,8 @@
     </a>
     <div id="page-wrap">
       <div id="header" class="clearfix">
-        <div class="content">
-          <h1 class="lfloat"><a href="/">Rssminer</a></h1>
+        <div class="content clearfix">
+          <h1 class="lfloat">Rssminer</h1>
           <form action="/login" method="post"
                 id="login-form" class="rfloat">
             <table>
@@ -47,10 +47,8 @@
       <div id="content">
         <div id="main" class="clearfix">
           <div class="lfloat">
-            <p>Rssminer is an intelligent
-              <a href="http://en.wikipedia.org/wiki/RSS">RSS</a>
-              reader. By machine learning, Rssminer highlights stories you
-              like, and helps discover stories you may like.</p>
+            <h2>Rssminer is an intelligent RSS reader. By machine
+              learning, it highlights stories you like, helps discover stories you may like.</h2>
             <br>
             <div id="slides">
               <div class="slides_container">
