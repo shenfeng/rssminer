@@ -7,7 +7,7 @@ cd "${HOME}" && java -server \
     -Djava.net.preferIPv4Stack=true \
     -Dsun.jnu.encoding=UTF-8 \
     -Dsun.net.inetaddr.ttl=0 \
-    -Xms150m -Xmx150m \
+    -Xms96m -Xmx96m -XX:PermSize=40M -XX:MaxPermSize=40M \
     -server -cp "classes:lib/*:src/" clojure.main \
     -m rssminer.main $@
 
