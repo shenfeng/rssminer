@@ -25,14 +25,6 @@
                                   "useServerPrepStmts" true
                                   "maintainTimeStats" false}))))
 
-(defn use-mysql-database! [^String url user]
-  (let [url (if (= -1 (.indexOf url (int \?)))
-              (str url "?" (jdbc-params)) (str url "&" (jdbc-params)))
-        ds (PerThreadDataSource. url user "")]
-    (swap! rssminer-conf assoc :data-source ds)
-    (reset! mysql-db-factory {:factory (fn [& args] (.getConnection ds))
-                              :ds ds})))
-
 (defn do-mysql-commands [& commands]
   (with-connection @mysql-db-factory
     (apply do-commands commands)))
@@ -73,4 +65,16 @@
 (defn parse-timestamp [str]
   (let [f (SimpleDateFormat. "EEE, dd MMM yyyy HH:mm:ss ZZZ" Locale/US)]
     (Timestamp. (.getTime (.parse f str)))))
+
+(defn use-mysql-database! [^String url user]
+  (let [url (if (= -1 (.indexOf url (int \?)))
+              (str url "?" (jdbc-params)) (str url "&" (jdbc-params)))
+        ds (PerThreadDataSource. url user "")]
+    (swap! rssminer-conf assoc :data-source ds)
+    (reset! mysql-db-factory {:factory (fn [& args] (.getConnection ds))
+                              :ds ds})
+    ;; init demo-user as soon as possible
+    (swap! rssminer-conf assoc :demo-user
+           (first (mysql-query ["SELECT id, conf, like_score, neutral_score
+                  FROM users WHERE email = 'demo@rssminer.net'"])))))
 

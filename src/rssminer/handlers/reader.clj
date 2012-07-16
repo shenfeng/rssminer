@@ -57,8 +57,9 @@
     (assoc (redirect "/?r=d") :session nil ;; delete cookie
            :session-cookie-attrs {:max-age -1})
     (do
-      (swap! cfg/rssminer-conf assoc :demo-user
-             (find-user-by-email "demo@rssminer.net"))
+      (swap! cfg/rssminer-conf assoc :demo-user ;in case score updated
+             (dissoc (find-user-by-email "demo@rssminer.net")
+                     :password))
       (let [data {:rm {:user (:demo-user @cfg/rssminer-conf)
                        :no_iframe Utils/NO_IFRAME
                        :demo true
