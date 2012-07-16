@@ -55,7 +55,7 @@ public class HttpTaskRunner {
         public void finish(int status, String body,
                 Map<String, String> headers) {
             body = Utils.trimRemoveBom(body);
-            if (isHtml(headers, body)) {
+            if (status == 200 && isHtml(headers, body)) {
                 try {
                     String rss = Utils.extractRssUrl(body, task.getUri());
                     if (rss != null && rss.length() > 0) {
