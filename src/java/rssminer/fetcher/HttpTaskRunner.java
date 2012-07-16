@@ -7,9 +7,6 @@ import static rssminer.Utils.CLIENT;
 
 import java.net.URI;
 import java.net.UnknownHostException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -140,6 +137,7 @@ public class HttpTaskRunner {
                         CLIENT.get(task.getUri(), headers, task.getProxy(),
                                 listener);
                     } catch (UnknownHostException e) {
+                        taskFinished(task, 602);
                         task.onThrowable(e);
                     }
                 } catch (InterruptedException e) { // die
@@ -199,11 +197,11 @@ public class HttpTaskRunner {
 
     private Map<Object, Object> computeStat() {
         mStat.put("Total", mCounter);
-        mStat.put("Remain", mTaskQueue.size());
+        mStat.put("RemainJob", mTaskQueue.size());
+        mStat.put("RunningJob", runningTasks.size());
+        mStat.put("Permit", mConcurrent.availablePermits());
         double m = (double) (currentTimeMillis() - startTime) / 60000;
         mStat.put("PerMiniute", mCounter / m);
-        DateFormat format = new SimpleDateFormat("MM-dd HH:mm:ss");
-        mStat.put("StartTime", format.format(new Date(startTime)));
         return mStat;
     }
 
