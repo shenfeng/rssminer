@@ -14,12 +14,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
-import me.shenfeng.http.HttpUtils;
 import me.shenfeng.http.client.ITextHandler;
 import me.shenfeng.http.client.TextRespListener;
 
@@ -41,11 +41,24 @@ public class HttpTaskRunner {
             this.task = task;
         }
 
+        private boolean isHtml(Map<String, String> headers, String body) {
+            String ct = null;
+            for (Entry<String, String> e : headers.entrySet()) {
+                if ("content-type".equalsIgnoreCase(e.getKey())) {
+                    ct = e.getValue();
+                    break;
+                }
+            }
+            if (ct != null && ct.toLowerCase().indexOf("html") != -1) {
+                return true;
+            }
+            return false;
+        }
+
         public void finish(int status, String body,
                 Map<String, String> headers) {
             body = Utils.trimRemoveBom(body);
-            String ct = headers.get(HttpUtils.CONTENT_TYPE);
-            if (ct != null && ct.toLowerCase().indexOf("html") != -1) {
+            if (isHtml(headers, body)) {
                 try {
                     String rss = Utils.extractRssUrl(body, task.getUri());
                     if (rss != null && rss.length() > 0) {
@@ -54,7 +67,7 @@ public class HttpTaskRunner {
                         status = 301;
                         logger.info("{} html, extract {}", task.getUri(), rss);
                     } else {
-                        logger.warn("{} {} no rss link", task.getUri(), ct);
+                        logger.warn("{}, but no rss link", task.getUri());
                     }
                 } catch (Exception e) {
                     logger.error("try to extract rss link", e);
