@@ -16,13 +16,13 @@
 
 body {
     font: 400 15px/1.431 'Lucida Grande', 'Helvetica Neue', "Microsoft YaHei", Helvetica, Arial, sans-serif;
-    /* background: transparent url('/imgs/bg-site.png') repeat center top; */
+    background: transparent url('/imgs/bg-site.png') repeat center top;
     /* background: #F6F6F6 url('/imgs/background.png') repeat center top; */
     color: #222;
     margin: 0;
     padding: 0;
 }
-img { border: 0;}
+img { border: 0; }
 a { outline: none; }
 table { border-collapse: collapse; border-spacing: 0; }
 
@@ -43,7 +43,12 @@ table { border-collapse: collapse; border-spacing: 0; }
 /* @include linear-gradient(#E9EAEF, #F3F6F9, true); */
 }
 
-h2 { font-size: 20px; font-weight: normal; margin: 20px 0 2px 0; }
+h2 {
+    font-size: 20px;
+    font-weight: normal;
+    margin: 20px 0 2px 0;
+    line-height: 1.8;
+}
 
 #error {
     text-align: center;
@@ -81,17 +86,30 @@ p {
         padding-top: 1em;
         width: $page-width - $left_width - 30px;
         >span, a { display: block; margin: 0 40px; cursor: pointer; }
+        img {
+            border: 1px #ddd solid;
+            &:hover {
+                border: 1px #aaa solid;
+                box-shadow: 0 0 3px #888;
+            /* border: 2px #ddd solid; */
+            }
+        }
         h3 {
-            padding: 0.5em;
-            margin: 10px 0;
-            font-size: 14px;
+            padding: 0.5em 0 0.5em 0.5em;
+            margin: 12px 0;
+            font-size: 13px;
             background: #eee;
+            span {
+                font-weight: normal;
+                /* text-decoration: underline; */
+                font-size: 10px;
+            }
             /* background: #D1E1FA; */
             /* background: #C5D7FB; */
             /* background-color: #D1E1FA; */
             /* @include linear-gradient(#C5D7FB, #D8E1FF, true); */
             a {
-                font-size: 12px;
+                font-size: 11px;
                 display: inline;
                 margin: 0;
                 font-weight: normal;

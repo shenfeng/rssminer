@@ -79,6 +79,8 @@
   }
 
   function show_search_result (data) {
+    util.add_even(data.feeds);
+    util.add_even(data.subs);
     var html = tmpls.search_result(data);
     hide_search_context_menu();
     $header.append(html).find('img').each(util.favicon_error);

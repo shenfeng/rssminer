@@ -33,6 +33,21 @@
     return data;
   }
 
+  function add_even (arr) {
+    if(_.isArray(arr)) {
+      for(var i = 0; i < arr.length; i++) {
+        if((i + 1) % 2 === 0) {
+          var item = arr[i];
+          if(item.cls) {
+            item.cls += ' even';
+          } else {
+            item.cls = 'even';
+          }
+        }
+      }
+    }
+  }
+
   var eventSplitter = /^(\S+)\s*(.*)$/;
 
   function delegate_events($ele, events) {
@@ -100,6 +115,7 @@
       call_if_fn: call_if_fn,
       get_final_link: get_final_link,
       params: params,
+      add_even: add_even,
       extract_data: extract_data,
       hostname: hostname
     }

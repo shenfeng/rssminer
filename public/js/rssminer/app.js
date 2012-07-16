@@ -145,6 +145,7 @@
   }
 
   function show_feeds (data) {
+    util.add_even(data.feeds);
     show_server_message();
     iframe.src = 'about:blank';
     var html = tmpls.feeds_nav(data);

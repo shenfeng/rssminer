@@ -127,7 +127,9 @@
                title=" Secure and convenient: Google protect your password">
               <img src="/imgs/openid_google.png"/>
             </a>
-            <h3>Create an account</h3>
+            <h3>Create an account
+              <span>Login with google is encouraged</span>
+            </h3>
             <form action="/signup" method="post" id="signup-form">
               <table>
                 <tr>

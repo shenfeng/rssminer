@@ -2,7 +2,7 @@
   {{#sub_cnt}}
     <ul class="subs">
       {{#subs}}
-        <li class="ficon-error">
+        <li class="ficon-error {{ cls }}">
           <a href="#{{href}}">
             <img src="{{img}}" width="15" height="15" />
             <i class="icon-rss"></i>

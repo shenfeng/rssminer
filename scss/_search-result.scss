@@ -17,13 +17,15 @@
 #search-result {
     box-shadow: 0 1px 4px #aaa;
     width: 540px;
-    top: 38px;
+    top: 37px;
     left: 230px;
     background: white;
+    border-radius: 0 0 5px 5px;
+    border: 1px solid #EEE;
     a { padding: 2px 7px; display: block; }
     .feed {
         padding: 1px 3px 2px 3px;
-        &:nth-child(even) { background: $nth_child_color;}
+        /* &:nth-child(even) { background: $nth_child_color;} */
         &.selected { @include selected(); }
     }
     .title {
@@ -41,10 +43,11 @@
     .subs {
         padding-bottom: 2px;
         border-bottom: 1px solid #eee;
+        .even { background: $nth_child_color; }
         li {
             position: relative;
             padding-top: 2px;
-            &:nth-child(even) { background: $nth_child_color;}
+            /* &:nth-child(even) { background: $nth_child_color;} */
             &.selected { @include selected(); }
         }
     }
