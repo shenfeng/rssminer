@@ -16,7 +16,7 @@
       {{#demo}}
       <p class="warn">
         This is a public account, please
-        <a href="/logout">create a private one</a>
+        <a href="/logout">create your own</a>
         to add subscription.
       </p>
       {{/demo}}

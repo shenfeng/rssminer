@@ -227,7 +227,6 @@ li {
 .icon-comments:before             { content: "\f086"; }
 .icon-star-half:before            { content: "\f089"; }
 .icon-heart-empty:before          { content: "\f08a"; }
-.icon-signout:before              { content: "\f08b"; }
 .icon-linkedin-sign:before        { content: "\f08c"; }
 .icon-pushpin:before              { content: "\f08d"; }
 .icon-external-link:before        { content: "\f08e"; }
@@ -310,12 +309,12 @@ li {
 .icon-paste:before                { content: "\f0ea"; }
 
 .icon-user-md:before              { content: "\f200"; }
+.icon-off:before                  { content: "\f011"; }
 
 
 */
 .icon-share:before                { content: "\f045"; }
 .icon-user:before                 { content: "\f007"; }
-.icon-off:before                  { content: "\f011"; }
 .icon-edit:before                 { content: "\f044"; }
 .icon-search:before               { content: "\f002"; }
 .icon-rss:before                  { content: "\f09e"; }
@@ -328,3 +327,5 @@ li {
 .icon-github-sign:before          { content: "\f092"; }
 .icon-github:before               { content: "\f09b"; }
 .icon-info-sign:before            { content: "\f05a"; }
+.icon-signout:before              { content: "\f08b"; }
+

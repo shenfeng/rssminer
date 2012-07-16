@@ -3,7 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Rssminer - an intelligent RSS reader</title>
+    <link rel="shortcut icon" href="/favicon.ico?{VERSION}" />
+    <title>Rssminer, an intelligent RSS reader</title>
     <meta name="keywords" content="RSS miner, Rssminer, RSS aggregator,
                                    intelligent RSS reader">
     <meta name="description"
@@ -31,7 +32,7 @@
                            placeholder="Email"/></td>
                 <td><input type="password" name="password"
                            id="password" placeholder="Password"/></td>
-                <td><input type="submit" value="Sign in" /></td>
+                <td><input type="submit" value="Login" /></td>
               </tr>
               <tr>
                 <td><input type="checkbox" id="persistent" checked
@@ -146,7 +147,7 @@
             </form>
             <h3>Google Chrome extension</h3>
             <span title="Easy way to add subscription, not ready, please wait a while">
-              <img src="/imgs/icon48.png"/>
+              <img src="/imgs/icon48.png?{VERSION}"/>
             </span>
           </div> <!-- right, login form -->
         </div>

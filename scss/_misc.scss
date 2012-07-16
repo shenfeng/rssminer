@@ -31,11 +31,15 @@ $demo_warn_bg_color: #fcfcac;
     padding: 8px;
     margin: 0;
     display: inline-block;
+    a {
+        font-weight: bold;
+        color: blue;
+    }
 }
 
 #warn-msg {
     display: none;
-    right: 250px;
+    right: 280px;
     background: $demo_warn_bg_color;
     font-size: 13px;
     top: 8px;

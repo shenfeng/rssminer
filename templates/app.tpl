@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="shortcut icon" href="/favicon.ico?{VERSION}" />
     <title>Rssminer, intelligent rss reader</title>
     <meta name="keywords" content="rss miner, rssminer, rss aggregator,
                                    intelligent rss reader">
@@ -24,7 +25,7 @@
           <ul id="sub-list"></ul>
         </div>
         <div id="warn-msg">
-          this is a public account, <a href="/">create a private one</a>
+          this is a public account, <a href="/">create your own</a>
         </div>
         <input id="q" autocomplete="off"
                placeholder="type to search subscriptions, articles"/>
@@ -46,8 +47,8 @@
             </a>
           </li>
           <li>
-            <a href="/logout" title="Logout">
-              <i class="icon-off"></i>
+            <a href="/logout">
+              <i class="icon-signout"></i><span>Logout</span>
             </a>
           </li>
         </ul>
