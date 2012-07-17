@@ -10,13 +10,24 @@
         [clojure.java.jdbc :only [with-query-results]])
   (:require [rssminer.database :as db]))
 
+(def step 1000)
+
+(defn- max-feed-id []
+  (-> (mysql-query ["select max(id) m from feeds"]) first :m))
+
+(def select-sql "SELECT f.*, s.summary FROM feeds f LEFT JOIN feed_data s ON f.id = s.id WHERE f.id >= ? AND f.id < ?")
+
 (defn rebuild-index []
   (info "Clear all lucene index and rebuild it")
-  (with-mysql
-    (with-query-results rs ["SELECT f.*, s.summary FROM feeds f
-               LEFT JOIN feed_data s ON f.id = s.id"]
-      (doseq [feed rs]
-        (index-feed (:id feed) (:rss_link_id feed) feed))))
+  (let [max (max-feed-id)]
+    (info "max feed id " max)
+    (doseq [start (range 0 max step)]
+      (when (= 0 (rem start (* step 10)))
+        (info "doing feed" (str "[" start ", " (+ start step) ")")))
+      (with-mysql
+        (with-query-results rs [select-sql start (+ start step)]
+          (doseq [feed rs]
+            (index-feed (:id feed) (:rss_link_id feed) feed))))))
   (close-global-index-writer! :optimize true)
   (info "Rebuild index OK"))
 
@@ -45,9 +56,7 @@
              ["--[no-]help" "Print this help"])]
     (when (:help options) (println banner) (System/exit 0))
     (if (= (:command options) :rebuild-index)
-      (do (db/use-mysql-database! (str (:db-url options)
-                                       "?useCursorFetch=true&defaultFetchSize=400")
-                                  (:db-user options))
+      (do (db/use-mysql-database! (:db-url options) (:db-user options))
           (use-index-writer! (:index-path options))
           (rebuild-index)))))
 

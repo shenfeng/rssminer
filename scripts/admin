@@ -69,8 +69,9 @@ backup_summary() {
 
 restore_db () {
     recreate_db_and_user
-    FILE=`ls $BACKUP_FOLDER -t |head -1`
-    FILE="$BACKUP_FOLDER/$FILE"
+    # abs path already
+    FILE=`ls $BACKUP_FOLDER/rssminer* -t |head -1`
+    # FILE="$BACKUP_FOLDER/$FILE"
     if [ -f "$FILE" ]; then
         log "restore $DB_NAME db from file $FILE"
         zcat $FILE | mysql -ufeng
@@ -81,7 +82,7 @@ restore_db () {
     fi
 
     FILE=`ls $BACKUP_FOLDER/feed_data* -t |head -1`
-    FILE="$BACKUP_FOLDER/$FILE"
+    # FILE="$BACKUP_FOLDER/$FILE"
     if [ -f "$FILE" ]; then
         log "restore feed_data from file $FILE"
         zcat $FILE | mysql -ufeng $DB_NAME
@@ -99,7 +100,7 @@ rebuild_index () {
     cd "${HOME}" && java \
         -Dfile.encoding=UTF-8 \
         -Dsun.jnu.encoding=UTF-8 \
-        -Xms150m -Xmx150m \
+        -Xms88m -Xmx88m -XX:PermSize=32M -XX:MaxPermSize=32M \
         -server -cp "classes:lib/*:src/" clojure.main \
         -m rssminer.admin -c rebuild-index
 }
