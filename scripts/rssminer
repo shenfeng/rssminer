@@ -28,7 +28,7 @@ JVM_ARGS="-server -Dsun.jnu.encoding=UTF-8 \
     -Dfile.encoding=UTF-8 \
     -Dsun.net.inetaddr.ttl=0 \
     -Djava.net.preferIPv4Stack=true \
-    -Xms96m -Xmx96m -XX:PermSize=40M -XX:MaxPermSize=40M"
+    -Xms88m -Xmx88m -XX:PermSize=32M -XX:MaxPermSize=32M"
 
 JMX_OPTS="-Dcom.sun.management.jmxremote \
      -Dcom.sun.management.jmxremote.port=22134 \
