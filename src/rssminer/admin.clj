@@ -13,7 +13,8 @@
 (defn rebuild-index []
   (info "Clear all lucene index and rebuild it")
   (with-mysql
-    (with-query-results rs ["select * from feeds"]
+    (with-query-results rs ["SELECT f.*, s.summary FROM feeds f
+               LEFT JOIN feed_data s ON f.id = s.id"]
       (doseq [feed rs]
         (index-feed (:id feed) (:rss_link_id feed) feed))))
   (close-global-index-writer! :optimize true)

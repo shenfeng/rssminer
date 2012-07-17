@@ -53,7 +53,18 @@ backup_db() {
     D=`date +"%Y%m%d%H%M"`
     BACKUP_SQL="$BACKUP_FOLDER/rssminer_$D.sql.gz"
     log "Back up to file $BACKUP_SQL"
-    ssh rssminer.net "mysqldump -u $DB_USER --routines --single-transaction --database $DB_NAME --add-drop-database --add-drop-table | gzip --stdout" > $BACKUP_SQL
+    ssh rssminer.net "mysqldump -u $DB_USER --routines --single-transaction --database $DB_NAME --ignore-table=rssminer.feed_data --ignore-table=rssminer.favicon --add-drop-database --add-drop-table | gzip --stdout" > $BACKUP_SQL
+}
+
+backup_summary() {
+    if [ ! -d $BACKUP_FOLDER ]; then
+        sudo mkdir -p $BACKUP_FOLDER
+        sudo chown -R feng:feng $BACKUP_FOLDER
+    fi
+    D=`date +"%Y%m%d%H%M"`
+    BACKUP_SQL="$BACKUP_FOLDER/feed_data_$D.sql.gz"
+    log "Back up feed_data to file $BACKUP_SQL"
+    ssh rssminer.net "mysqldump -u $DB_USER $DB_NAME feed_data | gzip --stdout" > $BACKUP_SQL
 }
 
 restore_db () {
@@ -63,9 +74,19 @@ restore_db () {
     if [ -f "$FILE" ]; then
         log "restore $DB_NAME db from file $FILE"
         zcat $FILE | mysql -ufeng
+        cat $HOME/scripts/missing.sql | mysql -ufeng $DB_NAME
         # mysql -ufeng < $file
     else
         error "Backup sql file is required"
+    fi
+
+    FILE=`ls $BACKUP_FOLDER/feed_data* -t |head -1`
+    FILE="$BACKUP_FOLDER/$FILE"
+    if [ -f "$FILE" ]; then
+        log "restore feed_data from file $FILE"
+        zcat $FILE | mysql -ufeng $DB_NAME
+    else
+        error "feed_data is not restored"
     fi
 }
 
@@ -97,6 +118,7 @@ Commands:
   backup-db          backup mysql database from online
   restore-db         restore backuped mysql database
   rebuild-index      rebuild luence index
+  backup-summary     backup feed summary table
 EOF
 }
 
@@ -110,6 +132,7 @@ while test $# -ne 0; do
         backup-db) backup_db; exit;;
         restore-db) restore_db $@; exit;;
         rebuild-index) rebuild_index $@; exit;;
+        backup-summary) backup_summary $@; exit;;
         *) usage; exit;;
     esac
 done

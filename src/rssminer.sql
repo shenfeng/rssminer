@@ -62,12 +62,18 @@ CREATE TABLE feeds (
   published_ts INT UNSIGNED NOT NULL default 0,
   -- fetched_ts INT UNSIGNED,
   rss_link_id INT UNSIGNED NOT NULL,
-  summary MEDIUMTEXT,           -- rss summary, given by download rss
+  -- summary MEDIUMTEXT,           -- rss summary, given by download rss
 
   -- alter table feeds drop index rss_link_id_link;
   -- alter table feeds add index rss_link_id_link(rss_link_id, link);
              -- REFERENCES rss_links ON UPDATE CASCADE ON DELETE CASCADE,
   key rss_link_id_link (rss_link_id, link)
+);
+
+create table feed_data (
+  id INT UNSIGNED PRIMARY KEY,
+  summary MEDIUMTEXT           -- from rss
+  -- content MEDIUMTEXT            -- extract content, need working
 );
 
 CREATE TABLE user_subscription (

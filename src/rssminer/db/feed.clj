@@ -7,27 +7,30 @@
         [clojure.tools.logging :only [warn]]
         [clojure.java.jdbc :only [update-values delete-rows do-prepared]]))
 
-(defn- feed-exits [rssid link]
-  (mysql-query ["SELECT 1 FROM feeds WHERE rss_link_id = ? AND link = ?"
-                rssid link]))
-
 (defn update-total-feeds [rssid]
   (with-mysql (do-prepared "UPDATE rss_links SET total_feeds =
                  (SELECT COUNT(*) FROM feeds where rss_link_id = ?)
                  WHERE id = ?" [rssid rssid])))
+
+(defn- feed-exits [rssid link]
+  (mysql-query ["SELECT 1 FROM feeds WHERE rss_link_id = ? AND link = ?"
+                rssid link]))
+
+(defn- save-feed [feed rssid]
+  (try (let [id (mysql-insert :feeds (dissoc (assoc feed :rss_link_id rssid)
+                                             :summary))]
+         (index-feed id rssid feed)
+         (mysql-insert :feed_data {:id id :summary (:summary feed)})
+         id)                            ; return id
+       (catch Exception e
+         (warn "insert for rss" rssid e))))
 
 (defn save-feeds [feeds rssid]
   (let [ids (map (fn [{:keys [link] :as feed}]
                    (when (and link (not (blank? link)))
                      ;; link is the only cared,
                      (if-not (feed-exits rssid link)
-                       (try
-                         (let [id (mysql-insert
-                                   :feeds (assoc feed :rss_link_id rssid))]
-                           (index-feed id rssid feed)
-                           id)
-                         (catch Exception e
-                           (warn "insert for rss" rssid e)))))) ; return id
+                       (save-feed feed rssid))))
                  (:entries feeds))
         inserted (filter identity (doall ids))]
     (when (seq inserted)
