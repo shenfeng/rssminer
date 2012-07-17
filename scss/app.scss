@@ -116,6 +116,7 @@ a { outline: 0; text-decoration: none;}
 #main {
     margin-top: $header_height;
     background: white;
+    /* background: white url('/imgs/bg-site.png') repeat center top; */
     /* background: #F6F6F6 url('/imgs/bg.png') repeat center top; */
     /* background: #F6F6F6 url('/imgs/background.png') repeat center top; */
     position: relative;
@@ -132,6 +133,7 @@ html, body {
 body {
     font: 400 14px/1.431 'Lucida Grande', "Helvetica Neue","Microsoft YaHei",Helvetica,Arial,sans-serif;
     background: #F6F6F6 url('/imgs/background.png') repeat center top;
+    /* background: #F6F6F6 url('/imgs/bg-content.png') repeat center top; /\* from MDN *\/ */
 }
 
 #content { margin-left: $nav_width; }
@@ -143,6 +145,7 @@ body {
     font-size: 13px;
     overflow-x: hidden;
     overflow-y: scroll;
+    background: white url('/imgs/bg-site.png') repeat center top;
     h3 {
         a { color: #111; }
         margin: 0; padding: 8px 0 8px 5px; @include overflow-ellipsis();
@@ -175,8 +178,9 @@ ul { list-style: none; padding: 0; margin: 0; }
 .ficon-ok .icon-rss { display: none; }
 
 #sub-list {                     /* in logo */
-    background: white;
+    /* background: white; */
     width: $nav_width;
+    background: white url('/imgs/bg-site.png') repeat center top;
     overflow-y: scroll;
     overflow-x: hidden;
     display: none;

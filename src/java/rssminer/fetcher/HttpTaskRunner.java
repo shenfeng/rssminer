@@ -17,13 +17,29 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
+import me.shenfeng.http.DynamicBytes;
 import me.shenfeng.http.client.ITextHandler;
 import me.shenfeng.http.client.TextRespListener;
+import me.shenfeng.http.client.TextRespListener.IFilter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import rssminer.Utils;
+
+class Filter implements IFilter {
+
+    public boolean accept(Map<String, String> headers) {
+        return true;
+    }
+
+    public boolean accept(DynamicBytes partialBody) {
+        if (partialBody.length() > 2 * 1024 * 1024) // max 2 M
+            return false;
+        return true;
+    }
+
+}
 
 public class HttpTaskRunner {
 
@@ -130,7 +146,7 @@ public class HttpTaskRunner {
                     final IHttpTask task = mTaskQueue.poll(); // can not be null
                     try {
                         TextRespListener listener = new TextRespListener(
-                                new TextHandler(task));
+                                new TextHandler(task), filter);
                         // copy. convert from Clojure map to java map
                         TreeMap<String, String> headers = new TreeMap<String, String>(
                                 task.getHeaders());
@@ -152,6 +168,7 @@ public class HttpTaskRunner {
     private final IHttpTasksProvder mBulkProvider;
     private final IBlockingTaskProvider mBlockingProvider;
     private final String mName;
+    private final Filter filter = new Filter();
     private final ConcurrentLinkedQueue<IHttpTask> mTaskQueue;
     private final Semaphore mConcurrent;
 
