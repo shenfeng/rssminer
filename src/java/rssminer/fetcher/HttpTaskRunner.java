@@ -218,7 +218,7 @@ public class HttpTaskRunner {
         mStat.put("RunningJob", runningTasks.size());
         mStat.put("Permit", mConcurrent.availablePermits());
         double m = (double) (currentTimeMillis() - startTime) / 60000;
-        mStat.put("PerMiniute", mCounter / m);
+        mStat.put("PerMiniute", String.format(".3f", mCounter / m));
         return mStat;
     }
 
