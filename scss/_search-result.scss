@@ -1,12 +1,13 @@
 @mixin selected () {
     background: $search_result_selecte_color;
+    .sub { color: #111; }
 }
 
 .tags {
     display: inline-block;
     font-size: 9px;
     li {
-        color: #222;
+        color: #000;
         background: #efefef;
         display: inline-block;
         padding: 1px 2px;
@@ -54,11 +55,11 @@
     .count { top: 9px; right: 7px; }
     img { margin-top: 2px; }
     .feeds { .title { margin-left: 12px; } }
-    .date { top: 26px; right: 7px; }
+    .date { top: 26px; right: 7px; font-size: 10px; color: #444; }
     .author { margin: 0; color: #111; }
     .meta {
         padding-left: 12px;
-        width: 440px;
+        width: 470px;
         @include overflow-ellipsis();
     }
     .sub { font-size: 9px; color: #333; }
