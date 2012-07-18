@@ -1,6 +1,6 @@
 @mixin selected () {
     background: $search_result_selecte_color;
-    .sub { color: #111; }
+    /* .sub { color: #111; } */
 }
 
 .tags {
@@ -24,6 +24,7 @@
     border-radius: 0 0 5px 5px;
     border: 1px solid #EEE;
     a { padding: 2px 7px; display: block; }
+    .even { background: $nth_child_color; } /* feed */
     .feed {
         padding: 1px 3px 2px 3px;
         /* &:nth-child(even) { background: $nth_child_color;} */
@@ -44,7 +45,7 @@
     .subs {
         padding-bottom: 2px;
         border-bottom: 1px solid #eee;
-        .even { background: $nth_child_color; }
+        /* .even { background: $nth_child_color; } */
         li {
             position: relative;
             padding-top: 2px;
@@ -52,8 +53,8 @@
             &.selected { @include selected(); }
         }
     }
+    .sub { font-size: 10px; color: #222; }
     .count { top: 9px; right: 7px; }
-    img { margin-top: 2px; }
     .feeds { .title { margin-left: 12px; } }
     .date { top: 26px; right: 7px; font-size: 10px; color: #444; }
     .author { margin: 0; color: #111; }
@@ -62,6 +63,6 @@
         width: 470px;
         @include overflow-ellipsis();
     }
-    .sub { font-size: 9px; color: #333; }
+    img { margin-top: 2px; }
     @include border-radius(0 0 5px 5px);
 }
