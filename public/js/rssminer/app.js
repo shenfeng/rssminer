@@ -210,7 +210,11 @@
   }
 
   function fetcher_finished (result) {
-    if(!result) { return ; }
+    if(!result) {
+      notify.show_msg('Sorry, Fetcher is too busy.. job batched.',
+                      10000);
+      return ;
+    }
     if(result.refresh) {
       fetch_and_show_user_subs(function () {
         // if user is waiting, just put he there
@@ -225,7 +229,8 @@
 
   function import_from_greader (e) {
     if(_RM_.demo) {
-      alert('If you like it, please login in with Google OpenID, then import. This is a public account');
+      alert('If you like it, please login in with Google OpenID' +
+            ', then import. This is a public account');
       return false;
     }
   }
@@ -235,11 +240,11 @@
         url = $.trim($input.val()),
         added = function () {
           $input.val('');
-          notify.show_msg('subscription added successfully', 400);
+          notify.show_msg('Subscription added successfully', 400);
           window.setTimeout(function () {
             // if user is waiting, just put he there
             if(still_in_settings()) {
-              notify.show_msg('working hard to fetch the feeds...', 10000);
+              notify.show_msg('Working hard to fetch the feeds...', 10000);
             }
           }, 1500);
         };
@@ -251,7 +256,7 @@
       }
       data_api.add_subscription(url, added, fetcher_finished);
     } else {
-      notify.show_msg('Not valid rss/atom link', 3000);
+      notify.show_msg('Not a valid rss/atom link', 3000);
     }
   }
 

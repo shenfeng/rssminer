@@ -467,9 +467,9 @@
             gen_sub_titles();
             sub.refresh = true;
           }
-          call_if_fn(cb, sub);
+          call_if_fn(cb, sub);  // fetcher successfully
         } else {                // fetch again
-          interval += 1500;
+          interval += 300;
           times -= 1;
           window.setTimeout(function () {
             polling_rss_link(rss_link_id, interval, times, cb);
@@ -477,12 +477,12 @@
         }
       });
     } else {
-      call_if_fn(cb);
+      call_if_fn(cb);           // fetcher timeout
     }
   }
 
   function add_subscription (url, added_cb, fetcher_finished) {
-    var POLLING_INTERVAL = 2000,
+    var POLLING_INTERVAL = 1500,
         POLLING_TIMES = 4;
 
     ajax.jpost('/api/subs/add' , {link: url, g: get_first_group() }, function (data) {
@@ -490,8 +490,8 @@
         var id = data.rss_link_id;
         polling_rss_link(id, POLLING_INTERVAL, POLLING_TIMES,
                          fetcher_finished);
-      }, 1000);
-      call_if_fn(added_cb);
+      }, 300);
+      call_if_fn(added_cb);     // added successfully
     });
   }
 
