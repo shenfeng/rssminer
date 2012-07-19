@@ -141,7 +141,7 @@
         groups: [{subs: [sub], group: new_folder}]
       });
       $last_menu_ui.remove();
-      $subs_list.append(html).find('img').each(util.favicon_error);
+      $subs_list.append(html).find('img').each(util.favicon_ok);
       $subs_list.trigger('refresh.rm');
     }
     dump_and_saving_sorting();

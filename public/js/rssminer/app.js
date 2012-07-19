@@ -263,7 +263,7 @@
   function fetch_and_show_user_subs (cb) {
     data_api.get_user_subs(function (subs) {
       var html = tmpls.subs_nav({groups: subs});
-      $subs_list.empty().append(html).find('img').each(util.favicon_error);
+      $subs_list.empty().append(html).find('img').each(util.favicon_ok);
       $subs_list.trigger('refresh.rm');
       util.call_if_fn(cb);
     });
@@ -277,7 +277,7 @@
     }
     if(_RM_.ge) {
       var msg2 = 'Error: ' + _RM_.ge + ' , please try again';
-      notify.show_msg(msg2, 4000);
+      notify.show_msg(msg2, 6000);
       _RM_.ge = 0;
     }
   }

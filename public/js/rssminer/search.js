@@ -83,7 +83,7 @@
     util.add_even(data.subs);
     var html = tmpls.search_result(data);
     hide_search_context_menu();
-    $header.append(html).find('img').each(util.favicon_error);
+    $header.append(html).find('img').each(util.favicon_ok);
     $lis = $('#search-result .subs > li, #search-result .feeds > li');
     $lis.mouseenter(function (e) {
       current_idx = _.indexOf($lis, this);

@@ -70,7 +70,7 @@
     }
   }
 
-  function favicon_error (idx, img) {
+  function favicon_ok (idx, img) {
     img.onload = function () {
       var c = 'ficon-error';
       $(img).closest('.' + c).removeClass(c).addClass('ficon-ok');
@@ -111,7 +111,7 @@
   window.RM = $.extend(window.RM || {}, {
     util: {
       delegate_events: delegate_events,
-      favicon_error: favicon_error,
+      favicon_ok: favicon_ok,
       call_if_fn: call_if_fn,
       get_final_link: get_final_link,
       params: params,

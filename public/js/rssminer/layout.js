@@ -8,7 +8,6 @@
 
   var SELECTED = 'selected';
 
-
   function layout () {
     var height = $win.height() - $header.height();
     $nav.height(height);
