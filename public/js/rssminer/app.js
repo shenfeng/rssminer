@@ -20,8 +20,8 @@
 
   var $footer = $('#footer'),
       $reading_area = $('#reading-area'),
-      $navigation = $('#navigation'),
-      $subs_list = $('#sub-list'),
+      $navigation = $('#navigation'), // feed list
+      $subs_list = $('#sub-list'),    // sub list
       iframe = $('iframe')[0],
       $logo = $('#logo'),
       $welcome_list = $('#welcome-list');
@@ -296,6 +296,7 @@
     }
   });
 
+
   fetch_and_show_user_subs(function () { // app start here
     RM.hashRouter({
       '': show_welcome,
@@ -306,6 +307,17 @@
       'read/f_:group/:id?p=:page&s=:sort': read_group_feed,
       'read/:id/:id?p=:page&s=:sort': read_feed
     });
+  });
+
+  $navigation.scroll(function (e) {     // feed list scroll, auto load
+    var total_height = $navigation[0].scrollHeight, // ie8, ff, chrome
+        scrollTop = $navigation.scrollTop(),
+        height = $navigation.height();
+    if(scrollTop + height === total_height) {
+      console.log('loading................', gcur_page, gcur_sort,
+                  gcur_sub_id, gcur_is_group);
+    }
+    console.log(total_height, scrollTop, height);
   });
 
   if(_RM_.demo) { $('#warn-msg').show(); }
