@@ -1,7 +1,7 @@
 @import "css3";
 @import "font-awesome";
 
-$nav_width: 265px;
+$nav_width: 275px;
 $footer_height: 230px;
 $hover_color: #E5ECF9; // #DDD;
 $selected_color: #D6E9F8;
@@ -17,6 +17,11 @@ $like_color: #449d4e;
 /* $like_color: #7CC127; */
 $neutral_color: #f5d85f;
 $dislike_color: #c28561;
+
+/* $feed_border_color: #e3e3e3; */
+$feed_border_color: #E0E0DC;
+
+$bg_url: '/imgs/bg-site.png';
 
 ::-webkit-scrollbar {
     width: 7px;
@@ -56,8 +61,8 @@ a { outline: 0; text-decoration: none;}
 #logo {                         /* in header */
     &.show-nav #sub-list { display: block; }
     h1 {
-        margin: 5px 65px 3px 26px;
-        font-size: 26px;
+        margin: 2px 65px 4px 26px;
+        font-size: 28px;
         a { color: white; }
     }
     sub {
@@ -78,7 +83,7 @@ a { outline: 0; text-decoration: none;}
     width: 100%;
     .links {                    /* in wrapper */
         font-size: 17px;
-        right: 75px;
+        right: 78px;
         top: 9px;
         span { font-size: 13px;}
         li {
@@ -97,17 +102,20 @@ a { outline: 0; text-decoration: none;}
         position: relative;
         > * { position: absolute; }
     }
+    $input_left: 295px;
+    $input_width: 285px;
     .icon-search {
-        left: 517px;
+        left: $input_left + $input_width - 8px;
+        /* left: 517px; */
         top: 9px;
         font-size: 19px;
         color: #727270;
     }
     input {
-        left: 230px;
+        left: $input_left;
         font-size: 14px;
-        padding: 5px 4px;
-        width: 300px;
+        padding: 5px;
+        width: $input_width;
         margin-top: 6px;
         @include border-radius(5px);
     }
@@ -116,6 +124,7 @@ a { outline: 0; text-decoration: none;}
 #main {
     margin-top: $header_height;
     background: white;
+    background: white url($bg_url) repeat center top;
     /* background: white url('/imgs/bg-site.png') repeat center top; */
     /* background: #F6F6F6 url('/imgs/bg.png') repeat center top; */
     /* background: #F6F6F6 url('/imgs/background.png') repeat center top; */
@@ -131,9 +140,9 @@ html, body {
 }
 
 body {
-    font: 400 14px/1.431 'Lucida Grande', "Helvetica Neue","Microsoft YaHei",Helvetica,Arial,sans-serif;
-    background: #F6F6F6 url('/imgs/background.png') repeat center top;
-/* background: #F6F6F6 url('/imgs/bg-content.png') repeat center top; /\* from MDN *\/ */
+    font: 400 14px/1.431 'Lucida Grande', "Helvetica Neue","Microsoft YaHei", Helvetica, Arial, sans-serif;
+    /* background: #F6F6F6 url('/imgs/background.png') repeat center top; */
+    background: #F6F6F6 url('/imgs/bg-content.png') repeat center top; /* from MDN */
 }
 
 #content { margin-left: $nav_width; }
@@ -145,7 +154,7 @@ body {
     font-size: 13px;
     overflow-x: hidden;
     overflow-y: scroll;
-    background: white url('/imgs/bg-site.png') repeat center top;
+    background: white url($bg_url) repeat center top;
     box-shadow: 2px 1px 6px -2px #8A8A8A;
     h3 {
         text-transform: capitalize;
@@ -164,7 +173,7 @@ body {
     li {
         border-top: 1px solid white;
         /* border-bottom: 1px solid #aeb7bf; */
-        border-bottom: 1px dotted #e3e3e3;
+        border-bottom: 1px dotted $feed_border_color;
         padding: 5px 4px 6px 4px;
     }
     .selected { background: $selected_color; }
@@ -187,14 +196,16 @@ ul { list-style: none; padding: 0; margin: 0; }
 #sub-list {                     /* in logo */
     /* background: white; */
     width: $nav_width;
-    background: white url('/imgs/bg-site.png') repeat center top;
+    background: white url($bg_url) repeat center top;
     overflow-y: scroll;
     overflow-x: hidden;
+    padding-top: 5px;
     display: none;
-    margin-top: 4px;
+/* margin-top: 4px; */
 }
 
 #sub-list {                     /* in navigation */
+    a { color: #2e2e2e; }
     .icon-folder-close { display: none; }
     li.collapse {
         /* show close icon when folder is closed */
@@ -219,8 +230,13 @@ ul { list-style: none; padding: 0; margin: 0; }
         i, img { top: 2px; }
         display: block;
         position: relative;
-        span { padding: 3px 0 3px 22px; display: inline-block; }
-        i { left: 3px; font-size: 16px; color: #3e9acc;}
+        span { padding: 3px 0 3px 26px; display: inline-block; }
+        i {
+            left: 5px;
+            font-size: 16px;
+            color: #3E9ACC;
+            top: 3px;
+        }
     }
     .title {
         @include overflow-ellipsis();
@@ -320,7 +336,9 @@ ul { list-style: none; padding: 0; margin: 0; }
     }
 }
 
-.unread a { color: #00E; }
+.unread a { color: #0000de; // color: #3a6494;
+          /* color: #0B3B8C; */
+          }
 .read, .sys-read { a { color: #111; } }
 
 #reading-area {
@@ -342,7 +360,7 @@ ul { list-style: none; padding: 0; margin: 0; }
     overflow-y: auto;
     height: 100%;
     margin: 3px 2px 2px 0;
-    .even { background: $nth_child_color; } /* feed */
+    /* background: #F6F6F6 url('/imgs/background.png') repeat center top; */
     h2 {
         a {
             color: #02060e;
@@ -351,9 +369,13 @@ ul { list-style: none; padding: 0; margin: 0; }
             display: inline-block;
         }
         text-transform: capitalize;
-        text-align: center; margin: 14px 0;
+        text-align: left;
+        margin: 15px 0;
+        font-size: 18px;
+        color: #333;
+        padding-left: 30px;
     }
-    .like .indicator { top: 6px; }
+    /* .like .indicator { top: 6px; } */
     .date {
         position: absolute;
         top: 7px;
@@ -363,10 +385,13 @@ ul { list-style: none; padding: 0; margin: 0; }
     .feed {
         a { height: 20px; }
         margin-left: 20px;
-        padding: 6px 3px 6px 3px;
+        padding: 7px 3px 6px 3px;
+        border-bottom: 1px dotted $feed_border_color;
 
     /* &:nth-child(even) { background: $nth_child_color; } */
     }
+    /* .even { background: $nth_child_color; } /\* feed *\/ */
+
     .feeds {
         .title {
             max-width: 600px;
@@ -374,7 +399,7 @@ ul { list-style: none; padding: 0; margin: 0; }
             @include overflow-ellipsis();
         }
         margin: 2px 5px 5px 5px;
-        width: $body_width - $nav_width - 100px;
+        width: $body_width - $nav_width - 71px;
     }
 }
 
@@ -383,6 +408,7 @@ ul { list-style: none; padding: 0; margin: 0; }
     border-bottom: 1px solid $border_color;
     padding-right: 65px;
     font-size: 15px;
+    margin-left: 20px;
     ul {
         padding: 0;
         margin: 0;
@@ -392,20 +418,20 @@ ul { list-style: none; padding: 0; margin: 0; }
         display: inline-block;
         min-width: 40px;
         text-align: center;
-        padding: 3px 10px;
+        padding: 3px 10px 5px 10px;
         &.selected {
             background: lighten($header_color, 8%);
             border-radius: 5px 5px 0 0;
             color: white;
             a { color: white; }
         }
-        a { color: #222;  text-transform: capitalize; }
+        a { color: #222;  }
     }
 }
 
 .pager {                        /* in welcome-list , left feeds nav*/
-    padding: 5px 0 0 25px;
-    border-top: 1px solid #EFEFEF;
+    padding: 13px 0 0 25px;
+    /* border-top: 1px solid #EFEFEF; */
     li {
         &.current { background: #ccc; font-weight: bold; }
         background: #ECECEC;

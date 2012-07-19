@@ -16,8 +16,11 @@
   var STORAGE_KEY = '_rm_',
       MAX_PAGER = 9,
       WELCOME_MAX_PAGE = 7,
-      // per item 29 pixel, first feed to top 138px, 140 px for brower use
-      PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 32.9),
+      // works for 900, 800, 1080 screen (height)
+      // per item 34.85 pixel, first feed to top 138px, 140 px for brower use
+      PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 34.85),
+      // PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 32.9),
+
       // show search result count according to screen height
       SEARCH_RESUTL_COUNT = Math.min(Math.floor((screen.height - 260) / 43), 17),
       LIKE_SCORE = user_data.like_score,        // default 1

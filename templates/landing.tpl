@@ -58,10 +58,10 @@
                 <img src="/imgs/s/img3.png">
                 <img src="/imgs/s/img4.png">
               </div>
-              <a href="#" class="prev">
-                <img src="/imgs/arrow-prev.png" alt="Arrow Prev"></a>
-              <a href="#" class="next">
-                <img src="/imgs/arrow-next.png" alt="Arrow Next"></a>
+              <!-- <a href="#" class="prev"> -->
+              <!--   <img src="/imgs/arrow-prev.png" alt="Arrow Prev"></a> -->
+              <!-- <a href="#" class="next"> -->
+              <!--   <img src="/imgs/arrow-next.png" alt="Arrow Next"></a> -->
             </div>
             <div class="clearfix"></div>
             <h3>why another one? </h3>

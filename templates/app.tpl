@@ -60,7 +60,9 @@
       </div>
       <div id="content">
         <div id="reading-area">
-          <div id="welcome-list"></div>
+          <div id="welcome-list">
+            <p id="loading-msg">Loading....</p>
+          </div>
           <div class="iframe">
             <iframe src="about:blank"
                     sandbox="allow-scripts allow-same-origin"></iframe>
