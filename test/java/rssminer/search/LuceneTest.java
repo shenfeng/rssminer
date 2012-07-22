@@ -27,7 +27,7 @@ public class LuceneTest {
 
 	IndexSearcher searcher;
 
-	static final Analyzer analyzer = new KStemStopAnalyzer();
+	static final Analyzer analyzer = new RssminerAnalyzer();
 
 	@Before
 	public void setup() throws IOException {

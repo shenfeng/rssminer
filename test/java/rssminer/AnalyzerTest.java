@@ -19,7 +19,7 @@ import org.apache.lucene.util.Version;
 import org.junit.Assert;
 import org.junit.Test;
 
-import rssminer.search.KStemStopAnalyzer;
+import rssminer.search.RssminerAnalyzer;
 
 public class AnalyzerTest {
     
@@ -89,7 +89,7 @@ public class AnalyzerTest {
 
     @Test
     public void testKStemStopAnalyzer() throws IOException {
-        Analyzer analyzer = new KStemStopAnalyzer();
+        Analyzer analyzer = new RssminerAnalyzer();
         String content = "against Lazy cats took catty 以下 1111.1 ";
 
         List<String> terms = getTerms(analyzer, content);

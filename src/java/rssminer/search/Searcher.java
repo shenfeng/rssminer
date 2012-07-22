@@ -55,7 +55,7 @@ import clojure.lang.Keyword;
 public class Searcher {
 
     static final Version V = Version.LUCENE_35;
-    static final Analyzer analyzer = new KStemStopAnalyzer();
+    static final Analyzer analyzer = new RssminerAnalyzer();
     public static final Logger logger = LoggerFactory
             .getLogger(Searcher.class);
     public static final String FEED_ID = "id";
@@ -74,8 +74,10 @@ public class Searcher {
             TAG };
 
     // cache it, String.intern is heavy
-    static Term[] TERMS = new Term[] { new Term(AUTHOR), new Term(TITLE),
-            new Term(TAG), new Term(CONTENT) };
+    static Term[] TERMS = new Term[] { new Term(TITLE), new Term(CONTENT) };
+
+    static Term[] SIMPLE_SPLIT_TERM = new Term[] { new Term(TAG),
+            new Term(AUTHOR) };
 
     // static Term CONTENT_TERM = new Term(CONTENT);
     static Term FEED_ID_TERM = new Term(FEED_ID);
@@ -185,6 +187,15 @@ public class Searcher {
             q.add(part, Occur.SHOULD);
         }
 
+        List<String> parts = simpleSplit(text);
+        for (Term t : SIMPLE_SPLIT_TERM) {
+            BooleanQuery part = new BooleanQuery();
+            for (String term : parts) {
+                part.add(new TermQuery(t.createTerm(term.toLowerCase())), Occur.MUST);
+            }
+            q.add(part, Occur.SHOULD);
+        }
+
         BooleanQuery ids = new BooleanQuery();
         for (String rid : rssids) {
             ids.add(new TermQuery(RSS_ID_TERM.createTerm(rid)), Occur.SHOULD);
@@ -193,7 +204,6 @@ public class Searcher {
         BooleanQuery query = new BooleanQuery();
         query.add(q, Occur.MUST);
         query.add(ids, Occur.MUST);
-
         return query;
     }
 

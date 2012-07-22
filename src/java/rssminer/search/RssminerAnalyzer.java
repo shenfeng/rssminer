@@ -10,15 +10,15 @@ import me.shenfeng.mmseg.SimpleMMsegTokenizer;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.PorterStemFilter;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.en.KStemFilter;
 
-public class KStemStopAnalyzer extends Analyzer {
+public class RssminerAnalyzer extends Analyzer {
 
     static class DictHolder {
         static final Dictionary dic;
         static {
-            InputStream is = KStemStopAnalyzer.class.getClassLoader()
+            InputStream is = RssminerAnalyzer.class.getClassLoader()
                     .getResourceAsStream("words.dic");
             Dictionary tmp = null;
             try {
@@ -43,7 +43,9 @@ public class KStemStopAnalyzer extends Analyzer {
 
         // final StandardTokenizer src = new StandardTokenizer(v, reader);
         // TokenStream tok = new StandardFilter(v, src);
+        // new PorterStemmer
         TokenStream tok = new StopFilter(msegTokenizer);
-        return new KStemFilter(tok);
+        // return new KStemFilter(tok);
+        return new PorterStemFilter(tok);
     }
 }
