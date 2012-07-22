@@ -30,6 +30,7 @@ import rssminer.Utils;
 class Filter implements IFilter {
 
     public boolean accept(Map<String, String> headers) {
+        // just accept all, only limit size
         return true;
     }
 

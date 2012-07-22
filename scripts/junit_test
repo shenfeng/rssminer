@@ -12,4 +12,5 @@ cd $HOME
 
 find test/java -name "*.java" | xargs javac -Xlint:unchecked -cp "classes:lib/*:src/:lib/dev/*"  -d classes -sourcepath test/java
 
-java -cp "lib/*:lib/dev/*:classes/" org.junit.runner.JUnitCore rssminer.TestExtractRssLink
+java -cp "lib/*:lib/dev/*:classes/" org.junit.runner.JUnitCore rssminer.test.ExtractRssLinkTest
+java -cp "lib/*:lib/dev/*:classes/" org.junit.runner.JUnitCore rssminer.test.CompactHtmlTest

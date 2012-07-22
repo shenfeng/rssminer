@@ -1,4 +1,4 @@
-package rssminer;
+package rssminer.test;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,7 +11,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-public class TestExtractRssLink {
+import rssminer.Utils;
+
+public class ExtractRssLinkTest {
 
     @Test
     public void testExtractRssLink() throws FileNotFoundException,

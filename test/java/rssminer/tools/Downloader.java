@@ -21,11 +21,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import me.shenfeng.http.DynamicBytes;
 import me.shenfeng.http.HttpUtils;
 import me.shenfeng.http.client.HttpClient;
 import me.shenfeng.http.client.HttpClientConfig;
 import me.shenfeng.http.client.ITextHandler;
 import me.shenfeng.http.client.TextRespListener;
+import me.shenfeng.http.client.TextRespListener.IFilter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,6 +131,26 @@ public class Downloader {
         this.concurrency = concurrency;
     }
 
+    private IFilter filter = new IFilter() {
+
+        public boolean accept(DynamicBytes partialBody) {
+            if (partialBody.length() > 2 * 1024 * 1024) {
+                return false;
+            }
+            return true;
+        }
+
+        public boolean accept(Map<String, String> headers) {
+            String ct = headers.get(HttpUtils.CONTENT_TYPE);
+            if (ct != null) {
+                if (ct.toLowerCase().indexOf("text") != -1) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    };
+
     public void start() throws IOException, InterruptedException,
             URISyntaxException, SQLException {
         final HttpClient client = new HttpClient(new HttpClientConfig(60000,
@@ -149,7 +171,7 @@ public class Downloader {
                             Map<String, String> map = new TreeMap<String, String>();
 
                             TextRespListener listener = new TextRespListener(
-                                    new TextHandler(job, jobs, s));
+                                    new TextHandler(job, jobs, s), filter);
                             s.acquire();
                             client.get(new URI(job.url), map, PROXY, listener);
                         } catch (Exception e) {

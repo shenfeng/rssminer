@@ -43,12 +43,12 @@ import org.ccil.cowan.tagsoup.Parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import rssminer.Utils;
 import rssminer.db.DBHelper;
 import rssminer.db.Feed;
 import rssminer.db.MinerDAO;
+import rssminer.jsoup.HtmlUtils;
 import rssminer.sax.ExtractMainTextHandler;
 import clojure.lang.Keyword;
 
@@ -200,7 +200,7 @@ public class Searcher {
     public void close(boolean optimize) throws CorruptIndexException,
             IOException {
         if (indexer != null) {
-            if(optimize) {
+            if (optimize) {
                 logger.info("optimize index");
                 indexer.forceMerge(1);
             }
@@ -251,11 +251,13 @@ public class Searcher {
 
         if (summary != null) {
             try {
-                String content = Utils.extractText(summary);
+                // String content = Utils.extractText(summary);
+                String content = HtmlUtils.summaryText(summary);
                 Field f = new Field(CONTENT, false, content, Store.NO,
                         Index.ANALYZED, TermVector.YES);
                 doc.add(f);
-            } catch (SAXException ignore) {
+            } catch (Exception ignore) {
+                logger.error("feed:" + feeId, ignore);
             }
         }
         return doc;
@@ -293,11 +295,6 @@ public class Searcher {
     public void index(int feeID, int rssID, String author, String title,
             String summary, String tags) throws CorruptIndexException,
             IOException {
-        try {
-            if (summary != null)
-                summary = Utils.extractText(summary);
-        } catch (SAXException ignore) {
-        }
         Document doc = createDocument(feeID, rssID, author, title, summary,
                 tags);
 
