@@ -21,7 +21,7 @@
   (info "Clear all lucene index and rebuild it")
   (let [max (max-feed-id)]
     (info "max feed id " max)
-    (doseq [start (range 0 max step)]
+    (doseq [start (range 0 (+ max step) step)]
       (when (= 0 (rem start (* step 10)))
         (info "doing feed" (str "[" start ", " (+ start step) ")")))
       (with-mysql
