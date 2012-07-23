@@ -1,7 +1,15 @@
 package rssminer.test;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
 import rssminer.jsoup.HtmlUtils;
 
@@ -23,9 +31,22 @@ public class HtmlUtilTest {
                 "<div></div>" };
 
         for (int i = 0; i < snippets.length; i++) {
-            String expect = HtmlUtils.compact(snippets[i], "http://rssminer.net");
+            String expect = HtmlUtils.compact(snippets[i],
+                    "http://rssminer.net");
             // System.out.println(expect);
             Assert.assertEquals("should the same", expects[i], expect);
         }
     }
+
+    @Test
+    public void testExtractFavicon() throws FileNotFoundException,
+            IOException, SAXException, URISyntaxException {
+        String html = IOUtils.toString(new FileInputStream(
+                "test/python-iaq.html"));
+        String icon = HtmlUtils.extractFavicon(html,
+                new URI("http://rssminer.net/")).toString();
+
+        Assert.assertEquals("http://rssminer.net/favicon.ico", icon);
+    }
+
 }

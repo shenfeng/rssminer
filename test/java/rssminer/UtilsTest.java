@@ -100,17 +100,6 @@ public class UtilsTest {
         // Assert.assertTrue(tuple.rssLinks.size() > 0);
     }
 
-    @Test
-    public void testExtractFavicon() throws FileNotFoundException,
-            IOException, SAXException, URISyntaxException {
-        String html = IOUtils.toString(new FileInputStream(
-                "/home/feng/workspace/rssminer/templates/index.html"));
-        String icon = Utils.extractFaviconUrl(html,
-                new URI("http://rssminer.net")).toString();
-
-        Assert.assertEquals("http://rssminer.net/imgs/16px-feed-icon.png",
-                icon);
-    }
 
     @Test
     public void testURI() throws URISyntaxException {

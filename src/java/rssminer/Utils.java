@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import rssminer.sax.ExtractFaviconHandler;
 import rssminer.sax.ExtractRssHandler;
 import rssminer.sax.ExtractTextHandler;
 import rssminer.sax.HTMLMinfiyHandler;
@@ -94,15 +93,6 @@ public class Utils {
             } catch (SQLException ignore) {
             }
         }
-    }
-
-    public static URI extractFaviconUrl(String html, URI base)
-            throws IOException, SAXException {
-        Parser p = parser.get();
-        ExtractFaviconHandler h = new ExtractFaviconHandler(base);
-        p.setContentHandler(h);
-        p.parse(new InputSource(new StringReader(html)));
-        return h.get();
     }
 
     public static String extractRssUrl(String html, URI base)

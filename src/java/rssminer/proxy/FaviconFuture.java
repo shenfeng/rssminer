@@ -2,7 +2,6 @@ package rssminer.proxy;
 
 import static me.shenfeng.http.HttpUtils.LOCATION;
 import static rssminer.Utils.CLIENT;
-import static rssminer.Utils.extractFaviconUrl;
 
 import java.io.ByteArrayInputStream;
 import java.net.URI;
@@ -23,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import rssminer.Utils;
+import rssminer.jsoup.HtmlUtils;
 import clojure.lang.Keyword;
 
 public class FaviconFuture extends CommonFuture {
@@ -107,7 +107,7 @@ public class FaviconFuture extends CommonFuture {
                 }
             } else if (status == 200) {
                 try {
-                    URI uri = extractFaviconUrl(body, base);
+                    URI uri = HtmlUtils.extractFavicon(body, base);
                     if (uri == null) {
                         uri = new URI(base.getScheme() + "://"
                                 + base.getHost() + "/favicon.ico");
