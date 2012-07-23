@@ -39,17 +39,13 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
-import org.ccil.cowan.tagsoup.Parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.InputSource;
 
-import rssminer.Utils;
 import rssminer.db.DBHelper;
 import rssminer.db.Feed;
 import rssminer.db.MinerDAO;
 import rssminer.jsoup.HtmlUtils;
-import rssminer.sax.ExtractMainTextHandler;
 import clojure.lang.Keyword;
 
 public class Searcher {
@@ -83,36 +79,12 @@ public class Searcher {
     static Term FEED_ID_TERM = new Term(FEED_ID);
     static Term RSS_ID_TERM = new Term(RSS_ID);
 
-    private IndexWriter indexer = null;
-    private final String path;
-    private Map<Keyword, Object> config;
-    private DataSource ds;
-
-    private Map<String, Float> boost = new TreeMap<String, Float>();
-
-    public static Searcher SEARCHER; // global
-
-    public static void closeGlobalSearcher() {
-        if (SEARCHER != null) {
-            try {
-                SEARCHER.close(false);
-            } catch (Exception ignore) {
-            }
-            SEARCHER = null;
-        }
-    }
-
-    public Map<String, Float> getBoost() {
-        return boost;
-    }
-
     public static Searcher initGlobalSearcher(String path,
             Map<Keyword, Object> config) throws IOException {
         closeGlobalSearcher();
         SEARCHER = new Searcher(config, path);
         return SEARCHER;
     }
-
     public static List<String> simpleSplit(String str) {
         ArrayList<String> strs = new ArrayList<String>(2);
         int start = -1;
@@ -135,6 +107,26 @@ public class Searcher {
             strs.add(str.substring(start + 1));
         }
         return strs;
+    }
+    private IndexWriter indexer = null;
+    private final String path;
+
+    private Map<Keyword, Object> config;
+
+    private DataSource ds;
+
+    private Map<String, Float> boost = new TreeMap<String, Float>();
+
+    public static Searcher SEARCHER; // global
+
+    public static void closeGlobalSearcher() {
+        if (SEARCHER != null) {
+            try {
+                SEARCHER.close(false);
+            } catch (Exception ignore) {
+            }
+            SEARCHER = null;
+        }
     }
 
     private Searcher(Map<Keyword, Object> config, String path)
@@ -298,6 +290,10 @@ public class Searcher {
         return array;
     }
 
+    public Map<String, Float> getBoost() {
+        return boost;
+    }
+
     public IndexReader getReader() throws CorruptIndexException, IOException {
         return IndexReader.open(indexer, false);
     }
@@ -348,24 +344,5 @@ public class Searcher {
 
     public String toString() {
         return "Searcher@" + path;
-    }
-
-    public void updateIndex(int feedid, int rssID, String html) {
-        if (html != null && !html.isEmpty()) {
-            Parser p = Utils.parser.get();
-            ExtractMainTextHandler h = new ExtractMainTextHandler();
-            p.setContentHandler(h);
-            try {
-                p.parse(new InputSource(new StringReader(html)));
-                String content = h.getContent();
-                String title = h.getTitle();
-                indexer.updateDocument(
-                        FEED_ID_TERM.createTerm(Integer.toString(feedid)),
-                        createDocument(feedid, rssID, null, title, content,
-                                null));
-            } catch (Exception e) {
-                logger.info(e.getMessage(), e);
-            }
-        }
     }
 }
