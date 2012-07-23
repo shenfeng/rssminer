@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import rssminer.sax.ExtractTextHandler;
 import rssminer.sax.HTMLMinfiyHandler;
 import rssminer.sax.RewriteHandler;
 import clojure.lang.Keyword;
@@ -92,15 +91,6 @@ public class Utils {
             } catch (SQLException ignore) {
             }
         }
-    }
-
-    public static String extractText(String html) throws IOException,
-            SAXException {
-        Parser p = parser.get();
-        ExtractTextHandler h = new ExtractTextHandler();
-        p.setContentHandler(h);
-        p.parse(new InputSource(new StringReader(html)));
-        return h.getText();
     }
 
     public static byte[] genKey(int userID) {

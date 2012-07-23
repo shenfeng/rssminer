@@ -82,4 +82,10 @@ public class HtmlUtilTest {
         // System.out.println(str);
     }
 
+    @Test
+    public void testExtractSummary() {
+        String s = HtmlUtils.summaryText("<a>text\n</a>");
+        Assert.assertEquals(s, "text");
+    }
+
 }

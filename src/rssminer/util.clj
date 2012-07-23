@@ -63,10 +63,6 @@
 (definline now-seconds []
   `(quot (System/currentTimeMillis) 1000))
 
-(defn extract-text [html]
-  (when html
-    (rssminer.Utils/extractText html)))
-
 (defn serialize-to-js [data]
   (let [stats (map
                (fn [[k v]]

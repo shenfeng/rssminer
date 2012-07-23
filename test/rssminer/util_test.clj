@@ -12,9 +12,6 @@
 (deftest test-write-json
   (is (json-str {:date (Date.)})))
 
-(deftest test-extract-text
-  (is (= (extract-text "<a>text\n</a>") "text\n")))
-
 (deftest test-assoc-if
   (is (= 3 (-> (assoc-if {} :a 1 :b 2 :c 3) keys count)))
   (is (= 2 (-> (assoc-if {} :a 1 :b 2 :c nil) keys count))))
