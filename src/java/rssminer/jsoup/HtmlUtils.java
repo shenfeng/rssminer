@@ -2,6 +2,7 @@ package rssminer.jsoup;
 
 import java.net.URI;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,6 +17,17 @@ public class HtmlUtils {
 
     private static final Logger logger = LoggerFactory
             .getLogger(HtmlUtils.class);
+
+    final static String HREF = "href";
+    final static String LINK = "link";
+    final static String RSS = "application/rss+xml";
+    final static String ATOM = "application/atom+xml";
+    final static String TITLE = "title";
+    final static String TYPE = "type";
+    final static String REL = "rel";
+    final static String ALTERNATE = "alternate";
+    final static Pattern comment = Pattern.compile("comment",
+            Pattern.CASE_INSENSITIVE);
 
     public static String compact(String html, String baseUri) {
         StringBuilder sb = new StringBuilder(html.length());
@@ -44,6 +56,32 @@ public class HtmlUtils {
         } catch (Exception ignore) {
             logger.warn(base.toString(), ignore);
         }
+        return null;
+    }
+
+    public static String extractRssUrl(String html, URI base) {
+        Document d = Jsoup.parse(html);
+        Elements links = d.getElementsByTag(LINK);
+
+        for (Element link : links) {
+            if (ALTERNATE.equalsIgnoreCase(link.attr(REL))) {
+                String type = link.attr(TYPE);
+                if (RSS.equalsIgnoreCase(type) || ATOM.equalsIgnoreCase(type)) {
+                    String href = link.attr(HREF);
+                    String title = link.attr(TITLE);
+                    if (title == null) {
+                        title = "";
+                    }
+                    // ignore comment
+                    if (href != null && !comment.matcher(href).find()
+                            && !comment.matcher(title).find()) {
+                        // return the first one
+                        return base.resolve(href).toString();
+                    }
+                }
+            }
+        }
+
         return null;
     }
 

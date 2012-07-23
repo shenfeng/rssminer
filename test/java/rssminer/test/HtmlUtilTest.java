@@ -49,4 +49,37 @@ public class HtmlUtilTest {
         Assert.assertEquals("http://rssminer.net/favicon.ico", icon);
     }
 
+    @Test
+    public void testExtractRssLink() throws FileNotFoundException,
+            IOException, SAXException, URISyntaxException {
+        String html = IOUtils.toString(new FileInputStream(
+                "test/e_rss/planet_clojure.html"));
+        String str = HtmlUtils.extractRssUrl(html, new URI(
+                "http://planet.clojure.in/"));
+        Assert.assertEquals("http://planet.clojure.in/atom.xml", str);
+        // System.out.println(str);
+
+        html = IOUtils.toString(new FileInputStream("test/e_rss/ul.uk.html"));
+        str = HtmlUtils.extractRssUrl(html, new URI("http://www.uc.hk/"));
+
+        Assert.assertEquals("http://www.uc.hk/rss.xml", str);
+        // System.out.println(str);
+
+        html = IOUtils
+                .toString(new FileInputStream("test/e_rss/scottgu.html"));
+        str = HtmlUtils.extractRssUrl(html, new URI(
+                "http://weblogs.asp.net/scottgu/"));
+
+        Assert.assertEquals("http://weblogs.asp.net/scottgu/rss.aspx", str);
+        // System.out.println(str);
+
+        html = IOUtils.toString(new FileInputStream(
+                "test/e_rss/blog.golang.org.htm"));
+        str = HtmlUtils.extractRssUrl(html,
+                new URI("http://blog.golang.org/"));
+
+        Assert.assertEquals("http://blog.golang.org/feeds/posts/default", str);
+        // System.out.println(str);
+    }
+
 }

@@ -108,7 +108,7 @@ task :swank => :javac do
 end
 
 desc 'Deploy to production'
-task :deploy => [:clean, :chrome, :test, :junit, :prepare_prod] do
+task :deploy => [:clean, :chrome, :test, :prepare_prod] do
   sh "scripts/deploy"
 end
 
@@ -119,7 +119,7 @@ task :javac do
 end
 
 desc "Run junit test"
-task :junit => [:prepare, :javac] do
+task :junit => [:javac] do
   sh './scripts/junit_test'
 end
 
@@ -127,7 +127,7 @@ desc "Run all test"
 task :all_test => [:test, :junit]
 
 desc "Run lein unit test"
-task :test => [:prepare, :javac] do
+task :test => [:prepare, :javac, :junit] do
   sh 'lein test'
 end
 

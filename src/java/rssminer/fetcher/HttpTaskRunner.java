@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import rssminer.Utils;
+import rssminer.jsoup.HtmlUtils;
 
 class Filter implements IFilter {
 
@@ -74,7 +75,7 @@ public class HttpTaskRunner {
             body = Utils.trimRemoveBom(body);
             if (status == 200 && isHtml(headers, body)) {
                 try {
-                    String rss = Utils.extractRssUrl(body, task.getUri());
+                    String rss = HtmlUtils.extractRssUrl(body, task.getUri());
                     if (rss != null && rss.length() > 0) {
                         headers.clear();
                         headers.put(LOCATION, rss);
