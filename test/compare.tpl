@@ -5,6 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>title</title>
     <link href="/css/compare.css" rel="stylesheet" type="text/css" />
+    <style tyle="text/css">
+    .links li { display: inline-block; padding: 0 10px; }
+    </style>
   </head>
   <body>
     <div id="page-wrap">

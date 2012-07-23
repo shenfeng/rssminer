@@ -108,7 +108,7 @@ public class StopFilter extends FilteringTokenFilter {
                 "年", "我", "时", "是", "有", "来", "用", "而", "被", "这", "都", "在",
                 "和", "了", "从", "吗", "吧", "的", "也", "要", "也", "里", "或", "该",
                 "能", "把", "它", "地", "等", "是一", "一些", "这样", "如果", "我们", "一个",
-                "可以", "这个", "已经");
+                "可以", "这个", "已经", "月", "日");
 
         final CharArraySet stopSet = new CharArraySet(Version.LUCENE_33,
                 stopWords.size(), false);

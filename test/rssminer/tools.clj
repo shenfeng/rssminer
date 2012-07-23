@@ -3,6 +3,8 @@
         [rssminer.database :only [mysql-query with-mysql mysql-insert]]
         [clojure.tools.cli :only [cli]]
         [compojure.core :only [defroutes GET POST DELETE ANY context]]
+        (ring.middleware [keyword-params :only [wrap-keyword-params]]
+                         [params :only [wrap-params]])
         [clojure.tools.logging :only [info]]
         [ring.util.response :only [redirect]]
         [me.shenfeng.http.server :only [run-server]]
@@ -43,6 +45,11 @@ where d.id >= ? and d.id <= ?"  start (+ start step)]))
   (route/files "") ;; files under public folder
   (route/not-found "<p>Page not found.</p>" ))
 
+(defn app []
+  (-> #'all-routes
+      wrap-keyword-params
+      wrap-params))
+
 (defn stop-server []
   (when-not (nil? @server)
     (info "shutdown Rssminer server....")
@@ -58,9 +65,9 @@ where d.id >= ? and d.id <= ?"  start (+ start step)]))
   (swap! rssminer-conf assoc
          :profile profile
          :worker worker)
-  (reset! server (run-server all-routes {:port port
-                                         :ip bind-ip
-                                         :thread worker})))
+  (reset! server (run-server (app) {:port port
+                                    :ip bind-ip
+                                    :thread worker})))
 
 (defn -main [& args]
   "Start toolserver server"
