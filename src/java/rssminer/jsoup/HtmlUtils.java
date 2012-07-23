@@ -20,15 +20,6 @@ public class HtmlUtils {
         return vistor.toString();
     }
 
-    public static String summaryText(String summay) {
-        Document d = Jsoup.parse(summay);
-        // Elements elements = d.getElementsByTag("code").remove();
-        // System.out.println(elements.size());
-        // Elements tags = d.getElementsByTag("pre").remove();
-        // System.out.println(tags.size());
-        return d.body().text();
-    }
-
     public static boolean isQuoteNeeded(String val) {
         if (val.isEmpty() || val.length() > 10) {
             return true;
@@ -46,5 +37,14 @@ public class HtmlUtils {
 
             return false;
         }
+    }
+
+    public static String summaryText(String summay) {
+        Document d = Jsoup.parse(summay);
+        // Elements elements = d.getElementsByTag("code").remove();
+        // System.out.println(elements.size());
+        // Elements tags = d.getElementsByTag("pre").remove();
+        // System.out.println(tags.size());
+        return d.body().text();
     }
 }

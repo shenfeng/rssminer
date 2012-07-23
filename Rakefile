@@ -108,7 +108,7 @@ task :swank => :javac do
 end
 
 desc 'Deploy to production'
-task :deploy => [:clean, :chrome, :test, :prepare_prod] do
+task :deploy => [:clean, :chrome, :test, :junit, :prepare_prod] do
   sh "scripts/deploy"
 end
 

@@ -73,7 +73,11 @@ public class CompactHtmlVisitor implements NodeVisitor {
 
         if (node instanceof TextNode) {
             TextNode t = (TextNode) node;
-            sb.append(t.toString());
+            String html = t.toString();
+            if(html.startsWith("\n")) { // remove string
+                html = html.substring(1);
+            }
+            sb.append(html);
         } else {
             sb.append(START).append(name);
             // ignore any attribute
