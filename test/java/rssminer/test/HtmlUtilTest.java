@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import rssminer.tools.Utils;
 import rssminer.jsoup.HtmlUtils;
 
 public class HtmlUtilTest {
@@ -42,7 +43,7 @@ public class HtmlUtilTest {
     public void testExtractFavicon() throws FileNotFoundException,
             IOException, SAXException, URISyntaxException {
         String html = IOUtils.toString(new FileInputStream(
-                "test/python-iaq.html"));
+                "test/html/python-iaq.html"));
         String icon = HtmlUtils.extractFavicon(html,
                 new URI("http://rssminer.net/")).toString();
 
@@ -52,21 +53,19 @@ public class HtmlUtilTest {
     @Test
     public void testExtractRssLink() throws FileNotFoundException,
             IOException, SAXException, URISyntaxException {
-        String html = IOUtils.toString(new FileInputStream(
-                "test/e_rss/planet_clojure.html"));
+        String html = Utils.readFile("test/e_rss/planet_clojure.html");
         String str = HtmlUtils.extractRssUrl(html, new URI(
                 "http://planet.clojure.in/"));
         Assert.assertEquals("http://planet.clojure.in/atom.xml", str);
         // System.out.println(str);
 
-        html = IOUtils.toString(new FileInputStream("test/e_rss/ul.uk.html"));
+        html = Utils.readFile("test/e_rss/ul.uk.html");
         str = HtmlUtils.extractRssUrl(html, new URI("http://www.uc.hk/"));
 
         Assert.assertEquals("http://www.uc.hk/rss.xml", str);
         // System.out.println(str);
 
-        html = IOUtils
-                .toString(new FileInputStream("test/e_rss/scottgu.html"));
+        html = Utils.readFile("test/e_rss/scottgu.html");
         str = HtmlUtils.extractRssUrl(html, new URI(
                 "http://weblogs.asp.net/scottgu/"));
 
@@ -86,6 +85,20 @@ public class HtmlUtilTest {
     public void testExtractSummary() {
         String s = HtmlUtils.summaryText("<a>text\n</a>");
         Assert.assertEquals(s, "text");
+    }
+
+    @Test
+    public void testMinifyHtml() throws FileNotFoundException, IOException,
+            SAXException {
+        String htmlWithBr = Utils.readFile("test/html/python-iaq.html");
+
+        String s = HtmlUtils.minfiyHtml(htmlWithBr, "http://what.com");
+        Assert.assertEquals(-1, s.indexOf("</hr>"));
+        Assert.assertEquals(-1, s.indexOf("</br>"));
+
+        String file = Utils.readFile("test/html/alibuybuy-70468.html");
+        s = HtmlUtils.minfiyHtml(file,
+                "http://www.alibuybuy.com/posts/70468.html");
     }
 
 }

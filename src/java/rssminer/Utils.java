@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import rssminer.sax.HTMLMinfiyHandler;
 import rssminer.sax.RewriteHandler;
 import clojure.lang.Keyword;
 
@@ -110,15 +109,6 @@ public class Utils {
         }
         sb.setLength(sb.length() - 1); // remove last _
         return sb.toString().getBytes(HttpUtils.UTF_8);
-    }
-
-    public static String minfiyHtml(String html, String url)
-            throws IOException, SAXException {
-        Parser p = parser.get();
-        HTMLMinfiyHandler m = new HTMLMinfiyHandler(html, url);
-        p.setContentHandler(m);
-        p.parse(new InputSource(new StringReader(html)));
-        return m.get();
     }
 
     public static boolean proxy(String uri) throws URISyntaxException {

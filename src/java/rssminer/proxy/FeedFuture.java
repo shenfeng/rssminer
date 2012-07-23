@@ -2,7 +2,6 @@ package rssminer.proxy;
 
 import static me.shenfeng.http.HttpUtils.LOCATION;
 import static rssminer.Utils.CLIENT;
-import static rssminer.Utils.minfiyHtml;
 
 import java.net.URI;
 import java.net.UnknownHostException;
@@ -11,6 +10,7 @@ import java.util.Map;
 import me.shenfeng.http.client.ITextHandler;
 import me.shenfeng.http.client.TextRespListener;
 import rssminer.Utils;
+import rssminer.jsoup.HtmlUtils;
 import clojure.lang.Keyword;
 
 // fetch the orginal html
@@ -37,7 +37,7 @@ public class FeedFuture extends AbstractFuture {
             } else {
                 String finalUrl = uri.toString();
                 try {
-                    html = minfiyHtml(html, finalUrl);
+                    html = HtmlUtils.minfiyHtml(html, finalUrl);
                     html = Utils.rewrite(html, finalUrl, proxyserver);
                     headers = getHeaders("text/html; charset=utf8");
                     done(status, headers, html);

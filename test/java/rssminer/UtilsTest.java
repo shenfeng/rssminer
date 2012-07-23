@@ -1,7 +1,6 @@
 package rssminer;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -13,7 +12,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -34,33 +32,6 @@ public class UtilsTest {
         htmlWithBr = IOUtils.toString(new FileInputStream(
                 "/home/feng/workspace/rssminer/test/python-iaq.html"));
 
-    }
-
-    @Test
-    public void testMinify() throws Exception {
-
-        String html = IOUtils.toString(new FileInputStream(new File(
-                "/tmp/70468.html")));
-
-        String minified = Utils.minfiyHtml(html,
-                "http://www.alibuybuy.com/posts/70468.html");
-
-        System.out.println(minified);
-    }
-
-    @Test
-    public void testHtmlminfiy() throws IOException, SAXException {
-        String result1 = Utils.minfiyHtml(htmlWithBr, "http://google.com");
-        System.out.println(result1);
-        System.out.println(htmlWithBr.length() + "\t" + result1.length());
-    }
-
-    @Test
-    public void testBrHr() throws IOException, SAXException,
-            URISyntaxException {
-        String s = Utils.minfiyHtml(htmlWithBr, urlBase);
-        Assert.assertEquals(-1, s.indexOf("</hr>"));
-        Assert.assertEquals(-1, s.indexOf("</br>"));
     }
 
     @Test
@@ -99,7 +70,6 @@ public class UtilsTest {
         // Assert.assertTrue(tuple.links.size() > 0);
         // Assert.assertTrue(tuple.rssLinks.size() > 0);
     }
-
 
     @Test
     public void testURI() throws URISyntaxException {

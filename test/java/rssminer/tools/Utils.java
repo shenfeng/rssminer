@@ -1,11 +1,14 @@
 package rssminer.tools;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.apache.commons.io.IOUtils;
 import org.ccil.cowan.tagsoup.Parser;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -67,6 +70,14 @@ public class Utils {
         p.setContentHandler(h);
         p.parse(new InputSource(new StringReader(html)));
         return h.getText();
+    }
+
+    public static String readFile(String file) throws FileNotFoundException,
+            IOException {
+        FileInputStream is = new FileInputStream(file);
+        String txt = IOUtils.toString(is);
+        is.close();
+        return txt;
     }
 
 }
