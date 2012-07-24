@@ -27,9 +27,9 @@ public class HtmlUtilTest {
                 "<div><p>12</p><style>.a{color:red}</style></div>" };
 
         String[] expects = new String[] { "<pre>a <span>b</span>c  d</pre>",
-                "<div></div>", "<div>\naa aa</div>", "<div>\naaaa</div>",
-                "<div><p>aaaa</p></div>", "<div>\na<p>aaaa</p>b</div>",
-                "<div><div>\na</div><div>\nb</div><div>\nc</div></div>",
+                "<div></div>", "<div>aa aa</div>", "<div>aaaa</div>",
+                "<div><p>aaaa</p></div>", "<div>a<p>aaaa</p>b</div>",
+                "<div><div>a</div><div>b</div><div>c</div></div>",
                 "<div></div>", "<div><p>12</p></div>" };
 
         for (int i = 0; i < snippets.length; i++) {

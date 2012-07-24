@@ -2,9 +2,12 @@ package rssminer.jsoup;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Entities.EscapeMode;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.NodeVisitor;
@@ -30,6 +33,8 @@ public class CompactHtmlVisitor implements NodeVisitor {
     static final char EQUAL = '=';
     static final char QUOTE = '\"';
 
+    static Map<Character, String> encode = EscapeMode.base.getMap();
+
     private StringBuilder sb;
     private URI baseUri;
 
@@ -52,14 +57,50 @@ public class CompactHtmlVisitor implements NodeVisitor {
         return val;
     }
 
+    private static boolean preserveWhitespace(Node node) {
+        while (node != null) {
+            if (node instanceof Element
+                    && ((Element) node).tag().preserveWhitespace()) {
+                return true;
+            } else {
+                node = node.parent();
+            }
+        }
+        return false;
+    }
+
     public void head(Node node, int depth) {
         String name = node.nodeName();
-
         if (node instanceof TextNode) {
             TextNode t = (TextNode) node;
+            boolean squash = !preserveWhitespace(t.parent());
+            boolean lastWhiteSpace = false;
+
             // TODO, optimize it. leading \n can not be removed #144490
-            String html = t.toString();
-            sb.append(html);
+            // String html = t.toString();
+            String html = t.getWholeText();
+            for (int i = 0; i < html.length(); ++i) {
+                char c = html.charAt(i);
+                if (squash) {
+                    if (Character.isWhitespace(c)) {
+                        if (!lastWhiteSpace) {
+                            sb.append(' ');
+                        }
+                        lastWhiteSpace = true;
+                        continue;
+                    } else {
+                        lastWhiteSpace = false;
+                    }
+                }
+
+                String encoded = encode.get(c);
+                if (encoded != null) {
+                    sb.append('&').append(encoded).append(';');
+                } else {
+                    sb.append(c);
+                }
+            }
+            // sb.append(html);
         } else {
             sb.append(START).append(name);
             // ignore any attribute
