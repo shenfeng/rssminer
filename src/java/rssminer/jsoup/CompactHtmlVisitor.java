@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
-import org.jsoup.nodes.DataNode;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.NodeVisitor;
@@ -20,8 +19,6 @@ public class CompactHtmlVisitor implements NodeVisitor {
 
     static final String[] UN_ClOSEABLE_TAGS = new String[] { "img", "input",
             "hr", "br", "meta", "link", "#text" };
-    static final String[] IGNORE_TAGS = new String[] { "script", "style",
-            "iframe", "#comment" };
     static final String[] IGNORE_ATTRS = new String[] { "class", "id",
             "style" };
     static final String[] KEEP_ATTRS = new String[] { "href", "src", "title",
@@ -61,20 +58,11 @@ public class CompactHtmlVisitor implements NodeVisitor {
 
     public void head(Node node, int depth) {
         String name = node.nodeName();
-        for (String ignore : IGNORE_TAGS) {
-            if (ignore.equals(name)) {
-                return;
-            }
-        }
-
-        if (node instanceof DataNode) {
-            return;
-        }
 
         if (node instanceof TextNode) {
             TextNode t = (TextNode) node;
             String html = t.toString();
-            if(html.startsWith("\n")) { // remove string
+            if (html.startsWith("\n")) { // remove string
                 html = html.substring(1);
             }
             sb.append(html);
@@ -116,9 +104,6 @@ public class CompactHtmlVisitor implements NodeVisitor {
     }
 
     public void tail(Node node, int depth) {
-        if (node instanceof DataNode) {
-            return;
-        }
         String name = node.nodeName();
         for (String tag : UN_ClOSEABLE_TAGS) {
             if (tag.equals(name)) {

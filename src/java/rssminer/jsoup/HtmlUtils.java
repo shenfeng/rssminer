@@ -12,7 +12,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
-import org.jsoup.select.NodeTraversor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
@@ -43,7 +42,7 @@ public class HtmlUtils {
         Document doc = Jsoup.parse(html, baseUri);
         List<Node> nodes = doc.body().childNodes();
         for (Node e : nodes) {
-            new NodeTraversor(vistor).traverse(e);
+            new PartialTraversor(vistor).traverse(e);
         }
         return vistor.toString();
     }
