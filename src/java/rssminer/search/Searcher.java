@@ -254,7 +254,7 @@ public class Searcher {
         if (summary != null) {
             try {
                 // String content = Utils.extractText(summary);
-                String content = HtmlUtils.summaryText(summary);
+                String content = HtmlUtils.text(summary);
                 Field f = new Field(CONTENT, false, content, Store.NO,
                         Index.ANALYZED, TermVector.YES);
                 doc.add(f);

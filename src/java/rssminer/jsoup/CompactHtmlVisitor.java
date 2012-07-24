@@ -20,8 +20,6 @@ public class CompactHtmlVisitor implements NodeVisitor {
 
     static final String[] UN_ClOSEABLE_TAGS = new String[] { "img", "input",
             "hr", "br", "meta", "link", "#text" };
-    static final String[] IGNORE_ATTRS = new String[] { "class", "id",
-            "style" };
     static final String[] KEEP_ATTRS = new String[] { "href", "src", "title",
             "type", "alt", "width", // feedburner track
             "height" };
@@ -35,28 +33,6 @@ public class CompactHtmlVisitor implements NodeVisitor {
 
     static Map<Character, String> encode = EscapeMode.base.getMap();
 
-    private StringBuilder sb;
-    private URI baseUri;
-
-    private String resolve(String node, String key, String val) {
-        if (this.baseUri == null) {
-            return val;
-        }
-        if (val.isEmpty()) {
-            return val;
-        }
-
-        if ("img".equals(node) && "src".equals(key)) {
-            try {
-                if (!val.startsWith("http") && !val.startsWith("data:")) {
-                    val = baseUri.resolve(val).toString();
-                }
-            } catch (Exception e) {
-            }
-        }
-        return val;
-    }
-
     private static boolean preserveWhitespace(Node node) {
         while (node != null) {
             if (node instanceof Element
@@ -67,6 +43,23 @@ public class CompactHtmlVisitor implements NodeVisitor {
             }
         }
         return false;
+    }
+
+    private StringBuilder sb;
+    private URI baseUri;
+
+    public CompactHtmlVisitor(StringBuilder sb, String baseUri) {
+        this.sb = sb;
+        try {
+            URI uri = new URI(baseUri);
+            String h = uri.getHost();
+            // http://feedproxy.google.com
+            if (h != null && h.indexOf("proxy") != -1) {
+            } else {
+                this.baseUri = uri;
+            }
+        } catch (URISyntaxException e) {
+        }
     }
 
     public void head(Node node, int depth) {
@@ -124,18 +117,23 @@ public class CompactHtmlVisitor implements NodeVisitor {
         }
     }
 
-    public CompactHtmlVisitor(StringBuilder sb, String baseUri) {
-        this.sb = sb;
-        try {
-            URI uri = new URI(baseUri);
-            String h = uri.getHost();
-            // http://feedproxy.google.com
-            if (h != null && h.indexOf("proxy") != -1) {
-            } else {
-                this.baseUri = uri;
-            }
-        } catch (URISyntaxException e) {
+    private String resolve(String node, String key, String val) {
+        if (this.baseUri == null) {
+            return val;
         }
+        if (val.isEmpty()) {
+            return val;
+        }
+
+        if ("img".equals(node) && "src".equals(key)) {
+            try {
+                if (!val.startsWith("http") && !val.startsWith("data:")) {
+                    val = baseUri.resolve(val).toString();
+                }
+            } catch (Exception e) {
+            }
+        }
+        return val;
     }
 
     public void tail(Node node, int depth) {

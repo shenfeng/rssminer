@@ -7,12 +7,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.apache.commons.io.IOUtils;
+import org.jsoup.Jsoup;
 import org.junit.Assert;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import rssminer.tools.Utils;
 import rssminer.jsoup.HtmlUtils;
+import rssminer.tools.Utils;
 
 public class HtmlUtilTest {
 
@@ -106,6 +107,12 @@ public class HtmlUtilTest {
         String file = Utils.readFile("test/html/alibuybuy-70468.html");
         s = HtmlUtils.minfiyHtml(file,
                 "http://www.alibuybuy.com/posts/70468.html");
+    }
+
+    @Test
+    public void testJsoup() {
+        // Jsoup.parse(null);
+        Jsoup.parse("");
     }
 
 }

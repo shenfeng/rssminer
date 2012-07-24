@@ -36,13 +36,19 @@ public class HtmlUtils {
     final static Pattern comment = Pattern.compile("comment",
             Pattern.CASE_INSENSITIVE);
 
+    static final String[] IGNORE_TAGS = new String[] { "script", "style",
+            "iframe", "link", "#comment" };
+
+    static String[] TEXT_IGNORE = new String[] { "code", "pre" };
+
     public static String compact(String html, String baseUri) {
         StringBuilder sb = new StringBuilder(html.length());
         CompactHtmlVisitor vistor = new CompactHtmlVisitor(sb, baseUri);
+        PartialTraversor traversor = new PartialTraversor(vistor, IGNORE_TAGS);
         Document doc = Jsoup.parse(html, baseUri);
         List<Node> nodes = doc.body().childNodes();
         for (Node e : nodes) {
-            new PartialTraversor(vistor).traverse(e);
+            traversor.traverse(e);
         }
         return vistor.toString();
     }
@@ -92,15 +98,6 @@ public class HtmlUtils {
         return null;
     }
 
-    public static String minfiyHtml(String html, String url)
-            throws IOException, SAXException {
-        Parser p = Utils.parser.get();
-        HTMLMinfiyHandler m = new HTMLMinfiyHandler(html, url);
-        p.setContentHandler(m);
-        p.parse(new InputSource(new StringReader(html)));
-        return m.get();
-    }
-
     public static boolean isQuoteNeeded(String val) {
         if (val.isEmpty() || val.length() > 10) {
             return true;
@@ -120,12 +117,35 @@ public class HtmlUtils {
         }
     }
 
+    public static String minfiyHtml(String html, String url)
+            throws IOException, SAXException {
+        Parser p = Utils.parser.get();
+        HTMLMinfiyHandler m = new HTMLMinfiyHandler(html, url);
+        p.setContentHandler(m);
+        p.parse(new InputSource(new StringReader(html)));
+        return m.get();
+    }
+
     public static String summaryText(String summay) {
+        if (summay == null) {
+            return "";
+        }
         Document d = Jsoup.parse(summay);
         // Elements elements = d.getElementsByTag("code").remove();
         // System.out.println(elements.size());
         // Elements tags = d.getElementsByTag("pre").remove();
         // System.out.println(tags.size());
         return d.body().text();
+    }
+
+    public static String text(String html) {
+        if (html == null) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder(html.length() / 2);
+        TextAccumVisitor vistor = new TextAccumVisitor(sb);
+        PartialTraversor traversor = new PartialTraversor(vistor, TEXT_IGNORE);
+        traversor.traverse(Jsoup.parse(html).body());
+        return sb.toString();
     }
 }

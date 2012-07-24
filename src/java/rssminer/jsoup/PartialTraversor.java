@@ -6,12 +6,9 @@ import org.jsoup.select.NodeVisitor;
 // copy and modified version of NodeTraversor
 public class PartialTraversor {
 
-    static final String[] IGNORE_TAGS = new String[] { "script", "style",
-            "iframe", "link", "#comment" };
-
     private boolean ignoreNode(Node node) {
         String name = node.nodeName();
-        for (String ignore : IGNORE_TAGS) {
+        for (String ignore : ignoreTags) {
             if (ignore.equals(name)) {
                 return true;
             }
@@ -21,9 +18,11 @@ public class PartialTraversor {
     }
 
     private NodeVisitor visitor;
+    private String[] ignoreTags;
 
-    public PartialTraversor(NodeVisitor visitor) {
+    public PartialTraversor(NodeVisitor visitor, String[] ignoreTags) {
         this.visitor = visitor;
+        this.ignoreTags = ignoreTags;
     }
 
     public void traverse(Node root) {
