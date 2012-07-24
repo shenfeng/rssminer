@@ -8,6 +8,7 @@
     }
   }
   bind_event(window, 'keydown', function (e) {
+    // .wumii-related-items
     if(e.ctrlKey || e.altKey) {
       try {
         var start = parseInt(/\d+/.exec(location.search)[0]) || 0;

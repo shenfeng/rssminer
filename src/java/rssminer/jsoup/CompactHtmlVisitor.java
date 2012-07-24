@@ -57,10 +57,8 @@ public class CompactHtmlVisitor implements NodeVisitor {
 
         if (node instanceof TextNode) {
             TextNode t = (TextNode) node;
+            // TODO, optimize it. leading \n can not be removed #144490
             String html = t.toString();
-            if (html.startsWith("\n")) { // remove string
-                html = html.substring(1);
-            }
             sb.append(html);
         } else {
             sb.append(START).append(name);
