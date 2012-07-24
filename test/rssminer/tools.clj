@@ -42,7 +42,7 @@ where d.id >= ? and d.id <= ?"  start (+ start step)]))
 
 (defroutes all-routes
   (GET "/compare" [] compare-data)
-  (route/files "") ;; files under public folder
+  (route/files "/static" {:root "test/public"}) ;; files under public folder
   (route/not-found "<p>Page not found.</p>" ))
 
 (defn app []

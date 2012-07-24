@@ -1,0 +1,19 @@
+.links li { display: inline-block; padding: 0 10px; }
+
+td.id, td.length  {
+    vertical-align: top;
+}
+
+.summary *{
+    max-width: 760px;
+}
+
+.compact *{
+    max-width: 760px;
+}
+
+
+img {
+    margin: 4px auto;
+    display: block;
+}

@@ -4,10 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>title</title>
-    <link href="/css/compare.css" rel="stylesheet" type="text/css" />
-    <style tyle="text/css">
-    .links li { display: inline-block; padding: 0 10px; }
-    </style>
+    <link href="/static/compare.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
     <div id="page-wrap">
@@ -25,12 +22,11 @@
         </tr>
         {{#feeds}}
           <tr>
-            <td>
-              <a target="_blank"
-                href="{{ link }}">{{ id }}</a>
+            <td class="id">
+              <a target="_blank" href="{{ link }}">{{ id }}</a>
             </td>
-            <td>{{ summary_length }}</td>
-            <td>{{ compact_lenght }}</td>
+            <td class="length">{{ summary_length }}</td>
+            <td class="length">{{ compact_lenght }}</td>
             <td class="summary">
               {{{ summary }}}
             </td>
@@ -45,5 +41,6 @@
           <li><a href="/compare?start={{.}}">{{ . }}</a></li>{{/links}}
       </ul>
     </div>
+    <script src="/static/compare.js"></script>
   </body>
 </html>
