@@ -2,8 +2,6 @@ package rssminer.jsoup;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
@@ -34,8 +32,6 @@ public class CompactHtmlVisitor implements NodeVisitor {
 
     private StringBuilder sb;
     private URI baseUri;
-
-    public static Map<String, Integer> all_attrs = new HashMap<String, Integer>();
 
     private String resolve(String node, String key, String val) {
         if (this.baseUri == null) {

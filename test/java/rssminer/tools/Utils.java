@@ -55,7 +55,7 @@ class ExtractTextHandler extends DefaultHandler {
 
 public class Utils {
 
-    static String JDBC_URL = "jdbc:mysql://localhost/rssminer";
+    static String JDBC_URL = "jdbc:mysql://localhost/rssminer?cachePrepStmts=true&useServerPrepStmts=true";
 
     public static Connection getRssminerDB() throws SQLException {
         Connection con = DriverManager.getConnection(JDBC_URL, "feng", "");

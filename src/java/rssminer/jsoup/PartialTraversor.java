@@ -7,7 +7,7 @@ import org.jsoup.select.NodeVisitor;
 public class PartialTraversor {
 
     static final String[] IGNORE_TAGS = new String[] { "script", "style",
-            "iframe", "#comment" };
+            "iframe", "link", "#comment" };
 
     private boolean ignoreNode(Node node) {
         String name = node.nodeName();

@@ -136,56 +136,6 @@ public class HtmlParserBench {
     }
 
     @Test
-    public void testJsouSummary() throws SQLException, IOException,
-            SAXException {
-
-        Connection con = Utils.getRssminerDB();
-        Statement stat = con.createStatement();
-        ResultSet rs = stat
-                .executeQuery("select d.id, d.summary, link from feed_data d join feeds f on f.id = d.id");
-        // PreparedStatement ps = con
-        // .prepareStatement("update feed_data set jsoup=?, tagsoup=?, compact=? where id = ?");
-
-        PreparedStatement ps = con
-                .prepareStatement("update feed_data set compact=? where id = ?");
-
-        int orignalLength = 0;
-        int compactLength = 0;
-        while (rs.next()) {
-            int id = rs.getInt(1);
-            String html = rs.getString(2);
-            if (html == null || html.isEmpty()) {
-                continue;
-            }
-//            System.out.println("=================" + id
-//                    + "=====================");
-            String compact = HtmlUtils.compact(html, rs.getString(3));
-            orignalLength += html.length();
-            compactLength += compact.length();
-            try {
-                ps.setString(1, compact);
-                ps.setInt(2, id);
-                ps.execute();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-//        System.out.println(CompactHtmlVisitor.all_attrs);
-        Map<String, Integer> attrs = CompactHtmlVisitor.all_attrs;
-
-        ArrayList<Entry<String, Integer>> list = new ArrayList<Entry<String, Integer>>(
-                attrs.entrySet());
-        Collections.sort(list, new Cmp());
-        for (Entry<String, Integer> l : list) {
-            // System.out.println(l);
-        }
-        System.out.println();
-        System.out.println("orignal: " + orignalLength);
-        System.out.println("compact: " + compactLength);
-        System.out.println(compactLength / (double) orignalLength);
-    }
-
-    @Test
     public void testTagsoup() {
         Parser p = new Parser();
         for (File f : files) {
