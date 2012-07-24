@@ -3,7 +3,9 @@
 td.id, td.length  {
     vertical-align: top;
 }
-
+body {
+    line-height: 1.6;
+}
 .summary *{
     max-width: 760px;
 }

@@ -16,7 +16,7 @@
         <tr>
           <th class="id">id </th>
           <th class="id">su_len</th>
-          <th class="id">compact_len</th>
+          <th class="id">c_len</th>
           <th class="compact"> summary </th>
           <th class="summary"> compact</th>
         </tr>
