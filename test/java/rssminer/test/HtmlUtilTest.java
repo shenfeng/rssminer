@@ -86,6 +86,12 @@ public class HtmlUtilTest {
     public void testExtractSummary() {
         String s = HtmlUtils.summaryText("<a>text\n</a>");
         Assert.assertEquals(s, "text");
+
+        s = HtmlUtils.summaryText("<a><script>text</script></a>");
+        Assert.assertEquals(s, "");
+
+        s = HtmlUtils.summaryText("<a><style>text</style></a>");
+        Assert.assertEquals(s, "");
     }
 
     @Test
