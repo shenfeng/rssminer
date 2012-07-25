@@ -18,8 +18,6 @@ public class CompactHtmlVisitor implements NodeVisitor {
 
     static Logger logger = LoggerFactory.getLogger(CompactHtmlVisitor.class);
 
-    static final String[] UN_ClOSEABLE_TAGS = new String[] { "img", "input",
-            "hr", "br", "meta", "link", "#text" };
     static final String[] KEEP_ATTRS = new String[] { "href", "src", "title",
             "type", "alt", "width", // feedburner track
             "height" };
@@ -137,12 +135,15 @@ public class CompactHtmlVisitor implements NodeVisitor {
     }
 
     public void tail(Node node, int depth) {
-        String name = node.nodeName();
-        for (String tag : UN_ClOSEABLE_TAGS) {
-            if (tag.equals(name)) {
-                return;
-            }
+        if (node instanceof TextNode) {
+            return;
         }
+
+        if (node instanceof Element && ((Element) node).tag().isEmpty()) {
+            return;
+        }
+
+        String name = node.nodeName();
         sb.append(START).append(SLASH).append(name);
         sb.append(END);
     }
