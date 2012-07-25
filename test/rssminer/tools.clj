@@ -21,9 +21,9 @@
 (defonce server (atom nil))
 
 (defn- get-data [start]
-  (mysql-query ["SELECT d.*, f.link from feed_data d
+  (mysql-query ["SELECT d.*, f.link, f.title from feed_data d
 join feeds f on f.id = d.id
-where d.id >= ? and d.id <= ?"  start (+ start step)]))
+where d.id >= ? and length(summary) < 300 limit ?" start step]))
 
 (defn compare-data [req]
   (let [start (Integer/parseInt (or (-> req :params :start) "0"))

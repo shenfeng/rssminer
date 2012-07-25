@@ -23,7 +23,8 @@
         {{#feeds}}
           <tr>
             <td class="id">
-              <a target="_blank" href="{{ link }}">{{ id }}</a>
+              <a target="_blank" title="{{title}}"
+                href="{{ link }}">{{ id }}</a>
             </td>
             <td class="length">{{ summary_length }}</td>
             <td class="length">{{ compact_lenght }}</td>
