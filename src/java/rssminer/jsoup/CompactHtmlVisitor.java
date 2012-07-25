@@ -91,27 +91,41 @@ public class CompactHtmlVisitor implements NodeVisitor {
                     sb.append(c);
                 }
             }
-            // sb.append(html);
         } else {
             sb.append(START).append(name);
-            // ignore any attribute
             Attributes attrs = node.attributes();
-            for (Attribute attr : attrs) {
-                String key = attr.getKey();
-                for (String k : KEEP_ATTRS) {
-                    if (k.equals(key)) {
-                        sb.append(SPACE).append(key).append(EQUAL);
-                        String val = resolve(name, k, attr.getValue());
-                        if (HtmlUtils.isQuoteNeeded(val)) {
-                            sb.append(QUOTE).append(val).append(QUOTE);
-                        } else {
-                            sb.append(val);
+            if ("iframe".equals(name) || "object".equals(name)
+                    || "embed".equals(name)) {
+                // keep all attrs
+                for (Attribute attr : attrs) {
+                    addAttr(name, attr.getKey(), attr.getValue());
+                }
+            } else {
+                for (Attribute attr : attrs) {
+                    String key = attr.getKey();
+                    // ignore unknown attribute
+                    for (String k : KEEP_ATTRS) {
+                        if (k.equals(key)) {
+                            addAttr(name, k, attr.getValue());
+                            break;
                         }
-                        break;
                     }
                 }
             }
             sb.append(END);
+        }
+    }
+
+    private void addAttr(String name, String k, String val) {
+        sb.append(SPACE).append(k);
+        if (!val.isEmpty()) {
+            sb.append(EQUAL);
+            val = resolve(name, k, val);
+            if (HtmlUtils.isQuoteNeeded(val)) {
+                sb.append(QUOTE).append(val).append(QUOTE);
+            } else {
+                sb.append(val);
+            }
         }
     }
 

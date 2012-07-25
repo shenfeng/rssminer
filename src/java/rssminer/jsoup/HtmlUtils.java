@@ -37,7 +37,7 @@ public class HtmlUtils {
             Pattern.CASE_INSENSITIVE);
 
     static final String[] IGNORE_TAGS = new String[] { "script", "style",
-            "iframe", "link", "#comment" };
+            "link", "#comment" };
 
     static String[] TEXT_IGNORE = new String[] { "code", "pre" };
 
@@ -99,7 +99,7 @@ public class HtmlUtils {
     }
 
     public static boolean isQuoteNeeded(String val) {
-        if (val.isEmpty() || val.length() > 10) {
+        if (val.length() > 10) {
             return true;
         } else {
             int i = val.length();
