@@ -5,9 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.ccil.cowan.tagsoup.Parser;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.junit.Assert;
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -112,6 +117,13 @@ public class HtmlUtilTest {
     @Test
     public void testJsoup() {
         // Jsoup.parse(null);
+        Document doc = Document.createShell("");
+        Element body = doc.body();
+
+        Document d2 = new Document("");
+        List<Node> nodes = org.jsoup.parser.Parser.parseFragment("<p>1</p>",
+                d2, "");
+        System.out.println(nodes);
         Jsoup.parse("");
     }
 
