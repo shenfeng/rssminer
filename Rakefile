@@ -6,12 +6,7 @@ htmlcompressor = "htmlcompressor.jar"
 luke = "lukeall-3.5.0.jar"
 
 def get_file_as_string(filename)
-  data = ''
-  f = File.open(filename, "r")
-  f.each_line do |line|
-    data += line
-  end
-  return data
+  return open(filename, 'r'){|f| f.read }
 end
 
 def get_dir(path)
