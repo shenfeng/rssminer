@@ -79,7 +79,8 @@
     } else if ($just_read.hasClass('like')) {
       selector += ' .unread-like';
     } else { selector += ' .unread-dislike'; }
-    var $n = $(selector), n = + ($n.text() || "0").trim();
+    var $n = $(selector),
+        n = parseInt($.trim($n.text()) || "0");
     if(n === 1) { $n.remove(); }
     else { $n.text(n-1); }
   }
@@ -196,8 +197,7 @@
 
   function fetcher_finished (result) {
     if(!result) {
-      notify.show_msg('Sorry, Fetcher is too busy.. job batched.',
-                      10000);
+      notify.show_msg('Sorry, Fetcher is too busy.. job batched.', 10000);
       return ;
     }
     if(result.refresh) {

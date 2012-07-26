@@ -16,16 +16,16 @@
 
   var MAX_PAGER = 9,
       WELCOME_MAX_PAGE = 7,
+      h = screen.height,
       // works for 900, 800, 1080 screen (height)
       // per item 34.85 pixel, first feed to top 138px, 140 px for brower use
-      PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 34.85),
+      PER_PAGE_FEEDS = Math.floor((h - 138 - 140) / 34.85),
       // PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 32.9),
-
       // show search result count according to screen height
-      SEARCH_RESUTL_COUNT = Math.min(Math.floor((screen.height - 260) / 43), 17),
-      LIKE_SCORE = user_data.like_score,        // default 1
-      MIN_COUNT = 5,
-      NEUTRAL_SCORE =  user_data.neutral_score;    // db default 0
+      SEARCH_RESUTL_COUNT = Math.min(Math.floor((h - 260) / 43), 17),
+      LIKE_SCORE = user_data.like_score, // default 1
+      NEUTRAL_SCORE =  user_data.neutral_score, // db default 0
+      MIN_COUNT = 5;
 
   // how many pages does each section has
   var WELCOME_TABS = {recommend: 1, newest: 1, read: 1, voted: 1};
@@ -498,7 +498,7 @@
     });
   }
 
-  function get_search_result (q, limit, cb) {
+  function fetch_search_result (q, limit, cb) {
     var subs = [],
         count = 0,
         grouped = parse_subs(subscriptions_cache);
@@ -573,8 +573,8 @@
     data: {
       add_subscription: add_subscription,
       get_feed: get_feed,
-      get_search_result: get_search_result,
       get_subscription: get_subscription,
+      fetch_search_result: fetch_search_result,
       fetch_sub_feeds: fetch_sub_feeds,
       fetch_group_feeds: fetch_group_feeds,
       get_subscriptions: function () { return subscriptions_cache || []; },

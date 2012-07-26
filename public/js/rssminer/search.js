@@ -107,7 +107,7 @@
   }
 
   function do_search (q) {
-    data.get_search_result(q, 18, function (result) {
+    data.fetch_search_result(q, 18, function (result) {
       // if no result, wait for result
       if(result.sub_cnt || (result.feeds && result.feeds.length)) {
         show_search_result(result);
