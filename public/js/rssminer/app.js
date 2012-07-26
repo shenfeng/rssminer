@@ -281,7 +281,6 @@
     }
   });
 
-
   fetch_and_show_user_subs(function () { // app start here
     RM.hashRouter({
       '': show_welcome,

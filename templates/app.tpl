@@ -13,7 +13,7 @@
                    like, and help discover stories you may like.">
     {{#prod}}<style type="text/css">{{{ css }}}</style>{{/prod}}
     {{#dev}}<link rel="stylesheet" href="/css/app.css">{{/dev}}
-    {{{ data }}}
+    <script>{{{ data }}}</script>
     <!--[if lt IE 8 ]><script>location.href="/browser"</script><![endif]-->
   </head>
   <!--[if IE 8]><body class="ie8"> <![endif]-->
@@ -28,7 +28,7 @@
           this is a public account, <a href="/">create your own</a>
         </div>
         <input id="q" autocomplete="off"
-               placeholder="type to search subscriptions, articles"/>
+               placeholder="search subscriptions, articles"/>
         <i class="icon-search"></i>
         <ul class="links">
           <li>

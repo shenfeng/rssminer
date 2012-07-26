@@ -67,9 +67,8 @@
   (let [stats (map
                (fn [[k v]]
                  (str "var _" (str/upper-case (name k))
-                      "_ = " (json-str v) "; ")) data)
-        js (concat '("<script>") stats '("</script>"))]
-    (apply str js)))
+                      "_ = " (json-str v) "; ")) data)]
+    (apply str stats)))
 
 (defmacro ignore-error [& body]
   `(try ~@body

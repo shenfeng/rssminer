@@ -7,11 +7,12 @@
   var escapeRegExp  = /[-[\]{}()+?.,\\^$|#\s]/g;
 
   var oldHash,
+      location = window.location,
       isStarted = false,
       handles = [];
 
   function getFragment () {
-    var hash = window.location.hash;
+    var hash = location.hash;
     return decodeURIComponent(hash.replace(/^#*/, ''));
   }
 
