@@ -1,4 +1,4 @@
-(function () {
+(function (undefined) {
   var RM = window.RM,           // namespace
       _RM_ = window._RM_,       // inject to html, data
       ajax = RM.ajax,
@@ -10,11 +10,11 @@
 
   var subscriptions_cache,
       sub_titles = {},          // use by transform_item
-      feeds_cache = {},
-      cache_fixer = {};         // fix browser cache, inconsistency
+      feeds_cache = {};
 
-  var STORAGE_KEY = '_rm_',
-      MAX_PAGER = 9,
+  var last_search_ajax;
+
+  var MAX_PAGER = 9,
       WELCOME_MAX_PAGE = 7,
       // works for 900, 800, 1080 screen (height)
       // per item 34.85 pixel, first feed to top 138px, 140 px for brower use
@@ -35,13 +35,6 @@
       READ_TAB = 'read',
       VOTED_TAB = 'voted';
   var SUB_TABS = [RECOMMEND_TAB, NEWEST_TAB, OLDEST_TAB, READ_TAB, VOTED_TAB];
-
-  function save_to_cache_fixer (feedid, data) {
-    cache_fixer[feedid] = _.extend(cache_fixer[feedid] || {}, data);
-    if(window.localStorage) {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(cache_fixer));
-    }
-  }
 
   function get_subscription (subid) {
     subid = parseInt(subid);
@@ -103,18 +96,8 @@
   }
 
   function transform_item (feed, page, sort, section) {
-    var cf = cache_fixer[feed.id],
-        rssid = feed.rssid;
+    var rssid = feed.rssid;
     section = section || rssid;
-    if(cf) {
-      // try to fix outdated data, browser cache 1 hour
-      feed.readts = 'readts' in cf ? cf.readts : feed.readts;
-      feed.vote = 'vote' in cf ? cf.vote : feed.vote;
-    }
-    // var info = [];              // used in context menu
-    // if(feed.read > 1) {
-    //   info.push({text: 'You read it in ' + ymdate(feed.read)});
-    // }
     var date = ymdate(feed.publishedts);
     if(section === READ_TAB || sort === READ_TAB) {
       date = ymdate(feed.readts);
@@ -380,16 +363,12 @@
 
   function mark_as_read (feedid, cb) {
     ajax.spost('/api/feeds/' + feedid + '/read', function () {
-      save_to_cache_fixer(feedid, {
-        readts: Math.round(new Date().getTime() / 1000)
-      });
       call_if_fn(cb);
     });
   }
 
   function save_vote (feedid, vote, cb) {
     ajax.spost('/api/feeds/' + feedid  + '/vote', {vote: vote}, function () {
-      save_to_cache_fixer(feedid, {vote: vote});
       call_if_fn(cb);
     });
   }
@@ -519,7 +498,6 @@
     });
   }
 
-  var last_search_ajax;
   function get_search_result (q, limit, cb) {
     var subs = [],
         count = 0,
@@ -614,7 +592,4 @@
     update_subscrption(subscriptions_cache, data);
   });
 
-  if(window.localStorage) {   // load data from localStorage
-    cache_fixer = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-  }
 })();
