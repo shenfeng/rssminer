@@ -314,10 +314,10 @@
         scrollTop = $navigation.scrollTop(),
         height = $navigation.height();
     if(scrollTop + height === total_height) {
-      console.log('loading................', gcur_page, gcur_sort,
-                  gcur_sub_id, gcur_is_group);
+      // console.log('loading................', gcur_page, gcur_sort,
+      //             gcur_sub_id, gcur_is_group);
     }
-    console.log(total_height, scrollTop, height);
+    // console.log(total_height, scrollTop, height);
   });
 
   if(_RM_.demo) { $('#warn-msg').show(); }

@@ -157,7 +157,7 @@ body {
     background: white url($bg_url) repeat center top;
     box-shadow: 2px 1px 6px -2px #8A8A8A;
     h3 {
-        text-transform: capitalize;
+        /* text-transform: capitalize; */
         a { color: #111;  }
         margin: 0; padding: 8px 0 8px 5px; @include overflow-ellipsis();
     }
@@ -368,7 +368,7 @@ ul { list-style: none; padding: 0; margin: 0; }
             max-width: 800px;
             display: inline-block;
         }
-        text-transform: capitalize;
+        /* text-transform: capitalize; */
         text-align: left;
         margin: 15px 0;
         font-size: 18px;
