@@ -12,8 +12,7 @@
   var SHOW_NAV = 'show-nav',
       SHOW_IFRAME = 'show-iframe';
 
-  var gmark_as_read_timer_id = 0,
-      gcur_page,
+  var gcur_page,
       gcur_sort,
       gcur_is_group = false,
       gcur_sub_id;
@@ -85,13 +84,6 @@
     else { $n.text(n-1); }
   }
 
-  function reset_markread_timer (mark_read) {
-    if(gmark_as_read_timer_id) {
-      window.clearTimeout(gmark_as_read_timer_id);
-    }
-    gmark_as_read_timer_id = window.setTimeout(mark_read, 500);
-  }
-
   function read_feed (subid, feedid, page, sort, folder) {
     var read_cb = function () {
       gcur_sub_id = subid;
@@ -107,10 +99,8 @@
       set_document_title(feed.title);
       $footer.empty().append(tmpls.footer_info(feed));
       iframe.src = util.get_final_link(link, feedid);
-      var mark_read = mark_feed_as_read($me, feedid, subid);
-      reset_markread_timer(mark_read);
+      mark_feed_as_read($me, feedid, subid);
       iframe.onload = function () {
-        mark_read();
         $footer.find('> img').css({visibility: 'hidden'});
       };
     };
@@ -132,16 +122,11 @@
   }
 
   function mark_feed_as_read ($me, feedid, subid) {
-    var called = false;
-    return function () {
-      if(!called && !$me.hasClass('read')) {
-        called = true;
-        data_api.mark_as_read(feedid);
-        decrement_number($me, subid);
-        gmark_as_read_timer_id = null;
-        $me.removeClass('unread sys-read').addClass('read');
-      }
-    };
+    if(!$me.hasClass('read')) {
+      data_api.mark_as_read(feedid);
+      decrement_number($me, subid);
+      $me.removeClass('unread sys-read').addClass('read');
+    }
   }
 
   function show_feeds (data) {
