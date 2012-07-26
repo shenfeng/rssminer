@@ -64,7 +64,7 @@
     return  _RM_.static_server + '/fav?h=' + h;
   }
 
-  function split_tag (tags) {
+  function split_tags (tags) {
     if(tags) { return tags.split("; ").slice(0, 3); } // at most 3
     else { return []; }
   }
@@ -115,7 +115,7 @@
       href: feed_hash(section, feed.id, page, sort),
       id: feed.id,
       link: feed.link,
-      tags: split_tag(feed.tags),
+      tags: split_tags(feed.tags),
       title: feed.title || feed.link
     };
   }
@@ -241,42 +241,63 @@
     return h;
   }
 
-  function fetch_sub_feeds (subid, page, sort, cb) {
-    var sub =_.find(subscriptions_cache, function (sub) {
-      return sub.id === subid;
-    }) || {};
-    var offset = Math.max(0, page -1) * PER_PAGE_FEEDS;
-    var url = '/api/subs/' + subid + '?' + util.params({
+  function gen_sort_data (id, sort) {
+    var sort_data = [];
+    _.each(SUB_TABS, function (s) {
+      sort_data.push({
+        selected: !sort || s === sort,
+        href: sub_hash(id, 1, s),
+        text: s
+      });
+    });
+    return sort_data;
+  }
+
+  function fetch_feeds (data) {
+    var offset = Math.max(0, data.page - 1) * PER_PAGE_FEEDS;
+    var url = '/api/subs/' + data.id + '?' + util.params({
       offset: offset,
       limit: PER_PAGE_FEEDS,
-      sort: sort
+      sort: data.sort
     });
     ajax.get(url, function (resp) {
       feeds_cache['current_sub'] = resp;
+      var total = data.total(resp);
       var feeds = _.map(resp, function (feed) {
-        return transform_item(feed, page, sort);
+        return transform_item(feed, data.page, data.sort);
       });
+      data.cb({
+        title: data.title,
+        url: data.url,
+        feeds: feeds,
+        sort: gen_sort_data(data.section, data.sort),
+        pager: compute_sub_paging(data.section, data.sort, total, data.page)
+      });
+    });
+  }
+
+  function fetch_sub_feeds (subid, page, sort, cb) {
+    var sub =_.find(subscriptions_cache, function (s) {
+      return s.id === subid;
+    }) || {};
+    var total = function (resp) {
       var total = sub.like + sub.neutral; // recommand
       if(sort === NEWEST_TAB || sort === OLDEST_TAB) {
         total = sub.total;
       } else if(sort === READ_TAB || sort === VOTED_TAB) {
         total = resp.length === PER_PAGE_FEEDS;
       }
-      var sort_data = [];
-      _.each(SUB_TABS, function (s) {
-        sort_data.push({
-          selected: !sort || s === sort,
-          href: sub_hash(subid, 1, s),
-          text: s
-        });
-      });
-      cb({
-        title: sort + ' - ' + sub.title,
-        url: sub.url,
-        feeds: feeds,
-        sort: sort_data,
-        pager: compute_sub_paging(subid, sort, total, page)
-      });
+      return total;
+    };
+    fetch_feeds({
+      title: sort + ' - ' + sub.title,
+      cb: cb,
+      id: subid,
+      section: subid,
+      total: total,
+      page: page,
+      sort: sort,
+      url: sub.url
     });
   }
 
@@ -374,12 +395,11 @@
   }
 
   function get_first_group () {
-    var grouped = parse_subs(subscriptions_cache),
-        group = null;
+    var grouped = parse_subs(subscriptions_cache);
     if(grouped && grouped.length) {
-      group = grouped[0].group.name;
+      return grouped[0].group.name;
     }
-    return group;
+    return null;
   }
 
   function get_subids_for_group (group) {
@@ -390,49 +410,31 @@
 
   function fetch_group_feeds (group, page, sort, cb) {
     var grouped = get_subids_for_group(group);
-    if(grouped && grouped.subs.length > 1) {
+    var ids = _.pluck(grouped.subs, 'id').sort(function (a, b) {
+      return a - b;             // asc sorting
+    });
+    var total = function (resp) {
       var g = grouped.group;
-      var offset = Math.max(0, page -1) * PER_PAGE_FEEDS;
-      var ids = _.pluck(grouped.subs, 'id');
-      var section = 'f_' + group;
-      ids = ids.sort(function (a, b) { return a -b; });
-      var url = '/api/subs/' + ids.join('-') + '?' + util.params({
-        offset: offset,
-        limit: PER_PAGE_FEEDS,
-        sort: sort
-      });
-      ajax.get(url, function (resp) {
-        feeds_cache['current_sub'] = resp;
-        var feeds = _.map(resp, function (feed) {
-          return transform_item(feed, page, sort, section);
-        });
-        var sort_data = [];
-        _.each(SUB_TABS, function (s) {
-          sort_data.push({
-            selected: !sort || s === sort,
-            href: sub_hash(section, 1, s),
-            text: s
-          });
-        });
-        var total = g.like + g.neutral; // recommand
-        if(sort === NEWEST_TAB || sort === OLDEST_TAB) {
-          total =  _.reduce(grouped.subs, function (m, sub) {
-            return m + sub.total;
-          }, 0);
-        } else if(sort === READ_TAB || sort === VOTED_TAB) {
-          total = resp.length === PER_PAGE_FEEDS;
-        }
-        cb({
-          title: sort + " - " + group + ' [folder]',
-          feeds: feeds,
-          sort: sort_data,
-          pager: compute_sub_paging(section, sort, total, page)
-        });
-      });
-    } else {
-      var id = grouped.subs[0].id;
-      fetch_sub_feeds(id, page, sort, cb);
-    }
+      var total = g.like + g.neutral; // recommand
+      if(sort === NEWEST_TAB || sort === OLDEST_TAB) {
+        total =  _.reduce(grouped.subs, function (m, sub) {
+          return m + sub.total;
+        }, 0);
+      } else if(sort === READ_TAB || sort === VOTED_TAB) {
+        total = resp.length === PER_PAGE_FEEDS;
+      }
+      return total;
+    };
+
+    fetch_feeds({
+      title: sort + " - " + group + ' [folder]',
+      cb: cb,
+      id: ids.join('-'),
+      section: 'f_' + group,
+      total: total,
+      page: page,
+      sort: sort
+    });
   }
 
   function polling_rss_link (rss_link_id, interval, times, cb) {
@@ -493,9 +495,7 @@
   }
 
   function save_settings (data, cb) {
-    ajax.jpost('/api/settings', data, function () {
-      call_if_fn(cb);
-    });
+    ajax.jpost('/api/settings', data, function () { call_if_fn(cb); });
   }
 
   function fetch_search_result (q, limit, cb) {
@@ -531,16 +531,8 @@
     }
   }
 
-  function try_sync_with_storage (subscriptions) {
-    if(localStorage) {
-      var data = JSON.parse(localStorage.getItem('__sort__'));
-      if(data) {
-        update_subscrption(subscriptions, data);
-      }
-    }
-  }
 
-  function update_subscrption (subscriptions, data) {
+  function update_subscrptions (subscriptions, data) {
     var index = 1;
     _.each(data, function (group) {
       _.each(group.ids, function (id) {
@@ -589,7 +581,15 @@
   });
 
   $(RM).bind('sub-sorted.rm',function (e, data) {
-    update_subscrption(subscriptions_cache, data);
+    update_subscrptions(subscriptions_cache, data);
   });
 
+  function try_sync_with_storage (subscriptions) {
+    if(localStorage) {
+      var data = JSON.parse(localStorage.getItem('__sort__'));
+      if(data) {
+        update_subscrptions(subscriptions, data);
+      }
+    }
+  }
 })();
