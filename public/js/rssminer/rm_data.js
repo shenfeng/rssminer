@@ -116,7 +116,7 @@
       id: feed.id,
       link: feed.link,
       tags: split_tags(feed.tags),
-      title: feed.title || feed.link
+      title: $.trim(feed.title || feed.link)
     };
   }
 
@@ -217,7 +217,7 @@
       // feeds = _.filter(feeds, function (f) { return f.title; });
       cb({
         title: section + ' - Rssminer, an intelligent RSS reader',
-        feeds: feeds,
+        feeds: remove_duplicate_feed(feeds),
         pager: compute_welcome_paging(section, page, resp.length),
         sort: sort_data
       });
@@ -253,6 +253,18 @@
     return sort_data;
   }
 
+  function remove_duplicate_feed (feeds) {
+    var results = [];
+    _.each(feeds, function (f) {
+      var included = _.any(results, function (r) {
+        return r.title === f.title || r.link === f.link;
+      });
+      if(!included) { results.push(f); }
+    });
+    return results;
+  }
+
+
   function fetch_feeds (data) {
     var offset = Math.max(0, data.page - 1) * PER_PAGE_FEEDS;
     var url = '/api/subs/' + data.id + '?' + util.params({
@@ -269,7 +281,7 @@
       data.cb({
         title: data.title,
         url: data.url,
-        feeds: feeds,
+        feeds: remove_duplicate_feed(feeds),
         sort: gen_sort_data(data.section, data.sort),
         pager: compute_sub_paging(data.section, data.sort, total, data.page)
       });
@@ -524,6 +536,7 @@
           // and get the result again
           return transform_item(feed, 1, NEWEST_TAB);
         });
+        feeds = remove_duplicate_feed(feeds);
         cb({subs: subs, feeds: feeds, sub_cnt: subs.length});
       });
     } else {
