@@ -193,7 +193,9 @@
     }
   }
 
-  function get_welcome_list (section, page, cb) { // no cache
+  // sort is not used, just the same api as fetch_sub, fetch_folder
+  function fetch_welcome (section, page, sort, cb) { // no cache
+    if(page > WELCOME_MAX_PAGE) { cb({}); return; }          // do not load
     var params = util.params({
       section: section,
       limit: PER_PAGE_FEEDS,
@@ -350,7 +352,10 @@
           href: tab_hash(section, page + 1)
         });
       }
-      return {pages: pages};
+      return {
+        pages: pages,
+        has_more: has_more
+      };
     }
   }
 
@@ -388,9 +393,10 @@
     return {
       count: count,
       page: page,
-      pages: pages,
-      prev: page > 1,         // has prev page
-      next: count > page      // has next page
+      has_more : page <= count,
+      pages: pages
+      // prev: page > 1,         // has prev page
+      // next: count > page      // has next page
     };
   }
 
@@ -584,7 +590,7 @@
       fetch_group_feeds: fetch_group_feeds,
       get_subscriptions: function () { return subscriptions_cache || []; },
       get_user_subs: get_user_subs,
-      get_welcome_list: get_welcome_list,
+      fetch_welcome: fetch_welcome,
       mark_as_read: mark_as_read,
       save_vote: save_vote,
       list_folder_names: list_folder_names,

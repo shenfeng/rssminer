@@ -1,6 +1,7 @@
 (function () {
   var RM = window.RM,
       data = RM.data,
+      to_html = Mustache.render,
       tmpls = RM.tmpls,
       notify = RM.notify,
       util = RM.util;
@@ -20,7 +21,7 @@
 
   function show_folder_context_menu (e) { // hide in search.js
     $last_menu_ui = $(this);
-    var html = tmpls.folder_ct_menu({});
+    var html = to_html(tmpls.folder_ct_menu, {});
     $ct_menu.empty().append(html).css({
       left: e.clientX,
       top: e.clientY,
@@ -60,7 +61,7 @@
   function show_item_context_menu (e) { // hide in search.js
     $last_menu_ui = $(this);
     var subid = parseInt($last_menu_ui.attr('data-id')),
-        html = tmpls.sub_ct_menu({
+        html = to_html(tmpls.sub_ct_menu, {
           folders: data.list_folder_names(subid),
           sub: data.get_subscription(subid)
         });
@@ -80,7 +81,7 @@
   function show_feed_context_menu (e) {
     $last_menu_ui = $(this);
     var feed = data.get_feed($last_menu_ui.attr('data-id')),
-        html = tmpls.feed_ct_menu(feed);
+        html = to_html(tmpls.feed_ct_menu, feed);
     $ct_menu.empty().append(html).css({
       top: e.clientY,
       left: e.clientX,
@@ -137,7 +138,7 @@
     if(!find) {
       var subid = $last_menu_ui.attr('data-id'),
           sub = data.get_subscription(subid);
-      var html = tmpls.subs_nav({
+      var html = to_html(tmpls.subs_nav, {
         groups: [{subs: [sub], group: new_folder}]
       });
       $last_menu_ui.remove();

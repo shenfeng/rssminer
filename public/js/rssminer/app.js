@@ -3,6 +3,7 @@
       RM = window.RM,
       data_api = RM.data,
       notify = RM.notify,
+      to_html = Mustache.render,
       tmpls = RM.tmpls,
       util = RM.util,
       layout = RM.layout,
@@ -12,11 +13,6 @@
   var SHOW_NAV = 'show-nav',
       SHOW_IFRAME = 'show-iframe';
 
-  var gcur_page,
-      gcur_sort,
-      gcur_is_group = false,
-      gcur_sub_id;
-
   var $footer = $('#footer'),
       $reading_area = $('#reading-area'),
       $navigation = $('#navigation'), // feed list
@@ -24,6 +20,22 @@
       iframe = $('iframe')[0],
       $logo = $('#logo'),
       $welcome_list = $('#welcome-list');
+
+  var gcur_page,
+      gcur_sort,
+      gcur_group,
+      gcur_subid,
+      gcur_has_more = true,
+      GROUP_FOLDER = 'GROUP',
+      GROUP_WELCOME = 'ALL',
+      GROUP_SUB = 'SUB';
+
+  function _update_state (subid, page, sort, group) {
+    gcur_page = page;
+    gcur_sort = sort;
+    gcur_group = group;
+    gcur_subid = subid;
+  }
 
   function set_document_title (title) {
     var rssminer = 'Rssminer, intelligent rss reader';
@@ -35,7 +47,7 @@
   }
 
   function read_subscription (id, page, sort, callback) {
-    gcur_is_group = false;
+    _update_state(id, page, sort, GROUP_SUB);
     $reading_area.removeClass(SHOW_IFRAME);
     layout.select('#sub-list', $("#item-" + id));
     data_api.fetch_sub_feeds(id, page, sort, function (data) {
@@ -45,7 +57,7 @@
   }
 
   function read_group_subs (group, page, sort, callback) {
-    gcur_is_group = true;
+    _update_state(group, page, sort, GROUP_FOLDER);
     layout.select('#sub-list', $("[data-name='" + group + "']"));
     data_api.fetch_group_feeds(group, page, sort, function (data) {
       show_feeds(data);
@@ -53,24 +65,6 @@
     });
   }
 
-  function load_feeds_into_left_nav () {
-    var fn = gcur_is_group ? data_api.fetch_group_feeds :
-          data_api.fetch_sub_feeds;
-    fn(gcur_sub_id, gcur_page, gcur_sort, function (data) {
-      $navigation.empty().append(tmpls.feeds_nav(data));
-      $navigation.scrollTop(0);
-    });
-  }
-
-  function load_next_page () {
-    gcur_page += 1;
-    load_feeds_into_left_nav();
-  }
-
-  function load_prev_page () {
-    gcur_page -= 1;
-    load_feeds_into_left_nav();
-  }
 
   function decrement_number ($just_read, subid) {
     var selector = "#item-" + subid;
@@ -87,7 +81,7 @@
 
   function read_feed (subid, feedid, page, sort, folder) {
     var read_cb = function () {
-      gcur_sub_id = subid;
+      gcur_subid = subid;
       gcur_sort = sort;
       gcur_page = page;
       $reading_area.addClass(SHOW_IFRAME);
@@ -98,14 +92,14 @@
           link = feed.link;
       feed.domain = util.hostname(link);
       set_document_title(feed.title);
-      $footer.empty().append(tmpls.footer_info(feed));
+      $footer.empty().append(to_html(tmpls.footer_info, feed));
       iframe.src = util.get_final_link(link, feedid);
       mark_feed_as_read($me, feedid, subid);
       iframe.onload = function () {
         $footer.find('> img').css({visibility: 'hidden'});
       };
     };
-    if(gcur_sub_id === subid) {
+    if(gcur_subid === subid) {
       read_cb();                   // just read feed
     } else {
       if(_.isNumber(subid)) {
@@ -132,11 +126,12 @@
 
   function show_feeds (data) {
     util.add_even(data.feeds);
+    gcur_has_more = data.pager.has_more;
     show_server_message();
     iframe.src = 'about:blank';
-    var html = tmpls.feeds_nav(data);
+    var html = to_html(tmpls.feeds_nav, data, tmpls);
     $navigation.empty().append(html);
-    html = tmpls.sub_feeds(data);
+    html = to_html(tmpls.sub_feeds, data);
     $welcome_list.empty().append(html).trigger('child_change.rm');
     set_document_title(data.title);
     $reading_area.removeClass(SHOW_IFRAME);
@@ -147,8 +142,9 @@
     var d = !section && !page;
     section = section || 'recommend';
     page = page || 1;
+    _update_state(section, page, section, GROUP_WELCOME);
     if(data_api.get_subscriptions().length) { // user has subscriptions
-      data_api.get_welcome_list(section, page, function (data) {
+      data_api.fetch_welcome(section, page, section, function (data) {
         if(!data.feeds.length && d) {
           // try to show something that has data
           location.hash = '?s=newest&p=1';
@@ -173,7 +169,7 @@
       })
     };
     d.demo = _RM_.demo;
-    var html = tmpls.settings(d);
+    var html = to_html(tmpls.settings, d);
     $welcome_list.empty().append(html);
   }
 
@@ -247,7 +243,7 @@
 
   function fetch_and_show_user_subs (cb) {
     data_api.get_user_subs(function (subs) {
-      var html = tmpls.subs_nav({groups: subs});
+      var html = to_html(tmpls.subs_nav, {groups: subs});
       $subs_list.empty().append(html).find('img').each(util.favicon_ok);
       $subs_list.trigger('refresh.rm');
       util.call_if_fn(cb);
@@ -271,8 +267,6 @@
     'click .add-sub a.import': import_from_greader,
     'click #add-subscription': add_subscription,
     'click #save-settings': save_settings,
-    'click #nav-pager .next': load_next_page,
-    'click #nav-pager .prev': load_prev_page,
     'mouseenter #logo': function () { $logo.addClass(SHOW_NAV); },
     'mouseleave #logo': function () {
       if(/#read\/.+\/\d+/.test(location.hash)) { // if reading feed
@@ -294,14 +288,25 @@
   });
 
   $navigation.scroll(function (e) {     // feed list scroll, auto load
+    if(!gcur_has_more) { return; }
     var total_height = $navigation[0].scrollHeight, // ie8, ff, chrome
         scrollTop = $navigation.scrollTop(),
         height = $navigation.height();
     if(scrollTop + height === total_height) {
-      // console.log('loading................', gcur_page, gcur_sort,
-      //             gcur_sub_id, gcur_is_group);
+      var fn = data_api.fetch_sub_feeds;
+      if( gcur_group === GROUP_FOLDER) { fn = data_api.fetch_group_feeds; }
+      else if (gcur_group === GROUP_WELCOME ) { fn = data_api.fetch_welcome; }
+      gcur_page += 1;
+      fn(gcur_subid, gcur_page, gcur_sort, function (data) {
+        gcur_has_more = data.pager && data.pager.has_more;
+        if(!gcur_has_more) {
+          $('#navigation .loader').remove();
+        } else {
+          var html = to_html(tmpls.feeds_list, data, tmpls);
+          $('#feed-list').append(html);
+        }
+      });
     }
-    // console.log(total_height, scrollTop, height);
   });
 
   if(_RM_.demo) { $('#warn-msg').show(); }

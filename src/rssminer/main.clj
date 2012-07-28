@@ -68,7 +68,7 @@
              ["--redis-host" "Redis for session store"
               :default "127.0.0.1"]
              ["--proxy-server" "proxy server" :default "//192.168.1.3"]
-             ["--static-server" "static server" :default "//192.168.1.3"]
+             ["--static-server" "static server" :default "//192.168.1.200"]
              ["--db-url" "MySQL Database url"
               :default "jdbc:mysql://localhost/rssminer"]
              ["--db-user" "MySQL Database user name" :default "feng"]
