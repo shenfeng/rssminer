@@ -88,16 +88,17 @@
       var $me = $('#feed-' + feedid);
       $logo.removeClass(SHOW_NAV);
       layout.select('#feed-list', $me);
-      var feed = data_api.get_feed(feedid),
-          link = feed.link;
-      feed.domain = util.hostname(link);
-      set_document_title(feed.title);
-      $footer.empty().append(to_html(tmpls.footer_info, feed));
-      iframe.src = util.get_final_link(link, feedid);
-      mark_feed_as_read($me, feedid, subid);
-      iframe.onload = function () {
-        $footer.find('> img').css({visibility: 'hidden'});
-      };
+      data_api.fetch_feed(feedid, function (feed) {
+        var link = feed.link;
+        feed.domain = util.hostname(link);
+        set_document_title(feed.title);
+        $footer.empty().append(to_html(tmpls.footer_info, feed));
+        iframe.src = util.get_final_link(link, feedid);
+        mark_feed_as_read($me, feedid, subid);
+        iframe.onload = function () {
+          $footer.find('> img').css({visibility: 'hidden'});
+        };
+      });
     };
     if(gcur_subid === subid) {
       read_cb();                   // just read feed
@@ -287,8 +288,10 @@
     });
   });
 
+  var is_loading = false;
+
   $navigation.scroll(function (e) {     // feed list scroll, auto load
-    if(!gcur_has_more) { return; }
+    if(!gcur_has_more || is_loading) { return; }
     var total_height = $navigation[0].scrollHeight, // ie8, ff, chrome
         scrollTop = $navigation.scrollTop(),
         height = $navigation.height();
@@ -297,7 +300,9 @@
       if( gcur_group === GROUP_FOLDER) { fn = data_api.fetch_group_feeds; }
       else if (gcur_group === GROUP_WELCOME ) { fn = data_api.fetch_welcome; }
       gcur_page += 1;
+      is_loading = true;
       fn(gcur_subid, gcur_page, gcur_sort, function (data) {
+        is_loading = false;
         gcur_has_more = data.pager && data.pager.has_more;
         if(!gcur_has_more) {
           $('#navigation .loader').remove();

@@ -80,12 +80,13 @@
 
   function show_feed_context_menu (e) {
     $last_menu_ui = $(this);
-    var feed = data.get_feed($last_menu_ui.attr('data-id')),
-        html = to_html(tmpls.feed_ct_menu, feed);
-    $ct_menu.empty().append(html).css({
-      top: e.clientY,
-      left: e.clientX,
-      display: 'block'
+    data.fetch_feed($last_menu_ui.attr('data-id'), function (feed) {
+      var html = to_html(tmpls.feed_ct_menu, feed);
+      $ct_menu.empty().append(html).css({
+        top: e.clientY,
+        left: e.clientX,
+        display: 'block'
+      });
     });
     return false;
   }
@@ -162,13 +163,14 @@
     // Chrome works fine, firefox does not work
     // middle button, // left button with ctrl
     if((e.which === 1 && e.ctrlKey) || e.which === 2)   {
-      var $a = $(this),
-          feed = data.get_feed($a.parent().attr('data-id'));
-      var old_link = $a.attr('href');
-      $a.attr('href', feed.link);
-      setTimeout(function () {
-        $a.attr('href', old_link); // change it back
-      }, 100);
+      var $a = $(this);
+      data.fetch_feed($a.parent().attr('data-id'), function (feed) {
+        var old_link = $a.attr('href');
+        $a.attr('href', feed.link);
+        setTimeout(function () {
+          $a.attr('href', old_link); // change it back
+        }, 100);
+      });
     }
   }
 

@@ -9,8 +9,8 @@
       user_conf = JSON.parse(user_data.conf || "{}");
 
   var subscriptions_cache,
-      sub_titles = {},          // use by transform_item
-      feeds_cache = {};
+      feeds_cache = {},
+      sub_titles = {};          // use by transform_item
 
   var last_search_ajax;
 
@@ -19,7 +19,7 @@
       h = screen.height,
       // works for 900, 800, 1080 screen (height)
       // per item 34.85 pixel, first feed to top 138px, 140 px for brower use
-      PER_PAGE_FEEDS = Math.floor((h - 138 - 140) / 34.85),
+      PER_PAGE_FEEDS = Math.floor((h - 138 - 140) / 35.15),
       // PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 32.9),
       // show search result count according to screen height
       SEARCH_RESUTL_COUNT = Math.min(Math.floor((h - 260) / 43), 17),
@@ -36,32 +36,20 @@
       VOTED_TAB = 'voted';
   var SUB_TABS = [RECOMMEND_TAB, NEWEST_TAB, OLDEST_TAB, READ_TAB, VOTED_TAB];
 
-  function get_subscription (subid) {
-    subid = parseInt(subid);
-    var sub = _.find(subscriptions_cache, function (sub) {
-      return subid === sub.id;
-    });
-    sub.group = sub.group || 'null';
-    return transorm_sub(sub);
-  }
-
-  function get_feed (feedid) {
-    var feed;
-    feedid = parseInt(feedid);
-    for(var key in feeds_cache) {
-      var feeds = feeds_cache[key];
-      feed = _.find(feeds, function (f) {
-        return f.id === feedid;
-      });
-      if(feed) { break; }
-    }
-    return feed ? transform_item(feed) : {};
-  }
-
+  // --------------HELPER functions-------------
   function favicon_path (url) {
     var host = util.hostname(url),
         h = encodeURIComponent(host.split("").reverse().join(''));
     return  _RM_.static_server + '/fav?h=' + h;
+  }
+
+  function cache_feeds (cur_id, feeds) {
+    if( feeds_cache.cur_id !== cur_id ) {
+      feeds_cache.feeds = feeds; // re init
+      feeds_cache.cur_id = cur_id;
+    } else {
+      feeds_cache.feeds = feeds.concat(feeds_cache.feeds || []);
+    }
   }
 
   function split_tags (tags) {
@@ -146,6 +134,14 @@
     };
   }
 
+  function get_first_group () {
+    var grouped = parse_subs(subscriptions_cache);
+    if(grouped && grouped.length) {
+      return grouped[0].group.name;
+    }
+    return null;
+  }
+
   function parse_subs (subs) {
     var grouped = _.groupBy(subs, 'group'),
         result = [],
@@ -157,10 +153,14 @@
       list = _.filter(list, function (i) { return i.title; });
       var like = _.reduce(list, function (m, sub) { return sub.like + m; }, 0),
           neutral = _.reduce(list, function (m, sub) { return sub.neutral + m; }, 0),
+          total = _.reduce(list, function (m, sub) { return sub.total + m; }, 0),
           hash = sub_hash('f_' + group, 1, default_sort(like, neutral));
       if(list.length) {
         result.push({
-          group: {name: group, like: like, neutral: neutral, hash: hash},
+          group: {
+            name: group, like: like, neutral: neutral,
+            hash: hash, total: total
+          },
           subs: list,
           collapse: _.include(collapsed, group)
         });
@@ -170,13 +170,32 @@
     return result;
   }
 
+  function sub_hash (id, page, sort) {
+    var href = 'read/' + id;
+    if(page) { href = href + '?p='+ page; }
+    if(sort) { href = href + "&s=" + sort; }
+    return href;
+  }
+
+  function welcome_tab_hash (section, page) { // welcome page tab
+    return '?s=' + section + '&p=' + page;
+  }
+
+  function feed_hash (sub, id, page, sort) {
+    var h = 'read/' + sub + "/" + id;
+    if(page) { h += '?p=' + page + '&s=' + sort; }
+    return h;
+  }
   function gen_sub_titles () {
     sub_titles = {};
     _.each(subscriptions_cache, function (sub) {
       sub_titles[sub.id] = transorm_sub(sub);
     });
   }
+
   // helper funciton end here
+  // -------------------------------------------
+
 
   // API
   function get_user_subs (cb) {
@@ -191,139 +210,6 @@
         get_user_subs(cb);
       });
     }
-  }
-
-  // sort is not used, just the same api as fetch_sub, fetch_folder
-  function fetch_welcome (section, page, sort, cb) { // no cache
-    if(page > WELCOME_MAX_PAGE) { cb({}); return; }          // do not load
-    var params = util.params({
-      section: section,
-      limit: PER_PAGE_FEEDS,
-      offset: Math.max(0, page-1) * PER_PAGE_FEEDS
-    });
-    var sort_data = _.map(_.keys(WELCOME_TABS), function (tab) {
-      return {
-        text: tab,
-        selected: section === tab,
-        href: tab_hash(tab, 1)
-      };
-    });
-
-    ajax.get('/api/welcome?' + params, function (resp) {
-      resp = resp || [];
-      feeds_cache[section] = resp; // cache unchanged
-      var feeds = _.map(resp, function (feed) {
-        var result = transform_item(feed, page, 'score', section);
-        return result;
-      });
-      // feeds = _.filter(feeds, function (f) { return f.title; });
-      cb({
-        title: section + ' - Rssminer, an intelligent RSS reader',
-        feeds: remove_duplicate_feed(feeds),
-        pager: compute_welcome_paging(section, page, resp.length),
-        sort: sort_data
-      });
-    });
-  }
-
-  function sub_hash (id, page, sort) {
-    var href = 'read/' + id;
-    if(page) { href = href + '?p='+ page; }
-    if(sort) { href = href + "&s=" + sort; }
-    return href;
-  }
-
-  function tab_hash (section, page) { // welcome page tab
-    return '?s=' + section + '&p=' + page;
-  }
-
-  function feed_hash (sub, id, page, sort) {
-    var h = 'read/' + sub + "/" + id;
-    if(page) { h += '?p=' + page + '&s=' + sort; }
-    return h;
-  }
-
-  function gen_sort_data (id, sort) {
-    var sort_data = [];
-    _.each(SUB_TABS, function (s) {
-      sort_data.push({
-        selected: !sort || s === sort,
-        href: sub_hash(id, 1, s),
-        text: s
-      });
-    });
-    return sort_data;
-  }
-
-  function remove_duplicate_feed (feeds) {
-    var results = [];
-    _.each(feeds, function (f) {
-      var included = _.any(results, function (r) {
-        return r.title === f.title || r.link === f.link;
-      });
-      if(!included) { results.push(f); }
-    });
-    return results;
-  }
-
-
-  function fetch_feeds (data) {
-    var offset = Math.max(0, data.page - 1) * PER_PAGE_FEEDS;
-    var url = '/api/subs/' + data.id + '?' + util.params({
-      offset: offset,
-      limit: PER_PAGE_FEEDS,
-      sort: data.sort
-    });
-    ajax.get(url, function (resp) {
-      feeds_cache['current_sub'] = resp;
-      var total = data.total(resp);
-      var feeds = _.map(resp, function (feed) {
-        return transform_item(feed, data.page, data.sort);
-      });
-      data.cb({
-        title: data.title,
-        url: data.url,
-        feeds: remove_duplicate_feed(feeds),
-        sort: gen_sort_data(data.section, data.sort),
-        pager: compute_sub_paging(data.section, data.sort, total, data.page)
-      });
-    });
-  }
-
-  function fetch_sub_feeds (subid, page, sort, cb) {
-    var sub =_.find(subscriptions_cache, function (s) {
-      return s.id === subid;
-    }) || {};
-    var total = function (resp) {
-      var total = sub.like + sub.neutral; // recommand
-      if(sort === NEWEST_TAB || sort === OLDEST_TAB) {
-        total = sub.total;
-      } else if(sort === READ_TAB || sort === VOTED_TAB) {
-        total = resp.length === PER_PAGE_FEEDS;
-      }
-      return total;
-    };
-    fetch_feeds({
-      title: sort + ' - ' + sub.title,
-      cb: cb,
-      id: subid,
-      section: subid,
-      total: total,
-      page: page,
-      sort: sort,
-      url: sub.url
-    });
-  }
-
-  function should_include (page_count, current, page) {
-    if(page_count < MAX_PAGER) {
-      return true;
-    } else if(page === 1 || page === page_count || page === current){
-      return true;
-    } else if(Math.abs(current - page) < Math.ceil(MAX_PAGER / 2)){
-      return true;
-    }
-    return false;
   }
 
   function compute_welcome_paging (section, page, last_count) {
@@ -342,14 +228,14 @@
         pages.push({
           page: i,
           current: i === page,
-          href: tab_hash(section, i)
+          href: welcome_tab_hash(section, i)
         });
       }
       if(has_more) {
         pages.push({
           page: 'next',
           current: false,
-          href: tab_hash(section, page + 1)
+          href: welcome_tab_hash(section, page + 1)
         });
       }
       return {
@@ -357,6 +243,83 @@
         has_more: has_more
       };
     }
+  }
+
+  // sort is not used, just the same api as fetch_sub, fetch_folder
+  function fetch_welcome (section, page, sort, cb) { // no cache
+    if(page > WELCOME_MAX_PAGE) { cb({}); return; }          // do not load
+    var params = util.params({
+      section: section,
+      limit: PER_PAGE_FEEDS,
+      offset: Math.max(0, page-1) * PER_PAGE_FEEDS
+    });
+    var sort_data = _.map(_.keys(WELCOME_TABS), function (tab) {
+      return {
+        text: tab,
+        selected: section === tab,
+        href: welcome_tab_hash(tab, 1)
+      };
+    });
+
+    ajax.get('/api/welcome?' + params, function (resp) {
+      resp = resp || [];
+      var feeds = _.map(resp, function (feed) {
+        return transform_item(feed, page, 'score', section);
+      });
+
+      cache_feeds('w_' + section, feeds);
+
+      // feeds = _.filter(feeds, function (f) { return f.title; });
+      cb({
+        title: section + ' - Rssminer, an intelligent RSS reader',
+        feeds: remove_duplicate_feed(feeds),
+        pager: compute_welcome_paging(section, page, resp.length),
+        sort: sort_data
+      });
+    });
+  }
+
+
+  function remove_duplicate_feed (feeds) {
+    var results = [];
+    _.each(feeds, function (f) {
+      var included = _.any(results, function (r) {
+        return r.title === f.title || r.link === f.link;
+      });
+      if(!included) { results.push(f); }
+    });
+    return results;
+  }
+
+  function should_include (page_count, current, page) {
+    if(page_count < MAX_PAGER) {
+      return true;
+    } else if(page === 1 || page === page_count || page === current){
+      return true;
+    } else if(Math.abs(current - page) < Math.ceil(MAX_PAGER / 2)){
+      return true;
+    }
+    return false;
+  }
+
+
+  function mark_as_read (feedid, cb) {
+    ajax.spost('/api/feeds/' + feedid + '/read', function () {
+      call_if_fn(cb);
+    });
+  }
+
+  function save_vote (feedid, vote, cb) {
+    ajax.spost('/api/feeds/' + feedid  + '/vote', {vote: vote}, function () {
+      call_if_fn(cb);
+    });
+  }
+
+
+  function get_subids_for_group (group) {
+    var grouped = parse_subs(subscriptions_cache);
+    var result = _.find(grouped, function (g) { return g.group.name === group; });
+    return result;
   }
 
   function compute_sub_paging (subid, sorting, total, page) {
@@ -400,30 +363,47 @@
     };
   }
 
-  function mark_as_read (feedid, cb) {
-    ajax.spost('/api/feeds/' + feedid + '/read', function () {
-      call_if_fn(cb);
+  function fetch_feeds (data) {
+    var sort = data.sort;
+    var offset = Math.max(0, data.page - 1) * PER_PAGE_FEEDS;
+    var url = '/api/subs/' + data.id + '?' + util.params({
+      offset: offset,
+      limit: PER_PAGE_FEEDS,
+      sort: sort
     });
-  }
 
-  function save_vote (feedid, vote, cb) {
-    ajax.spost('/api/feeds/' + feedid  + '/vote', {vote: vote}, function () {
-      call_if_fn(cb);
+    ajax.get(url, function (resp) {
+      var sub_group = data.sub_group;
+      var total = sub_group.like + sub_group.neutral; // recommand
+      if(sort === NEWEST_TAB || data.sort === OLDEST_TAB) {
+        total = sub_group.total;
+      } else if(sort === READ_TAB || sort === VOTED_TAB) {
+        total = resp.length === PER_PAGE_FEEDS;
+      }
+      var feeds = _.map(resp, function (feed) {
+        return transform_item(feed, data.page, sort);
+      });
+
+      // used by fetch_feed;
+      cache_feeds(data.section, feeds);
+
+      var sort_tabs = [];
+      _.each(SUB_TABS, function (s) {
+        sort_tabs.push({
+          selected: !sort || s === sort,
+          href: sub_hash(data.section, 1, s),
+          text: s
+        });
+      });
+
+      data.cb({
+        title: data.title,
+        url: data.url,
+        feeds: remove_duplicate_feed(feeds),
+        sort: sort_tabs,
+        pager: compute_sub_paging(data.section, sort, total, data.page)
+      });
     });
-  }
-
-  function get_first_group () {
-    var grouped = parse_subs(subscriptions_cache);
-    if(grouped && grouped.length) {
-      return grouped[0].group.name;
-    }
-    return null;
-  }
-
-  function get_subids_for_group (group) {
-    var grouped = parse_subs(subscriptions_cache);
-    var result = _.find(grouped, function (g) { return g.group.name === group; });
-    return result;
   }
 
   function fetch_group_feeds (group, page, sort, cb) {
@@ -431,27 +411,30 @@
     var ids = _.pluck(grouped.subs, 'id').sort(function (a, b) {
       return a - b;             // asc sorting
     });
-    var total = function (resp) {
-      var g = grouped.group;
-      var total = g.like + g.neutral; // recommand
-      if(sort === NEWEST_TAB || sort === OLDEST_TAB) {
-        total =  _.reduce(grouped.subs, function (m, sub) {
-          return m + sub.total;
-        }, 0);
-      } else if(sort === READ_TAB || sort === VOTED_TAB) {
-        total = resp.length === PER_PAGE_FEEDS;
-      }
-      return total;
-    };
-
     fetch_feeds({
       title: sort + " - " + group + ' [folder]',
       cb: cb,
       id: ids.join('-'),
       section: 'f_' + group,
-      total: total,
+      sub_group: grouped.group,
       page: page,
       sort: sort
+    });
+  }
+
+  function fetch_sub_feeds (subid, page, sort, cb) {
+    var sub =_.find(subscriptions_cache, function (s) {
+      return s.id === subid;
+    }) || {};
+    fetch_feeds({
+      title: sort + ' - ' + sub.title,
+      cb: cb,
+      id: subid,
+      section: subid,
+      sub_group: sub,
+      page: page,
+      sort: sort,
+      url: sub.url
     });
   }
 
@@ -536,20 +519,19 @@
       var url = '/api/search?q=' + q + "&limit=" + limit;
       last_search_ajax = ajax.sget(url, function (resp) {
         last_search_ajax = undefined;
-        feeds_cache['search_result'] = resp; // cache unchanged
         var feeds = _.map(resp, function (feed) {
           // no dedicated url and page, since I can just click the search box,
           // and get the result again
           return transform_item(feed, 1, NEWEST_TAB);
         });
         feeds = remove_duplicate_feed(feeds);
+        feeds_cache.search = feeds;
         cb({subs: subs, feeds: feeds, sub_cnt: subs.length});
       });
     } else {
       cb({subs: subs, sub_cnt: subs.length});
     }
   }
-
 
   function update_subscrptions (subscriptions, data) {
     var index = 1;
@@ -563,6 +545,15 @@
         }
       });
     });
+  }
+
+  function get_subscription (subid) {
+    subid = parseInt(subid);
+    var sub = _.find(subscriptions_cache, function (sub) {
+      return subid === sub.id;
+    });
+    sub.group = sub.group || 'null';
+    return transorm_sub(sub);
   }
 
   function list_folder_names (subid) {
@@ -580,22 +571,32 @@
     return result;
   }
 
+  function fetch_feed (id, cb) {
+    id = parseInt(id);
+    var feed = _.find(feeds_cache.feeds, function (f) { return f.id === id; });
+    if(!feed) {
+      feed = _.find(feeds_cache.search, function (f) { return f.id === id; });
+    }
+    // TODO, if miss, fetch from server
+    cb(feed);
+  }
+
   window.RM = $.extend(window.RM, {
     data: {
       add_subscription: add_subscription,
-      get_feed: get_feed,
-      get_subscription: get_subscription,
+      fetch_group_feeds: fetch_group_feeds,
       fetch_search_result: fetch_search_result,
       fetch_sub_feeds: fetch_sub_feeds,
-      fetch_group_feeds: fetch_group_feeds,
+      fetch_welcome: fetch_welcome,
+      fetch_feed: fetch_feed,
+      get_subscription: get_subscription,
       get_subscriptions: function () { return subscriptions_cache || []; },
       get_user_subs: get_user_subs,
-      fetch_welcome: fetch_welcome,
-      mark_as_read: mark_as_read,
-      save_vote: save_vote,
       list_folder_names: list_folder_names,
-      unsubscribe: unsubscribe,
-      save_settings: save_settings
+      mark_as_read: mark_as_read,
+      save_settings: save_settings,
+      save_vote: save_vote,
+      unsubscribe: unsubscribe
     }
   });
 

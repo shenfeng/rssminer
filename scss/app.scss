@@ -147,7 +147,7 @@ body {
     background: #F6F6F6 url('/imgs/bg-content.png') repeat center top; /* from MDN */
 }
 
-#content { margin-left: $nav_width; }
+#content { margin-left: $nav_width + 3px; }
 
 #navigation {
     float: left;
@@ -175,12 +175,13 @@ body {
     /* overflow: auto; */
     overflow-y: auto;
     overflow-x: hidden;
-    .indicator { top: 6px; }
+    .indicator { top: 11px; }
     li {
         border-top: 1px solid white;
+        line-height: 1.62;
         /* border-bottom: 1px solid #aeb7bf; */
         border-bottom: 1px dotted $feed_border_color;
-        padding: 9px 4px;
+        padding: 9px 12px 9px 5px;
     }
     .selected { background: $selected_color; }
 }
@@ -229,7 +230,7 @@ ul { list-style: none; padding: 0; margin: 0; }
         i, img { top: 6px; }
         padding-left: 2em;
         position: relative;
-        a { display: block; padding: 5px 0 3px 0; }
+        a { display: block; padding: 5px 0 4px 0; }
         img { left: 2em; }
     }
     .folder {
@@ -391,7 +392,7 @@ ul { list-style: none; padding: 0; margin: 0; }
     .feed {
         a { height: 20px; }
         margin-left: 20px;
-        padding: 7px 3px 6px 3px;
+        padding: 7px 3px;
         border-bottom: 1px dotted $feed_border_color;
 
     /* &:nth-child(even) { background: $nth_child_color; } */
@@ -436,7 +437,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 }
 
 .pager {                        /* in welcome-list , left feeds nav*/
-    padding: 13px 0 0 25px;
+    padding: 10px 0 0 25px;
     /* border-top: 1px solid #EFEFEF; */
     li {
         &.current { background: #ccc; font-weight: bold; }
