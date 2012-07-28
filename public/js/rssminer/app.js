@@ -144,6 +144,7 @@
     section = section || 'recommend';
     page = page || 1;
     _update_state(section, page, section, GROUP_WELCOME);
+    $subs_list.find('.selected').removeClass('selected');
     if(data_api.get_subscriptions().length) { // user has subscriptions
       data_api.fetch_welcome(section, page, section, function (data) {
         if(!data.feeds.length && d) {

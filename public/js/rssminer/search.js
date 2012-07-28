@@ -2,6 +2,7 @@
   var RM = window.RM,
       data = RM.data,
       tmpls = RM.tmpls,
+      to_html = Mustache.render,
       util = RM.util,
       $q = $('#header input'),
       $header = $('#header .wrapper');
@@ -81,7 +82,7 @@
   function show_search_result (data) {
     util.add_even(data.feeds);
     util.add_even(data.subs);
-    var html = tmpls.search_result(data);
+    var html = to_html(tmpls.search_result, data);
     hide_search_context_menu();
     $header.append(html).find('img').each(util.favicon_ok);
     $lis = $('#search-result .subs > li, #search-result .feeds > li');
