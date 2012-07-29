@@ -370,7 +370,7 @@
         total = resp.length === PER_PAGE_FEEDS;
       }
       var feeds = _.map(resp, function (feed) {
-        return transform_item(feed, data.page, sort);
+        return transform_item(feed, data.page, sort, data.section);
       });
 
       var sort_tabs = [];
@@ -560,7 +560,7 @@
     ajax.get('/api/feeds/' + id, function (feed) {
       var t = transform_item(feed);
       t.summary = feed.summary;
-      cb(feed);
+      cb(t);
     });
   }
 

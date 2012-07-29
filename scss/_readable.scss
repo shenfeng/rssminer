@@ -8,7 +8,7 @@
     background: #F6F6F6;
     /* feed info */
     .like .icon-thumbs-up { visibility: visible; }
-    .dislike .icon-thumbs-up { visibility: visible; }
+    .dislike .icon-thumbs-down { visibility: visible; }
     .neutral, .sys { .thumbs i { visibility: visible; } }
     .tags {
         float: right;
