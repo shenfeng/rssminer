@@ -11,13 +11,14 @@
       call_if_fn = util.call_if_fn;
 
   var SHOW_NAV = 'show-nav',
-      SHOW_IFRAME = 'show-iframe';
+      SHOW_CONTENT = 'show-content';
 
   var $footer = $('#footer'),
       $reading_area = $('#reading-area'),
       $navigation = $('#navigation'), // feed list
       $subs_list = $('#sub-list'),    // sub list
-      iframe = $('iframe')[0],
+      // iframe = $('iframe')[0],
+      $feed_content = $('#feed-content'),
       $logo = $('#logo'),
       $welcome_list = $('#welcome-list');
 
@@ -48,7 +49,7 @@
 
   function read_subscription (id, page, sort, callback) {
     _update_state(id, page, sort, GROUP_SUB);
-    $reading_area.removeClass(SHOW_IFRAME);
+    $reading_area.removeClass(SHOW_CONTENT);
     layout.select('#sub-list', $("#item-" + id));
     data_api.fetch_sub_feeds(id, page, sort, function (data) {
       show_feeds(data);
@@ -84,20 +85,17 @@
       gcur_subid = subid;
       gcur_sort = sort;
       gcur_page = page;
-      $reading_area.addClass(SHOW_IFRAME);
+      $reading_area.addClass(SHOW_CONTENT);
       var $me = $('#feed-' + feedid);
       $logo.removeClass(SHOW_NAV);
       layout.select('#feed-list', $me);
       data_api.fetch_feed(feedid, function (feed) {
         var link = feed.link;
-        feed.domain = util.hostname(link);
         set_document_title(feed.title);
-        $footer.empty().append(to_html(tmpls.footer_info, feed));
-        iframe.src = util.get_final_link(link, feedid);
+        var content = to_html(tmpls.feed_content, feed);
+        $feed_content.empty().append(content).scrollTop(0);
+        $feed_content.find('p>br').remove();
         mark_feed_as_read($me, feedid, subid);
-        iframe.onload = function () {
-          $footer.find('> img').css({visibility: 'hidden'});
-        };
       });
     };
     if(gcur_subid === subid) {
@@ -129,13 +127,13 @@
     util.add_even(data.feeds);
     gcur_has_more = data.pager.has_more;
     show_server_message();
-    iframe.src = 'about:blank';
+    // iframe.src = 'about:blank';
     var html = to_html(tmpls.feeds_nav, data, tmpls);
     $navigation.empty().append(html);
     html = to_html(tmpls.sub_feeds, data);
     $welcome_list.empty().append(html).trigger('child_change.rm');
     set_document_title(data.title);
-    $reading_area.removeClass(SHOW_IFRAME);
+    $reading_area.removeClass(SHOW_CONTENT);
     $logo.addClass(SHOW_NAV);
   }
 
@@ -162,7 +160,7 @@
   }
 
   function show_settings (section) {
-    $reading_area.removeClass(SHOW_IFRAME);
+    $reading_area.removeClass(SHOW_CONTENT);
     var sections = ['add', 'account', 'about'];
     var d = {
       selected: section,
@@ -269,10 +267,14 @@
     'click .add-sub a.import': import_from_greader,
     'click #add-subscription': add_subscription,
     'click #save-settings': save_settings,
-    'mouseenter #logo': function () { $logo.addClass(SHOW_NAV); },
+    'mouseenter #logo': function () {
+      $logo.addClass(SHOW_NAV);
+      // $reading_area.removeClass(SHOW_CONTENT);
+    },
     'mouseleave #logo': function () {
       if(/#read\/.+\/\d+/.test(location.hash)) { // if reading feed
         $logo.removeClass(SHOW_NAV);
+        // $reading_area.addClass(SHOW_CONTENT);
       }
     }
   });

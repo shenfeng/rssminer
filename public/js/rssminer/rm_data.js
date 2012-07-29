@@ -19,7 +19,7 @@
       h = screen.height,
       // works for 900, 800, 1080 screen (height)
       // per item 34.85 pixel, first feed to top 138px, 140 px for brower use
-      PER_PAGE_FEEDS = Math.floor((h - 138 - 140) / 35.15),
+      PER_PAGE_FEEDS = Math.floor((h - 138 - 140) / 37),
       // PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 32.9),
       // show search result count according to screen height
       SEARCH_RESUTL_COUNT = Math.min(Math.floor((h - 260) / 43), 17),
@@ -577,8 +577,13 @@
     if(!feed) {
       feed = _.find(feeds_cache.search, function (f) { return f.id === id; });
     }
+    ajax.get('/api/feeds/' + id, function (resp) {
+      feed.summary = resp;
+      cb(feed);
+      // console.log(resp);
+    });
     // TODO, if miss, fetch from server
-    cb(feed);
+    // cb(feed);
   }
 
   window.RM = $.extend(window.RM, {

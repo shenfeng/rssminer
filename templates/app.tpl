@@ -63,11 +63,7 @@
           <div id="welcome-list">
             <p id="loading-msg">Loading....</p>
           </div>
-          <div class="iframe">
-            <iframe src="about:blank"
-                    sandbox="allow-scripts allow-same-origin"></iframe>
-            <div id="footer"></div><!-- footer info -->
-          </div>
+          <div id="feed-content"></div>
         </div>
       </div>
     </div>

@@ -1,0 +1,88 @@
+#feed-content {
+    padding: 10px 0 100px 40px;
+    overflow-y: auto;
+    height: 100%;
+    font-size: 16px;
+    line-height: 2.1;
+    color: #323c46;
+    background: #F6F6F6;
+    /* feed info */
+    .like .icon-thumbs-up { visibility: visible; }
+    .dislike .icon-thumbs-up { visibility: visible; }
+    .neutral, .sys { .thumbs i { visibility: visible; } }
+    .tags {
+        float: right;
+        font-size: 13px;
+        li { color: #555; padding: 1px 4px ;}
+    }
+    /* .date { float: right; } */
+    .feed {
+        padding-bottom: 20px;
+        span {
+            font-size: 12px;
+        }
+    }
+    h2 { margin: 10px 0;}
+    .thumbs {
+        position: fixed;
+        font-size: 34px;
+        top: 80%;
+        left: 50%;
+        margin-left: 530px;
+        line-height: 1;
+        width: 40px;
+        i {
+            padding: 5px 0;
+            color: blue;
+            &:hover { color: red; }
+        }
+    }
+    * { max-width: 700px; }
+    .summary {
+        padding-bottom: 150px;
+        /* height: 100%; */
+        p {
+            text-indent: 2em;
+            margin: 20px 0;
+        }
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            li { margin: 5px 0; }
+        }
+        blockquote {
+            padding: 5px;
+            background: #f1f0ea;
+        }
+        ol {
+            list-style-type: decimal;
+            padding-left: 20px;
+            li { margin: 5px 0; }
+        }
+        img {
+            margin: 5px auto;
+            display: block;
+        }
+
+        code, pre {
+            font-size: 13px;
+            font-family: monospace;
+        }
+
+        embed, object {
+            display: block;
+            margin: 5px auto;
+        }
+
+        table {
+            border-collapse: collapse;
+            td {
+                padding: 0 5px;
+                border-bottom: 1px solid #ccc;
+            }
+            td + td {
+                border-left: 1px solid #ccc;
+            }
+        }
+    }
+}
