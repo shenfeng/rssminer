@@ -35,8 +35,7 @@
 
 (defn update-rss-link [id data]
   (if-let [url (:url data)]
-    (if-let [sid (-> (mysql-query ["SELECT id FROM rss_links WHERE url = ?"
-                                   (:url data)]) first :id)]
+    (if-let [sid (-> (fetch-rss-link-by-url (:url data)) :id)]
       (let [old (mysql-query ["SELECT id FROM user_subscription WHERE
                                rss_link_id = ?" id])]
         (doseq [id old]
@@ -55,10 +54,6 @@
   (-> (mysql-query ["SELECT COUNT(*) as count
                 FROM feeds WHERE rss_link_id = ?" rss-id])
       first :count))
-
-(defn fetch-user-sub [id]
-  (first (mysql-query ["SELECT id, url, title, alternate
-              FROM rss_links WHERE id = ?" id])))
 
 (defn fetch-subscription [user-id rss-link-id]
   (first (mysql-query ["SELECT id, rss_link_id, title, group_name FROM
@@ -82,6 +77,10 @@
                                 " WHERE user_id = " user-id
                                 " AND rss_link_id = " (:id d)))
                 data (range 400 200000 4)))))
+
+(defn fetch-user-sub [userid id]
+  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+    (.fetchUserSub db userid id)))
 
 (defn fetch-user-subs [userid]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]

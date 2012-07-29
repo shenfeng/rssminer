@@ -74,4 +74,5 @@
   (let [[_ subscription] (prepare)
         resp (auth-app {:uri (str "/api/subs/p/" (:rss_link_id subscription))
                         :request-method :get})]
+    (is (= (:rss_link_id subscription) (-> resp :body read-json :id)))
     (is (= 200 (:status resp)))))

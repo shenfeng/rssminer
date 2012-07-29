@@ -32,7 +32,7 @@ public class MinerDAO {
     private DataSource ds;
 
     // sub newest, oldest
-    static final String SELECT_FIELD = "SELECT f.id,f.rss_link_id,f.title,f.author,f.link,tags,"
+    static final String FEED_FIELD = "SELECT f.id,f.rss_link_id,f.title,f.author,f.link,tags,"
             + "f.published_ts,uf.read_date,uf.vote_user, uf.vote_date FROM feeds "
             + "f LEFT JOIN user_feed uf ON uf.feed_id = f.id and uf.user_id =";
 
@@ -93,7 +93,7 @@ public class MinerDAO {
     private List<Feed> fetchFeeds(int userID, List<Integer> feedids)
             throws SQLException {
         StringBuilder sb = createBuilder(feedids);
-        sb.append(SELECT_FIELD).append(userID);
+        sb.append(FEED_FIELD).append(userID);
         sb.append(" where id in");
         appendIn(sb, feedids);
         return fetchFeeds(sb.toString());
@@ -200,7 +200,7 @@ public class MinerDAO {
     public List<Feed> fetchFolderNewest(int userID, List<Integer> rssIDs,
             int limit, int offset) throws SQLException {
         StringBuilder sb = createBuilder(rssIDs);
-        sb.append(SELECT_FIELD).append(userID);
+        sb.append(FEED_FIELD).append(userID);
         sb.append(" WHERE f.rss_link_id in ");
         appendIn(sb, rssIDs);
         sb.append(" order by published_ts desc ");
@@ -212,7 +212,7 @@ public class MinerDAO {
     public List<Feed> fetchFolderOldest(int userID, List<Integer> rssIDs,
             int limit, int offset) throws SQLException {
         StringBuilder sb = createBuilder(rssIDs);
-        sb.append(SELECT_FIELD).append(userID);
+        sb.append(FEED_FIELD).append(userID);
         sb.append(" WHERE f.rss_link_id in ");
         appendIn(sb, rssIDs);
         sb.append(" order by published_ts ");
@@ -223,7 +223,7 @@ public class MinerDAO {
     public List<Feed> fetchFolderRead(int userID, List<Integer> rssIDs,
             int limit, int offset) throws SQLException {
         StringBuilder sb = createBuilder(rssIDs);
-        sb.append(SELECT_FIELD).append(userID);
+        sb.append(FEED_FIELD).append(userID);
         sb.append(" where uf.read_date > 0 and uf.rss_link_id in ");
         appendIn(sb, rssIDs);
         sb.append(" order by uf.read_date desc ");
@@ -234,7 +234,7 @@ public class MinerDAO {
     public List<Feed> fetchFolderVote(int userID, List<Integer> rssIDs,
             int limit, int offset) throws SQLException {
         StringBuilder sb = createBuilder(rssIDs);
-        sb.append(SELECT_FIELD).append(userID);
+        sb.append(FEED_FIELD).append(userID);
         sb.append(" where uf.vote_date > 0 and uf.vote_user != 0 and uf.rss_link_id in ");
         appendIn(sb, rssIDs);
         sb.append(" order by uf.vote_date desc ");
@@ -270,7 +270,7 @@ public class MinerDAO {
     public List<Feed> fetchGNewest(int userID, int limit, int offset)
             throws SQLException {
         StringBuilder sb = createBuilder(null);
-        sb.append(SELECT_FIELD).append(userID);
+        sb.append(FEED_FIELD).append(userID);
         sb.append(" JOIN user_subscription us ON f.rss_link_id = us.rss_link_id");
         sb.append(" where us.user_id = ");
         sb.append(userID);
@@ -282,7 +282,7 @@ public class MinerDAO {
     public List<Feed> fetchGRead(int userID, int limit, int offset)
             throws SQLException {
         StringBuilder sb = createBuilder(null);
-        sb.append(SELECT_FIELD).append(userID);
+        sb.append(FEED_FIELD).append(userID);
         sb.append(" where uf.read_date > 0 order by uf.read_date desc ");
         appendLimitOffset(sb, limit, offset);
         return fetchFeeds(sb.toString());
@@ -291,7 +291,7 @@ public class MinerDAO {
     public List<Feed> fetchGVote(int userID, int limit, int offset)
             throws SQLException {
         StringBuilder sb = new StringBuilder(240);
-        sb.append(SELECT_FIELD).append(userID);
+        sb.append(FEED_FIELD).append(userID);
         sb.append(" where uf.vote_date > 0 and uf.vote_user != 0 order by uf.vote_date desc ");
         appendLimitOffset(sb, limit, offset);
         return fetchFeeds(sb.toString());
@@ -313,7 +313,7 @@ public class MinerDAO {
     public List<Feed> fetchSubNewest(int userID, int subID, int limit,
             int offset) throws SQLException {
         StringBuilder sb = createBuilder(null);
-        sb.append(SELECT_FIELD).append(userID);
+        sb.append(FEED_FIELD).append(userID);
         sb.append(" WHERE f.rss_link_id = ").append(subID);
         sb.append(" order by published_ts desc ");
         appendLimitOffset(sb, limit, offset);
@@ -323,7 +323,7 @@ public class MinerDAO {
     public List<Feed> fetchSubOldest(int userID, int subID, int limit,
             int offset) throws SQLException {
         StringBuilder sb = createBuilder(null);
-        sb.append(SELECT_FIELD).append(userID);
+        sb.append(FEED_FIELD).append(userID);
         sb.append(" WHERE f.rss_link_id = ").append(subID);
         sb.append(" order by published_ts ");
         appendLimitOffset(sb, limit, offset);
@@ -333,7 +333,7 @@ public class MinerDAO {
     public List<Feed> fetchSubRead(int userID, int subID, int limit,
             int offset) throws SQLException {
         StringBuilder sb = createBuilder(null);
-        sb.append(SELECT_FIELD).append(userID);
+        sb.append(FEED_FIELD).append(userID);
         sb.append(" where uf.read_date > 0 and uf.rss_link_id = ");
         sb.append(subID);
         sb.append(" order by uf.read_date desc ");
@@ -341,26 +341,12 @@ public class MinerDAO {
         return fetchFeeds(sb.toString());
     }
 
-    public List<Feed> fetchSubVote(int userID, int subID, int limit,
-            int offset) throws SQLException {
-        StringBuilder sb = createBuilder(null);
-        sb.append(SELECT_FIELD).append(userID);
-        sb.append(" where uf.vote_date > 0 and uf.vote_user != 0 and uf.rss_link_id = ");
-        sb.append(subID);
-        sb.append(" order by uf.vote_date desc ");
-        appendLimitOffset(sb, limit, offset);
-        return fetchFeeds(sb.toString());
-    }
-
-    public List<Subscription> fetchUserSubs(int userID) throws SQLException {
+    private List<Subscription> fetchSubs(String select, int userID)
+            throws SQLException {
         Connection con = ds.getConnection();
         try {
             Statement stat = con.createStatement();
-            ResultSet rs = stat
-                    .executeQuery("SELECT rss_link_id AS id, l.title, group_name, sort_index,"
-                            + "l.alternate as url, l.total_feeds FROM user_subscription u join rss_links l "
-                            + "ON l.id = u.rss_link_id WHERE u.user_id = "
-                            + userID);
+            ResultSet rs = stat.executeQuery(select);
             List<Subscription> subs = new ArrayList<Subscription>();
             while (rs.next()) {
                 Subscription s = new Subscription();
@@ -409,5 +395,39 @@ public class MinerDAO {
         } finally {
             Utils.closeQuietly(con);
         }
+    }
+
+    public List<Feed> fetchSubVote(int userID, int subID, int limit,
+            int offset) throws SQLException {
+        StringBuilder sb = createBuilder(null);
+        sb.append(FEED_FIELD).append(userID);
+        sb.append(" where uf.vote_date > 0 and uf.vote_user != 0 and uf.rss_link_id = ");
+        sb.append(subID);
+        sb.append(" order by uf.vote_date desc ");
+        appendLimitOffset(sb, limit, offset);
+        return fetchFeeds(sb.toString());
+    }
+
+    static final String SUB_FIELDS = "SELECT rss_link_id AS id, l.title, group_name, sort_index,"
+            + "l.alternate as url, l.total_feeds FROM user_subscription u join rss_links l "
+            + "ON l.id = u.rss_link_id WHERE";
+
+    public Subscription fetchUserSub(int userid, int rssid)
+            throws SQLException {
+        StringBuilder sb = new StringBuilder(SUB_FIELDS.length() + 20);
+        sb.append(SUB_FIELDS);
+        sb.append(" u.rss_link_id = ").append(rssid);
+        List<Subscription> subs = fetchSubs(sb.toString(), userid);
+        if (subs.isEmpty()) {
+            return null;
+        }
+        return subs.get(0);
+    }
+
+    public List<Subscription> fetchUserSubs(int userID) throws SQLException {
+        StringBuilder sb = new StringBuilder(SUB_FIELDS.length() + 20);
+        sb.append(SUB_FIELDS);
+        sb.append(" u.user_id = ").append(userID);
+        return fetchSubs(sb.toString(), userID);
     }
 }

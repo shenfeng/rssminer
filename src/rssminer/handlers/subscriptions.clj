@@ -25,7 +25,7 @@
 
 (defn polling-fetcher [req]             ;; wait for fetcher return
   (let [rss-id (-> req :params :rss-id to-int)]
-    (db/fetch-user-sub rss-id)))
+    (db/fetch-user-sub (user-id-from-session req) rss-id)))
 
 (defn list-subscriptions [req]
   (db/fetch-user-subs (user-id-from-session req))  )

@@ -454,7 +454,7 @@
           }
           call_if_fn(cb, sub);  // fetcher successfully
         } else {                // fetch again
-          interval += 300;
+          interval += 400;
           times -= 1;
           window.setTimeout(function () {
             polling_rss_link(rss_link_id, interval, times, cb);

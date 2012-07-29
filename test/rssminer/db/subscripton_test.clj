@@ -15,11 +15,14 @@
 
 (deftest test-update-rss-link-simple
   (let [r1 (mysql-insert-and-return :rss_links rss1)
-        newly (assoc rss2 :title "aaa")]
+        newly (assoc rss2 :title "aaa")
+        newly2 {:title "aaa"}]
     (update-rss-link (:id r1) newly)
     (is (= newly (first (mysql-query ["SELECT url, title FROM rss_links
+                                       WHERE id =?" (:id r1)]))))
+    (update-rss-link (:id r1) newly2)
+    (is (= newly2 (first (mysql-query ["SELECT title FROM rss_links
                                        WHERE id =?" (:id r1)]))))))
-
 ;;; simple update rss_link
 (deftest test-update-rss-link
   (let [r1 (mysql-insert-and-return :rss_links rss1)
@@ -33,6 +36,18 @@
     (is (= (:id r2)
            (-> (mysql-query ["SELECT * FROM user_subscription WHERE id = ?"
                              (:id us)]) first :rss_link_id)))))
+
+(deftest test-update-rss-link2
+  (let [r1 (mysql-insert-and-return :rss_links rss1)
+        us (mysql-insert-and-return :user_subscription
+                                    {:user_id (:id user1)
+                                     :rss_link_id (:id r1)})]
+    (update-rss-link (:id r1) rss2)
+    (is (nil? (mysql-query ["SELECT * FROM rss_links WHERE url = ?"
+                            (:url rss1)])))
+    (is (= (:url rss2) (-> (mysql-query ["SELECT * FROM rss_links
+                                           WHERE id = ?" (:id r1)])
+                           first :url)))))
 
 (deftest test-update-rss-link-complex
   (let [r1 (mysql-insert-and-return :rss_links rss1)
