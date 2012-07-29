@@ -1,8 +1,9 @@
 (ns rssminer.views.feeds-test
   (:use clojure.test
         rssminer.db.feed
+        [clojure.data.json :only [read-json]]
         [rssminer.database :only [mysql-query with-mysql
-                                 mysql-insert-and-return]]
+                                  mysql-insert-and-return]]
         (rssminer [test-common :only [user1 app-fixture auth-app json-body
                                       mk-feeds-fixtrue]])))
 
@@ -42,5 +43,12 @@
     (is (= (:vote_user (get-user-feed fid)) 1))
     ;; vote date should be updated
     (is (> (:vote_date (get-user-feed fid)) 1))))
+
+(deftest test-fetch-feed
+  (let [fid (first-feedid)
+        resp (auth-app {:uri (str "/api/feeds/" fid "")
+                        :request-method :get})]
+    (is (= (:status resp) 200))
+    (is (-> resp :body read-json :summary))))
 
 ;;; list subs are in subscriptions_test

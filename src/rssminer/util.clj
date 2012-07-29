@@ -42,6 +42,8 @@
   (.print out ",\"tags\":") (write-json (.getTags f) out escape-unicode?)
   (.print out ",\"pts\":") (.print out (.getPublishedts f))
   (.print out ",\"readts\":") (.print out (.getReadts f))
+  (when-let [s (.getSummary f)]
+    (.print out ",\"summary\":") (write-json s out escape-unicode?))
   (.print out ",\"votets\":") (.print out (.getVotets f))
   (.print out \}))
 

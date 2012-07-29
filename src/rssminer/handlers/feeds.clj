@@ -22,8 +22,11 @@
 
 (defn get-feed [req]
   (let [fid (-> req :params :id to-int)
-        user-id (user-id-from-session req)]
-    (db/fetch-feed user-id fid)))
+        user-id (user-id-from-session req)
+        feed (db/fetch-feed user-id fid)]
+    (if feed
+      {:body feed :headers cache-control }
+      feed)))
 
 (defn get-by-subscription [req]
   (let [{:keys [rid limit sort offset]} (:params req)
@@ -46,7 +49,6 @@
                    "read" (db/fetch-folder-read uid ids limit offset)
                    "voted" (db/fetch-folder-vote uid ids limit offset))))]
     (if (and (seq data) (not= "read" sort) (not= "voted" sort))
-      {:body data
-       :headers cache-control }
+      {:body data :headers cache-control }
       data))) ;; cache one hour
 

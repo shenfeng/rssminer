@@ -43,15 +43,6 @@
     return  _RM_.static_server + '/fav?h=' + h;
   }
 
-  function cache_feeds (cur_id, feeds) {
-    if( feeds_cache.cur_id !== cur_id ) {
-      feeds_cache.feeds = feeds; // re init
-      feeds_cache.cur_id = cur_id;
-    } else {
-      feeds_cache.feeds = feeds.concat(feeds_cache.feeds || []);
-    }
-  }
-
   function split_tags (tags) {
     if(tags) { return tags.split("; ").slice(0, 3); } // at most 3
     else { return []; }
@@ -267,8 +258,6 @@
         return transform_item(feed, page, 'score', section);
       });
 
-      cache_feeds('w_' + section, feeds);
-
       // feeds = _.filter(feeds, function (f) { return f.title; });
       cb({
         title: section + ' - Rssminer, an intelligent RSS reader',
@@ -383,9 +372,6 @@
       var feeds = _.map(resp, function (feed) {
         return transform_item(feed, data.page, sort);
       });
-
-      // used by fetch_feed;
-      cache_feeds(data.section, feeds);
 
       var sort_tabs = [];
       _.each(SUB_TABS, function (s) {
@@ -525,7 +511,6 @@
           return transform_item(feed, 1, NEWEST_TAB);
         });
         feeds = remove_duplicate_feed(feeds);
-        feeds_cache.search = feeds;
         cb({subs: subs, feeds: feeds, sub_cnt: subs.length});
       });
     } else {
@@ -572,18 +557,11 @@
   }
 
   function fetch_feed (id, cb) {
-    id = parseInt(id);
-    var feed = _.find(feeds_cache.feeds, function (f) { return f.id === id; });
-    if(!feed) {
-      feed = _.find(feeds_cache.search, function (f) { return f.id === id; });
-    }
-    ajax.get('/api/feeds/' + id, function (resp) {
-      feed.summary = resp;
+    ajax.get('/api/feeds/' + id, function (feed) {
+      var t = transform_item(feed);
+      t.summary = feed.summary;
       cb(feed);
-      // console.log(resp);
     });
-    // TODO, if miss, fetch from server
-    // cb(feed);
   }
 
   window.RM = $.extend(window.RM, {

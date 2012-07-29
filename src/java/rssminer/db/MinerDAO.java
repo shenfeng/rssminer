@@ -4,6 +4,7 @@ import static rssminer.Utils.K_DATA_SOURCE;
 import static rssminer.Utils.K_REDIS_SERVER;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -23,6 +24,7 @@ import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.Tuple;
 import rssminer.Utils;
+import rssminer.jsoup.HtmlUtils;
 import clojure.lang.Keyword;
 
 public class MinerDAO {
@@ -35,6 +37,11 @@ public class MinerDAO {
     static final String FEED_FIELD = "SELECT f.id,f.rss_link_id,f.title,f.author,f.link,tags,"
             + "f.published_ts,uf.read_date,uf.vote_user, uf.vote_date FROM feeds "
             + "f LEFT JOIN user_feed uf ON uf.feed_id = f.id and uf.user_id =";
+
+    static final String FETCH_FEED = "SELECT f.id,f.rss_link_id,f.title,f.author,f.link,tags,"
+            + "f.published_ts,uf.read_date,uf.vote_user,uf.vote_date,d.summary FROM feeds "
+            + "f LEFT JOIN user_feed uf ON uf.feed_id = f.id and uf.user_id = ? "
+            + "join feed_data d on d.id = f.id and f.id = ?";
 
     public MinerDAO(Map<Keyword, Object> config) {
         this.jedis = (JedisPool) config.get(K_REDIS_SERVER);
@@ -99,6 +106,27 @@ public class MinerDAO {
         return fetchFeeds(sb.toString());
     }
 
+    private Feed createFeed(ResultSet rs, boolean withSummary)
+            throws SQLException {
+        Feed f = new Feed();
+        f.setId(rs.getInt(1));
+        f.setRssid(rs.getInt(2));
+        f.setTitle(rs.getString(3));
+        f.setAuthor(rs.getString(4));
+        f.setLink(rs.getString(5));
+        f.setTags(rs.getString(6));
+        f.setPublishedts(rs.getInt(7));
+        f.setReadts(rs.getInt(8));
+        f.setVote(rs.getInt(9));
+        f.setVotets(rs.getInt(10));
+        if (withSummary) {
+            String summary = rs.getString(11);
+            summary = HtmlUtils.compact(summary, f.getLink());
+            f.setSummary(summary);
+        }
+        return f;
+    }
+
     private List<Feed> fetchFeeds(String sql) throws SQLException {
         Connection con = ds.getConnection();
         try {
@@ -106,18 +134,7 @@ public class MinerDAO {
             List<Feed> feeds = new ArrayList<Feed>(30);
             ResultSet rs = stat.executeQuery(sql);
             while (rs.next()) {
-                Feed f = new Feed();
-                f.setId(rs.getInt(1));
-                f.setRssid(rs.getInt(2));
-                f.setTitle(rs.getString(3));
-                f.setAuthor(rs.getString(4));
-                f.setLink(rs.getString(5));
-                f.setTags(rs.getString(6));
-                f.setPublishedts(rs.getInt(7));
-                f.setReadts(rs.getInt(8));
-                f.setVote(rs.getInt(9));
-                f.setVotets(rs.getInt(10));
-                feeds.add(f);
+                feeds.add(createFeed(rs, false));
             }
             Utils.closeQuietly(rs);
             Utils.closeQuietly(stat);
@@ -395,6 +412,36 @@ public class MinerDAO {
         } finally {
             Utils.closeQuietly(con);
         }
+    }
+
+    public Feed fetchFeed(int userID, int feedID) throws SQLException {
+        Connection con = ds.getConnection();
+        Jedis redis = jedis.getResource();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = con.prepareStatement(FETCH_FEED);
+            ps.setInt(1, userID);
+            ps.setInt(2, feedID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                Feed f = createFeed(rs, true);
+                byte[] set = Utils.genKey(userID, f.getRssid());
+                byte[] member = Integer.toString(feedID).getBytes(
+                        HttpUtils.UTF_8);
+                Double score = redis.zscore(set, member);
+                if (score != null) {
+                    f.setScore(score);
+                }
+                return f;
+            }
+        } finally {
+            jedis.returnResource(redis);
+            Utils.closeQuietly(rs);
+            Utils.closeQuietly(ps);
+            Utils.closeQuietly(con);
+        }
+        return null;
     }
 
     public List<Feed> fetchSubVote(int userID, int subID, int limit,

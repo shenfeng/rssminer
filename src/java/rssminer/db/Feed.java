@@ -12,6 +12,15 @@ public class Feed implements Comparable<Feed> {
     private int publishedts;
     private int readts;
     private int votets;
+    private String summary;
+
+    public int compareTo(Feed o) {
+        if (o.score > score)
+            return 1;
+        else if (score > o.score)
+            return -1;
+        return 0;
+    }
 
     public String getAuthor() {
         return author;
@@ -39,6 +48,10 @@ public class Feed implements Comparable<Feed> {
 
     public double getScore() {
         return score;
+    }
+
+    public String getSummary() {
+        return summary;
     }
 
     public String getTags() {
@@ -85,6 +98,10 @@ public class Feed implements Comparable<Feed> {
         this.score = score;
     }
 
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
     public void setTags(String tags) {
         this.tags = tags;
     }
@@ -99,14 +116,6 @@ public class Feed implements Comparable<Feed> {
 
     public void setVotets(int votets) {
         this.votets = votets;
-    }
-
-    public int compareTo(Feed o) {
-        if (o.score > score)
-            return 1;
-        else if (score > o.score)
-            return -1;
-        return 0;
     }
 
 }

@@ -43,15 +43,8 @@
   (:link (first (mysql-query ["SELECT link FROM feeds WHERE id = ?" id]))))
 
 (defn fetch-feed [userid id]
-  (rssminer.jsoup.HtmlUtils/compact
-   (-> (mysql-query ["select summary from feed_data where id = ?"
-                     id])
-       first :summary) "http://shenfeng.me"))
-
-(defn fetch-feed2 [userid id]
-  (-> (mysql-query ["select summary from feed_data where id = ?"
-                    id])
-      first :summary))
+  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+    (.fetchFeed db userid id)))
 
 (defn- get-rssid-by-feedid [id]
   (-> (mysql-query ["select rss_link_id from feeds where id = ?" id])
