@@ -8,8 +8,13 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import me.shenfeng.http.HttpUtils;
 import me.shenfeng.http.client.HttpClient;
@@ -18,11 +23,73 @@ import me.shenfeng.http.client.HttpClientConfig;
 import org.ccil.cowan.tagsoup.Parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
+import rssminer.db.SubItem;
 import rssminer.sax.RewriteHandler;
 import clojure.lang.Keyword;
+
+class GoogleExportHandler extends DefaultHandler {
+
+    protected List<SubItem> items = new ArrayList<SubItem>(8);
+
+    private int objectDepth = 0;
+
+    private boolean isTitle = false;
+    private boolean isLabel = false;
+    private SubItem current = new SubItem();
+    private boolean isUrl = true;
+    public void characters(char[] ch, int start, int length)
+            throws SAXException {
+        if (isTitle) {
+            current.setTitle(new String(ch, start, length).trim());
+        } else if (isLabel) {
+            current.setCategory(new String(ch, start, length).trim());
+        } else if (isUrl) {
+            String url = new String(ch, start, length).trim();
+            if (url.startsWith("feed/")) {
+                current.setUrl(url.substring(5));
+            } else if (current.getUrl() != null) {
+                current.setUrl(current.getUrl() + url);
+            }
+        }
+    }
+
+    public void endElement(String uri, String localName, String qName)
+            throws SAXException {
+        if (qName.equals("object") && --objectDepth == 1) {
+            items.add(current);
+            current = new SubItem();
+        }
+
+        isTitle = false;
+        isUrl = false;
+        isLabel = false;
+    }
+
+    public List<SubItem> getItems() {
+        return items;
+    }
+
+    public void startElement(String uri, String localName, String qName,
+            Attributes att) throws SAXException {
+        if (qName.equals("object")) {
+            ++objectDepth;
+        } else if ("string".equals(qName)) {
+            String name = att.getValue("name");
+            if ("title".equals(name)) {
+                isTitle = true;
+            } else if (objectDepth == 2 && "id".equals(name)) {
+                isUrl = true;
+            } else if ("label".equals(name)) {
+                isLabel = true;
+            }
+        }
+    }
+}
 
 public class Utils {
     final static Logger logger = LoggerFactory.getLogger(Utils.class);
@@ -111,6 +178,18 @@ public class Utils {
         return sb.toString().getBytes(HttpUtils.UTF_8);
     }
 
+    public static List<SubItem> parseGReaderSubs(String input)
+            throws ParserConfigurationException, SAXException, IOException {
+
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        SAXParser parser = factory.newSAXParser();
+
+        GoogleExportHandler handler = new GoogleExportHandler();
+        parser.parse(new InputSource(new StringReader(input)), handler);
+
+        return handler.getItems();
+    }
+
     public static boolean proxy(String uri) throws URISyntaxException {
         return proxy(new URI(uri));
     }
@@ -158,5 +237,4 @@ public class Utils {
         }
         return html;
     }
-
 }

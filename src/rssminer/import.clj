@@ -5,7 +5,7 @@
         [ring.util.response :only [redirect]]
         (rssminer [util :only [user-id-from-session ignore-error]]
                   [http :only [request]]))
-  (:import rssminer.importer.Parser))
+  (:import rssminer.Utils))
 
 (def oauth2 {"redirect_uri" "http://rssminer.net/oauth2callback"
              "client_secret" "gQ-exryYQvjEW9OV_lqeh-uQ"
@@ -39,7 +39,7 @@
                              :headers {"Authorization"
                                        (str "OAuth " access_token)}})]
           (if (= 200 (:status data))    ; do import
-            (let [items (Parser/parseGReaderSubs (:body data))]
+            (let [items (Utils/parseGReaderSubs (:body data))]
               (info uid "import greader" (count items))
               (subscribe-all uid items)))
           (finish-import data))

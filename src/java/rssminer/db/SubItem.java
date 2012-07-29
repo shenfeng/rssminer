@@ -1,6 +1,12 @@
-package rssminer.importer;
+package rssminer.db;
 
-public class Item {
+/**
+ * google export
+ *
+ * @author feng
+ *
+ */
+public class SubItem {
     private String title;
     private String url;
     private String category;

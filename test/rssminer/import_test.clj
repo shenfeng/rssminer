@@ -4,14 +4,14 @@
         [rssminer.test-common :only [auth-app app-fixture user1]]
         [rssminer.db.subscription :only [fetch-user-subs]])
   (:import java.io.File
-           rssminer.importer.Parser))
+           rssminer.Utils))
 
 (use-fixtures :each app-fixture)
 
 (deftest test-parset-google-output
-  (let [o (map bean (Parser/parseGReaderSubs
+  (let [o (map bean (Utils/parseGReaderSubs
                      (slurp "test/greader-subs-list.xml")))]
-    (subscribe-all (:id user1) (Parser/parseGReaderSubs
+    (subscribe-all (:id user1) (Utils/parseGReaderSubs
                                 (slurp "test/greader-subs-list.xml")))
     ;; fixture add 1
     (is (= 84 (count (fetch-user-subs (:id user1)))))
