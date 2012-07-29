@@ -65,7 +65,7 @@
       <p>
         You have trouble login with Google OpenID. For example, In China,
         Google sometimes get reseted. You can set a password to login.
-        The username is your email address.
+        The user name is your email address.
       </p>
       <p>You can always login with Google OpenID, even after you set the password</p>
       <section>
@@ -103,14 +103,13 @@
           The remaining 50%:
           <i class="icon-thumbs-up"></i>
           if one actually worth
-          reading, Rssminer will learn the lession</li>
+          reading, Rssminer will learn the lesson</li>
       </ul>
       <h3>How articles are sorted?</h3>
       <ul>
         <li>Every unread article is given a score</li>
         <li>The score is computed for you by learn from your recent
-          reading history and explit
-          vote: <i class="icon-thumbs-down"></i>
+          reading history and explicit vote: <i class="icon-thumbs-down"></i>
           <i class="icon-thumbs-up"></i>
         </li>
         <li>Newer articles trend to have a higher score than older
@@ -124,7 +123,7 @@
         Sharing <i class="icon-share"></i>
       </h3>
       <p>I am working on it...</p>
-      <h3>Bug report, Feature sugesstion</h3>
+      <h3>Bug report, Feature suggestion</h3>
       <i class="icon-envelope"></i>Email me: shenedu@gmail.com
       <h3>English Dictionary</h3>
       An <a target="_blank" href="http://dict.shenfeng.me">

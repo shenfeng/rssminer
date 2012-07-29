@@ -76,7 +76,7 @@
                   the list.
                 </p>
               </li>
-              <li>Reading the orignal
+              <li>Reading the original
                 <p>There may have valuable comment. </p>
                 <p>Some blog's RSS output are not complete:
                   <ul>
@@ -107,8 +107,8 @@
                 </p>
               </li>
               <li>
-                Instant fulltext search
-                <p>The faster, the better. Rssminer do it in realtime</p>
+                Instant full text search
+                <p>The faster, the better. Rssminer do it in real time</p>
               </li>
               <li>Concise UI</li>
             </ol>
