@@ -11,7 +11,7 @@
 
 (defn subscribe [url user-id title group-name]
   (when url
-    (let [sub (or (db/fetch-rss-link {:url url})
+    (let [sub (or (db/fetch-rss-link-by-url url)
                   (mysql-insert-and-return :rss_links {:url url
                                                        :user_id user-id}))]
       (fetcher-enqueue (select-keys sub enqueue-keys))

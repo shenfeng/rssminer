@@ -1,13 +1,13 @@
 (ns rssminer.db.subscription
-  (:use [rssminer.database :only [select-sql-params mysql-insert-and-return
+  (:use [rssminer.database :only [mysql-insert-and-return
                                   mysql-query with-mysql]]
         [rssminer.config :only [rssminer-conf]]
         [clojure.java.jdbc :only [delete-rows update-values do-commands]])
   (:import rssminer.db.MinerDAO))
 
-(defn fetch-rss-link [map]
-  (first
-   (mysql-query (select-sql-params :rss_links map))))
+(defn fetch-rss-link-by-url [url]
+  (first (mysql-query
+          ["SELECT * FROM rss_links where url = ?" url])))
 
 (defn fetch-feeds-count-by-id [rss-id]
   (-> (mysql-query ["SELECT COUNT(*) as count

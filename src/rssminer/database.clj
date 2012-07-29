@@ -38,20 +38,6 @@
   `(with-connection @mysql-db-factory
      ~@body))
 
-(defn select-sql-params
-  ([table pred-map] (select-sql-params table pred-map 1 0))
-  ([table pred-map limit offset]
-     (let [pred-seg (str/join " AND "
-                              (map #(str (as-identifier %) " = ?")
-                                   (keys pred-map)))
-           values (concat (vals pred-map) (list limit offset))
-           sql (list "SELECT * FROM "
-                     (name table)
-                     " WHERE "
-                     pred-seg
-                     " LIMIT ? OFFSET ?")]
-       (apply vector (cons (apply str sql) values)))))
-
 (defn mysql-query [query]
   (with-mysql (with-query-results rs query (doall rs))))
 
@@ -60,7 +46,8 @@
 
 (defn mysql-insert-and-return [table record]
   (let [id (mysql-insert table record)]
-    (first (mysql-query (select-sql-params table {:id id})))))
+    (first (mysql-query [(str "select * from " (name table)
+                              " where id = ?") id]))))
 
 (defn parse-timestamp [str]
   (let [f (SimpleDateFormat. "EEE, dd MMM yyyy HH:mm:ss ZZZ" Locale/US)]
