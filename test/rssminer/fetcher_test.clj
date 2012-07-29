@@ -2,6 +2,7 @@
   (:use clojure.test
         rssminer.fetcher
         rssminer.db.feed
+        rssminer.db.subscription
         [rssminer.util :only [now-seconds]]
         [rssminer.database :only [mysql-query mysql-insert]]
         [rssminer.test-common :only [app-fixture]])
@@ -30,6 +31,9 @@
                  (slurp "test/scottgu-atom.xml"))
     (is (= 1 (- (count (mysql-query ["select * from feeds"])) (count feeds))))
     (is (= 1 (- (count links) (count (fetch-rss-links 1000)))))))
+
+(defn- insert-rss-link [link]
+  (mysql-insert :rss_links link))
 
 (deftest test-insert-rss-link
   (let [links (fetch-rss-links 1000)

@@ -4,7 +4,8 @@
                   [parser :only [parse-feed]]
                   [redis :only [fetcher-dequeue fetcher-enqueue]]
                   [config :only [rssminer-conf]]))
-  (:require [rssminer.db.feed :as db])
+  (:require [rssminer.db.feed :as db]
+            [rssminer.db.subscription :as subdb])
   (:import [rssminer.fetcher HttpTaskRunner IHttpTask IHttpTasksProvder
             HttpTaskRunnerConf IBlockingTaskProvider]
            me.shenfeng.http.HttpUtils))
@@ -56,7 +57,7 @@
                           :title (:title feeds))]
     (info (str "id:" id) status url
           (str "[" (-> feeds :entries count) "] feeds"))
-    (db/update-rss-link id updated)
+    (subdb/update-rss-link id updated)
     ;; if url is updated, feeds should be nil
     (when feeds (db/save-feeds feeds id))))
 
@@ -67,11 +68,11 @@
     (onThrowable [this ^Throwable t]
       (warn (str "id:" (:id link)) url (.getMessage t))
       (try
-        (db/update-rss-link (:id link)
-                            (let [interval (slower (:check_interval link))]
-                              {:check_interval interval
-                               :next_check_ts (+ (now-seconds) interval)
-                               :error_msg (.getMessage t)}))
+        (subdb/update-rss-link (:id link)
+                               (let [interval (slower (:check_interval link))]
+                                 {:check_interval interval
+                                  :next_check_ts (+ (now-seconds) interval)
+                                  :error_msg (.getMessage t)}))
         (catch Exception e (error e url)))) ; mysql fail
     (getHeaders [this]
       {HttpUtils/IF_MODIFIED_SINCE last_modified
@@ -85,11 +86,11 @@
 (defn mk-provider []
   (reify IHttpTasksProvder
     (getTasks [this]
-      (map mk-fetcher-task (db/fetch-rss-links
+      (map mk-fetcher-task (subdb/fetch-rss-links
                             (:fetch-size @rssminer-conf))))))
 
 (defn refetch-rss-link [id]
-  (if-let [rss (db/fetch-rss-link id)]
+  (if-let [rss (subdb/fetch-rss-link-by-id id)]
     (fetcher-enqueue rss)))
 
 (defn mk-blocking-provider []

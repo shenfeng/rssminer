@@ -6,7 +6,7 @@
                    [config :only [rssminer-conf cache-control]])
          [clojure.data.json :only [json-str read-json]])
   (:require [rssminer.db.user :as db]
-            [rssminer.db.user-feed :as uf]
+            [rssminer.db.feed :as fdb]
             [clojure.string :as str]))
 
 (deftemplate login-page (slurp (resource "templates/login.tpl")))
@@ -63,10 +63,10 @@
         offset (-> req :params :offset to-int)
         sort (-> req :params :section)
         data (case sort
-               "newest" (uf/fetch-newest u-id limit offset)
-               "voted" (uf/fetch-recent-vote u-id limit offset)
-               "read" (uf/fetch-recent-read u-id limit offset)
-               "recommend" (uf/fetch-likest u-id limit offset))]
+               "newest" (fdb/fetch-newest u-id limit offset)
+               "voted" (fdb/fetch-recent-vote u-id limit offset)
+               "read" (fdb/fetch-recent-read u-id limit offset)
+               "recommend" (fdb/fetch-likest u-id limit offset))]
     (if (and (seq data) (not= "read" sort) (not= "voted" sort))
       {:body data       ;; ok, just cache for 10 miniutes
        :headers cache-control}

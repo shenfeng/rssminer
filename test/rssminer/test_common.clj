@@ -17,7 +17,6 @@
 
         rssminer.classify)
   (:require [clojure.string :as str]
-            [rssminer.db.user-feed :as uf]
             [clojure.java.jdbc :as jdbc]
             [rssminer.database :as db])
   (:import java.io.File

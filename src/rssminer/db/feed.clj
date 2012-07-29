@@ -1,11 +1,13 @@
 (ns rssminer.db.feed
   (:use [rssminer.database :only [mysql-query with-mysql mysql-insert]]
         (rssminer [search :only [index-feed]]
-                  [util :only [ignore-error to-int now-seconds]]
+                  [util :only [to-int now-seconds]]
+                  [config :only [rssminer-conf]]
                   [classify :only [on-fetcher-event]])
         [clojure.string :only [blank?]]
         [clojure.tools.logging :only [warn]]
-        [clojure.java.jdbc :only [update-values delete-rows do-prepared]]))
+        [clojure.java.jdbc :only [do-prepared]])
+  (:import rssminer.db.MinerDAO))
 
 (defn update-total-feeds [rssid]
   (with-mysql (do-prepared "UPDATE rss_links SET total_feeds =
@@ -40,51 +42,82 @@
 (defn fetch-link [id]
   (:link (first (mysql-query ["SELECT link FROM feeds WHERE id = ?" id]))))
 
-(defn- nil-fill [data key]
-  (if (contains? data key)
-    data
-    (assoc data key nil)))
+(defn- get-rssid-by-feedid [id]
+  (-> (mysql-query ["select rss_link_id from feeds where id = ?" id])
+      first :rss_link_id))
 
-;;; make sure last_modified and :etag are always updated
-(defn- safe-update-rss-link [id data]
-  (let [data (nil-fill (nil-fill data :last_modified) :etag)]
-    (with-mysql
-      (update-values :rss_links ["id = ?" id] data))))
+;;; TODO. when autoCommit=false this complete,
+;;; other threads does not see the change
+(defn insert-user-vote [user-id feed-id vote]
+  (let [now (now-seconds)
+        rssid (get-rssid-by-feedid feed-id)]
+    (with-mysql (do-prepared ;; rss_link_id default 0, which is ok
+                 "INSERT INTO user_feed
+                  (user_id, feed_id, rss_link_id, vote_user, vote_date) VALUES(?, ?, ?, ?, ?)
+                 ON DUPLICATE KEY UPDATE vote_user = ?, vote_date = ?"
+                 [user-id feed-id rssid vote now vote now]))))
 
-(defn update-rss-link [id data]
-  (if-let [url (:url data)]
-    (if-let [sid (-> (mysql-query ["SELECT id FROM rss_links WHERE url = ?"
-                                   (:url data)]) first :id)]
-      (let [old (mysql-query ["SELECT id FROM user_subscription WHERE
-                               rss_link_id = ?" id])]
-        (doseq [id old]
-          (with-mysql
-            (try (update-values :user_subscription ["id = ?" (:id id)]
-                                {:rss_link_id sid})
-                 (catch Exception e      ;duplicate, already subscribed
-                   (delete-rows :user_subscription ["id=?" (:id id)])))))
-        (with-mysql
-          (delete-rows :feeds ["rss_link_id = ?" id])
-          (delete-rows :rss_links ["id = ?" id])))
-      (safe-update-rss-link id data))   ;no saved, just update this one
-    (safe-update-rss-link id data)))
+(defn mark-as-read [user-id feed-id]
+  (let [now (now-seconds)
+        rssid (get-rssid-by-feedid feed-id)]
+    (with-mysql (do-prepared ;; rss_link_id default 0
+                 "INSERT INTO user_feed (user_id, feed_id, rss_link_id, read_date)
+       VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE read_date = ?"
+                 [user-id feed-id rssid now now]))))
 
-(defn update-feed [id data]
-  (with-mysql
-    (update-values :feeds ["id = ?" id] data)))
+(defn fetch-newest [userid limit offset]
+  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+    (.fetchGNewest db userid limit offset)))
 
-(defn fetch-rss-links [limit]           ; for fetcher
-  "Returns nil when no more"
-  (mysql-query ["SELECT id, url, check_interval, last_modified, etag
-              FROM rss_links
-              WHERE next_check_ts < ?
-              ORDER BY next_check_ts LIMIT 0, ?" (now-seconds) limit]))
+(defn fetch-likest [userid limit offset]
+  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+    (.fetchGLikest db userid limit offset)))
 
-(defn fetch-rss-link [id]
-  (first (mysql-query
-          ["SELECT id, url, check_interval, last_modified, etag
-              FROM rss_links where id = ?" id])))
+(defn fetch-recent-read [userid limit offset]
+  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+    (.fetchGRead db userid limit offset)))
 
-(defn insert-rss-link [link]
-  ;; ignore voilate of uniqe constraint
-  (ignore-error (mysql-insert :rss_links link)))
+(defn fetch-recent-vote [userid limit offset]
+  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+    (.fetchGVote db userid limit offset)))
+
+(defn fetch-sub-newest [userid subid limit offset]
+  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+    (.fetchSubNewest db userid subid limit offset)))
+
+(defn fetch-sub-oldest [userid subid limit offset]
+  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+    (.fetchSubOldest db userid subid limit offset)))
+
+(defn fetch-sub-likest [userid subid limit offset]
+  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+    (.fetchSubLikest db userid subid limit offset)))
+
+(defn fetch-sub-read [userid subid limit offset]
+  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+    (.fetchSubRead db userid subid limit offset)))
+
+(defn fetch-sub-vote [userid subid limit offset]
+  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+    (.fetchSubVote db userid subid limit offset)))
+
+(defn fetch-folder-newest [userid subids limit offset]
+  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+    (.fetchFolderNewest db userid subids limit offset)))
+
+(defn fetch-folder-oldest [userid subids limit offset]
+  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+    (.fetchFolderOldest db userid subids limit offset)))
+
+(defn fetch-folder-likest [userid subids limit offset]
+  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+    (.fetchFolderLikest db userid subids limit offset)))
+
+(defn fetch-folder-read [userid subids limit offset]
+  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+    (.fetchFolderRead db userid subids limit offset)))
+
+(defn fetch-folder-vote [userid subids limit offset]
+  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+    (.fetchFolderVote db userid subids limit offset)))
+
