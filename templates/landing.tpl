@@ -166,11 +166,14 @@
         </div>
       </div> <!-- footer -->
     </div>   <!-- page-wrap -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     {{#dev}}
+    <script src="/js/lib/jquery-1.7.2.js"></script>
     <script src="/js/lib/slides.min.jquery.js"></script>
     <script src="/js/rssminer/landing.js"></script>
     {{/dev}}
-    {{#prod}}<script src="/js/landing-min.js?{VERSION}"></script>{{/prod}}
+    {{#prod}}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="/js/landing-min.js?{VERSION}"></script>
+    {{/prod}}
   </body>
 </html>

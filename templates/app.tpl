@@ -72,8 +72,8 @@
       </div>
     </div>
     <ul id="ct-menu"></ul>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     {{#dev}}
+    <script src="/js/lib/jquery-1.7.2.js"></script>
     <script src="/js/lib/jquery-ui-1.8.18.custom.js"></script>
     <script src="/js/lib/underscore.js"></script>
     <script src="/js/lib/mustache.js"></script>
@@ -87,6 +87,9 @@
     <script src="/js/rssminer/ct_menu.js"></script>
     <script src="/js/rssminer/app.js"></script>
     {{/dev}}
-    {{#prod}}<script src="/js/app-min.js?{VERSION}"></script>{{/prod}}
+    {{#prod}}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="/js/app-min.js?{VERSION}"></script>
+    {{/prod}}
   </body>
 </html>
