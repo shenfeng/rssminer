@@ -40,7 +40,7 @@
   (.print out ",\"title\":") (write-json (.getTitle f) out escape-unicode?)
   (.print out ",\"author\":") (write-json (.getAuthor f) out escape-unicode?)
   (.print out ",\"tags\":") (write-json (.getTags f) out escape-unicode?)
-  (.print out ",\"publishedts\":") (.print out (.getPublishedts f))
+  (.print out ",\"pts\":") (.print out (.getPublishedts f))
   (.print out ",\"readts\":") (.print out (.getReadts f))
   (.print out ",\"votets\":") (.print out (.getVotets f))
   (.print out \}))

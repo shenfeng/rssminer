@@ -86,7 +86,7 @@
   function transform_item (feed, page, sort, section) {
     var rssid = feed.rssid;
     section = section || rssid;
-    var date = ymdate(feed.publishedts);
+    var date = ymdate(feed.pts); // publish ts
     if(section === READ_TAB || sort === READ_TAB) {
       date = ymdate(feed.readts);
     } else if(section === VOTED_TAB || sort === VOTED_TAB) {
