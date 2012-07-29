@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="shortcut icon" href="/favicon.ico?{VERSION}" />
-    <title>Rssminer, an intelligent RSS reader</title>
+    <title>Rssminer, an intelligent RSS reader, with readability</title>
     <meta name="keywords" content="RSS miner, Rssminer, RSS aggregator,
                                    intelligent RSS reader">
     <meta name="description"
@@ -48,8 +48,11 @@
       <div id="content">
         <div id="main" class="clearfix">
           <div class="lfloat">
-            <h2>Rssminer is an intelligent RSS reader. By machine
-              learning, it highlights stories you like, helps discover stories you may like.</h2>
+            <h2>
+              Rssminer is an intelligent RSS reader. By machine
+              learning, it highlights stories you like, helps discover
+              stories you may like.
+            </h2>
             <br>
             <div id="slides">
               <div class="slides_container">
@@ -76,39 +79,12 @@
                   the list.
                 </p>
               </li>
-              <li>Reading the original
-                <p>There may have valuable comment. </p>
-                <p>Some blog's RSS output are not complete:
-                  <ul>
-                    <li>
-                      <a href="/demo#read/35?p=1&s=newest">
-                        Hacker news
-                      </a>
-                    </li>
-                    <li>
-                      <a href="/demo#read/160/151848?p=1&s=newest">
-                        Peter Norvig
-                      </a>
-                    </li>
-                    <li>
-                      <a href="/demo#read/39?p=1&s=newest">
-                        IBM developerWorks :Java technology
-                      </a>
-                    </li>
-                  </ul>
-                </p>
+              <li>
+                <p>Nicely formatted for <b>Readability</b></p>
               </li>
               <li>
-                Some blogs are not accessible in China.
-                <p>Rssminer
-                  <a href="http://en.wikipedia.org/wiki/Proxy_server">
-                    transparently help you get rid of it
-                  </a>
-                </p>
-              </li>
-              <li>
-                Instant full text search
-                <p>The faster, the better. Rssminer do it in real time</p>
+                <p>Instant full text search: the faster,
+                  the better. Rssminer do it in real time</p>
               </li>
               <li>Concise UI</li>
             </ol>
