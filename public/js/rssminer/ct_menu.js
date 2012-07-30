@@ -78,19 +78,6 @@
     return false;
   }
 
-  function show_feed_context_menu (e) {
-    $last_menu_ui = $(this);
-    data.fetch_feed($last_menu_ui.attr('data-id'), function (feed) {
-      var html = to_html(tmpls.feed_ct_menu, feed);
-      $ct_menu.empty().append(html).css({
-        top: e.clientY,
-        left: e.clientX,
-        display: 'block'
-      });
-    });
-    return false;
-  }
-
   function rename_folder_name () {
     $ct_menu.hide();
     var val = $last_menu_ui.attr('data-name'),
@@ -159,21 +146,6 @@
     return false;
   }
 
-  function feed_clicked (e) {
-    // Chrome works fine, firefox does not work
-    // middle button, // left button with ctrl
-    if((e.which === 1 && e.ctrlKey) || e.which === 2)   {
-      var $a = $(this);
-      data.fetch_feed($a.parent().attr('data-id'), function (feed) {
-        var old_link = $a.attr('href');
-        $a.attr('href', feed.link);
-        setTimeout(function () {
-          $a.attr('href', old_link); // change it back
-        }, 100);
-      });
-    }
-  }
-
   function save_vote_up (e) {
     var $parent = $(this).closest('.feed');
     var $feed = $parent.length ? $parent : $last_menu_ui;
@@ -211,19 +183,11 @@
     }
   }
 
-  $welcome_list.bind('child_change.rm', function () { // rebind
-    $navigation.find('.feed > a').click(feed_clicked);
-    // middle button click does not work well with delegate
-    $welcome_list.find('.feed > a').click(feed_clicked);
-  });
-
   util.delegate_events($ct_menu, {
     'click .rename': rename_folder_name,
     'click .folder': change_folder,
     'click .new-folder': move_to_new_folder,
-    'click .unsubscribe': unsubscribe_item,
-    'click .voteup': save_vote_up,
-    'click .votedown': save_vote_down
+    'click .unsubscribe': unsubscribe_item
   });
 
   util.delegate_events($subs_list, {
@@ -234,8 +198,7 @@
 
   util.delegate_events($('#main'), {
     'click .thumbs .icon-thumbs-down': save_vote_down,
-    'click .thumbs .icon-thumbs-up': save_vote_up,
-    'contextmenu .feeds .feed': show_feed_context_menu
+    'click .thumbs .icon-thumbs-up': save_vote_up
   });
 
   $subs_list.sortable({

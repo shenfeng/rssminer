@@ -80,6 +80,16 @@
     else { $n.text(n-1); }
   }
 
+  function clean_content () {
+    $feed_content.find('p').each(function (idx, p) {
+      var $p = $(p);
+      if(!$.trim($p.text())) {
+        $p.hide();            // 4037/330457
+      }
+    });
+    $feed_content.find('p>br').hide();
+  }
+
   function read_feed (subid, feedid, page, sort, folder) {
     var read_cb = function () {
       gcur_subid = subid;
@@ -94,7 +104,7 @@
         set_document_title(feed.title);
         var content = to_html(tmpls.feed_content, feed);
         $feed_content.empty().append(content).scrollTop(0);
-        $feed_content.find('p>br').remove();
+        clean_content();
         mark_feed_as_read($me, feedid, subid);
       });
     };
@@ -131,7 +141,7 @@
     var html = to_html(tmpls.feeds_nav, data, tmpls);
     $navigation.empty().append(html);
     html = to_html(tmpls.sub_feeds, data);
-    $welcome_list.empty().append(html).trigger('child_change.rm');
+    $welcome_list.empty().append(html);
     set_document_title(data.title);
     $reading_area.removeClass(SHOW_CONTENT);
     $logo.addClass(SHOW_NAV);

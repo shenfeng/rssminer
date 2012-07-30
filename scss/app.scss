@@ -1,28 +1,6 @@
 @import "css3";
 @import "font-awesome";
-
-/* $nav_width: 275px; */
-$nav_width: 300px;
-$footer_height: 230px;
-$hover_color: #E5ECF9; // #DDD;
-$selected_color: #D6E9F8;
-/* $selected_color: #4498e1; */
-$header_height: 46px;
-/* $header_color: #3D5877; */
-$header_color: #3d668f;
-$body_width: 1220px;
-$nth_child_color: #f4fafb;
-$search_result_selecte_color: #7b9bf0;
-
-$like_color: #449d4e;
-/* $like_color: #7CC127; */
-$neutral_color: #f5d85f;
-$dislike_color: #c28561;
-
-/* $feed_border_color: #e3e3e3; */
-$feed_border_color: #E0E0DC;
-
-$bg_url: '/imgs/bg-site.png';
+@import "vars";
 
 ::-webkit-scrollbar {
     width: 7px;
@@ -84,6 +62,7 @@ a { outline: 0; text-decoration: none;}
     /* background: #3d668f; */
     Height: $header_height;
     width: 100%;
+    box-shadow: 0 1px 3px rgba($header_color, 0.6);
     .links {                    /* in wrapper */
         font-size: 17px;
         right: 78px;
@@ -105,17 +84,16 @@ a { outline: 0; text-decoration: none;}
         position: relative;
         > * { position: absolute; }
     }
-    $input_left: 295px;
     $input_width: 285px;
     .icon-search {
-        left: $input_left + $input_width - 8px;
+        left: $nav_width + $input_width - 8px;
         /* left: 517px; */
         top: 9px;
         font-size: 19px;
         color: #727270;
     }
     input {
-        left: $input_left;
+        left: $nav_width;
         font-size: 14px;
         padding: 5px;
         width: $input_width;
@@ -183,7 +161,7 @@ body {
         line-height: 1.62;
         /* border-bottom: 1px solid #aeb7bf; */
         border-bottom: 1px dotted $feed_border_color;
-        padding: 9px 12px 9px 5px;
+        padding: 10px 12px 10px 5px;
     }
     .selected { background: $selected_color; }
 }
@@ -345,9 +323,7 @@ ul { list-style: none; padding: 0; margin: 0; }
     }
 }
 
-.unread a { color: #0000de; // color: #3a6494;
-          /* color: #0B3B8C; */
-          }
+.unread a { color: $unread_color; }
 .read, .sys-read { a { color: #111; } }
 
 #reading-area {
@@ -395,9 +371,9 @@ ul { list-style: none; padding: 0; margin: 0; }
     }
     .author { position: absolute; top: 11px; }
     .feed {
-        a { height: 20px; }
+        a { height: 21px; }
         margin-left: 20px;
-        padding: 7px 3px 8px 3px;
+        padding: 8px 3px; //  8px 3px;
         border-bottom: 1px dotted $feed_border_color;
 
     /* &:nth-child(even) { background: $nth_child_color; } */

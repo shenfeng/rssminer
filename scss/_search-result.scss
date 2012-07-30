@@ -1,6 +1,7 @@
+@import "vars";
+
 @mixin selected () {
     background: $search_result_selecte_color;
-    /* .sub { color: #111; } */
 }
 
 .tags {
@@ -17,9 +18,9 @@
 
 #search-result {
     box-shadow: 0 1px 4px #aaa;
-    width: 540px;
+    width: $search_width;
     top: 37px;
-    left: 295px;
+    left: $nav_width;
     background: white;
     border-radius: 0 0 5px 5px;
     border: 1px solid #EEE;
@@ -33,7 +34,7 @@
     .title {
         display: inline-block;
         color: black;
-        max-width: 500px;
+        max-width: $search_width - 28px;
         @include overflow-ellipsis();
     }
     .indicator {
@@ -60,7 +61,7 @@
     .author { margin: 0; color: #111; }
     .meta {
         padding-left: 12px;
-        width: 470px;
+        width: $search_width - 80px;
         @include overflow-ellipsis();
     }
     img { margin-top: 2px; }

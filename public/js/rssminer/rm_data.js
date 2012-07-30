@@ -19,7 +19,7 @@
       h = screen.height,
       // works for 900, 800, 1080 screen (height)
       // per item 34.85 pixel, first feed to top 138px, 140 px for brower use
-      PER_PAGE_FEEDS = Math.floor((h - 138 - 140) / 37),
+      PER_PAGE_FEEDS = Math.floor((h - 138 - 140) / 40),
       // PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 32.9),
       // show search result count according to screen height
       SEARCH_RESUTL_COUNT = Math.min(Math.floor((h - 260) / 43), 17),

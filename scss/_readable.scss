@@ -1,3 +1,5 @@
+@import "vars";
+
 #feed-content {
     padding: 10px 0 100px 40px;
     overflow-y: auto;
@@ -22,7 +24,12 @@
             font-size: 12px;
         }
     }
-    h2 { margin: 10px 0;}
+    .feed h2 {
+        text-align: center;
+        margin: 10px 0; border-bottom: 1px solid #E8E8E8;
+        padding-bottom: 20px;
+        a { color: $unread_color; }
+    }
     .thumbs {
         position: fixed;
         font-size: 34px;
@@ -33,7 +40,7 @@
         width: 40px;
         i {
             padding: 5px 0;
-            color: #3d668f;
+            color: $header_color;
             &:hover { color: red; }
         }
     }
