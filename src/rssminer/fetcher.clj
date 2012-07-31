@@ -29,7 +29,7 @@
   (min (int (* last-interval 1.4)) (* 3600 24 3))) ;3 days
 
 (defn- quicker [last-interval]
-  (max (* 3600 12) (int (/ last-interval 1.4)))) ; min 12h
+  (max (* 3600 8) (int (/ last-interval 1.4)))) ; min 8h
 
 ;; TODO better last_modified and etag policy
 (defn- next-check [last-interval status headers]
