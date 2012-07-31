@@ -7,7 +7,8 @@
         [clojure.string :only [blank?]]
         [clojure.tools.logging :only [warn]]
         [clojure.java.jdbc :only [do-prepared]])
-  (:import rssminer.db.MinerDAO))
+  (:import rssminer.db.MinerDAO
+           rssminer.jsoup.HtmlUtils))
 
 (defn update-total-feeds [rssid]
   (with-mysql (do-prepared "UPDATE rss_links SET total_feeds =
@@ -20,7 +21,11 @@
 
 (defn- save-feed [feed rssid]
   (try (let [id (mysql-insert :feeds (dissoc (assoc feed :rss_link_id rssid)
-                                             :summary))]
+                                             :summary))
+             ;; always compact html to save disk storage
+             feed (assoc feed :summary
+                         (HtmlUtils/compact (:summary feed)
+                                            (:link feed)))]
          (index-feed id rssid feed)
          (mysql-insert :feed_data {:id id :summary (:summary feed)})
          id)                            ; return id

@@ -24,7 +24,6 @@ import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.Tuple;
 import rssminer.Utils;
-import rssminer.jsoup.HtmlUtils;
 import clojure.lang.Keyword;
 
 public class MinerDAO {
@@ -120,9 +119,7 @@ public class MinerDAO {
         f.setVote(rs.getInt(9));
         f.setVotets(rs.getInt(10));
         if (withSummary) {
-            String summary = rs.getString(11);
-            summary = HtmlUtils.compact(summary, f.getLink());
-            f.setSummary(summary);
+            f.setSummary(rs.getString(11));
         }
         return f;
     }

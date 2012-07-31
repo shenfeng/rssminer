@@ -42,7 +42,7 @@ public class HtmlUtils {
     static String[] TEXT_IGNORE = new String[] { "code", "pre" };
 
     public static String compact(String html, String baseUri) {
-        if (html == null) {
+        if (html == null || html.isEmpty()) {
             return "";
         }
         StringBuilder sb = new StringBuilder(html.length());
