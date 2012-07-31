@@ -119,7 +119,9 @@
                 <tr>
                   <td></td>
                   <td><input type="submit" disabled
-                             title="Log in with google OpenID is encouraged"
+                             title="Log in with google OpenID is
+                             encouraged. Use firebug if you know what
+                             I mean"
                              value="Sign up"/></td></tr>
               </table>
             </form>
