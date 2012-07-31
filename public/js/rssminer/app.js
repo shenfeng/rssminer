@@ -99,6 +99,7 @@
       var $me = $('#feed-' + feedid);
       $logo.removeClass(SHOW_NAV);
       layout.select('#feed-list', $me);
+      $navigation.scroll(); // trigger scroll if has need load more
       data_api.fetch_feed(feedid, function (feed) {
         var link = feed.link;
         set_document_title(feed.title);

@@ -347,7 +347,7 @@
       page: page,
       has_more : page <= count,
       pages: pages
-      // prev: page > 1,         // has prev page
+      // prev: page > 0,         // has prev page
       // next: count > page      // has next page
     };
   }
