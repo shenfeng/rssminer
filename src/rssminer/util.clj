@@ -26,8 +26,8 @@
 (defn- write-json-date [^Date d ^PrintWriter out escape-unicode?]
   (.print out (int (/ (.getTime d) 1000))))
 
-(defn- write-json-feed2 [^Feed f ^PrintWriter out escape-unicode?]
-  (.print out (json-str (dissoc (bean f) :class))))
+(defn json-str2 [json]
+  (json-str json :escape-unicode false))
 
 ;;; 1861 req/s vs 1606 req/s compare with reflection
 (defn- write-json-feed [^Feed f ^PrintWriter out escape-unicode?]
@@ -48,7 +48,7 @@
   (.print out \}))
 
 (defn- write-json-sub [^Subscription f ^PrintWriter out escape-unicode?]
-  (.print out (json-str (dissoc (bean f) :class))))
+  (.print out (json-str2 (dissoc (bean f) :class))))
 
 (extend Date Write-JSON
         {:write-json write-json-date})

@@ -1,9 +1,8 @@
 (ns rssminer.middleware
-  (:use [rssminer.util :only [user-id-from-session]]
+  (:use [rssminer.util :only [user-id-from-session json-str2]]
         [ring.util.response :only [redirect]]
         [clojure.tools.logging :only [debug error info]]
-        [compojure.core :only [GET POST DELETE PUT]]
-        [clojure.data.json :only [json-str]])
+        [compojure.core :only [GET POST DELETE PUT]])
   (:require [rssminer.config :as conf]
             [clojure.data.json :as json]))
 
@@ -62,13 +61,13 @@
       (if (contains? resp :body)
         (let [r {:status (or (:status resp) 200)
                  :headers (merge json-resp-header (:headers resp))
-                 :body (-> resp :body json-str)}]
+                 :body (-> resp :body json-str2)}]
           (if (contains? resp :session)
             (assoc r :session (:session resp))
             r))
         {:status 200
          :headers json-resp-header
-         :body (json-str resp)}))))
+         :body (json-str2 resp)}))))
 
 (defn wrap-request-logging-in-dev [handler]
   (if (conf/in-dev?)

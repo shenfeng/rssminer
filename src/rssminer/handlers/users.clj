@@ -2,9 +2,9 @@
   (:use  [ring.util.response :only [redirect]]
          [clojure.java.io :only [resource]]
          me.shenfeng.mustache
-         (rssminer [util :only [user-id-from-session to-int md5-sum]]
-                   [config :only [rssminer-conf cache-control]])
-         [clojure.data.json :only [json-str read-json]])
+         (rssminer [util :only [user-id-from-session to-int md5-sum
+                                json-str2]]
+                   [config :only [rssminer-conf cache-control]]))
   (:require [rssminer.db.user :as db]
             [rssminer.db.feed :as fdb]
             [clojure.string :as str]))
@@ -54,7 +54,7 @@
             p (md5-sum (str (:email user) "+" password))]
         (db/update-user uid {:password p})))
     (when-let [nav (-> req :body :nav)]
-      (db/update-user uid {:conf (json-str {:nav nav})}))
+      (db/update-user uid {:conf (json-str2 {:nav nav})}))
     {:status 204 :body nil}))
 
 (defn summary [req]
