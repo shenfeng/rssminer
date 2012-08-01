@@ -48,10 +48,8 @@
                      3))))
 
 (deftest test-encode-decode-key
-  (let [k "zk15v22ul"]
-    (is (= k (r/gen-key {:id 1})))
-    (doseq [i (range 9000 9006)]
-      (is (= i (r/decode-key (r/gen-key {:id i})))))))
+  (doseq [i (range 9000 9006)]
+    (is (= i (r/decode-key (r/gen-key {:id i}))))))
 
 (deftest test-should-proxy
   (is (Utils/proxy "http://feedproxy.google.com/~r/Interface21TeamBlog/~3/pwLWS9HQ6is/"))

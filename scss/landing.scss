@@ -165,6 +165,13 @@ p {
 #accouts-div {
     a { text-decoration: none; }
     h1 { width: 300px; margin: 40px auto 20px; }
+    img {
+        border: 1px #ddd solid;
+        &:hover {
+            border: 1px #aaa solid;
+            box-shadow: 0 0 3px #888;
+        }
+    }
     form {
         width: 400px;
         margin: 0 auto;

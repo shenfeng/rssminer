@@ -62,15 +62,13 @@
   (route/not-found "<p>Page not found.</p>" ))
 
 (defn gen-key [data]
-  (if-let [id (-> data :id)]
-    (str "zk" (Integer/toString (- Integer/MAX_VALUE id) 35))
+  (if-let [id (:id data)]
+    (rssminer.Utils/encrytUserID (int id))
     "__noop__"))
 
 (defn decode-key [^String key]
-  (if (and key (.startsWith key "zk"))
-    (- Integer/MAX_VALUE
-       (Integer/valueOf (.substring key 2) 35))
-    nil))
+  (when key (try (rssminer.Utils/descryUserID key)
+                 (catch Exception e))))
 
 (deftype CookieSessionStore []
   SessionStore
@@ -86,7 +84,7 @@
   (-> #'all-routes
       wrap-auth
       (wrap-session {:store (CookieSessionStore.)
-                     :cookie-name "_id_"
+                     :cookie-name "_id"
                      :cookie-attrs {:http-only true}})
       wrap-cache-header
       wrap-request-logging-in-dev

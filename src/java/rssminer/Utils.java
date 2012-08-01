@@ -2,16 +2,27 @@ package rssminer;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.NetworkInterface;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -42,6 +53,7 @@ class GoogleExportHandler extends DefaultHandler {
     private boolean isLabel = false;
     private SubItem current = new SubItem();
     private boolean isUrl = true;
+
     public void characters(char[] ch, int start, int length)
             throws SAXException {
         if (isTitle) {
@@ -113,9 +125,25 @@ public class Utils {
     public static final Keyword K_EVENTS_THRESHOLD = Keyword
             .intern("events-threshold");
 
+    static final SecretKeySpec skeySpec;
+
     static {
         try {
             CLIENT = new HttpClient(new HttpClientConfig(60000, USER_AGETNT));
+
+            byte[] key = null;
+            Enumeration<NetworkInterface> interfaces = NetworkInterface
+                    .getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                NetworkInterface in = interfaces.nextElement();
+                String name = in.getDisplayName();
+                if ("eth0".equalsIgnoreCase(name)) {
+                    key = Arrays.copyOf(in.getHardwareAddress(), 16);
+                    break;
+                }
+            }
+            skeySpec = new SecretKeySpec(key, "AES");
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -236,5 +264,25 @@ public class Utils {
             }
         }
         return html;
+    }
+
+    public static String encrytUserID(int userid)
+            throws NoSuchAlgorithmException, NoSuchPaddingException,
+            InvalidKeyException, IllegalBlockSizeException,
+            BadPaddingException {
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+        byte[] bytes = cipher.doFinal(Integer.toString(userid).getBytes());
+        return DatatypeConverter.printBase64Binary(bytes);
+    }
+
+    public static int descryUserID(String cookie)
+            throws NoSuchAlgorithmException, NoSuchPaddingException,
+            InvalidKeyException, NumberFormatException,
+            IllegalBlockSizeException, BadPaddingException {
+        Cipher cipher = Cipher.getInstance("AES");
+        byte[] bytes = DatatypeConverter.parseBase64Binary(cookie);
+        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+        return Integer.parseInt(new String(cipher.doFinal(bytes)));
     }
 }
