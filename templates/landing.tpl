@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="shortcut icon" href="/favicon.ico?{VERSION}" />
-    <title>Rssminer, an intelligent RSS reader, with readability</title>
+    <title>Rssminer, intelligent RSS reader, for readability</title>
     <meta name="keywords" content="RSS miner, Rssminer, RSS aggregator,
                                    intelligent RSS reader">
     <meta name="description"
-          content="Rssminer is an intelligent web-based RSS reader. By
-                   machine learning, Rssminer highlight stories you
-                   like, and help discover stories you may like.">
+          content="Rssminer is an intelligent web-based RSS
+                   reader. It sort all unread feeds according to your
+                   personal taste: the already read items">
     {{#prod}}<style type="text/css">{{{ css }}}</style>{{/prod}}
     {{#dev}}<link rel="stylesheet" href="/css/landing.css">{{/dev}}
   </head>
@@ -49,9 +49,9 @@
         <div id="main" class="clearfix">
           <div class="lfloat">
             <h2>
-              Rssminer is an intelligent RSS reader. By machine
-              learning, it highlights stories you like, helps discover
-              stories you may like.
+              Rssminer is an intelligent RSS reader. It sort all
+              unread feeds according to your personal taste: the
+              already read items.
             </h2>
             <br>
             <div id="slides">
@@ -73,20 +73,18 @@
             <ol>
               <li>Sorting unread feeds according to your personal taste
                 <p>
-                  There are so many feeds coming out each day.
-                  Rssminer sort them by learning from your reading
-                  history. Make interesting ones appear on the top of
+                  There are many feeds coming out each day. Rssminer
+                  helps you by sorting them by learning from your already
+                  read items, make interesting ones appear on the top of
                   the list.
                 </p>
               </li>
               <li>
-                <p>Nicely formatted for <b>Readability</b></p>
+                <p>Nicely layout for best <b>Readability</b></p>
               </li>
               <li>
-                <p>Instant full text search: the faster,
-                  the better. Rssminer do it in real time</p>
+                <p>Instant full text search</p>
               </li>
-              <li>Concise UI</li>
             </ol>
           </div>
           <div class="rfloat">
@@ -120,8 +118,8 @@
                   <td></td>
                   <td><input type="submit" disabled
                              title="Log in with google OpenID is
-                             encouraged. Use firebug if you know what
-                             I mean"
+                                    encouraged. Use firebug if you know what
+                                    I mean"
                              value="Sign up"/></td></tr>
               </table>
             </form>

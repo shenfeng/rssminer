@@ -560,6 +560,7 @@
     ajax.get('/api/feeds/' + id, function (feed) {
       var t = transform_item(feed);
       t.summary = feed.summary;
+      t.sub = get_subscription(t.rssid);
       cb(t);
     });
   }

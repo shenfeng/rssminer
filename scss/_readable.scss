@@ -1,34 +1,40 @@
 @import "vars";
 
 #feed-content {
+    $color: #313131;
     padding: 10px 0 100px 40px;
     overflow-y: auto;
     height: 100%;
     font-size: 16px;
     line-height: 2.1;
-    color: #323c46;
+    /* color: #323c46; */
+    color: $color;
     background: #F6F6F6;
-    /* feed info */
     .like .icon-thumbs-up { visibility: visible; }
     .dislike .icon-thumbs-down { visibility: visible; }
     .neutral, .sys { .thumbs i { visibility: visible; } }
     .tags {
-        float: right;
-        font-size: 13px;
-        li { color: #555; padding: 1px 4px ;}
+        li { color: #555; padding: 0 4px ;}
     }
-    /* .date { float: right; } */
     .feed {
         padding-bottom: 20px;
-        span {
-            font-size: 12px;
+    }
+    .date { float: right; }
+    .meta {
+        font-size: 12px;
+        .sub {
+            margin: 2px 20px;
+            @include overflow-ellipsis();
+            max-width: 300px;
+            display: inline-block;
+            color: $unread_color;
         }
     }
     .feed h2 {
         text-align: center;
         margin: 10px 0; border-bottom: 1px solid #E8E8E8;
         padding-bottom: 20px;
-        a { color: $unread_color; }
+        a { color: $color; font-size: 20px;}
     }
     .thumbs {
         position: fixed;
@@ -38,16 +44,12 @@
         margin-left: 530px;
         line-height: 1;
         width: 40px;
-        i {
-            padding: 5px 0;
-            color: $header_color;
-            &:hover { color: red; }
-        }
+        i { padding: 5px 0; }
     }
     * { max-width: 700px; }
     .summary {
+        h1, h2 { font-size: 23px;}
         padding-bottom: 150px;
-        /* height: 100%; */
         p {
             text-indent: 2em;
             margin: 20px 0;

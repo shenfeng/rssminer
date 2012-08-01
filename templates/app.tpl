@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="shortcut icon" href="/favicon.ico?{VERSION}" />
-    <title>Rssminer, intelligent RSS reader</title>
+    <title>Rssminer, intelligent RSS reader, for readability</title>
     <meta name="keywords" content="rss miner, rssminer, rss aggregator,
                                    intelligent rss reader">
     <meta name="description"
-          content="RSSMiner is an intelligent web-based rss reader. By
-                   machine learning, RSSMiner highlight stories you
-                   like, and help discover stories you may like.">
+          content="Rssminer is an intelligent web-based RSS
+                   reader. It sort all unread feeds according to your
+                   personal taste: the already read items">
     {{#prod}}<style type="text/css">{{{ css }}}</style>{{/prod}}
     {{#dev}}<link rel="stylesheet" href="/css/app.css">{{/dev}}
     <script>{{{ data }}}</script>

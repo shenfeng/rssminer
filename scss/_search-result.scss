@@ -35,7 +35,7 @@
     .title {
         display: inline-block;
         color: black;
-        max-width: $search_width - 28px;
+        max-width: $search_width - 88px;
         @include overflow-ellipsis();
     }
     .indicator {
