@@ -2,6 +2,7 @@
 
 #feed-content {
     $color: #313131;
+    $color: #323;
     padding: 10px 0 100px 40px;
     overflow-y: auto;
     height: 100%;
@@ -16,26 +17,34 @@
     .tags {
         li { color: #555; padding: 0 4px ;}
     }
-    .feed {
-        padding-bottom: 20px;
-    }
     .date { float: right; }
     .meta {
         font-size: 12px;
+        .link {
+            @include overflow-ellipsis();
+            display: block;
+            max-width: 500px;
+            color: #aaa;
+        }
         .sub {
-            margin: 2px 20px;
+            margin: 0 20px;
             @include overflow-ellipsis();
             max-width: 300px;
             display: inline-block;
             color: $unread_color;
         }
+        .author { margin-left: 0; }
+        padding-bottom: 8px;
+        border-bottom: 1px solid #E8E8E8;
     }
-    .feed h2 {
-        text-align: center;
-        margin: 10px 0; border-bottom: 1px solid #E8E8E8;
-        padding-bottom: 20px;
-        a { color: $color; font-size: 20px;}
+    .feed {
+        padding-bottom: 10px;
+        h2 {
+            margin: 10px 0;
+            font-size: 20px;
+        }
     }
+    /* .feed */
     .thumbs {
         position: fixed;
         font-size: 34px;

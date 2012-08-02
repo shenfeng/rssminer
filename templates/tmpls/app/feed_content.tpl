@@ -1,8 +1,7 @@
 <div class="feed {{ cls }}" data-id={{ id }}>
-  <h2>
-    <a href="{{ link }}" target="_blank">{{ title }}</a>
-  </h2>
+  <h2>{{ title }}</h2>
   <div class="meta">
+    <a class="link" href="{{ link }}" target="_blank">{{{ link }}}</a>
     <span title="author" class="author">{{ author }}</span>
     {{#sub}}
       <a class="sub" href="#{{{href}}}">{{title}}</a>
@@ -25,7 +24,5 @@
     </i>
   </div>
 </div>
-<div class="summary">
-  {{{summary}}}
-</div>
+<div class="summary">{{{summary}}}</div>
 
