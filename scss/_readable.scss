@@ -1,15 +1,15 @@
 @import "vars";
 
 #feed-content {
-    $color: #313131;
-    $color: #323;
+    /* $color: #313131; */
+    /* $color: #333; */
     padding: 10px 0 100px 40px;
     overflow-y: auto;
     height: 100%;
     font-size: 16px;
     line-height: 2.1;
     /* color: #323c46; */
-    color: $color;
+    color: #333;
     background: #F6F6F6;
     .like .icon-thumbs-up { visibility: visible; }
     .dislike .icon-thumbs-down { visibility: visible; }
@@ -27,10 +27,9 @@
             color: #aaa;
         }
         .sub {
-            margin: 0 20px;
+            padding: 1px 20px;
             @include overflow-ellipsis();
             max-width: 300px;
-            display: inline-block;
             color: $unread_color;
         }
         .author { margin-left: 0; }
@@ -62,6 +61,10 @@
         p {
             text-indent: 2em;
             margin: 20px 0;
+        }
+        sup {
+            /* font-size: 16px; */
+            /* vertical-align: baseline; */
         }
         ul {
             list-style-type: disc;
