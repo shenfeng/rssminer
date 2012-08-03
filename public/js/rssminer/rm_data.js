@@ -556,8 +556,10 @@
     return result;
   }
 
-  function fetch_feed (id, cb) {
-    ajax.get('/api/feeds/' + id, function (feed) {
+  function fetch_feed (id, mark_as_red, cb) {
+    var url = '/api/feeds/' + id;
+    if(mark_as_red) { url += '?read=1'; }
+    ajax.get(url, function (feed) {
       var t = transform_item(feed);
       t.summary = feed.summary;
       t.sub = get_subscription(t.rssid);

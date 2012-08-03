@@ -46,9 +46,18 @@
 
 (deftest test-fetch-feed
   (let [fid (first-feedid)
-        resp (auth-app {:uri (str "/api/feeds/" fid "")
+        resp (auth-app {:uri (str "/api/feeds/" fid)
                         :request-method :get})]
     (is (= (:status resp) 200))
-    (is (-> resp :body read-json :summary))))
+    (is (-> resp :body read-json :summary))
+    (is (nil? (mysql-query
+               ["select * from user_feed where feed_id = ?" fid])) 0)
+    (is (= (auth-app {:uri (str "/api/feeds/" fid)
+                      :params {"read" "1"}
+                      :request-method :get})))
+    ;; mark as read
+    (is (> (-> (mysql-query
+                ["select * from user_feed where feed_id = ?" fid])
+               first :read_date) 0))))
 
 ;;; list subs are in subscriptions_test

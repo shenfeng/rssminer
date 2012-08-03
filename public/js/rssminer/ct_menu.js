@@ -1,6 +1,6 @@
 (function () {
   var RM = window.RM,
-      data = RM.data,
+      data_api = RM.data,
       to_html = Mustache.render,
       tmpls = RM.tmpls,
       notify = RM.notify,
@@ -62,8 +62,8 @@
     $last_menu_ui = $(this);
     var subid = parseInt($last_menu_ui.attr('data-id')),
         html = to_html(tmpls.sub_ct_menu, {
-          folders: data.list_folder_names(subid),
-          sub: data.get_subscription(subid)
+          folders: data_api.list_folder_names(subid),
+          sub: data_api.get_subscription(subid)
         });
     var top = e.clientY;
     $ct_menu.empty().append(html);
@@ -101,10 +101,10 @@
 
   function unsubscribe_item () {
     var subid = $last_menu_ui.attr('data-id'),
-        sub = data.get_subscription(subid);
+        sub = data_api.get_subscription(subid);
     $ct_menu.hide();
     if(confirm('unsubscribe "' + sub.title + '"')) {
-      data.unsubscribe(subid, function () {
+      data_api.unsubscribe(subid, function () {
         $last_menu_ui.remove();
         notify.show_msg('unsubscribed', 1000);
       });
@@ -125,7 +125,7 @@
     });
     if(!find) {
       var subid = $last_menu_ui.attr('data-id'),
-          sub = data.get_subscription(subid);
+          sub = data_api.get_subscription(subid);
       var html = to_html(tmpls.subs_nav, {
         groups: [{subs: [sub], group: new_folder}]
       });
@@ -170,7 +170,7 @@
     }
     if(id) {
       id = parseInt(id, 10);
-      data.save_vote(id, vote, function () {
+      data_api.save_vote(id, vote, function () {
         notify.show_msg('Saved', 1000);
         if(vote === 1) {
           $feed.addClass('like').removeClass('dislike neutral sys');

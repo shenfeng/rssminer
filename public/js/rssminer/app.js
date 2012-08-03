@@ -100,13 +100,19 @@
       $logo.removeClass(SHOW_NAV);
       layout.select('#feed-list', $me);
       $navigation.scroll(); // trigger scroll if has need load more
-      data_api.fetch_feed(feedid, function (feed) {
+      var mark_read = false;
+      if(!$me.hasClass('read')) {
+        mark_read = true;
+        decrement_number($me, subid);
+        $me.removeClass('unread sys-read').addClass('read');
+      }
+      data_api.fetch_feed(feedid, mark_read, function (feed) {
         var link = feed.link;
         set_document_title(feed.title);
         var content = to_html(tmpls.feed_content, feed);
         $feed_content.empty().append(content).scrollTop(0);
         clean_content();
-        mark_feed_as_read($me, feedid, subid);
+        // mark_feed_as_read($me, feedid, subid);
       });
     };
     if(gcur_subid === subid) {

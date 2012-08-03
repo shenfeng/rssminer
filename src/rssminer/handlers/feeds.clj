@@ -13,16 +13,21 @@
     (on-feed-event user-id fid)
     {:status 204 :body nil}))
 
+(defn- mark-read [fid user-id]
+  (db/mark-as-read user-id fid)
+  (on-feed-event user-id fid))
+
 (defn mark-as-read [req]
   (let [fid (-> req :params :id to-int)
         user-id (user-id-from-session req)]
-    (db/mark-as-read user-id fid)
-    (on-feed-event user-id fid)
+    (mark-read fid user-id)
     {:status 204 :body nil}))
 
 (defn get-feed [req]
   (let [fid (-> req :params :id to-int)
         user-id (user-id-from-session req)]
+    (when (= "1" (-> req :params :read))
+      (mark-read fid user-id))
     (db/fetch-feed user-id fid)))
 
 (defn get-by-subscription [req]
