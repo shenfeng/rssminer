@@ -24,6 +24,7 @@
             @include overflow-ellipsis();
             display: block;
             max-width: 500px;
+            padding-bottom: 4px;
             color: #aaa;
         }
         .sub {
@@ -33,13 +34,13 @@
             color: $unread_color;
         }
         .author { margin-left: 0; }
-        padding-bottom: 8px;
+        padding-bottom: 6px;
         border-bottom: 1px solid #E8E8E8;
     }
     .feed {
         padding-bottom: 10px;
         h2 {
-            margin: 10px 0;
+            margin: 10px 0 -4px 0;
             font-size: 20px;
         }
     }
@@ -47,25 +48,28 @@
     .thumbs {
         position: fixed;
         font-size: 34px;
-        top: 80%;
+        top: 81%;
         left: 50%;
-        margin-left: 530px;
+        margin-left: 515px;
         line-height: 1;
         width: 40px;
         i { padding: 5px 0; }
     }
     * { max-width: 700px; }
     .summary {
-        h1, h2 { font-size: 23px;}
+        h1 { font-size: 23px;}
+        h2, h3 { font-size: 20px; }
+        h4, h5 { font-size: 18px; }
         padding-bottom: 150px;
         p {
             text-indent: 2em;
+            text-align: justify;
             margin: 20px 0;
         }
-        sup {
-            /* font-size: 16px; */
-            /* vertical-align: baseline; */
-        }
+        /* sup { */
+        /* font-size: 16px; */
+        /* vertical-align: baseline; */
+        /* } */
         ul {
             list-style-type: disc;
             padding-left: 20px;

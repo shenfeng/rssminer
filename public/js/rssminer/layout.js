@@ -44,10 +44,6 @@
   layout();
 
   window.RM = $.extend(window.RM, {
-    layout: {
-      relayout: layout,
-      select: select,
-      scroll_into_view: scroll_into_view
-    }
+    layout: { select: select }
   });
 })();

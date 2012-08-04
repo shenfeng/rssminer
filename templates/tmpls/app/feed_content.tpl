@@ -25,4 +25,3 @@
   </div>
 </div>
 <div class="summary">{{{summary}}}</div>
-
