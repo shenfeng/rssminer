@@ -28,7 +28,7 @@
         user-id (user-id-from-session req)]
     (when (= "1" (-> req :params :read))
       (mark-read fid user-id))
-    (db/fetch-feed user-id fid)))
+    {:body (db/fetch-feed user-id fid) :headers cache-control}))
 
 (defn get-by-subscription [req]
   (let [{:keys [rid limit sort offset]} (:params req)
