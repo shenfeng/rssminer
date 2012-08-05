@@ -7,7 +7,7 @@
     overflow-y: auto;
     height: 100%;
     font-size: 16px;
-    line-height: 2.1;
+    line-height: 2.0;
     /* color: #323c46; */
     color: #333;
     background: #F6F6F6;
@@ -66,6 +66,7 @@
             text-align: justify;
             margin: 20px 0;
         }
+        li p { text-indent: 0; } /* 147878 */
         /* sup { */
         /* font-size: 16px; */
         /* vertical-align: baseline; */

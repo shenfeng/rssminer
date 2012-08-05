@@ -2,28 +2,20 @@ package rssminer.tools;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.StringReader;
-import java.net.URISyntaxException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.ccil.cowan.tagsoup.Parser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.jsoup.select.NodeTraversor;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -31,9 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
-import rssminer.jsoup.CompactHtmlVisitor;
-import rssminer.jsoup.HtmlUtils;
 
 class Cmp implements Comparator<Entry<String, Integer>> {
 
@@ -121,18 +110,6 @@ public class HtmlParserBench {
                 logger.error(html, e);
             }
         }
-    }
-
-    private String to_html(Document doc) throws URISyntaxException {
-        StringBuilder sb = new StringBuilder(256);
-        CompactHtmlVisitor vistor = new CompactHtmlVisitor(sb,
-                "http://google.com");
-        Elements elements = doc.body().children();
-        for (Element e : elements) {
-            new NodeTraversor(vistor).traverse(e);
-        }
-        System.out.println(vistor);
-        return null;
     }
 
     @Test

@@ -14,6 +14,28 @@ import rssminer.tools.Utils;
 public class CompactHtmlRealDataTest {
 
     @Test
+    public void test() throws SQLException {
+        Connection con = Utils.getRssminerDB();
+        Statement stat = con.createStatement();
+        ResultSet rs = stat
+                .executeQuery("select d.id, d.summary, link from feed_data d join feeds f on f.id = d.id where f.id = 140450");
+
+        while (rs.next()) {
+            String summary = rs.getString(2);
+            int id = rs.getInt(1);
+            String link = rs.getString(3);
+
+            System.out.println(summary);
+
+            System.out.println("----------------------\n");
+
+            String string = HtmlUtils.compact(summary, link);
+            System.out.println(string);
+        }
+
+    }
+
+    @Test
     public void testCompactHtmlRatio() throws SQLException {
 
         Connection con = Utils.getRssminerDB();
@@ -24,7 +46,7 @@ public class CompactHtmlRealDataTest {
         // .prepareStatement("update feed_data set jsoup=?, tagsoup=?, compact=? where id = ?");
 
         PreparedStatement ps = con
-                .prepareStatement("update feed_data set compact=? where id = ?");
+                .prepareStatement("update feed_data set summary=? where id = ?");
 
         int orignalLength = 0;
         int compactLength = 0;
@@ -32,12 +54,16 @@ public class CompactHtmlRealDataTest {
         while (rs.next()) {
             int id = rs.getInt(1);
             String html = rs.getString(2);
-            if (html == null || html.isEmpty()) {
-                continue;
+            if (html == null) {
+                html = "";
             }
             String compact = HtmlUtils.compact(html, rs.getString(3));
             orignalLength += html.length();
             compactLength += compact.length();
+            if (orignalLength > compactLength) {
+                // System.out.println(id + "\t" + orignalLength + "\t" +
+                // compactLength);
+            }
             count++;
             try {
                 ps.setString(1, compact);

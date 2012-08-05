@@ -60,6 +60,24 @@ public class CompactHtmlVisitor implements NodeVisitor {
         }
     }
 
+    private String trimLeft(String html) { // most space is on the left
+        int start = 0;
+        for (int i = 0; i < html.length(); ++i) {
+            char c = html.charAt(i);
+            if (Character.isWhitespace(c) || c == 0xA0) { // nbsp
+                start = i;
+            } else {
+                break;
+            }
+        }
+
+        if (html.charAt(start) == 0xA0) {
+            return html.substring(start + 1);
+        } else {
+            return html.substring(start); // left one space
+        }
+    }
+
     public void head(Node node, int depth) {
         String name = node.nodeName();
         if (node instanceof TextNode) {
@@ -70,6 +88,9 @@ public class CompactHtmlVisitor implements NodeVisitor {
             // TODO, optimize it. leading \n can not be removed #144490
             // String html = t.toString();
             String html = t.getWholeText();
+            if (squash) {
+                html = trimLeft(html);
+            }
             for (int i = 0; i < html.length(); ++i) {
                 char c = html.charAt(i);
                 if (squash) {
