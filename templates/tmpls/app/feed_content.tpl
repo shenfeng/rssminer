@@ -13,7 +13,10 @@
         {{/tags}}
       </ul>
     {{/tags.length}}
-    <span class="date">{{ date }}</span>
+    <span class="date">publish: {{ date }}</span>
+    {{#rdate}}
+      <span class="date">read: {{rdate}}</span> <!-- read date -->
+    {{/rdate}}
     <i class="thumbs">
       <i class="icon-thumbs-up"
         title="like it, give me more like this">

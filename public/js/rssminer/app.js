@@ -315,7 +315,8 @@
   var is_loading = false;
 
   $navigation.scroll(function (e) {     // feed list scroll, auto load
-    if(!gcur_has_more || is_loading) { return; }
+    if(!gcur_has_more) { $('#navigation .loader').remove();}
+    if(is_loading) { return; }
     var total_height = $navigation[0].scrollHeight, // ie8, ff, chrome
         scrollTop = $navigation.scrollTop(),
         height = $navigation.height();

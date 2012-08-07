@@ -19,9 +19,9 @@
   var prev_key = 0;
 
   function keyboard_shortcut (e) {
-    if(prev_key === 71 && e.which === 85) {       // g
-      location.hash = '';
-      return;
+    if(e.which === 191) {       // /
+      $('#q').click();
+      return false;
     }
     if(is_reading()) {
       var $feed_list = $('#feed-list'),
@@ -29,6 +29,15 @@
           $next = $current.next(),
           $prev = $current.prev();
       switch(e.which) {
+      case 85:
+        var args = /#read\/(.+)\/\d+\?(.+?)s=(.+)/.exec(location.hash);
+        // console.log(args);
+        if(/^\d+$/.test(args[1]) || /f_.*/.test(args[1])) {
+          location.hash = 'read/' + args[1] + '?p=1&s=' + args[3];
+        } else {
+          location.hash = '?s=' + args[1] + '&p=1';
+        }
+        break;
       case 75:                  // j
         if(!$prev.length) {
           $prev = $('#feed-list .feed:first');
@@ -75,6 +84,17 @@
         var $f = $welcome_list.find('.feed:first').find('a');
         var href = $f.attr('href');
         location.hash = href;
+        break;
+      case 84:                  // t, swith tab
+        var $tabs = $('.sort li');
+        var selected = $tabs.filter('.selected')[0];
+        var idx = $.inArray(selected, $tabs);
+        if(idx === $tabs.length - 1) {
+          idx = 0;
+        } else {
+          idx += 1;
+        }
+        location.hash = $($tabs[idx]).find('a').attr('href');
         break;
       }
     }

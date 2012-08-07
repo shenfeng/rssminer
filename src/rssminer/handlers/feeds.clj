@@ -25,10 +25,11 @@
 
 (defn get-feed [req]
   (let [fid (-> req :params :id to-int)
-        user-id (user-id-from-session req)]
+        user-id (user-id-from-session req)
+        feed (db/fetch-feed user-id fid)]
     (when (= "1" (-> req :params :read))
       (mark-read fid user-id))
-    {:body (db/fetch-feed user-id fid) :headers cache-control}))
+    {:body feed :headers cache-control}))
 
 (defn get-by-subscription [req]
   (let [{:keys [rid limit sort offset]} (:params req)

@@ -562,6 +562,9 @@
     ajax.get(url, function (feed) {
       var t = transform_item(feed);
       t.summary = feed.summary;
+      if(feed.readts) {
+        t.rdate = ymdate(feed.readts);
+      }
       t.sub = get_subscription(t.rssid);
       cb(t);
     });
