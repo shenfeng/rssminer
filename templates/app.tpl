@@ -81,6 +81,7 @@
     <script src="/js/rssminer/rm_data.js"></script>
     <script src="/js/rssminer/search.js"></script>
     <script src="/js/rssminer/ct_menu.js"></script>
+    <script src="/js/rssminer/keyboard.js"></script>
     <script src="/js/rssminer/app.js"></script>
     {{/dev}}
     {{#prod}}

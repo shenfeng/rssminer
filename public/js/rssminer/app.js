@@ -31,7 +31,9 @@
       GROUP_WELCOME = 'ALL',
       GROUP_SUB = 'SUB';
 
+
   function _update_state (subid, page, sort, group) {
+    $feed_content.scrollTop(0).empty();      // save memory
     gcur_page = page;
     gcur_sort = sort;
     gcur_group = group;
@@ -87,7 +89,9 @@
         $p.hide();            // 4037/330457
       }
     });
-    $feed_content.find('p>br').hide();
+    // TODO focus reading area
+    $feed_content.find('.feed h2').click();
+    // $feed_content.find('p>br').hide();
   }
 
   function read_feed (subid, feedid, page, sort, folder) {
@@ -106,13 +110,13 @@
         decrement_number($me, subid);
         $me.removeClass('unread sys-read').addClass('read');
       }
+      $welcome_list.empty();
       data_api.fetch_feed(feedid, mark_read, function (feed) {
-        var link = feed.link;
         set_document_title(feed.title);
         var content = to_html(tmpls.feed_content, feed);
-        $feed_content.empty().append(content).scrollTop(0);
+        $feed_content.scrollTop(0);
+        $feed_content.empty().append(content);
         clean_content();
-        // mark_feed_as_read($me, feedid, subid);
       });
     };
     if(gcur_subid === subid) {
