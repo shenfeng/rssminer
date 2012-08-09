@@ -28,7 +28,6 @@ public class Compact {
         PreparedStatement select = con.prepareStatement(sql);
         PreparedStatement update = con
                 .prepareStatement("update feed_data set summary = ? where id = ?");
-
         if (rs.next()) {
             int count = rs.getInt(1);
             for (int i = 0; i <= count + STEP;) {
@@ -43,9 +42,11 @@ public class Compact {
                     String summary = rs.getString(2);
                     String link = rs.getString(3);
                     String c = HtmlUtils.compact(summary, link);
-                    update.setString(1, c);
-                    update.setInt(2, id);
-                    update.executeUpdate();
+                    if (!c.equals(summary)) {
+                        update.setString(1, c);
+                        update.setInt(2, id);
+                        update.executeUpdate();
+                    }
                 }
                 rs.close();
                 i += STEP;
