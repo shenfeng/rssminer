@@ -33,7 +33,7 @@
 
 
   function _update_state (subid, page, sort, group) {
-    $feed_content.scrollTop(0).empty();      // save memory
+    $feed_content.scrollTop(0).empty(); // save memory, when reading list
     gcur_page = page;
     gcur_sort = sort;
     gcur_group = group;
@@ -89,8 +89,9 @@
         $p.hide();            // 4037/330457
       }
     });
+    // $feed_content[0].focus();
     // TODO focus reading area
-    $feed_content.find('.feed h2').click();
+    // $feed_content.find('.feed h2').click();
     // $feed_content.find('p>br').hide();
   }
 
@@ -114,8 +115,7 @@
       data_api.fetch_feed(feedid, mark_read, function (feed) {
         set_document_title(feed.title);
         var content = to_html(tmpls.feed_content, feed);
-        $feed_content.scrollTop(0);
-        $feed_content.empty().append(content);
+        $feed_content.scrollTop(0).empty().append(content);
         clean_content();
       });
     };
