@@ -118,6 +118,29 @@
         <li>Articles are sorted by the score</li>
         <li>The scores are updated as you read or vote, automatically</li>
       </ul>
+      <h3>Keyboard shortcut</h3>
+      <table>
+        <tr>
+          <td>j</td>
+          <td>Prev Item</td>
+        </tr>
+        <tr>
+          <td>k</td>
+          <td>Next item</td>
+        </tr>
+        <tr>
+          <td>o</td>
+          <td>Open</td>
+        </tr>
+        <tr>
+          <td>u</td>
+          <td>Return to list</td>
+        </tr>
+        <tr>
+          <td>t</td>
+          <td>Switch tab</td>
+        </tr>
+      </table>
       <h3>
         Reading Note <i class="icon-comment"></i>,
         Sharing <i class="icon-share"></i>

@@ -23,6 +23,14 @@
     }
 }
 
+.show-about {
+    td:first-child {
+        color: red;
+        width: 60px;
+        text-align: center;
+    }
+}
+
 $demo_warn_bg_color: #fcfcac;
 /* $demo_warn_bg_color: #DDDAAA; */
 
