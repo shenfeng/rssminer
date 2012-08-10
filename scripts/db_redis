@@ -1,0 +1,42 @@
+#! /bin/bash -x
+
+set -u                          # Treat unset variables as an error
+set -e #  Exit immediately if a simple command exits with a non-zero status
+
+# start redis and mysql for OS X development
+
+run_local () {
+    cd /Users/feng/Downloads/redis/src && ./redis-server &
+    cd /Users/feng/Downloads/mysql-5.5.25a-osx10.6-x86_64 && ./bin/mysqld --basedir . --innodb_buffer_pool_size 8388608 --innodb-flush-log-at-trx-commit=2 &
+}
+
+DESKTOP='192.168.1.3'
+
+ssh_proxy () {
+    ssh -N -f -L 3306:127.0.0.1:3306 $DESKTOP
+    ssh -N -f -L 6379:127.0.0.1:6379 $DESKTOP
+}
+
+kill_db_redis () {
+    killall redis-server
+    killall mysqld
+}
+
+usage () {
+    cat <<EOF
+USAGE:
+db_redis kill|ssh|local
+EOF
+}
+
+while test $# -ne 0; do
+    arg=$1; shift
+    case $arg in
+        kill) kill_db_redis $@; exit;;
+        ssh) ssh_proxy; exit;;
+        local) run_local $@; exit;;
+        *) usage; exit;;
+    esac
+done
+
+usage
