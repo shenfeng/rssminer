@@ -3,7 +3,12 @@
 set -u                          # Treat unset variables as an error
 set -e #  Exit immediately if a simple command exits with a non-zero status
 
-ABSOLUTE_PATH=$(readlink -f $0)
+READLINK=readlink
+if which greadlink > /dev/null; then
+    READLINK=greadlink
+fi
+
+ABSOLUTE_PATH=$(${READLINK} -f $0)
 HOME="${ABSOLUTE_PATH%/*/*}"
 
 cd $HOME

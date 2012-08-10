@@ -110,7 +110,7 @@ end
 
 desc "Javac"
 task :javac do
-  sh 'rm classes -rf && mkdir classes'
+  sh 'rm -rf classes && mkdir classes'
   sh 'find src/java -name "*.java" | xargs javac -Xlint:unchecked -cp "classes:lib/*:src/"  -d classes -sourcepath src/java/'
 end
 
@@ -123,7 +123,7 @@ desc "Run all test"
 task :all_test => [:test, :junit]
 
 desc "Run lein unit test"
-task :test => [:prepare, :javac, :junit] do
+task :test => [:prepare, :javac] do
   sh 'lein test'
 end
 
@@ -158,7 +158,9 @@ task :css_compile do
     sh "sass -t compressed --cache-location /tmp #{source} #{target}"
   end
   sh "find public/css/ -type f " +
-    "| xargs -I {} sed -i \"s/{VERSION}/#{version}/g\" {}"
+    "| xargs -I {} sed -i -e \"s/{VERSION}/#{version}/g\" {}"
+  # os x sed will generate many file end with -e
+  sh "find public/css -type f -name \"*-e\" | xargs rm"
   sh 'mv public/css/chrome.css chrome/style.css'
 end
 
@@ -202,7 +204,9 @@ task :html_compress do
     end
   end
   sh "find src/templates/ -type f " +
-    "| xargs -I {} sed -i \"s/{VERSION}/#{version}/g\" {}"
+    "| xargs -I {} sed -i -e \"s/{VERSION}/#{version}/g\" {}"
+
+  sh "find src/templates/ -type f -name \"*-e\" | xargs rm"
 end
 
 desc "Using luke to inspect luence index"

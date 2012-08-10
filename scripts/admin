@@ -3,18 +3,25 @@
 set -u                          # Treat unset variables as an error
 set -e #  Exit immediately if a simple command exits with a non-zero status
 
-ABSOLUTE_PATH=$(readlink -f $0)
+READLINK=readlink
+if which greadlink > /dev/null; then
+    READLINK=greadlink
+fi
+
+ABSOLUTE_PATH=$(${READLINK} -f $0)
 HOME="${ABSOLUTE_PATH%/*/*}"
 DB_NAME='rssminer'
 DB_USER='feng'
 BACKUP_FOLDER="/var/rssminer_backup"
 
 log() {
-    echo "`date --rfc-3339=seconds` INFO -- $@"
+    echo "`date` ERROR -- $@"
+    # echo "`date --rfc-3339=seconds` INFO -- $@"
 }
 
 error() {
-    echo "`date --rfc-3339=seconds` ERROR -- $@"
+    echo "`date` ERROR -- $@"
+    # echo "`date --rfc-3339=seconds` ERROR -- $@"
 }
 
 drop_db() {
@@ -35,6 +42,7 @@ create_db() {
 recreate_db_and_user () {
     drop_db $DB_NAME
     create_db $DB_NAME
+    # mysql -uroot -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY ''";
     mysql -uroot mysql -e "DROP USER '$DB_USER'@localhost"
     mysql -uroot -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY ''";
     mysql -uroot -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';"

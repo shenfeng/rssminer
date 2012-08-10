@@ -1,8 +1,16 @@
 #!/bin/sh
+set -u                          # Treat unset variables as an error
+set -e #  Exit immediately if a simple command exits with a non-zero status
 
-ABSOLUTE_PATH=$(readlink -f $0)
+READLINK=readlink
+if which greadlink > /dev/null; then
+    READLINK=greadlink
+fi
+
+ABSOLUTE_PATH=$(${READLINK} -f $0)
 HOME="${ABSOLUTE_PATH%/*/*}"
 cd "${HOME}" && java -server \
+    -Xdebug -Xrunjdwp:transport=dt_socket,address=9092,server=y,suspend=n \
     -Dfile.encoding=UTF-8 \
     -Djava.net.preferIPv4Stack=true \
     -Dsun.jnu.encoding=UTF-8 \
