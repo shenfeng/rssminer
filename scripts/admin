@@ -15,13 +15,12 @@ DB_USER='feng'
 BACKUP_FOLDER="/var/rssminer_backup"
 
 log() {
-    echo "`date` ERROR -- $@"
+    echo "`date "+%Y-%m-%d %H:%M:%S"` INFO -- $@"
     # echo "`date --rfc-3339=seconds` INFO -- $@"
 }
 
 error() {
-    echo "`date` ERROR -- $@"
-    # echo "`date --rfc-3339=seconds` ERROR -- $@"
+    echo "`date "+%Y-%m-%d %H:%M:%S"` ERROR -- $@"
 }
 
 drop_db() {
