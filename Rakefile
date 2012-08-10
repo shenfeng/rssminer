@@ -111,7 +111,7 @@ end
 desc "Javac"
 task :javac do
   sh 'rm -rf classes && mkdir classes'
-  sh 'find src/java -name "*.java" | xargs javac -Xlint:unchecked -cp "classes:lib/*:src/"  -d classes -sourcepath src/java/'
+  sh 'find src/java -name "*.java" | xargs javac -Xlint:unchecked -encoding utf8 -cp "classes:lib/*:src/"  -d classes -sourcepath src/java/'
 end
 
 desc "Run junit test"

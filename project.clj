@@ -25,7 +25,7 @@
   :repositories {"java.net" {:url "http://download.java.net/maven/2/"
                              :snapshots false}}
   :warn-on-reflection true
-  :javac-options {:source "1.7" :target "1.7" :debug "true" :fork "true"}
+  :javac-options {:source "1.7" :target "1.7" :debug "true" :fork "true" :encoding "utf8"}
   :java-source-path "src/java"
   :aot [rssminer.main, rssminer.admin]
   ;; :omit-source true
