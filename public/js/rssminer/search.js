@@ -121,9 +121,10 @@
       hide_search_context_menu();
       $q.blur();
       $ct_menu.hide();
-    } else if(e.which === 191 && e.shiftKey) { // key / => shift + ?
-      $q.focus().click();
     }
+    // else if(e.which === 191 && e.shiftKey) { // key / => shift + ?
+    // $q.focus().click();
+    // }
   }
 
   function search_on_click () {

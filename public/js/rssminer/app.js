@@ -33,6 +33,7 @@
 
 
   function _update_state (subid, page, sort, group) {
+    $welcome_list.scrollTop(0);
     $feed_content.scrollTop(0).empty(); // save memory, when reading list
     gcur_page = page;
     gcur_sort = sort;
@@ -89,10 +90,6 @@
         $p.hide();            // 4037/330457
       }
     });
-    // $feed_content[0].focus();
-    // TODO focus reading area
-    // $feed_content.find('.feed h2').click();
-    // $feed_content.find('p>br').hide();
   }
 
   function read_feed (subid, feedid, page, sort, folder) {

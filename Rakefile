@@ -160,7 +160,7 @@ task :css_compile do
   sh "find public/css/ -type f " +
     "| xargs -I {} sed -i -e \"s/{VERSION}/#{version}/g\" {}"
   # os x sed will generate many file end with -e
-  sh "find public/css -type f -name \"*-e\" | xargs rm"
+  sh "find public/css -type f -name \"*-e\" | xargs rm -f"
   sh 'mv public/css/chrome.css chrome/style.css'
 end
 
@@ -206,7 +206,7 @@ task :html_compress do
   sh "find src/templates/ -type f " +
     "| xargs -I {} sed -i -e \"s/{VERSION}/#{version}/g\" {}"
 
-  sh "find src/templates/ -type f -name \"*-e\" | xargs rm"
+  sh "find src/templates/ -type f -name \"*-e\" | xargs rm -f"
 end
 
 desc "Using luke to inspect luence index"

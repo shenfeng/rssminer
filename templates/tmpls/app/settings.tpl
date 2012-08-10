@@ -144,6 +144,18 @@
           <td>/</td>
           <td>Focus search</td>
         </tr>
+        <tr>
+          <td>?(Shift + /)</td>
+          <td>Help</td>
+        </tr>
+        <tr>
+          <td>n|down</td>
+          <td>Scroll down article</td>
+        </tr>
+        <tr>
+          <td>p|up</td>
+          <td>Scroll up article</td>
+        </tr>
       </table>
       <h3>
         Reading Note <i class="icon-comment"></i>,
