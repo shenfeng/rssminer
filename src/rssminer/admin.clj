@@ -8,7 +8,9 @@
         (clojure.tools [logging :only [info]]
                        [cli :only [cli]])
         [clojure.java.jdbc :only [with-query-results]])
-  (:require [rssminer.database :as db]))
+  (:require [rssminer.database :as db])
+  (:import [java.util.concurrent BlockingQueue ArrayBlockingQueue]
+           [java.util.concurrent Executors TimeUnit]))
 
 (def step 1000)
 
@@ -19,7 +21,18 @@
 
 (defn rebuild-index []
   (info "Clear all lucene index and rebuild it")
-  (let [max (max-feed-id)]
+  (let [max (max-feed-id)
+        stop-setinal (Object.)
+        index-queue (ArrayBlockingQueue. 300)
+        processor-count (.. Runtime getRuntime availableProcessors)
+        threads (Executors/newFixedThreadPool processor-count)
+        worker (fn [] (loop [feed (.take index-queue)]
+                       (when (not= feed stop-setinal)
+                         (index-feed (:id feed) (:rss_link_id feed) feed)
+                         (recur (.take index-queue)))))]
+    (doseq [i (range processor-count)]
+      (.submit threads ^Runnable worker))
+    (.shutdown threads)
     (info "max feed id " max)
     (doseq [start (range 0 (+ max step) step)]
       (when (= 0 (rem start (* step 10)))
@@ -27,7 +40,10 @@
       (with-mysql
         (with-query-results rs [select-sql start (+ start step)]
           (doseq [feed rs]
-            (index-feed (:id feed) (:rss_link_id feed) feed))))))
+            (.put index-queue feed)))))
+    (doseq [i (range (* 2 processor-count))]
+      (.put index-queue stop-setinal))
+    (.awaitTermination threads 10 TimeUnit/MINUTES)) ; allow stop
   (close-global-index-writer! :optimize true)
   (info "Rebuild index OK"))
 
