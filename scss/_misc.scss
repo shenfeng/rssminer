@@ -1,3 +1,5 @@
+@import "vars";
+
 .section {
     h2 { text-align: left; padding-left: 4em; }
     h4 { width: 130px; }
@@ -24,8 +26,21 @@
 }
 
 .show-about {
+    table {
+        border-collapse: collapse;
+        border: 1px solid #ccc;
+        td {
+            padding: 3px 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        td + td {
+            border-left: 1px solid #ccc;
+        }
+    }
     td:first-child {
-        color: red;
+        color: $header_color;
+        font-size: 16px;
+        font-weight: bold;
         width: 60px;
         text-align: center;
     }

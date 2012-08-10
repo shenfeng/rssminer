@@ -118,7 +118,7 @@
         <li>Articles are sorted by the score</li>
         <li>The scores are updated as you read or vote, automatically</li>
       </ul>
-      <h3>Keyboard shortcut</h3>
+      <h3>Keyboard shortcuts</h3>
       <table>
         <tr>
           <td>j</td>
@@ -139,6 +139,10 @@
         <tr>
           <td>t</td>
           <td>Switch tab</td>
+        </tr>
+        <tr>
+          <td>/</td>
+          <td>Focus search</td>
         </tr>
       </table>
       <h3>
@@ -163,6 +167,3 @@
     </div>
   </li>
 </ul>
-
-
-

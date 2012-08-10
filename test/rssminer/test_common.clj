@@ -82,7 +82,8 @@
       (catch SQLException e
         (print-sql-exception-chain e)
         (throw e))
-      (finally (run-admin "drop-db" ["-d" test-db-name])))))
+      ;; (finally (run-admin "drop-db" ["-d" test-db-name]))
+      )))
 
 (defn redis-fixture [test-fn]
   (sh "redis-cli" "flushdb")            ; just clean all
