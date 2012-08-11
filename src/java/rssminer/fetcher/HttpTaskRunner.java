@@ -36,9 +36,7 @@ class Filter implements IFilter {
     }
 
     public boolean accept(DynamicBytes partialBody) {
-        if (partialBody.length() > 2 * 1024 * 1024) // max 2 M
-            return false;
-        return true;
+        return partialBody.length() <= 2 * 1024 * 1024;
     }
 
 }
@@ -64,7 +62,7 @@ public class HttpTaskRunner {
                     break;
                 }
             }
-            if (ct != null && ct.toLowerCase().indexOf("html") != -1) {
+            if (ct != null && ct.toLowerCase().contains("html")) {
                 return true;
             }
             return false;
@@ -245,7 +243,7 @@ public class HttpTaskRunner {
         Object c = mStat.get(code);
         Integer count = 0;
         if (c instanceof Integer) {
-            count = ((Integer) c).intValue() + 1;
+            count = (Integer) c + 1;
         }
         mStat.put(code, count);
     }

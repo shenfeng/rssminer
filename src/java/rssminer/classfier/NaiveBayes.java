@@ -141,7 +141,7 @@ public class NaiveBayes {
     }
 
     public static double[] classify(Map<String, Map<String, Double>> model,
-            List<Integer> feeds) throws CorruptIndexException, IOException {
+            List<Integer> feeds) throws IOException {
         int[] ids = SEARCHER.feedID2DocIDs(feeds);
         double[] result = new double[ids.length];
         IndexReader reader = SEARCHER.getReader();
@@ -158,7 +158,7 @@ public class NaiveBayes {
     }
 
     public static double classify(Map<String, Map<String, Double>> model,
-            int feedid) throws CorruptIndexException, IOException {
+            int feedid) throws IOException {
         IndexReader reader = SEARCHER.getReader();
         IndexSearcher searcher = new IndexSearcher(reader);
         int docid = SEARCHER.feedID2DocID(searcher, feedid);
@@ -168,7 +168,7 @@ public class NaiveBayes {
     }
 
     public static Map<String, Map<String, Double>> train(List<Vote> votes)
-            throws CorruptIndexException, IOException {
+            throws IOException {
         // get ids
         List<Integer> feedids = new ArrayList<Integer>(votes.size());
         for (Vote vote : votes) {
@@ -190,9 +190,8 @@ public class NaiveBayes {
     }
 
     private static Map<String, Double> trainField(IndexReader reader,
-            List<Vote> votes, String field) throws IOException,
-            CorruptIndexException {
-        Map<String, TermFeature> map = null;
+            List<Vote> votes, String field) throws IOException {
+        Map<String, TermFeature> map;
         if (Searcher.CONTENT.equals(field)) {
             map = new HashMap<String, TermFeature>(20480);
         } else {

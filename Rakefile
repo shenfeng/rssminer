@@ -1,4 +1,4 @@
-task :default => :test
+task :default => :all_test
 
 version = Time.now.strftime("%Y%m%d%H%M") # timestamp
 jscompiler = "closure-compiler.jar"

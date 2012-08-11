@@ -52,11 +52,11 @@ public class CompactHtmlVisitor implements NodeVisitor {
             URI uri = new URI(baseUri);
             String h = uri.getHost();
             // http://feedproxy.google.com
-            if (h != null && h.indexOf("proxy") != -1) {
+            if (h != null && h.contains("proxy")) {
             } else {
                 this.baseUri = uri;
             }
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException ignored) {
         }
     }
 
@@ -163,7 +163,7 @@ public class CompactHtmlVisitor implements NodeVisitor {
                 if (!val.startsWith("http") && !val.startsWith("data:")) {
                     val = baseUri.resolve(val).toString();
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         return val;

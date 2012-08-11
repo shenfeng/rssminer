@@ -62,7 +62,7 @@ public class HtmlUtils {
             Elements elements = d.getElementsByTag("link");
             for (Element e : elements) {
                 String rel = e.attr("rel");
-                if (rel != null && rel.indexOf("icon") != -1) {
+                if (rel != null && rel.contains("icon")) {
                     String href = e.attr("href");
                     if (href != null) {
                         return base.resolve(href);

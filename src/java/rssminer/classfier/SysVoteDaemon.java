@@ -60,7 +60,7 @@ public class SysVoteDaemon implements Runnable {
     }
 
     private void computeAddSaveScore(int userID) throws SQLException,
-            CorruptIndexException, IOException {
+            IOException {
         Map<String, Map<String, Double>> model = trainModel(userID);
         if (model != null) {
             Watch w = new Watch().start();
@@ -94,7 +94,7 @@ public class SysVoteDaemon implements Runnable {
     }
 
     private Map<String, Map<String, Double>> getModel(int userID)
-            throws SQLException, CorruptIndexException, IOException {
+            throws SQLException, IOException {
         Map<String, Map<String, Double>> cache = modelCache.get(userID);
         if (cache != null) {
             if (cache == noModel) {
@@ -108,7 +108,7 @@ public class SysVoteDaemon implements Runnable {
     }
 
     public void handlerFetcherEvent(FetcherEvent e) throws SQLException,
-            CorruptIndexException, IOException {
+            IOException {
         Watch w = new Watch().start();
         List<Integer> userIDs = DBHelper.fetchUserIDsBySubID(ds, e.subid);
         Jedis redis = jedis.getResource();
@@ -134,7 +134,7 @@ public class SysVoteDaemon implements Runnable {
                 e.subid, e.feedids.size(), userIDs.size(), w.time() });
     }
 
-    public void handlerUserEvent(UserEvent e) throws CorruptIndexException,
+    public void handlerUserEvent(UserEvent e) throws
             SQLException, IOException {
         Integer c = combineEvents.get(e.userID);
         if (c == null) {
@@ -160,7 +160,7 @@ public class SysVoteDaemon implements Runnable {
     }
 
     public void run() {
-        Event event = null;
+        Event event;
         while (running) {
             try {
                 event = queue.take();
@@ -192,7 +192,7 @@ public class SysVoteDaemon implements Runnable {
             ps.setDouble(2, neutral);
             ps.setInt(3, usreID);
             ps.executeUpdate();
-            if (con.getAutoCommit() == false) {
+            if (!con.getAutoCommit()) {
                 con.commit();
             }
             Utils.closeQuietly(ps);
@@ -245,7 +245,7 @@ public class SysVoteDaemon implements Runnable {
     }
 
     private Map<String, Map<String, Double>> trainModel(int userID)
-            throws SQLException, CorruptIndexException, IOException {
+            throws SQLException, IOException {
         Watch w = new Watch().start();
         List<Vote> votes = DBHelper.fetchVotedIds(ds, userID);
         Map<String, Map<String, Double>> model = null;

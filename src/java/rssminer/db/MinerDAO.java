@@ -372,9 +372,9 @@ public class MinerDAO {
                 s.setTotal(rs.getInt(6));
                 subs.add(s);
             }
+            Utils.closeQuietly(rs);
             String sql = "select like_score,neutral_score from users where id = "
                     + userID;
-            Utils.closeQuietly(rs);
             rs = stat.executeQuery(sql);
             if (rs.next()) {
                 double like = rs.getDouble(1);

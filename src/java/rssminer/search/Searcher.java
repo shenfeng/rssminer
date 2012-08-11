@@ -94,7 +94,7 @@ public class Searcher {
             ch = str.charAt(i);
             if (Character.isWhitespace(ch)
                     || Character.getType(ch) == OTHER_PUNCTUATION) {
-                if (splitter == false) {
+                if (!splitter) {
                     strs.add(str.substring(start + 1, i));
                 }
                 splitter = true;
@@ -199,7 +199,7 @@ public class Searcher {
         return query;
     }
 
-    public void close(boolean optimize) throws CorruptIndexException,
+    public void close(boolean optimize) throws
             IOException {
         if (indexer != null) {
             if (optimize) {
@@ -213,7 +213,7 @@ public class Searcher {
     }
 
     private Document createDocument(int feeId, int rssID, String author,
-            String title, String summary, String tags) throws IOException {
+            String title, String summary, String tags) {
         Document doc = new Document();
         // not intern, already interned
         Field fid = new Field(FEED_ID, false, Integer.toString(feeId),
@@ -266,7 +266,7 @@ public class Searcher {
     }
 
     public int feedID2DocID(IndexSearcher searcher, int feedid)
-            throws CorruptIndexException, IOException {
+            throws IOException {
         TermQuery query = new TermQuery(FEED_ID_TERM.createTerm(Integer
                 .toString(feedid)));
         TopDocs docs = searcher.search(query, 1);
@@ -278,7 +278,7 @@ public class Searcher {
     }
 
     public int[] feedID2DocIDs(List<Integer> feeds)
-            throws CorruptIndexException, IOException {
+            throws IOException {
         int[] array = new int[feeds.size()];
         IndexReader reader = getReader();
         IndexSearcher searcher = new IndexSearcher(reader);
@@ -294,12 +294,12 @@ public class Searcher {
         return boost;
     }
 
-    public IndexReader getReader() throws CorruptIndexException, IOException {
+    public IndexReader getReader() throws IOException {
         return IndexReader.open(indexer, false);
     }
 
     public void index(int feeID, int rssID, String author, String title,
-            String summary, String tags) throws CorruptIndexException,
+            String summary, String tags) throws
             IOException {
         Document doc = createDocument(feeID, rssID, author, title, summary,
                 tags);
@@ -309,7 +309,7 @@ public class Searcher {
 
     // return feed ids
     public List<Feed> search(String term, int userID, int limit)
-            throws CorruptIndexException, IOException, ParseException,
+            throws IOException, ParseException,
             SQLException {
         List<Integer> subids = DBHelper.getUserSubIDS(ds, userID);
         List<String> subs = new ArrayList<String>();
@@ -321,8 +321,8 @@ public class Searcher {
 
     // return feed ids
     public List<Feed> searchInSubIDs(String term, int userID,
-            List<String> subids, int limit) throws CorruptIndexException,
-            IOException, ParseException, SQLException {
+            List<String> subids, int limit) throws
+            IOException, SQLException {
         IndexReader reader = getReader();
         IndexSearcher searcher = new IndexSearcher(getReader());
         Query q = buildQuery(term, subids);
