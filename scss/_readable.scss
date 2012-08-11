@@ -57,6 +57,8 @@
     }
     * { max-width: 700px; }
     .summary {
+        /* font-family: Kai 'Lucida Grande', "Helvetica Neue","Microsoft YaHei", Helvetica, Arial, sans-serif; */
+        /* font-size: 17px; */
         h1 { font-size: 23px;}
         h2, h3 { font-size: 20px; }
         h4, h5 { font-size: 18px; }
@@ -88,6 +90,7 @@
         img {
             margin: 5px auto;
             display: block;
+            box-shadow: 0 0 5px #999;
         }
 
         code, pre {

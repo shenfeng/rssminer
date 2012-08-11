@@ -37,11 +37,14 @@
             border-left: 1px solid #ccc;
         }
     }
+    td {
+        width: 200px;
+    }
     td:first-child {
         color: $header_color;
         font-size: 16px;
         font-weight: bold;
-        width: 90px;
+        width: 130px;
         text-align: center;
     }
 }
