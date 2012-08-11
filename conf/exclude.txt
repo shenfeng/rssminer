@@ -21,6 +21,7 @@
 /public/js/rssminer
 /scss
 /src
+/out
 /src/templates/tmpls
 /target
 /templates
