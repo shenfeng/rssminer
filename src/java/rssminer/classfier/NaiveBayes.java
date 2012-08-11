@@ -1,23 +1,16 @@
 package rssminer.classfier;
 
-import static rssminer.search.Searcher.SEARCHER;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.TermFreqVector;
 import org.apache.lucene.search.IndexSearcher;
-
 import rssminer.db.Vote;
 import rssminer.search.Searcher;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
+
+import static rssminer.search.Searcher.SEARCHER;
 
 class TermFeature implements Comparable<TermFeature> {
 
@@ -113,7 +106,7 @@ public class NaiveBayes {
     }
 
     private static double classfiy(Map<String, Map<String, Double>> model,
-            IndexReader reader, int docid) throws IOException {
+                                   IndexReader reader, int docid) throws IOException {
         double result = 1.0D;
         for (String field : Searcher.FIELDS) {
             Map<String, Double> submodel = model.get(field);
@@ -141,7 +134,7 @@ public class NaiveBayes {
     }
 
     public static double[] classify(Map<String, Map<String, Double>> model,
-            List<Integer> feeds) throws IOException {
+                                    List<Integer> feeds) throws IOException {
         int[] ids = SEARCHER.feedID2DocIDs(feeds);
         double[] result = new double[ids.length];
         IndexReader reader = SEARCHER.getReader();
@@ -158,7 +151,7 @@ public class NaiveBayes {
     }
 
     public static double classify(Map<String, Map<String, Double>> model,
-            int feedid) throws IOException {
+                                  int feedid) throws IOException {
         IndexReader reader = SEARCHER.getReader();
         IndexSearcher searcher = new IndexSearcher(reader);
         int docid = SEARCHER.feedID2DocID(searcher, feedid);
@@ -190,7 +183,7 @@ public class NaiveBayes {
     }
 
     private static Map<String, Double> trainField(IndexReader reader,
-            List<Vote> votes, String field) throws IOException {
+                                                  List<Vote> votes, String field) throws IOException {
         Map<String, TermFeature> map;
         if (Searcher.CONTENT.equals(field)) {
             map = new HashMap<String, TermFeature>(20480);

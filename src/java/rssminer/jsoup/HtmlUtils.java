@@ -1,11 +1,5 @@
 package rssminer.jsoup;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.net.URI;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import org.ccil.cowan.tagsoup.Parser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,9 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
 import rssminer.Utils;
 import rssminer.sax.HTMLMinfiyHandler;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.URI;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class HtmlUtils {
 
@@ -36,10 +35,10 @@ public class HtmlUtils {
     final static Pattern comment = Pattern.compile("comment",
             Pattern.CASE_INSENSITIVE);
 
-    static final String[] IGNORE_TAGS = new String[] { "script", "style",
-            "link", "#comment" };
+    static final String[] IGNORE_TAGS = new String[] {"script", "style",
+            "link", "#comment"};
 
-    static String[] TEXT_IGNORE = new String[] { "code", "pre" };
+    static String[] TEXT_IGNORE = new String[] {"code", "pre"};
 
     public static String compact(String html, String baseUri) {
         if (html == null || html.isEmpty()) {

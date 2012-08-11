@@ -1,22 +1,22 @@
 package rssminer.search;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-
 import me.shenfeng.mmseg.BSDictionary;
 import me.shenfeng.mmseg.Dictionary;
 import me.shenfeng.mmseg.SimpleMMsegTokenizer;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.PorterStemFilter;
 import org.apache.lucene.analysis.TokenStream;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+
 public class RssminerAnalyzer extends Analyzer {
 
     static class DictHolder {
         static final Dictionary dic;
+
         static {
             InputStream is = RssminerAnalyzer.class.getClassLoader()
                     .getResourceAsStream("words.dic");

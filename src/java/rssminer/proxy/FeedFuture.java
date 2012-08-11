@@ -1,17 +1,17 @@
 package rssminer.proxy;
 
-import static me.shenfeng.http.HttpUtils.LOCATION;
-import static rssminer.Utils.CLIENT;
+import clojure.lang.Keyword;
+import me.shenfeng.http.client.ITextHandler;
+import me.shenfeng.http.client.TextRespListener;
+import rssminer.Utils;
+import rssminer.jsoup.HtmlUtils;
 
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.Map;
 
-import me.shenfeng.http.client.ITextHandler;
-import me.shenfeng.http.client.TextRespListener;
-import rssminer.Utils;
-import rssminer.jsoup.HtmlUtils;
-import clojure.lang.Keyword;
+import static me.shenfeng.http.HttpUtils.LOCATION;
+import static rssminer.Utils.CLIENT;
 
 // fetch the orginal html
 public class FeedFuture extends AbstractFuture {
@@ -26,7 +26,7 @@ public class FeedFuture extends AbstractFuture {
         }
 
         public void onSuccess(int status, Map<String, String> headers,
-                String html) {
+                              String html) {
             if (status == 301 || status == 302) {
                 String loc = headers.get(LOCATION);
                 if (loc != null) {
@@ -77,7 +77,7 @@ public class FeedFuture extends AbstractFuture {
     }
 
     public FeedFuture(String uri, Map<String, String> headers,
-            Map<Keyword, Object> config) {
+                      Map<Keyword, Object> config) {
         super(uri, headers, config);
         this.proxyserver = config.get(Utils.K_PROXY_SERVER) + "/p?u=";
     }

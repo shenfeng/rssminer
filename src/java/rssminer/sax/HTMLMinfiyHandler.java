@@ -41,7 +41,7 @@ public class HTMLMinfiyHandler extends AbstractHTMLHandler {
             }
         } else if (isInStyle) {
             final int total = start + length;
-            for (int i = start; i < total;) {
+            for (int i = start; i < total; ) {
                 // skip leading space
                 while (i < total && Character.isWhitespace(ch[i])) {
                     ++i;
@@ -66,7 +66,7 @@ public class HTMLMinfiyHandler extends AbstractHTMLHandler {
     }
 
     public void startElement(String uri, String localName, String qName,
-            Attributes attrs) throws SAXException {
+                             Attributes attrs) throws SAXException {
         qName = qName.toLowerCase();
         sb.append(START).append(qName);
         int length = attrs.getLength();

@@ -1,16 +1,15 @@
 package rssminer.proxy;
 
+import clojure.lang.Keyword;
+import me.shenfeng.http.HttpUtils;
+import redis.clients.jedis.Jedis;
+
 import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
-
-import me.shenfeng.http.HttpUtils;
-
-import redis.clients.jedis.Jedis;
-import clojure.lang.Keyword;
 
 public abstract class AbstractFuture extends CommonFuture {
 
@@ -21,7 +20,7 @@ public abstract class AbstractFuture extends CommonFuture {
     private static byte[] BODY = "b".getBytes();
 
     public AbstractFuture(String uri, Map<String, String> headers,
-            Map<Keyword, Object> config) {
+                          Map<Keyword, Object> config) {
         super(config, headers);
         initUri = uri;
         if (!tryCache()) {

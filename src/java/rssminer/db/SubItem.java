@@ -4,7 +4,6 @@ package rssminer.db;
  * google export
  *
  * @author feng
- *
  */
 public class SubItem {
     private String title;

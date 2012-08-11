@@ -8,7 +8,7 @@ public class HttpTaskRunnerConf {
     IBlockingTaskProvider blockingProvider;
     int queueSize = 300;
     int blockingTimeOut = 5; // blocking provider timeout, ie redis blpop.
-                             // seconds
+    // seconds
 
     String name;
     Proxy proxy = Proxy.NO_PROXY;

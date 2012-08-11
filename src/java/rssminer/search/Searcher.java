@@ -1,19 +1,6 @@
 package rssminer.search;
 
-import static java.lang.Character.OTHER_PUNCTUATION;
-import static rssminer.Utils.K_DATA_SOURCE;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
-import javax.sql.DataSource;
-
+import clojure.lang.Keyword;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -22,31 +9,31 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.Field.TermVector;
-import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.*;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
-import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.BooleanClause.Occur;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import rssminer.db.DBHelper;
 import rssminer.db.Feed;
 import rssminer.db.MinerDAO;
 import rssminer.jsoup.HtmlUtils;
-import clojure.lang.Keyword;
+
+import javax.sql.DataSource;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.sql.SQLException;
+import java.util.*;
+
+import static java.lang.Character.OTHER_PUNCTUATION;
+import static rssminer.Utils.K_DATA_SOURCE;
 
 public class Searcher {
 
@@ -66,25 +53,26 @@ public class Searcher {
     static final float TAG_BOOST = 2;
     static final float CONTENT_BOOST = 1;
 
-    public static String[] FIELDS = new String[] { AUTHOR, TITLE, CONTENT,
-            TAG };
+    public static String[] FIELDS = new String[] {AUTHOR, TITLE, CONTENT,
+            TAG};
 
     // cache it, String.intern is heavy
-    static Term[] TERMS = new Term[] { new Term(TITLE), new Term(CONTENT) };
+    static Term[] TERMS = new Term[] {new Term(TITLE), new Term(CONTENT)};
 
-    static Term[] SIMPLE_SPLIT_TERM = new Term[] { new Term(TAG),
-            new Term(AUTHOR) };
+    static Term[] SIMPLE_SPLIT_TERM = new Term[] {new Term(TAG),
+            new Term(AUTHOR)};
 
     // static Term CONTENT_TERM = new Term(CONTENT);
     static Term FEED_ID_TERM = new Term(FEED_ID);
     static Term RSS_ID_TERM = new Term(RSS_ID);
 
     public static Searcher initGlobalSearcher(String path,
-            Map<Keyword, Object> config) throws IOException {
+                                              Map<Keyword, Object> config) throws IOException {
         closeGlobalSearcher();
         SEARCHER = new Searcher(config, path);
         return SEARCHER;
     }
+
     public static List<String> simpleSplit(String str) {
         ArrayList<String> strs = new ArrayList<String>(2);
         int start = -1;
@@ -108,6 +96,7 @@ public class Searcher {
         }
         return strs;
     }
+
     private IndexWriter indexer = null;
     private final String path;
 
@@ -213,7 +202,7 @@ public class Searcher {
     }
 
     private Document createDocument(int feeId, int rssID, String author,
-            String title, String summary, String tags) {
+                                    String title, String summary, String tags) {
         Document doc = new Document();
         // not intern, already interned
         Field fid = new Field(FEED_ID, false, Integer.toString(feeId),
@@ -299,7 +288,7 @@ public class Searcher {
     }
 
     public void index(int feeID, int rssID, String author, String title,
-            String summary, String tags) throws
+                      String summary, String tags) throws
             IOException {
         Document doc = createDocument(feeID, rssID, author, title, summary,
                 tags);
@@ -321,7 +310,7 @@ public class Searcher {
 
     // return feed ids
     public List<Feed> searchInSubIDs(String term, int userID,
-            List<String> subids, int limit) throws
+                                     List<String> subids, int limit) throws
             IOException, SQLException {
         IndexReader reader = getReader();
         IndexSearcher searcher = new IndexSearcher(getReader());

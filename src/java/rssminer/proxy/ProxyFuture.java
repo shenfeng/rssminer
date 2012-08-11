@@ -1,8 +1,12 @@
 package rssminer.proxy;
 
-import static me.shenfeng.http.HttpUtils.CONTENT_TYPE;
-import static me.shenfeng.http.HttpUtils.LOCATION;
-import static rssminer.Utils.CLIENT;
+import clojure.lang.Keyword;
+import me.shenfeng.http.DynamicBytes;
+import me.shenfeng.http.client.BinaryRespListener;
+import me.shenfeng.http.client.IBinaryHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import rssminer.Utils;
 
 import java.io.ByteArrayInputStream;
 import java.net.URI;
@@ -10,15 +14,9 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Map;
 
-import me.shenfeng.http.DynamicBytes;
-import me.shenfeng.http.client.BinaryRespListener;
-import me.shenfeng.http.client.IBinaryHandler;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import rssminer.Utils;
-import clojure.lang.Keyword;
+import static me.shenfeng.http.HttpUtils.CONTENT_TYPE;
+import static me.shenfeng.http.HttpUtils.LOCATION;
+import static rssminer.Utils.CLIENT;
 
 // binary
 public class ProxyFuture extends AbstractFuture {
@@ -33,7 +31,7 @@ public class ProxyFuture extends AbstractFuture {
         }
 
         public void onSuccess(int status, Map<String, String> headers,
-                DynamicBytes bytes) {
+                              DynamicBytes bytes) {
             if (status == 301 || status == 302) {
                 String loc = headers.get(LOCATION);
                 if (loc != null) {
@@ -57,7 +55,7 @@ public class ProxyFuture extends AbstractFuture {
     }
 
     public ProxyFuture(String uri, Map<String, String> headers,
-            Map<Keyword, Object> config) {
+                       Map<Keyword, Object> config) {
         super(uri, headers, config);
     }
 

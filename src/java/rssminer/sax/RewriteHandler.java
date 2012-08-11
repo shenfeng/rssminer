@@ -1,14 +1,14 @@
 package rssminer.sax;
 
-import static java.net.URLEncoder.encode;
-import static rssminer.Utils.reverse;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
+import static java.net.URLEncoder.encode;
+import static rssminer.Utils.reverse;
 
 public class RewriteHandler extends AbstractHTMLHandler {
 
@@ -28,7 +28,7 @@ public class RewriteHandler extends AbstractHTMLHandler {
     }
 
     public void startElement(String uri, String localName, String qName,
-            Attributes attrs) throws SAXException {
+                             Attributes attrs) throws SAXException {
         qName = qName.toLowerCase();
         boolean rw = "script".equals(qName) || "img".equals(qName)
                 || "link".equals(qName);

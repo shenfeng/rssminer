@@ -1,25 +1,9 @@
 package rssminer;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
+import clojure.lang.Keyword;
 import me.shenfeng.http.HttpUtils;
 import me.shenfeng.http.client.HttpClient;
 import me.shenfeng.http.client.HttpClientConfig;
-
 import org.ccil.cowan.tagsoup.Parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +11,20 @@ import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
 import rssminer.db.SubItem;
 import rssminer.sax.RewriteHandler;
-import clojure.lang.Keyword;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 class GoogleExportHandler extends DefaultHandler {
 
@@ -42,6 +36,7 @@ class GoogleExportHandler extends DefaultHandler {
     private boolean isLabel = false;
     private SubItem current = new SubItem();
     private boolean isUrl = true;
+
     public void characters(char[] ch, int start, int length)
             throws SAXException {
         if (isTitle) {
@@ -75,7 +70,7 @@ class GoogleExportHandler extends DefaultHandler {
     }
 
     public void startElement(String uri, String localName, String qName,
-            Attributes att) throws SAXException {
+                             Attributes att) throws SAXException {
         if (qName.equals("object")) {
             ++objectDepth;
         } else if ("string".equals(qName)) {
@@ -95,10 +90,10 @@ public class Utils {
     final static Logger logger = LoggerFactory.getLogger(Utils.class);
     public static final HttpClient CLIENT;
     public static final String USER_AGETNT = "Mozilla/5.0 (compatible; Rssminer/1.0; +http://rssminer.net)";
-    public static final String[] NO_IFRAME = new String[] { "groups.google" }; // X-Frame-Options
+    public static final String[] NO_IFRAME = new String[] {"groups.google"}; // X-Frame-Options
     public static final String[] RESETED_DOMAINS = new String[] {
             "wordpress", "appspot", "emacsblog", "blogger", "blogspot",
-            "mikemccandless", "feedproxy", "blogblog" };
+            "mikemccandless", "feedproxy", "blogblog"};
 
     public static final String FINAL_URI = "X-final-uri";
 

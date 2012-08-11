@@ -1,22 +1,19 @@
 package rssminer.proxy;
 
-import static me.shenfeng.http.HttpUtils.CACHE_CONTROL;
-import static me.shenfeng.http.HttpUtils.CONTENT_TYPE;
-import static rssminer.Utils.K_DATA_SOURCE;
-import static rssminer.Utils.K_PROXY;
-import static rssminer.Utils.K_REDIS_SERVER;
+import clojure.lang.Keyword;
+import me.shenfeng.http.server.IListenableFuture;
+import me.shenfeng.http.server.ServerConstant;
+import redis.clients.jedis.JedisPool;
 
+import javax.sql.DataSource;
 import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.sql.DataSource;
-
-import me.shenfeng.http.server.IListenableFuture;
-import me.shenfeng.http.server.ServerConstant;
-import redis.clients.jedis.JedisPool;
-import clojure.lang.Keyword;
+import static me.shenfeng.http.HttpUtils.CACHE_CONTROL;
+import static me.shenfeng.http.HttpUtils.CONTENT_TYPE;
+import static rssminer.Utils.*;
 
 public class CommonFuture implements IListenableFuture {
 
@@ -55,7 +52,7 @@ public class CommonFuture implements IListenableFuture {
     }
 
     public CommonFuture(Map<Keyword, Object> config,
-            Map<String, String> headers) {
+                        Map<String, String> headers) {
         this.proxy = (Proxy) (config.get(K_PROXY));
         this.redis = (JedisPool) config.get(K_REDIS_SERVER);
         this.dataSource = (DataSource) config.get(K_DATA_SOURCE);
