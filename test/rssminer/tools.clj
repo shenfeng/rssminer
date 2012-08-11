@@ -23,9 +23,7 @@
 (defn- get-data [start]
   (mysql-query ["SELECT d.*, f.link, f.title from feed_data d
 join feeds f on f.id = d.id
-where d.id >= ? and length(summary) < 400
- and length(summary) > 100
- limit ?" start step]))
+where d.id >= ?  limit ?" start step]))
 
 (defn compare-data [req]
   (let [start (Integer/parseInt (or (-> req :params :start) "0"))

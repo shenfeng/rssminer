@@ -166,9 +166,8 @@ end
 
 desc "create chrome extension"
 task :chrome do
-  sh 'google-chrome --pack-extension=chrome ' +
-    '--pack-extension-key=conf/chrome.pem'
-  sh 'mv chrome.crx public/rssminer.crx'
+  # sh 'google-chrome --pack-extension=chrome ' + '--pack-extension-key=conf/chrome.pem'
+  # sh 'mv chrome.crx public/rssminer.crx'
 end
 
 desc "update dev mysql config file, restart mysql"

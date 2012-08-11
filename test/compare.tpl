@@ -15,8 +15,6 @@
       <table border=1>
         <tr>
           <th class="id">id </th>
-          <th class="id">su_len</th>
-          <th class="id">c_len</th>
           <th class="compact"> summary </th>
           <th class="summary"> compact</th>
         </tr>
@@ -26,14 +24,8 @@
               <a target="_blank" title="{{title}}"
                 href="{{ link }}">{{ id }}</a>
             </td>
-            <td class="length">{{ summary_length }}</td>
-            <td class="length">{{ compact_lenght }}</td>
-            <td class="summary">
-              {{{ summary }}}
-            </td>
-            <td class="compact">
-              {{{ compact }}}
-            </td>
+            <td class="summary">{{{ summary }}}</td>
+            <td class="compact">{{{ compact }}}</td>
           </tr>
         {{/feeds}}
       </table>

@@ -66,9 +66,11 @@ public class CompactHtmlRealDataTest {
             }
             count++;
             try {
-                ps.setString(1, compact);
-                ps.setInt(2, id);
-                ps.execute();
+                if (!compact.equals(html)) {
+                    ps.setString(1, compact);
+                    ps.setInt(2, id);
+                    ps.execute();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
