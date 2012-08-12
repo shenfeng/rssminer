@@ -11,6 +11,8 @@
       call_if_fn = util.call_if_fn;
 
   var SHOW_NAV = 'show-nav',
+      MIN_TIME = 400,           // at least 400ms, then record
+      SAVE_THREASH_HOLD = 5,
       READ_URL_PATTEN = 'read/:id/:id?p=:page&s=:sort',
       SHOW_CONTENT = 'show-content';
 
@@ -28,6 +30,8 @@
       gcur_group,
       gcur_subid,
       gcur_has_more = true,
+      greading_meta = {},
+      greading_times = {},
       GROUP_FOLDER = 'GROUP',
       GROUP_WELCOME = 'ALL',
       GROUP_SUB = 'SUB';
@@ -93,8 +97,22 @@
     });
   }
 
-  function record_time (url_pattern, args) {
-    console.log(url_pattern, args);
+  function record_reading_time (url_pattern, args) {
+    if(greading_meta.read) {
+      var time = new Date() - greading_meta.start;
+      if(time > MIN_TIME) {
+        time = parseInt(Math.floor(time/100)); // save store it in 0.1s
+        greading_times[greading_meta.id] = time;
+        if(_.keys(greading_times).length >= SAVE_THREASH_HOLD) {
+          var data = greading_times;
+          greading_times = {};  // empty it
+          data_api.save_reading_times(data);
+        }
+      }
+    }
+    if(url_pattern !== READ_URL_PATTEN) {
+      greading_meta.read = false;
+    }
   }
 
   function read_feed (subid, feedid, page, sort, folder) {
@@ -115,6 +133,11 @@
       }
       $welcome_list.empty();
       data_api.fetch_feed(feedid, mark_read, function (feed) {
+        // record reading meta: time
+        greading_meta.read = true;
+        greading_meta.start = new Date();
+        greading_meta.id = feedid;
+
         set_document_title(feed.title);
         var content = to_html(tmpls.feed_content, feed);
         $feed_content.scrollTop(0).empty().append(content);
@@ -315,12 +338,12 @@
       };
       table[READ_URL_PATTEN] = read_feed;
       for(var url_pattern in table) {
-        table[url_pattern] = (function (h) { // h is different every loop
+        table[url_pattern] = (function (h, url) { // h is different every loop
           return function () {          // allow record time
-            record_time(url_pattern, _.toArray(arguments));
+            record_reading_time(url, _.toArray(arguments));
             h.apply(null, arguments);
           };
-        })(table[url_pattern]);
+        })(table[url_pattern], url_pattern);
       }
       return table;
     })());

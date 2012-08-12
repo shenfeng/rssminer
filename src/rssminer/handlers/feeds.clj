@@ -31,6 +31,11 @@
       (mark-read fid user-id))
     {:body feed :headers cache-control}))
 
+(defn save-reading-time [req]
+  (let [user-id (user-id-from-session req)]
+    (db/update-reading-time user-id (:body req)))
+  {:status 204 :body nil})
+
 (defn get-by-subscription [req]
   (let [{:keys [rid limit sort offset]} (:params req)
         uid (user-id-from-session req)

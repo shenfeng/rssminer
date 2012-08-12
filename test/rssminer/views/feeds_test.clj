@@ -60,4 +60,16 @@
                 ["select * from user_feed where feed_id = ?" fid])
                first :read_date) 0))))
 
+(deftest test-save-reading-time
+  (let [ids (map :id (mysql-query ["select id from feeds"]))
+        body (apply hash-map (interleave ids (range 238 400)))]
+    (doseq [id ids]                     ; mark all as read
+      (auth-app {:uri (str "/api/feeds/" id "/read")
+                 :request-method :post}))
+    (is (= 204 (:status (auth-app {:uri "/api/feeds"
+                                   :request-method :post
+                                   :body (json-body body)}))))
+    (doseq [time (mysql-query ["select read_time from user_feed"])]
+      (is (> (:read_time time) 0)))))
+
 ;;; list subs are in subscriptions_test

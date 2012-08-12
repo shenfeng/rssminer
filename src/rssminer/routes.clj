@@ -32,6 +32,7 @@
   (JGET "/search" [] reader/search)
   (JPOST "/settings" [] user/save-settings)
   (JGET "/welcome" [] user/summary)
+  (JPOST "/feeds" [] feed/save-reading-time)
   (context "/feeds/:id" []
            (JGET "/" [] feed/get-feed)
            (JPOST "/vote" [] feed/user-vote)

@@ -103,6 +103,7 @@ create table user_feed (
     -- float => double 2012/4/30
     -- vote_sys DOUBLE default 0,  -- learn by program
     read_date INT NOT NULL default -1,   -- the reading date, -1, unread
+    read_time MEDIUMINT UNSIGNED NOT NULL DEFAULT 0,
     -- 2012/5/27
     -- alter table user_feed add vote_date int default -1 after read_date
     -- alter table user_feed change rss_link_id rss_link_id int unsigned not null default 0 after feed_id;

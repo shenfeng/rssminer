@@ -1,7 +1,7 @@
 (ns rssminer.db.feed
   (:use [rssminer.database :only [mysql-query with-mysql mysql-insert]]
         (rssminer [search :only [index-feed]]
-                  [util :only [to-int now-seconds]]
+                  [util :only [to-int now-seconds ignore-error]]
                   [config :only [rssminer-conf]]
                   [classify :only [on-fetcher-event]])
         [clojure.string :only [blank?]]
@@ -73,6 +73,19 @@
                  "INSERT INTO user_feed (user_id, feed_id, rss_link_id, read_date)
        VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE read_date = ?"
                  [user-id feed-id rssid now now]))))
+
+(def update-sql ["update user_feed set read_time = read_time + ? where user_id = ? and feed_id = ?"])
+
+;; data is a map {:feed_id time}
+(defn update-reading-time [user-id data]
+  (ignore-error                         ; read_time may out of range, MEDIUMINT UNSIGNED
+   (with-mysql
+     (apply do-prepared
+            (concat update-sql
+                    (map (fn [[feedid time]]
+                           ;; max 5 minutes, time in 0.1s
+                           [(min (* 10 60 5) time)
+                            user-id (to-int (name feedid))]) data))))))
 
 (defn fetch-newest [userid limit offset]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]

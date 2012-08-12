@@ -570,6 +570,10 @@
     });
   }
 
+  function save_reading_times (data, cb) {
+    ajax.jpost('/api/feeds', data, function () {call_if_fn(cb);});
+  }
+
   window.RM = $.extend(window.RM, {
     data: {
       add_subscription: add_subscription,
@@ -583,6 +587,7 @@
       get_user_subs: get_user_subs,
       list_folder_names: list_folder_names,
       mark_as_read: mark_as_read,
+      save_reading_times: save_reading_times,
       save_settings: save_settings,
       save_vote: save_vote,
       unsubscribe: unsubscribe
