@@ -62,6 +62,8 @@ public class Searcher {
     static Term[] SIMPLE_SPLIT_TERM = new Term[] {new Term(TAG),
             new Term(AUTHOR)};
 
+    static TermVector TV = TermVector.WITH_POSITIONS_OFFSETS;
+
     // static Term CONTENT_TERM = new Term(CONTENT);
     static Term FEED_ID_TERM = new Term(FEED_ID);
     static Term RSS_ID_TERM = new Term(RSS_ID);
@@ -217,7 +219,7 @@ public class Searcher {
             List<String> authors = simpleSplit(author);
             for (String a : authors) {
                 Field f = new Field(AUTHOR, false, a.toLowerCase(), Store.NO,
-                        Index.NOT_ANALYZED, TermVector.YES);
+                        Index.NOT_ANALYZED, TV);
                 f.setBoost(AUTHOR_BOOST);
                 doc.add(f);
             }
@@ -225,7 +227,7 @@ public class Searcher {
 
         if (title != null) {
             Field f = new Field(TITLE, false, title, Store.NO,
-                    Index.ANALYZED, TermVector.YES);
+                    Index.ANALYZED, TV);
             f.setBoost(TITLE_BOOST);
             doc.add(f);
         }
@@ -234,7 +236,7 @@ public class Searcher {
             List<String> ts = simpleSplit(tags);
             for (String tag : ts) {
                 Field f = new Field(TAG, false, tag.toLowerCase(), Store.NO,
-                        Index.NOT_ANALYZED, TermVector.YES);
+                        Index.NOT_ANALYZED, TV);
                 f.setBoost(TAG_BOOST);
                 doc.add(f);
             }
@@ -245,7 +247,7 @@ public class Searcher {
                 // String content = Utils.extractText(summary);
                 String content = HtmlUtils.text(summary);
                 Field f = new Field(CONTENT, false, content, Store.NO,
-                        Index.ANALYZED, TermVector.YES);
+                        Index.ANALYZED, TV);
                 doc.add(f);
             } catch (Exception ignore) {
                 logger.error("feed:" + feeId, ignore);
