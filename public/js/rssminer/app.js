@@ -11,6 +11,7 @@
       call_if_fn = util.call_if_fn;
 
   var SHOW_NAV = 'show-nav',
+      READ_URL_PATTEN = 'read/:id/:id?p=:page&s=:sort',
       SHOW_CONTENT = 'show-content';
 
   var $footer = $('#footer'),
@@ -90,6 +91,10 @@
         $p.hide();            // 4037/330457
       }
     });
+  }
+
+  function record_time (url_pattern, args) {
+    console.log(url_pattern, args);
   }
 
   function read_feed (subid, feedid, page, sort, folder) {
@@ -297,16 +302,28 @@
     }
   });
 
+
   fetch_and_show_user_subs(function () { // app start here
-    RM.hashRouter({
-      '': show_welcome,
-      '?s=:section&p=:p': show_welcome,
-      's/:section': show_settings,
-      'read/f_:group?p=:page&s=:sort': read_group_subs,
-      'read/:id?p=:page&s=:sort': read_subscription,
-      'read/f_:group/:id?p=:page&s=:sort': read_group_feed,
-      'read/:id/:id?p=:page&s=:sort': read_feed
-    });
+    RM.hashRouter((function () {
+      var table = {
+        '': show_welcome,
+        '?s=:section&p=:p': show_welcome,
+        's/:section': show_settings,
+        'read/f_:group?p=:page&s=:sort': read_group_subs,
+        'read/:id?p=:page&s=:sort': read_subscription,
+        'read/f_:group/:id?p=:page&s=:sort': read_group_feed
+      };
+      table[READ_URL_PATTEN] = read_feed;
+      for(var url_pattern in table) {
+        table[url_pattern] = (function (h) { // h is different every loop
+          return function () {          // allow record time
+            record_time(url_pattern, _.toArray(arguments));
+            h.apply(null, arguments);
+          };
+        })(table[url_pattern]);
+      }
+      return table;
+    })());
   });
 
   var is_loading = false;
