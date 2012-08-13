@@ -12,7 +12,7 @@
 
   var SHOW_NAV = 'show-nav',
       MIN_TIME = 400,           // at least 400ms, then record
-      SAVE_THREASH_HOLD = 5,
+      SAVE_THREASH_HOLD = 3,
       READ_URL_PATTEN = 'read/:id/:id?p=:page&s=:sort',
       SHOW_CONTENT = 'show-content';
 
