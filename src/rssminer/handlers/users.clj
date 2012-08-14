@@ -12,6 +12,8 @@
 (deftemplate login-page (slurp (resource "templates/login.tpl")))
 (deftemplate signup-page (slurp (resource "templates/signup.tpl")))
 
+(def cookie-attr {:max-age (* 3600 24 60)})
+
 (defn show-login-page [req]
   (to-html login-page {:return_url (or (-> req :params :return_url) "/a")}))
 
@@ -24,7 +26,7 @@
     (if user
       (assoc (redirect return-url)
         :session {:id (:id user)}      ; IE does not persistent cookie
-        :session-cookie-attrs {:max-age (* 3600 24 7)})
+        :session-cookie-attrs cookie-attr)
       (to-html login-page {:return_url return-url
                            :msg "Login failed, Email or password error"}))))
 
@@ -99,5 +101,5 @@
       :session {:id (:id (or (db/find-user-by-email email)
                              (db/create-user {:email email
                                               :provider "google"})))}
-      :session-cookie-attrs {:max-age (* 3600 24 7)})
+      :session-cookie-attrs {:max-age cookie-attr})
     (redirect "/")))
