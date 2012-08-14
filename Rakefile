@@ -250,18 +250,56 @@ namespace :run do
   task :restore_db_dev => ["db:restore_db", "run:dev"]
 end
 
+def get_mtime(patten)
+  mtime_total = 0
+  FileList[patten].each do |f|
+    mtime_total += File.mtime(f).to_i
+  end
+  return mtime_total
+end
+
+def watch_change(patten, cb)
+  t = Thread.new do
+    mtime_total = get_mtime(patten)
+    while true do
+      sleep 0.1                #  sleep 100ms
+      n = get_mtime(patten)
+      # puts n
+      if n != mtime_total
+        cb.call()
+        mtime_total = n
+      end
+    end
+  end
+  return t
+end
+
+def has_inotify()
+  begin
+    sh "which inotifywait"
+    return true
+  rescue
+    return false
+  end
+end
+
 namespace :watch do
   desc 'Watch css, html'
   task :all => [:deps, :css_compile, "js:tmpls"] do
-    # sh "echo -n \"\033]0;rssminer rake watch\007\""
-    t1 = Thread.new do
-      sh 'while inotifywait -r -e modify scss/; do rake css_compile; done'
-    end
-    t2 = Thread.new do
-      sh 'while inotifywait -r -e modify templates/; do rake js:tmpls; done'
+    if has_inotify
+      t1 = Thread.new {
+        sh 'while inotifywait -r -e modify scss/; do rake css_compile; done'
+      }
+      t2 = Thread.new {
+        sh 'while inotifywait -r -e modify templates/; do rake js:tmpls; done'
+      }
+    elsif
+      t1 = watch_change('log2/**/*.*', lambda {sh 'rake css_compile'})
+      t2 = watch_change('templates//**/*.*', lambda {sh 'rake js:tmpls'})
     end
     trap(:INT) {
-      sh "killall inotifywait"
+      sh "killall inotifywait || exit 0"
+      exit
     }
     t1.join
     t2.join
