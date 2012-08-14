@@ -14,7 +14,14 @@
     <div id="accouts-div">
       <h1><a href="/"> Rssminer</a> Login </h1>
       {{#msg}}<p id="error">{{{ msg }}}</p>{{/msg}}
-      <form action="/login" method="post" class="post-form">
+      <div class="openid s">
+        <h3>Open ID login</h3>
+        <a href="/login/google">
+          <img src="/imgs/openid_google.png"/>
+        </a>
+      </div>
+      <form action="/login" method="post" class="post-form s">
+        <h3>Password login</h3>
         <table>
           <tr>
             <td><label for="email">Email:</label>
@@ -40,15 +47,12 @@
         </table>
         <input value="{{{return_url}}}" name="return-url" type="hidden" />
       </form>
-      <div class="openid">
-        <h3>Already have an Google account?</h3>
-        <a href="/login/google">
-          <img src="/imgs/openid_google.png"/>
-        </a>
+      <div class="s">
+        <h3>Try with a live demo</h3>
+        <div id="demo">
+          <a href="/demo">demo</a>
+        </div>
       </div>
     </div>
   </body>
 </html>
-
-
-
