@@ -44,7 +44,7 @@
   }
 
   function split_tags (tags) {
-    if(tags) { return tags.split("; ").slice(0, 3); } // at most 3
+    if(tags) { return tags.split(/;\s?/).slice(0, 4); } // at most 4
     else { return []; }
   }
 

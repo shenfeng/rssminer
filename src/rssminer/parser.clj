@@ -47,7 +47,7 @@
                         (-> e :contents first :value trim)
                         (-> e :description :value trim))
               :link link
-              :tags (let [t (s/join "; " (map #(-> % :name trim)
+              :tags (let [t (s/join ";" (map #(-> % :name trim)
                                               (:categories e)))]
                       (most-len t 128))
               :updated_ts (:updatedDate e)
