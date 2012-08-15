@@ -18,6 +18,11 @@ public class TextAccumVisitor implements NodeVisitor {
     public void tail(Node node, int depth) {
         if (node instanceof TextNode) {
             String text = ((TextNode) node).getWholeText();
+            if (node.parent().nodeName() == "a" && text.startsWith("http")) {
+                // do not care if this is <a href="href">href</a>
+                return;
+            }
+
             boolean lastWhiteSpace = sb.length() > 0;
             if (sb.length() > 0
                     && !Character.isWhitespace(sb.charAt(sb.length() - 1))) {
