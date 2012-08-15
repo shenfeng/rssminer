@@ -101,5 +101,5 @@
       :session {:id (:id (or (db/find-user-by-email email)
                              (db/create-user {:email email
                                               :provider "google"})))}
-      :session-cookie-attrs {:max-age cookie-attr})
+      :session-cookie-attrs cookie-attr)
     (redirect "/")))

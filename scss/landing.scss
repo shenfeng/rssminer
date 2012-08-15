@@ -85,7 +85,7 @@ p {
     .rfloat {
         padding-top: 1em;
         width: $page-width - $left_width - 30px;
-        >span, a { display: block; margin: 0 40px; cursor: pointer; }
+        >span, a { margin: 0 40px; cursor: pointer; }
         img {
             border: 1px #ddd solid;
             &:hover {
