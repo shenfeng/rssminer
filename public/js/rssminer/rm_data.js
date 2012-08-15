@@ -536,7 +536,7 @@
     subid = parseInt(subid);
     var sub = _.find(subscriptions_cache, function (sub) {
       return subid === sub.id;
-    });
+    }) || {};
     sub.group = sub.group || 'null';
     return transorm_sub(sub);
   }

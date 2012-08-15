@@ -1,19 +1,14 @@
 package rssminer.tools;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.StringReader;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
 import org.apache.commons.io.IOUtils;
 import org.ccil.cowan.tagsoup.Parser;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import java.io.*;
+import java.sql.*;
 
 class ExtractTextHandler extends DefaultHandler {
     private int i, end;
@@ -56,6 +51,16 @@ class ExtractTextHandler extends DefaultHandler {
 public class Utils {
 
     static String JDBC_URL = "jdbc:mysql://localhost/rssminer?cachePrepStmts=true&useServerPrepStmts=true";
+
+    public static int getMaxID() throws SQLException {
+        Connection con = getRssminerDB();
+        Statement stat = con.createStatement();
+        ResultSet rs = stat.executeQuery("select max(id) from feed_data");
+        rs.next();
+        int max = rs.getInt(1);
+        con.close();
+        return max;
+    }
 
     public static Connection getRssminerDB() throws SQLException {
         Connection con = DriverManager.getConnection(JDBC_URL, "feng", "");
