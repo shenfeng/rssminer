@@ -92,7 +92,7 @@
     $feed_content.find('p').each(function (idx, p) {
       var $p = $(p);
       // only remove if no chillren and no text. 516264
-      if(!$.trim($p.text()) && !$p.find('*').length) {
+      if(!$.trim($p.text()) && !$p.find('img').length) {
         $p.hide();            // 4037/330457
       }
     });
