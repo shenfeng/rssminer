@@ -48,6 +48,7 @@ public class RssminerAnalyzer extends Analyzer {
         TokenStream tok = new StopFilter(msegTokenizer);
         tok = new PorterStemFilter(tok);
         return tok;
+//        return new StopFilter(msegTokenizer);
         // return tok;
         // return new KStemFilter(tok);
     }

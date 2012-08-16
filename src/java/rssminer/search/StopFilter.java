@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.lang.Character.*;
+
 public class StopFilter extends FilteringTokenFilter {
     public static final CharArraySet STOP_WORDS_SET;
 
@@ -103,7 +105,7 @@ public class StopFilter extends FilteringTokenFilter {
                 "no", "not", "of", "on", "or", "such", "that", "the",
                 "their", "then", "there", "these", "they", "this", "to",
                 "was", "will", "with", "一", "与", "且", "个", "为", "么", "乎",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "上", "中",
+                "上", "中",
                 "于", "人", "以", "们", "会", "但", "你", "到", "后", "对", "将", "就",
                 "年", "我", "时", "是", "有", "来", "用", "而", "被", "这", "都", "在",
                 "和", "了", "从", "吗", "吧", "的", "也", "要", "也", "里", "或", "该",
@@ -124,7 +126,21 @@ public class StopFilter extends FilteringTokenFilter {
 
     @Override
     protected boolean accept() throws IOException {
-        return !STOP_WORDS_SET
-                .contains(termAtt.buffer(), 0, termAtt.length());
+        char[] buffer = termAtt.buffer();
+        int length = termAtt.length();
+        if (length == 1) {
+            int type = getType(buffer[0]);
+            // ignore number or char, is lowercased by upper logic
+            if (type == DECIMAL_DIGIT_NUMBER || type == LOWERCASE_LETTER) {
+                return false;
+            }
+        } else if (length == 2) {
+            // only 2, one of them is number, ignore
+            if (getType(buffer[0]) == DECIMAL_DIGIT_NUMBER ||
+                    getType(buffer[1]) == DECIMAL_DIGIT_NUMBER) {
+                return false;
+            }
+        }
+        return !STOP_WORDS_SET.contains(buffer, 0, length);
     }
 }
