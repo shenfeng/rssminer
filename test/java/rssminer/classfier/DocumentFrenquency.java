@@ -15,17 +15,20 @@ import rssminer.tools.Utils;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 class Counter {
 
-    private HashMap<String, Integer> counter = new HashMap<String, Integer>();
+    private HashMap<String, Integer> counter;
 
     public Counter(int capacity) {
-        this.counter = new HashMap<>(capacity);
+        this.counter = new HashMap<String, Integer>(capacity);
     }
 
     public void add(String key) {
@@ -97,15 +100,15 @@ public class DocumentFrenquency {
     public static void main(String[] args) throws SQLException, IOException, InterruptedException {
         long start = System.currentTimeMillis();
         Connection con = Utils.getRssminerDB();
-//        int maxID = Utils.getMaxID();
-        int maxID = 100000;
+        int maxID = Utils.getMaxID();
+//        int maxID = 100000;
         String sql = "select summary from feed_data where id = ?";
         PreparedStatement ps = con.prepareStatement(sql);
         for (int i = 1; i < maxID; i++) {
             if (i % 20000 == 0) {
 //                remove();
-                logger.info("handle {}, max {}, {}",
-                        new Object[] {i, maxID,
+                logger.info("handle {}, max {}, term: {}",
+                        new Object[]{i, maxID,
                                 df.getCounter().size()});
 
             }
@@ -114,11 +117,13 @@ public class DocumentFrenquency {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 String summary = rs.getString(1);
-                addDocument(HtmlUtils.text(summary));
+                summary = HtmlUtils.text(summary);
+//                summary = Mapper.toSimplified(HtmlUtils.text(summary));
+                addDocument(summary);
             }
             rs.close();
         }
-        remove();
+        //        remove();
         FileOutputStream fout = new FileOutputStream("/tmp/df");
         for (Map.Entry<String, Integer> entry : df.getCounter().entrySet()) {
             String str = entry.getValue() + "\t" + entry.getKey() + "\n";
