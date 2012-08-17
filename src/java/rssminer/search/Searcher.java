@@ -149,6 +149,8 @@ public class Searcher {
 
     private Query buildQuery(String text, List<String> rssids)
             throws IOException {
+        text = Mapper.toSimplified(text);
+
         TokenStream stream = analyzer.tokenStream("", new StringReader(text));
 
         CharTermAttribute c = stream.getAttribute(CharTermAttribute.class);
@@ -216,6 +218,7 @@ public class Searcher {
         doc.add(rid);
 
         if (author != null && author.length() > 0) {
+            author = Mapper.toSimplified(author);
             List<String> authors = simpleSplit(author);
             for (String a : authors) {
                 Field f = new Field(AUTHOR, false, a.toLowerCase(), Store.NO,
@@ -226,6 +229,7 @@ public class Searcher {
         }
 
         if (title != null) {
+            title = Mapper.toSimplified(title);
             Field f = new Field(TITLE, false, title, Store.NO,
                     Index.ANALYZED, TV);
             f.setBoost(TITLE_BOOST);
@@ -233,6 +237,7 @@ public class Searcher {
         }
 
         if (tags != null && tags.length() > 0) {
+            tags = Mapper.toSimplified(tags);
             List<String> ts = simpleSplit(tags);
             for (String tag : ts) {
                 Field f = new Field(TAG, false, tag.toLowerCase(), Store.NO,
@@ -246,6 +251,7 @@ public class Searcher {
             try {
                 // String content = Utils.extractText(summary);
                 String content = HtmlUtils.text(summary);
+                content = Mapper.toSimplified(content);
                 Field f = new Field(CONTENT, false, content, Store.NO,
                         Index.ANALYZED, TV);
                 doc.add(f);
