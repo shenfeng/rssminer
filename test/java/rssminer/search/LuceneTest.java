@@ -1,12 +1,5 @@
 package rssminer.search;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -21,6 +14,13 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 
 public class LuceneTest {
@@ -58,10 +58,10 @@ public class LuceneTest {
 			}
 
 			BooleanQuery q = new BooleanQuery();
-			for (String field : Searcher.FIELDS) {
+			for (Term field : Searcher.ALL_FIELDS) {
 				BooleanQuery part = new BooleanQuery();
 				for (String term : terms) {
-					part.add(new TermQuery(new Term(field, term)), Occur.MUST);
+					part.add(new TermQuery(field.createTerm(term)), Occur.MUST);
 				}
 				q.add(part, Occur.SHOULD);
 			}

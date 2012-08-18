@@ -1,6 +1,7 @@
 package rssminer.classfier;
 
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermFreqVector;
 import org.apache.lucene.search.IndexSearcher;
 import rssminer.db.Vote;
@@ -108,23 +109,26 @@ public class NaiveBayes {
     private static double classfiy(Map<String, Map<String, Double>> model,
                                    IndexReader reader, int docid) throws IOException {
         double result = 1.0D;
-        for (String field : Searcher.FIELDS) {
-            Map<String, Double> submodel = model.get(field);
-            TermFreqVector vetor = reader.getTermFreqVector(docid, field);
+        int total = reader.numDocs();
+        for (Term field : Searcher.ALL_FIELDS) {
+            Map<String, Double> submodel = model.get(field.field());
+            TermFreqVector vetor = reader.getTermFreqVector(docid, field.field());
             if (vetor != null) {
                 double score = 1.0D;
                 String[] terms = vetor.getTerms();
                 int[] freqs = vetor.getTermFrequencies();
                 for (int i = 0; i < freqs.length; i++) {
-                    String term = terms[i];
-                    Double w = submodel.get(term);
+                    String text = terms[i];
+                    Double w = submodel.get(text);
                     if (w != null) {
-                        score += w * freqs[i];
+                        double tfidf = freqs[i] * Math.log(total/ reader.docFreq(field.createTerm(text)));
+                        score += w * tfidf;
                     }
                 }
-                score *= SEARCHER.getBoost().get(field); // boost
+                score *= SEARCHER.getBoost().get(field.field()); // boost
                 int length = terms.length;
                 if (length > 1) {
+                    // make long article less significant
                     score = score / Math.log(length);
                 }
                 result += score;
@@ -174,18 +178,19 @@ public class NaiveBayes {
         IndexReader reader = SEARCHER.getReader();
 
         Map<String, Map<String, Double>> result = new HashMap<String, Map<String, Double>>();
-        for (String field : Searcher.FIELDS) {
+        for (Term field : Searcher.ALL_FIELDS) {
             Map<String, Double> sub = trainField(reader, votes, field);
-            result.put(field, sub);
+            result.put(field.field(), sub);
         }
         reader.close();
         return result;
     }
 
     private static Map<String, Double> trainField(IndexReader reader,
-                                                  List<Vote> votes, String field) throws IOException {
+                                                  List<Vote> votes, Term field) throws IOException {
+        int total = reader.numDocs();
         Map<String, TermFeature> map;
-        if (Searcher.CONTENT.equals(field)) {
+        if (Searcher.CONTENT.equals(field.field())) {
             map = new HashMap<String, TermFeature>(20480);
         } else {
             map = new HashMap<String, TermFeature>(768);
@@ -195,26 +200,27 @@ public class NaiveBayes {
                 continue;
             }
             TermFreqVector termVector = reader.getTermFreqVector(vote.docID,
-                    field);
+                    field.field());
             if (termVector != null) {
                 String[] terms = termVector.getTerms();
                 int[] freqs = termVector.getTermFrequencies();
 
                 for (int j = 0; j < freqs.length; j++) {
-                    String term = terms[j];
-                    int count = freqs[j];
-                    TermFeature h = map.get(term);
+                    String text = terms[j];
+                    double tfidf = freqs[j] * Math.log( total/ reader.docFreq(field.createTerm(text)));
+//                    int count = freqs[j];
+                    TermFeature h = map.get(text);
                     if (h == null) {
                         h = new TermFeature();
                     }
                     if (vote.vote == 1) { // like
-                        h.like += count;
+                        h.like += tfidf;
                     } else if (vote.vote == -1) { // dislike
-                        h.dislike += count;
+                        h.dislike += tfidf;
                     } else { // read
-                        h.read += count;
+                        h.read += tfidf;
                     }
-                    map.put(term, h);
+                    map.put(text, h);
                 }
             }
         }

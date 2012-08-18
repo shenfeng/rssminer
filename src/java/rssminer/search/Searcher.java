@@ -53,20 +53,22 @@ public class Searcher {
     static final float TAG_BOOST = 2;
     static final float CONTENT_BOOST = 1;
 
-    public static String[] FIELDS = new String[] {AUTHOR, TITLE, CONTENT,
-            TAG};
-
     // cache it, String.intern is heavy
-    static Term[] TERMS = new Term[] {new Term(TITLE), new Term(CONTENT)};
-
-    static Term[] SIMPLE_SPLIT_TERM = new Term[] {new Term(TAG),
-            new Term(AUTHOR)};
-
-    static TermVector TV = TermVector.WITH_POSITIONS_OFFSETS;
-
-    // static Term CONTENT_TERM = new Term(CONTENT);
+    public static final Term TITLE_TERM = new Term(TITLE);
+    public static final Term CONTNET_TERM = new Term(CONTENT);
+    public static final Term TAG_TERM = new Term(TAG);
+    public static final Term AUTHOR_TERM = new Term(AUTHOR);
     static Term FEED_ID_TERM = new Term(FEED_ID);
     static Term RSS_ID_TERM = new Term(RSS_ID);
+
+    public static Term[] ANALYZE_FIELDS = new Term[] {TITLE_TERM, CONTNET_TERM};
+    public static Term[] ALL_FIELDS = new Term[] {
+            TITLE_TERM, CONTNET_TERM, TAG_TERM, AUTHOR_TERM
+    };
+    public static Term[] SIMPLE_SPLIT_FIELDS = new Term[] {TAG_TERM,
+            AUTHOR_TERM};
+
+    public static final TermVector TV = TermVector.WITH_POSITIONS_OFFSETS;
 
     public static Searcher initGlobalSearcher(String path,
                                               Map<Keyword, Object> config) throws IOException {
@@ -162,7 +164,7 @@ public class Searcher {
 
         BooleanQuery q = new BooleanQuery();
 
-        for (Term t : TERMS) {
+        for (Term t : ANALYZE_FIELDS) {
             BooleanQuery part = new BooleanQuery();
             for (String term : terms) {
                 part.add(new TermQuery(t.createTerm(term)), Occur.MUST);
@@ -173,7 +175,7 @@ public class Searcher {
         }
 
         List<String> parts = simpleSplit(text);
-        for (Term t : SIMPLE_SPLIT_TERM) {
+        for (Term t : SIMPLE_SPLIT_FIELDS) {
             BooleanQuery part = new BooleanQuery();
             for (String term : parts) {
                 part.add(new TermQuery(t.createTerm(term.toLowerCase())), Occur.MUST);
