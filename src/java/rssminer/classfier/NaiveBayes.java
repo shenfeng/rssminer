@@ -19,6 +19,10 @@ class TermFeature implements Comparable<TermFeature> {
     double dislike = 0;
     double read = 0;
 
+    static final double LIKE_DEFAULT = 0.2;
+    static final double DISLIKE_DEFAULT = 0.2;
+    static final double READ_AS_LIKE_RATIO = 0.15;
+
     public int compareTo(TermFeature o) {
         double left = Math.abs(getLogScore());
         double right = Math.abs(o.getLogScore());
@@ -36,9 +40,9 @@ class TermFeature implements Comparable<TermFeature> {
     }
 
     private double getScore() {
-        double l = 0.1, dis = 0.1; //
+        double l = LIKE_DEFAULT, dis = DISLIKE_DEFAULT; //
         if (like != 0 || read != 0) {
-            l = like + read * 0.15;
+            l = like + read * READ_AS_LIKE_RATIO;
         }
         if (dislike != 0) {
             dis = dislike;

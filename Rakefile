@@ -111,8 +111,15 @@ end
 desc "Javac"
 task :javac do
   sh 'rm -rf classes && mkdir classes'
-  sh 'find src/java -name "*.java" | xargs javac -Xlint:unchecked -encoding utf8 -cp "classes:lib/*:src/"  -d classes -sourcepath src/java/'
+  sh 'find src/java -name "*.java" | xargs javac -Xlint:unchecked -encoding utf8 -cp "classes:lib/*:src/" -d classes -sourcepath src/java/'
 end
+
+desc "Javac debug"
+task :javac_debug do
+  sh 'rm -rf classes && mkdir classes'
+  sh 'find src/java -name "*.java" | xargs javac -Xlint:unchecked -encoding utf8 -cp "classes:lib/*:src/"  -g -d classes -sourcepath src/java/'
+end
+
 
 desc "Run junit test"
 task :junit => [:javac] do
@@ -232,7 +239,7 @@ end
 
 namespace :run do
   desc "Run server in dev profile"
-  task :dev => [:prepare, :javac] do
+  task :dev => [:prepare, :javac_debug] do
     sh 'scripts/run --profile dev'
   end
 
