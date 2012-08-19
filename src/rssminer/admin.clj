@@ -43,7 +43,7 @@
             (.put index-queue feed)))))
     (doseq [i (range (* 2 processor-count))]
       (.put index-queue stop-setinal))
-    (.awaitTermination threads 10 TimeUnit/MINUTES)) ; allow stop
+    (.awaitTermination threads 1000 TimeUnit/MINUTES)) ; allow stop
   (close-global-index-writer! :optimize true)
   (info "Rebuild index OK"))
 
