@@ -2,7 +2,7 @@ package rssminer.test;
 
 import junit.framework.Assert;
 import org.junit.Test;
-import rssminer.Utils;
+import rssminer.SimHash;
 
 public class SimHashTest {
     @Test
@@ -10,10 +10,10 @@ public class SimHashTest {
         int diff = 1;
         String strx = "0";
         String stry = "1";
-        for (int i = 0; i < 31; i++) {
-            int x = Integer.parseInt(strx, 2);
-            int y = Integer.parseInt(stry, 2);
-            Assert.assertSame(diff, Utils.hammingDistance(x, y));
+        for (int i = 0; i < 63; i++) {
+            long x = Long.parseLong(strx, 2);
+            long y = Long.parseLong(stry, 2);
+            Assert.assertSame(SimHash.hammingDistance(x, y), diff);
             double r = Math.random();
             if (r > 0.7) {
                 diff += 1;
@@ -23,9 +23,12 @@ public class SimHashTest {
                 diff += 1;
                 strx += "0";
                 stry += "1";
-            } else {
+            } else if( r > 0.2) {
                 strx += "1";
                 stry += "1";
+            } else {
+                strx += "0";
+                stry += "0";
             }
         }
     }
@@ -56,8 +59,8 @@ public class SimHashTest {
         int h1 = simhash("the cat sat on a mat".split(" "));
         int h2 = simhash("the cat sat on the mat".split(" "));
         int h3 = simhash("we all scream for ice cream".split(" "));
-        System.out.println(Utils.hammingDistance(h1, h2));
-        System.out.println(Utils.hammingDistance(h1, h3));
-        System.out.println(Utils.hammingDistance(h2, h3));
+        System.out.println(SimHash.hammingDistance(h1, h2));
+        System.out.println(SimHash.hammingDistance(h1, h3));
+        System.out.println(SimHash.hammingDistance(h2, h3));
     }
 }

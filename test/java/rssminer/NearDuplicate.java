@@ -14,7 +14,7 @@ public class NearDuplicate implements Runnable {
 
     static Logger logger = LoggerFactory.getLogger(NearDuplicate.class);
 
-    private static volatile int[] feedhashes;
+    private static volatile long[] feedhashes;
 
     private NearDuplicate() {
     }
@@ -30,10 +30,10 @@ public class NearDuplicate implements Runnable {
             return new ArrayList<Integer>(0);
         }
         ArrayList<Integer> result = new ArrayList<Integer>();
-        int md = feedhashes[feedid];
+        long md = feedhashes[feedid];
         for (int i = 0; i < feedhashes.length; i++) {
             if (i != feedid) {
-                int d = rssminer.Utils.hammingDistance(md, feedhashes[i]);
+                int d = SimHash.hammingDistance(md, feedhashes[i]);
                 if (d < distance) {
                     result.add(i);
                     logger.info("{}:{} {}:{}, distance: {}", new Object[]{
@@ -59,12 +59,12 @@ public class NearDuplicate implements Runnable {
         try {
             logger.info("init NearDuplicate");
             int max = Utils.getMaxID();
-            int[] hashes = new int[max + 1];
+            long[] hashes = new long[max + 1];
             for (int i = 0; i <= max; i++) {
                 if(i % 60000 == 0) {
                     logger.info("handing {}, max {}", i, max);
                 }
-                int hash = rssminer.Utils.simHash(i);
+                long hash = SimHash.simHash(i);
                 hashes[i] = hash;
             }
             feedhashes = hashes;

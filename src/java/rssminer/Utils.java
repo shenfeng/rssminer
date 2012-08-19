@@ -4,9 +4,6 @@ import clojure.lang.Keyword;
 import me.shenfeng.http.HttpUtils;
 import me.shenfeng.http.client.HttpClient;
 import me.shenfeng.http.client.HttpClientConfig;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.TermFreqVector;
-import org.apache.lucene.search.IndexSearcher;
 import org.ccil.cowan.tagsoup.Parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +13,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import rssminer.db.SubItem;
 import rssminer.sax.RewriteHandler;
-import rssminer.search.Searcher;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -215,49 +211,6 @@ public class Utils {
             return null;
         }
     }
-
-    public static int hammingDistance(int x, int y) {
-        int dist = 0;
-        int val = x ^ y;
-        while (val != 0) {
-            ++dist;
-            val &= val - 1;
-        }
-        return dist;
-    }
-
-    public static int simHash(int feedid) throws IOException {
-        IndexReader reader = Searcher.SEARCHER.getReader();
-        IndexSearcher searcher = new IndexSearcher(reader);
-        int docid = Searcher.SEARCHER.feedID2DocID(searcher, feedid);
-        if (docid == -1) {
-            return -1;
-        }
-        TermFreqVector tv = reader.getTermFreqVector(docid, Searcher.CONTENT);
-        if (tv == null) {
-            return -1;
-        }
-        String[] terms = tv.getTerms();
-        int[] bits = new int[32];
-        for (String term : terms) {
-            int code = term.hashCode();
-            for (int i = 0; i < bits.length; i++) {
-                if (((code >>> i) & 0x1) == 0x1) {
-                    ++bits[i];
-                } else {
-                    --bits[i];
-                }
-            }
-        }
-        int fingerprint = 0;
-        for (int i = 0; i < bits.length; i++) {
-            if (bits[i] > 0) {
-                fingerprint += (1 << i);
-            }
-        }
-        return fingerprint;
-    }
-
 
     public static String rewrite(String html, String urlBase, String proxyURI)
             throws IOException, SAXException, URISyntaxException {

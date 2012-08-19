@@ -50,7 +50,7 @@ where d.id =? " id])))
 
 (defn find-silimar [req]
   (let [id (Integer/parseInt (or (-> req :params :id) "0"))
-        duplicates (filter #(> % 0) (NearDuplicate/similar id 2))]
+        duplicates (filter #(> % 0) (NearDuplicate/similar id 3))]
     (to-html similar_tpl {:article (fetch-data-by-id id)
                           :similars (map fetch-data-by-id duplicates)})))
 
