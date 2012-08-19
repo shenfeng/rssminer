@@ -99,7 +99,7 @@ desc "Prepare for production"
 task :prepare_prod => [:css_compile, "js:minify"]
 
 desc "lein swank"
-task :swank => :javac do
+task :swank => :javac_debug do
   sh "lein swank"
 end
 
@@ -118,6 +118,7 @@ desc "Javac debug"
 task :javac_debug do
   sh 'rm -rf classes && mkdir classes'
   sh 'find src/java -name "*.java" | xargs javac -Xlint:unchecked -encoding utf8 -cp "classes:lib/*:src/"  -g -d classes -sourcepath src/java/'
+  sh 'find test/java -name "*.java" | xargs javac -Xlint:unchecked -cp "classes:lib/*:src/:lib/dev/*"  -d classes -sourcepath test/java'
 end
 
 

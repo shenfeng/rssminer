@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>title</title>
-    <link href="/static/compare.css" rel="stylesheet" type="text/css" />
+    <link href="/static/tools.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
     <div id="page-wrap">
@@ -34,6 +34,6 @@
           <li><a href="/compare?start={{.}}">{{ . }}</a></li>{{/links}}
       </ul>
     </div>
-    <script src="/static/compare.js"></script>
+    <script src="/static/tools.js"></script>
   </body>
 </html>
