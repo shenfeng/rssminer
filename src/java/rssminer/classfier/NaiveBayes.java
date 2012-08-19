@@ -78,8 +78,9 @@ class TermScoreEntry implements Comparable<TermScoreEntry> {
 public class NaiveBayes {
 
     static final int MAX_FEATURE = 512;
+    static final int MIN_DF = 3;
 
-    static Map<String, Double> pick(Map<String, TermFeature> map) {
+    static Map<String, Double> pickTop(Map<String, TermFeature> map) {
         Map<String, Double> result = new HashMap<String, Double>(
                 (int) (MAX_FEATURE / 0.75f) + 2); // load factor
         if (map.size() < MAX_FEATURE) {
@@ -90,9 +91,8 @@ public class NaiveBayes {
             }
         } else {
             TermScoreEntry all[] = new TermScoreEntry[map.size()];
-            Set<Entry<String, TermFeature>> entries = map.entrySet();
             int index = 0;
-            for (Entry<String, TermFeature> e : entries) {
+            for (Entry<String, TermFeature> e : map.entrySet()) {
                 all[index] = new TermScoreEntry(e.getKey(), e.getValue()
                         .getLogScore());
                 index += 1;
@@ -121,7 +121,8 @@ public class NaiveBayes {
                     String text = terms[i];
                     Double w = submodel.get(text);
                     if (w != null) {
-                        double tfidf = freqs[i] * Math.log(total/ reader.docFreq(field.createTerm(text)));
+                        int df = reader.docFreq(field.createTerm(text));
+                        double tfidf = freqs[i] * Math.log(total / df);
                         score += w * tfidf;
                     }
                 }
@@ -190,7 +191,7 @@ public class NaiveBayes {
                                                   List<Vote> votes, Term field) throws IOException {
         int total = reader.numDocs();
         Map<String, TermFeature> map;
-        if (Searcher.CONTENT.equals(field.field())) {
+        if (Searcher.CONTNET_TERM.equals(field)) {
             map = new HashMap<String, TermFeature>(20480);
         } else {
             map = new HashMap<String, TermFeature>(768);
@@ -207,23 +208,26 @@ public class NaiveBayes {
 
                 for (int j = 0; j < freqs.length; j++) {
                     String text = terms[j];
-                    double tfidf = freqs[j] * Math.log( total/ reader.docFreq(field.createTerm(text)));
+                    int df = reader.docFreq(field.createTerm(text));
+                    if (df > MIN_DF) {
+                        double tfidf = freqs[j] * Math.log(total / df);
 //                    int count = freqs[j];
-                    TermFeature h = map.get(text);
-                    if (h == null) {
-                        h = new TermFeature();
+                        TermFeature h = map.get(text);
+                        if (h == null) {
+                            h = new TermFeature();
+                        }
+                        if (vote.vote == 1) { // like
+                            h.like += tfidf;
+                        } else if (vote.vote == -1) { // dislike
+                            h.dislike += tfidf;
+                        } else { // read
+                            h.read += tfidf;
+                        }
+                        map.put(text, h);
                     }
-                    if (vote.vote == 1) { // like
-                        h.like += tfidf;
-                    } else if (vote.vote == -1) { // dislike
-                        h.dislike += tfidf;
-                    } else { // read
-                        h.read += tfidf;
-                    }
-                    map.put(text, h);
                 }
             }
         }
-        return pick(map);
+        return pickTop(map);
     }
 }
