@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <link rel="shortcut icon" href="/favicon.ico?{VERSION}" />
+    <link rel="shortcut icon" href="/s/favicon.ico?{VERSION}" />
     <title>Rssminer, intelligent RSS reader, for readability</title>
     <meta name="keywords" content="RSS miner, Rssminer, RSS aggregator,
                                    intelligent RSS reader">
@@ -12,7 +12,7 @@
                    reader. It sort all unread feeds according to your
                    personal taste: the already read items">
     {{#prod}}<style type="text/css">{{{ css }}}</style>{{/prod}}
-    {{#dev}}<link rel="stylesheet" href="/css/landing.css">{{/dev}}
+    {{#dev}}<link rel="stylesheet" href="/s/css/landing.css">{{/dev}}
   </head>
   <body>
     <a href="https://github.com/shenfeng/rssminer">
@@ -56,15 +56,15 @@
             <br>
             <div id="slides">
               <div class="slides_container">
-                <img src="/imgs/s/a.png">
-                <img src="/imgs/s/img1.png">
-                <img src="/imgs/s/img3.png">
-                <img src="/imgs/s/img4.png">
+                <img src="/s/imgs/s/a.png">
+                <img src="/s/imgs/s/img1.png">
+                <img src="/s/imgs/s/img3.png">
+                <img src="/s/imgs/s/img4.png">
               </div>
               <!-- <a href="#" class="prev"> -->
-              <!--   <img src="/imgs/arrow-prev.png" alt="Arrow Prev"></a> -->
+              <!--   <img src="/s/imgs/arrow-prev.png" alt="Arrow Prev"></a> -->
               <!-- <a href="#" class="next"> -->
-              <!--   <img src="/imgs/arrow-next.png" alt="Arrow Next"></a> -->
+              <!--   <img src="/s/imgs/arrow-next.png" alt="Arrow Next"></a> -->
             </div>
             <div class="clearfix"></div>
             <h3>why another one? </h3>
@@ -99,7 +99,7 @@
             </h3>
             <a href="/login/google"
                title=" Secure and convenient: Google protect your password">
-              <img src="/imgs/openid_google.png"/>
+              <img src="/s/imgs/openid_google.png"/>
             </a>
             <h3>Create an account
               <span>Login with google is encouraged</span>
@@ -125,7 +125,7 @@
             </form>
             <h3>Google Chrome extension</h3>
             <span title="Easy way to add subscription, not ready, please wait a while">
-              <img src="/imgs/icon48.png?{VERSION}"/>
+              <img src="/s/imgs/icon48.png?{VERSION}"/>
             </span>
           </div> <!-- right, login form -->
         </div>
@@ -143,13 +143,13 @@
       </div> <!-- footer -->
     </div>   <!-- page-wrap -->
     {{#dev}}
-    <script src="/js/lib/jquery-1.7.2.js"></script>
-    <script src="/js/lib/slides.min.jquery.js"></script>
-    <script src="/js/rssminer/landing.js"></script>
+    <script src="/s/js/lib/jquery-1.7.2.js"></script>
+    <script src="/s/js/lib/slides.min.jquery.js"></script>
+    <script src="/s/js/rssminer/landing.js"></script>
     {{/dev}}
     {{#prod}}
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script src="/js/landing-min.js?{VERSION}"></script>
+    <script src="/s/js/landing-min.js?{VERSION}"></script>
     {{/prod}}
   </body>
 </html>

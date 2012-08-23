@@ -16,7 +16,7 @@
 
 body {
     font: 400 15px/1.431 'Lucida Grande', 'Helvetica Neue', "Microsoft YaHei", Helvetica, Arial, sans-serif;
-    background: transparent url('/imgs/bg-site.png') repeat center top;
+    background: transparent url('/s/imgs/bg-site.png') repeat center top;
     /* background: #F6F6F6 url('/imgs/background.png') repeat center top; */
     color: #222;
     margin: 0;
@@ -245,7 +245,7 @@ $slide_img_height: 370px;
             width:12px;
             height:0;
             padding-top:12px;
-            background-image:url(/imgs/pagination.png);
+            background-image:url(/s/imgs/pagination.png);
             background-position:0 0;
             float:left;
             overflow:hidden;

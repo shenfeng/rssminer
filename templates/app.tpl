@@ -12,7 +12,7 @@
                    reader. It sort all unread feeds according to your
                    personal taste: the already read items">
     {{#prod}}<style type="text/css">{{{ css }}}</style>{{/prod}}
-    {{#dev}}<link rel="stylesheet" href="/css/app.css">{{/dev}}
+    {{#dev}}<link rel="stylesheet" href="/s/css/app.css">{{/dev}}
     <script>{{{ data }}}</script>
     <!--[if lt IE 8 ]><script>location.href="/browser"</script><![endif]-->
   </head>
@@ -69,24 +69,24 @@
     </div>
     <ul id="ct-menu"></ul>
     {{#dev}}
-    <script src="/js/lib/jquery-1.7.2.js"></script>
-    <script src="/js/lib/jquery-ui-1.8.18.custom.js"></script>
-    <script src="/js/lib/underscore.js"></script>
-    <script src="/js/lib/mustache.js"></script>
-    <script src="/js/gen/app-tmpls.js"></script>
-    <script src="/js/rssminer/util.js"></script>
-    <script src="/js/rssminer/ajax.js"></script>
-    <script src="/js/rssminer/router.js"></script>
-    <script src="/js/rssminer/layout.js"></script>
-    <script src="/js/rssminer/rm_data.js"></script>
-    <script src="/js/rssminer/search.js"></script>
-    <script src="/js/rssminer/ct_menu.js"></script>
-    <script src="/js/rssminer/keyboard.js"></script>
-    <script src="/js/rssminer/app.js"></script>
+    <script src="/s/js/lib/jquery-1.7.2.js"></script>
+    <script src="/s/js/lib/jquery-ui-1.8.18.custom.js"></script>
+    <script src="/s/js/lib/underscore.js"></script>
+    <script src="/s/js/lib/mustache.js"></script>
+    <script src="/s/js/gen/app-tmpls.js"></script>
+    <script src="/s/js/rssminer/util.js"></script>
+    <script src="/s/js/rssminer/ajax.js"></script>
+    <script src="/s/js/rssminer/router.js"></script>
+    <script src="/s/js/rssminer/layout.js"></script>
+    <script src="/s/js/rssminer/rm_data.js"></script>
+    <script src="/s/js/rssminer/search.js"></script>
+    <script src="/s/js/rssminer/ct_menu.js"></script>
+    <script src="/s/js/rssminer/keyboard.js"></script>
+    <script src="/s/js/rssminer/app.js"></script>
     {{/dev}}
     {{#prod}}
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script src="/js/app-min.js?{VERSION}"></script>
+    <script src="/s/js/app-min.js?{VERSION}"></script>
     {{/prod}}
   </body>
 </html>

@@ -131,7 +131,7 @@ desc "Run all test"
 task :all_test => [:test, :junit]
 
 desc "Run lein unit test"
-task :test => [:prepare, :javac] do
+task :test => [:prepare, :javac_debug] do
   sh 'lein test'
 end
 

@@ -23,8 +23,8 @@ server {
       return 403;
      }
 
-    location ~* \.(ico|css|js|gif|jpe?g|png|eot|ttf|woff)(\?.+)?$ {
-        root    /var/www/rssminer/public;
+    location /s/ {
+        alias   /var/www/rssminer/public/;
         add_header Expires "Thu, 31 Dec 2037 23:55:55 GMT";
         add_header Cache-Control "public, max-age=315360000";
         access_log off;

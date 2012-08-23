@@ -59,7 +59,7 @@
            (POST "/" [] user/signup))
   (GET "/logout" [] user/logout)
   (context "/api" [] api-routes)
-  (route/files "") ;; files under public folder
+  (route/files "/s") ;; files under public folder
   (route/not-found "<p>Page not found.</p>" ))
 
 (defn gen-key [data]

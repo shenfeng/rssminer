@@ -26,7 +26,7 @@
           <p>
             <a href="/import/google" class="import"
                title="Import all you google reader subscriptions:">
-              <img src="/imgs/import-greader.png"/>
+              <img src="/s/imgs/import-greader.png"/>
             </a>
           </p>
         </div>
@@ -40,13 +40,13 @@
               <a target="_blank"
                  title="RSS - Wikipedia, the free encyclopedia"
                  href="http://en.wikipedia.org/wiki/RSS">
-                <img src="/imgs/wiki.ico"/>
+                <img src="/s/imgs/wiki.ico"/>
               </a>
             </li>
             <li>
               <a target="_blank" title="简易信息聚合"
                  href="http://baike.baidu.com/view/1644.htm">
-                <img src="/imgs/bk.ico"/>
+                <img src="/s/imgs/bk.ico"/>
               </a>
             </li>
           </ul>

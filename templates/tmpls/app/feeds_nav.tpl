@@ -10,5 +10,5 @@
   {{>feeds_list}}
 </ul>
 {{#pager}}
-  <img class="loader" src="/imgs/loader-15.gif"/>
+  <img class="loader" src="/s/imgs/loader-15.gif"/>
 {{/pager}}

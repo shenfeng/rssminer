@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Login - Rssminer, an intelligent RSS reader</title>
-    <link rel="stylesheet" href="/css/landing.css?{VERSION}">
+    <link rel="stylesheet" href="/s/css/landing.css?{VERSION}">
     <meta name="description"
           content="Rssminer is a another Web-based aggregator, let you
                    read up to date Atom and RSS feeds online in one
