@@ -246,7 +246,7 @@ namespace :run do
 
   desc "Compile and run"
   task :aot do
-    sh 'scripts/aot-run'
+    sh 'scripts/aot_run'
   end
 
   desc "Run server in production profile"

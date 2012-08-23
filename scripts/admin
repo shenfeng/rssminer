@@ -50,7 +50,7 @@ recreate_db_and_user () {
 
 init_db() {
     recreate_db_and_user
-    mysql --host $DB_HOST -u$DB_USER $DB_NAME < $HOME/src/rssminer.sql
+    mysql --host $DB_HOST -u$DB_USER $DB_NAME < $HOME/scripts/rssminer.sql
 }
 
 backup_db() {
