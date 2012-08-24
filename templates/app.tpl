@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <link rel="shortcut icon" href="/favicon.ico?{VERSION}" />
+    <link rel="shortcut icon" href="/s/favicon.ico?{VERSION}" />
     <title>Rssminer, intelligent RSS reader, for readability</title>
     <meta name="keywords" content="rss miner, rssminer, rss aggregator,
                                    intelligent rss reader">
