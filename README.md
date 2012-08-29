@@ -3,17 +3,19 @@
 * Rssminer - an simple, but intelligent RSS reader
 * Live version [http://rssminer.net](http://rssminer.net)
 * Write in Clojure & Javascript & Java, by [shen feng](http://shenfeng.me)
-* Simple, fast, Responsive UI. Features combines naturally, and make
-  perfect sense.
 
 ## Features
 
-* Read the original, not the provided `abstract`: eg: `Hacker news`,
-`IBM developerWorks : Java technology`, `Peter Norvig`
-* Read blogspot, wordpress, feedburner etc in China
-* Learn from your reading history, your vote `like` `dislike`, rank feeds accordingly. Realtime.
+* Build for readability
+* Realtime, instant fulltext search
+* Realtime, personalized recommendation based on reading history
 * Google Chrome plugin to add subscription
-* Clean and compact code.
+* Clean and compact code
+* Super fast (In order to be fast, I write the `Web server`, `Database Connection Pool`, 
+  `Chinese segmentation`, `Template System`, `Some JS libs` from
+  scratch.  I save every bit to make it faster.  The server can handle
+  thousands of request per seconds(Including fulltext search) with
+  very low latency.
 
 ## Technologies
 
@@ -32,14 +34,16 @@
 * [mmseg](https://github.com/shenfeng/mmseg), A java implementation of
   MMSEG. Especially written for Rssminer
 * [MySQL](http://www.mysql.com/), data store
-* [Redis](http://redis.io/), Message Queue; Per user per feed score Store. Proxy cache.
+* [Redis](http://redis.io/), Message Queue; Per user per feed score
+  Store. Proxy cache.
+* [Mustache.clj](https://github.com/shenfeng/mustache.clj), Mustache
+  for Clojure
 
 ### Client-side
 * [jQuery](http://jquery.com/), nicer API
 * [Underscore](http://documentcloud.github.com/underscore/), be functional
 * [sass](http://sass-lang.com/), fix css
-* [mustache.js](https://github.com/janl/mustache.js), I rely it do all
-  the client side templating. For faster UI, this is one way to go.
+* [mustache.js](https://github.com/janl/mustache.js), Mustache for JS
 
 ## How to run it
 
