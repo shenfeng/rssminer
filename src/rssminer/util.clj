@@ -63,7 +63,8 @@
         {:write-json write-json-sub})
 
 (defn ^:dynamic user-id-from-session [req] ;; for test code easy mock
-  (:session req))
+  (if (= {} (:session req)) ; ring return empty map if session is null
+    nil (:session req)))
 
 (definline now-seconds []
   `(quot (System/currentTimeMillis) 1000))

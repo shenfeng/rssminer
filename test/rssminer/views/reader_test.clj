@@ -7,13 +7,9 @@
 
 (deftest test-index-page
   (let [resp (test-app {:uri "/"
-                        :request-method :get})
-        app-resp (test-app {:uri "/a"
-                            :request-method :get})
-        js-resp (test-app {:uri "/s/js/lib/underscore.js"
-                           :request-method :get
-                           :headers {}})]
-    (is (= 302 (:status app-resp)))
+                        :request-method :get})]
+    (is (= 302 (:status (test-app {:uri "/a"
+                                   :request-method :get}))))
     (is (= "/demo" (get-in (test-app {:uri "/"
                                       :params {"r" "d"}
                                       :request-method :get})
@@ -26,7 +22,9 @@
                         [:headers "Location"])))
     (is (= "no-cache" ((:headers resp) "Cache-Control")))
     (is (= "text/html; charset=utf-8" ((:headers resp) "Content-Type")))
-    (is (= 200 (:status js-resp)))
+    (is (= 200 (:status (test-app {:uri "/s/js/lib/underscore.js"
+                                   :request-method :get
+                                   :headers {}}))))
     (is (= 200 (:status resp)))))
 
 (deftest test-admin-recompute-scores
