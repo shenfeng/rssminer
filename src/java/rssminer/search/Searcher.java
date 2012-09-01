@@ -280,7 +280,7 @@ public class Searcher {
             throws IOException {
         int[] array = new int[feeds.size()];
         IndexReader reader = getReader();
-        IndexSearcher searcher = new IndexSearcher(getReader());
+        IndexSearcher searcher = new IndexSearcher(reader);
         for (int i = 0; i < feeds.size(); i++) {
             int l = feeds.get(i);
             array[i] = feedID2DocID(searcher, l);
