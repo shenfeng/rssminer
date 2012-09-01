@@ -57,7 +57,7 @@
       </section>
     </div>
   </li>
-  <li class="section account">
+  <li class="section settings">
     <div>
       <p class="warn">
         Login in with Google OpenID is encouraged. But if...

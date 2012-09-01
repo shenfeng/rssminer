@@ -208,7 +208,7 @@
 
   function show_settings (section) {
     $reading_area.removeClass(SHOW_CONTENT);
-    var sections = ['add', 'account', 'about'];
+    var sections = ['add', 'settings', 'help'];
     var d = {
       selected: section,
       tabs: _.map(sections, function (s) {

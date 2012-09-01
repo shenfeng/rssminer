@@ -27,8 +27,7 @@
         <div id="warn-msg">
           this is a public account, <a href="/">create your own</a>
         </div>
-        <input id="q" autocomplete="off"
-               placeholder="search subscriptions, articles"/>
+        <input id="q" autocomplete="off"/>
         <i class="icon-search"></i>
         <ul class="links">
           <li>
@@ -37,13 +36,13 @@
             </a>
           </li>
           <li>
-            <a href="#s/account" title="Account settings">
-              <i class="icon-user"></i>
+            <a href="#s/settings" title="Account settings">
+              <i class="icon-user"></i><span>Settings</span>
             </a>
           </li>
           <li>
-            <a href="#s/about" title="About">
-              <i class="icon-info-sign"></i>
+            <a href="#s/help" title="Help">
+              <i class="icon-info-sign"></i><span>Help</span>
             </a>
           </li>
           <li>
