@@ -10,3 +10,4 @@
                            :password "123456"
                            :name "test-usre"})]
     (is (authenticate "test@test.com" "123456"))))
+

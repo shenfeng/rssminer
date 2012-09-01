@@ -1,18 +1,4 @@
 (function(){
-  var enable_proxy = true;      // proxy reseted site?
-
-  var _RM_ = window._RM_,
-      PROXY_SERVER = _RM_.proxy_server,
-      NO_IFRAME_SITES = _RM_.no_iframe, // X-Frame-Options, etc
-      RESETED_SITES = _RM_.reseted; // get tcp reseted in CN
-
-  setTimeout(function () {
-    var img = new Image(),
-        src = ["blog", "spot",".com/favicon.ico?t="].join("");
-    img.onload = function () { enable_proxy = false; };
-    img.src = "http://sujitpal."+ src + new Date().getTime();
-  }, 300);
-
   var hostname = (function () {
     var l = document.createElement("a");
     return function (uri) {
@@ -85,35 +71,12 @@
     return arr.join('&');
   }
 
-  function get_final_link (link, feedid) {
-    var h = hostname(link),
-        bypass = _.any(NO_IFRAME_SITES, function (site) {
-          return h.indexOf(site) !== -1;
-        }),
-        reseted = _.any(RESETED_SITES, function (site) {
-          return h.indexOf(site) !== -1;
-        }),
-        proxy = bypass;
-
-    if(!bypass && enable_proxy && reseted) { proxy = true; }
-
-    // https proxy is not supported yet
-    if(link.indexOf('https://') === 0) { proxy = false; }
-
-    if(proxy) {
-      return PROXY_SERVER + "/f/o/" + feedid + "?p=1";
-    } else {
-      return link;
-    }
-  }
-
   // export
   window.RM = $.extend(window.RM || {}, {
     util: {
       delegate_events: delegate_events,
       favicon_ok: favicon_ok,
       call_if_fn: call_if_fn,
-      get_final_link: get_final_link,
       params: params,
       add_even: add_even,
       extract_data: extract_data,

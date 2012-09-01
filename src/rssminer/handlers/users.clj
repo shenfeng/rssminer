@@ -3,7 +3,7 @@
          [clojure.java.io :only [resource]]
          me.shenfeng.mustache
          (rssminer [util :only [user-id-from-session to-int md5-sum
-                                json-str2]]
+                                json-str2 read-if-json]]
                    [config :only [rssminer-conf cache-control]]))
   (:require [rssminer.db.user :as db]
             [rssminer.db.feed :as fdb]
@@ -45,18 +45,22 @@
         (assoc (redirect "/a")           ; no conf currently
           :session {:id (:id user)})))))
 
+(defn- update-conf [uid req key]
+  (when-let [data (-> req :body key)]
+    (let [conf (merge (-> uid db/find-user-by-id :conf read-if-json)
+                      {key data})]
+      (db/update-user uid {:conf (json-str2 conf)}))))
+
 ;;; :nav => show and hide of left nav
-;;; :expire => feed mark as read after X days
-;;; :like_threshhold => more than it mean like
-;;; :dislike_threshhold => less than it mean dislike
+;;; :pref_sort => show recommand or newest
 (defn save-settings [req]
   (let [uid (user-id-from-session req)]
     (when-let [password (-> req :body :password)]
       (let [user (db/find-user-by-id uid)
             p (md5-sum (str (:email user) "+" password))]
         (db/update-user uid {:password p})))
-    (when-let [nav (-> req :body :nav)]
-      (db/update-user uid {:conf (json-str2 {:nav nav})}))
+    (update-conf uid req :nav)
+    (update-conf uid req :pref_sort)
     {:status 204 :body nil}))
 
 (defn summary [req]

@@ -1,6 +1,8 @@
 (ns rssminer.views.users-test
   (:use clojure.test
-        [rssminer.test-common :only [test-app app-fixture
+        [rssminer.db.user :only [find-user-by-id]]
+        [rssminer.util :only [read-if-json]]
+        [rssminer.test-common :only [test-app app-fixture user1
                                      auth-app json-body]]))
 
 (use-fixtures :each app-fixture)
@@ -42,12 +44,14 @@
     (is (= 302 (:status signup)))
     (is (= 302 (:status login)))))
 
-(deftest test-save-pref
-  (let [resp (auth-app {:uri "/api/settings"
+(deftest test-save-settings
+  (let [conf {:nav ["tag1" "tag2"]
+              :pref_sort "likest"}
+        resp (auth-app {:uri "/api/settings"
                         :request-method :post
-                        :body (json-body {:nav [:tag1 :tag1]
-                                          :expire 60})})]
-    (is (= 204 (:status resp)))))
+                        :body (json-body conf)})]
+    (is (= 204 (:status resp)))
+    (is (= conf (-> user1 :id find-user-by-id :conf read-if-json)))))
 
 (deftest test-welcome-list
   (doseq [section ["newest" "voted" "read" "recommend"]]

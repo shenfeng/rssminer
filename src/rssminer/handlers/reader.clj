@@ -41,10 +41,8 @@
     (assoc (redirect "/") :session nil ;; delete cookie
            :session-cookie-attrs {:max-age -1})
     (let [data {:rm {:user (find-user-by-id (user-id-from-session req))
-                     :no_iframe Utils/NO_IFRAME
                      :gw (-> req :params :gw) ; google import wait
                      :ge (-> req :params :ge) ; google import error
-                     :reseted Utils/RESETED_DOMAINS
                      :static_server (:static-server @cfg/rssminer-conf)
                      :proxy_server (:proxy-server @cfg/rssminer-conf)}}]
       (to-html app-page {:dev (cfg/in-dev?)
@@ -61,9 +59,7 @@
              (dissoc (find-user-by-email "demo@rssminer.net")
                      :password))
       (let [data {:rm {:user (:demo-user @cfg/rssminer-conf)
-                       :no_iframe Utils/NO_IFRAME
                        :demo true
-                       :reseted Utils/RESETED_DOMAINS
                        :static_server (:static-server @cfg/rssminer-conf)
                        :proxy_server (:proxy-server @cfg/rssminer-conf)}}]
         {:body (to-html app-page {:dev (cfg/in-dev?)

@@ -208,9 +208,15 @@
 
   function show_settings (section) {
     $reading_area.removeClass(SHOW_CONTENT);
-    var sections = ['add', 'settings', 'help'];
+    var old_sort = data_api.user_conf.pref_sort;
+    var sections = ['add', 'settings', 'help'],
+        sortings = [{value: 'newest', // default newest
+                     s: old_sort ==='newest'},
+                    {value: 'recommend',
+                     s: old_sort === 'recommend'}];
     var d = {
       selected: section,
+      sortings: sortings,
       tabs: _.map(sections, function (s) {
         return { n: s, s: s === section };
       })
@@ -310,8 +316,17 @@
     }
   }
 
+  function save_pref_sort (e) {
+    var val = $(this).val();
+    data_api.save_settings({pref_sort: val}, function () {
+      fetch_and_show_user_subs();
+      notify.show_msg('Settings saved', 3000);
+    });
+  }
+
   util.delegate_events($(document), {
     'click .add-sub a.import': import_from_greader,
+    'change #all-settings select': save_pref_sort,
     'click #add-subscription': add_subscription,
     'click #save-settings': save_settings,
     'mouseenter #logo': function () {
@@ -325,7 +340,6 @@
       }
     }
   });
-
 
   fetch_and_show_user_subs(function () { // app start here
     RM.hashRouter((function () {

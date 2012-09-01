@@ -1,5 +1,5 @@
 (ns rssminer.util
-  (:use [clojure.data.json :only [json-str Write-JSON write-json]]
+  (:use [clojure.data.json :only [json-str Write-JSON write-json read-json]]
         [clojure.tools.logging :only [error info]]
         [ring.middleware.file-info :only [make-http-format]]
         [clojure.pprint :only [pprint]])
@@ -28,6 +28,9 @@
 
 (defn json-str2 [json]
   (json-str json :escape-unicode false))
+
+(defn read-if-json [str]
+  (when str (read-json str)) )
 
 ;;; 1861 req/s vs 1606 req/s compare with reflection
 (defn- write-json-feed [^Feed f ^PrintWriter out escape-unicode?]

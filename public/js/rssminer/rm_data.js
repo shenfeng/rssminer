@@ -100,10 +100,11 @@
   }
 
   function default_sort (like, neutral) {
-    if(like + neutral > MIN_COUNT) {
+    // user choose this
+    if(user_conf.pref_sort === RECOMMEND_TAB
+       && like + neutral > MIN_COUNT) {
       return RECOMMEND_TAB;
-    }
-    return NEWEST_TAB;
+    } else { return NEWEST_TAB; }
   }
 
   function transorm_sub (sub) {
@@ -482,6 +483,9 @@
   }
 
   function save_settings (data, cb) {
+    if(data.pref_sort) {
+      user_conf.pref_sort = data.pref_sort;
+    }
     ajax.jpost('/api/settings', data, function () { call_if_fn(cb); });
   }
 
@@ -590,6 +594,7 @@
       save_reading_times: save_reading_times,
       save_settings: save_settings,
       save_vote: save_vote,
+      user_conf: user_conf,
       unsubscribe: unsubscribe
     }
   });
