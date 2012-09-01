@@ -280,11 +280,12 @@ public class Searcher {
             throws IOException {
         int[] array = new int[feeds.size()];
         IndexReader reader = getReader();
-        IndexSearcher searcher = new IndexSearcher(reader);
+        IndexSearcher searcher = new IndexSearcher(getReader());
         for (int i = 0; i < feeds.size(); i++) {
             int l = feeds.get(i);
             array[i] = feedID2DocID(searcher, l);
         }
+        // searcher.close() will not close reader
         reader.close();
         return array;
     }
@@ -323,7 +324,7 @@ public class Searcher {
                                      List<String> subids, int limit) throws
             IOException, SQLException {
         IndexReader reader = getReader();
-        IndexSearcher searcher = new IndexSearcher(getReader());
+        IndexSearcher searcher = new IndexSearcher(reader);
         Query q = buildQuery(term, subids);
         TopDocs docs = searcher.search(q, limit);
         List<Integer> feedids = new ArrayList<Integer>(docs.scoreDocs.length);
@@ -332,7 +333,7 @@ public class Searcher {
             Document doc = searcher.doc(docid);
             feedids.add(Integer.valueOf(doc.get(FEED_ID)));
         }
-        reader.close();
+        reader.close(); // searcher.close will not close reader
         if (feedids.isEmpty()) {
             return new ArrayList<Feed>(0);
         } else {

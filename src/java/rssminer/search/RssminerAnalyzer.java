@@ -33,7 +33,11 @@ public class RssminerAnalyzer extends Analyzer {
         }
     }
 
-    public TokenStream tokenStream(String fieldName, Reader reader) {
+    public final TokenStream reusableTokenStream(String fieldName, Reader reader) throws IOException {
+        return super.reusableTokenStream(fieldName, reader);
+    }
+
+    public final TokenStream tokenStream(String fieldName, Reader reader) {
 
         SimpleMMsegTokenizer msegTokenizer = new SimpleMMsegTokenizer(
                 DictHolder.dic, reader);
