@@ -27,7 +27,7 @@
         <div id="warn-msg">
           this is a public account, <a href="/">create your own</a>
         </div>
-        <input id="q" autocomplete="off"/>
+        <input id="q" autocomplete="off" placeholder="type to search"/>
         <i class="icon-search"></i>
         <ul class="links">
           <li>
