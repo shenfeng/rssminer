@@ -186,7 +186,7 @@
 
   function show_welcome (section, page, cb) {
     var d = !section && !page;
-    section = section || 'recommend';
+    section = section || data_api.user_conf.pref_sort || 'newest';
     page = page || 1;
     _update_state(section, page, section, GROUP_WELCOME);
     $subs_list.find('.selected').removeClass('selected');
