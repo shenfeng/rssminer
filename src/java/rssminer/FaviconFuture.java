@@ -1,30 +1,57 @@
-package rssminer.proxy;
+package rssminer;
 
 import clojure.lang.Keyword;
 import me.shenfeng.http.DynamicBytes;
 import me.shenfeng.http.client.*;
+import me.shenfeng.http.server.IListenableFuture;
+import me.shenfeng.http.server.ServerConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import rssminer.Utils;
 import rssminer.jsoup.HtmlUtils;
 
+import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
+import java.net.Proxy;
 import java.net.URI;
 import java.sql.*;
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 
-import static me.shenfeng.http.HttpUtils.LOCATION;
-import static rssminer.Utils.CLIENT;
+import static me.shenfeng.http.HttpUtils.*;
+import static rssminer.Utils.*;
 
-public class FaviconFuture extends CommonFuture {
+public class FaviconFuture implements IListenableFuture {
 
     static Logger logger = LoggerFactory.getLogger(FaviconFuture.class);
 
-    private String hostname;
+    static final int MAX_RETRY = 5;
+
+    private volatile Runnable listener;
+    private volatile Object resp;
+    protected volatile int retryCount = 0;
+
+    private final String hostname;
+    protected final Proxy proxy;
+    protected final DataSource dataSource;
+    protected final Map<String, String> reqHeaders;
+
+    static final int CACHE_TIME = 3600 * 24 * 5; // cache 5 day;
+    static final String CACHE_VALUE = "public, max-age=" + CACHE_TIME;
+
+    public Object get() {
+        return resp;
+    }
 
     private void noIcon() {
         finish(404, null, true); // cache failed
+    }
+
+    protected Map<String, String> getHeaders(String ct) {
+        Map<String, String> h = new TreeMap<String, String>();
+        if (ct != null && !ct.isEmpty()) {
+            h.put(CONTENT_TYPE, ct);
+        }
+        h.put(CACHE_CONTROL, CACHE_VALUE);
+        return h;
     }
 
     private void finish(int status, byte[] data, boolean cache) {
@@ -50,6 +77,17 @@ public class FaviconFuture extends CommonFuture {
         } else {
             // browser js will do it right
             done(200, getHeaders(null), null);
+        }
+    }
+
+    protected void done(int status, Map<String, String> headers, Object body) {
+        Map<Keyword, Object> r = new HashMap<Keyword, Object>(6);
+        r.put(ServerConstant.STATUS, status);
+        r.put(ServerConstant.HEADERS, headers);
+        r.put(ServerConstant.BODY, body);
+        resp = r;
+        if (listener != null) {
+            listener.run(); // will call get, get resp
         }
     }
 
@@ -116,6 +154,16 @@ public class FaviconFuture extends CommonFuture {
         }
     }
 
+    public void addListener(Runnable listener) {
+        if (this.listener != null)
+            throw new RuntimeException("listener is already added");
+        if (resp != null) {
+            listener.run(); // listener will call get(), and get the real resp
+        } else {
+            this.listener = listener;
+        }
+    }
+
     private void doIt(URI u, boolean img) {
         if (++retryCount > MAX_RETRY) {
             noIcon();
@@ -123,10 +171,10 @@ public class FaviconFuture extends CommonFuture {
         }
         try {
             if (img) {
-                CLIENT.get(u, sendHeaders, proxy, new BinaryRespListener(
+                CLIENT.get(u, reqHeaders, proxy, new BinaryRespListener(
                         new FaviconHandler(u)));
             } else {
-                CLIENT.get(u, sendHeaders, proxy, new TextRespListener(
+                CLIENT.get(u, reqHeaders, proxy, new TextRespListener(
                         new WebPageHandler(u)));
             }
         } catch (Exception e) {
@@ -165,8 +213,15 @@ public class FaviconFuture extends CommonFuture {
 
     public FaviconFuture(String hostname, Map<String, String> headers,
                          Map<Keyword, Object> config) {
-        super(config, headers);
+        this.proxy = (Proxy) (config.get(K_PROXY));
+        this.dataSource = (DataSource) config.get(K_DATA_SOURCE);
+        this.reqHeaders = new TreeMap<String, String>(headers);
         this.hostname = hostname;
+
+        if (proxy == null || dataSource == null) {
+            throw new NullPointerException(
+                    "proxy, redis, datasource can's be null");
+        }
         if (!tryCache()) {
             try {
                 doIt(new URI("http://" + hostname), false);

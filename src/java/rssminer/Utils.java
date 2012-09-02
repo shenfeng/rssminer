@@ -4,7 +4,6 @@ import clojure.lang.Keyword;
 import me.shenfeng.http.HttpUtils;
 import me.shenfeng.http.client.HttpClient;
 import me.shenfeng.http.client.HttpClientConfig;
-import org.ccil.cowan.tagsoup.Parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
@@ -12,7 +11,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import rssminer.db.SubItem;
-import rssminer.sax.RewriteHandler;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -99,8 +97,6 @@ public class Utils {
 
     // config key
     public static final Keyword K_PROXY = Keyword.intern("proxy");
-    public static final Keyword K_PROXY_SERVER = Keyword
-            .intern("proxy-server");
     public static final Keyword K_REDIS_SERVER = Keyword
             .intern("redis-server");
     public static final Keyword K_DATA_SOURCE = Keyword.intern("data-source");
@@ -115,17 +111,6 @@ public class Utils {
             throw new RuntimeException(e);
         }
     }
-
-    public static final ThreadLocal<Parser> parser = new ThreadLocal<Parser>() {
-        protected Parser initialValue() {
-            Parser p = new Parser();
-            try {
-                p.setFeature(Parser.defaultAttributesFeature, false);
-            } catch (Exception ignore) {
-            }
-            return p;
-        }
-    };
 
     public static void closeQuietly(Connection con) {
         if (con != null) {
@@ -210,15 +195,6 @@ public class Utils {
         } else {
             return null;
         }
-    }
-
-    public static String rewrite(String html, String urlBase, String proxyURI)
-            throws IOException, SAXException, URISyntaxException {
-        Parser p = parser.get();
-        RewriteHandler h = new RewriteHandler(html, urlBase, proxyURI);
-        p.setContentHandler(h);
-        p.parse(new InputSource(new StringReader(html)));
-        return h.get();
     }
 
     public static List<String> split(String str, int ch) {

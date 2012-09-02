@@ -14,10 +14,9 @@
                                      JPOST JPUT JDELETE JGET]]))
   (:require [compojure.route :as route]
             [rssminer.import :as import]
-            rssminer.admin
+            [rssminer.admin :as admin]
             (rssminer.handlers [reader :as reader]
                                [subscriptions :as subs]
-                               [proxy :as proxy]
                                [users :as user]
                                [feeds :as feed])))
 
@@ -40,10 +39,8 @@
 
 (defroutes all-routes
   (GET "/" [] reader/show-landing-page)
-  (GET "/fav" [] proxy/get-favicon)
-  (GET "/p" []  proxy/handle-proxy)
+  (GET "/fav" [] reader/get-favicon)
   (GET "/browser" []  reader/show-unsupported-page)
-  (GET "/f/o/:id" [] proxy/proxy-feed)
   (GET "/a" [] reader/show-app-page)
   (GET "/demo" [] reader/show-demo-page)
   (context "/login" []
@@ -51,7 +48,7 @@
            (POST "/" [] user/login)
            (GET "/google" [] user/google-openid)
            (GET "/checkauth" [] user/checkauth))
-  (GET "/admin/compute" [] rssminer.admin/recompute-scores)
+  (GET "/admin/compute" [] admin/recompute-scores)
   (GET "/oauth2callback" [] import/oauth2callback)
   (GET "/import/google" [] import/greader-import)
   (context "/signup" []

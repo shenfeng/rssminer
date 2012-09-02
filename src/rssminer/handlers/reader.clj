@@ -5,8 +5,11 @@
         [clojure.java.io :only [resource]]
         [ring.util.response :only [redirect]]
         [rssminer.db.user :only [find-user-by-email find-user-by-id]])
-  (:require [rssminer.config :as cfg])
-  (:import rssminer.Utils))
+  (:require [rssminer.config :as cfg]
+            [clojure.string :as str]
+            [rssminer.db.feed :as db])
+  (:import rssminer.Utils
+           rssminer.FaviconFuture))
 
 (deftemplate landing-page (slurp (resource "templates/landing.tpl")))
 
@@ -72,5 +75,13 @@
         uid (user-id-from-session req)
         limit (min 20 (to-int limit))]
     (if ids
-      (search-within-subs q uid (clojure.string/split ids #",") limit)
+      (search-within-subs q uid (str/split ids #",") limit)
       (search* q uid limit))))
+
+(defn get-favicon [req]
+  (if-let [hostname (-> req :params :h str/reverse)]
+    {:status 200
+     :body (FaviconFuture. hostname
+                           {"User-Agent" ((:headers req) "user-agent")}
+                           @cfg/rssminer-conf)}
+    {:status 404}))

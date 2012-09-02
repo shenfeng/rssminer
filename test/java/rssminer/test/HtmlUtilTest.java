@@ -1,14 +1,6 @@
 package rssminer.test;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-
 import org.apache.commons.io.IOUtils;
-import org.ccil.cowan.tagsoup.Parser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -16,9 +8,15 @@ import org.jsoup.nodes.Node;
 import org.junit.Assert;
 import org.junit.Test;
 import org.xml.sax.SAXException;
-
 import rssminer.jsoup.HtmlUtils;
 import rssminer.tools.Utils;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
 
 public class HtmlUtilTest {
 
@@ -98,20 +96,6 @@ public class HtmlUtilTest {
 
         s = HtmlUtils.summaryText("<a><style>text</style></a>");
         Assert.assertEquals(s, "");
-    }
-
-    @Test
-    public void testMinifyHtml() throws FileNotFoundException, IOException,
-            SAXException {
-        String htmlWithBr = Utils.readFile("test/html/python-iaq.html");
-
-        String s = HtmlUtils.minfiyHtml(htmlWithBr, "http://what.com");
-        Assert.assertEquals(-1, s.indexOf("</hr>"));
-        Assert.assertEquals(-1, s.indexOf("</br>"));
-
-        String file = Utils.readFile("test/html/alibuybuy-70468.html");
-        s = HtmlUtils.minfiyHtml(file,
-                "http://www.alibuybuy.com/posts/70468.html");
     }
 
     @Test

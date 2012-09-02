@@ -1,6 +1,5 @@
 package rssminer.jsoup;
 
-import org.ccil.cowan.tagsoup.Parser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -8,13 +7,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import rssminer.Utils;
-import rssminer.sax.HTMLMinfiyHandler;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.net.URI;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -117,15 +110,6 @@ public class HtmlUtils {
 
             return false;
         }
-    }
-
-    public static String minfiyHtml(String html, String url)
-            throws IOException, SAXException {
-        Parser p = Utils.parser.get();
-        HTMLMinfiyHandler m = new HTMLMinfiyHandler(html, url);
-        p.setContentHandler(m);
-        p.parse(new InputSource(new StringReader(html)));
-        return m.get();
     }
 
     public static String summaryText(String summay) {

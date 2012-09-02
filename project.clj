@@ -17,7 +17,6 @@
                  [org.clojure/tools.logging "0.2.3"]
                  [org.jsoup/jsoup "1.6.4"]
                  [ch.qos.logback/logback-classic "1.0.1"]
-                 [org.ccil.cowan.tagsoup/tagsoup "1.2"]
                  [redis.clients/jedis "2.1.0"]
                  [ring/ring-core "1.1.3"]]
   :dev-resources-path "/usr/lib/jvm/java-6-sun/lib/tools.jar:/usr/lib/jvm/java-6-sun/lib/src.zip"
@@ -49,6 +48,7 @@
   :dev-dependencies [[swank-clojure "1.4.0"]
                      [junit/junit "4.8.2"]
                      [commons-lang "2.3"]
+                     [org.ccil.cowan.tagsoup/tagsoup "1.2"]
                      [org.apache.lucene/lucene-analyzers "3.6.1"]
                      [org.apache.lucene/lucene-facet "3.6.1"]
                      [javax.mail/mail "1.4.4"]

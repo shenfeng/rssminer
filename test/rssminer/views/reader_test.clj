@@ -1,7 +1,8 @@
 (ns rssminer.views.reader-test
-  (use clojure.test
-       [rssminer.test-common :only [test-app auth-app auth-app2
-                                    app-fixture]]))
+  (:use clojure.test
+        [rssminer.database :only [mysql-insert]]
+        [rssminer.test-common :only [test-app auth-app auth-app2
+                                     app-fixture]]))
 
 (use-fixtures :each app-fixture)
 
@@ -44,4 +45,34 @@
   (let [resp (test-app {:uri "/demo"
                         :request-method :get})]
     (is (= 200 (:status resp)))))
+
+(deftest test-get-favicon
+  (let [host "www.test.com"
+        data (byte-array (map byte (range 1 10)))]
+    (mysql-insert :favicon {:hostname host :favicon nil :code 404})
+    (let [resp (:body (test-app {:uri "/fav"
+                                 :request-method :get
+                                 :headers {}
+                                 :query-string
+                                 (str "h=" (clojure.string/reverse host))}))]
+      (.addListener resp (reify Runnable
+                           (run [this]
+                             (let [resp (.get resp)]
+                               (is (= 200 (:status resp)))
+                               (is (nil? (:body resp))))))))))
+
+(deftest test-get-favicon2
+  (let [host "www.test.com"
+        data (.getBytes host)]
+    (mysql-insert :favicon {:hostname host :favicon data :code 200})
+    (let [resp (:body (test-app {:uri "/fav"
+                                 :request-method :get
+                                 :headers {}
+                                 :query-string
+                                 (str "h=" (clojure.string/reverse host))}))]
+      (.addListener resp (reify Runnable
+                           (run [this]
+                             (let [resp (.get resp)]
+                               (is (= 200 (:status resp)))
+                               (is (= host (slurp (:body resp)))))))))))
 
