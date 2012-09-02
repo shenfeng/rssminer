@@ -8,6 +8,7 @@
 .lein-failures
 .project
 /.git
+/.lein-plugins
 /.settings
 /bin
 /build
