@@ -186,7 +186,7 @@
 
   function show_welcome (section, page, cb) {
     var d = !section && !page;
-    section = section || data_api.user_conf.pref_sort || 'newest';
+    section = section || data_api.user_conf.pref_sort || 'recommend';
     page = page || 1;
     _update_state(section, page, section, GROUP_WELCOME);
     $subs_list.find('.selected').removeClass('selected');
@@ -210,10 +210,10 @@
     $reading_area.removeClass(SHOW_CONTENT);
     var old_sort = data_api.user_conf.pref_sort;
     var sections = ['add', 'settings', 'help'],
-        sortings = [{value: 'newest', // default newest
-                     s: old_sort ==='newest'},
-                    {value: 'recommend',
-                     s: old_sort === 'recommend'}];
+        sortings = [{value: 'recommend', // default to recommend
+                     s: old_sort === 'recommend'},
+                    {value: 'newest',
+                     s: old_sort ==='newest'}];
     var d = {
       selected: section,
       sortings: sortings,
