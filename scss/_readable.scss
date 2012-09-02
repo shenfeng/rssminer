@@ -8,7 +8,6 @@
     height: 100%;
     font-size: 16px;
     line-height: 2.0;
-    /* color: #323c46; */
     color: #333;
     background: #F6F6F6;
     .like .icon-thumbs-up { visibility: visible; }
@@ -64,9 +63,9 @@
         h4, h5 { font-size: 18px; }
         padding-bottom: 150px;
         p {
-            text-indent: 2em;
+            /* text-indent: 2em; */
             text-align: justify;
-            margin: 20px 0;
+            margin: 17px 0;
         }
         li p { text-indent: 0; } /* 147878 */
         /* sup { */
@@ -79,7 +78,10 @@
             li { margin: 5px 0; }
         }
         blockquote {
-            padding: 5px;
+            margin: 13px;
+            font-size: 15px;
+            /* line-height: 1.5; */
+            padding:0 7px;
             background: #f1f0ea;
         }
         ol {
@@ -88,12 +90,13 @@
             li { margin: 5px 0; }
         }
         img {
-            margin: 5px auto;
+            margin: 8px auto;
             display: block;
-            box-shadow: 0 0 5px #999;
+            box-shadow: 0 0 8px #999;
         }
 
         code, pre {
+            line-height: 1.4;
             font-size: 13px;
             font-family: monospace;
         }
