@@ -22,9 +22,9 @@ import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+
+import static java.lang.Character.OTHER_PUNCTUATION;
 
 class GoogleExportHandler extends DefaultHandler {
 
@@ -221,6 +221,39 @@ public class Utils {
         return h.get();
     }
 
+    public static List<String> split(String str, int ch) {
+        int begin = 0;
+        for (; begin < str.length(); begin++) {
+            if(str.charAt(begin) != ch) {
+                break;
+            }
+        }
+        if(begin > 0) {
+            str = str.substring(begin);
+            begin = 0;
+        }
+
+        int idx = str.indexOf(ch);
+        if (idx == -1) {
+            return Arrays.asList(str.trim());
+        } else {
+            ArrayList<String> strs = new ArrayList<String>(2);
+            while (idx > -1) {
+                String s = str.substring(begin, idx).trim();
+                if (s.length() > 0) {
+                    strs.add(s);
+                }
+                begin = idx + 1;
+                idx = str.indexOf(ch, begin);
+            }
+            String s = str.substring(begin).trim();
+            if (s.length() > 0) {
+                strs.add(s);
+            }
+            return strs;
+        }
+    }
+
     public static String trimRemoveBom(String html) {
         html = html.trim();
         if (html.length() > 0) {
@@ -231,5 +264,30 @@ public class Utils {
             }
         }
         return html;
+    }
+
+
+    public static List<String> simpleSplit(String str) {
+        ArrayList<String> strs = new ArrayList<String>(2);
+        int start = -1;
+        boolean splitter = true;
+        char ch;
+        for (int i = 0; i < str.length(); ++i) {
+            ch = str.charAt(i);
+            if (Character.isWhitespace(ch)
+                    || Character.getType(ch) == OTHER_PUNCTUATION) {
+                if (!splitter) {
+                    strs.add(str.substring(start + 1, i));
+                }
+                splitter = true;
+                start = i;
+            } else {
+                splitter = false;
+            }
+        }
+        if (start != str.length() - 1) {
+            strs.add(str.substring(start + 1));
+        }
+        return strs;
     }
 }

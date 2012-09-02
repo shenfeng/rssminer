@@ -15,13 +15,13 @@
 /classes
 /conf/exclude.txt
 /lib
+/out
 /project.clj
 /public/js/gen
 /public/js/lib
 /public/js/rssminer
 /scss
 /src
-/out
 /src/templates/tmpls
 /target
 /templates
@@ -31,6 +31,7 @@
 README
 README.md
 Rakefile
+TODO
 pom.xml
 rssminer-1.0.0.jar
 tags

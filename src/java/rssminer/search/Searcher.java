@@ -20,6 +20,7 @@ import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rssminer.Utils;
 import rssminer.db.DBHelper;
 import rssminer.db.Feed;
 import rssminer.db.MinerDAO;
@@ -32,7 +33,6 @@ import java.io.StringReader;
 import java.sql.SQLException;
 import java.util.*;
 
-import static java.lang.Character.OTHER_PUNCTUATION;
 import static rssminer.Utils.K_DATA_SOURCE;
 
 public class Searcher {
@@ -61,11 +61,11 @@ public class Searcher {
     static Term FEED_ID_TERM = new Term(FEED_ID);
     static Term RSS_ID_TERM = new Term(RSS_ID);
 
-    public static Term[] ANALYZE_FIELDS = new Term[] {TITLE_TERM, CONTNET_TERM};
-    public static Term[] ALL_FIELDS = new Term[] {
+    public static Term[] ANALYZE_FIELDS = new Term[]{TITLE_TERM, CONTNET_TERM};
+    public static Term[] ALL_FIELDS = new Term[]{
             TITLE_TERM, CONTNET_TERM, TAG_TERM, AUTHOR_TERM
     };
-    public static Term[] SIMPLE_SPLIT_FIELDS = new Term[] {TAG_TERM,
+    public static Term[] SIMPLE_SPLIT_FIELDS = new Term[]{TAG_TERM,
             AUTHOR_TERM};
 
     public static final TermVector TV = TermVector.WITH_POSITIONS_OFFSETS;
@@ -77,29 +77,7 @@ public class Searcher {
         return SEARCHER;
     }
 
-    public static List<String> simpleSplit(String str) {
-        ArrayList<String> strs = new ArrayList<String>(2);
-        int start = -1;
-        boolean splitter = true;
-        char ch;
-        for (int i = 0; i < str.length(); ++i) {
-            ch = str.charAt(i);
-            if (Character.isWhitespace(ch)
-                    || Character.getType(ch) == OTHER_PUNCTUATION) {
-                if (!splitter) {
-                    strs.add(str.substring(start + 1, i));
-                }
-                splitter = true;
-                start = i;
-            } else {
-                splitter = false;
-            }
-        }
-        if (start != str.length() - 1) {
-            strs.add(str.substring(start + 1));
-        }
-        return strs;
-    }
+
 
     private IndexWriter indexer = null;
     private final String path;
@@ -174,7 +152,7 @@ public class Searcher {
             q.add(part, Occur.SHOULD);
         }
 
-        List<String> parts = simpleSplit(text);
+        List<String> parts = Utils.simpleSplit(text);
         for (Term t : SIMPLE_SPLIT_FIELDS) {
             BooleanQuery part = new BooleanQuery();
             for (String term : parts) {
@@ -221,7 +199,7 @@ public class Searcher {
 
         if (author != null && author.length() > 0) {
             author = Mapper.toSimplified(author);
-            List<String> authors = simpleSplit(author);
+            List<String> authors = Utils.simpleSplit(author);
             for (String a : authors) {
                 Field f = new Field(AUTHOR, false, a.toLowerCase(), Store.NO,
                         Index.NOT_ANALYZED, TV);
@@ -240,7 +218,7 @@ public class Searcher {
 
         if (tags != null && tags.length() > 0) {
             tags = Mapper.toSimplified(tags);
-            List<String> ts = simpleSplit(tags);
+            List<String> ts = Utils.simpleSplit(tags);
             for (String tag : ts) {
                 Field f = new Field(TAG, false, tag.toLowerCase(), Store.NO,
                         Index.NOT_ANALYZED, TV);

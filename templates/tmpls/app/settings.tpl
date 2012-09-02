@@ -17,7 +17,7 @@
         to add subscription.
       </p>
     {{/demo}}
-    <section>
+    <div>
       <h4>Import</h4>
       <div>
         <p>
@@ -27,8 +27,8 @@
           </a>
         </p>
       </div>
-    </section>
-    <section>
+    </div>
+    <div>
       <h4>URL</h4>
       <div>
         <input id="rss_atom_url" placeholder="paste atom/rss url here"/>
@@ -48,13 +48,13 @@
           </li>
         </ul>
       </div>
-    </section>
-    <section>
+    </div>
+    <div>
       <button id="add-subscription">add</button>
-    </section>
+    </div>
   </li>
   <li class="section settings">
-    <section>
+    <div>
       <p>Default list: default show the automatic recommendation or
         just the newest</p>
         <select>
@@ -62,8 +62,8 @@
             <option {{#s}}selected{{/s}}>{{ value }}</option>
           {{/sortings}}
         </select>
-    </section>
-    <section>
+    </div>
+    <div>
       <p class="warn">
         Login in with Google OpenID is encouraged. But if...
       </p>
@@ -83,10 +83,10 @@
         <input type="password" placeholder="retype password"
         name="password2" id="password2"/>
       </div>
-    </section>
-    <section>
+    </div>
+    <div>
       <button id="save-settings">Save</button>
-    </section>
+    </div>
   </li>
   <li class="section about">
     <h3>What are the colors for?</h3>

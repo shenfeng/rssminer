@@ -28,7 +28,7 @@
 
 .section {
     h4 { width: 130px; }
-    section {
+    > div {
         padding: 10px 0;
         border-bottom: 1px dotted #ECECEC;
         h4, > div {

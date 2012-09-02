@@ -22,7 +22,6 @@ java -Dsun.jnu.encoding=UTF-8 \
     -cp rssminer.jar:lib/* rssminer.main \
     --index-path /var/rssminer/index \
     --static-server //s.rss-miner.com \
-    --proxy-server //p.rss-miner.com \
     --profile prod \
     --worker 2 \
     --port 9090 \

@@ -43,8 +43,7 @@
     (let [data {:rm {:user (find-user-by-id (user-id-from-session req))
                      :gw (-> req :params :gw) ; google import wait
                      :ge (-> req :params :ge) ; google import error
-                     :static_server (:static-server @cfg/rssminer-conf)
-                     :proxy_server (:proxy-server @cfg/rssminer-conf)}}]
+                     :static_server (:static-server @cfg/rssminer-conf)}}]
       (to-html app-page {:dev (cfg/in-dev?)
                          :prod (cfg/in-prod?)
                          :css app-css
@@ -60,8 +59,7 @@
                      :password))
       (let [data {:rm {:user (:demo-user @cfg/rssminer-conf)
                        :demo true
-                       :static_server (:static-server @cfg/rssminer-conf)
-                       :proxy_server (:proxy-server @cfg/rssminer-conf)}}]
+                       :static_server (:static-server @cfg/rssminer-conf)}}]
         {:body (to-html app-page {:dev (cfg/in-dev?)
                                   :prod (cfg/in-prod?)
                                   :css app-css
