@@ -7,3 +7,4 @@
 8. saveable search
 8. tag navigation
 9. build a bookmark manager tool
+10. something like GR list expand mode: scoll, then next article
