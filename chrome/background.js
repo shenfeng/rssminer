@@ -52,6 +52,8 @@
   }
 
   function pageaction_clicked (tab) {
+    console.log("clicked", tab);
+    // return;
     chrome.tabs.sendRequest(tab.id, {}, function (response) {
       var rss_links = response.data;
       if(!is_subscribed(rss_links)) {
@@ -80,9 +82,9 @@
       // clear BadgeText
       chrome.browserAction.setBadgeText({text:''});
     }
-    chrome.browserAction.setIcon({
-      path: rss_links.length? RSS_ICON : RSSMINER_ICON
-    });
+    // chrome.browserAction.setIcon({
+    //   path: rss_links.length? RSS_ICON : RSSMINER_ICON
+    // });
   }
 
   function show_rssminer_icon (request, sender, sendResponse) {
@@ -121,6 +123,7 @@
   chrome.extension.onRequest.addListener(show_rssminer_icon);
   // tab select change
   chrome.tabs.onActivated.addListener(tab_activated);
+  chrome.browserAction.onClicked.addListener(pageaction_clicked);
   // chrome.browserAction.onClicked.addListener(function (tab) {
 
   //   chrome.browserAction.setPopup({

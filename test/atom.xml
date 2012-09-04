@@ -1,0 +1,1104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+ 
+ <title>shenfeng's blog</title>
+ <link href="http://shenfeng.me/atom.xml" rel="self" />
+ <link href="http://shenfeng.me" />
+ <updated>2012-04-25T08:25:36+08:00</updated>
+ <id>http://shenfeng.me</id>
+ <author>
+   <name>Feng Shen</name>
+   <email>shenedu@gmail.com</email>
+ </author>
+
+ 
+ <entry>
+   <title>jvm options</title>
+   <link href="http://shenfeng.me/jvm-options.html" />
+   <updated>2012-04-06T00:00:00+08:00</updated>
+   <id>http://shenfeng.me/jvm-options</id>
+   <content type="html">&lt;p&gt;&lt;code&gt;java -XX:+PrintFlagsFinal&lt;/code&gt;&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>2012要看的书， 要写的代码</title>
+   <link href="http://shenfeng.me/my-2012.html" />
+   <updated>2012-03-27T00:00:00+08:00</updated>
+   <id>http://shenfeng.me/my-2012</id>
+   <content type="html">&lt;h3 id='2012_'&gt;管2012会不会有不有世界末日， 他并不妨碍我读几本书。&lt;/h3&gt;
+
+&lt;p&gt;作为一个程序员，行业要求要无止境的学习，并且我还很喜欢这个行业&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;《深入理解Java虚拟机:JVM高级特性与最佳实践》 不管怎样， 我很喜欢java和JVM上的Clojure， 有必要深入了解一下。&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;《Computer Systems, A programmer&amp;#8217;s perspective》 去年就开始翻了， 希望今年能看完。&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;《The c programming language》 大一就读了这本书， 现在有必要重读一下&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;《a global history from prehistory to the 21st century》 袁某人推荐的。去年就买了，可是没有看。 很是喜欢袁老师&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id='id2'&gt;想要写的代码&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;用C写一个Web Server, 用epoll，自己写内存分配，妥善处理超时，和各种意 外情况。 看看能到多快。&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;用纯JAVA， 从头写一个web server 和http client，给Rssminer用。 能给 production用。 妥善处理超时， 各种意外，控制latency， 控制内存使用。&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;写完Rssminer。 这个已经写了快一年了。 今年6月份以前应该publicly available&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>浅说Javascript的namespace 和 private</title>
+   <link href="http://shenfeng.me/javascript-namespace-private.html" />
+   <updated>2012-03-03T00:00:00+08:00</updated>
+   <id>http://shenfeng.me/javascript-namespace-private</id>
+   <content type="html">&lt;p&gt;&lt;a href='http://www.crockford.com/'&gt;Douglas Crockford&lt;/a&gt; 说&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href='http://javascript.crockford.com/javascript.html'&gt;JavaScript: The Wrrrld&amp;#8217;s Most Misunderstood Programming Language&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://javascript.crockford.com/popular.html'&gt;The World&amp;#8217;s Most Misunderstood Programming Language Has Become the World&amp;#8217;s Most Popular Programming Language&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;我参与的项目用了很多javascript。比如&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href='http://mei.fm/'&gt;中文版美味书签&lt;/a&gt;: 选集查看页面是用javascript渲染的； 选集创建，js也起了很重要的作用&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='https://trakrapp.com/'&gt;Track&lt;/a&gt;: 就是一个Javascript App， 很多逻辑都是 在浏览器完成， 包括routing， 生成HTML&amp;#8230;&amp;#8230;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://rssminer.net'&gt;Rssminer&lt;/a&gt;: javascript做了更多事情， 比如浏览器端 生产HTML， 去广告， 实现readability&amp;#8230;&amp;#8230;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;依赖Javascript有很多好处，不细说。缺点也有一堆，比如“没有namespace和private”， 他们是模块化和封装的基础，我感觉尤为关键。&lt;code&gt;package&lt;/code&gt;，&lt;code&gt;private&lt;/code&gt;是javascript的关键字，但是作用却是：&lt;code&gt;不小心用作变量名, object的key，程序出错&lt;/code&gt;，仅此而已。&lt;code&gt;但是上帝在把门关上的时候，留了一个窗户&lt;/code&gt;。用&lt;code&gt;函数&lt;/code&gt;可以实现他们（从某种意义上说）&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='js'&gt;&lt;span class='c1'&gt;// utils.js&lt;/span&gt;
+&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kd'&gt;function&lt;/span&gt; &lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+  &lt;span class='c1'&gt;//  private. given by closure&lt;/span&gt;
+  &lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;private_var&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
+  &lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;helper1&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='kd'&gt;function&lt;/span&gt; &lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt; &lt;span class='p'&gt;};&lt;/span&gt;
+  &lt;span class='c1'&gt;// namespace: YOUR_NS. given by javascript&amp;#39;s global object&lt;/span&gt;
+  &lt;span class='nb'&gt;window&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;YOUR_NS&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nb'&gt;window&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;YOUR_NS&lt;/span&gt; &lt;span class='o'&gt;||&lt;/span&gt; &lt;span class='p'&gt;{};&lt;/span&gt;
+  &lt;span class='nb'&gt;window&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;YOUR_NS&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;utils&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='nx'&gt;helper1&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='nx'&gt;helper1&lt;/span&gt;            &lt;span class='c1'&gt;// export, public&lt;/span&gt;
+  &lt;span class='p'&gt;};&lt;/span&gt;
+  &lt;span class='c1'&gt;// create an anonymous function, execute it immediately&lt;/span&gt;
+&lt;span class='p'&gt;})();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='js'&gt;&lt;span class='c1'&gt;// app.js&lt;/span&gt;
+&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kd'&gt;function&lt;/span&gt; &lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+  &lt;span class='c1'&gt;// like java&amp;#39;s import, c++&amp;#39;s using namespace&lt;/span&gt;
+  &lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;utils&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nb'&gt;window&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;YOUR_NS&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;utils&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
+  &lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;utils2&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nb'&gt;window&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;YOUR_NS&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;utils&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  &lt;span class='c1'&gt;// rename&lt;/span&gt;
+  &lt;span class='c1'&gt;// direct import, java&amp;#39;s import static&lt;/span&gt;
+  &lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;helper1&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nx'&gt;utils&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;helper1&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
+  &lt;span class='c1'&gt;// you app&amp;#39;s logic here&lt;/span&gt;
+  &lt;span class='nx'&gt;utils&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;helper1&lt;/span&gt;&lt;span class='p'&gt;();&lt;/span&gt;              &lt;span class='c1'&gt;// smaple usage&lt;/span&gt;
+  &lt;span class='nx'&gt;utils2&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;helper1&lt;/span&gt;&lt;span class='p'&gt;();&lt;/span&gt;             &lt;span class='c1'&gt;// smaple usage&lt;/span&gt;
+  &lt;span class='nx'&gt;helper1&lt;/span&gt;&lt;span class='p'&gt;();&lt;/span&gt;                    &lt;span class='c1'&gt;// smaple usage&lt;/span&gt;
+&lt;span class='p'&gt;})();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='html'&gt;&lt;span class='c'&gt;&amp;lt;!-- app.html --&amp;gt;&lt;/span&gt;
+&lt;span class='c'&gt;&amp;lt;!-- browser load and execute them in order --&amp;gt;&lt;/span&gt;
+&lt;span class='nt'&gt;&amp;lt;script &lt;/span&gt;&lt;span class='na'&gt;src=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;utils.js&amp;quot;&lt;/span&gt;&lt;span class='nt'&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;span class='nt'&gt;&amp;lt;script &lt;/span&gt;&lt;span class='na'&gt;src=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;app.js&amp;quot;&lt;/span&gt;&lt;span class='nt'&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>How far epoll can push concurrent socket connection</title>
+   <link href="http://shenfeng.me/how-far-epoll-can-push-concurrent-socket-connection.html" />
+   <updated>2012-02-01T00:00:00+08:00</updated>
+   <id>http://shenfeng.me/how-far-epoll-can-push-concurrent-socket-connection</id>
+   <content type="html">&lt;p&gt;I wrote an &lt;a href='http://shenfeng.me:9090/'&gt;online dictionary&lt;/a&gt; in pure C in Spring festival.&lt;/p&gt;
+
+&lt;p&gt;The dictionary data(about &lt;code&gt;8.2M&lt;/code&gt;, file &lt;code&gt;dbdata&lt;/code&gt;) is compressed and loaded into memory using &lt;code&gt;mmap&lt;/code&gt;, an index is build on top of it for fast lookup using &lt;code&gt;binary search&lt;/code&gt;. The RES is about &lt;code&gt;9M&lt;/code&gt; when concurrent connection is not high, say, blow 1k.&lt;/p&gt;
+
+&lt;p&gt;I handcrafted the web server in pure C with epoll. It serves static file and word lookup request. The performance is amazing, &lt;code&gt;54.3k req/s, when 800k socket connections are kept&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id='test_machine'&gt;Test Machine&lt;/h2&gt;
+
+&lt;p&gt;Server and test app are run on the same computer.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Mem&lt;/code&gt;: 16G&lt;/li&gt;
+
+&lt;li&gt;&lt;code&gt;CPU&lt;/code&gt;: Intel(R) Core(TM) i7-2600 CPU @ 3.40GHz&lt;/li&gt;
+
+&lt;li&gt;&lt;code&gt;OS&lt;/code&gt; : GUN/Linux Debian 3.1.0-1-amd64&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Several config for Linux:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='sh'&gt;&lt;span class='c'&gt;# set up virtual network interface,&lt;/span&gt;
+&lt;span class='c'&gt;# test client bind to these IP, then connect&lt;/span&gt;
+&lt;span class='k'&gt;for &lt;/span&gt;i in &lt;span class='sb'&gt;`&lt;/span&gt;seq 21 37&lt;span class='sb'&gt;`&lt;/span&gt;; &lt;span class='k'&gt;do &lt;/span&gt;sudo ifconfig eth0:&lt;span class='nv'&gt;$i&lt;/span&gt; 192.168.1.&lt;span class='nv'&gt;$i&lt;/span&gt; up ; &lt;span class='k'&gt;done&lt;/span&gt;
+
+&lt;span class='c'&gt;# more ports for testing&lt;/span&gt;
+sudo sysctl -w net.ipv4.ip_local_port_range&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='s2'&gt;&amp;quot;1025 65535&amp;quot;&lt;/span&gt;
+
+&lt;span class='c'&gt;# edit /etc/security/limits.conf, add line&lt;/span&gt;
+&lt;span class='c'&gt;# * - nofile 999999&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h2 id='800k_concurrent_connection'&gt;800K concurrent connection&lt;/h2&gt;
+
+&lt;p&gt;Test code, written in java, Memory usage: &lt;code&gt;RES&lt;/code&gt;: &lt;code&gt;142M&lt;/code&gt; (from &lt;code&gt;htop&lt;/code&gt;)&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='java'&gt;&lt;span class='kd'&gt;public&lt;/span&gt; &lt;span class='kd'&gt;class&lt;/span&gt; &lt;span class='nc'&gt;MakeupIdelConnection&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+    &lt;span class='kd'&gt;final&lt;/span&gt; &lt;span class='kd'&gt;static&lt;/span&gt; &lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;STEPS&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;10&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+    &lt;span class='kd'&gt;final&lt;/span&gt; &lt;span class='kd'&gt;static&lt;/span&gt; &lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;connectionPerIP&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;50000&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+    &lt;span class='kd'&gt;public&lt;/span&gt; &lt;span class='kd'&gt;static&lt;/span&gt; &lt;span class='kt'&gt;void&lt;/span&gt; &lt;span class='nf'&gt;main&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;String&lt;/span&gt;&lt;span class='o'&gt;[]&lt;/span&gt; &lt;span class='n'&gt;args&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='kd'&gt;throws&lt;/span&gt; &lt;span class='n'&gt;IOException&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+        &lt;span class='kd'&gt;final&lt;/span&gt; &lt;span class='n'&gt;Selector&lt;/span&gt; &lt;span class='n'&gt;selector&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;Selector&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;open&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+        &lt;span class='n'&gt;InetSocketAddress&lt;/span&gt; &lt;span class='n'&gt;locals&lt;/span&gt;&lt;span class='o'&gt;[]&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='nf'&gt;InetSocketAddress&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;192.168.1.22&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;9090&lt;/span&gt;&lt;span class='o'&gt;),&lt;/span&gt;
+                &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='nf'&gt;InetSocketAddress&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;192.168.1.23&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;9090&lt;/span&gt;&lt;span class='o'&gt;),&lt;/span&gt;
+                &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='nf'&gt;InetSocketAddress&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;192.168.1.24&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;9090&lt;/span&gt;&lt;span class='o'&gt;),&lt;/span&gt;
+                &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='nf'&gt;InetSocketAddress&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;192.168.1.25&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;9090&lt;/span&gt;&lt;span class='o'&gt;),&lt;/span&gt;
+                &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='nf'&gt;InetSocketAddress&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;192.168.1.26&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;9090&lt;/span&gt;&lt;span class='o'&gt;),&lt;/span&gt;
+                &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='nf'&gt;InetSocketAddress&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;192.168.1.27&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;9090&lt;/span&gt;&lt;span class='o'&gt;),&lt;/span&gt;
+                &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='nf'&gt;InetSocketAddress&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;192.168.1.28&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;9090&lt;/span&gt;&lt;span class='o'&gt;),&lt;/span&gt;
+                &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='nf'&gt;InetSocketAddress&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;192.168.1.29&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;9090&lt;/span&gt;&lt;span class='o'&gt;),&lt;/span&gt;
+                &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='nf'&gt;InetSocketAddress&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;192.168.1.30&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;9090&lt;/span&gt;&lt;span class='o'&gt;),&lt;/span&gt;
+                &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='nf'&gt;InetSocketAddress&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;192.168.1.31&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;9090&lt;/span&gt;&lt;span class='o'&gt;),&lt;/span&gt;
+                &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='nf'&gt;InetSocketAddress&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;192.168.1.32&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;9090&lt;/span&gt;&lt;span class='o'&gt;),&lt;/span&gt;
+                &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='nf'&gt;InetSocketAddress&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;192.168.1.33&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;9090&lt;/span&gt;&lt;span class='o'&gt;),&lt;/span&gt;
+                &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='nf'&gt;InetSocketAddress&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;192.168.1.34&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;9090&lt;/span&gt;&lt;span class='o'&gt;),&lt;/span&gt;
+                &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='nf'&gt;InetSocketAddress&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;192.168.1.35&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;9090&lt;/span&gt;&lt;span class='o'&gt;),&lt;/span&gt;
+                &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='nf'&gt;InetSocketAddress&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;192.168.1.36&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;9090&lt;/span&gt;&lt;span class='o'&gt;),&lt;/span&gt;
+                &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='nf'&gt;InetSocketAddress&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;192.168.1.37&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;9090&lt;/span&gt;&lt;span class='o'&gt;),&lt;/span&gt;
+
+        &lt;span class='o'&gt;};&lt;/span&gt;
+        &lt;span class='kt'&gt;long&lt;/span&gt; &lt;span class='n'&gt;start&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;System&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;currentTimeMillis&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+        &lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;connected&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+        &lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;currentConnectionPerIP&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+        &lt;span class='k'&gt;while&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='kc'&gt;true&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+            &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;System&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;currentTimeMillis&lt;/span&gt;&lt;span class='o'&gt;()&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt; &lt;span class='n'&gt;start&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;&lt;/span&gt; &lt;span class='mi'&gt;1000&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='mi'&gt;60&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='mi'&gt;10&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                &lt;span class='k'&gt;break&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+            &lt;span class='o'&gt;}&lt;/span&gt;
+            &lt;span class='k'&gt;for&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;i&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt; &lt;span class='n'&gt;i&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;&lt;/span&gt; &lt;span class='n'&gt;connectionPerIP&lt;/span&gt; &lt;span class='o'&gt;/&lt;/span&gt; &lt;span class='n'&gt;STEPS&lt;/span&gt; &lt;span class='o'&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class='n'&gt;currentConnectionPerIP&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;&lt;/span&gt; &lt;span class='n'&gt;connectionPerIP&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt; &lt;span class='o'&gt;++&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='o'&gt;++&lt;/span&gt;&lt;span class='n'&gt;currentConnectionPerIP&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                &lt;span class='k'&gt;for&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;InetSocketAddress&lt;/span&gt; &lt;span class='n'&gt;addr&lt;/span&gt; &lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='n'&gt;locals&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                    &lt;span class='n'&gt;SocketChannel&lt;/span&gt; &lt;span class='n'&gt;ch&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;SocketChannel&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;open&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+                    &lt;span class='n'&gt;ch&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;configureBlocking&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='kc'&gt;false&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+                    &lt;span class='n'&gt;Socket&lt;/span&gt; &lt;span class='n'&gt;s&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;ch&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;socket&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+                    &lt;span class='n'&gt;s&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;setReuseAddress&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='kc'&gt;true&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+                    &lt;span class='n'&gt;ch&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;register&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;selector&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='n'&gt;SelectionKey&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;OP_CONNECT&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+                    &lt;span class='n'&gt;ch&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;connect&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;addr&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+                &lt;span class='o'&gt;}&lt;/span&gt;
+            &lt;span class='o'&gt;}&lt;/span&gt;
+
+            &lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;select&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;selector&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;select&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;1000&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='mi'&gt;10&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt; &lt;span class='c1'&gt;// 10s&lt;/span&gt;
+            &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;select&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                &lt;span class='n'&gt;System&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;out&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;println&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;select return: &amp;quot;&lt;/span&gt; &lt;span class='o'&gt;+&lt;/span&gt; &lt;span class='n'&gt;select&lt;/span&gt; &lt;span class='o'&gt;+&lt;/span&gt; &lt;span class='s'&gt;&amp;quot; events ; current connection per ip: &amp;quot;&lt;/span&gt; &lt;span class='o'&gt;+&lt;/span&gt; &lt;span class='n'&gt;currentConnectionPerIP&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+                &lt;span class='n'&gt;Set&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;SelectionKey&lt;/span&gt;&lt;span class='o'&gt;&amp;gt;&lt;/span&gt; &lt;span class='n'&gt;selectedKeys&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;selector&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;selectedKeys&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+                &lt;span class='n'&gt;Iterator&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;SelectionKey&lt;/span&gt;&lt;span class='o'&gt;&amp;gt;&lt;/span&gt; &lt;span class='n'&gt;it&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;selectedKeys&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;iterator&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+
+                &lt;span class='k'&gt;while&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;it&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;hasNext&lt;/span&gt;&lt;span class='o'&gt;())&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                    &lt;span class='n'&gt;SelectionKey&lt;/span&gt; &lt;span class='n'&gt;key&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;it&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;next&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+                    &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;key&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;isConnectable&lt;/span&gt;&lt;span class='o'&gt;())&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                        &lt;span class='n'&gt;SocketChannel&lt;/span&gt; &lt;span class='n'&gt;ch&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;SocketChannel&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='n'&gt;key&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;channel&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+                        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;ch&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;finishConnect&lt;/span&gt;&lt;span class='o'&gt;())&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                            &lt;span class='o'&gt;++&lt;/span&gt;&lt;span class='n'&gt;connected&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+                            &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;connected&lt;/span&gt; &lt;span class='o'&gt;%&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;connectionPerIP&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='n'&gt;locals&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;length&lt;/span&gt; &lt;span class='o'&gt;/&lt;/span&gt; &lt;span class='mi'&gt;10&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='o'&gt;==&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                                &lt;span class='n'&gt;System&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;out&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;println&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;connected: &amp;quot;&lt;/span&gt; &lt;span class='o'&gt;+&lt;/span&gt; &lt;span class='n'&gt;connected&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+                            &lt;span class='o'&gt;}&lt;/span&gt;
+                            &lt;span class='n'&gt;key&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;interestOps&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;SelectionKey&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;OP_READ&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+                        &lt;span class='o'&gt;}&lt;/span&gt;
+                    &lt;span class='o'&gt;}&lt;/span&gt;
+                &lt;span class='o'&gt;}&lt;/span&gt;
+                &lt;span class='n'&gt;selectedKeys&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;clear&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+            &lt;span class='o'&gt;}&lt;/span&gt;
+        &lt;span class='o'&gt;}&lt;/span&gt;
+    &lt;span class='o'&gt;}&lt;/span&gt;
+&lt;span class='o'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h2 id='534k_reqs'&gt;53.4k req/s&lt;/h2&gt;
+
+&lt;p&gt;When 800K connection is kept, CPU usage: about &lt;code&gt;65%&lt;/code&gt; of a single core.&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='java'&gt;&lt;span class='kd'&gt;class&lt;/span&gt; &lt;span class='nc'&gt;SelectAttachment&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+    &lt;span class='kd'&gt;private&lt;/span&gt; &lt;span class='kd'&gt;static&lt;/span&gt; &lt;span class='kd'&gt;final&lt;/span&gt; &lt;span class='n'&gt;Random&lt;/span&gt; &lt;span class='n'&gt;r&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='n'&gt;Random&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+    &lt;span class='kd'&gt;private&lt;/span&gt; &lt;span class='kd'&gt;static&lt;/span&gt; &lt;span class='kd'&gt;final&lt;/span&gt; &lt;span class='n'&gt;String&lt;/span&gt;&lt;span class='o'&gt;[]&lt;/span&gt; &lt;span class='n'&gt;urls&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;/d/aarp&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;/d/about&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;/d/zoo&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;/d/throw&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;/d/new&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;/tmpls.js&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;/mustache.js&amp;quot;&lt;/span&gt; &lt;span class='o'&gt;};&lt;/span&gt;
+    &lt;span class='n'&gt;String&lt;/span&gt; &lt;span class='n'&gt;uri&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+    &lt;span class='n'&gt;ByteBuffer&lt;/span&gt; &lt;span class='n'&gt;request&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+    &lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;response_length&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+    &lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;response_cnt&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+    &lt;span class='kd'&gt;public&lt;/span&gt; &lt;span class='nf'&gt;SelectAttachment&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;String&lt;/span&gt; &lt;span class='n'&gt;uri&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+        &lt;span class='k'&gt;this&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;uri&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;uri&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+        &lt;span class='n'&gt;request&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;ByteBuffer&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;wrap&lt;/span&gt;&lt;span class='o'&gt;((&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;GET &amp;quot;&lt;/span&gt; &lt;span class='o'&gt;+&lt;/span&gt; &lt;span class='n'&gt;uri&lt;/span&gt; &lt;span class='o'&gt;+&lt;/span&gt; &lt;span class='s'&gt;&amp;quot; HTTP/1.1\r\n\r\n&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;).&lt;/span&gt;&lt;span class='na'&gt;getBytes&lt;/span&gt;&lt;span class='o'&gt;());&lt;/span&gt;
+    &lt;span class='o'&gt;}&lt;/span&gt;
+    &lt;span class='kd'&gt;public&lt;/span&gt; &lt;span class='kd'&gt;static&lt;/span&gt; &lt;span class='n'&gt;SelectAttachment&lt;/span&gt; &lt;span class='nf'&gt;next&lt;/span&gt;&lt;span class='o'&gt;()&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='nf'&gt;SelectAttachment&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;urls&lt;/span&gt;&lt;span class='o'&gt;[&lt;/span&gt;&lt;span class='n'&gt;r&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;nextInt&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;urls&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;length&lt;/span&gt;&lt;span class='o'&gt;)]);&lt;/span&gt;
+    &lt;span class='o'&gt;}&lt;/span&gt;
+&lt;span class='o'&gt;}&lt;/span&gt;
+
+&lt;span class='kd'&gt;public&lt;/span&gt; &lt;span class='kd'&gt;class&lt;/span&gt; &lt;span class='nc'&gt;PerformanceBench&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+    &lt;span class='kd'&gt;static&lt;/span&gt; &lt;span class='kd'&gt;final&lt;/span&gt; &lt;span class='kt'&gt;byte&lt;/span&gt; &lt;span class='n'&gt;CR&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;13&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+    &lt;span class='kd'&gt;static&lt;/span&gt; &lt;span class='kd'&gt;final&lt;/span&gt; &lt;span class='kt'&gt;byte&lt;/span&gt; &lt;span class='n'&gt;LF&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;10&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+    &lt;span class='kd'&gt;static&lt;/span&gt; &lt;span class='kd'&gt;final&lt;/span&gt; &lt;span class='n'&gt;String&lt;/span&gt; &lt;span class='n'&gt;CL&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;content-length: &amp;quot;&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+
+    &lt;span class='kd'&gt;public&lt;/span&gt; &lt;span class='kd'&gt;static&lt;/span&gt; &lt;span class='n'&gt;String&lt;/span&gt; &lt;span class='nf'&gt;readLine&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;ByteBuffer&lt;/span&gt; &lt;span class='n'&gt;buffer&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+        &lt;span class='n'&gt;StringBuilder&lt;/span&gt; &lt;span class='n'&gt;sb&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='n'&gt;StringBuilder&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;64&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+        &lt;span class='kt'&gt;char&lt;/span&gt; &lt;span class='n'&gt;b&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+        &lt;span class='nl'&gt;loop:&lt;/span&gt; &lt;span class='k'&gt;for&lt;/span&gt; &lt;span class='o'&gt;(;;)&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+            &lt;span class='n'&gt;b&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;char&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='n'&gt;buffer&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;get&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+            &lt;span class='k'&gt;switch&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;b&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+            &lt;span class='k'&gt;case&lt;/span&gt; &lt;span class='nl'&gt;CR:&lt;/span&gt;
+                &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;buffer&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;get&lt;/span&gt;&lt;span class='o'&gt;()&lt;/span&gt; &lt;span class='o'&gt;==&lt;/span&gt; &lt;span class='n'&gt;LF&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt;
+                    &lt;span class='k'&gt;break&lt;/span&gt; &lt;span class='n'&gt;loop&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+                &lt;span class='k'&gt;break&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+            &lt;span class='k'&gt;case&lt;/span&gt; &lt;span class='nl'&gt;LF:&lt;/span&gt;
+                &lt;span class='k'&gt;break&lt;/span&gt; &lt;span class='n'&gt;loop&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+            &lt;span class='o'&gt;}&lt;/span&gt;
+            &lt;span class='n'&gt;sb&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;append&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;b&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+        &lt;span class='o'&gt;}&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;sb&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;toString&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+    &lt;span class='o'&gt;}&lt;/span&gt;
+
+    &lt;span class='kd'&gt;public&lt;/span&gt; &lt;span class='kd'&gt;static&lt;/span&gt; &lt;span class='kt'&gt;void&lt;/span&gt; &lt;span class='nf'&gt;main&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;String&lt;/span&gt;&lt;span class='o'&gt;[]&lt;/span&gt; &lt;span class='n'&gt;args&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='kd'&gt;throws&lt;/span&gt; &lt;span class='n'&gt;IOException&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+        &lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;concurrency&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;1024&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='mi'&gt;3&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+        &lt;span class='kt'&gt;long&lt;/span&gt; &lt;span class='n'&gt;totalByteReceive&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+        &lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;total&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;200000&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+        &lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;remaining&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;total&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+        &lt;span class='n'&gt;InetSocketAddress&lt;/span&gt; &lt;span class='n'&gt;addr&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='n'&gt;InetSocketAddress&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;127.0.0.1&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='mi'&gt;9090&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+        &lt;span class='n'&gt;ByteBuffer&lt;/span&gt; &lt;span class='n'&gt;readBuffer&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;ByteBuffer&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;allocateDirect&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;1024&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='mi'&gt;64&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+        &lt;span class='n'&gt;Selector&lt;/span&gt; &lt;span class='n'&gt;selector&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;Selector&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;open&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+        &lt;span class='n'&gt;SelectAttachment&lt;/span&gt; &lt;span class='n'&gt;att&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+        &lt;span class='n'&gt;SocketChannel&lt;/span&gt; &lt;span class='n'&gt;ch&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+        &lt;span class='kt'&gt;long&lt;/span&gt; &lt;span class='n'&gt;start&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;System&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;currentTimeMillis&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+        &lt;span class='k'&gt;for&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;i&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt; &lt;span class='n'&gt;i&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;&lt;/span&gt; &lt;span class='n'&gt;concurrency&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt; &lt;span class='o'&gt;++&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+            &lt;span class='n'&gt;ch&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;SocketChannel&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;open&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+            &lt;span class='n'&gt;ch&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;socket&lt;/span&gt;&lt;span class='o'&gt;().&lt;/span&gt;&lt;span class='na'&gt;setReuseAddress&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='kc'&gt;true&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+            &lt;span class='n'&gt;ch&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;configureBlocking&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='kc'&gt;false&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+            &lt;span class='n'&gt;ch&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;register&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;selector&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='n'&gt;SelectionKey&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;OP_CONNECT&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='n'&gt;SelectAttachment&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;next&lt;/span&gt;&lt;span class='o'&gt;());&lt;/span&gt;
+            &lt;span class='n'&gt;ch&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;connect&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;addr&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+        &lt;span class='o'&gt;}&lt;/span&gt;
+        &lt;span class='nl'&gt;loop:&lt;/span&gt; &lt;span class='k'&gt;while&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='kc'&gt;true&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+            &lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;select&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;selector&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;select&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+            &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;select&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                &lt;span class='n'&gt;Set&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;SelectionKey&lt;/span&gt;&lt;span class='o'&gt;&amp;gt;&lt;/span&gt; &lt;span class='n'&gt;selectedKeys&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;selector&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;selectedKeys&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+                &lt;span class='n'&gt;Iterator&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;SelectionKey&lt;/span&gt;&lt;span class='o'&gt;&amp;gt;&lt;/span&gt; &lt;span class='n'&gt;it&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;selectedKeys&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;iterator&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+                &lt;span class='k'&gt;while&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;it&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;hasNext&lt;/span&gt;&lt;span class='o'&gt;())&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                    &lt;span class='n'&gt;SelectionKey&lt;/span&gt; &lt;span class='n'&gt;key&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;it&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;next&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+                    &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;key&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;isConnectable&lt;/span&gt;&lt;span class='o'&gt;())&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                        &lt;span class='n'&gt;ch&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;SocketChannel&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='n'&gt;key&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;channel&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+                        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;ch&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;finishConnect&lt;/span&gt;&lt;span class='o'&gt;())&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                            &lt;span class='n'&gt;key&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;interestOps&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;SelectionKey&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;OP_WRITE&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+                        &lt;span class='o'&gt;}&lt;/span&gt;
+                    &lt;span class='o'&gt;}&lt;/span&gt; &lt;span class='k'&gt;else&lt;/span&gt; &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;key&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;isWritable&lt;/span&gt;&lt;span class='o'&gt;())&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                        &lt;span class='n'&gt;ch&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;SocketChannel&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='n'&gt;key&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;channel&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+                        &lt;span class='n'&gt;att&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;SelectAttachment&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='n'&gt;key&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;attachment&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+                        &lt;span class='n'&gt;ByteBuffer&lt;/span&gt; &lt;span class='n'&gt;buffer&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;att&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;request&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+                        &lt;span class='n'&gt;ch&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;write&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;buffer&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+                        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='o'&gt;(!&lt;/span&gt;&lt;span class='n'&gt;buffer&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;hasRemaining&lt;/span&gt;&lt;span class='o'&gt;())&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                            &lt;span class='n'&gt;key&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;interestOps&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;SelectionKey&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;OP_READ&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+                        &lt;span class='o'&gt;}&lt;/span&gt;
+                    &lt;span class='o'&gt;}&lt;/span&gt; &lt;span class='k'&gt;else&lt;/span&gt; &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;key&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;isReadable&lt;/span&gt;&lt;span class='o'&gt;())&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                        &lt;span class='n'&gt;ch&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;SocketChannel&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='n'&gt;key&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;channel&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+                        &lt;span class='n'&gt;att&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;SelectAttachment&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='n'&gt;key&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;attachment&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+                        &lt;span class='n'&gt;readBuffer&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;clear&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+                        &lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;read&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;ch&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;read&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;readBuffer&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+                        &lt;span class='n'&gt;totalByteReceive&lt;/span&gt; &lt;span class='o'&gt;+=&lt;/span&gt; &lt;span class='n'&gt;read&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+                        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;att&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;response_length&lt;/span&gt; &lt;span class='o'&gt;==&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                            &lt;span class='n'&gt;readBuffer&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;flip&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+                            &lt;span class='n'&gt;String&lt;/span&gt; &lt;span class='n'&gt;line&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;readLine&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;readBuffer&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+                            &lt;span class='k'&gt;while&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;line&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;length&lt;/span&gt;&lt;span class='o'&gt;()&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                                &lt;span class='n'&gt;line&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;line&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;toLowerCase&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+                                &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;line&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;startsWith&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;CL&lt;/span&gt;&lt;span class='o'&gt;))&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                                    &lt;span class='n'&gt;String&lt;/span&gt; &lt;span class='n'&gt;length&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;line&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;substring&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;CL&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;length&lt;/span&gt;&lt;span class='o'&gt;());&lt;/span&gt;
+                                    &lt;span class='n'&gt;att&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;response_length&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;Integer&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;valueOf&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;length&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+                                    &lt;span class='n'&gt;att&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;response_cnt&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;att&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;response_length&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+                                &lt;span class='o'&gt;}&lt;/span&gt;
+                                &lt;span class='n'&gt;line&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;readLine&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;readBuffer&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+                            &lt;span class='o'&gt;}&lt;/span&gt;
+                            &lt;span class='n'&gt;att&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;response_cnt&lt;/span&gt; &lt;span class='o'&gt;-=&lt;/span&gt; &lt;span class='n'&gt;readBuffer&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;remaining&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+                        &lt;span class='o'&gt;}&lt;/span&gt; &lt;span class='k'&gt;else&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                            &lt;span class='n'&gt;att&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;response_cnt&lt;/span&gt; &lt;span class='o'&gt;-=&lt;/span&gt; &lt;span class='n'&gt;read&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+                        &lt;span class='o'&gt;}&lt;/span&gt;
+                        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;att&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;response_cnt&lt;/span&gt; &lt;span class='o'&gt;==&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                            &lt;span class='n'&gt;remaining&lt;/span&gt;&lt;span class='o'&gt;--;&lt;/span&gt;
+                            &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;remaining&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                                &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;remaining&lt;/span&gt; &lt;span class='o'&gt;%&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;total&lt;/span&gt; &lt;span class='o'&gt;/&lt;/span&gt; &lt;span class='mi'&gt;10&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='o'&gt;==&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                                    &lt;span class='n'&gt;System&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;out&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;println&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;remaining\t&amp;quot;&lt;/span&gt; &lt;span class='o'&gt;+&lt;/span&gt; &lt;span class='n'&gt;remaining&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+                                &lt;span class='o'&gt;}&lt;/span&gt;
+                                &lt;span class='n'&gt;key&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;attach&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;SelectAttachment&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;next&lt;/span&gt;&lt;span class='o'&gt;());&lt;/span&gt;
+                                &lt;span class='n'&gt;key&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;interestOps&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;SelectionKey&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;OP_WRITE&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+                            &lt;span class='o'&gt;}&lt;/span&gt; &lt;span class='k'&gt;else&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+                                &lt;span class='k'&gt;break&lt;/span&gt; &lt;span class='n'&gt;loop&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+                            &lt;span class='o'&gt;}&lt;/span&gt;
+                        &lt;span class='o'&gt;}&lt;/span&gt;
+                    &lt;span class='o'&gt;}&lt;/span&gt;
+                &lt;span class='o'&gt;}&lt;/span&gt;
+                &lt;span class='n'&gt;selectedKeys&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;clear&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+            &lt;span class='o'&gt;}&lt;/span&gt;
+        &lt;span class='o'&gt;}&lt;/span&gt;
+        &lt;span class='kt'&gt;long&lt;/span&gt; &lt;span class='n'&gt;time&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;System&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;currentTimeMillis&lt;/span&gt;&lt;span class='o'&gt;()&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt; &lt;span class='n'&gt;start&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+        &lt;span class='kt'&gt;long&lt;/span&gt; &lt;span class='n'&gt;receiveM&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;totalByteReceive&lt;/span&gt; &lt;span class='o'&gt;/&lt;/span&gt; &lt;span class='mi'&gt;1024&lt;/span&gt; &lt;span class='o'&gt;/&lt;/span&gt; &lt;span class='mi'&gt;1024&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+        &lt;span class='kt'&gt;double&lt;/span&gt; &lt;span class='n'&gt;reqs&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;double&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='n'&gt;total&lt;/span&gt; &lt;span class='o'&gt;/&lt;/span&gt; &lt;span class='n'&gt;time&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='mi'&gt;1000&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+        &lt;span class='kt'&gt;double&lt;/span&gt; &lt;span class='n'&gt;ms&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;double&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='n'&gt;receiveM&lt;/span&gt; &lt;span class='o'&gt;/&lt;/span&gt; &lt;span class='n'&gt;time&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='mi'&gt;1000&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+        &lt;span class='n'&gt;System&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;out&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;printf&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;total time: %dms; %.2f req/s; receive: %dM data; %.2f M/s\n&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='n'&gt;time&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='n'&gt;reqs&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='n'&gt;receiveM&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='n'&gt;ms&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+    &lt;span class='o'&gt;}&lt;/span&gt;
+&lt;span class='o'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h2 id='source_code'&gt;Source code&lt;/h2&gt;
+
+&lt;p&gt;It&amp;#8217;s on github, &lt;a href='https://github.com/shenfeng/dictionary'&gt;https://github.com/shenfeng/dictionary&lt;/a&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;/server&lt;/code&gt; Server side code, in C.&lt;/li&gt;
+
+&lt;li&gt;&lt;code&gt;/client&lt;/code&gt; Javascript/HTML/CSS&lt;/li&gt;
+
+&lt;li&gt;&lt;code&gt;/test/java&lt;/code&gt; Unit test and performance test code&lt;/li&gt;
+
+&lt;li&gt;&lt;code&gt;/src&lt;/code&gt; Clojure and java code to generate the &lt;code&gt;dbdata&lt;/code&gt; file&lt;/li&gt;
+&lt;/ol&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Elisp, jump to last edit location across whole session</title>
+   <link href="http://shenfeng.me/emacs-last-edit-location.html" />
+   <updated>2011-12-24T00:00:00+08:00</updated>
+   <id>http://shenfeng.me/emacs-last-edit-location</id>
+   <content type="html">&lt;h3 id='scenario'&gt;Scenario&lt;/h3&gt;
+
+&lt;p&gt;Coding, editing &amp;#8212;&amp;gt; an interesting function &amp;#8212;&amp;gt; anther interesting function &amp;#8212;&amp;gt; &amp;#8230;&lt;/p&gt;
+
+&lt;p&gt;&amp;#8220;My god, where have I been, how can I jump right back to the last edit position&amp;#8221;&lt;/p&gt;
+
+&lt;h3 id='how_other_handle_it'&gt;How other handle it&lt;/h3&gt;
+
+&lt;p&gt;Eclipse has a handing feature: &lt;code&gt;Last Edit Location&lt;/code&gt;, binding to &lt;code&gt;Ctrl+Q&lt;/code&gt;, It works &lt;code&gt;globally&lt;/code&gt;: all visited files, even those being edited, but currently closed.&lt;/p&gt;
+
+&lt;h3 id='exiting_solution'&gt;Exiting solution&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href='http://emacs-session.sourceforge.net/'&gt;EmacsSession&lt;/a&gt; has a function called &lt;code&gt;session-jump-to-last-change&lt;/code&gt;, but per buffer&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='http://www.emacswiki.org/emacs/GotoLastChange'&gt;GotoLastChange&lt;/a&gt;, but per buffer&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id='elisp_to_the_rescue'&gt;Elisp to the rescue&lt;/h3&gt;
+
+&lt;p&gt;I&amp;#8217;ve being using emacs for several month, it serves me well, it lacks this very handing feature. Thanks to elisp, I can implement it myself.&lt;/p&gt;
+
+&lt;h3 id='code'&gt;Code&lt;/h3&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='scheme'&gt;&lt;span class='c1'&gt;;;; record two different file&amp;#39;s last change. cycle them&lt;/span&gt;
+&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;defvar&lt;/span&gt; &lt;span class='nv'&gt;feng-last-change-pos1&lt;/span&gt; &lt;span class='nv'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;defvar&lt;/span&gt; &lt;span class='nv'&gt;feng-last-change-pos2&lt;/span&gt; &lt;span class='nv'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;defun&lt;/span&gt; &lt;span class='nv'&gt;feng-swap-last-changes&lt;/span&gt; &lt;span class='p'&gt;()&lt;/span&gt;
+  &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;when&lt;/span&gt; &lt;span class='nv'&gt;feng-last-change-pos2&lt;/span&gt;
+    &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='k'&gt;let &lt;/span&gt;&lt;span class='p'&gt;((&lt;/span&gt;&lt;span class='nf'&gt;tmp&lt;/span&gt; &lt;span class='nv'&gt;feng-last-change-pos2&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+      &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;setf&lt;/span&gt; &lt;span class='nv'&gt;feng-last-change-pos2&lt;/span&gt; &lt;span class='nv'&gt;feng-last-change-pos1&lt;/span&gt;
+            &lt;span class='nv'&gt;feng-last-change-pos1&lt;/span&gt; &lt;span class='nv'&gt;tmp&lt;/span&gt;&lt;span class='p'&gt;))))&lt;/span&gt;
+
+&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;defun&lt;/span&gt; &lt;span class='nv'&gt;feng-goto-last-change&lt;/span&gt; &lt;span class='p'&gt;()&lt;/span&gt;
+  &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;interactive&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+  &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;when&lt;/span&gt; &lt;span class='nv'&gt;feng-last-change-pos1&lt;/span&gt;
+    &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='k'&gt;let* &lt;/span&gt;&lt;span class='p'&gt;((&lt;/span&gt;&lt;span class='nf'&gt;buffer&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;find-file-noselect&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;car &lt;/span&gt;&lt;span class='nv'&gt;feng-last-change-pos1&lt;/span&gt;&lt;span class='p'&gt;)))&lt;/span&gt;
+           &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;win&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;get-buffer-window&lt;/span&gt; &lt;span class='nv'&gt;buffer&lt;/span&gt;&lt;span class='p'&gt;)))&lt;/span&gt;
+      &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='k'&gt;if &lt;/span&gt;&lt;span class='nv'&gt;win&lt;/span&gt;
+          &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;select-window&lt;/span&gt; &lt;span class='nv'&gt;win&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+        &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;switch-to-buffer-other-window&lt;/span&gt; &lt;span class='nv'&gt;buffer&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+      &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;goto-char&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;cdr &lt;/span&gt;&lt;span class='nv'&gt;feng-last-change-pos1&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+      &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;feng-swap-last-changes&lt;/span&gt;&lt;span class='p'&gt;))))&lt;/span&gt;
+
+&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;defun&lt;/span&gt; &lt;span class='nv'&gt;feng-buffer-change-hook&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;beg&lt;/span&gt; &lt;span class='nv'&gt;end&lt;/span&gt; &lt;span class='nv'&gt;len&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+  &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='k'&gt;let &lt;/span&gt;&lt;span class='p'&gt;((&lt;/span&gt;&lt;span class='nf'&gt;bfn&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;buffer-file-name&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+        &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;file&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;car &lt;/span&gt;&lt;span class='nv'&gt;feng-last-change-pos1&lt;/span&gt;&lt;span class='p'&gt;)))&lt;/span&gt;
+    &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;when&lt;/span&gt; &lt;span class='nv'&gt;bfn&lt;/span&gt;
+      &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='k'&gt;if &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='k'&gt;or &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;not &lt;/span&gt;&lt;span class='nv'&gt;file&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;equal&lt;/span&gt; &lt;span class='nv'&gt;bfn&lt;/span&gt; &lt;span class='nv'&gt;file&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt; &lt;span class='c1'&gt;;; change the same file&lt;/span&gt;
+          &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;setq&lt;/span&gt; &lt;span class='nv'&gt;feng-last-change-pos1&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;cons &lt;/span&gt;&lt;span class='nv'&gt;bfn&lt;/span&gt; &lt;span class='nv'&gt;end&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+        &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;progn&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;setq&lt;/span&gt; &lt;span class='nv'&gt;feng-last-change-pos2&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;cons &lt;/span&gt;&lt;span class='nv'&gt;bfn&lt;/span&gt; &lt;span class='nv'&gt;end&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+               &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;feng-swap-last-changes&lt;/span&gt;&lt;span class='p'&gt;))))))&lt;/span&gt;
+
+&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;add-hook&lt;/span&gt; &lt;span class='ss'&gt;&amp;#39;after-change-functions&lt;/span&gt; &lt;span class='ss'&gt;&amp;#39;feng-buffer-change-hook&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='c1'&gt;;;; just quick to reach&lt;/span&gt;
+&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;global-set-key&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;kbd&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;M-`&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='ss'&gt;&amp;#39;feng-goto-last-change&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>A web crawler, written for speed, in JAVA and Clojure</title>
+   <link href="http://shenfeng.me/a-web-crawler-in-java-clojure.html" />
+   <updated>2011-10-07T00:00:00+08:00</updated>
+   <id>http://shenfeng.me/a-web-crawler-in-java-clojure</id>
+   <content type="html">&lt;p&gt;十一长假就快要过去了， 写的web crawler也告一段落： 速度能达到大概下载8万网页/小时， CPU和Mem的使用都比较满意： 运行40分钟的截图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt='image' src='/imgs/crawler-cpu-mem.png' /&gt;&lt;/p&gt;
+
+&lt;h4 id='cpu_mem'&gt;CPU， Mem使用&lt;/h4&gt;
+
+&lt;p&gt;&lt;img alt='image' src='/imgs/crawler-network.png' /&gt;&lt;/p&gt;
+
+&lt;h4 id='4m'&gt;网络使用（4M带宽，已极限）&lt;/h4&gt;
+
+&lt;p&gt;&lt;img alt='image' src='/imgs/crawler-stat.png' /&gt;&lt;/p&gt;
+
+&lt;h4 id='status'&gt;按status的分布&lt;/h4&gt;
+
+&lt;p&gt;Crawler是&lt;a href='http://rssminer.net'&gt;Rss miner&lt;/a&gt;的一部分， git log查看， 已零星5个月， 这5个月的周末都耗在上面了， 其中大部分在crawler上， 数次大的重构或重写。&lt;/p&gt;
+
+&lt;p&gt;Crawer主要以&lt;a href='http://clojure.org'&gt;Clojure&lt;/a&gt;和Java完成。 Clojure可以把程序写得很简洁， 利用Java可以很好的组织多线程， 面向对象 + functional， 感觉很不错。&lt;/p&gt;
+
+&lt;p&gt;开始， 我用Clojure了封装JDK 的 &lt;a href='http://download.oracle.com/javase/1.4.2/docs/api/java/net/URLConnection.html'&gt;URLConnection&lt;/a&gt;, 由于Blocking， 为了加快速度， 需要使用多线程。&lt;/p&gt;
+
+&lt;h4 id='_'&gt;有一些问题， 例如：&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;线程少速度慢， 线程多了内存受不了， 我对内存较敏感， 有一部分是想挑战自己， 也有一部分是因为我的VPS只有512M内存， 想在上面跑Rss miner, 包括一个Web server， 一个Rss fetcher, 一个Web Crawler, 一个Online的实时推荐算法， 筹划中&amp;#8230;.&lt;/li&gt;
+
+&lt;li&gt;URLConnection以&lt;a href='http://en.wikipedia.org/wiki/Stream_(computing'&gt;Stream&lt;/a&gt;封装, 不是很方便。&lt;/li&gt;
+
+&lt;li&gt;如果各个线程分别自己保存自己下载的数据， Disk可能比较辛苦。 如果用Queue送给单独的一个线程处理， 又有一个额外的线程开销。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;我寻找 &lt;a href='http://en.wikipedia.org/wiki/Asynchronous_I/O'&gt;Non-blocking&lt;/a&gt;的Http Client， 试用了两个， 都不太满意， 自己写了&lt;a href='https://github.com/shenfeng/async-http-client'&gt;一个&lt;/a&gt;， 注重性能和稳定性。&lt;/p&gt;
+
+&lt;h4 id='id1'&gt;实现：&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;4个线程， 每个线程都是一个Loop， 相互之间是Producer， Consumer的关系， 通过Queue和Event交流&lt;/li&gt;
+
+&lt;li&gt;管理状态比较多的，用Java实现， 比如用Tagsoup抽取链接和文本， 通过规则排除部分URL&lt;/li&gt;
+
+&lt;li&gt;DNS prefetch, &lt;a href='http://en.wikipedia.org/wiki/Pdnsd'&gt;Pdnsd&lt;/a&gt;做DNS cache： UDP提前发送&lt;a href='https://github.com/shenfeng/netty-http-client/blob/master/src/java/me/shenfeng/dns/DnsPrefecher.java'&gt;Query请求&lt;/a&gt;， 忽略结果。 &lt;!-- * 速度可以通过信号量控制 --&gt;&lt;/li&gt;
+
+&lt;li&gt;Java搭了一个简单的框架， 提供两个Interface, 由Clojure实现&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='java'&gt;&lt;span class='kd'&gt;public&lt;/span&gt; &lt;span class='kd'&gt;interface&lt;/span&gt; &lt;span class='nc'&gt;IHttpTask&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+    &lt;span class='n'&gt;URI&lt;/span&gt; &lt;span class='nf'&gt;getUri&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+    &lt;span class='n'&gt;Map&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;String&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='n'&gt;Object&lt;/span&gt;&lt;span class='o'&gt;&amp;gt;&lt;/span&gt; &lt;span class='n'&gt;getHeaders&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+    &lt;span class='n'&gt;Object&lt;/span&gt; &lt;span class='nf'&gt;doTask&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;HttpResponse&lt;/span&gt; &lt;span class='n'&gt;response&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='kd'&gt;throws&lt;/span&gt; &lt;span class='n'&gt;Exception&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+    &lt;span class='n'&gt;Proxy&lt;/span&gt; &lt;span class='nf'&gt;getProxy&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+&lt;span class='o'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='java'&gt;&lt;span class='kd'&gt;public&lt;/span&gt; &lt;span class='kd'&gt;interface&lt;/span&gt; &lt;span class='nc'&gt;IHttpTaskProvder&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+    &lt;span class='n'&gt;List&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;IHttpTask&lt;/span&gt;&lt;span class='o'&gt;&amp;gt;&lt;/span&gt; &lt;span class='n'&gt;getTasks&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+&lt;span class='o'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Async Java HTTP client</title>
+   <link href="http://shenfeng.me/async-java-http-client.html" />
+   <updated>2011-09-18T00:00:00+08:00</updated>
+   <id>http://shenfeng.me/async-java-http-client</id>
+   <content type="html">&lt;p&gt;I spent some of my spare time writing &lt;a href='http://rssminer.net'&gt;Rssminer&lt;/a&gt;, an intelligent RSS reader, I want it to be smart enough to highlight stories I like, and help me discover stories I may like.&lt;/p&gt;
+
+&lt;p&gt;I plan to do it by downloading as many web pages as possible from the Internet, extract RSS links it contains, download them, then apply machine learning algorithms on them. It&amp;#8217;s ambitious.&lt;/p&gt;
+
+&lt;p&gt;The first thing need to be solved is an Http client. JDK&amp;#8217;s &lt;a href='http://download.oracle.com/javase/1.4.2/docs/api/java/net/URLConnection.html'&gt;URLConnection&lt;/a&gt; is blocking, 20 threads devoted to it, still not fast enough, and there are some keepalive timer come out of the way. The non-blocking &lt;a href='https://github.com/sonatype/async-http-client'&gt;AsyncHttpClient&lt;/a&gt; is tried, it works great, but it lacks &lt;code&gt;socks proxy&lt;/code&gt; support, and I want to control everything.&lt;/p&gt;
+
+&lt;p&gt;So, I write my own async HTTP client, by using a great library &lt;a href='http://www.jboss.org/netty'&gt;netty&lt;/a&gt;, which provides a async socket framework and HTTP codec.&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='java'&gt;   &lt;span class='c1'&gt;// Http client sample usage&lt;/span&gt;
+   &lt;span class='n'&gt;HttpClientConfig&lt;/span&gt; &lt;span class='n'&gt;config&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='n'&gt;HttpClientConfig&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+   &lt;span class='n'&gt;header&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='n'&gt;HashMap&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;String&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='n'&gt;Object&lt;/span&gt;&lt;span class='o'&gt;&amp;gt;();&lt;/span&gt;
+   &lt;span class='n'&gt;HttpClient&lt;/span&gt; &lt;span class='n'&gt;client&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='n'&gt;HttpClient&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;config&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+   &lt;span class='n'&gt;URI&lt;/span&gt; &lt;span class='n'&gt;uri&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='n'&gt;URI&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;http://onycloud.com&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+   &lt;span class='kd'&gt;final&lt;/span&gt; &lt;span class='n'&gt;HttpResponseFuture&lt;/span&gt; &lt;span class='n'&gt;future&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;client&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;execGet&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;uri&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='n'&gt;header&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+   &lt;span class='n'&gt;resp&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;addListener&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='n'&gt;Runnable&lt;/span&gt;&lt;span class='o'&gt;()&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+       &lt;span class='kd'&gt;public&lt;/span&gt; &lt;span class='kt'&gt;void&lt;/span&gt; &lt;span class='nf'&gt;run&lt;/span&gt;&lt;span class='o'&gt;()&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+           &lt;span class='n'&gt;HttpResponse&lt;/span&gt; &lt;span class='n'&gt;resp&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;future&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;get&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt; &lt;span class='c1'&gt;// async&lt;/span&gt;
+       &lt;span class='o'&gt;}&lt;/span&gt;
+   &lt;span class='o'&gt;});&lt;/span&gt;
+   &lt;span class='n'&gt;HttpResponse&lt;/span&gt; &lt;span class='n'&gt;resp&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;future&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;get&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt; &lt;span class='c1'&gt;// blocking&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;The source code is concise, about 1000 lines of code(about 600 lines excluding import statements and blank lines), can be found on &lt;a href='https://github.com/shenfeng/async-http-client'&gt;github&lt;/a&gt;.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Using TagSoup to extract text from HTML</title>
+   <link href="http://shenfeng.me/using-tagsoup-extract-text-from-html.html" />
+   <updated>2011-09-03T00:00:00+08:00</updated>
+   <id>http://shenfeng.me/using-tagsoup-extract-text-from-html</id>
+   <content type="html">&lt;p&gt;These days, I am experimenting &lt;a href='http://lucene.apache.org/java/docs/index.html'&gt;Apache Lucene&lt;/a&gt;. I need a way to extract text from HTML source, feed it to Lucene. I first come up with a solution by using regex and Clojure:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='clojure'&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kd'&gt;defn &lt;/span&gt;&lt;span class='nv'&gt;extract&lt;/span&gt; &lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nv'&gt;html&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
+  &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;when &lt;/span&gt;&lt;span class='nv'&gt;html&lt;/span&gt;
+    &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;str/replace&lt;/span&gt; &lt;span class='nv'&gt;html&lt;/span&gt; &lt;span class='o'&gt;#&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;(?m)&amp;lt;[^&amp;lt;&amp;gt;]+&amp;gt;|\n&amp;quot;&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;Most of the time, it works, and very fast. But it can&amp;#8217;t ignore Javascript and CSS, which is needed. So I come up with another solution, by using &lt;a href='https://github.com/cgrand/enlive'&gt;enlive&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here is the Clojure code.&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='clojure'&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kd'&gt;defn- &lt;/span&gt;&lt;span class='nv'&gt;emit-str&lt;/span&gt; &lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nv'&gt;node&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
+   &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;cond &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;string? &lt;/span&gt;&lt;span class='nv'&gt;node&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='nv'&gt;node&lt;/span&gt;
+         &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;and &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='ss'&gt;:tag&lt;/span&gt; &lt;span class='nv'&gt;node&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+              &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;not= &lt;/span&gt;&lt;span class='ss'&gt;:script&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='ss'&gt;:tag&lt;/span&gt; &lt;span class='nv'&gt;node&lt;/span&gt;&lt;span class='p'&gt;)))&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;emit-str&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='ss'&gt;:content&lt;/span&gt; &lt;span class='nv'&gt;node&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+         &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;seq? &lt;/span&gt;&lt;span class='nv'&gt;node&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;map &lt;/span&gt;&lt;span class='nv'&gt;emit-str&lt;/span&gt; &lt;span class='nv'&gt;node&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+         &lt;span class='ss'&gt;:else&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+ &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kd'&gt;defn &lt;/span&gt;&lt;span class='nv'&gt;extract-text&lt;/span&gt; &lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nv'&gt;html&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
+   &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;when &lt;/span&gt;&lt;span class='nv'&gt;html&lt;/span&gt;
+     &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='k'&gt;let &lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nv'&gt;r&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;html/html-resource&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;java.io.StringReader.&lt;/span&gt; &lt;span class='nv'&gt;html&lt;/span&gt;&lt;span class='p'&gt;))]&lt;/span&gt;
+       &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;str/trim&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;apply str &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;flatten&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;emit-str&lt;/span&gt; &lt;span class='nv'&gt;r&lt;/span&gt;&lt;span class='p'&gt;)))))))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;It&amp;#8217;s works. javascript is ignored. But it&amp;#8217;s a little slow: On my machine, extract a given html file, regex takes 0.21ms, But extract-text takes 2.76ms.&lt;/p&gt;
+
+&lt;p&gt;Enlive is build on top of &lt;a href='http://home.ccil.org/~cowan/tagsoup/'&gt;TagSoup&lt;/a&gt;, which a SAX-compliant parser written in Java that, instead of parsing well-formed or valid XML, parses HTML as it is found in the wild: poor, nasty and brutish, though quite often far from short.&lt;/p&gt;
+
+&lt;p&gt;By calling&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='clojure'&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;html/html-resource&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;java.io.StringReader.&lt;/span&gt; &lt;span class='nv'&gt;html&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;Enlive build a tree for the html, which is a little overkill for only extract text. By directly using TagSoup, I can bypass this overhead. Here is the Java code:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='java'&gt;&lt;span class='kd'&gt;public&lt;/span&gt; &lt;span class='kd'&gt;class&lt;/span&gt; &lt;span class='nc'&gt;Utils&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+    &lt;span class='kd'&gt;public&lt;/span&gt; &lt;span class='kd'&gt;static&lt;/span&gt; &lt;span class='n'&gt;String&lt;/span&gt; &lt;span class='nf'&gt;extractText&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;String&lt;/span&gt; &lt;span class='n'&gt;html&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='kd'&gt;throws&lt;/span&gt; &lt;span class='n'&gt;IOException&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt;
+            &lt;span class='n'&gt;SAXException&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+        &lt;span class='n'&gt;Parser&lt;/span&gt; &lt;span class='n'&gt;p&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='n'&gt;Parser&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+        &lt;span class='n'&gt;Handler&lt;/span&gt; &lt;span class='n'&gt;h&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='n'&gt;Handler&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+        &lt;span class='n'&gt;p&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;setContentHandler&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;h&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+        &lt;span class='n'&gt;p&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;parse&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='n'&gt;InputSource&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='n'&gt;StringReader&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;html&lt;/span&gt;&lt;span class='o'&gt;)));&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;h&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;getText&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+    &lt;span class='o'&gt;}&lt;/span&gt;
+&lt;span class='o'&gt;}&lt;/span&gt;
+&lt;span class='kd'&gt;class&lt;/span&gt; &lt;span class='nc'&gt;Handler&lt;/span&gt; &lt;span class='kd'&gt;extends&lt;/span&gt; &lt;span class='n'&gt;DefaultHandler&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+    &lt;span class='kd'&gt;private&lt;/span&gt; &lt;span class='n'&gt;StringBuilder&lt;/span&gt; &lt;span class='n'&gt;sb&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='n'&gt;StringBuilder&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+    &lt;span class='kd'&gt;private&lt;/span&gt; &lt;span class='kt'&gt;boolean&lt;/span&gt; &lt;span class='n'&gt;keep&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='kc'&gt;true&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+    &lt;span class='kd'&gt;public&lt;/span&gt; &lt;span class='kt'&gt;void&lt;/span&gt; &lt;span class='nf'&gt;characters&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;char&lt;/span&gt;&lt;span class='o'&gt;[]&lt;/span&gt; &lt;span class='n'&gt;ch&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;start&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;length&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt;
+            &lt;span class='kd'&gt;throws&lt;/span&gt; &lt;span class='n'&gt;SAXException&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;keep&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+            &lt;span class='n'&gt;sb&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;append&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;ch&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='n'&gt;start&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='n'&gt;length&lt;/span&gt;&lt;span class='o'&gt;);&lt;/span&gt;
+        &lt;span class='o'&gt;}&lt;/span&gt;
+    &lt;span class='o'&gt;}&lt;/span&gt;
+    &lt;span class='kd'&gt;public&lt;/span&gt; &lt;span class='n'&gt;String&lt;/span&gt; &lt;span class='nf'&gt;getText&lt;/span&gt;&lt;span class='o'&gt;()&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;sb&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;toString&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+    &lt;span class='o'&gt;}&lt;/span&gt;
+    &lt;span class='kd'&gt;public&lt;/span&gt; &lt;span class='kt'&gt;void&lt;/span&gt; &lt;span class='nf'&gt;startElement&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;String&lt;/span&gt; &lt;span class='n'&gt;uri&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='n'&gt;String&lt;/span&gt; &lt;span class='n'&gt;localName&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='n'&gt;String&lt;/span&gt; &lt;span class='n'&gt;qName&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt;
+            &lt;span class='n'&gt;Attributes&lt;/span&gt; &lt;span class='n'&gt;atts&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt; &lt;span class='kd'&gt;throws&lt;/span&gt; &lt;span class='n'&gt;SAXException&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;localName&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='na'&gt;equalsIgnoreCase&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;script&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;))&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+            &lt;span class='n'&gt;keep&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='kc'&gt;false&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+        &lt;span class='o'&gt;}&lt;/span&gt;
+    &lt;span class='o'&gt;}&lt;/span&gt;
+    &lt;span class='kd'&gt;public&lt;/span&gt; &lt;span class='kt'&gt;void&lt;/span&gt; &lt;span class='nf'&gt;endElement&lt;/span&gt;&lt;span class='o'&gt;(&lt;/span&gt;&lt;span class='n'&gt;String&lt;/span&gt; &lt;span class='n'&gt;uri&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='n'&gt;String&lt;/span&gt; &lt;span class='n'&gt;localName&lt;/span&gt;&lt;span class='o'&gt;,&lt;/span&gt; &lt;span class='n'&gt;String&lt;/span&gt; &lt;span class='n'&gt;qName&lt;/span&gt;&lt;span class='o'&gt;)&lt;/span&gt;
+            &lt;span class='kd'&gt;throws&lt;/span&gt; &lt;span class='n'&gt;SAXException&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+        &lt;span class='n'&gt;keep&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='kc'&gt;true&lt;/span&gt;&lt;span class='o'&gt;;&lt;/span&gt;
+    &lt;span class='o'&gt;}&lt;/span&gt;
+&lt;span class='o'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;After experiment, I find&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='java'&gt;&lt;span class='n'&gt;Parser&lt;/span&gt; &lt;span class='n'&gt;p&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='n'&gt;Parser&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;takes a lot of CPU time. By using &lt;a href='http://download.oracle.com/javase/6/docs/api/java/lang/ThreadLocal.html'&gt;ThreadLocal&lt;/a&gt;&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='java'&gt;&lt;span class='kd'&gt;private&lt;/span&gt; &lt;span class='kd'&gt;static&lt;/span&gt; &lt;span class='kd'&gt;final&lt;/span&gt; &lt;span class='n'&gt;ThreadLocal&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;Parser&lt;/span&gt;&lt;span class='o'&gt;&amp;gt;&lt;/span&gt; &lt;span class='n'&gt;parser&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='n'&gt;ThreadLocal&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;Parser&lt;/span&gt;&lt;span class='o'&gt;&amp;gt;()&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+    &lt;span class='kd'&gt;protected&lt;/span&gt; &lt;span class='n'&gt;Parser&lt;/span&gt; &lt;span class='nf'&gt;initialValue&lt;/span&gt;&lt;span class='o'&gt;()&lt;/span&gt; &lt;span class='o'&gt;{&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='nf'&gt;Parser&lt;/span&gt;&lt;span class='o'&gt;();&lt;/span&gt;
+    &lt;span class='o'&gt;}&lt;/span&gt;
+&lt;span class='o'&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;It takes 0.38ms to extract text from the same html file. I am happy with the result.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Ring netty adapter</title>
+   <link href="http://shenfeng.me/ring-netty-adapter.html" />
+   <updated>2011-08-12T00:00:00+08:00</updated>
+   <id>http://shenfeng.me/ring-netty-adapter</id>
+   <content type="html">&lt;p&gt;An netty adapter impl on top of &lt;a href='http://www.jboss.org/netty'&gt;netty&lt;/a&gt; for used with &lt;a href='https://github.com/mmcgrana/ring'&gt;Ring&lt;/a&gt;. &lt;a href='http://rssminer.net'&gt;Rssminer&lt;/a&gt; uses it to build the web server.&lt;/p&gt;
+
+&lt;h3 id='quick_start'&gt;Quick Start&lt;/h3&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='clojure'&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nv'&gt;me.shenfeng/async-ring-adapter&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;1.0.0&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
+
+&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;use&lt;/span&gt; &lt;span class='ss'&gt;&amp;#39;ring.adapter.netty&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kd'&gt;defn &lt;/span&gt;&lt;span class='nv'&gt;app&lt;/span&gt; &lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='nv'&gt;req&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
+  &lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='ss'&gt;:status&lt;/span&gt;  &lt;span class='mi'&gt;200&lt;/span&gt;
+   &lt;span class='ss'&gt;:headers&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Content-Type&amp;quot;&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;text/html&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt;
+   &lt;span class='ss'&gt;:body&lt;/span&gt;    &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;str &lt;/span&gt;&lt;span class='s'&gt;&amp;quot;hello word&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)})&lt;/span&gt;
+&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;run-netty&lt;/span&gt; &lt;span class='nv'&gt;app&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='ss'&gt;:port&lt;/span&gt; &lt;span class='mi'&gt;8080&lt;/span&gt;
+                &lt;span class='ss'&gt;:worker&lt;/span&gt; &lt;span class='mi'&gt;4&lt;/span&gt; &lt;span class='c1'&gt;;; worker thread count&lt;/span&gt;
+                &lt;span class='ss'&gt;:netty&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;reuseAddress&amp;quot;&lt;/span&gt; &lt;span class='nv'&gt;true&lt;/span&gt;&lt;span class='p'&gt;}})&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h3 id='netty_options'&gt;netty options&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;connectTimeoutMillis&lt;/li&gt;
+
+&lt;li&gt;keepAlive&lt;/li&gt;
+
+&lt;li&gt;reuseAddress&lt;/li&gt;
+
+&lt;li&gt;tcpNoDelay&lt;/li&gt;
+
+&lt;li&gt;receiveBufferSize&lt;/li&gt;
+
+&lt;li&gt;sendBufferSize&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;more options, refer &lt;a href='http://docs.jboss.org/netty/3.2/api/org/jboss/netty/channel/socket/nio/NioSocketChannelConfig.html'&gt;netty doc&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id='why'&gt;why&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Netty is well designed and documented. It&amp;#8217;s fun reading it&amp;#8217;s code. It&amp;#8217;s high performance.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;Netty&amp;#8217;s HTTP support is very different from the existing HTTP libraries. It gives you complete control over how HTTP messages are exchanged in a low level. Because it is basically the combination of HTTP codec and HTTP message classes, there is no restriction such as enforced thread model. That is, you can write your own HTTP client or server that works exactly the way you want. You have full control over thread model, connection life cycle, chunked encoding, and as much as what HTTP specification allows you to do.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id='limitation'&gt;Limitation&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Serving file is not optimized due to it&amp;#8217;s better be done by Nginx, so as compression.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id='benchmark'&gt;Benchmark&lt;/h3&gt;
+
+&lt;p&gt;There is a script &lt;code&gt;./scripts/start_server&lt;/code&gt; will start netty at port 3333, jetty at port 4444, here is a result on my machine&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='clojure'&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='k'&gt;def &lt;/span&gt;&lt;span class='nv'&gt;resp&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='ss'&gt;:status&lt;/span&gt;  &lt;span class='mi'&gt;200&lt;/span&gt;
+           &lt;span class='ss'&gt;:headers&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Content-Type&amp;quot;&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;text/plain&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt;
+           &lt;span class='ss'&gt;:body&lt;/span&gt;    &lt;span class='s'&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;})&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='sh'&gt;  ab -n 300000 -c 50 http://localhost:4444/  &lt;span class='c'&gt;#11264.90 [#/sec] (mean) jetty&lt;/span&gt;
+  ab -n 300000 -c 50 http://localhost:3333/  &lt;span class='c'&gt;#12638.37 [#/sec] (mean) netty&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h3 id='contributors'&gt;Contributors&lt;/h3&gt;
+
+&lt;p&gt;This repo was fork from &lt;a href='https://github.com/datskos/ring-netty-adapter'&gt;datskos&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id='source_code'&gt;Source code&lt;/h3&gt;
+
+&lt;p&gt;The source code is in &lt;a href='https://github.com/shenfeng/async-ring-adapter'&gt;github&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Elisp, select the nth visible window quickly</title>
+   <link href="http://shenfeng.me/emacs-lisp-select-nth-window.html" />
+   <updated>2011-07-22T00:00:00+08:00</updated>
+   <id>http://shenfeng.me/emacs-lisp-select-nth-window</id>
+   <content type="html">&lt;p&gt;我们在昆山的团队中另外3个都用&lt;a href='http://www.gnu.org/software/emacs/'&gt;GNU Emacs&lt;/a&gt;， 为了更容易的和他们的代码风格保持一致， 我也试着学了一下。一学也有三个月了。&lt;/p&gt;
+
+&lt;p&gt;开发用的显示器分辨率是1920x1080, Emacs可以很好的使用这些空间， 通过&lt;a href='http://hjiang.net'&gt;hjiang&lt;/a&gt;的 &lt;a href='http://hjiang.net/archives/253'&gt;smart-split&lt;/a&gt;，可以把 一个Emacs frame分成&lt;a href='/imgs/emacs-3-window.png'&gt;3个window&lt;/a&gt;， 通过other-window(C-x o)在这些window之间进行切换。 因为需要按Ctrl, 折磨小拇指， 并且也不是很方便。&lt;/p&gt;
+
+&lt;p&gt;我琢磨着写了下面的函数，可以快速切换到指定窗口。&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='scheme'&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;defun&lt;/span&gt; &lt;span class='nv'&gt;select-nth-window&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;n&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+  &lt;span class='s'&gt;&amp;quot;Select the nth visible window of current frame,&lt;/span&gt;
+&lt;span class='s'&gt;window are ordered by top-left point&amp;quot;&lt;/span&gt;
+  &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='k'&gt;let* &lt;/span&gt;&lt;span class='p'&gt;((&lt;/span&gt;&lt;span class='nf'&gt;cmp&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='k'&gt;lambda &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;l&lt;/span&gt; &lt;span class='nv'&gt;r&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+                &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='k'&gt;if &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;= &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;second&lt;/span&gt; &lt;span class='nv'&gt;l&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;second&lt;/span&gt; &lt;span class='nv'&gt;r&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+                    &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;&amp;lt; &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;third&lt;/span&gt; &lt;span class='nv'&gt;l&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;third&lt;/span&gt; &lt;span class='nv'&gt;r&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+                  &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;&amp;lt; &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;second&lt;/span&gt; &lt;span class='nv'&gt;l&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;second&lt;/span&gt; &lt;span class='nv'&gt;r&lt;/span&gt;&lt;span class='p'&gt;)))))&lt;/span&gt;
+         &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;windows&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;sort&lt;/span&gt;
+                   &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;mapcar&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='k'&gt;lambda &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;w&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+                             &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;cons &lt;/span&gt;&lt;span class='nv'&gt;w&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;window-edges&lt;/span&gt; &lt;span class='nv'&gt;w&lt;/span&gt;&lt;span class='p'&gt;)))&lt;/span&gt;
+                           &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;window-list&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt; &lt;span class='nv'&gt;cmp&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+         &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;index&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;- &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;min &lt;/span&gt;&lt;span class='nv'&gt;n&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;length &lt;/span&gt;&lt;span class='nv'&gt;windows&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt; &lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;)))&lt;/span&gt;
+    &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;first&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;nth&lt;/span&gt; &lt;span class='nv'&gt;index&lt;/span&gt; &lt;span class='nv'&gt;windows&lt;/span&gt;&lt;span class='p'&gt;))))&lt;/span&gt;
+
+&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;defun&lt;/span&gt; &lt;span class='nv'&gt;select-first-window&lt;/span&gt; &lt;span class='p'&gt;()&lt;/span&gt;
+  &lt;span class='s'&gt;&amp;quot;Select the top-left most window&amp;quot;&lt;/span&gt;
+  &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;interactive&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+  &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;select-window&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;select-nth-window&lt;/span&gt; &lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;)))&lt;/span&gt;
+
+&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;defun&lt;/span&gt; &lt;span class='nv'&gt;select-second-window&lt;/span&gt; &lt;span class='p'&gt;()&lt;/span&gt;
+  &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;interactive&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+  &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;select-window&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;select-nth-window&lt;/span&gt; &lt;span class='mi'&gt;2&lt;/span&gt;&lt;span class='p'&gt;)))&lt;/span&gt;
+
+&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;defun&lt;/span&gt; &lt;span class='nv'&gt;select-third-window&lt;/span&gt; &lt;span class='p'&gt;()&lt;/span&gt;
+  &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;interactive&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+  &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;select-window&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;select-nth-window&lt;/span&gt; &lt;span class='mi'&gt;3&lt;/span&gt;&lt;span class='p'&gt;)))&lt;/span&gt;
+
+&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;global-set-key&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;kbd&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;M-1&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='ss'&gt;&amp;#39;select-first-window&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;global-set-key&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;kbd&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;M-2&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='ss'&gt;&amp;#39;select-second-window&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;global-set-key&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;kbd&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;M-3&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='ss'&gt;&amp;#39;select-third-window&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;我改了一个&lt;a href='http://hjiang.net'&gt;hjiang&lt;/a&gt;的 &lt;a href='http://hjiang.net/archives/253'&gt;smart-split&lt;/a&gt; 来更好的满足我的需要：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;尽量等分Frame， 在1920x1080的显示器上为78个字符（依赖字体，字号）&lt;/li&gt;
+
+&lt;li&gt;给分出的window，装上不同的user buffer(名字不是以*开始的）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='scheme'&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;defun&lt;/span&gt; &lt;span class='nv'&gt;smart-split&lt;/span&gt; &lt;span class='p'&gt;()&lt;/span&gt;
+  &lt;span class='s'&gt;&amp;quot;Split the window into near 80-column sub-windows, try to&lt;/span&gt;
+&lt;span class='s'&gt;equally size every window&amp;quot;&lt;/span&gt;
+  &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;interactive&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+  &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;defun&lt;/span&gt; &lt;span class='nv'&gt;compute-width-helper&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;w&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='s'&gt;&amp;quot;More than 220 column, can be split to 3, else 2&amp;quot;&lt;/span&gt;
+    &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='k'&gt;if &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;&amp;gt; &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;window-width&lt;/span&gt; &lt;span class='nv'&gt;w&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='mi'&gt;220&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='mi'&gt;80&lt;/span&gt;
+      &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;+ &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;/ &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;window-width&lt;/span&gt; &lt;span class='nv'&gt;w&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='mi'&gt;2&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;)))&lt;/span&gt;
+  &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;defun&lt;/span&gt; &lt;span class='nv'&gt;smart-split-helper&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;w&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='s'&gt;&amp;quot;Helper function to split a given window into two, the first of which has&lt;/span&gt;
+&lt;span class='s'&gt;    80 columns.&amp;quot;&lt;/span&gt;
+    &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='k'&gt;if &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;&amp;gt; &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;window-width&lt;/span&gt; &lt;span class='nv'&gt;w&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='mi'&gt;130&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+        &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='k'&gt;let* &lt;/span&gt;&lt;span class='p'&gt;((&lt;/span&gt;&lt;span class='nf'&gt;w2&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;split-window&lt;/span&gt; &lt;span class='nv'&gt;w&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;compute-width-helper&lt;/span&gt; &lt;span class='nv'&gt;w&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='nv'&gt;t&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+               &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;i&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+          &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;with-selected-window&lt;/span&gt; &lt;span class='nv'&gt;w2&lt;/span&gt;
+            &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;next-buffer&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+            &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;while&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='k'&gt;and &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;string-match&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;^*&amp;quot;&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;buffer-name&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;&amp;lt; &lt;/span&gt;&lt;span class='nv'&gt;i&lt;/span&gt; &lt;span class='mi'&gt;20&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+              &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;setq&lt;/span&gt; &lt;span class='nv'&gt;i&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='nv'&gt;+&lt;/span&gt; &lt;span class='nv'&gt;i&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+              &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;next-buffer&lt;/span&gt;&lt;span class='p'&gt;)))&lt;/span&gt;
+          &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;smart-split-helper&lt;/span&gt; &lt;span class='nv'&gt;w2&lt;/span&gt;&lt;span class='p'&gt;))))&lt;/span&gt;
+  &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;smart-split-helper&lt;/span&gt; &lt;span class='nv'&gt;nil&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+
+&lt;span class='c1'&gt;;; bind to F12 for quick access&lt;/span&gt;
+&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;global-set-key&lt;/span&gt; &lt;span class='err'&gt;[&lt;/span&gt;&lt;span class='nv'&gt;f12&lt;/span&gt;&lt;span class='err'&gt;]&lt;/span&gt; &lt;span class='ss'&gt;&amp;#39;smart-split&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;我还bind了F1为delete-other-windows（default C-x 1）&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='scheme'&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;global-set-key&lt;/span&gt; &lt;span class='err'&gt;[&lt;/span&gt;&lt;span class='nv'&gt;f1&lt;/span&gt;&lt;span class='err'&gt;]&lt;/span&gt; &lt;span class='ss'&gt;&amp;#39;delete-other-windows&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;这样就可以F1, F12, M-1, M-2, M-3进行快速的切换。倒是挺方便。&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Various options of GWT compiler</title>
+   <link href="http://shenfeng.me/various-options-of-gwt-compiler.html" />
+   <updated>2011-07-02T14:13:46+08:00</updated>
+   <id>http://shenfeng.me/various-options-of-gwt-compiler</id>
+   <content type="html">&lt;p&gt;&lt;a href='http://code.google.com/webtoolkit/'&gt;GWT&lt;/a&gt; compiler is somewhat slow, here are some options I used to make it faster.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;build.xml:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='xml'&gt;   &lt;span class='nt'&gt;&amp;lt;property&lt;/span&gt; &lt;span class='na'&gt;name=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;gwt.args&amp;quot;&lt;/span&gt;  &lt;span class='na'&gt;value=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;-compileReport-localWorkers 4&lt;/span&gt;
+&lt;span class='s'&gt;                              -XdisableClassMetadata -XdisableCastChecking&amp;quot;&lt;/span&gt; &lt;span class='nt'&gt;/&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;gwt.xml&lt;/strong&gt;&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='xml'&gt;   &lt;span class='nt'&gt;&amp;lt;set-property&lt;/span&gt; &lt;span class='na'&gt;name=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;user.agent&amp;quot;&lt;/span&gt; &lt;span class='na'&gt;value=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;safari,gecko_8&amp;quot;&lt;/span&gt;&lt;span class='nt'&gt;/&amp;gt;&lt;/span&gt;
+   &lt;span class='c'&gt;&amp;lt;!--only compile for chrome, firefox--&amp;gt;&lt;/span&gt;
+   &lt;span class='nt'&gt;&amp;lt;set-property&lt;/span&gt; &lt;span class='na'&gt;name=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;compiler.stackMode&amp;quot;&lt;/span&gt; &lt;span class='na'&gt;value=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;strip&amp;quot;&lt;/span&gt;&lt;span class='nt'&gt;/&amp;gt;&lt;/span&gt;
+   &lt;span class='c'&gt;&amp;lt;!--removes client-side stack trace info (can reduce size up to 15%)--&amp;gt;&lt;/span&gt;
+   &lt;span class='nt'&gt;&amp;lt;set-configuration-property&lt;/span&gt; &lt;span class='na'&gt;name=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;compiler.enum.obfuscate.names&amp;quot;&lt;/span&gt;
+                               &lt;span class='na'&gt;value=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;true&amp;quot;&lt;/span&gt; &lt;span class='nt'&gt;/&amp;gt;&lt;/span&gt;
+   &lt;span class='c'&gt;&amp;lt;!-- only use if you&amp;#39;re not using enums as String values --&amp;gt;&lt;/span&gt;
+   &lt;span class='nt'&gt;&amp;lt;set-configuration-property&lt;/span&gt; &lt;span class='na'&gt;name=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;CssResource.obfuscationPrefix&amp;quot;&lt;/span&gt;
+                               &lt;span class='na'&gt;value=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;empty&amp;quot;&lt;/span&gt; &lt;span class='nt'&gt;/&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;More information: &lt;a href='http://code.google.com/webtoolkit/doc/latest/DevGuideCompilingAndDebugging.html'&gt;GWT Compile &amp;amp; Debug&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Create bootable flash disk to install Windows 7 from Windows</title>
+   <link href="http://shenfeng.me/create-bootable-flash-disk-to-install-windows-7-from-windows.html" />
+   <updated>2011-03-05T13:31:31+08:00</updated>
+   <id>http://shenfeng.me/create-bootable-flash-disk-to-install-windows-7-from-windows</id>
+   <content type="html">&lt;p&gt;&lt;strong&gt;From windows:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;prepare a 4G or lager flash disk&lt;/li&gt;
+
+&lt;li&gt;open cmd, with amdin privileges.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;a href='/imgs/diskpart-create-win7-bootable.jpg'&gt;&lt;img alt='diskpart' src='/imgs/diskpart-create-win7-bootable.jpg' /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;copy all content of the dvd to flash disk&lt;/li&gt;
+
+&lt;li&gt;execute&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='sh'&gt;  bootsect /nt60 X:  &lt;span class='c'&gt;#(X is the flash disk) &lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Thinkpad T410s, Install Ubuntu 10.10 64bit</title>
+   <link href="http://shenfeng.me/thinkpad-t410s.html" />
+   <updated>2011-02-20T10:41:18+08:00</updated>
+   <id>http://shenfeng.me/thinkpad-t410s</id>
+   <content type="html">&lt;p&gt;I bought a Lenovo Thinpad T410s a few days ago. After install ubuntu 10.10 64bit, Everything works out of the box:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Graphics : yes ( Intel HD, the VGA is blurred. With a DP to DVI adaptor, OK; NVS 3100M, VGA is OK )&lt;/li&gt;
+
+&lt;li&gt;Intel SSD, works great, a few tweeks : &lt;a href='/ssd-optimization-linux-ubuntu-10-10-64bit.html'&gt;SSD linux optimization&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;Fingerprint Reader (not tested, I disable it from bios)&lt;/li&gt;
+
+&lt;li&gt;Wireless, Thinkpad bgn: Yes&lt;/li&gt;
+
+&lt;li&gt;Ethernet: Yes&lt;/li&gt;
+
+&lt;li&gt;Camera: Yes&lt;/li&gt;
+
+&lt;li&gt;Microphone, Audio: Yes&lt;/li&gt;
+
+&lt;li&gt;SmartCard Reader: Yes&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;a href='http://cpbl.wordpress.com/2010/10/29/lenovo-thinkpad-t410s-and-ubuntu-10-10/'&gt;Trackpad multitouch feature&lt;/a&gt;&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='sh'&gt; xinput &lt;span class='nb'&gt;set&lt;/span&gt;-prop &lt;span class='s2'&gt;&amp;quot;SynPS/2 Synaptics TouchPad&amp;quot;&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;Synaptics Two-Finger Scrolling&amp;quot;&lt;/span&gt; 1 1
+ xinput &lt;span class='nb'&gt;set&lt;/span&gt;-prop &lt;span class='s2'&gt;&amp;quot;SynPS/2 Synaptics TouchPad&amp;quot;&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;Synaptics Two-Finger Pressure&amp;quot;&lt;/span&gt; 20
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;a href='http://www.thinkwiki.org/wiki/How_to_configure_the_TrackPoint'&gt;TrackPoint&lt;/a&gt;&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='sh'&gt; &lt;span class='nb'&gt;echo&lt;/span&gt; -n 210 &amp;gt; /sys/devices/platform/i8042/serio1/serio2/speed
+ &lt;span class='nb'&gt;echo&lt;/span&gt; -n 250 &amp;gt; /sys/devices/platform/i8042/serio1/serio2/sensitivity
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;a href='http://www.thinkwiki.org/wiki/Category:T510'&gt;Display NVS 3100M&lt;/a&gt; To enable brightness control in X, append &amp;#8216;Option &amp;#8220;RegistryDwords&amp;#8221; &amp;#8220;EnableBrightnessControl=1&amp;#8221;&amp;#8217; to the Device-Section of xorg.conf.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href='https://help.ubuntu.com/community/RestrictedFormats/Flash'&gt;Flash Player&lt;/a&gt;&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='sh'&gt; sudo add-apt-repository ppa:sevenmachines/flash &lt;span class='o'&gt;&amp;amp;&amp;amp;&lt;/span&gt; sudo apt-get update &lt;span class='o'&gt;&amp;amp;&amp;amp;&lt;/span&gt; sudo apt-get install flashplugin64-installer
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;a href='http://forum.notebookreview.com/lenovo-ibm/509947-t410s-unscientific-color-calibration-color-enhancement-tweaks-intel-gfx-control-panel.html'&gt;Color: Blue Cast, correct&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Linux SSD 优化 -- for ubuntu 10.10 64bit</title>
+   <link href="http://shenfeng.me/ssd-optimization-linux-ubuntu-10-10-64bit.html" />
+   <updated>2011-02-19T22:09:12+08:00</updated>
+   <id>http://shenfeng.me/ssd-optimization-linux-ubuntu-10-10-64bit</id>
+   <content type="html">&lt;p&gt;The conf I make to make less write to SSD, thus make it run a little faster. It&amp;#8217;s quite dangerous, since log are not kept and other compromises.&lt;/p&gt;
+
+&lt;p&gt;On my dev machine, which has 8G memory and a SSD, works quite good, trade memory and safety for speed.&lt;/p&gt;
+
+&lt;p&gt;All my source code are sync to remote git repository. On my dev machine, which has nothing but code, I already have safety.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;修改/etc/fstab, 为每个分区加上 noatime,data=writeback。/dev/sda1为/ 分区&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='sh'&gt; sudo tune2fs -o journal_data_writeback /dev/sda1
+ 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;edit /etc/fstab：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='sh'&gt; tmpfs /tmp tmpfs defaults 0 0
+ tmpfs /var/log tmpfs defaults 0 0
+ tmpfs /var/tmp tmpfs defaults 0 0
+ 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;修改/etc/default/grub&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='sh'&gt; &lt;span class='nv'&gt;GRUB_CMDLINE_LINUX&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='s2'&gt;&amp;quot;elevator=noop&amp;quot;&lt;/span&gt;
+ &lt;span class='nv'&gt;GRUB_TERMINAL&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;console &lt;span class='c'&gt;#not for speed, it looks better&lt;/span&gt;
+ &lt;span class='nv'&gt;GRUB_TIMEOUT&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;2
+ 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;before using apt-get:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='sh'&gt; sudo mount tmpfs /var/cache/apt/archives -t tmpfs
+ mkdir /var/cache/apt/archives/partial
+ 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;browser cache:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;firefox: browser.cache.disk.parent_directory = /tmp&lt;/li&gt;
+
+&lt;li&gt;chrome: &amp;#8211;user-data-dir=/tmp&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Google Chrome’s Special about Pages</title>
+   <link href="http://shenfeng.me/chrome-about.html" />
+   <updated>2011-02-15T13:58:16+08:00</updated>
+   <id>http://shenfeng.me/chrome-about</id>
+   <content type="html">&lt;ul&gt;
+&lt;li&gt;about:blank&lt;/li&gt;
+
+&lt;li&gt;about:cache&lt;/li&gt;
+
+&lt;li&gt;about:crash&lt;/li&gt;
+
+&lt;li&gt;about:credits&lt;/li&gt;
+
+&lt;li&gt;about:dns&lt;/li&gt;
+
+&lt;li&gt;about:histograms&lt;/li&gt;
+
+&lt;li&gt;about:net-internals&lt;/li&gt;
+
+&lt;li&gt;about:plugins&lt;/li&gt;
+
+&lt;li&gt;about:terms&lt;/li&gt;
+
+&lt;li&gt;about:version&lt;/li&gt;
+
+&lt;li&gt;about: (same as about:version)&lt;/li&gt;
+
+&lt;li&gt;about:flags&lt;/li&gt;
+
+&lt;li&gt;chrome://about (same as about:version)&lt;/li&gt;
+
+&lt;li&gt;chrome://bookmark&lt;/li&gt;
+
+&lt;li&gt;chrome://download chrome://extensions&lt;/li&gt;
+
+&lt;li&gt;chrome://favicon chrome://history&lt;/li&gt;
+
+&lt;li&gt;chrome://thumb&lt;/li&gt;
+
+&lt;li&gt;chrome://view-http-cache (same as about:cache)&lt;/li&gt;
+&lt;/ul&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Imdisk 虚拟磁盘</title>
+   <link href="http://shenfeng.me/imdisk.html" />
+   <updated>2011-01-16T00:16:06+08:00</updated>
+   <id>http://shenfeng.me/imdisk</id>
+   <content type="html">&lt;h2 id='imdisk'&gt;&lt;a href='http://www.ltr-data.se/opencode.html/#ImDisk'&gt;imdisk&lt;/a&gt;&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;ImDisk is a virtual disk driver for Windows NT/2000/XP/2003/Vista/2008. It can create virtual hard disk, floppy or CD/DVD drives using image files or &lt;strong&gt;system memory&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;在windows 7 上时使用时，需要解决权限问题，方法之一是用admin 权限在cmd下运行 这两条命令 &lt;a href='http://www.ltr-data.se/opencode.html/#ImDisk'&gt;详情&lt;/a&gt;&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='sh'&gt;  sc config imdisk &lt;span class='nv'&gt;start&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;auto
+  net start imdisk
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;ol&gt;
+&lt;li&gt;imdisk可以当虚拟光驱用，挂载iso文件,就像linux的&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='sh'&gt;  mount -o loop
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;ol&gt;
+&lt;li&gt;用system memory 创建的磁盘, 就像linux 的tmpfs，访问速度很快: &lt;img alt='image' src='/imgs/imdisk-window-speed.png' /&gt;。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;这条命令&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='sh'&gt; imdisk -a -s 5G -p &lt;span class='s2'&gt;&amp;quot;/fs:ntfs /q /y&amp;quot;&lt;/span&gt; -m &lt;span class='se'&gt;\#&lt;/span&gt;:
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;在我的机器上创建了一个5个G的虚拟硬盘，并且格式化，分配一个没有使用的盘符。（我用的是64为的windows 7， 在32位系统上受限于32位虚拟内存地址，可能只能创建2G左右，&lt;strong&gt;imdisk是按需 使用内存的，&lt;/strong&gt;像linux的tmpfs） &lt;img alt='image' src='/imgs/imdisk-window-explorer.png' /&gt;&lt;/p&gt;
+
+&lt;h3 id='imdisk_'&gt;imdisk 用途&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;做为ie，firefox，chrome等浏览器的缓存 - 做为系统的临时目录&lt;/li&gt;
+
+&lt;li&gt;挂在ISO文件 - &amp;#8230;&amp;#8230;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id='google_chrome_'&gt;google chrome 设置路径的方式&lt;/h4&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&amp;#8211;user-data-dir=e:&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id='firefox'&gt;firefox设置的方式是：&lt;/h4&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;browser.cache.disk.parent_directory=e:&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;方便日常电脑使用，加快电脑速度。&lt;/p&gt;
+
+&lt;h4 id='linuxmount'&gt;在linux下，做这些事情方便：mount&lt;/h4&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='sh'&gt; &lt;span class='c'&gt;# add the following line to /etc/fstab&lt;/span&gt;
+ tmpfs /tmp tmpfs defaults 0 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Guava, an open source JAVA library from google</title>
+   <link href="http://shenfeng.me/guava.html" />
+   <updated>2010-12-22T00:21:03+08:00</updated>
+   <id>http://shenfeng.me/guava</id>
+   <content type="html">&lt;p&gt;大概半年以前就听说了guava, an open source java library from google. 今天看了youtube上找到关于它的两个视频，大约一个半小时。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Youtube - Using the Google Collections Library for Java (1 of 2)&lt;/strong&gt;&lt;/p&gt;
+&lt;iframe allowfullscreen='true' frameborder='0' src='http://www.youtube.com/embed/ZeO_J2OcHYM' width='560' height='349'&gt;google collection 1&lt;/iframe&gt;
+&lt;p&gt;&lt;strong&gt;Youtube - Using the Google Collections Library for Java (2 of 2)&lt;/strong&gt;&lt;/p&gt;
+&lt;iframe allowfullscreen='true' frameborder='0' src='http://www.youtube.com/embed/9ni_KEkHfto' width='560' height='349'&gt;google collection 2&lt;/iframe&gt;
+&lt;p&gt;确实挺好的，推荐使用, maven配置&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='xml'&gt;   &lt;span class='nt'&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+        &lt;span class='nt'&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;com.google.code.findbugs&lt;span class='nt'&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+        &lt;span class='nt'&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;jsr305&lt;span class='nt'&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+        &lt;span class='nt'&gt;&amp;lt;version&amp;gt;&lt;/span&gt;1.3.9&lt;span class='nt'&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+   &lt;span class='nt'&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+   &lt;span class='nt'&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+        &lt;span class='nt'&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;com.google.guava&lt;span class='nt'&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+        &lt;span class='nt'&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;guava&lt;span class='nt'&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+        &lt;span class='nt'&gt;&amp;lt;version&amp;gt;&lt;/span&gt;r07&lt;span class='nt'&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Programs I use</title>
+   <link href="http://shenfeng.me/program-i-use.html" />
+   <updated>2010-12-17T21:41:59+08:00</updated>
+   <id>http://shenfeng.me/program-i-use</id>
+   <content type="html">&lt;h3 id='linux'&gt;linux:&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;software: google chrome, git-core, vim, xvidcap(屏幕录制)&lt;/li&gt;
+
+&lt;li&gt;programming: eclipse, ant, tomcat, sun-java6-jdk sun-java6-source, maven2, rake, sass, emacs&lt;/li&gt;
+
+&lt;li&gt;tools: iotop htop rlwrap unrar p7zip openssh-server﻿tmux iptraf pktstat(network), ms-sys(create windows bootable flash disk from ISO), nginx, curl,&lt;/li&gt;
+
+&lt;li&gt;font: inconsolata (console), Consolas(emacs)&lt;/li&gt;
+
+&lt;li&gt;other: ia32-libs synergy samba VMware&lt;/li&gt;
+
+&lt;li&gt;command to install&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='sh'&gt;   sudo apt-get update &lt;span class='o'&gt;&amp;amp;&amp;amp;&lt;/span&gt; sudo apt-get install vim emacs23 git-core &lt;span class='se'&gt;\&lt;/span&gt;
+   iotop htop rlwrap unrar p7zip pktstat sun-java6-jdk &lt;span class='se'&gt;\&lt;/span&gt;
+   sun-java6-source zsh rake ttf-inconsolata ia32-libs tmux
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h3 id='windows'&gt;windows:&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;imdisk (a tmpfs like for windows)&lt;/li&gt;
+
+&lt;li&gt;google chrome, firefox (firebug, web developer toolbar, FireQuery, YSlow, Firepicker)&lt;/li&gt;
+
+&lt;li&gt;visual studio, office 2010, visio&lt;/li&gt;
+
+&lt;li&gt;photoshop cs5&lt;/li&gt;
+
+&lt;li&gt;synergy, 7-zip, Virtual CloneDrive (mount iso in windows)&lt;/li&gt;
+
+&lt;li&gt;sketchup, google earth&lt;/li&gt;
+
+&lt;li&gt;VMware&lt;/li&gt;
+
+&lt;li&gt;cygwin (+ xinit openssh wget)&lt;/li&gt;
+&lt;/ol&gt;</content>
+ </entry>
+ 
+ 
+</feed>

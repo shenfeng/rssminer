@@ -5,6 +5,7 @@
 
   chrome.tabs.getSelected(null, function(tab) {
     chrome.tabs.sendRequest(tab.id, {}, function(response) {
+      console.log(response);
       if(response.type === 'rss_links' && response.data.length) {
         var links = response.data;
         var html = to_html(tmpls.rss_links, {links: links});
