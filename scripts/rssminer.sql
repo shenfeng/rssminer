@@ -58,6 +58,7 @@ CREATE TABLE feeds (
   -- ALTER TABLE feeds ADD COLUMN summary MEDIUMTEXT
   -- final_link VARCHAR(256),
   tags VARCHAR(128) NOT NULL default '',
+  link_hash int NOT NULL DEFAULT 0,
   updated_ts INT UNSIGNED NOT NULL default 0,
   published_ts INT UNSIGNED NOT NULL default 0,
   -- fetched_ts INT UNSIGNED,
@@ -67,7 +68,8 @@ CREATE TABLE feeds (
   -- alter table feeds drop index rss_link_id_link;
   -- alter table feeds add index rss_link_id_link(rss_link_id, link);
              -- REFERENCES rss_links ON UPDATE CASCADE ON DELETE CASCADE,
-  key rss_link_id_link (rss_link_id, link)
+  -- 9977856 vs 83886080 compared to index on link
+  key rss_id_link_hash (rss_link_id, link_hash)
 );
 
 create table feed_data (

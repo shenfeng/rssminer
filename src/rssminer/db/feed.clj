@@ -15,9 +15,10 @@
                  (SELECT COUNT(*) FROM feeds where rss_link_id = ?)
                  WHERE id = ?" [rssid rssid])))
 
-(defn- feed-exits [rssid link]
-  (mysql-query ["SELECT 1 FROM feeds WHERE rss_link_id = ? AND link = ?"
-                rssid link]))
+(defn- feed-exits? [rssid link]
+  (mysql-query
+   ["SELECT 1 FROM feeds WHERE rss_link_id = ? AND link_hash = ? AND link = ?"
+    rssid (.hashCode ^String link) link]))
 
 (defn- save-feed [feed rssid]
   (try (let [id (mysql-insert :feeds (dissoc (assoc feed :rss_link_id rssid)
@@ -36,8 +37,10 @@
   (let [ids (map (fn [{:keys [link] :as feed}]
                    (when (and link (not (blank? link)))
                      ;; link is the only cared,
-                     (if-not (feed-exits rssid link)
-                       (save-feed feed rssid))))
+                     (if-not (feed-exits? rssid link)
+                       (save-feed (assoc feed
+                                    :link_hash (.hashCode ^String link))
+                                  rssid))))
                  (:entries feeds))
         inserted (filter identity (doall ids))]
     (when (seq inserted)
