@@ -14,6 +14,7 @@ DB_NAME='rssminer'
 DB_USER='feng'
 BACKUP_FOLDER="/var/rssminer_backup"
 DB_HOST='127.0.0.1'
+MYSQL="mysql --host $DB_HOST -uroot"
 
 log() {
     echo "`date "+%Y-%m-%d %H:%M:%S"` INFO -- $@"
@@ -27,13 +28,13 @@ error() {
 drop_db() {
     SQL="drop database if exists $1"
     log $SQL
-    mysql --host $DB_HOST -uroot -e "$SQL"
+    $MYSQL -e "$SQL"
 }
 
 create_db() {
     SQL="create database $1"
     log $SQL
-    mysql --host $DB_HOST -uroot -e "$SQL"
+    $MYSQL -e "$SQL"
 }
 
 # GRANT ALL PRIVILEGES ON *.* TO 'admin'@'%';
@@ -42,15 +43,16 @@ create_db() {
 recreate_db_and_user () {
     drop_db $DB_NAME
     create_db $DB_NAME
-    # mysql -uroot -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY ''";
-    mysql --host $DB_HOST -uroot mysql -e "DROP USER '$DB_USER'@localhost"
-    mysql --host $DB_HOST -uroot -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY ''";
-    mysql --host $DB_HOST -uroot -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';"
+    # otherwise drop user may fail
+    $MYSQL -e "GRANT USAGE ON *.* TO '$DB_USER'@'localhost';"
+    $MYSQL mysql -e "DROP USER '$DB_USER'@localhost"
+    $MYSQL -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY ''";
+    $MYSQL -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';"
 }
 
 init_db() {
     recreate_db_and_user
-    mysql --host $DB_HOST -u$DB_USER $DB_NAME < $HOME/scripts/rssminer.sql
+    $MYSQL $DB_NAME < $HOME/scripts/rssminer.sql
 }
 
 backup_db() {
@@ -82,8 +84,8 @@ restore_db () {
     # FILE="$BACKUP_FOLDER/$FILE"
     if [ -f "$FILE" ]; then
         log "restore $DB_NAME db from file $FILE"
-        zcat $FILE | mysql -ufeng
-        cat $HOME/scripts/missing.sql | mysql -ufeng $DB_NAME
+        zcat $FILE | $MYSQL
+        cat $HOME/scripts/missing.sql | $MYSQL $DB_NAME
         # mysql -ufeng < $file
     else
         error "Backup sql file is required"
@@ -93,7 +95,7 @@ restore_db () {
     # FILE="$BACKUP_FOLDER/$FILE"
     if [ -f "$FILE" ]; then
         log "restore feed_data from file $FILE"
-        zcat $FILE | mysql -ufeng $DB_NAME
+        zcat $FILE | $MYSQL $DB_NAME
     else
         error "feed_data is not restored"
     fi

@@ -1,0 +1,32 @@
+#! /bin/bash
+
+DB_DIR=/tmp/mysql2
+PID_FILE=/tmp/mysql2.pid
+SOCKET_FILE=/tmp/mysql2.sock
+
+sudo rm $DB_DIR -rf && mkdir $DB_DIR
+
+sudo mysql_install_db --user=mysql --basedir=/usr --datadir=$DB_DIR
+
+sudo mysqld --basedir=/usr --datadir=$DB_DIR --user=mysql --server-id=2 --innodb_file_per_table --port=3307 --innodb_file_format=Barracuda --pid-file=$PID_FILE socket --socket $SOCKET_FILE
+
+sudo mysqld --basedir=/usr --datadir=/tmp/mysql2/ --user=mysql --server-id=2 --innodb_file_per_table --port=3307 --innodb_file_format=Barracuda --pid-file=/tmp/mysqld.pid --socket /tmp/mysqld2.sock
+
+mysqldump --host 127.0.0.1 -u root --routines --single-transaction --database rssminer --ignore-table=rssminer.feed_data --add-drop-database --add-drop-table | mysql -uroot --port 3307 --host 127.0.0.1
+
+# import feed_data structure
+# 31 need to confirm online
+
+mysqldump --host 127.0.0.1 --port 3306  rssminer feed_data | tail -n +31 | mysql -uroot --port 3307 --host 127.0.0.1 rssminer
+
+mysql --host 127.0.0.1 --port 3307 rssminer -uroot
+
+# cat /tmp/data.sql| mysql -uroot --port 3307 rssminer
+
+# mysql -uroot --port 3307 rssminer
+
+
+create table feed_data (
+  id INT UNSIGNED PRIMARY KEY,
+  summary MEDIUMTEXT
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=4;

@@ -76,7 +76,8 @@
         test-user "feng_test"]
     (try
       (run-admin "init-db" ["-d" test-db-name "-u" test-user])
-      (db/use-mysql-database! (str "jdbc:mysql://localhost/" test-db-name)
+      (db/use-mysql-database! (str "jdbc:mysql://localhost/" test-db-name
+                                   "?noAccessToProcedureBodies=true")
                               test-user)
       (test-fn)
       (catch SQLException e
