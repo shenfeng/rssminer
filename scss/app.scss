@@ -191,13 +191,18 @@ ul { list-style: none; padding: 0; margin: 0; }
 }
 
 #sub-list {                     /* in navigation */
-    a { color: #2e2e2e; }
+    /* a { color: #2e2e2e; } */
     .icon-folder-close { display: none; }
     li.collapse {
         /* show close icon when folder is closed */
         .icon-folder-open { display: none; }
         .icon-folder-close { display: inline-block; }
         > ul { display: none; }
+    }
+    .title { color: #333; }
+    .has-like .title {
+        color: black;
+        font-weight: bold;
     }
     .folder, .item {
         cursor: pointer;

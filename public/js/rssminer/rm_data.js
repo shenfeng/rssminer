@@ -117,6 +117,7 @@
       link: sub.url,
       group: sub.group,
       title_l: title.toLowerCase(),
+      cls: sub.like > 0 ? 'has-like' : 'no-like',
       // sort by likest if has likest
       href: sub_hash(sub.id, 1, default_sort(sub.like, sub.neutral)),
       like: sub.like,

@@ -84,7 +84,10 @@
     } else { selector += ' .unread-dislike'; }
     var $n = $(selector),
         n = parseInt($.trim($n.text()) || "0");
-    if(n === 1) { $n.remove(); }
+    if(n === 1) {
+      $n.parents('.has-like').removeClass('has-like');
+      $n.remove();
+    }
     else { $n.text(n-1); }
   }
 
@@ -95,6 +98,9 @@
       if(!$.trim($p.text()) && !$p.find('img').length) {
         $p.hide();            // 4037/330457
       }
+    });
+    $feed_content.find('a').each(function (idx, a) {
+      $(a).attr('target', '_blank');
     });
   }
 

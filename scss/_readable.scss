@@ -7,7 +7,7 @@
     overflow-y: auto;
     height: 100%;
     font-size: 16px;
-    line-height: 2.0;
+    line-height: 1.9;
     color: #333;
     background: #F6F6F6;
     .like .icon-thumbs-up { visibility: visible; }
@@ -65,7 +65,7 @@
         p {
             /* text-indent: 2em; */
             text-align: justify;
-            margin: 17px 0;
+            margin: 15px 0;
         }
         li p { text-indent: 0; } /* 147878 */
         /* sup { */

@@ -9,7 +9,7 @@
     {{/group}}
     <ul class="rss-category">
       {{#subs}}
-        <li class="item ficon-error"
+        <li class="item ficon-error {{cls}}"
           id="item-{{id}}" data-id="{{id}}" title="{{title}}">
           <a href="#{{href}}">
             <img src="{{img}}" width="16" height="16" />
