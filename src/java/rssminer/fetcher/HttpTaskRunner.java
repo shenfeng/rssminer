@@ -151,6 +151,8 @@ public class HttpTaskRunner {
                         task.onThrowable(e);
                     }
                 } catch (InterruptedException e) { // die
+                } catch (Exception e) {
+                    logger.error("loop exception, catch it", e);
                 }
             }
             mRunning = false;

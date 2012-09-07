@@ -3,13 +3,14 @@
 #feed-content {
     /* $color: #313131; */
     /* $color: #333; */
-    padding: 10px 0 100px 25px;
-    overflow-y: auto;
-    height: 100%;
+    padding: 10px 0 10px 25px;
+    /* overflow-y: auto; */
+    /* height: 100%; */
     font-size: 16px;
     line-height: 1.9;
     color: #333;
-    background: #F6F6F6;
+    background: #FAFAFA;
+    /* background: #F6F6F6; */
     .like .icon-thumbs-up { visibility: visible; }
     .dislike .icon-thumbs-down { visibility: visible; }
     .neutral, .sys { .thumbs i { visibility: visible; } }
@@ -61,7 +62,7 @@
         h1 { font-size: 23px;}
         h2, h3 { font-size: 20px; }
         h4, h5 { font-size: 18px; }
-        padding-bottom: 150px;
+        /* padding-bottom: 150px; */
         p {
             /* text-indent: 2em; */
             text-align: justify;

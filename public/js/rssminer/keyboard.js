@@ -112,11 +112,11 @@
       break;
     case 40:                    // down
     case 78:                    // n
-      $feed_content[0].scrollTop += STEP;
+      $reading_area[0].scrollTop += STEP;
       break;
     case 38:                    // up
     case 80:                    // p
-      $feed_content[0].scrollTop -= STEP;
+      $reading_area[0].scrollTop -= STEP;
       break;
     }
   }
@@ -136,5 +136,11 @@
     else { return list_shortcuts(e); }
   }
 
+  // function on_feed_content_scoll (e) {
+  //   console.log($reading_area.scrollTop(),
+  //               $feed_content.find('.summary').height());
+  // }
+
   $(document).keydown(keyboard_shortcut);
+  // $reading_area.scroll(on_feed_content_scoll);
 })();

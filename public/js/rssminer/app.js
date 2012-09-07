@@ -39,7 +39,8 @@
 
   function _update_state (subid, page, sort, group) {
     $welcome_list.scrollTop(0);
-    $feed_content.scrollTop(0).empty(); // save memory, when reading list
+    $feed_content.empty(); // save memory, when reading list
+    $reading_area.scrollTop(0);
     gcur_page = page;
     gcur_sort = sort;
     gcur_group = group;
@@ -147,7 +148,8 @@
 
         set_document_title(feed.title);
         var content = to_html(tmpls.feed_content, feed);
-        $feed_content.scrollTop(0).empty().append(content);
+        $feed_content.empty().append(content);
+        $reading_area.scrollTop(0);
         clean_content();
       });
     };

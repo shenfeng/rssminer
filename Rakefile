@@ -302,8 +302,8 @@ namespace :watch do
         sh 'while inotifywait -r -e modify templates/; do rake js:tmpls; done'
       }
     elsif
-      t1 = watch_change('log2/**/*.*', lambda {sh 'rake css_compile'})
-      t2 = watch_change('templates//**/*.*', lambda {sh 'rake js:tmpls'})
+      t1 = watch_change('scss/**/*.*', lambda {sh 'rake css_compile'})
+      t2 = watch_change('templates/**/*.*', lambda {sh 'rake js:tmpls'})
     end
     trap(:INT) {
       sh "killall inotifywait || exit 0"
