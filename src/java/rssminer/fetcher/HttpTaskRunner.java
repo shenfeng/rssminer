@@ -10,7 +10,6 @@ import rssminer.Utils;
 import rssminer.jsoup.HtmlUtils;
 
 import java.net.URI;
-import java.net.UnknownHostException;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -138,18 +137,10 @@ public class HttpTaskRunner {
                     tryFillTask();
                     mConcurrent.acquire(); // limit concurrency
                     final IHttpTask task = mTaskQueue.poll(); // can not be null
-                    try {
-                        TextRespListener listener = new TextRespListener(
-                                new TextHandler(task), filter);
-                        // copy. convert from Clojure map to java map
-                        TreeMap<String, String> headers = new TreeMap<String, String>(
-                                task.getHeaders());
-                        CLIENT.get(task.getUri(), headers, task.getProxy(),
-                                listener);
-                    } catch (UnknownHostException e) {
-                        taskFinished(task, 602);
-                        task.onThrowable(e);
-                    }
+                    TextRespListener listener = new TextRespListener(
+                            new TextHandler(task), filter);
+                    CLIENT.get(task.getUri(), task.getHeaders(), task.getProxy(),
+                            listener);
                 } catch (InterruptedException e) { // die
                 } catch (Exception e) {
                     logger.error("loop exception, catch it", e);
