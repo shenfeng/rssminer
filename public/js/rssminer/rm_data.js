@@ -576,7 +576,7 @@
         return t;
       });
       cb(results);
-    });
+    }, ids.length < 3);         // less than 3, silent
   }
 
   function save_reading_times (data, cb) {

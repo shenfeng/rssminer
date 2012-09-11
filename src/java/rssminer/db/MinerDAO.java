@@ -409,6 +409,7 @@ public class MinerDAO {
         sb.append(userID);
         sb.append(" join feed_data d on d.id = f.id and f.id in ");
         appendIn(sb, feedIDs);
+
         return sortbyOrder(feedIDs, fetchFeedsWithScore(userID, sb.toString()));
     }
 

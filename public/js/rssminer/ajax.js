@@ -50,7 +50,7 @@
       type: method,
       url: url,
       success: function (result, status, xhr) {
-        if(!silent) { hide_notif(LOADING); }
+        if(!silent) { hide_notif(LOADING);}
         if(typeof success === 'function') {
           success.apply(null, arguments);
         }
@@ -69,6 +69,7 @@
   }
 
   function get(url, success, silent) {
+    // console.log(url, 'silent', silent);
     if(!silent) { show_msg(LOADING); }
     _clear_timer();
     return $.ajax(handler(url, 'GET', success, silent));

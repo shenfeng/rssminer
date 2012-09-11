@@ -118,7 +118,8 @@ $demo_warn_bg_color: #fcfcac;
         padding: 3px 5px;
         margin: 0;
     }
-    .message { background: yellow;  }
+    /* .message { background: yellow;  } */
+    .message { background: #fff1a8;  color: #222; }
     .error { background: #FDD; }
     visibility: hidden;
 }
