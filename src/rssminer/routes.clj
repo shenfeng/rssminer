@@ -33,7 +33,7 @@
   (JGET "/welcome" [] user/summary)
   (JPOST "/feeds" [] feed/save-reading-time)
   (context "/feeds/:id" []
-           (JGET "/" [] feed/get-feed)
+           (JGET "/" [] feed/get-feeds) ; or ids
            (JPOST "/vote" [] feed/user-vote)
            (POST "/read" [] feed/mark-as-read)))
 

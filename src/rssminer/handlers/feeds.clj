@@ -23,13 +23,10 @@
     (mark-read fid user-id)
     {:status 204 :body nil}))
 
-(defn get-feed [req]
-  (let [fid (-> req :params :id to-int)
-        user-id (user-id-from-session req)
-        feed (db/fetch-feed user-id fid)]
-    (when (= "1" (-> req :params :read))
-      (mark-read fid user-id))
-    {:body feed :headers cache-control}))
+(defn get-feeds [req]
+  (let [fids (map to-int (str/split (-> req :params :id) #"-"))
+        user-id (user-id-from-session req)]
+    {:body (db/fetch-feeds user-id fids) :headers cache-control}))
 
 (defn save-reading-time [req]
   (let [user-id (user-id-from-session req)]

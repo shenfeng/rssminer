@@ -94,6 +94,7 @@
       href: feed_hash(section, feed.id, page, sort),
       id: feed.id,
       link: feed.link,
+      link_d: decodeURI(feed.link),
       tags: split_tags(feed.tags),
       title: $.trim(feed.title || feed.link)
     };
@@ -562,17 +563,19 @@
     return result;
   }
 
-  function fetch_feed (id, mark_as_red, cb) {
-    var url = '/api/feeds/' + id;
-    if(mark_as_red) { url += '?read=1'; }
-    ajax.get(url, function (feed) {
-      var t = transform_item(feed);
-      t.summary = feed.summary;
-      if(feed.readts) {
-        t.rdate = ymdate(feed.readts);
-      }
-      t.sub = get_subscription(t.rssid);
-      cb(t);
+  function fetch_summary (ids, cb) {
+    var url = '/api/feeds/' + ids.join('-');
+    ajax.get(url, function (feeds) {
+      var results = _.map(feeds, function (feed) {
+        var t = transform_item(feed);
+        t.summary = feed.summary;
+        if(feed.readts) {
+          t.rdate = ymdate(feed.readts);
+        }
+        t.sub = get_subscription(t.rssid);
+        return t;
+      });
+      cb(results);
     });
   }
 
@@ -587,7 +590,7 @@
       fetch_search_result: fetch_search_result,
       fetch_sub_feeds: fetch_sub_feeds,
       fetch_welcome: fetch_welcome,
-      fetch_feed: fetch_feed,
+      fetch_summary: fetch_summary,
       get_subscription: get_subscription,
       get_subscriptions: function () { return subscriptions_cache || []; },
       get_user_subs: get_user_subs,

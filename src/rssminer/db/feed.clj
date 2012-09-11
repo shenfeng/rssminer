@@ -50,9 +50,9 @@
 (defn fetch-link [id]
   (:link (first (mysql-query ["SELECT link FROM feeds WHERE id = ?" id]))))
 
-(defn fetch-feed [userid id]
+(defn fetch-feeds [userid ids]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (.fetchFeed db userid id)))
+    (.fetchFeedsWithSummary db userid ids)))
 
 (defn- get-rssid-by-feedid [id]
   (-> (mysql-query ["select rss_link_id from feeds where id = ?" id])

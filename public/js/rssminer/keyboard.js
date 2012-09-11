@@ -8,6 +8,7 @@
       $feed_content = $('#feed-content'),
       $reading_area = $('#reading-area'),
       $subs_list = $('#sub-list'),    // sub list
+      $navigation = $('#navigation'), // feed list
       $welcome_list = $('#welcome-list');
 
   var SHOW_NAV = 'show-nav',
@@ -95,15 +96,17 @@
         location.hash = '?s=' + args[1] + '&p=1';
       }
       break;
-    case 75:                  // j
+    case 75:                  // k
       if(!$prev.length) {
         $prev = $('#feed-list .feed:first');
       }
       location.hash = $prev.find('a').attr('href');
       break;
-    case 74:                  // k
-      //  load more
-      if(!$next.next().length) { $feed_content.scroll(); }
+    case 74:                  // j
+      //  load more, logic in app.js
+      if(!$next.next().length) {
+        $navigation.scroll();
+      }
       if($next.length) {
         location.hash = $next.find('a').attr('href');
       } else {

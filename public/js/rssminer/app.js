@@ -13,6 +13,9 @@
   var SHOW_NAV = 'show-nav',
       MIN_TIME = 400,           // at least 400ms, then record
       SAVE_THREASH_HOLD = 3,
+      TOP_DIFF = 300,
+      BOTTOM_DIFF = 400,
+      READING_CLS = 'reading',
       READ_URL_PATTEN = 'read/:id/:id?p=:page&s=:sort',
       SHOW_CONTENT = 'show-content';
 
@@ -20,7 +23,6 @@
       $reading_area = $('#reading-area'),
       $navigation = $('#navigation'), // feed list
       $subs_list = $('#sub-list'),    // sub list
-      // iframe = $('iframe')[0],
       $feed_content = $('#feed-content'),
       $logo = $('#logo'),
       $welcome_list = $('#welcome-list');
@@ -35,7 +37,6 @@
       GROUP_FOLDER = 'GROUP',
       GROUP_WELCOME = 'ALL',
       GROUP_SUB = 'SUB';
-
 
   function _update_state (subid, page, sort, group) {
     $welcome_list.scrollTop(0);
@@ -74,7 +75,6 @@
       call_if_fn(callback);
     });
   }
-
 
   function decrement_number ($just_read, subid) {
     var selector = "#item-" + subid;
@@ -123,36 +123,93 @@
     }
   }
 
-  function read_feed (subid, feedid, page, sort, folder) {
-    var read_cb = function () {
+  function select_and_compute_fetch_ids (feedid, scroll_up) {
+    var $me = $('#feed-' + feedid);
+    $reading_area.addClass(SHOW_CONTENT);
+    $welcome_list.empty();
+    $logo.removeClass(SHOW_NAV);
+    layout.select('#feed-list', $me);
+    $navigation.scroll(); // trigger scroll if has need load more
+    var ids=  [];
+
+    var $summary = $("#s-" + feedid);
+    if($summary.length) {
+      if(!$summary.hasClass(READING_CLS)) {
+        $summary[0].scrollIntoView();
+      }
+    } else {
+      ids = [feedid];
+    }
+
+    var parse_id = function ($e) {
+      if($e.length && !$('#s-' + $e.attr('data-id')).length) {
+        return $e.attr('data-id');
+      }
+    };
+
+    var next = 2, prev = 2;
+    if(scroll_up === true) {
+      prev = 3;
+      next = 1;
+    } else if(scroll_up === false) {
+      prev = 1;
+      next = 3;
+    }
+
+    var $prev = $me.prev();
+    do {
+      $prev = $prev.prev();
+      ids.unshift(parse_id($prev));
+    } while(--prev > 0);
+
+    var $next = $me.next();
+    do {
+      $next = $next.next();
+      ids.push(parse_id($next));
+    } while(--next > 0)
+
+    return _.filter(ids, _.identity);
+  }
+
+  function focus_feed_summary (feedid) {
+    $feed_content.find('>.' + READING_CLS).removeClass(READING_CLS);
+    $('#s-' + feedid).addClass(READING_CLS);
+  }
+
+  function read_callback (subid, feedid, page, sort, scroll_up) {
+    return function () {
       gcur_subid = subid;
       gcur_sort = sort;
       gcur_page = page;
-      $reading_area.addClass(SHOW_CONTENT);
-      var $me = $('#feed-' + feedid);
-      $logo.removeClass(SHOW_NAV);
-      layout.select('#feed-list', $me);
-      $navigation.scroll(); // trigger scroll if has need load more
-      var mark_read = false;
-      if(!$me.hasClass('read')) {
-        mark_read = true;
-        decrement_number($me, subid);
-        $me.removeClass('unread sys-read').addClass('read');
-      }
-      $welcome_list.empty();
-      data_api.fetch_feed(feedid, mark_read, function (feed) {
-        // record reading meta: time
-        greading_meta.read = true;
-        greading_meta.start = new Date();
-        greading_meta.id = feedid;
 
-        set_document_title(feed.title);
-        var content = to_html(tmpls.feed_content, feed);
-        $feed_content.empty().append(content);
-        $reading_area.scrollTop(0);
-        clean_content();
-      });
+      var ids = select_and_compute_fetch_ids(feedid, scroll_up);
+      console.log(ids);
+      if(ids.length) {
+        data_api.fetch_summary(ids, function (feeds) {
+          // record reading meta: time
+          greading_meta.read = true;
+          greading_meta.start = new Date();
+          greading_meta.id = feedid;
+
+          set_document_title(feeds[0].title);
+          var content = to_html(tmpls.feed_content, {feeds: feeds});
+          if(scroll_up === true) {
+            $feed_content.prepend(content);
+          } else if( scroll_up === false) {
+            $feed_content.append(content);
+          } else {
+            $feed_content.empty().append(content);
+          }
+          focus_feed_summary(feedid);
+        });
+      } else {
+        focus_feed_summary(feedid);
+      }
     };
+  }
+
+  function read_feed (subid, feedid, page, sort, folder, scroll_up) {
+    var read_cb = read_callback(subid, feedid, page, sort, scroll_up);
     if(gcur_subid === subid) {
       read_cb();                   // just read feed
     } else {
@@ -237,7 +294,6 @@
   function save_settings (e) {
     var d = util.extract_data( $('#all-settings .account') );
     for(var i in d) { if(!d[i]) { delete d[i]; } }
-    d.expire = parseInt(d.expire, 10);
     if(d.password && d.password !== d.password2) {
       alert('password not match');
       return;
@@ -311,6 +367,63 @@
     });
   }
 
+  function on_navigation_scroll () {
+    // make it private
+    var is_loading = false;
+    return function (e) {     // feed list scroll, auto load
+      if(!gcur_has_more) { $('#navigation .loader').remove();}
+      if(is_loading) { return; }
+      var total_height = $navigation[0].scrollHeight, // ie8, ff, chrome
+          scrollTop = $navigation.scrollTop(),
+          height = $navigation.height();
+      if(scrollTop + height === total_height) {
+        var fn = data_api.fetch_sub_feeds;
+        if( gcur_group === GROUP_FOLDER) {
+          fn = data_api.fetch_group_feeds;
+        } else if (gcur_group === GROUP_WELCOME ) {
+          fn = data_api.fetch_welcome;
+        }
+        gcur_page += 1;
+        is_loading = true;
+        fn(gcur_subid, gcur_page, gcur_sort, function (data) {
+          is_loading = false;
+          gcur_has_more = data.pager && data.pager.has_more;
+          if(!gcur_has_more) {
+            $('#navigation .loader').remove();
+          } else {
+            var html = to_html(tmpls.feeds_list, data, tmpls);
+            $('#feed-list').append(html);
+          }
+        });
+      }
+    };
+  }
+
+  function on_feed_area_scroll () {
+    var previousScroll = 0;
+    return function (e) {
+      var currentScroll = $reading_area.scrollTop(),
+          $reading = $reading_area.find('.reading'),
+          $prev = $reading.prev(),
+          $next = $reading.next();
+      if (currentScroll > previousScroll && $next.length) { // down
+        if($next.position().top - currentScroll < TOP_DIFF) {
+          var id = parseInt($next.find('.feed').attr('data-id'));
+          focus_feed_summary(id);
+          read_feed(gcur_subid, id, gcur_page, gcur_sort, gcur_group, false);
+        }
+      } else if($prev.length) {                  // up
+        var height = $reading_area.height();
+        if($reading.position().top - currentScroll - height > -BOTTOM_DIFF) {
+          id = parseInt($prev.find('.feed').attr('data-id'));
+          focus_feed_summary(id);
+          read_feed(gcur_subid, id, gcur_page, gcur_sort, gcur_group, false);
+        }
+      }
+      previousScroll = currentScroll;
+    };
+  }
+
   function show_server_message () { // only show once
     if(_RM_.gw) {               // google import wait
       var msg = 'Busy importing from google reader, please refresh in a few seconds';
@@ -337,6 +450,7 @@
     'change #all-settings select': save_pref_sort,
     'click #add-subscription': add_subscription,
     'click #save-settings': save_settings,
+    // 'scroll #reading-area': function (e) { console.log("-----------------"); },
     'mouseenter #logo': function () {
       $logo.addClass(SHOW_NAV);
       // $reading_area.removeClass(SHOW_CONTENT);
@@ -372,32 +486,7 @@
     })());
   });
 
-  var is_loading = false;
-
-  $navigation.scroll(function (e) {     // feed list scroll, auto load
-    if(!gcur_has_more) { $('#navigation .loader').remove();}
-    if(is_loading) { return; }
-    var total_height = $navigation[0].scrollHeight, // ie8, ff, chrome
-        scrollTop = $navigation.scrollTop(),
-        height = $navigation.height();
-    if(scrollTop + height === total_height) {
-      var fn = data_api.fetch_sub_feeds;
-      if( gcur_group === GROUP_FOLDER) { fn = data_api.fetch_group_feeds; }
-      else if (gcur_group === GROUP_WELCOME ) { fn = data_api.fetch_welcome; }
-      gcur_page += 1;
-      is_loading = true;
-      fn(gcur_subid, gcur_page, gcur_sort, function (data) {
-        is_loading = false;
-        gcur_has_more = data.pager && data.pager.has_more;
-        if(!gcur_has_more) {
-          $('#navigation .loader').remove();
-        } else {
-          var html = to_html(tmpls.feeds_list, data, tmpls);
-          $('#feed-list').append(html);
-        }
-      });
-    }
-  });
-
+  $reading_area.scroll(on_feed_area_scroll());
+  $navigation.scroll(on_navigation_scroll());
   if(_RM_.demo) { $('#warn-msg').show(); }
 })();

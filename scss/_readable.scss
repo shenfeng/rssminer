@@ -1,19 +1,31 @@
 @import "vars";
 
 #feed-content {
+    > li {
+        &.reading {
+            border-left-color: #4d90f0
+        }
+        border: 1px solid #ddd;
+        padding: 10px 0 10px 25px;
+        box-shadow: 0 0 4px #e3e5eb;
+        margin: 10px 0 20px;
+        * { max-width: 740px; }
+    }
     /* $color: #313131; */
     /* $color: #333; */
-    padding: 10px 0 10px 25px;
     /* overflow-y: auto; */
     /* height: 100%; */
+    position: relative;
     font-size: 16px;
     line-height: 1.9;
     color: #333;
-    background: #FAFAFA;
+    /* background: #FAFAFA; */
+    background: white;
+    padding: 0 10px 0 5px;
     /* background: #F6F6F6; */
-    .like .icon-thumbs-up { visibility: visible; }
-    .dislike .icon-thumbs-down { visibility: visible; }
-    .neutral, .sys { .thumbs i { visibility: visible; } }
+    /* .like .icon-thumbs-up { visibility: visible; } */
+    /* .dislike .icon-thumbs-down { visibility: visible; } */
+    /* .neutral, .sys { .thumbs i { visibility: visible; } } */
     .tags {
         li { color: #555; padding: 0 4px ;}
     }
@@ -40,22 +52,24 @@
     .feed {
         padding-bottom: 10px;
         h2 {
-            margin: 10px 0 -4px 0;
+            margin: 0 0 -4px 0;
             font-size: 20px;
         }
     }
     /* .feed */
     .thumbs {
-        position: fixed;
-        font-size: 34px;
-        top: 81%;
-        left: 50%;
-        margin-left: 505px;
+        position: static;
+        font-size: 18px;
+        /* position: fixed; */
+        /* font-size: 34px; */
+        /* top: 81%; */
+        /* left: 50%; */
+        /* margin-left: 505px; */
+        /* line-height: 1; */
+        /* width: 40px; */
         line-height: 1;
-        width: 40px;
-        i { padding: 5px 0; }
+        i { padding: 0; visibility: visible; }
     }
-    * { max-width: 740px; }
     .summary {
         /* font-family: Kai 'Lucida Grande', "Helvetica Neue","Microsoft YaHei", Helvetica, Arial, sans-serif; */
         /* font-size: 17px; */
@@ -121,3 +135,4 @@
         }
     }
 }
+

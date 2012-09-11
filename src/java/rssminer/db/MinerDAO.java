@@ -16,8 +16,8 @@ import static rssminer.Utils.K_REDIS_SERVER;
 public class MinerDAO {
     static final int COMBINED_KEY_EXPIRE = 1800; // cache half an hour
 
-    private JedisPool jedis;
-    private DataSource ds;
+    private final JedisPool jedis;
+    private final DataSource ds;
 
     // sub newest, oldest
     static final String FEED_FIELD = "SELECT f.id,f.rss_link_id,f.title,f.author,f.link,tags,"
@@ -26,8 +26,8 @@ public class MinerDAO {
 
     static final String FETCH_FEED = "SELECT f.id,f.rss_link_id,f.title,f.author,f.link,tags,"
             + "f.published_ts,uf.read_date,uf.vote_user,uf.vote_date,d.summary FROM feeds "
-            + "f LEFT JOIN user_feed uf ON uf.feed_id = f.id and uf.user_id = ? "
-            + "join feed_data d on d.id = f.id and f.id = ?";
+            + "f LEFT JOIN user_feed uf ON uf.feed_id = f.id and uf.user_id = ";
+//            + "join feed_data d on d.id = f.id and f.id ";
 
     public MinerDAO(Map<Keyword, Object> config) {
         this.jedis = (JedisPool) config.get(K_REDIS_SERVER);
@@ -115,10 +115,11 @@ public class MinerDAO {
         Connection con = ds.getConnection();
         try {
             Statement stat = con.createStatement();
-            List<Feed> feeds = new ArrayList<Feed>(30);
+            List<Feed> feeds = new ArrayList<Feed>(20);
             ResultSet rs = stat.executeQuery(sql);
+            boolean withsummary = rs.getMetaData().getColumnCount() == 11;
             while (rs.next()) {
-                feeds.add(createFeed(rs, false));
+                feeds.add(createFeed(rs, withsummary));
             }
             Utils.closeQuietly(rs);
             Utils.closeQuietly(stat);
@@ -128,10 +129,7 @@ public class MinerDAO {
         }
     }
 
-    public List<Feed> fetchFeedsWithScore(int userID, List<Integer> feedids)
-            throws SQLException {
-        List<Feed> feeds = fetchFeeds(userID, feedids);
-        // sort by search result by lucene score
+    public List<Feed> sortbyOrder(List<Integer> feedids, List<Feed> feeds) {
         List<Feed> result = new ArrayList<Feed>(feeds.size());
         for (Integer id : feedids) {
             for (Feed f : feeds) {
@@ -141,8 +139,14 @@ public class MinerDAO {
                 }
             }
         }
-        addScore(userID, result);
         return result;
+    }
+
+    public List<Feed> fetchFeedsWithScore(int userID, List<Integer> feedids)
+            throws SQLException {
+        List<Feed> feeds = sortbyOrder(feedids, fetchFeeds(userID, feedids));
+        addScore(userID, feeds);
+        return feeds;
     }
 
     private List<Feed> fetchFeedsWithScore(int userID, Set<Tuple> scores)
@@ -398,34 +402,14 @@ public class MinerDAO {
         }
     }
 
-    public Feed fetchFeed(int userID, int feedID) throws SQLException {
-        Connection con = ds.getConnection();
-        Jedis redis = jedis.getResource();
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            ps = con.prepareStatement(FETCH_FEED);
-            ps.setInt(1, userID);
-            ps.setInt(2, feedID);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                Feed f = createFeed(rs, true);
-                byte[] set = Utils.genKey(userID, f.getRssid());
-                byte[] member = Integer.toString(feedID).getBytes(
-                        HttpUtils.UTF_8);
-                Double score = redis.zscore(set, member);
-                if (score != null) {
-                    f.setScore(score);
-                }
-                return f;
-            }
-        } finally {
-            jedis.returnResource(redis);
-            Utils.closeQuietly(rs);
-            Utils.closeQuietly(ps);
-            Utils.closeQuietly(con);
-        }
-        return null;
+    public List<Feed> fetchFeedsWithSummary(int userID, List<Integer> feedIDs)
+            throws SQLException {
+        StringBuilder sb = new StringBuilder(FETCH_FEED.length() + 80);
+        sb.append(FETCH_FEED);
+        sb.append(userID);
+        sb.append(" join feed_data d on d.id = f.id and f.id in ");
+        appendIn(sb, feedIDs);
+        return sortbyOrder(feedIDs, fetchFeedsWithScore(userID, sb.toString()));
     }
 
     public List<Feed> fetchSubVote(int userID, int subID, int limit,

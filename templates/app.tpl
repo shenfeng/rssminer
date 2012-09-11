@@ -62,7 +62,7 @@
           <div id="welcome-list">
             <p id="loading-msg">Loading....</p>
           </div>
-          <div id="feed-content"></div>
+          <ul id="feed-content"></ul>
         </div>
       </div>
     </div>
