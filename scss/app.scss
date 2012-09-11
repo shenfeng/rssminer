@@ -279,21 +279,21 @@ ul { list-style: none; padding: 0; margin: 0; }
 .thumbs {
     position: absolute;
     top: 5px;
-    color: #3b5998;
+    color: $thumb_light_color;
     right: 90px;
     z-index: 20;
-    font-size: 20px;
+    font-size: 17px;
     i {
         display: inline-block;
         cursor: pointer;
         visibility: hidden;
-        &:hover { color: #021030; }
+        &:hover { color: $thumb_dark_color; }
     }
 }
 
-.like .icon-thumbs-up { color: #021030; }
-.dislike .icon-thumbs-down { color: #021030; }
-.neutral, .sys { .thumbs { color: #3b5998; } }
+.like .icon-thumbs-up { color: $thumb_dark_color; font-size: 20px;}
+.dislike .icon-thumbs-down { color: $thumb_dark_color; font-size: 20px;}
+.neutral, .sys { .thumbs { color: $thumb_light_color; } }
 
 .feed {
     &.like {
