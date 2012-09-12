@@ -1,6 +1,6 @@
 # RSSMiner
 
-* Rssminer - an simple, but intelligent RSS reader
+* Rssminer - a simple, intelligent RSS reader
 * Live version [http://rssminer.net](http://rssminer.net)
 * Write in Clojure & Javascript & Java, by [shen feng](http://shenfeng.me)
 
