@@ -2,10 +2,13 @@
 
 #feed-content {
     > li {
-        &.reading { border-left-color: #4d90f0; }
+        &:hover,&.reading {
+            box-shadow: 0px 2px 3px 1px #e3e5eb;
+            border-left-color: #4d90f0;
+        }
         border: 1px solid #ddd;
         padding: 5px 0 10px 25px;
-        box-shadow: 0 0 4px #e3e5eb;
+        box-shadow: 0 0 2px #e3e5eb;
         margin: 10px 0 20px;
         * { max-width: 740px; }
     }
