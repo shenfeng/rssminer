@@ -66,5 +66,8 @@
     return loadUrl(oldHash);
   }
 
-  window.RM.hashRouter = hashRouter;
+  window.RM.Router = {route: hashRouter, navigate: function (hash) {
+    oldHash = hash;
+    location.hash = hash;
+  }};
 })();

@@ -1,6 +1,7 @@
 (function () {
   var _RM_ = window._RM_ || {},
       RM = window.RM,
+      router = RM.Router,
       data_api = RM.data,
       notify = RM.notify,
       to_html = Mustache.render,
@@ -149,6 +150,8 @@
     var $me = $('#s-' + feedid);
     if(!$me.hasClass(READING_CLS)) {
       set_document_title($me.find('.feed h2').text());
+
+      router.navigate($('#feed-' + feedid).find('a').attr('href'));
 
       var $all = $feed_content.find('> li');
       $all.removeClass(READING_CLS);
@@ -515,7 +518,7 @@
   });
 
   fetch_and_show_user_subs(function () { // app start here
-    RM.hashRouter({
+    router.route({
       '': show_welcome,
       '?s=:section&p=:p': show_welcome,
       's/:section': show_settings,
