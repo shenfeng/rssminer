@@ -215,8 +215,8 @@
 
           (function check () {
             var n = new Date().getTime();
-            // NO need to check time, 20s
-            if($imgs.length && n - now < 20000 && fid === feedid) { // ms
+            // NO need to check time, 30s
+            if($imgs.length && n - now < 30000 && fid === feedid) { // ms
               $imgs = $imgs.filter(function (idx) {
                 var h = $(this).height();
                 if(h) { disabled_scroll(h); }
