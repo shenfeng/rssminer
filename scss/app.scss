@@ -15,7 +15,6 @@
     /* background: #cecece; */
     border-radius: 10px;
     background: #eee;
-/* visibility: hidden; */
 }
 
 ::-webkit-scrollbar-thumb {
@@ -25,7 +24,6 @@
     background: #a1a0a0;
     border-radius: 10px;
     background: #c0c0c0;
-/* visibility: hidden; */
 /* box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2); */
 }
 
@@ -294,6 +292,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 .like .icon-thumbs-up { color: $thumb_dark_color; font-size: 20px;}
 .dislike .icon-thumbs-down { color: $thumb_dark_color; font-size: 20px;}
 .neutral, .sys { .thumbs i { color: $thumb_light_color; font-size: 17px; } }
+.neutral, .sys { .thumbs i:hover { color: $thumb_dark_color; } }
 
 .feed {
     &.like {

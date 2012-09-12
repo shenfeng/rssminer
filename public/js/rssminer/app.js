@@ -34,7 +34,6 @@
       gcur_sort,
       gcur_group,
       gcur_subid,
-      gcur_has_more = true,
       greading_meta = {},
       greading_times = {},
       GROUP_FOLDER = 'GROUP',
@@ -199,13 +198,32 @@
     });
 
     if(scroll_up === undefined) {
-      _.defer(function () {
+      (function (fid) {
         var p = $me.position();
         if(p) {
+          // scroll based on current postion
           var s = $reading_area.scrollTop();
           disabled_scroll(p.top - s);
+
+          // if img has no height
+          var now = new Date().getTime();
+          var $0 = $me.prevAll().find('img').filter(function (idx) {
+            return $(this).height() === 0;
+          });
+
+          (function check () {
+            var n = new Date().getTime();
+            if($0.length && n - now < 3500 && fid === feedid) {
+              $0 = $0.filter(function (idx) {
+                var h = $(this).height();
+                if(h) { disabled_scroll(h); }
+                return h === 0;
+              });
+              _.delay(check, 30);
+            }
+          })();
         }
-      });
+      })(feedid);
     }
   }
 
@@ -224,6 +242,7 @@
   function disabled_scroll (diff) {
     if(diff) {
       ignore_scroll_event = true;
+      // console.log('scroll', diff);
       $reading_area[0].scrollTop += diff;
       _.delay(function () { ignore_scroll_event = false; }, 20);
     }
@@ -241,27 +260,30 @@
         return !$("#s-" + id).length || id === feedid;
       });
       var idx = _.indexOf(ids, feedid);
-
       var insert_before = idx !== 0;
-
       ids = _.filter(ids, function (id) { // remove feedid if exits
         return !$("#s-" + id).length;
       });
-
-      if(ids.length > 1) {
+      // console.log(ids);
+      var $f = $('#feed-' + feedid); // only one
+      if(ids.length > 1 ||(ids.length === 1 && !$f.next().next().length)) {
         data_api.fetch_summary(ids, function (feeds) {
-          // record reading meta: time
-          // greading_meta.read = true;
-          // greading_meta.start = new Date();
-          // greading_meta.id = feedid;
+          var $content = $(to_html(tmpls.feed_content, {feeds: feeds}));
+          var duplicates = [];
 
-          var content = to_html(tmpls.feed_content, {feeds: feeds});
+          $content.filter('li').each(function (idx, li) {
+            if($('#' + li.id).length) { duplicates.push(li); }
+          });
+          _.each(duplicates, function (li) {
+            li.parentNode.replaceChild(li);
+          });
+
           if(insert_before === true) {
             keep_position(feedid, function () {
-              $feed_content.prepend(content);
+              $feed_content.prepend($content);
             });
           } else {
-            $feed_content.append(content);
+            $feed_content.append($content);
           }
           cleaning_and_scrollto(feedid, subid, scroll_up);
         });
@@ -431,6 +453,7 @@
   }
 
   var is_loading = false;
+  var gcur_has_more = true;
   function on_navigation_scroll(e) {     // feed list scroll, auto load
     if(!gcur_has_more) { $('#navigation .loader').remove(); return; }
     if(is_loading) { return; }
@@ -460,11 +483,12 @@
   };
 
   var previous_scroll = 0;
-  var ignore_scroll_event = false;  // app scroll too, ignore them
-  function on_read_area_scroll(e) {
+  var ignore_scroll_event = false; // app call scroll, ignore event
+  function on_readarea_scroll(e) {
     if(ignore_scroll_event) { return; }
     var current_scroll = $reading_area.scrollTop(),
         $reading = $reading_area.find('.reading'),
+        // TODO, not just prev, next, since HOME/END key
         $prev = $reading.prev(),
         $next = $reading.next();
     if (current_scroll > previous_scroll && $next.length) { // down
@@ -513,7 +537,7 @@
     },
     'mouseleave #logo': function () {
       if(/#read\/.+\/\d+/.test(location.hash)) { // if reading feed
-        $logo.removeClass(SHOW_NAV);
+        _.delay(function () { $logo.removeClass(SHOW_NAV); }, 200);
       }
     }
   });
@@ -531,7 +555,7 @@
   });
 
 
-  $reading_area.scroll(on_read_area_scroll);
+  $reading_area.scroll(on_readarea_scroll);
   $navigation.scroll(on_navigation_scroll);
 
   if(_RM_.demo) { $('#warn-msg').show(); }

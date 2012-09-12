@@ -2,11 +2,9 @@
 
 #feed-content {
     > li {
-        &.reading {
-            border-left-color: #4d90f0
-        }
+        &.reading { border-left-color: #4d90f0; }
         border: 1px solid #ddd;
-        padding: 10px 0 10px 25px;
+        padding: 5px 0 10px 25px;
         box-shadow: 0 0 4px #e3e5eb;
         margin: 10px 0 20px;
         * { max-width: 740px; }
@@ -16,11 +14,8 @@
     line-height: 1.81;
     color: #333;
     /* background: #FAFAFA; */
-    background: white;
+    /* background: white; */
     padding: 0 25px 0 5px;
-    /* .like .icon-thumbs-up { visibility: visible; } */
-    /* .dislike .icon-thumbs-down { visibility: visible; } */
-    /* .neutral, .sys { .thumbs i { visibility: visible; } } */
     .tags {
         li { color: #555; padding: 0 4px ;}
     }
@@ -32,13 +27,14 @@
         .link {
             @include overflow-ellipsis();
             display: block;
-            max-width: 500px;
-            padding-bottom: 4px;
+            max-width: 700px;
+            padding: 4px 0;
+            font: 11px Helvetica, Arial, sans-serif;
             color: #aaa;
         }
         .sub {
-            padding: 1px 20px;
             @include overflow-ellipsis();
+            padding: 1px 20px;
             max-width: 300px;
             color: $unread_color;
         }
@@ -51,16 +47,12 @@
             font-size: 17px;
         }
     }
-    /* .feed */
     .thumbs {
         position: static;
-        font-size: 18px;
         line-height: 1;
         i { padding: 0; visibility: visible; }
     }
     .summary {
-        /* font-family: Kai 'Lucida Grande', "Helvetica Neue","Microsoft YaHei", Helvetica, Arial, sans-serif; */
-        /* font-size: 17px; */
         h1 { font-size: 20px;}
         h2, h3 { font-size: 17px; }
         h4, h5 { font-size: 16px; }
@@ -90,18 +82,15 @@
             display: block;
             box-shadow: 0 0 8px #999;
         }
-
         code, pre {
             line-height: 1.4;
             font-size: 13px;
             font-family: monospace;
         }
-
         embed, object {
             display: block;
             margin: 5px auto;
         }
-
         table {
             border-collapse: collapse;
             margin: 0 auto;
