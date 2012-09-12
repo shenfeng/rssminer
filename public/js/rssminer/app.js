@@ -200,9 +200,11 @@
 
     if(scroll_up === undefined) {
       _.defer(function () {
-        var s = $reading_area.scrollTop();
-        var top = $me.position().top;
-        disabled_scroll(top - s);
+        var p = $me.position();
+        if(p) {
+          var s = $reading_area.scrollTop();
+          disabled_scroll(p.top - s);
+        }
       });
     }
   }
@@ -270,7 +272,6 @@
   }
 
   function read_feed (subid, feedid, page, sort, folder, scroll_up) {
-
     var read_cb = read_callback(subid, feedid, page, sort, scroll_up);
     if(gcur_subid === subid) {
       read_cb();                   // just read feed
@@ -535,8 +536,3 @@
 
   if(_RM_.demo) { $('#warn-msg').show(); }
 })();
-
-
-// $('#feed-content h2').each(function (idx, h2) {
-//   console.log($(h2).text());
-// });
