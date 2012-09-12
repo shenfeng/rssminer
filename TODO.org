@@ -9,3 +9,4 @@
 9. build a bookmark manager tool
 10. something like GR list expand mode: scoll, then next article
 11. faceted filtering
+12. fix show article meta when content is large (2012/9/11)

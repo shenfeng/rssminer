@@ -293,7 +293,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 
 .like .icon-thumbs-up { color: $thumb_dark_color; font-size: 20px;}
 .dislike .icon-thumbs-down { color: $thumb_dark_color; font-size: 20px;}
-.neutral, .sys { .thumbs { color: $thumb_light_color; } }
+.neutral, .sys { .thumbs i { color: $thumb_light_color; font-size: 17px; } }
 
 .feed {
     &.like {
