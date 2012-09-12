@@ -157,7 +157,7 @@
       var $all = $feed_content.find('> li');
       $all.removeClass(READING_CLS);
 
-      $me.find('p').each(function (idx, p) {
+      $reading_area.find('p').each(function (idx, p) {
         var $p = $(p);
         // only remove if no chillren and no text. 516264
         if(!$.trim($p.text()) && !$p.find('img').length) {
@@ -165,7 +165,7 @@
         }
       });
 
-      $me.find('a').each(function (idx, a) {
+      $reading_area.find('a').each(function (idx, a) {
         $(a).attr('target', '_blank');
       });
 
@@ -215,7 +215,8 @@
 
           (function check () {
             var n = new Date().getTime();
-            if($imgs.length && n - now < 3500 && fid === feedid) { // ms
+            // NO need to check time, 20s
+            if($imgs.length && n - now < 20000 && fid === feedid) { // ms
               $imgs = $imgs.filter(function (idx) {
                 var h = $(this).height();
                 if(h) { disabled_scroll(h); }
@@ -277,6 +278,7 @@
             if($('#' + li.id).length) { duplicates.push(li); }
           });
           _.each(duplicates, function (li) {
+            // console.log('remove', li);
             li.parentNode.removeChild(li);
           });
 
