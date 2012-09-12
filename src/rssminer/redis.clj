@@ -1,13 +1,18 @@
 (ns rssminer.redis
   (:use [rssminer.config :only [rssminer-conf]])
-  (:import [redis.clients.jedis JedisPool Jedis JedisPoolConfig]))
+  (:import [redis.clients.jedis JedisPool Protocol Jedis JedisPoolConfig]))
 
 (defonce redis-pool (atom nil))
 
-(defn set-redis-pool! [^String host] ;; called when app start
+;; called when app start
+(defn set-redis-pool! [^String host
+                       & {:keys [port timeout database]
+                          :or {port 6379
+                               timeout Protocol/DEFAULT_PORT
+                               database Protocol/DEFAULT_DATABASE}}]
   (if-let [p ^JedisPool @redis-pool]
     (.destroy p))
-  (let [pool (JedisPool. (JedisPoolConfig.) host)]
+  (let [pool (JedisPool. (JedisPoolConfig.) host port timeout nil database)]
     (swap! rssminer-conf assoc :redis-server pool)
     (reset! redis-pool pool)))
 

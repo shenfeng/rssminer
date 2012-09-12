@@ -87,11 +87,10 @@
       )))
 
 (defn redis-fixture [test-fn]
-  (sh "redis-cli" "flushdb")            ; just clean all
-  (set-redis-pool! "127.0.0.1")
+  (sh "redis-cli" "-n" 2  "flushdb")            ; just clean all
+  (set-redis-pool! "127.0.0.1" :database 2)
   (swap! rssminer-conf assoc :events-threshold (int 3))
-  (test-fn)
-  (sh "redis-cli" "flushdb"))
+  (test-fn))
 
 (defn- wait-redis-key-present [key]
   (let [^JedisPool client @redis-pool
