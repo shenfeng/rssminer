@@ -108,7 +108,8 @@
   }
 
   function do_search (q) {
-    data.fetch_search_result(q, 18, function (result) {
+    // 16 is subscriptions count
+    data.fetch_search_result(q, function (result) {
       // if no result, wait for result
       if(result.sub_cnt || (result.feeds && result.feeds.length)) {
         show_search_result(result);

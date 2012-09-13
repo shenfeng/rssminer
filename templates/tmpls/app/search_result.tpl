@@ -32,19 +32,10 @@
       <li class="feed {{cls}}">
         <a href="#{{href}}">
           <span class="indicator"></span>
-          <span class="title" title="{{{title}}}">{{{title}}}</span>
-          <div class="meta">
-            <span class="author" title="author">{{{author}}}</span>
-            <ul class="tags">
-              {{#tags}}
-                <li title="tag">{{.}}</li>
-              {{/tags}}
-            </ul>
-            {{#sub}}
-              <span class="sub" title="from">{{ title }}</span>
-            {{/sub}}
-            <span class="date">{{ date }}</span>
-          </div>
+          <span class="title" title="{{{title}}}">{{{title_h}}}</span>
+          {{#sub}}
+            <span class="sub" title="from">{{ title }}</span>
+          {{/sub}}
         </a>
       </li>
     {{/feeds}}

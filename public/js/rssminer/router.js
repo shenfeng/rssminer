@@ -67,8 +67,10 @@
   }
 
   window.RM.Router = {route: hashRouter, navigate: function (hash) {
-    hash = hash.replace(/^#*/, '');
-    oldHash = hash;
-    location.hash = hash;
+    if(hash) {
+      hash = hash.replace(/^#*/, '');
+      oldHash = hash;
+      location.hash = hash;
+    }
   }};
 })();

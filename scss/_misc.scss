@@ -78,8 +78,7 @@ $demo_warn_bg_color: #fcfcac;
 #loading-msg {
     font-size: 35px;
     text-align: center;
-    $nav_width: -275px;
-    margin: 100px 0 350px $nav_width;
+    margin: 100px 0 350px -275px;
 }
 
 .warn {

@@ -1,5 +1,6 @@
 /* $nav_width: 275px; */
 $nav_width: 310px;
+$search_right: $nav_width;
 $footer_height: 230px;
 $hover_color: #E5ECF9; // #DDD;
 $selected_color: #D6E9F8;
@@ -9,7 +10,8 @@ $header_height: 46px;
 /* $header_color: #3D5877; */
 $header_color: #3d668f;
 $body_width: 1220px;
-$search_width: 480px;
+/* $search_width: 480px; */
+$search_width: 620px;
 $nth_child_color: #f4fafb;
 $search_result_selecte_color: #7b9bf0;
 

@@ -22,7 +22,7 @@
       PER_PAGE_FEEDS = Math.floor((h - 138 - 140) / 40),
       // PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 32.9),
       // show search result count according to screen height
-      SEARCH_RESUTL_COUNT = Math.min(Math.floor((h - 260) / 43), 17),
+      SEARCH_RESUTL_COUNT = Math.min(Math.floor((h - 330) / 35), 17),
       LIKE_SCORE = user_data.like_score, // default 1
       NEUTRAL_SCORE =  user_data.neutral_score, // db default 0
       MIN_COUNT = 5;
@@ -492,14 +492,26 @@
     ajax.jpost('/api/settings', data, function () { call_if_fn(cb); });
   }
 
-  function fetch_search_result (q, limit, cb) {
+  function hight_search (str, keywords) {
+    _.each(keywords, function (k) {
+      str = str.replace(new RegExp(k, 'ig'), function (m) {
+        return "<b>" + m + "</b>";
+      });
+    });
+    return str;
+  }
+
+  function fetch_search_result (q, cb) {
     var subs = [],
         count = 0,
         grouped = parse_subs(subscriptions_cache);
     _.each(grouped, function (group) {
       _.each(group.subs, function (sub) {
-        if((!q || sub.title_l.indexOf(q) !== -1) && count < limit) {
+        if((!q || sub.title_l.indexOf(q) !== -1)
+           && count < SEARCH_RESUTL_COUNT) {
           if(sub.total) {
+            sub = _.clone(sub);
+            sub.title = hight_search(sub.title, [q]);
             subs.push(sub);
             count++;
           }
@@ -507,15 +519,15 @@
       });
     });
     if(q.length > 1) {
-      limit = Math.max(SEARCH_RESUTL_COUNT - subs.length, 10);
+      var limit = Math.max(SEARCH_RESUTL_COUNT - subs.length, 10);
       if(last_search_ajax) { last_search_ajax.abort(); }
       var url = '/api/search?q=' + q + "&limit=" + limit;
       last_search_ajax = ajax.sget(url, function (resp) {
         last_search_ajax = undefined;
         var feeds = _.map(resp, function (feed) {
-          // no dedicated url and page, since I can just click the search box,
-          // and get the result again
-          return transform_item(feed, 1, NEWEST_TAB);
+          feed = transform_item(feed, 1, NEWEST_TAB);
+          feed.title_h = hight_search(feed.title, [q]);
+          return feed;
         });
         feeds = remove_duplicate_feed(feeds);
         cb({subs: subs, feeds: feeds, sub_cnt: subs.length});

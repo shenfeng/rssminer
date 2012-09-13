@@ -1,7 +1,7 @@
 @import "vars";
 
 @mixin selected () {
-    background: $search_result_selecte_color;
+    background: $selected_color;
 }
 
 .tags {
@@ -17,54 +17,56 @@
 }
 
 #search-result {
-    $color: #e5e5e5;
+    $color: #ddd;
     box-shadow: 0px 2px 4px 2px $color;
     width: $search_width;
     top: 36px;
-    left: $nav_width;
+    left: $search_right;
     background: white;
     border-radius: 0 0 5px 5px;
     border: 1px solid $color;
-    a { padding: 2px 7px 5px 7px; display: block; }
-    .even { background: $nth_child_color; } /* feed */
+    font: 13px/1.65 'Helvetica Neue',Helvetica,Arial,Sans-serif;
+    a {
+        @include overflow-ellipsis();
+        display: block;
+        padding: 8px 0 8px 6px;
+    }
+    b { color: #333; }
     .feed {
-        padding: 1px 3px 2px 3px;
-        /* &:nth-child(even) { background: $nth_child_color;} */
+        a {
+            max-width: $search_width - 38px;
+        }
+        .title { margin-left: 19px; }
         &.selected { @include selected(); }
     }
     .title {
-        display: inline-block;
-        color: black;
-        max-width: $search_width - 88px;
+        max-width: $search_width - 208px;
         @include overflow-ellipsis();
+        display: inline-block;
+        color: #111;
     }
     .indicator {
-        top: 5px;
+        top: 8px;
         height: 7px;
         width: 7px;
-        left: 4px;
+        left: 5px;
     }
     .subs {
-        padding-bottom: 2px;
+        a {
+            max-width: $search_width - 88px;
+            padding: 6px 0 6px 6px;
+        }
         border-bottom: 1px solid #eee;
-        /* .even { background: $nth_child_color; } */
         li {
             position: relative;
-            padding-top: 2px;
-            /* &:nth-child(even) { background: $nth_child_color;} */
             &.selected { @include selected(); }
         }
     }
-    .sub { font-size: 10px; color: #222; }
-    .count { top: 9px; right: 7px; }
-    .feeds { .title { margin-left: 12px; } }
-    .date { top: 26px; right: 7px; font-size: 10px; color: #444; }
-    .author { margin: 0; color: #111; }
-    .meta {
-        padding-left: 12px;
-        width: $search_width - 80px;
-        @include overflow-ellipsis();
+    .sub { font-size: 12px; color: #666; padding-left: 10px; }
+    .count { top: 12px; right: 7px; }
+    .icon-rss, img {
+        position: relative;
+        top: 1px;
     }
-    img { margin-top: 2px; }
     @include border-radius(0 0 5px 5px);
 }
