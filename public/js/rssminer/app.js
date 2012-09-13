@@ -209,17 +209,19 @@
 
           // if img has no height
           var now = new Date().getTime();
-          var $imgs = $me.prevAll().find('img').filter(function (idx) {
+          var $imgs = $me.prevAll().find('img').filter(function () {
             return $(this).height() === 0;
           });
+
+          if(!$imgs.length) { return; }
 
           (function check () {
             var n = new Date().getTime();
             // NO need to check time, 30s
             if($imgs.length && n - now < 30000 && fid === feedid) { // ms
-              $imgs = $imgs.filter(function (idx) {
+              $imgs = $imgs.filter(function () {
                 var h = $(this).height();
-                if(h) { disabled_scroll(h); }
+                disabled_scroll(h);
                 return h === 0;
               });
               _.delay(check, 30);
