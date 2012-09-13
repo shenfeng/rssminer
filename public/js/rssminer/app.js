@@ -538,11 +538,25 @@
     });
   }
 
+  function close_shortcut_help () {
+    $('#shortcuts').fadeOut();
+    $('#overlay').fadeOut();
+  }
+
+  function show_shortcut_help () {
+    $('#shortcuts').fadeIn();
+    $('#overlay').fadeIn();
+    return false;
+  }
+
   util.delegate_events($(document), {
     'click .add-sub a.import': import_from_greader,
     'change #all-settings select': save_pref_sort,
     'click #add-subscription': add_subscription,
+    'click #show-shortcuts': show_shortcut_help,
     'click #save-settings': save_settings,
+    'click #overlay': close_shortcut_help,
+    'click .icon-ok-circle': close_shortcut_help,
     'mouseenter #logo': function () {
       $logo.addClass(SHOW_NAV);
     },

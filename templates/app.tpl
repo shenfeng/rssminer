@@ -67,6 +67,27 @@
       </div>
     </div>
     <ul id="ct-menu"></ul>
+    <div id="overlay"></div>
+    <div id="shortcuts">
+      <i class="icon-ok-circle"></i>
+      <div>
+        <div>
+          <h2>Keyboard shortcuts</h2>
+          <dl><dt>j</dt><dd>Next item</dd></dl>
+          <dl><dt>k</dt><dd>Previous item</dd></dl>
+          <dl><dt>o</dt><dd>Open first item</dd></dl>
+          <dl><dt>u</dt><dd>Return to list</dd></dl>
+          <dl><dt>n</dt><dd>Scroll down article</dd></dl>
+          <dl><dt>p</dt><dd>Scroll up article</dd></dl>
+          <dl><dt>t</dt><dd>Focus next tab</dd></dl>
+          <dl><dt>/</dt><dd>Focus search</dd></dl>
+          <dl><dt>?</dt><dd>Bring up this help dialog</dd></dl>
+          <dl><dt>Esc</dt><dd>Close or cancel</dd></dl>
+        </div>
+      </div>
+
+    </div>
+
     {{#dev}}
     <script src="/s/js/lib/jquery-1.7.2.js"></script>
     <script src="/s/js/lib/jquery-ui-1.8.18.custom.js"></script>

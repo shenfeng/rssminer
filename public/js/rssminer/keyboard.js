@@ -129,7 +129,9 @@
 
     if(e.which === 191) {       // /
       if(e.shiftKey) {
-        location.hash = ABOUT_HASH;
+        $('#shortcuts').fadeIn();
+        $('#overlay').fadeIn();
+        // location.hash = ABOUT_HASH;
       } else {
         $q.focus().click();
       }
@@ -139,11 +141,5 @@
     else { return list_shortcuts(e); }
   }
 
-  // function on_feed_content_scoll (e) {
-  //   console.log($reading_area.scrollTop(),
-  //               $feed_content.find('.summary').height());
-  // }
-
   $(document).keydown(keyboard_shortcut);
-  // $reading_area.scroll(on_feed_content_scoll);
 })();

@@ -48,30 +48,6 @@
     }
 }
 
-.show-help {
-    table {
-        border-collapse: collapse;
-        border: 1px solid #ccc;
-        td {
-            padding: 3px 10px;
-            border-bottom: 1px solid #ccc;
-        }
-        td + td {
-            border-left: 1px solid #ccc;
-        }
-    }
-    td {
-        width: 200px;
-    }
-    td:first-child {
-        color: $header_color;
-        font-size: 16px;
-        font-weight: bold;
-        width: 130px;
-        text-align: center;
-    }
-}
-
 $demo_warn_bg_color: #fcfcac;
 /* $demo_warn_bg_color: #DDDAAA; */
 
@@ -121,4 +97,77 @@ $demo_warn_bg_color: #fcfcac;
     .message { background: #fff1a8;  color: #222; }
     .error { background: #FDD; }
     visibility: hidden;
+}
+
+#overlay {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    z-index: 10;
+    background-color: black;
+    opacity: 0.15;
+    display: none;
+}
+
+#shortcuts {
+    display: none;
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    margin-left: -210px;
+    z-index: 20;
+    $left_width: 15px;
+    $m_left_width: -15px;
+    h2 {
+        width: 100%;
+        margin: 0 0 $left_width $m_left_width;
+        padding: 0 $left_width 10px $left_width;
+        font-size: 16px;
+        border-bottom: 1px solid #DDD;
+    }
+    > div {
+        position: relative;
+        border: 4px solid transparent;
+        border-radius: 5px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+        > div {
+            width: 425px;
+            color: #333;
+            padding: 10px $left_width;
+            border-radius: 4px;
+            background: white;
+            -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='white', endColorstr='#f4f9fb')";
+        }
+    }
+    dl { margin: 5px 0; }
+    dd {
+        display: inline;
+        margin: 0 0 0 10px;
+        color: #666;
+    }
+    .icon-ok-circle {
+        position: absolute;
+        font-size: 20px;
+        color: #CCC;
+        right: 14px;
+        padding: 0 5px;
+        top: 11px;
+        z-index: 10;
+        cursor: pointer;
+        &:hover { color: #666; }
+    }
+    dt {
+        display: inline-block;
+        margin: 0;
+        padding: 3px 6px;
+        min-width: 10px;
+        text-align: center;
+        font-family: Monaco, "Liberation Mono", Courier, monospace;
+        background: #333;
+        color: #EEE;
+        border-radius: 2px;
+        text-shadow: 1px 1px 0 black;
+    }
 }
