@@ -542,7 +542,7 @@
     },
     'mouseleave #logo': function () {
       if(/#read\/.+\/\d+/.test(location.hash)) { // if reading feed
-        _.delay(function () { $logo.removeClass(SHOW_NAV); }, 200);
+        _.delay(function () { $logo.removeClass(SHOW_NAV); }, 50);
       }
     }
   });

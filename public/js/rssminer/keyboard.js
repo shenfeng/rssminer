@@ -12,7 +12,7 @@
       $welcome_list = $('#welcome-list');
 
   var SHOW_NAV = 'show-nav',
-      STEP = 100,
+      STEP = 130,
       ABOUT_HASH = '#s/help',
       SHOW_CONTENT = 'show-content';
 
