@@ -487,10 +487,14 @@
     }
   };
 
+  function is_reading () {
+    return $reading_area.hasClass(SHOW_CONTENT);
+  }
+
   var previous_scroll = 0;
   var ignore_scroll_event = false; // app call scroll, ignore event
   function on_readarea_scroll(e) {
-    if(ignore_scroll_event) { return; }
+    if(ignore_scroll_event || !is_reading()) { return; }
     var current_scroll = $reading_area.scrollTop(),
         $reading = $reading_area.find('.reading'),
         // TODO, not just prev, next, since HOME/END key
