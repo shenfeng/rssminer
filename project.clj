@@ -15,7 +15,7 @@
                  [org.clojure/java.jdbc "0.2.3"]
                  [org.clojure/tools.cli "0.2.1"]
                  [org.clojure/tools.logging "0.2.3"]
-                 [org.jsoup/jsoup "1.6.4"]
+                 [org.jsoup/jsoup "1.6.3"]
                  [ch.qos.logback/logback-classic "1.0.1"]
                  [redis.clients/jedis "2.1.0"]
                  [ring/ring-core "1.1.3"]]
@@ -23,7 +23,7 @@
   :exclusions [javax.activation/activation]
   :repositories {"java.net" {:url "http://download.java.net/maven/2/"
                              :snapshots false}}
-  :plugins [[lein-eclipse "1.0.0"]]
+  ;; :plugins [[lein-eclipse "1.0.0"]]
   :warn-on-reflection true
   :javac-options {:source "1.7" :target "1.7" :debug "true"
                   :fork "true" :encoding "utf8"}

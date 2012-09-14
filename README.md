@@ -11,7 +11,7 @@
 * Realtime, personalized recommendation based on reading history
 * Google Chrome plugin to add subscription
 * Clean and compact code
-* Super fast (In order to be fast, I write the `Web server`, `Database Connection Pool`, 
+* Super fast (In order to be fast, I write the `Web server`, `Database Connection Pool`,
   `Chinese segmentation`, `Template System`, `Some JS libs` from
   scratch.  I save every bit to make it faster.  The server can handle
   thousands of request per seconds(Including fulltext search) with
@@ -65,8 +65,15 @@ git clone git://github.com/shenfeng/rssminer.git && cd rssminer && lein deps
 ```sh
 cd rssminer && ./scripts/admin init-db
 ```
+3. install tools
 
-3. Run it
+```sh
+brew install coreutils  # if you are using os x
+rake deps
+sudo gem install sass
+```
+
+4. Run it
 
 ```sh
 rake run:dev # run server in dev profile, view it: http://127.0.0.1:9090

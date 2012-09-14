@@ -3,14 +3,29 @@
 set -u                          # Treat unset variables as an error
 set -e #  Exit immediately if a simple command exits with a non-zero status
 
+# echo $PATH
+
+if echo $PATH | grep -v mysql > /dev/null ; then
+    PATH=$PATH:/Users/feng/Downloads/mysql-5.5.25a-osx10.6-x86_64/bin
+    PATH=$PATH:/Users/feng/Downloads/redis/src
+    # echo $PATH
+    # does not work
+    export PATH=$PATH
+fi
+
 # start redis and mysql for OS X development
 
 run_local () {
     cd /Users/feng/Downloads/redis/src && ./redis-server &
-    cd /Users/feng/Downloads/mysql-5.5.25a-osx10.6-x86_64 && ./bin/mysqld --basedir . --innodb_buffer_pool_size 8388608 --innodb-flush-log-at-trx-commit=2 &
+    cd /Users/feng/Downloads/mysql-5.5.25a-osx10.6-x86_64 && \
+        ./bin/mysqld --basedir . --innodb_buffer_pool_size 8388608 \
+        --innodb-flush-log-at-trx-commit=2 \
+        --innodb_file_format=Barracuda \
+        --innodb_file_per_table
+
 }
 
-DESKTOP='192.168.1.3'
+DESKTOP='192.168.1.101'
 
 ssh_proxy () {
     ssh -N -f -L 3306:127.0.0.1:3306 $DESKTOP
