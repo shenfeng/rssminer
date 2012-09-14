@@ -9,6 +9,9 @@
         list-style: disc;
         padding-left: 16px;
     }
+    p {
+        max-width: 740px;
+    }
     .about li { padding: 2px 0;}
     .bar { display:inline-block; width: 20px; height: 13px; }
     .like .bar { background: $like_color; }
@@ -18,7 +21,6 @@
     i { font-size: 16px; cursor:pointer; &:hover { color: red; } }
     .refs {
         display: inline-block;
-        list-style: none;
         li {
             display: inline-block;
             padding-right: 10px;
@@ -26,8 +28,14 @@
     }
 }
 
+#rss_atom_url {
+    width: 400px;
+    padding: 7px 5px;
+    font-size: 13px;
+}
+
 .section {
-    h4 { width: 130px; }
+    h4 { width: 115px; }
     > div {
         padding: 10px 0;
         border-bottom: 1px dotted #ECECEC;

@@ -37,7 +37,7 @@
           </li>
           <li>
             <a href="#s/settings" title="Account settings">
-              <i class="icon-user"></i><span>Settings</span>
+              <i class="icon-cogs"></i><span>Settings</span>
             </a>
           </li>
           <li>
