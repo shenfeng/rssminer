@@ -1,0 +1,21 @@
+#! /bin/bash
+
+set -u                          # Treat unset variables as an error
+set -e #  Exit immediately if a simple command exits with a non-zero status
+
+READLINK=readlink
+if which greadlink > /dev/null; then
+    READLINK=greadlink
+fi
+
+ABSOLUTE_PATH=$(${READLINK} -f $0)
+HOME="${ABSOLUTE_PATH%/*/*/*}"
+
+cd $HOME
+rm -rf classes
+mkdir classes
+
+find src/java -name "*.java" | xargs javac -Xlint:unchecked -encoding utf8 -cp "classes:lib/*:src/"  -g -d classes -sourcepath src/java/
+find test/java -name "*.java" | xargs javac -Xlint:unchecked -cp "classes:lib/*:src/:lib/dev/*"  -d classes -sourcepath test/java
+
+java -cp "classes:lib/*:src/" rssminer.PerfTest

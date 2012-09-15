@@ -37,8 +37,9 @@ create_db() {
     $MYSQL -e "$SQL"
 }
 
-# GRANT ALL PRIVILEGES ON *.* TO 'admin'@'%';
-# CREATE USER admin@'%' IDENTIFIED BY ''
+# CREATE USER feng@'%' IDENTIFIED BY ''
+# GRANT ALL PRIVILEGES ON *.* TO 'feng'@'%' with grant option;
+# flush privileges
 
 recreate_db_and_user () {
     drop_db $DB_NAME

@@ -256,6 +256,9 @@ public class MinerDAO {
             if (!redis.exists(key)) {
                 List<Integer> subIDS = DBHelper.getUserSubIDS(ds, userID);
                 int count = subIDS.size();
+                if(count < 1) {
+                    return new ArrayList<>(0);
+                }
                 byte[][] keys = new byte[count][];
                 for (int i = 0; i < count; i++) {
                     keys[i] = Utils.genKey(userID, subIDS.get(i));

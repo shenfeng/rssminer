@@ -30,3 +30,13 @@ create table feed_data (
   id INT UNSIGNED PRIMARY KEY,
   summary MEDIUMTEXT
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=4;
+
+# ALTER TABLE feed_data KEY_BLOCK_SIZE=4
+# Query OK, 572696 rows affected (5 min 28.71 sec)
+# Records: 572696  Duplicates: 0  Warnings: 0
+# data: 2G => 864m
+
+# alter table feeds KEY_BLOCK_SIZE=2;
+# Query OK, 566662 rows affected (2 min 49.59 sec)
+# Records: 566662  Duplicates: 0  Warnings: 0
+# data: 136m => 76m, idx: 18399232 => 10223616

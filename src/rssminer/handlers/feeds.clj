@@ -9,13 +9,13 @@
   (let [fid (-> req :params :id to-int)
         vote (-> req :body :vote to-int)
         user-id (user-id-from-session req)]
-    (db/insert-user-vote user-id fid vote)
-    (on-feed-event user-id fid)
+    (when (db/insert-user-vote user-id fid vote)
+      (on-feed-event user-id fid))
     {:status 204 :body nil}))
 
 (defn- mark-read [fid user-id]
-  (db/mark-as-read user-id fid)
-  (on-feed-event user-id fid))
+  (when (db/mark-as-read user-id fid)
+    (on-feed-event user-id fid)))
 
 (defn mark-as-read [req]
   (let [fid (-> req :params :id to-int)
@@ -56,4 +56,3 @@
     (if (and (seq data) (not= "read" sort) (not= "voted" sort))
       {:body data :headers cache-control }
       data))) ;; cache one hour
-

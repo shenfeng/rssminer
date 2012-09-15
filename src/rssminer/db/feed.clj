@@ -63,19 +63,21 @@
 (defn insert-user-vote [user-id feed-id vote]
   (let [now (now-seconds)
         rssid (get-rssid-by-feedid feed-id)]
-    (with-mysql (do-prepared ;; rss_link_id default 0, which is ok
-                 "INSERT INTO user_feed
+    (when rssid
+      (with-mysql (do-prepared ;; rss_link_id default 0, which is ok
+                   "INSERT INTO user_feed
                   (user_id, feed_id, rss_link_id, vote_user, vote_date) VALUES(?, ?, ?, ?, ?)
                  ON DUPLICATE KEY UPDATE vote_user = ?, vote_date = ?"
-                 [user-id feed-id rssid vote now vote now]))))
+                   [user-id feed-id rssid vote now vote now])))))
 
 (defn mark-as-read [user-id feed-id]
   (let [now (now-seconds)
         rssid (get-rssid-by-feedid feed-id)]
-    (with-mysql (do-prepared ;; rss_link_id default 0
-                 "INSERT INTO user_feed (user_id, feed_id, rss_link_id, read_date)
+    (when rssid
+      (with-mysql (do-prepared ;; rss_link_id default 0
+                   "INSERT INTO user_feed (user_id, feed_id, rss_link_id, read_date)
        VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE read_date = ?"
-                 [user-id feed-id rssid now now]))))
+                   [user-id feed-id rssid now now])))))
 
 (def update-sql ["update user_feed set read_time = read_time + ? where user_id = ? and feed_id = ?"])
 
@@ -145,4 +147,3 @@
 (defn fetch-folder-vote [userid subids limit offset]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
     (.fetchFolderVote db userid subids limit offset)))
-
