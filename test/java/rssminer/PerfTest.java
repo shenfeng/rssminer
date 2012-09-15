@@ -77,17 +77,17 @@ class Request {
             post = true;
             url = "/api/feeds/" + r.nextInt(FEED_COUNT) + "/vote";
             body = (r.nextInt(5) > 3 ? "{\"vote\":1}" : "{\"vote\":1}").getBytes();
-        } else if (next > 40) {
+        } else if (next > 45) {
             url = "/api/subs/" + r.nextInt(RSS_COUNT);
             url += "?offset=0&limit=15&sort=" + sorts[r.nextInt(sorts.length)];
-        } else if (next > 20) {
+        } else if (next > 40) {
             url = "/api/subs/" + r.nextInt(RSS_COUNT);
             int c = r.nextInt(7) + 3;
             for (int i = 0; i < c; ++i) {
                 url += ("-" + r.nextInt(RSS_COUNT));
             }
             url += "?offset=0&limit=15&sort=" + sorts[r.nextInt(sorts.length)];
-        } else if (next > 10) { // single get
+        } else if (next > 35) { // single get
             url = "/api/feeds/" + r.nextInt(FEED_COUNT);
         } else {
             url = "/api/feeds/" + r.nextInt(FEED_COUNT);
