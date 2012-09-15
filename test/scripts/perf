@@ -18,4 +18,4 @@ mkdir classes
 find src/java -name "*.java" | xargs javac -Xlint:unchecked -encoding utf8 -cp "classes:lib/*:src/"  -g -d classes -sourcepath src/java/
 find test/java -name "*.java" | xargs javac -Xlint:unchecked -cp "classes:lib/*:src/:lib/dev/*"  -d classes -sourcepath test/java
 
-java -cp "classes:lib/*:src/" rssminer.PerfTest
+java -cp "classes:lib/*:src/" rssminer.PerfTest $@

@@ -6,15 +6,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -25,24 +24,21 @@ class Request {
             "java", "ios", "clojure", "谷歌四面树敌", "史诗般的战争",
             "debian", "做正确的加法", "编程", "网页中的平面构成", "企业开发者", "Nosql", "google",
             "2从原理分析PHP性能", "nginx", "排名算法", "电子商务", "software",
-            "创新工场", "手机", "周鸿祎", "sql", "企业应用测试平台", "融资"
+            "创新工场", "手机", "周鸿祎", "sql", "企业应用测试平台", "融资", "github", "语言"
     };
-
-    static String[] cookie = new String[60];
-
-    static {
-        for (int i = 0; i < cookie.length; i++) {
-            cookie[i] = "zk" + Integer.toString(Integer.MAX_VALUE - (i + 1), 35);
-        }
-    }
-
 
     static String cookie(int userID) {
         return "zk" + Integer.toString(Integer.MAX_VALUE - (userID + 1), 35);
     }
 
+    static String[] sorts = new String[]{
+            "recommend", "newest", "oldest", "read", "voted"
+    };
+
     static String[] getUrls = new String[]{
             "/api/subs",
+            "/a",
+            "/",
             "/api/welcome?section=newest&limit=26&offset=0",
             "/api/welcome?section=newest&limit=26&offset=20",
             "/api/welcome?section=recommend&limit=26&offset=0",
@@ -50,14 +46,13 @@ class Request {
             "/api/welcome?section=voted&limit=26&offset=0"
     };
     public static final int RSS_COUNT = 6000;
-    public static final int FEED_COUNT = 100000;
+    public static final int FEED_COUNT = 700000;
 
     String url;
-    int userID;
-    Map<String, String> headers = new HashMap<>();
+    final int userID;
+    final Map<String, String> headers = new HashMap<>();
     boolean post = false;
     byte[] body;
-//    Map<String, Object> body = new HashMap<>();
 
     public Request() {
         Random r = new Random();
@@ -70,29 +65,29 @@ class Request {
         headers.put("Cookie", "_id_=" + cookie(userID));
 
         int next = r.nextInt(100);
-        if (next > 85) {
+        if (next > 80) {
             url = getUrls[r.nextInt(getUrls.length)];
-        } else if (next > 80) { // search
+        } else if (next > 75) { // 5% search
             url = "/api/search?q=" + search[r.nextInt(search.length)] +
                     "&limit=" + (r.nextInt(5) + 11);
-        } else if (next > 60) {
+        } else if (next > 55) { // 20% mark read
             post = true;
             url = "/api/feeds/" + r.nextInt(FEED_COUNT) + "/read";
-        } else if (next > 55) { // vote
+        } else if (next > 50) { // 5% vote
             post = true;
             url = "/api/feeds/" + r.nextInt(FEED_COUNT) + "/vote";
             body = (r.nextInt(5) > 3 ? "{\"vote\":1}" : "{\"vote\":1}").getBytes();
         } else if (next > 40) {
             url = "/api/subs/" + r.nextInt(RSS_COUNT);
-            url += "?offset=0&limit=15&sort=newest";
-        } else if (next > 30) {
+            url += "?offset=0&limit=15&sort=" + sorts[r.nextInt(sorts.length)];
+        } else if (next > 20) {
             url = "/api/subs/" + r.nextInt(RSS_COUNT);
             int c = r.nextInt(7) + 3;
             for (int i = 0; i < c; ++i) {
                 url += ("-" + r.nextInt(RSS_COUNT));
             }
-            url += "?offset=0&limit=15&sort=newest";
-        } else if (next > 25) { // single get
+            url += "?offset=0&limit=15&sort=" + sorts[r.nextInt(sorts.length)];
+        } else if (next > 10) { // single get
             url = "/api/feeds/" + r.nextInt(FEED_COUNT);
         } else {
             url = "/api/feeds/" + r.nextInt(FEED_COUNT);
@@ -105,14 +100,11 @@ class Request {
 }
 
 public class PerfTest {
-    static int THREAD_COUNT = 20;
-    static final int COUNT = 30000;
-    static AtomicInteger remaining = new AtomicInteger(COUNT);
-    static String host = "http://192.168.1.102:9090";
+    static String host = "http://192.168.1.101:9090";
 
     static Logger logger = LoggerFactory.getLogger(PerfTest.class);
 
-    static int exec(Request req) throws IOException {
+    static int exec(Request req, int id) throws IOException {
         long start = System.currentTimeMillis();
         HttpURLConnection con = (HttpURLConnection) new URL(host + req.url).openConnection();
 
@@ -131,12 +123,10 @@ public class PerfTest {
             throw new RuntimeException("status code: " + code + "; req: " + req.url);
         }
 
-        InputStream is = null;
         try {
-            is = con.getInputStream();
+            InputStream is = con.getInputStream();
             byte[] buffer = new byte[4096];
-            int read;
-            while ((read = (is.read(buffer))) > 0) {
+            while (is.read(buffer) > 0) {
             }
             is.close();
         } catch (IOException e) {
@@ -145,24 +135,54 @@ public class PerfTest {
         con.disconnect();
 
         int time = (int) (System.currentTimeMillis() - start);
-        logger.info("{}: {} {} {}, {}ms", new Object[]{
-                req.userID, req.post ? "GET" : "POST", code, req.url, time
-        });
+        if (id % 100 == 0)
+            logger.info("{}: {} {} {}, {}ms", new Object[]{
+                    req.userID, req.post ? "POST" : "GET", code, req.url, time
+            });
 
         return time;
     }
 
     public static void main(String[] args) throws InterruptedException {
-        final AtomicLong total = new AtomicLong(0);
-        ExecutorService exector = Executors.newFixedThreadPool(THREAD_COUNT);
-        for (int i = 0; i < THREAD_COUNT; i++) {
-            exector.submit(new Runnable() {
+
+        int threadCount = 20;
+        int count = 30000;
+        int idx = 0;
+        if (args.length == 3) {
+            host = "http://" + args[0];
+            idx = 1;
+        }
+        if (args.length > 0) {
+            threadCount = Integer.parseInt(args[idx++]);
+            count = Integer.parseInt(args[idx++]);
+        }
+
+        logger.info("thread: {}, total: {}, host: {}", new Object[]{
+                threadCount, count, host
+        });
+        final AtomicInteger remaining = new AtomicInteger(count);
+
+        final AtomicLong totalTime = new AtomicLong(0);
+        long start = System.currentTimeMillis();
+        final AtomicInteger ider = new AtomicInteger(0);
+        ExecutorService service = Executors.newFixedThreadPool(threadCount, new ThreadFactory() {
+            public Thread newThread(Runnable r) {
+                Thread t = new Thread(r);
+                t.setName("t" + ider.incrementAndGet());
+                return t;
+            }
+
+            ;
+        });
+        for (int i = 0; i < threadCount; i++) {
+            service.submit(new Runnable() {
                 public void run() {
-                    while (remaining.decrementAndGet() > 0) {
+                    int id;
+                    while ((id = remaining.decrementAndGet()) > 0) {
                         Request req = new Request();
                         try {
-                            int time = exec(req);
-                            total.getAndAdd(time);
+                            int time = exec(req, id);
+                            totalTime.getAndAdd(time);
                         } catch (Exception e) {
                             logger.error(req.url, e);
                         }
@@ -170,8 +190,11 @@ public class PerfTest {
                 }
             });
         }
-        exector.shutdown();
-        exector.awaitTermination(1000, TimeUnit.MINUTES);
-        logger.info("per request time: {}ms", total.get() / (double) COUNT);
+        service.shutdown();
+        service.awaitTermination(1000, TimeUnit.MINUTES);
+        long time = System.currentTimeMillis() - start;
+        logger.info("thread: {}, total: {}, per request time: {}ms, per: {}ms", new Object[]{
+                threadCount, count, totalTime.get() / count, time / count
+        });
     }
 }
