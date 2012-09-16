@@ -26,6 +26,7 @@
     border-radius: 0 0 5px 5px;
     border: 1px solid $color;
     font: 13px/1.65 'Helvetica Neue',Helvetica,Arial,Sans-serif;
+    .icon-folder-open { color: #3E9ACC; }
     a {
         @include overflow-ellipsis();
         display: block;

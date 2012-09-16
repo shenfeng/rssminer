@@ -51,7 +51,7 @@
       }
       location.hash = href;
       break;
-    case 79:
+    case 79:                    // o, open first
       var $f = $welcome_list.find('.feed:first').find('a');
       href = $f.attr('href');
       location.hash = href;
@@ -88,7 +88,10 @@
         $next = $current.next(),
         $prev = $current.prev();
     switch(e.which) {
-    case 85:
+    case 79:                    // o open the link
+      break;
+
+    case 85:                    // u, return to list
       var args = /#read\/(.+)\/\d+\?(.+?)s=(.+)/.exec(location.hash);
       if(/^\d+$/.test(args[1]) || /f_.*/.test(args[1])) {
         location.hash = 'read/' + args[1] + '?p=1&s=' + args[3];
@@ -138,7 +141,7 @@
       return false;
     }
     if(is_reading()) { reading_shortcuts(e);}
-    else { return list_shortcuts(e); }
+    else { list_shortcuts(e); }
   }
 
   $(document).keydown(keyboard_shortcut);

@@ -4,9 +4,14 @@
       {{#subs}}
         <li class="ficon-error {{ cls }}">
           <a href="#{{href}}">
+            {{#is_group}}
+              <i class="icon-folder-open"></i>
+            {{/is_group}}
+            {{^is_group}}
             <img src="{{img}}" width="15" height="15" />
             <i class="icon-rss"></i>
-            <span class="title"> {{{title}}} </span>
+            {{/is_group}}
+            <span class="title">{{{title}}}</span>
             <span class="count">
               {{#dislike}}
                 <span class="unread-dislike"

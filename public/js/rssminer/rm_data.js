@@ -506,9 +506,20 @@
         count = 0,
         grouped = parse_subs(subscriptions_cache);
     _.each(grouped, function (group) {
+      var g = group.group;
+      // if q is empty, indexOf return 0
+      if(g.name.indexOf(q) !== -1 && count < SEARCH_RESUTL_COUNT) {
+        if(g.total) {
+          g = _.clone(g);
+          g.is_group = true;
+          g.href = g.hash;
+          g.title = hight_search(g.name, [q]);
+          subs.push(g);
+          count++;
+        }
+      }
       _.each(group.subs, function (sub) {
-        if((!q || sub.title_l.indexOf(q) !== -1)
-           && count < SEARCH_RESUTL_COUNT) {
+        if(sub.title_l.indexOf(q) !== -1 && count < SEARCH_RESUTL_COUNT) {
           if(sub.total) {
             sub = _.clone(sub);
             sub.title = hight_search(sub.title, [q]);
