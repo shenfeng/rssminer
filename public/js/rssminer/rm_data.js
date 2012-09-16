@@ -529,8 +529,8 @@
         }
       });
     });
-    if(q.length > 1) {
-      var limit = Math.max(SEARCH_RESUTL_COUNT - subs.length, 10);
+    if(q.length > 1 && subs.length < SEARCH_RESUTL_COUNT) {
+      var limit = Math.min(SEARCH_RESUTL_COUNT - subs.length, 10);
       if(last_search_ajax) { last_search_ajax.abort(); }
       var url = '/api/search?q=' + q + "&limit=" + limit;
       last_search_ajax = ajax.sget(url, function (resp) {

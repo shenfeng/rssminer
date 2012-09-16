@@ -32,7 +32,7 @@
         display: block;
         padding: 8px 0 8px 6px;
     }
-    b { color: #333; }
+    b { color: #191919; }
     .feed {
         a {
             max-width: $search_width - 38px;
@@ -43,9 +43,10 @@
     .title {
         max-width: $search_width - 208px;
         @include overflow-ellipsis();
-        display: inline-block;
+        /* display: inline-block; */
         color: #111;
     }
+    /* li { height: 37px; } */
     .indicator {
         top: 8px;
         height: 7px;
