@@ -131,7 +131,7 @@ public class FaviconFuture implements IListenableFuture {
             if (status == 301 || status == 302) {
                 String loc = headers.get(LOCATION);
                 if (loc != null) {
-                    doIt(base.resolve(loc), true);
+                    doIt(base.resolve(loc), false);
                 } else {
                     noIcon();
                 }
@@ -171,7 +171,9 @@ public class FaviconFuture implements IListenableFuture {
         }
         try {
             if (img) {
-                CLIENT.get(u, reqHeaders, proxy, new BinaryRespListener(
+                Map<String, String> headers = new TreeMap<String, String>(reqHeaders);
+                headers.put(ACCEPT_ENCODING, null);
+                CLIENT.get(u, headers, proxy, new BinaryRespListener(
                         new FaviconHandler(u)));
             } else {
                 CLIENT.get(u, reqHeaders, proxy, new TextRespListener(
@@ -224,7 +226,7 @@ public class FaviconFuture implements IListenableFuture {
         }
         if (!tryCache()) {
             try {
-                doIt(new URI("http://" + hostname), false);
+                doIt(new URI("http://" + hostname + "/"), false);
             } catch (Exception e) {
                 noIcon();
             }

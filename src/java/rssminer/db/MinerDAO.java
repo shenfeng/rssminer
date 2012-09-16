@@ -257,7 +257,7 @@ public class MinerDAO {
                 List<Integer> subIDS = DBHelper.getUserSubIDS(ds, userID);
                 int count = subIDS.size();
                 if(count < 1) {
-                    return new ArrayList<>(0);
+                    return new ArrayList<Feed>(0);
                 }
                 byte[][] keys = new byte[count][];
                 for (int i = 0; i < count; i++) {

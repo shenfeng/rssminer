@@ -50,7 +50,7 @@ class Request {
 
     String url;
     final int userID;
-    final Map<String, String> headers = new HashMap<>();
+    final Map<String, String> headers = new HashMap<String, String>();
     boolean post = false;
     byte[] body;
 
