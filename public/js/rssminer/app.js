@@ -166,6 +166,7 @@
   }
 
   function cleaning_and_scrollto (feedid, subid, scroll_up) {
+    // console.log('reading', feedid);
     var $me = $(SUMMARY_SELECTOR + feedid);
     if(!$me.hasClass(READING_CLS)) {
       set_document_title($me.find('.feed h2').text());
@@ -206,6 +207,8 @@
     });
 
     if(scroll_up === undefined) {
+      $me.prevAll().find('img').css({display: 'none'});
+      $me.nextAll().find('img').css({display: 'block'});
       var p = $me.position();
       if(p) {                   // scroll based on current postion
         var s = $reading_area.scrollTop();
@@ -255,8 +258,6 @@
       if(ids.length > 1 ||(ids.length === 1 && !$f.next().next().length)) {
         data_api.fetch_summary(ids, function (feeds) {
           var $content = $(to_html(tmpls.feed_content, {feeds: feeds}));
-
-          $content.find('img').css({display: 'none'});
 
           var duplicates = [];
           $content.filter('li').each(function (idx, li) {
