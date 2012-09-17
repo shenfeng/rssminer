@@ -1,5 +1,4 @@
 (function () {
-
   var location = window.location,
       notify = window.RM.notify;
 
@@ -90,7 +89,6 @@
     switch(e.which) {
     case 79:                    // o open the link
       break;
-
     case 85:                    // u, return to list
       var args = /#read\/(.+)\/\d+\?(.+?)s=(.+)/.exec(location.hash);
       if(/^\d+$/.test(args[1]) || /f_.*/.test(args[1])) {
@@ -127,9 +125,19 @@
     }
   }
 
+  var prev_key = 0;
+
   function keyboard_shortcut (e) {
     if($q.is(':focus')) { return; }
 
+    if(prev_key === 71) {       // g
+      if(e.which === 65 || e.which === 72) {      // a(ll) or h(ome)
+        location.hash = '';     // go home
+        return;
+      }
+    }
+
+    prev_key = e.which;
     if(e.which === 191) {       // /
       if(e.shiftKey) {
         $('#shortcuts').fadeIn();

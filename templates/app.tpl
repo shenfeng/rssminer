@@ -85,16 +85,17 @@
       <div>
         <div>
           <h2>Keyboard shortcuts</h2>
-          <dl><dt>j</dt><dd>Next item</dd></dl>
-          <dl><dt>k</dt><dd>Previous item</dd></dl>
+          <dl><dt>n</dt><dd>Next item</dd></dl>
+          <dl><dt>p</dt><dd>Previous item</dd></dl>
           <dl><dt>o</dt><dd>Open first item</dd></dl>
+          <dl><dt>j</dt><dd>Scroll down article</dd></dl>
+          <dl><dt>k</dt><dd>Scroll up article</dd></dl>
           <dl><dt>u</dt><dd>Return to list</dd></dl>
-          <dl><dt>n</dt><dd>Scroll down article</dd></dl>
-          <dl><dt>p</dt><dd>Scroll up article</dd></dl>
           <dl><dt>t</dt><dd>Focus next tab</dd></dl>
           <dl><dt>/</dt><dd>Focus search</dd></dl>
           <dl><dt>?</dt><dd>Bring up this help dialog</dd></dl>
           <dl><dt>Esc</dt><dd>Close or cancel</dd></dl>
+          <dl><dt>g <b>then</b> h</dt><dd>go home</dd></dl>
         </div>
       </div>
 
