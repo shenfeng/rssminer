@@ -22,7 +22,7 @@
       PER_PAGE_FEEDS = Math.floor((h - 138 - 140) / 40),
       // PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 32.9),
       // show search result count according to screen height
-      SEARCH_RESUTL_COUNT = Math.min(Math.floor((h - 330) / 35), 17),
+      SEARCH_RESUTL_COUNT = Math.min(Math.floor((h - 370) / 35), 17),
       LIKE_SCORE = user_data.like_score, // default 1
       NEUTRAL_SCORE =  user_data.neutral_score, // db default 0
       MIN_COUNT = 5;
@@ -530,7 +530,7 @@
       });
     });
     if(q.length > 1 && subs.length < SEARCH_RESUTL_COUNT) {
-      var limit = Math.min(SEARCH_RESUTL_COUNT - subs.length, 10);
+      var limit = SEARCH_RESUTL_COUNT - subs.length;
       if(last_search_ajax) { last_search_ajax.abort(); }
       var url = '/api/search?q=' + q + "&limit=" + limit;
       last_search_ajax = ajax.sget(url, function (resp) {
