@@ -51,19 +51,10 @@ a { outline: 0; text-decoration: none;}
     Height: $header_height;
     width: 100%;
     box-shadow: 0 1px 3px rgba($header_color, 0.6);
-    .links {                    /* in wrapper */
-        /* top: 9px; */
-        > li {
-            /* &:hover span { text-decoration: underline; } */
-            display: inline-block;
-            padding: 3px 0 0 10px;
-        }
-    }
     #dropdown {
         top: 2px;
         font-size: 17px;
         right: 78px;
-        /* position: relative; */
         padding-bottom: 25px;
         cursor: pointer;
         min-width: 165px;
@@ -74,11 +65,8 @@ a { outline: 0; text-decoration: none;}
         img {
             position: relative;
             top: 8px;
-        /* padding: 4px; */
         }
-        &.clicked {
-            ul { display: none; }
-        }
+        &.clicked ul { display: none; }
         ul {
             display: none;
             border-radius: 0 0 5px 5px;
@@ -92,15 +80,10 @@ a { outline: 0; text-decoration: none;}
                 padding: 8px 4px;
                 display: block;
             }
-            /* line-height: 39px; */
             li {
-                span {
-                    padding-left: 4px;
-                }
-                &:hover {
-                    background: lighten($header_color, 6%);
-                }
-                display: block;
+                border-top: 1px solid darken($header_color, 1%);
+                span { padding-left: 4px; }
+                &:hover { background: lighten($header_color, 6%); }
             }
         }
     }
