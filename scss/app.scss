@@ -45,22 +45,63 @@ a { outline: 0; text-decoration: none;}
 }
 
 #header {
-    z-index: 1;
+    z-index: 30;
     position: relative;
     background: $header_color;
     Height: $header_height;
     width: 100%;
     box-shadow: 0 1px 3px rgba($header_color, 0.6);
     .links {                    /* in wrapper */
+        /* top: 9px; */
+        > li {
+            /* &:hover span { text-decoration: underline; } */
+            display: inline-block;
+            padding: 3px 0 0 10px;
+        }
+    }
+    #dropdown {
+        top: 2px;
         font-size: 17px;
         right: 78px;
-        top: 9px;
-        span { font-size: 12px;}
-        li {
-            &:hover span { text-decoration: underline; }
-            display: inline-block;
-            padding: 2px 0 2px 10px;
-            a { color: white; }
+        /* position: relative; */
+        padding-bottom: 25px;
+        cursor: pointer;
+        min-width: 165px;
+        a { color: white; }
+        a:hover span { text-decoration: underline;}
+        &:hover ul { display: block; }
+        span { color: white; font-size: 12px;}
+        img {
+            position: relative;
+            top: 8px;
+        /* padding: 4px; */
+        }
+        &.clicked {
+            ul { display: none; }
+        }
+        ul {
+            display: none;
+            border-radius: 0 0 5px 5px;
+            padding-bottom: 4px;
+            top: 44px;
+            width: 100%;
+            background: lighten($header_color, 1%);
+            z-index: 100;
+            position: absolute;
+            a {
+                padding: 8px 4px;
+                display: block;
+            }
+            /* line-height: 39px; */
+            li {
+                span {
+                    padding-left: 4px;
+                }
+                &:hover {
+                    background: lighten($header_color, 6%);
+                }
+                display: block;
+            }
         }
     }
     .wrapper {
@@ -102,7 +143,7 @@ html, body {
 body {
     font: 400 14px/1.431 'Lucida Grande', "Helvetica Neue","Microsoft YaHei", Helvetica, Arial, sans-serif;
     background: #F6F6F6 url('/s/imgs/bg-content.png') repeat center top;
-    /* text-rendering: optimizeLegibility; */
+/* text-rendering: optimizeLegibility; */
 }
 
 #content { margin-left: $nav_width + 3px; }
@@ -477,6 +518,7 @@ ul { list-style: none; padding: 0; margin: 0; }
     z-index: 100;
     box-shadow: 1px 1px 4px 1px $color;
 }
+
 
 @import "misc.scss";
 @import "readable.scss";

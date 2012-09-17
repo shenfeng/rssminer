@@ -123,7 +123,7 @@
       <li>The scores are updated as you read or vote, automatically</li>
     </ul>
     <h3>Keyboard shortcuts</h3>
-    <a id="show-shortcuts" href="#">Open Keyboard Shortcuts</a>
+    <a class="show-shortcuts" href="#">Open Keyboard Shortcuts</a>
     <h3>
       Reading Note <i class="icon-comment"></i>,
       Sharing <i class="icon-share"></i>

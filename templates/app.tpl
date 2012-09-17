@@ -25,32 +25,44 @@
           <ul id="sub-list"></ul>
         </div>
         <div id="warn-msg">
-          this is a public account, <a href="/">create your own</a>
+          this is public account, <a href="/">create your own</a>
         </div>
         <input id="q" autocomplete="off" placeholder="type to search"/>
         <i class="icon-search"></i>
-        <ul class="links">
-          <li>
-            <a href="#s/add" title="Add subscription" class="btn">
-              <i class="icon-edit"></i><span>Add</span>
-            </a>
-          </li>
-          <li>
-            <a href="#s/settings" title="Account settings">
-              <i class="icon-cogs"></i><span>Settings</span>
-            </a>
-          </li>
-          <li>
-            <a href="#s/help" title="Help">
-              <i class="icon-info-sign"></i><span>Help</span>
-            </a>
-          </li>
-          <li>
-            <a href="/logout">
-              <i class="icon-signout"></i><span>Logout</span>
-            </a>
-          </li>
-        </ul>
+        <div id="dropdown">
+          <a href="#">
+            <img height=25 width=25
+                 src="http://www.gravatar.com/avatar/{{{md5}}}?s=25"/>
+            <span>{{ email }}</span>
+          </a>
+          <ul>
+            <li>
+              <a href="#s/add" title="Add subscription" class="btn">
+                <i class="icon-edit"></i><span>Add subscription</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" title="Keyboard shortcuts" class="show-shortcuts">
+                <i class="icon-legal"></i><span>Keyboard shortcuts</span>
+              </a>
+            </li>
+            <li>
+              <a href="#s/settings" title="Account settings">
+                <i class="icon-wrench"></i><span>Settings</span>
+              </a>
+            </li>
+            <li>
+              <a href="#s/help" title="Help">
+                <i class="icon-info-sign"></i><span>Help</span>
+              </a>
+            </li>
+            <li>
+              <a href="/logout">
+                <i class="icon-signout"></i><span>Logout</span>
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <div id="main">

@@ -80,7 +80,7 @@ $demo_warn_bg_color: #fcfcac;
 #warn-msg {
     z-index: 100;
     display: none;
-    right: 280px;
+    right: 301px;
     background: $demo_warn_bg_color;
     font-size: 13px;
     top: 8px;
@@ -113,7 +113,7 @@ $demo_warn_bg_color: #fcfcac;
     left: 0px;
     height: 100%;
     width: 100%;
-    z-index: 10;
+    z-index: 39;
     background-color: black;
     opacity: 0.15;
     display: none;
@@ -125,7 +125,7 @@ $demo_warn_bg_color: #fcfcac;
     top: 100px;
     left: 50%;
     margin-left: -210px;
-    z-index: 20;
+    z-index: 40;
     $left_width: 15px;
     $m_left_width: -15px;
     h2 {

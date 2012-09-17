@@ -14,14 +14,15 @@
 
 (defn md5-sum
   "Compute the hex MD5 sum of a string."
-  [#^String str]
+  [#^String input]
   (let [alg (doto (MessageDigest/getInstance "MD5")
-              (.reset)
-              (.update (.getBytes str)))]
-    (try
-      (.toString (new BigInteger 1 (.digest alg)) 16)
-      (catch NoSuchAlgorithmException e
-        (throw (new RuntimeException e))))))
+              (.update (.getBytes input)))
+        hash (.toString (new BigInteger 1 (.digest alg)) 16)
+        length (.length hash)]
+    (if (> 32 length)
+      ;; 0x065 => 65, leading zero is dropped by BigInteger
+      (apply str (concat (repeat (- 32 length) \0) hash))
+      hash)))
 
 (defn- write-json-date [^Date d ^PrintWriter out escape-unicode?]
   (.print out (int (/ (.getTime d) 1000))))

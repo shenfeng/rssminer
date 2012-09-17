@@ -1,5 +1,6 @@
 (ns rssminer.handlers.reader
-  (:use (rssminer [util :only [user-id-from-session to-int serialize-to-js]]
+  (:use (rssminer [util :only [user-id-from-session md5-sum
+                               to-int serialize-to-js]]
                   [search :only [search* search-within-subs]])
         me.shenfeng.mustache
         [clojure.java.io :only [resource]]
@@ -43,13 +44,16 @@
   (if (cfg/demo-user? req)
     (assoc (redirect "/") :session nil ;; delete cookie
            :session-cookie-attrs {:max-age -1})
-    (let [data {:rm {:user (find-user-by-id (user-id-from-session req))
+    (let [user (find-user-by-id (user-id-from-session req))
+          data {:rm {:user user
                      :gw (-> req :params :gw) ; google import wait
                      :ge (-> req :params :ge) ; google import error
                      :static_server (:static-server @cfg/rssminer-conf)}}]
       (to-html app-page {:dev (cfg/in-dev?)
                          :prod (cfg/in-prod?)
                          :css app-css
+                         :email (:email user)
+                         :md5 (-> user :email md5-sum)
                          :data (serialize-to-js data)}))))
 
 (defn show-demo-page [req]
@@ -60,11 +64,14 @@
       (swap! cfg/rssminer-conf assoc :demo-user ;in case score updated
              (dissoc (find-user-by-email "demo@rssminer.net")
                      :password))
-      (let [data {:rm {:user (:demo-user @cfg/rssminer-conf)
+      (let [user (:demo-user @cfg/rssminer-conf)
+            data {:rm {:user user
                        :demo true
                        :static_server (:static-server @cfg/rssminer-conf)}}]
         {:body (to-html app-page {:dev (cfg/in-dev?)
                                   :prod (cfg/in-prod?)
+                                  :email (:email user)
+                                  :md5 (-> user :email md5-sum)
                                   :css app-css
                                   :data (serialize-to-js data)})
          :status 200

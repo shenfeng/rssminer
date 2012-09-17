@@ -29,6 +29,7 @@
       $navigation = $('#navigation'), // feed list
       $subs_list = $('#sub-list'),    // sub list
       $feed_content = $('#feed-content'),
+      $dropdown = $('#dropdown'),
       $logo = $('#logo'),
       $welcome_list = $('#welcome-list');
 
@@ -522,6 +523,10 @@
     });
   }
 
+  function hide_dropdown_menu () {
+
+  }
+
   function close_shortcut_help () {
     $('#shortcuts').fadeOut();
     $('#overlay').fadeOut();
@@ -537,13 +542,12 @@
     'click .add-sub a.import': import_from_greader,
     'change #all-settings select': save_pref_sort,
     'click #add-subscription': add_subscription,
-    'click #show-shortcuts': show_shortcut_help,
+    'click .show-shortcuts': show_shortcut_help,
     'click #save-settings': save_settings,
     'click #overlay': close_shortcut_help,
     'click .icon-ok-circle': close_shortcut_help,
-    'mouseenter #logo': function () {
-      $logo.addClass(SHOW_NAV);
-    },
+    'click #dropdown li': function () { $dropdown.addClass('clicked'); },
+    'mouseenter #logo': function () { $logo.addClass(SHOW_NAV); },
     'mouseleave #logo': function () {
       if(/#read\/.+\/\d+/.test(location.hash)) { // if reading feed
         _.delay(function () { $logo.removeClass(SHOW_NAV); }, 50);
@@ -568,4 +572,5 @@
   $navigation.scroll(on_navigation_scroll);
 
   if(_RM_.demo) { $('#warn-msg').show(); }
+  $dropdown.hover(function () { $dropdown.removeClass('clicked'); });
 })();
