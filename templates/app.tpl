@@ -28,7 +28,7 @@
           this is public account, <a href="/">create your own</a>
         </div>
         <div id="search">
-          <span>navigation, search...</span>
+          <span>search feed, subscription...</span>
           <input id="q" autocomplete="off"/>
           <i class="icon-search"></i>
         </div>
