@@ -124,7 +124,7 @@
       $q.blur();
       $ct_menu.hide();
       $('#shortcuts').fadeOut();
-      $('#overlay').fadeOut();
+      $('#overlay').hide();
     }
     // else if(e.which === 191 && e.shiftKey) { // key / => shift + ?
     // $q.focus().click();

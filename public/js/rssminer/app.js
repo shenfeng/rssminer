@@ -523,18 +523,14 @@
     });
   }
 
-  function hide_dropdown_menu () {
-
-  }
-
   function close_shortcut_help () {
     $('#shortcuts').fadeOut();
-    $('#overlay').fadeOut();
+    $('#overlay').hide();
   }
 
   function show_shortcut_help () {
     $('#shortcuts').fadeIn();
-    $('#overlay').fadeIn();
+    $('#overlay').show();
     return false;
   }
 

@@ -114,8 +114,9 @@ $demo_warn_bg_color: #fcfcac;
     height: 100%;
     width: 100%;
     z-index: 39;
-    background-color: black;
+    background: black;
     opacity: 0.15;
+    filter: alpha(opacity=15);
     display: none;
 }
 

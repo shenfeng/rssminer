@@ -141,7 +141,7 @@
     if(e.which === 191) {       // /
       if(e.shiftKey) {
         $('#shortcuts').fadeIn();
-        $('#overlay').fadeIn();
+        $('#overlay').show();
         // location.hash = ABOUT_HASH;
       } else {
         $q.focus().click();
