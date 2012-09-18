@@ -24,8 +24,8 @@ CREATE TABLE rss_links (
   description VARCHAR(1024),
   alternate VARCHAR(220),       -- usually, the site's link
   added_ts TIMESTAMP DEFAULT now(),
-  next_check_ts INT UNSIGNED DEFAULT 1,
-  last_status SMALLINT UNSIGNED,
+  next_check_ts INT UNSIGNED NOT NULL DEFAULT 1,
+  last_status SMALLINT UNSIGNED NOT NULL DEFAULT 0,
   error_msg VARCHAR(200),
   -- 2012/5/1
   -- alter table rss_links add total_feeds int unsigned default 0
