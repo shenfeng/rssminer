@@ -27,8 +27,11 @@
         <div id="warn-msg">
           this is public account, <a href="/">create your own</a>
         </div>
-        <input id="q" autocomplete="off" placeholder="type to search"/>
-        <i class="icon-search"></i>
+        <div id="search">
+          <span>navigation, search...</span>
+          <input id="q" autocomplete="off"/>
+          <i class="icon-search"></i>
+        </div>
         <div id="dropdown">
           <a href="#">
             <img height=25 width=25

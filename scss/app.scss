@@ -95,18 +95,33 @@ a { outline: 0; text-decoration: none;}
     }
     $input_width: 285px;
     .icon-search {
-        left: $search_right + $input_width - 8px;
-        top: 9px;
+        cursor: pointer;
+        left: $input_width - 5px;
+        position: absolute;
+        top: 7px;
         font-size: 19px;
         color: #727270;
+        line-height: 1;
+    }
+    #search {
+        left: $search_right;
+        @include border-radius(5px);
+        background: white;
+        top: 8px;
+        span {
+            top: 5px;
+            left: 9px;
+            position: absolute;
+            color: #666;
+        }
     }
     input {
-        left: $search_right;
+        outline: none;
+        background: transparent;
+        border: none;
         font-size: 14px;
         padding: 5px;
         width: $input_width;
-        margin-top: 6px;
-        @include border-radius(5px);
     }
 }
 

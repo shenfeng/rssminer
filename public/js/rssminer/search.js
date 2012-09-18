@@ -5,6 +5,7 @@
       to_html = Mustache.render,
       util = RM.util,
       $q = $('#header input'),
+      $placehoder = $('#search span'),
       $header = $('#header .wrapper');
 
   var SELECTED = 'selected',
@@ -131,14 +132,18 @@
   }
 
   function search_on_click () {
+    $placehoder.hide();
     $q[0].select();
     do_search($.trim($q.val()));
     return false;
   }
 
+  $q.blur(function () { if(!$q.val()) {$placehoder.show();}});
+
   util.delegate_events($(document), {
     'click #header input': search_on_click,
     'click': hide_search_context_menu,
+    'click #search span': search_on_click,
     'keydown #header input': navigation,
     'keyup #header input': search_input_keyup,
     'keyup': hide_search_result_on_esc

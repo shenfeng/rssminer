@@ -17,7 +17,7 @@
 }
 
 #search-result {
-    $color: #ddd;
+    $color: #cacaca;
     box-shadow: 0px 2px 4px 2px $color;
     width: $search_width;
     top: 36px;
@@ -65,7 +65,7 @@
         }
     }
     .sub { font-size: 12px; color: #666; padding-left: 10px; }
-    .count { top: 12px; right: 7px; }
+    .count { top: 11px; right: 7px; }
     .icon-rss, img {
         position: relative;
         top: 1px;
