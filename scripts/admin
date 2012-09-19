@@ -86,10 +86,14 @@ restore_db () {
     if [ -f "$FILE" ]; then
         log "restore $DB_NAME db from file $FILE"
         zcat $FILE | $MYSQL
-        cat $HOME/scripts/missing.sql | $MYSQL $DB_NAME
-        # mysql -ufeng < $file
     else
         error "Backup sql file is required"
+    fi
+
+    FILE="$BACKUP_FOLDER/favicon.sql"
+    if [ -f "$FILE" ]; then
+        log "restore favicon from file $FILE"
+        cat $FILE | $MYSQL $DB_NAME
     fi
 
     FILE=`ls $BACKUP_FOLDER/feed_data* -t |head -1`
@@ -98,6 +102,7 @@ restore_db () {
         log "restore feed_data from file $FILE"
         zcat $FILE | $MYSQL $DB_NAME
     else
+        cat $HOME/scripts/missing.sql | $MYSQL $DB_NAME
         error "feed_data is not restored"
     fi
 }
