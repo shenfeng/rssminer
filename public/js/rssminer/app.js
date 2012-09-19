@@ -161,7 +161,7 @@
       }
     });
 
-    $reading_area.find('a').each(function (idx, a) {
+    $reading_area.find('.summary a').each(function (idx, a) {
       $(a).attr('target', '_blank');
     });
   }

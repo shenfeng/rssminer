@@ -4,23 +4,11 @@
     background: $selected_color;
 }
 
-.tags {
-    display: inline-block;
-    font-size: 9px;
-    li {
-        color: #000;
-        background: #efefef;
-        display: inline-block;
-        padding: 1px 2px;
-        @include border-radius(3px);
-    }
-}
-
 #search-result {
     $color: #cacaca;
     box-shadow: 0px 2px 4px 2px $color;
     width: $search_width;
-    top: 36px;
+    top: 39px;
     left: $search_right;
     background: white;
     border-radius: 0 0 5px 5px;

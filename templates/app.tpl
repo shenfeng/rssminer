@@ -30,7 +30,6 @@
         <div id="search">
           <span>search feed, subscription...</span>
           <input id="q" autocomplete="off"/>
-          <i class="icon-search"></i>
         </div>
         <div id="dropdown">
           <a href="#">
@@ -40,22 +39,22 @@
           </a>
           <ul>
             <li>
-              <a href="#s/add" title="Add subscription" class="btn">
+              <a href="#s/add" class="btn">
                 <i class="icon-edit"></i><span>Add subscription</span>
               </a>
             </li>
             <li>
-              <a href="#" title="Keyboard shortcuts" class="show-shortcuts">
+              <a href="#" class="show-shortcuts">
                 <i class="icon-legal"></i><span>Keyboard shortcuts</span>
               </a>
             </li>
             <li>
-              <a href="#s/settings" title="Account settings">
+              <a href="#s/settings">
                 <i class="icon-wrench"></i><span>Settings</span>
               </a>
             </li>
             <li>
-              <a href="#s/help" title="Help">
+              <a href="#s/help">
                 <i class="icon-info-sign"></i><span>Help</span>
               </a>
             </li>
@@ -82,9 +81,13 @@
       </div>
     </div>
     <ul id="ct-menu"></ul>
+    <div id="tooltip">
+      <!-- <div class="arrow"></div> -->
+      <span>This is a test tip</span>
+    </div>
     <div id="overlay"></div>
     <div id="shortcuts">
-      <i class="icon-ok-circle"></i>
+      <i class="icon-ok-circle" data-title="close"></i>
       <div>
         <div>
           <h2>Keyboard shortcuts</h2>
@@ -101,9 +104,7 @@
           <dl><dt>g <b>then</b> h</dt><dd>go home</dd></dl>
         </div>
       </div>
-
     </div>
-
     {{#dev}}
     <script src="/s/js/lib/jquery-1.7.2.js"></script>
     <script src="/s/js/lib/jquery-ui-1.8.18.custom.js"></script>
@@ -118,6 +119,7 @@
     <script src="/s/js/rssminer/search.js"></script>
     <script src="/s/js/rssminer/ct_menu.js"></script>
     <script src="/s/js/rssminer/keyboard.js"></script>
+    <script src="/s/js/rssminer/tooltip.js"></script>
     <script src="/s/js/rssminer/app.js"></script>
     {{/dev}}
     {{#prod}}

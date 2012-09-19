@@ -1,6 +1,6 @@
-<h3 title="{{title}}">
+<h3>
   {{#url}}
-    <a target="blank" title="{{title}}" href="{{url}}">{{title}}</a>
+    <a target="blank" href="{{url}}">{{title}}</a>
   {{/url}}
   {{^url}}
   {{ title }}

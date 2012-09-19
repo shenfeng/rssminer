@@ -79,6 +79,7 @@ app_jss = FileList['public/js/lib/jquery-ui-1.8.18.custom.js',
                    'public/js/rssminer/search.js',
                    'public/js/rssminer/ct_menu.js',
                    'public/js/rssminer/keyboard.js',
+                   'public/js/rssminer/tooltip.js',
                    'public/js/rssminer/app.js']
 
 desc "Clean generated files"

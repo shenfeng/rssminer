@@ -65,6 +65,21 @@
     return cls;
   }
 
+  function tooltip (title, maxlength) {
+    var count = 0,
+        length = title.length;
+    for(var i = 0; i < length; ++i) {
+      if(title.charCodeAt(i) > 255) {
+        count += 2;
+      } else {
+        count += 1;
+      }
+    }
+    if(maxlength < count) {
+      return title;
+    }
+  }
+
   function ymdate (i) {
     var d = new Date(i * 1000),
         m = d.getMonth() + 1,
@@ -115,6 +130,7 @@
     return {
       img: favicon_path(sub.url),
       title: title,
+      tooltip: tooltip(title, 30),
       link: sub.url,
       group: sub.group,
       title_l: title.toLowerCase(),

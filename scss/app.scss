@@ -54,7 +54,7 @@ a { outline: 0; text-decoration: none;}
     #dropdown {
         top: 2px;
         font-size: 17px;
-        right: 78px;
+        right: 70px;
         padding-bottom: 25px;
         cursor: pointer;
         min-width: 165px;
@@ -94,15 +94,6 @@ a { outline: 0; text-decoration: none;}
         > * { position: absolute; }
     }
     $input_width: 285px;
-    .icon-search {
-        cursor: pointer;
-        left: $input_width - 5px;
-        position: absolute;
-        top: 7px;
-        font-size: 19px;
-        color: #727270;
-        line-height: 1;
-    }
     #search {
         left: $search_right;
         @include border-radius(5px);
@@ -120,6 +111,7 @@ a { outline: 0; text-decoration: none;}
         background: transparent;
         border: none;
         font-size: 14px;
+        height: 20px;
         padding: 5px;
         width: $input_width;
     }
@@ -278,7 +270,8 @@ ul { list-style: none; padding: 0; margin: 0; }
 
 .thumbs {
     position: absolute;
-    top: 5px;
+    line-height: 1;
+    top: 10px;
     color: $thumb_light_color;
     right: 90px;
     z-index: 20;
@@ -337,7 +330,7 @@ ul { list-style: none; padding: 0; margin: 0; }
         a {
             color: #02060e;
             @include overflow-ellipsis();
-            max-width: 800px;
+            max-width: 750px;
             display: inline-block;
         }
         text-transform: capitalize;
@@ -352,7 +345,7 @@ ul { list-style: none; padding: 0; margin: 0; }
         top: 12px;
         right: 1em;
     }
-    .author { position: absolute; top: 11px; }
+    .author { position: absolute; top: 10px; margin-left: 20px; }
     .feed {
         a { height: 21px; padding: 8px 3px; }
         margin-left: 20px;
@@ -360,7 +353,7 @@ ul { list-style: none; padding: 0; margin: 0; }
     }
     .feeds {
         .title {
-            max-width: 550px;
+            max-width: 520px;
             display: inline-block;
             @include overflow-ellipsis();
         }
@@ -424,12 +417,12 @@ ul { list-style: none; padding: 0; margin: 0; }
 }
 
 .author {
-    font-size: 10px;
-    margin-left: 10px;
-    color: #444;
+    font-size: 12px;
+    color: #666;
     display: inline-block;
-    background: #f2f2f2;
-    padding: 1px 2px;
+    max-width: 150px;
+    @include overflow-ellipsis();
+    padding: 2px;
 }
 
 .date { font-size: 11px; color: #555; }

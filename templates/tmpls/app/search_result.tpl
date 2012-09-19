@@ -15,17 +15,19 @@
             <span class="count">
               {{#dislike}}
                 <span class="unread-dislike"
-                  title="dislike count">{{dislike}}</span>
+                  data-title="dislike count">{{dislike}}</span>
               {{/dislike}}
               {{#neutral}}
                 <span class="unread-neutral"
-                  title="neutral count">{{neutral}}</span>
+                  data-title="neutral count">{{neutral}}</span>
               {{/neutral}}
               {{#like}}
                 <span class="unread-like"
-                  title="like count">{{like}}</span>
+                  data-title="like count">{{like}}</span>
               {{/like}}
-              <span class="total" title="total feed">{{ total }}</span>
+              <span class="total" data-title="total feed count">
+                {{ total }}
+              </span>
             </span>
           </a>
         </li>
@@ -37,9 +39,9 @@
       <li class="feed {{cls}}">
         <a href="#{{href}}">
           <span class="indicator"></span>
-          <span class="title" title="{{{title}}}">{{{title_h}}}</span>
+          <span class="title">{{{title_h}}}</span>
           {{#sub}}
-            <span class="sub" title="from">{{ title }}</span>
+            <span class="sub" data-title="from {{ title }}">{{ title }}</span>
           {{/sub}}
         </a>
       </li>

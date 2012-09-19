@@ -1,5 +1,17 @@
 @import "vars";
 
+.tags {
+    display: inline-block;
+    padding-left: 10px;
+    li {
+        color: #555;
+        background: #f1f1f1;
+        display: inline-block;
+        padding: 1px 2px;
+        @include border-radius(3px);
+    }
+}
+
 #feed-content {
     > li {
         &.reading {
@@ -19,32 +31,29 @@
     font-size: 15px;
     line-height: 1.82;
     color: #333;
-    /* background: #FAFAFA; */
-    /* background: white; */
     padding: 0 25px 0 5px;
-    .tags {
-        li { color: #555; padding: 0 4px ;}
+    .date { float: right; padding: 4px 0 0 8px; font-family: sans-serif;}
+    .link {
+        @include overflow-ellipsis();
+        display: block;
+        max-width: 700px;
+        padding: 4px 0;
+        font: 12px Helvetica, Arial, sans-serif;
+        color: #aaa;
     }
-    .date { float: right; padding-left: 8px; font-family: sans-serif;}
     .meta {
         font: 400 12px/1.231 "Helvetica Neue", Helvetica, Arial, sans-serif;
         padding-bottom: 8px;
         border-bottom: 1px solid #E8E8E8;
-        .link {
-            @include overflow-ellipsis();
-            display: block;
-            max-width: 700px;
-            padding: 4px 0;
-            font: 11px Helvetica, Arial, sans-serif;
-            color: #aaa;
-        }
         .sub {
             @include overflow-ellipsis();
-            padding: 1px 20px;
-            max-width: 300px;
-            color: $unread_color;
+            display: inline-block;
+            max-width: 200px;
+            a {
+                color: $unread_color;
+            }
         }
-        .author { margin-left: 0; }
+        .author { margin-left: 0; display: inline; padding: 2px 5px;}
     }
     .feed {
         padding-bottom: 3px;
@@ -52,7 +61,6 @@
     }
     .thumbs {
         position: static;
-        line-height: 1;
         i { padding: 0; visibility: visible; }
     }
     .summary {

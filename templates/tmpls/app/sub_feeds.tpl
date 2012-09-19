@@ -21,13 +21,14 @@
         <span class="title">{{{title}}}</span>
         <i class="thumbs">
           <i class="icon-thumbs-up"
-            title="like it, give me more like this">
+            data-title="like it, give me more like this in recommend tab">
           </i>
           <i class="icon-thumbs-down"
-            title="I would rather not seeing it">
+            data-title="dislike, less in recommend tab">
           </i>
         </i>
-        <span class="author" title="author">{{author}}</span>
+        <span class="author"
+          data-title="author">{{author}}</span>
         <span class="date">{{ date }}</span>
       </a>
     </li>

@@ -2,24 +2,26 @@
   <li id="s-{{id}}">
     <div class="feed {{ cls }}" data-id={{ id }}>
       <h2>{{ title }}</h2>
+      <a class="link" href="{{ link }}" target="_blank">{{{ link_d }}}</a>
       <div class="meta">
-        <a class="link" href="{{ link }}" target="_blank">{{{ link_d }}}</a>
         <i class="thumbs">
           <i class="icon-thumbs-up"
-            title="like it, give me more like this">
+            data-title="like it, give me more like this in recommend tab">
           </i>
           <i class="icon-thumbs-down"
-            title="I would rather not seeing it">
+            data-title="dislike, less in recommend tab">
           </i>
         </i>
-        <span title="author" class="author">{{ author }}</span>
+        <span data-title="author" class="author">{{ author }}</span>
         {{#sub}}
-          <a class="sub" href="#{{{href}}}">{{title}}</a>
+          <div class="sub" data-title="subscription">
+            <a href="#{{{href}}}">{{title}}</a>
+          </div>
         {{/sub}}
         {{#tags.length}}
-          <ul class="tags">
+          <ul class="tags" data-title="tag">
             {{#tags}}
-              <li title="tag">{{ . }}</li>
+              <li>{{ . }}</li>
             {{/tags}}
           </ul>
         {{/tags.length}}
