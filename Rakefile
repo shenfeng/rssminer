@@ -183,12 +183,11 @@ desc "update dev mysql config file, restart mysql"
 task :mysql_dev do
   sh 'sudo /etc/init.d/mysql stop'
   sh 'sudo rm /tmp/mysql -rf && sudo rm /tmp/mysql.log -f'
-  sh 'sudo cp /var/lib/mysql /tmp -r '
-  sh 'sudo chown mysql:mysql /tmp/mysql -R'
-  sh 'sudo cp conf/my-dev.cnf /etc/mysql/my.cnf'
+  sh 'mkdir /tmp/mysql'
+  sh 'sudo cp conf/my-dev.cnf /etc/mysql/my.cnf && sudo mysql_install_db'
+  # sh 'sudo chown mysql:mysql /tmp/mysql -R'
   sh 'sudo /etc/init.d/mysql start'
-  sh 'rake db:restore_db'
-  # sh 'scripts/admin -d rssminer -u feng init-db'
+  sh './scripts/admin restore-db'
 end
 
 desc "update dev mysql config file, restart mysql"

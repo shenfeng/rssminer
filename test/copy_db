@@ -1,0 +1,35 @@
+ssh 71.19.147.230 "mysqldump -u root --routines --single-transaction --database rssminer --add-drop-database --add-drop-table" | mysql -uroot
+
+CREATE USER feng@'71.19.147.230' IDENTIFIED BY ''
+GRANT ALL PRIVILEGES ON *.* TO 'feng'@'71.19.147.230';
+
+# drop user 'feng'@'localhost'
+CREATE USER feng@'localhost' IDENTIFIED BY ''
+GRANT ALL PRIVILEGES ON *.* TO 'feng'@'localhost';
+
+flush privileges;
+
+mysql --host 71.19.154.89 rssminer
+
+sudo ls -lh /var/lib/mysql/rssminer
+
+# OK, 718214 rows affected (23 min 27.18 sec), 2.5G => 1.1G
+ALTER TABLE feed_data KEY_BLOCK_SIZE=4;
+
+# OK, 317 rows affected (0.88 sec), 11M => 2M
+ALTER TABLE favicon KEY_BLOCK_SIZE=2;
+
+
+select count(*) from rss_links where next_check_ts < 10; #  4185
+
+select count(*) from feeds;     # 720465
+
+select id, title, next_check_ts, etag, last_modified from rss_links where title like '%??%';
+
+update rss_links set next_check_ts = 0 where title like '%??%';
+
+update rss_links set next_check_ts = 0 where id = 5674;
+
+select id, title, published_ts, rss_link_id from feeds order by published_ts desc limit 100 offset 100;
+
+select id, title, from_unixtime(published_ts), rss_link_id from feeds where title like '%??%' order by published_ts desc limit 100;

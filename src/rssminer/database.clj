@@ -16,6 +16,7 @@
 (defn- jdbc-params []                   ; default jdbc params
   (apply str (interpose "&" (map (fn [[k v]] (str k "=" v))
                                  {"useLocalSessionState" true
+                                  "characterEncoding" "utf8"
                                   "cacheCallableStmts" true
                                   "prepStmtCacheSize" 100 ; default 25
                                   ;; for rebuild index
