@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <link rel="shortcut icon" href="/s/favicon.ico?{VERSION}" />
+    <link rel="shortcut icon" href="/s/favicon.ico" />
     <title>Rssminer, intelligent RSS reader, for readability</title>
     <meta name="keywords" content="RSS miner, Rssminer, RSS aggregator,
                                    intelligent RSS reader">
@@ -125,7 +125,7 @@
             </form>
             <h3>Google Chrome extension</h3>
             <span title="Easy way to add subscription, not ready, please wait a while">
-              <img src="/s/imgs/icon48.png?{VERSION}"/>
+              <img src="/s/imgs/icon48.png"/>
             </span>
           </div> <!-- right, login form -->
         </div>
