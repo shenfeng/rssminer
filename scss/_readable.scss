@@ -94,9 +94,8 @@
             box-shadow: 0 0 8px #999;
         }
         code, pre {
-            line-height: 1.4;
-            font-size: 13px;
-            font-family: monospace;
+            white-space: pre-wrap;
+            font: 13px/1.4 Consolas, Monaco, monospace;
         }
         embed, object {
             display: block;
