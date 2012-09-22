@@ -13,7 +13,7 @@
           id="item-{{id}}" data-id="{{id}}"
           {{#tooltip}}data-title="{{tooltip}}"{{/tooltip}}>
             <a href="#{{href}}">
-              <img src="{{img}}" width="16" height="16" />
+              {{#img}}<img src="{{img}}" width="16" height="16" />{{/img}}
               <i class="icon-rss"></i>
               <span class="title"> {{{title}}} </span>
               <span class="count">

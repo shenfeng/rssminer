@@ -428,8 +428,8 @@ public class MinerDAO {
     }
 
     static final String SUB_FIELDS = "SELECT rss_link_id AS id, l.title, group_name, sort_index,"
-            + "l.alternate as url, l.total_feeds FROM user_subscription u join rss_links l "
-            + "ON l.id = u.rss_link_id WHERE";
+            + "COALESCE(l.alternate, l.url) as url, l.total_feeds FROM user_subscription u "
+            + "join rss_links l ON l.id = u.rss_link_id WHERE";
 
     public Subscription fetchUserSub(int userid, int rssid)
             throws SQLException {

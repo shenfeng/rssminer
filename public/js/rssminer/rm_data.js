@@ -126,9 +126,12 @@
 
   function transorm_sub (sub) {
     // the url is site's alternate url
-    var title = sub.title || sub.url || '';
+    var title = sub.title || sub.url || '',
+        img = null,
+        url = sub.url || '';
+    if(url.indexOf('http') === 0) { img = favicon_path(url); }
     return {
-      img: favicon_path(sub.url),
+      img: img,
       title: title,
       tooltip: tooltip(title, 30),
       link: sub.url,
