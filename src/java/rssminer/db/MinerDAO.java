@@ -281,7 +281,9 @@ public class MinerDAO {
         sb.append(FEED_FIELD).append(userID);
         sb.append(" JOIN user_subscription us ON f.rss_link_id = us.rss_link_id");
         sb.append(" where us.user_id = ");
-        sb.append(userID);
+        sb.append(userID).append(" and f.published_ts >");
+        // only recent 60 days
+        sb.append((int)(System.currentTimeMillis() / 1000) - 3600 * 24 * 60);
         sb.append(" order by f.published_ts desc ");
         appendLimitOffset(sb, limit, offset);
         return fetchFeedsWithScore(userID, sb.toString());
