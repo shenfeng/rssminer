@@ -28,3 +28,6 @@
 
 
 ** need auto start rssminer on server reboot
+
+# noatime
+/dev/xvda1	/               ext3    noatime,errors=remount-ro 0       1
