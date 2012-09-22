@@ -116,12 +116,11 @@
   }
 
   function default_sort (like, neutral) {
-    if(user_conf.pref_sort === NEWEST_TAB) {
-      return NEWEST_TAB;        // user choose this
-    }
-    if( like + neutral > MIN_COUNT) {
+    // default show newest. 3 place need to change
+    if(user_conf.pref_sort === RECOMMEND_TAB && like + neutral > MIN_COUNT) {
       return RECOMMEND_TAB;
-    } else { return NEWEST_TAB; }
+    }
+    return NEWEST_TAB;
   }
 
   function transorm_sub (sub) {

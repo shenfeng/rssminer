@@ -21,6 +21,7 @@
       FEED_SELECTOR = '#feed-',
       BOTTOM_DIFF = 400,
       READING_CLS = 'reading',
+      NEWEST_TAB = 'newest',
       READ_URL_PATTEN = 'read/:id/:id?p=:page&s=:sort',
       SHOW_CONTENT = 'show-content';
 
@@ -328,7 +329,7 @@
 
   function show_welcome (section, page, cb) {
     var d = !section && !page;
-    section = section || data_api.user_conf.pref_sort || 'recommend';
+    section = section || data_api.user_conf.pref_sort || NEWEST_TAB;
     page = page || 1;
     _update_state(section, page, section, GROUP_WELCOME);
     $subs_list.find('.selected').removeClass('selected');
@@ -352,10 +353,10 @@
     $reading_area.removeClass(SHOW_CONTENT);
     var old_sort = data_api.user_conf.pref_sort;
     var sections = ['add', 'settings', 'help'],
-        sortings = [{value: 'recommend', // default to recommend
-                     s: old_sort === 'recommend'},
-                    {value: 'newest',
-                     s: old_sort ==='newest'}];
+        sortings = [{value: NEWEST_TAB,
+                     s: old_sort === NEWEST_TAB},
+                    {value: 'recommend', // default to recommend
+                     s: old_sort === 'recommend'}];
     var d = {
       selected: section,
       sortings: sortings,
