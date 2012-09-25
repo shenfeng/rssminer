@@ -1,0 +1,22 @@
+#! /bin/bash -x
+
+set -u                          # Treat unset variables as an error
+set -e #  Exit immediately if a simple command exits with a non-zero status
+
+READLINK=readlink
+if which greadlink > /dev/null; then
+    READLINK=greadlink
+fi
+
+ABSOLUTE_PATH=$(${READLINK} -f $0)
+HOME="${ABSOLUTE_PATH%/*/*}"
+
+cd $HOME
+
+ICON=public/imgs/rssminer-icon.png
+DEST=android/res
+
+convert -resize 36x36 $ICON ${DEST}/drawable-ldpi/ic_launcher.png
+convert -resize 48x48 $ICON ${DEST}/drawable-mdpi/ic_launcher.png
+convert -resize 72x72 $ICON ${DEST}/drawable-hdpi/ic_launcher.png
+convert -resize 96x96 $ICON ${DEST}/drawable-xhdpi/ic_launcher.png
