@@ -13,7 +13,11 @@ import org.json.JSONArray;
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.Window;
+import android.view.WindowManager;
 
 public class MainActivity extends ListActivity {
 
@@ -21,6 +25,7 @@ public class MainActivity extends ListActivity {
 
 	private final Handler mHandler = new Handler();
 	private HttpClient mClient;
+	private boolean mFullScreen;
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
@@ -30,7 +35,37 @@ public class MainActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mClient = ((RssminerApplication) getApplication()).getHttpClient();
+		setFullscreen(true);
+		getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
 		getList();
+	}
+
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main_menu, menu);
+
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.item_full_screen) {
+			setFullscreen(!mFullScreen);
+		} else if (item.getItemId() == R.id.item_settings) {
+
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	private void setFullscreen(boolean on) {
+		mFullScreen = on;
+		Window win = getWindow();
+		WindowManager.LayoutParams winParams = win.getAttributes();
+		final int bits = WindowManager.LayoutParams.FLAG_FULLSCREEN;
+		if (on) {
+			winParams.flags |= bits;
+		} else {
+			winParams.flags &= ~bits;
+		}
+		win.setAttributes(winParams);
 	}
 
 	private void getList() {
@@ -39,7 +74,6 @@ public class MainActivity extends ListActivity {
 				HttpGet get = new HttpGet(
 						"http://192.168.1.101:9090/api/welcome?section=newest&limit=20&offset=0");
 				get.addHeader("Cookie", "_id_=zk15v22ul");
-
 				try {
 					HttpResponse resp = mClient.execute(get);
 					InputStream is = resp.getEntity().getContent();
