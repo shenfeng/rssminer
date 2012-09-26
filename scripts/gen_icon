@@ -16,6 +16,8 @@ cd $HOME
 ICON=public/imgs/rssminer-icon.png
 DEST=android/res
 
+mkdir -p ${DEST}/drawable-{ldpi,mdpi,hdpi,xhdpi}
+
 convert -resize 36x36 $ICON ${DEST}/drawable-ldpi/ic_launcher.png
 convert -resize 48x48 $ICON ${DEST}/drawable-mdpi/ic_launcher.png
 convert -resize 72x72 $ICON ${DEST}/drawable-hdpi/ic_launcher.png
