@@ -283,23 +283,11 @@
       // feeds = _.filter(feeds, function (f) { return f.title; });
       cb({
         title: section + ' - Rssminer, an intelligent RSS reader',
-        feeds: remove_duplicate_feed(feeds),
+        feeds: feeds,
         pager: compute_welcome_paging(section, page, resp.length),
         sort: sort_data
       });
     });
-  }
-
-
-  function remove_duplicate_feed (feeds) {
-    var results = [];
-    _.each(feeds, function (f) {
-      var included = _.any(results, function (r) {
-        return r.title === f.title || r.link === f.link;
-      });
-      if(!included) { results.push(f); }
-    });
-    return results;
   }
 
   function should_include (page_count, current, page) {
@@ -407,7 +395,7 @@
       data.cb({
         title: data.title,
         url: data.url,
-        feeds: remove_duplicate_feed(feeds),
+        feeds: feeds,
         sort: sort_tabs,
         pager: compute_sub_paging(data.section, sort, total, data.page)
       });
@@ -558,7 +546,6 @@
           feed.title_h = hight_search(feed.title, [q]);
           return feed;
         });
-        feeds = remove_duplicate_feed(feeds);
         cb({subs: subs, feeds: feeds, sub_cnt: subs.length});
       });
     } else {

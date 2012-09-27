@@ -27,7 +27,8 @@ public class MinerDAO {
     static final String FETCH_FEED = "SELECT f.id,f.rss_link_id,f.title,f.author,f.link,tags,"
             + "f.published_ts,uf.read_date,uf.vote_user,uf.vote_date,d.summary FROM feeds "
             + "f LEFT JOIN user_feed uf ON uf.feed_id = f.id and uf.user_id = ";
-//            + "join feed_data d on d.id = f.id and f.id ";
+
+    // + "join feed_data d on d.id = f.id and f.id ";
 
     public MinerDAO(Map<Keyword, Object> config) {
         this.jedis = (JedisPool) config.get(K_REDIS_SERVER);
@@ -123,7 +124,7 @@ public class MinerDAO {
             }
             Utils.closeQuietly(rs);
             Utils.closeQuietly(stat);
-            return feeds;
+            return removeDuplicate(feeds);
         } finally {
             Utils.closeQuietly(con);
         }
@@ -171,6 +172,24 @@ public class MinerDAO {
         }
     }
 
+    private List<Feed> removeDuplicate(List<Feed> feeds) {
+        List<Feed> results = new ArrayList<Feed>(feeds.size());
+        for (Feed f : feeds) {
+            boolean c = false;
+            for (Feed e : results) {
+                if (e.getTitle().equals(f.getTitle())
+                        || e.getLink().equals(f.getLink())) {
+                    c = true;
+                    break;
+                }
+            }
+            if (!c) {
+                results.add(f);
+            }
+        }
+        return results;
+    }
+
     private List<Feed> fetchFeedsWithScore(int userID, String sql)
             throws SQLException {
         List<Feed> feeds = fetchFeeds(sql);
@@ -180,7 +199,7 @@ public class MinerDAO {
 
     // for click on folder
     public List<Feed> fetchFolderLikest(int userID, List<Integer> rssIDs,
-                                        int limit, int offset) throws SQLException {
+            int limit, int offset) throws SQLException {
         Jedis redis = jedis.getResource();
         rssIDs = new ArrayList<Integer>(rssIDs);
         byte[] key = Utils.genKey(userID, rssIDs);
@@ -203,7 +222,7 @@ public class MinerDAO {
     }
 
     public List<Feed> fetchFolderNewest(int userID, List<Integer> rssIDs,
-                                        int limit, int offset) throws SQLException {
+            int limit, int offset) throws SQLException {
         StringBuilder sb = createBuilder(rssIDs);
         sb.append(FEED_FIELD).append(userID);
         sb.append(" WHERE f.rss_link_id in ");
@@ -215,7 +234,7 @@ public class MinerDAO {
 
     // for folder
     public List<Feed> fetchFolderOldest(int userID, List<Integer> rssIDs,
-                                        int limit, int offset) throws SQLException {
+            int limit, int offset) throws SQLException {
         StringBuilder sb = createBuilder(rssIDs);
         sb.append(FEED_FIELD).append(userID);
         sb.append(" WHERE f.rss_link_id in ");
@@ -226,7 +245,7 @@ public class MinerDAO {
     }
 
     public List<Feed> fetchFolderRead(int userID, List<Integer> rssIDs,
-                                      int limit, int offset) throws SQLException {
+            int limit, int offset) throws SQLException {
         StringBuilder sb = createBuilder(rssIDs);
         sb.append(FEED_FIELD).append(userID);
         sb.append(" where uf.read_date > 0 and uf.rss_link_id in ");
@@ -237,7 +256,7 @@ public class MinerDAO {
     }
 
     public List<Feed> fetchFolderVote(int userID, List<Integer> rssIDs,
-                                      int limit, int offset) throws SQLException {
+            int limit, int offset) throws SQLException {
         StringBuilder sb = createBuilder(rssIDs);
         sb.append(FEED_FIELD).append(userID);
         sb.append(" where uf.vote_date > 0 and uf.vote_user != 0 and uf.rss_link_id in ");
@@ -256,7 +275,7 @@ public class MinerDAO {
             if (!redis.exists(key)) {
                 List<Integer> subIDS = DBHelper.getUserSubIDS(ds, userID);
                 int count = subIDS.size();
-                if(count < 1) {
+                if (count < 1) {
                     return new ArrayList<Feed>(0);
                 }
                 byte[][] keys = new byte[count][];
@@ -283,7 +302,7 @@ public class MinerDAO {
         sb.append(" where us.user_id = ");
         sb.append(userID).append(" and f.published_ts >");
         // only recent 60 days
-        sb.append((int)(System.currentTimeMillis() / 1000) - 3600 * 24 * 60);
+        sb.append((int) (System.currentTimeMillis() / 1000) - 3600 * 24 * 60);
         sb.append(" order by f.published_ts desc ");
         appendLimitOffset(sb, limit, offset);
         return fetchFeedsWithScore(userID, sb.toString());
@@ -308,7 +327,7 @@ public class MinerDAO {
     }
 
     public List<Feed> fetchSubLikest(int userID, int subID, int limit,
-                                     int offset) throws SQLException {
+            int offset) throws SQLException {
         byte[] key = Utils.genKey(userID, subID);
         Jedis redis = jedis.getResource();
         try {
@@ -321,7 +340,7 @@ public class MinerDAO {
     }
 
     public List<Feed> fetchSubNewest(int userID, int subID, int limit,
-                                     int offset) throws SQLException {
+            int offset) throws SQLException {
         StringBuilder sb = createBuilder(null);
         sb.append(FEED_FIELD).append(userID);
         sb.append(" WHERE f.rss_link_id = ").append(subID);
@@ -331,7 +350,7 @@ public class MinerDAO {
     }
 
     public List<Feed> fetchSubOldest(int userID, int subID, int limit,
-                                     int offset) throws SQLException {
+            int offset) throws SQLException {
         StringBuilder sb = createBuilder(null);
         sb.append(FEED_FIELD).append(userID);
         sb.append(" WHERE f.rss_link_id = ").append(subID);
@@ -340,8 +359,8 @@ public class MinerDAO {
         return fetchFeedsWithScore(userID, sb.toString());
     }
 
-    public List<Feed> fetchSubRead(int userID, int subID, int limit,
-                                   int offset) throws SQLException {
+    public List<Feed> fetchSubRead(int userID, int subID, int limit, int offset)
+            throws SQLException {
         StringBuilder sb = createBuilder(null);
         sb.append(FEED_FIELD).append(userID);
         sb.append(" where uf.read_date > 0 and uf.rss_link_id = ");
@@ -384,8 +403,7 @@ public class MinerDAO {
                         byte[] key = Utils.genKey(userID, s.getId());
                         Response<Long> l = pipeline.zcount(key, like,
                                 Double.MAX_VALUE);
-                        Response<Long> n = pipeline
-                                .zcount(key, neutral, like);
+                        Response<Long> n = pipeline.zcount(key, neutral, like);
                         scores.add(l);
                         scores.add(n);
                     }
@@ -418,8 +436,8 @@ public class MinerDAO {
         return sortbyOrder(feedIDs, fetchFeedsWithScore(userID, sb.toString()));
     }
 
-    public List<Feed> fetchSubVote(int userID, int subID, int limit,
-                                   int offset) throws SQLException {
+    public List<Feed> fetchSubVote(int userID, int subID, int limit, int offset)
+            throws SQLException {
         StringBuilder sb = createBuilder(null);
         sb.append(FEED_FIELD).append(userID);
         sb.append(" where uf.vote_date > 0 and uf.vote_user != 0 and uf.rss_link_id = ");
@@ -433,8 +451,7 @@ public class MinerDAO {
             + "COALESCE(l.alternate, l.url) as url, l.total_feeds FROM user_subscription u "
             + "join rss_links l ON l.id = u.rss_link_id WHERE";
 
-    public Subscription fetchUserSub(int userid, int rssid)
-            throws SQLException {
+    public Subscription fetchUserSub(int userid, int rssid) throws SQLException {
         StringBuilder sb = new StringBuilder(SUB_FIELDS.length() + 20);
         sb.append(SUB_FIELDS);
         sb.append(" u.rss_link_id = ").append(rssid);
