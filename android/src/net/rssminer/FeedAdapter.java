@@ -22,7 +22,6 @@ public class FeedAdapter extends ArrayAdapter<Feed> {
 				Context.LAYOUT_INFLATER_SERVICE);
 	}
 
-	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		if (convertView == null) {
@@ -33,5 +32,4 @@ public class FeedAdapter extends ArrayAdapter<Feed> {
 
 		return convertView;
 	}
-
 }

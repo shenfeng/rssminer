@@ -3,9 +3,12 @@ package net.rssminer;
 import static net.rssminer.Constants.PREF_FULLSCREEN;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +28,18 @@ public class MainActivity extends ListActivity {
 	private boolean mFullScreen;
 	private SharedPreferences mPreferences;
 	private Window mWin;
+
+	public List<String> getAccountEmail() {
+		AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
+		Account[] accounts = manager.getAccounts();
+		List<String> emails = new ArrayList<String>(1);
+		for (int i = 0; i < accounts.length; i++) {
+			if (accounts[i].type == Constants.GOOGLE_ACCOUNT) {
+				emails.add(accounts[i].name);
+			}
+		}
+		return emails;
+	}
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,9 +68,7 @@ public class MainActivity extends ListActivity {
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.item_full_screen) {
-			setFullscreen(!mFullScreen);
-		} else if (item.getItemId() == R.id.item_settings) {
+		if (item.getItemId() == R.id.item_settings) {
 			startActivity(new Intent(this, RssminerPref.class));
 		}
 		return super.onOptionsItemSelected(item);

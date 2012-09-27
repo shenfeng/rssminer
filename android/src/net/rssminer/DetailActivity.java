@@ -6,10 +6,13 @@ import static net.rssminer.Constants.PREF_FULLSCREEN;
 import org.json.JSONArray;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebView;
@@ -40,6 +43,18 @@ public class DetailActivity extends Activity {
 		super.onResume();
 		mFullScreen = mPreferences.getBoolean(PREF_FULLSCREEN, true);
 		setFullscreen(mFullScreen);
+	}
+
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main_menu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.item_settings) {
+			startActivity(new Intent(this, RssminerPref.class));
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	protected void onCreate(Bundle savedInstanceState) {

@@ -2,12 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/item_full_screen"
-        android:icon="@android:drawable/ic_menu_slideshow"
-        android:showAsAction="ifRoom"
-        android:title="@string/full_screen">
-    </item>
-    <item
         android:id="@+id/item_settings"
         android:icon="@android:drawable/ic_menu_preferences"
         android:showAsAction="ifRoom"

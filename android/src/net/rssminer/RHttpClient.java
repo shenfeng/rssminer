@@ -16,7 +16,7 @@ import android.util.Log;
 
 public class RHttpClient {
 	private static final HttpClient mClient = AndroidHttpClient
-			.newInstance("android-client");;
+			.newInstance(Constants.USER_AGENT);
 
 	public static String get(String uri) throws IOException {
 		long start = System.currentTimeMillis();
