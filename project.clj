@@ -15,7 +15,7 @@
                  [org.clojure/java.jdbc "0.2.3"]
                  [org.clojure/tools.cli "0.2.1"]
                  [org.clojure/tools.logging "0.2.3"]
-                 [org.jsoup/jsoup "1.6.3"]
+                 [org.jsoup/jsoup "1.7.1"]
                  [ch.qos.logback/logback-classic "1.0.1"]
                  [redis.clients/jedis "2.1.0"]
                  [ring/ring-core "1.1.3"]]
