@@ -1,5 +1,5 @@
-**/*.psd
 **/*.org
+**/*.psd
 .classpath
 .git
 .gitignore
@@ -11,6 +11,7 @@
 /.git
 /.lein-plugins
 /.settings
+/android
 /bin
 /build
 /chrome
