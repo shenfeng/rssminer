@@ -1,28 +1,17 @@
 package net.rssminer;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Feed {
 
-	private String title;
-	private String link;
+	public final String title;
+	public final String link;
+	public final int id;
 
-	public Feed(String title, String link) {
-		this.title = title;
-		this.link = link;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getLink() {
-		return link;
-	}
-
-	public void setLink(String link) {
-		this.link = link;
+	public Feed(JSONObject obj) throws JSONException {
+		title = obj.getString("title");
+		link = obj.getString("link");
+		id = obj.getInt("id");
 	}
 }

@@ -29,7 +29,7 @@ public class FeedAdapter extends ArrayAdapter<Feed> {
 			convertView = inflater.inflate(layoutId, null);
 		}
 		TextView title = (TextView) convertView.findViewById(R.id.feed_title);
-		title.setText(this.getItem(position).getTitle());
+		title.setText(this.getItem(position).title);
 
 		return convertView;
 	}
