@@ -130,6 +130,18 @@ public class Utils {
         }
     }
 
+    public static String mysqlSafe(String text) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < text.length(); i++) {
+            char ch = text.charAt(i);
+            if (!Character.isHighSurrogate(ch)
+                    && !Character.isLowSurrogate(ch)) {
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
+    }
+
     public static void closeQuietly(Statement con) {
         if (con != null) {
             try {
