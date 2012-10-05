@@ -1,7 +1,7 @@
 (ns rssminer.handlers.reader
   (:use (rssminer [util :only [user-id-from-session md5-sum
                                to-int serialize-to-js]]
-                  [search :only [search* search-within-subs]])
+                  [search :only [search*]])
         me.shenfeng.mustache
         [clojure.java.io :only [resource]]
         [ring.util.response :only [redirect]]
@@ -78,12 +78,10 @@
          :session (:demo-user @cfg/rssminer-conf)}))))
 
 (defn search [req]
-  (let [{:keys [q limit ids]} (:params req)
+  (let [{:keys [q limit tags authors fs]} (:params req)
         uid (user-id-from-session req)
         limit (min 20 (to-int limit))]
-    (if ids
-      (search-within-subs q uid (str/split ids #",") limit)
-      (search* q uid limit))))
+    (search* q tags authors uid limit fs)))
 
 (defn get-favicon [req]
   (if-let [hostname (-> req :params :h str/reverse)]

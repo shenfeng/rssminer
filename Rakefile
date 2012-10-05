@@ -65,6 +65,7 @@ task :deps => ["thirdparty/#{jscompiler}",
                "thirdparty/#{htmlcompressor}"]
 
 landing_jss = FileList['public/js/lib/slides.min.jquery.js',
+                       'public/js/rssminer/tooltip.js',
                        'public/js/rssminer/landing.js']
 
 app_jss = FileList['public/js/lib/jquery-ui-1.8.18.custom.js',
@@ -91,6 +92,7 @@ task :clean  do
   rm_rf "public/css"
   rm_rf "classes"
   sh 'rm -vf public/js/*min.js'
+  sh 'find . -name "*.class" | xargs rm'
 end
 
 desc "Prepare for development"
@@ -119,7 +121,7 @@ desc "Javac debug"
 task :javac_debug do
   sh 'rm -rf classes && mkdir classes'
   sh 'find src/java -name "*.java" | xargs javac -Xlint:unchecked -encoding utf8 -cp "classes:lib/*:src/"  -g -d classes -sourcepath src/java/'
-  sh 'find test/java -name "*.java" | xargs javac -Xlint:unchecked -cp "classes:lib/*:src/:lib/dev/*"  -d classes -sourcepath test/java'
+  sh 'find test/java -name "*.java" | xargs javac -Xlint:unchecked -encoding utf8 -cp "classes:lib/*:src/:lib/dev/*"  -d classes -sourcepath test/java'
 end
 
 
@@ -195,7 +197,7 @@ task :mysql_prod do
   sh 'sudo /etc/init.d/mysql stop'
   sh 'sudo cp conf/my.cnf /etc/mysql/my.cnf'
   sh 'sudo /etc/init.d/mysql start'
-  sh 'rake db:restore_db'
+  # sh 'rake db:restore_db'
 end
 
 desc 'Compress html using htmlcompressor, save compressed to src/templates'

@@ -20,6 +20,8 @@ run_local () {
     cd /Users/feng/Downloads/mysql-5.5.25a-osx10.6-x86_64 && \
         ./bin/mysqld \
         --basedir . \
+        --character-set-server utf8 \
+        --collation-server utf8_general_ci \
         --innodb_buffer_pool_size 128m \
         --innodb_flush_method O_DIRECT \
         --max_allowed_packet 16m \
