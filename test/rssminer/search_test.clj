@@ -10,7 +10,7 @@
 (deftest test-search
   (let [rss-ids (range 1 100)
         ids (apply str (interpose "," rss-ids))]
-    (doseq [term ["onsummary" "acategory" "aScottGu"]]
+    (doseq [term ["onsummary" "acategory" "ascottgu"]]
       (let [resp (auth-app {:uri "/api/search"
                             :request-method :get
                             :params {"q" term  "limit" 10}})]

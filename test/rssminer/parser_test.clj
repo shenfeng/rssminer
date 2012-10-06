@@ -34,7 +34,7 @@
     (is (= "http://weblogs.asp.net/scottgu/default.aspx" (:link feed)))
     (is (:published_ts feed))
     (is (= 1 (-> feed :entries count)))
-    (is (= "ASP.NET;acategory;Link Listing;MVC"
+    (is (= "ASP.NET;aCategory;Link Listing;MVC"
            (-> feed :entries first :tags)))
     (are [k] (-> feed :entries first k)
          :author
