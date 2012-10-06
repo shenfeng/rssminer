@@ -21,6 +21,7 @@
       // works for 900, 800, 1080 screen (height)
       // per item 34.85 pixel, first feed to top 138px, 140 px for brower use
       PER_PAGE_FEEDS = Math.floor((h - 138 - 140) / 40),
+      SEARCH_PAGE_SIZE = 12,
       // PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 32.9),
       // show search result count according to screen height
       SEARCH_RESUTL_COUNT = Math.min(Math.floor((h - 370) / 35), 17),
@@ -558,8 +559,23 @@
     });
   }
 
-  function fetch_search (q, tags, authors, cb) {
-    var url = '/api/search?q=' + q + "&fs=1&limit=14&tags=" + tags + "&authors=" + authors ;
+  function filter_hash (tags, authors, q, offset) {
+    var filter = "";
+    if(q !== undefined) {
+      filter += "search?q=" + q + "&";
+    }
+    filter += ("tags=" + tags.join(SEPERATOR) + "&authors=" + authors.join(SEPERATOR));
+    if(offset !== undefined) {
+      filter += ("&offset=" + offset);
+    }
+    return filter;
+  }
+
+  function fetch_search (q, tags, authors, offset, cb) {
+    var url = "/api/search?" + util.params({
+      q: q, fs: 1, limit: SEARCH_PAGE_SIZE,
+      tags: tags, offset: offset, authors: authors
+    });
     tags = _.filter(tags.split(SEPERATOR), _.identity);
     authors = _.filter(authors.split(SEPERATOR), _.identity);
     ajax.get(url, function (resp) {
@@ -567,26 +583,35 @@
       resp.authors = _.map(resp.authors, function (val, key, map) {
         var idx = _.indexOf(authors, key),
             tmp = _.clone(authors);
-        if(idx === -1) {
-          tmp.push(key);
-        } else {
+        if(idx === -1) { tmp.push(key); } else {
           tmp = _.filter(tmp, function (t) { return t !== key; });
         }
-        var filter = "tags=" + tags.join(SEPERATOR) + "&authors=" + tmp.join(SEPERATOR);
+        var filter = filter_hash(tags, tmp);
         return {author: key, count: val, filter: filter, selected: idx > -1};
       });
       resp.tags = _.map(resp.tags, function (val, key, map) {
         var idx = _.indexOf(tags, key),
             tmp = _.clone(tags);
-        if(idx === -1) {
-          tmp.push(key);
-        } else {
+        if(idx === -1) { tmp.push(key); } else {
           tmp = _.filter(tmp, function (t) { return t !== key; });
         }
-        var filter = "tags=" + tmp.join(SEPERATOR) + "&authors=" + authors.join(SEPERATOR);
+        var filter = filter_hash(tmp, authors);
         return {tag: key, count: val, filter: filter, selected: idx > -1};
       });
-      resp.q = q;
+      var pages = [], os = 0;
+      for(var i = 0; i < 5; i++) {
+        if(resp.total > (os + SEARCH_PAGE_SIZE)) {
+          var page = {};
+          page.page = (i + 1);
+          page.href = filter_hash(tags, authors, q, os);
+          if(os === offset) { page.current = true; }
+          pages.push(page);
+          os += SEARCH_PAGE_SIZE;
+        } else {
+          break;
+        }
+      }
+      if(pages.length) { resp.pager = {pager: 1, pages: pages}; }
       cb(resp);
     });
   }

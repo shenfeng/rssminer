@@ -78,10 +78,12 @@
          :session (:demo-user @cfg/rssminer-conf)}))))
 
 (defn search [req]
-  (let [{:keys [q limit tags authors fs]} (:params req)
+  (let [{:keys [q limit tags authors fs offset]} (:params req)
         uid (user-id-from-session req)
-        limit (min 20 (to-int limit))]
-    (search* q tags authors uid limit fs)))
+        limit (min 20 (to-int limit))
+        offset (min (to-int (or offset "0")) 80)
+        fs (and (= 0 offset) (= fs "1"))]
+    (search* q tags authors uid limit offset fs)))
 
 (defn get-favicon [req]
   (if-let [hostname (-> req :params :h str/reverse)]

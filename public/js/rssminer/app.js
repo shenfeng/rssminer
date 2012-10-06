@@ -4,8 +4,14 @@
       router = RM.Router,
       data_api = RM.data,
       notify = RM.notify,
-      to_html = Mustache.render,
       tmpls = RM.tmpls,
+      to_html = function () {
+        var args = _.toArray(arguments);
+        if(args.length === 2) {
+          args.push(tmpls);
+        }
+        return Mustache.render.apply({}, args);
+      },
       util = RM.util,
       layout = RM.layout,
       location = window.location,
@@ -318,7 +324,7 @@
     gcur_has_more = data.pager.has_more;
     show_server_message();
     // iframe.src = 'about:blank';
-    var html = to_html(tmpls.feeds_nav, data, tmpls);
+    var html = to_html(tmpls.feeds_nav, data);
     $navigation.empty().append(html);
     html = to_html(tmpls.sub_feeds, data);
     $welcome_list.empty().append(html);
@@ -468,7 +474,7 @@
         if(!gcur_has_more) {
           $('#navigation .loader').remove();
         } else {
-          var html = to_html(tmpls.feeds_list, data, tmpls);
+          var html = to_html(tmpls.feeds_list, data);
           $('#feed-list').append(html);
         }
       });
@@ -538,10 +544,15 @@
   function search (q, tags, authors, offset) {
     if(q) { $('#search span').hide(); }
     $('#q').val(q);
-    data_api.fetch_search(q, tags, authors, function (data) {
-      var html = to_html(tmpls.search_result, data);
+    data_api.fetch_search(q, tags, authors, offset, function (data) {
+      var $html = $(to_html(tmpls.search_result, data));
       $reading_area.removeClass(SHOW_CONTENT);
-      $welcome_list.empty().append(html);
+      if(data.tags && data.tags.length) {
+        $welcome_list.empty().append($html);
+      } else {
+        $('#search-result .feeds').replaceWith($('.feeds', $html));
+        $('#search-result .pager').replaceWith($('.pager', $html));
+      }
     });
   }
 

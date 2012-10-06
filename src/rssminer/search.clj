@@ -20,8 +20,8 @@
 (defn index-feed [id rss-id {:keys [author tags title summary]}]
   (.index ^Searcher @searcher id rss-id author title summary tags))
 
-(defn search* [term tags authors userid limit fs]
-  {:body (.search ^Searcher @searcher term tags authors userid limit (= fs "1"))
+(defn search* [term tags authors userid limit offset fs]
+  {:body (.search ^Searcher @searcher term tags authors userid limit offset fs)
    :headers cache-control})
 
 ;; (defn search-within-subs [term uid subids limit]

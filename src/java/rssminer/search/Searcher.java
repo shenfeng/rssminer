@@ -228,13 +228,10 @@ public class Searcher {
 
 		if (author != null && author.length() > 0) {
 			author = Mapper.toSimplified(author);
-			List<String> authors = Utils.simpleSplit(author);
-			for (String a : authors) {
-				Field f = new Field(AUTHOR, false, a.toLowerCase(), Store.NO,
-						Index.NOT_ANALYZED, TV);
-				f.setBoost(AUTHOR_BOOST);
-				doc.add(f);
-			}
+			Field f = new Field(AUTHOR, false, author, Store.NO,
+					Index.NOT_ANALYZED, TV);
+			f.setBoost(AUTHOR_BOOST);
+			doc.add(f);
 		}
 
 		if (title != null) {
@@ -247,7 +244,9 @@ public class Searcher {
 
 		if (tags != null && tags.length() > 0) {
 			tags = Mapper.toSimplified(tags);
-			List<String> ts = Utils.simpleSplit(tags);
+			List<String> ts = Utils.split(tags, ';');
+			// List<String> ts = Utils.simpleSplit(tags);
+			// String[] ts = tags.split(";\\s?");
 			for (String tag : ts) {
 				Field f = new Field(TAG, false, tag.toLowerCase(), Store.NO,
 						Index.NOT_ANALYZED, TV);
@@ -312,15 +311,16 @@ public class Searcher {
 	}
 
 	public Map<String, Object> search(String q, String tags, String authors,
-			int userID, int limit, boolean facted) throws IOException,
-			ParseException, SQLException {
+			int userID, int limit, int offset, boolean facted)
+			throws IOException, ParseException, SQLException {
 		List<Integer> subids = DBHelper.getUserSubIDS(ds, userID);
 		IndexReader reader = getReader();
 		IndexSearcher searcher = new IndexSearcher(reader);
 		BooleanQuery query = buildQuery(q, subids);
 		addFilter(query, tags, authors);
 
-		TopScoreDocCollector top = TopScoreDocCollector.create(limit, false);
+		TopScoreDocCollector top = TopScoreDocCollector.create(limit + offset,
+				false);
 		Map<String, Object> ret = new TreeMap<String, Object>();
 		if (facted) {
 			FacetCollector f = new FacetCollector();
@@ -332,7 +332,7 @@ public class Searcher {
 			searcher.search(query, top);
 		}
 
-		TopDocs docs = top.topDocs();
+		TopDocs docs = top.topDocs(offset);
 		final int count = docs.scoreDocs.length;
 		List<Integer> feedids = new ArrayList<Integer>(count);
 		for (int i = 0; i < count; i++) {
