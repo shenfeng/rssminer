@@ -5,6 +5,51 @@
 }
 
 #search-result {
+    padding-top: 10px;
+    input {
+        display: block;
+        width: 300px;
+        padding: 3px;
+        margin: 4px auto;
+    }
+    table {
+        width: 850px;
+        background: #f4f4f4;
+        border-radius: 10px;
+        margin-left: 20px;
+        padding: 10px 20px;
+        .name { width: 60px; }
+    }
+    .c {
+        font-size: 12px;
+        font-family: sans-serif;
+        color: #999;
+    }
+    .filters {
+        font-size: 13px;
+        a {
+            display: inline-block;
+            padding: 4px;
+            color: #121212;
+        }
+        li {
+            &:hover {
+                a { color: black; }
+            }
+            &.selected {
+                background: lighten($header_color, 8%);
+                a { color: white; }
+                .c { color: #eee; }
+            }
+            cursor: pointer;
+            border-radius: 3px;
+            margin: 2px;
+            display: inline-block;
+        }
+    }
+}
+
+#instant-search {
     $color: #cacaca;
     box-shadow: 0px 2px 4px 2px $color;
     width: $search_width;
@@ -21,20 +66,17 @@
         padding: 8px 0 8px 6px;
     }
     b { color: #191919; }
-    .feed {
+    li {
         a {
             max-width: $search_width - 38px;
         }
-        .title { margin-left: 19px; }
         &.selected { @include selected(); }
     }
     .title {
         max-width: $search_width - 208px;
         @include overflow-ellipsis();
-        /* display: inline-block; */
         color: #111;
     }
-    /* li { height: 37px; } */
     .indicator {
         top: 8px;
         height: 7px;
@@ -47,10 +89,10 @@
             padding: 6px 0 6px 6px;
         }
         border-bottom: 1px solid #eee;
-        li {
-            position: relative;
-            &.selected { @include selected(); }
-        }
+    }
+    li {
+        position: relative;
+        &.selected { @include selected(); }
     }
     .sub { font-size: 12px; color: #666; padding-left: 10px; }
     .count { top: 11px; right: 7px; }

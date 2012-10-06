@@ -16,6 +16,7 @@
 
   var MAX_PAGER = 9,
       WELCOME_MAX_PAGE = 7,
+      SEPERATOR = ',',
       h = screen.height,
       // works for 900, 800, 1080 screen (height)
       // per item 34.85 pixel, first feed to top 138px, 140 px for brower use
@@ -507,7 +508,7 @@
     return str;
   }
 
-  function fetch_search_result (q, cb) {
+  function instant_search (q, cb) {
     var subs = [],
         count = 0,
         grouped = parse_subs(subscriptions_cache);
@@ -541,16 +542,53 @@
       var url = '/api/search?q=' + q + "&limit=" + limit;
       last_search_ajax = ajax.sget(url, function (resp) {
         last_search_ajax = undefined;
-        var feeds = _.map(resp, function (feed) {
-          feed = transform_item(feed, 1, NEWEST_TAB);
-          feed.title_h = hight_search(feed.title, [q]);
-          return feed;
-        });
-        cb({subs: subs, feeds: feeds, sub_cnt: subs.length});
+        transform_searched_feeds(resp, q);
+        cb({subs: subs, server: resp, sub_cnt: subs.length, q: q});
       });
     } else {
-      cb({subs: subs, sub_cnt: subs.length});
+      cb({subs: subs, sub_cnt: subs.length, q: q});
     }
+  }
+
+  function transform_searched_feeds (resp, q) {
+    resp.feeds = _.map(resp.feeds, function (feed) {
+      feed = transform_item(feed, 1, NEWEST_TAB);
+      feed.title_h = hight_search(feed.title, [q]);
+      return feed;
+    });
+  }
+
+  function fetch_search (q, tags, authors, cb) {
+    var url = '/api/search?q=' + q + "&fs=1&limit=14&tags=" + tags + "&authors=" + authors ;
+    tags = _.filter(tags.split(SEPERATOR), _.identity);
+    authors = _.filter(authors.split(SEPERATOR), _.identity);
+    ajax.get(url, function (resp) {
+      transform_searched_feeds(resp, q);
+      resp.authors = _.map(resp.authors, function (val, key, map) {
+        var idx = _.indexOf(authors, key),
+            tmp = _.clone(authors);
+        if(idx === -1) {
+          tmp.push(key);
+        } else {
+          tmp = _.filter(tmp, function (t) { return t !== key; });
+        }
+        var filter = "tags=" + tags.join(SEPERATOR) + "&authors=" + tmp.join(SEPERATOR);
+        return {author: key, count: val, filter: filter, selected: idx > -1};
+      });
+      resp.tags = _.map(resp.tags, function (val, key, map) {
+        var idx = _.indexOf(tags, key),
+            tmp = _.clone(tags);
+        if(idx === -1) {
+          tmp.push(key);
+        } else {
+          tmp = _.filter(tmp, function (t) { return t !== key; });
+        }
+        var filter = "tags=" + tmp.join(SEPERATOR) + "&authors=" + authors.join(SEPERATOR);
+        return {tag: key, count: val, filter: filter, selected: idx > -1};
+      });
+      resp.q = q;
+      cb(resp);
+    });
   }
 
   function update_subscrptions (subscriptions, data) {
@@ -615,13 +653,14 @@
     data: {
       add_subscription: add_subscription,
       fetch_group_feeds: fetch_group_feeds,
-      fetch_search_result: fetch_search_result,
+      fetch_search: fetch_search,
       fetch_sub_feeds: fetch_sub_feeds,
-      fetch_welcome: fetch_welcome,
       fetch_summary: fetch_summary,
+      fetch_welcome: fetch_welcome,
       get_subscription: get_subscription,
       get_subscriptions: function () { return subscriptions_cache || []; },
       get_user_subs: get_user_subs,
+      instant_search: instant_search,
       list_folder_names: list_folder_names,
       mark_as_read: mark_as_read,
       save_reading_times: save_reading_times,

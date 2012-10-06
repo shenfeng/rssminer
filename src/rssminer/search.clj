@@ -21,7 +21,7 @@
   (.index ^Searcher @searcher id rss-id author title summary tags))
 
 (defn search* [term tags authors userid limit fs]
-  {:body (.search ^Searcher @searcher term tags authors userid limit (nil? fs))
+  {:body (.search ^Searcher @searcher term tags authors userid limit (= fs "1"))
    :headers cache-control})
 
 ;; (defn search-within-subs [term uid subids limit]

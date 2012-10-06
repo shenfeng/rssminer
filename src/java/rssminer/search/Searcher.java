@@ -148,42 +148,42 @@ public class Searcher {
 
 	private BooleanQuery buildQuery(String text, List<Integer> rssids)
 			throws IOException {
-		List<String> terms = getTerms(text);
-		BooleanQuery q = new BooleanQuery();
-
-		for (Term t : ANALYZE_FIELDS) {
-			BooleanQuery part = new BooleanQuery();
-			for (String term : terms) {
-				part.add(new TermQuery(t.createTerm(term)), Occur.MUST);
+		BooleanQuery query = new BooleanQuery();
+		if (text != null && !text.isEmpty()) {
+			List<String> terms = getTerms(text);
+			BooleanQuery q = new BooleanQuery();
+			for (Term t : ANALYZE_FIELDS) {
+				BooleanQuery part = new BooleanQuery();
+				for (String term : terms) {
+					part.add(new TermQuery(t.createTerm(term)), Occur.MUST);
+				}
+				q.add(part, Occur.SHOULD);
 			}
-			q.add(part, Occur.SHOULD);
-		}
 
-		List<String> parts = Utils.simpleSplit(text);
-		for (Term t : SIMPLE_SPLIT_FIELDS) {
-			BooleanQuery part = new BooleanQuery();
-			for (String term : parts) {
-				part.add(new TermQuery(t.createTerm(term.toLowerCase())),
-						Occur.MUST);
+			List<String> parts = Utils.simpleSplit(text);
+			for (Term t : SIMPLE_SPLIT_FIELDS) {
+				BooleanQuery part = new BooleanQuery();
+				for (String term : parts) {
+					part.add(new TermQuery(t.createTerm(term.toLowerCase())),
+							Occur.MUST);
+				}
+				q.add(part, Occur.SHOULD);
 			}
-			q.add(part, Occur.SHOULD);
-		}
 
+			query.add(q, Occur.MUST);
+		}
 		BooleanQuery ids = new BooleanQuery();
 		for (Integer rid : rssids) {
 			ids.add(new TermQuery(RSS_ID_TERM.createTerm(rid.toString())),
 					Occur.SHOULD);
 		}
-
-		BooleanQuery query = new BooleanQuery();
-		query.add(q, Occur.MUST);
 		query.add(ids, Occur.MUST);
 		return query;
 	}
 
 	private void addFilter(BooleanQuery query, String tags, String authors) {
 		if (tags != null && tags.length() > 0) {
-			List<String> ts = Utils.split(tags, '+');
+			List<String> ts = Utils.split(tags, ',');
 			BooleanQuery part = new BooleanQuery();
 			for (String tag : ts) {
 				part.add(new TermQuery(TAG_TERM.createTerm(tag)), Occur.MUST);
@@ -191,8 +191,8 @@ public class Searcher {
 			query.add(part, Occur.MUST);
 		}
 
-		if (authors != null && tags.length() > 0) {
-			List<String> as = Utils.split(authors, '+');
+		if (authors != null && authors.length() > 0) {
+			List<String> as = Utils.split(authors, ',');
 			BooleanQuery part = new BooleanQuery();
 			for (String author : as) {
 				part.add(new TermQuery(AUTHOR_TERM.createTerm(author)),
@@ -326,8 +326,8 @@ public class Searcher {
 			FacetCollector f = new FacetCollector();
 			Collector col = MultiCollector.wrap(top, f);
 			searcher.search(query, col);
-			ret.put("author", f.getAuthor(15));
-			ret.put("tag", f.getTag(15));
+			ret.put("authors", f.getAuthor(15));
+			ret.put("tags", f.getTag(15));
 		} else {
 			searcher.search(query, top);
 		}
@@ -341,6 +341,7 @@ public class Searcher {
 			feedids.add(Integer.valueOf(doc.get(FEED_ID)));
 		}
 		reader.close(); // searcher.close will not close reader
+		ret.put("total", docs.totalHits);
 		if (feedids.isEmpty()) {
 			ret.put("feeds", new ArrayList<Feed>(0));
 		} else {

@@ -535,6 +535,16 @@
     return false;
   }
 
+  function search (q, tags, authors, offset) {
+    if(q) { $('#search span').hide(); }
+    $('#q').val(q);
+    data_api.fetch_search(q, tags, authors, function (data) {
+      var html = to_html(tmpls.search_result, data);
+      $reading_area.removeClass(SHOW_CONTENT);
+      $welcome_list.empty().append(html);
+    });
+  }
+
   util.delegate_events($(document), {
     'click .add-sub a.import': import_from_greader,
     'change #all-settings select': save_pref_sort,
@@ -560,7 +570,8 @@
       'read/f_:group?p=:page&s=:sort': read_group_subs,
       'read/:id?p=:page&s=:sort': read_subscription,
       'read/f_:group/:id?p=:page&s=:sort': read_group_feed,
-      'read/:id/:id?p=:page&s=:sort': read_feed
+      'read/:id/:id?p=:page&s=:sort': read_feed,
+      'search?q=:q&tags=:tags&authors=:authors&offset=:offset': search
     });
   });
 

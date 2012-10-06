@@ -10,6 +10,7 @@
 
   var SELECTED = 'selected',
       $ct_menu = $('#ct-menu'),
+      INSTANT_SEARCH = 'instant-search',
       WAIT_BEFORE_SEARCH = 100;
 
   var $lis,
@@ -53,7 +54,7 @@
     var q = $.trim($q.val());
     switch(e.which) {
     case 13:                    // enter
-      var $selected = $('#search-result .selected');
+      var $selected = $('#' + INSTANT_SEARCH + ' .selected');
       if($selected.length) {
         hide_search_context_menu();
         $q.blur();
@@ -83,10 +84,10 @@
   function show_search_result (data) {
     util.add_even(data.feeds);
     util.add_even(data.subs);
-    var html = to_html(tmpls.search_result, data);
+    var html = to_html(tmpls.instant_search, data);
     hide_search_context_menu();
     $header.append(html).find('img').each(util.favicon_ok);
-    $lis = $('#search-result .subs > li, #search-result .feeds > li');
+    $lis = $('#' + INSTANT_SEARCH + ' li');
     $lis.mouseenter(function (e) {
       current_idx = _.indexOf($lis, this);
       select_by_index();
@@ -100,19 +101,20 @@
 
   function hide_search_context_menu (e) {
     if(!e) {                    // call by others
-      $('#search-result').remove();
+      $('#' + INSTANT_SEARCH).remove();
       $ct_menu.hide();
     } else if(e.which !== 3) {  // not right click
-      $('#search-result').remove();
+      $('#' + INSTANT_SEARCH).remove();
       $ct_menu.hide();
     }
   }
 
   function do_search (q) {
     // 16 is subscriptions count
-    data.fetch_search_result(q, function (result) {
+    data.instant_search(q, function (result) {
+      var server = result.server;
       // if no result, wait for result
-      if(result.sub_cnt || (result.feeds && result.feeds.length)) {
+      if(result.sub_cnt || (server && server.feeds && server.feeds.length)) {
         show_search_result(result);
       }
     });

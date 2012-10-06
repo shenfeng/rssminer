@@ -1,48 +1,53 @@
 <div id="search-result">
-  {{#sub_cnt}}
-    <ul class="subs">
-      {{#subs}}
-        <li class="ficon-error {{ cls }}">
-          <a href="#{{href}}">
-            {{#is_group}}
-              <i class="icon-folder-open"></i>
-            {{/is_group}}
-            {{^is_group}}
-            <img src="{{img}}" width="15" height="15" />
-            <i class="icon-rss"></i>
-            {{/is_group}}
-            <span class="title">{{{title}}}</span>
-            <span class="count">
-              {{#dislike}}
-                <span class="unread-dislike"
-                  data-title="dislike count">{{dislike}}</span>
-              {{/dislike}}
-              {{#neutral}}
-                <span class="unread-neutral"
-                  data-title="neutral count">{{neutral}}</span>
-              {{/neutral}}
-              {{#like}}
-                <span class="unread-like"
-                  data-title="like count">{{like}}</span>
-              {{/like}}
-              <span class="total" data-title="total feed count">
-                {{ total }}
-              </span>
-            </span>
-          </a>
-        </li>
-      {{/subs}}
-    </ul>
-  {{/sub_cnt}}
+  <!-- <input value="{{q}}"/> -->
+  <table>
+    <tr>
+      {{#tags.length}}<td class="name">Tags:</td>{{/tags.length}}
+        <td>
+          <ul class="filters">
+            {{#tags}}
+              <li {{#selected}}class="selected"{{/selected}}>
+                <a href="#search?q={{q}}&{{filter}}&offset=0">
+                  <span class="filter">{{ tag }}</span>
+                  <span class="c">{{ count }}</span>
+                </a>
+              </li>
+            {{/tags}}
+          </ul>
+        </td>
+    </tr>
+    <tr>
+      {{#authors.length}}<td class="name">Authors: </td>{{/authors.length}}
+        <td>
+          <ul class="filters">
+            {{#authors}}
+              <li {{#selected}}class="selected"{{/selected}}>
+                <a href="#search?q={{q}}&{{filter}}&offset=0">
+                  <span class="filter">{{ author }}</span>
+                  <span class="c">{{ count }}</span></a>
+              </li>
+            {{/authors}}
+          </ul>
+        </td>
+    </tr>
+  </table>
   <ul class="feeds">
     {{#feeds}}
-      <li class="feed {{cls}}">
+      <li class="feed {{cls}}" data-id="{{id}}">
         <a href="#{{href}}">
           <span class="indicator"></span>
-          <span class="title">{{{title_h}}}</span>
-          {{#sub}}
-            <span class="sub" data-title="from {{ title }}">{{ title }}</span>
-          {{/sub}}
+          <span class="title">{{{title}}}</span>
+          <i class="thumbs">
+            <i class="icon-thumbs-up"
+              data-title="like it, give me more like this in recommend tab">
+            </i>
+            <i class="icon-thumbs-down"
+              data-title="dislike, less in recommend tab">
+            </i>
+          </i>
+          <span class="author"
+            data-title="author">{{author}}</span>
+            <span class="date">{{ date }}</span>
         </a>
       </li>
     {{/feeds}}
