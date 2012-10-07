@@ -599,7 +599,7 @@
         return {tag: key, count: val, filter: filter, selected: idx > -1};
       });
       var pages = [], os = 0;
-      for(var i = 0; i < 5; i++) {
+      for(var i = 0; i < 7; i++) {
         if(resp.total > (os + SEARCH_PAGE_SIZE)) {
           var page = {};
           page.page = (i + 1);
