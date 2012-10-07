@@ -86,8 +86,9 @@ public class FacetCollector extends Collector {
     private final Counter author = new Counter(1024);
     private final Counter tag = new Counter(1024);
 
-    private static final int STEP = 3078;
-    private static final int STEP2 = 10240;
+    private static final int STEP = 1024;
+    private static final int STEP2 = 5120;
+    private static final int STEP3 = 12288;
 
     public void setScorer(Scorer scorer) throws IOException {
     }
@@ -95,8 +96,12 @@ public class FacetCollector extends Collector {
     public void collect(int doc) throws IOException {
         int id = doc + base;
         count += 1;
-
-        if (count > STEP2) {
+        if (count > STEP3) {
+            step = 8;
+            if (count % 8 != 0) {
+                return;
+            }
+        } else if (count > STEP2) {
             step = 4;
             if (count % 4 != 0) { // 25%
                 return;
