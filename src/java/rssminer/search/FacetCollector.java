@@ -90,6 +90,10 @@ public class FacetCollector extends Collector {
     private static final int STEP2 = 5120;
     private static final int STEP3 = 12288;
 
+    public FacetCollector(IndexReader reader) {
+        this.reader = reader;
+    }
+
     public void setScorer(Scorer scorer) throws IOException {
     }
 
@@ -112,7 +116,6 @@ public class FacetCollector extends Collector {
                 return;
             }
         }
-
         TermFreqVector tv = reader.getTermFreqVector(id, Searcher.AUTHOR);
         if (tv != null) {
             String[] terms = tv.getTerms();
@@ -141,7 +144,6 @@ public class FacetCollector extends Collector {
     public void setNextReader(IndexReader reader, int docBase)
             throws IOException {
         this.base = docBase;
-        this.reader = reader;
     }
 
     public boolean acceptsDocsOutOfOrder() {

@@ -12,25 +12,26 @@ import org.apache.lucene.store.FSDirectory;
 
 public class FactedSearch {
 
-	public static void main(String[] args) throws CorruptIndexException,
-			IOException {
+    public static void main(String[] args) throws CorruptIndexException,
+            IOException {
 
-		IndexSearcher searcher = new IndexSearcher(IndexReader.open(FSDirectory
-				.open(new File("/var/rssminer/index"))));
+        IndexReader reader = IndexReader.open(FSDirectory.open(new File(
+                "/var/rssminer/index")));
+        IndexSearcher searcher = new IndexSearcher(reader);
 
-		for (int i = 0; i < 100; i++) {
-			long start = System.currentTimeMillis();
+        for (int i = 0; i < 100; i++) {
+            long start = System.currentTimeMillis();
 
-			TermQuery query = new TermQuery(new Term(Searcher.CONTENT, "http"));
-			// TopDocs docs = searcher.search(query, 10);
-			// System.out.println(docs.totalHits);
+            TermQuery query = new TermQuery(new Term(Searcher.CONTENT, "http"));
+            // TopDocs docs = searcher.search(query, 10);
+            // System.out.println(docs.totalHits);
 
-			FacetCollector collector = new FacetCollector();
-			searcher.search(query, collector);
-			collector.getAuthor(20);
-			collector.getTag(20);
-			System.out.println(System.currentTimeMillis() - start);
-			// collector.print();
-		}
-	}
+            FacetCollector collector = new FacetCollector(null);
+            searcher.search(query, collector);
+            collector.getAuthor(20);
+            collector.getTag(20);
+            System.out.println(System.currentTimeMillis() - start);
+            // collector.print();
+        }
+    }
 }

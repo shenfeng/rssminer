@@ -321,7 +321,7 @@ public class Searcher {
                 false);
         Map<String, Object> ret = new TreeMap<String, Object>();
         if (facted) {
-            FacetCollector f = new FacetCollector();
+            FacetCollector f = new FacetCollector(reader);
             Collector col = MultiCollector.wrap(top, f);
             searcher.search(query, col);
             ret.put("authors", f.getAuthor(15));
