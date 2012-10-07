@@ -13,7 +13,11 @@ import org.apache.lucene.search.Collector;
 import org.apache.lucene.search.Scorer;
 
 class Int {
-    int i = 1;
+    int i;
+
+    public Int(int count) {
+        this.i = count;
+    }
 }
 
 class Item implements Comparable<Item> {
@@ -43,17 +47,17 @@ class Counter {
         this.map = new HashMap<String, Int>((int) (max / 0.75) + 2);
     }
 
-    public void add(String term) {
+    public void add(String term, int count) {
         Int c = map.get(term);
         if (map.size() >= max) {
             if (c != null) {
-                c.i += 1;
+                c.i += count;
             }
         } else {
             if (c == null) {
-                map.put(term, new Int());
+                map.put(term, new Int(count));
             } else {
-                c.i += 1;
+                c.i += count;
             }
         }
     }
@@ -76,21 +80,39 @@ class Counter {
 
 public class FacetCollector extends Collector {
     private int base = 0;
+    private int count = 0;
+    private int step = 1;
     private IndexReader reader;
     private final Counter author = new Counter(1024);
     private final Counter tag = new Counter(1024);
+
+    private static final int STEP = 3078;
+    private static final int STEP2 = 10240;
 
     public void setScorer(Scorer scorer) throws IOException {
     }
 
     public void collect(int doc) throws IOException {
         int id = doc + base;
+        count += 1;
+
+        if (count > STEP2) {
+            step = 4;
+            if (count % 4 != 0) { // 25%
+                return;
+            }
+        } else if (count > STEP) {
+            step = 2;
+            if (count % 2 != 0) { // 50%
+                return;
+            }
+        }
 
         TermFreqVector tv = reader.getTermFreqVector(id, Searcher.AUTHOR);
         if (tv != null) {
             String[] terms = tv.getTerms();
             for (String t : terms) {
-                author.add(t);
+                author.add(t, step);
             }
         }
 
@@ -98,7 +120,7 @@ public class FacetCollector extends Collector {
         if (tv != null) {
             String[] terms = tv.getTerms();
             for (String t : terms) {
-                tag.add(t);
+                tag.add(t, step);
             }
         }
     }
