@@ -245,8 +245,6 @@ public class Searcher {
         if (tags != null && tags.length() > 0) {
             tags = Mapper.toSimplified(tags).toLowerCase();
             List<String> ts = Utils.split(tags, ';');
-            // List<String> ts = Utils.simpleSplit(tags);
-            // String[] ts = tags.split(";\\s?");
             for (String tag : ts) {
                 Field f = new Field(TAG, false, tag, Store.NO,
                         Index.NOT_ANALYZED, TV);

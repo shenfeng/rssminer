@@ -35,6 +35,13 @@
   (when s
     (if (> (.length s) len) (.substring s 0 len) s)))
 
+(defn- tag? [^String s]
+  (let [c (.length s)]
+    (if (> c 1)
+      true
+      (when (and (= c 1) (> (int (.charAt s 0)) 255))
+        true))))
+
 ;; http://hi.baidu.com/maczhijia/rss 0 feeds
 ;;; http://blogs.innodb.com/wp/feed/
 
@@ -47,8 +54,9 @@
                         (-> e :contents first :value trim)
                         (-> e :description :value trim))
               :link link
-              :tags (let [t (s/join ";" (map #(-> % :name trim)
-                                              (:categories e)))]
+              :tags (let [t (s/join ";" (filter tag?
+                                                (map #(-> % :name trim)
+                                                     (:categories e))))]
                       (most-len t 128))
               :updated_ts (:updatedDate e)
               :published_ts (let [s (or (:publishedDate e)

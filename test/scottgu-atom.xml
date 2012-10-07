@@ -155,6 +155,8 @@
 			scheme="http://weblogs.asp.net/scottgu/archive/tags/ASP.NET/default.aspx" />
 		<category term="aCategory"
 			scheme="http://weblogs.asp.net/scottgu/archive/tags/.NET/default.aspx" />
+<category term="a"
+			scheme="http://weblogs.asp.net/scottgu/archive/tags/.NET/default.aspx" />
 		<category term="Link Listing"
 			scheme="http://weblogs.asp.net/scottgu/archive/tags/Link+Listing/default.aspx" />
 		<category term="MVC"

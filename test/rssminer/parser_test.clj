@@ -14,7 +14,7 @@
     (is (= "http://www.ppurl.com" (:link feed)))
     (is (:published_ts feed))
     (is (= 1 (-> feed :entries count)))
-    (is (= "computer;R" (-> feed :entries first :tags)))
+    (is (= "computer" (-> feed :entries first :tags)))
     (are [k] (-> feed :entries first k)
          :author
          :title
