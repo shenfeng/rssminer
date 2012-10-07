@@ -544,10 +544,11 @@
   function search (q, tags, authors, offset) {
     if(q) { $('#search span').hide(); }
     $('#q').val(q);
-    data_api.fetch_search(q, tags, authors, offset, function (data) {
+    var fs = !$('#search-result').length || offset === 0;
+    data_api.fetch_search(q, tags, authors, offset, fs, function (data) {
       var $html = $(to_html(tmpls.search_result, data));
       $reading_area.removeClass(SHOW_CONTENT);
-      if(data.tags && data.tags.length) {
+      if(fs) {
         $welcome_list.empty().append($html);
       } else {
         $('#search-result .feeds').replaceWith($('.feeds', $html));

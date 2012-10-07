@@ -21,7 +21,7 @@
       // works for 900, 800, 1080 screen (height)
       // per item 34.85 pixel, first feed to top 138px, 140 px for brower use
       PER_PAGE_FEEDS = Math.floor((h - 138 - 140) / 40),
-      SEARCH_PAGE_SIZE = 12,
+      SEARCH_PAGE_SIZE = PER_PAGE_FEEDS - 2,
       // PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 32.9),
       // show search result count according to screen height
       SEARCH_RESUTL_COUNT = Math.min(Math.floor((h - 370) / 35), 17),
@@ -571,9 +571,9 @@
     return filter;
   }
 
-  function fetch_search (q, tags, authors, offset, cb) {
+  function fetch_search (q, tags, authors, offset, fs, cb) {
     var url = "/api/search?" + util.params({
-      q: q, fs: 1, limit: SEARCH_PAGE_SIZE,
+      q: q, fs: fs ? 1 : '', limit: SEARCH_PAGE_SIZE,
       tags: tags, offset: offset, authors: authors
     });
     tags = _.filter(tags.split(SEPERATOR), _.identity);

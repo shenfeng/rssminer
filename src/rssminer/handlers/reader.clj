@@ -82,7 +82,7 @@
         uid (user-id-from-session req)
         limit (min 20 (to-int limit))
         offset (min (to-int (or offset "0")) 80)
-        fs (and (= 0 offset) (= fs "1"))]
+        fs (= fs "1")]
     (search* q tags authors uid limit offset fs)))
 
 (defn get-favicon [req]
