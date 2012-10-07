@@ -42,7 +42,8 @@
             <span class="indicator"></span>
             <span class="title">{{{title_h}}}</span>
             {{#sub}}
-              <span class="sub" data-title="from {{ title }}">{{ title }}</span>
+              <span class="sub"
+                data-title="from {{ title }}">{{ title }}</span>
             {{/sub}}
           </a>
         </li>
@@ -52,7 +53,7 @@
   <ul>
     <li>
       <a href="#search?q={{q}}&tags=&authors=&offset=0">
-        search <b>{{q}}</b>
+        search <b>{{q}}</b> related feed
         {{#server}}
           <span class="count"><span class="total">{{ total }}</span></span>
         {{/server}}

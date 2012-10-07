@@ -542,10 +542,9 @@
   }
 
   function search (q, tags, authors, offset) {
-    if(q) { $('#search span').hide(); }
-    $('#q').val(q);
     var fs = !$('#search-result').length || offset === 0;
     data_api.fetch_search(q, tags, authors, offset, fs, function (data) {
+      data.q = q;
       var $html = $(to_html(tmpls.search_result, data));
       $reading_area.removeClass(SHOW_CONTENT);
       if(fs) {
@@ -554,12 +553,28 @@
         $('#search-result .feeds').replaceWith($('.feeds', $html));
         $('#search-result .pager').replaceWith($('.pager', $html));
       }
+      // $('#search-go input').focus();
     });
+  }
+
+  function update_search_hash (e) {
+    var val = $.trim($(this).val());
+    var $link = $('#search-go').find('a');
+    // var hash = 'search?q=&tags=&authors=&offset=0';
+    var hash = location.hash;
+    hash = hash.replace(/q=.*?&/, function (a, b, c) {
+      return "q=" + val + '&';
+    });
+    $link.attr('href', hash);
+    if(e.which === 13) {
+      location.hash = hash;
+    }
   }
 
   util.delegate_events($(document), {
     'click .add-sub a.import': import_from_greader,
     'change #all-settings select': save_pref_sort,
+    'keyup #search-go input': update_search_hash,
     'click #add-subscription': add_subscription,
     'click .show-shortcuts': show_shortcut_help,
     'click #save-settings': save_settings,

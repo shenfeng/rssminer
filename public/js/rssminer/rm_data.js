@@ -16,12 +16,12 @@
 
   var MAX_PAGER = 9,
       WELCOME_MAX_PAGE = 7,
-      SEPERATOR = ',',
+      SEPERATOR = ';',
       h = screen.height,
       // works for 900, 800, 1080 screen (height)
       // per item 34.85 pixel, first feed to top 138px, 140 px for brower use
       PER_PAGE_FEEDS = Math.floor((h - 138 - 140) / 40),
-      SEARCH_PAGE_SIZE = PER_PAGE_FEEDS - 2,
+      SEARCH_PAGE_SIZE = PER_PAGE_FEEDS - 3,
       // PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 32.9),
       // show search result count according to screen height
       SEARCH_RESUTL_COUNT = Math.min(Math.floor((h - 370) / 35), 17),
@@ -600,7 +600,7 @@
       });
       var pages = [], os = 0;
       for(var i = 0; i < 7; i++) {
-        if(resp.total > (os + SEARCH_PAGE_SIZE)) {
+        if(resp.total > (os + 1)) {
           var page = {};
           page.page = (i + 1);
           page.href = filter_hash(tags, authors, q, os);

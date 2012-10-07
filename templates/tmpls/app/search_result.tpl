@@ -1,5 +1,11 @@
 <div id="search-result">
-  <!-- <input value="{{q}}"/> -->
+  <div id="search-go">
+    <input value="{{q}}"/>
+    <a href="#search?q={{q}}&tags=&authors=&offset=0">search</a>
+    {{#total}}
+      <span>About {{ total }} results</span>
+    {{/total}}
+  </div>
   <table>
     <tr>
       {{#tags.length}}<td class="name">Tags:</td>{{/tags.length}}

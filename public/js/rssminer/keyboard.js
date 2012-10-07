@@ -128,7 +128,7 @@
   var prev_key = 0;
 
   function keyboard_shortcut (e) {
-    if($q.is(':focus')) { return; }
+    if($('input').is(':focus')) { return; }
 
     if(prev_key === 71) {       // g
       if(e.which === 65 || e.which === 72) {      // a(ll) or h(ome)

@@ -183,7 +183,7 @@ public class Searcher {
 
     private void addFilter(BooleanQuery query, String tags, String authors) {
         if (tags != null && tags.length() > 0) {
-            List<String> ts = Utils.split(tags, ',');
+            List<String> ts = Utils.split(tags, ';');
             BooleanQuery part = new BooleanQuery();
             for (String tag : ts) {
                 part.add(new TermQuery(TAG_TERM.createTerm(tag)), Occur.MUST);
@@ -192,7 +192,7 @@ public class Searcher {
         }
 
         if (authors != null && authors.length() > 0) {
-            List<String> as = Utils.split(authors, ',');
+            List<String> as = Utils.split(authors, ';');
             BooleanQuery part = new BooleanQuery();
             for (String author : as) {
                 part.add(new TermQuery(AUTHOR_TERM.createTerm(author)),

@@ -1,6 +1,5 @@
 (function () {
   var RM = window.RM,
-      data = RM.data,
       tmpls = RM.tmpls,
       to_html = Mustache.render,
       util = RM.util,
@@ -111,7 +110,7 @@
 
   function do_search (q) {
     // 16 is subscriptions count
-    data.instant_search(q, function (result) {
+    RM.data.instant_search(q, function (result) {
       var server = result.server;
       // if no result, wait for result
       if(result.sub_cnt || (server && server.feeds && server.feeds.length)) {
