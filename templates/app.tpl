@@ -57,6 +57,11 @@
               </a>
             </li>
             <li>
+              <a href="#search?q=&tags=&authors=&offset=0">
+                <i class="icon-search"></i><span>Search</span>
+              </a>
+            </li>
+            <li>
               <a href="#s/help">
                 <i class="icon-info-sign"></i><span>Help</span>
               </a>
