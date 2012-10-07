@@ -219,6 +219,7 @@ public class NaiveBayes {
                         TermFeature h = map.get(text);
                         if (h == null) {
                             h = new TermFeature();
+                            map.put(text, h);
                         }
                         if (vote.vote == 1) { // like
                             h.like += tfidf;
@@ -227,7 +228,6 @@ public class NaiveBayes {
                         } else { // read
                             h.read += tfidf;
                         }
-                        map.put(text, h);
                     }
                 }
             }
