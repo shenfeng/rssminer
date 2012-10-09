@@ -77,9 +77,6 @@ public class Searcher {
     public static Term[] ANALYZE_FIELDS = new Term[] { TITLE_TERM, CONTNET_TERM };
     public static Term[] ALL_FIELDS = new Term[] { TITLE_TERM, CONTNET_TERM,
             TAG_TERM, AUTHOR_TERM };
-    public static Term[] SIMPLE_SPLIT_FIELDS = new Term[] { TAG_TERM,
-            AUTHOR_TERM };
-
     public static final TermVector TV = TermVector.WITH_POSITIONS_OFFSETS;
 
     public static Searcher initGlobalSearcher(String path,
@@ -161,14 +158,12 @@ public class Searcher {
             }
 
             List<String> parts = Utils.simpleSplit(text);
-            for (Term t : SIMPLE_SPLIT_FIELDS) {
-                BooleanQuery part = new BooleanQuery();
-                for (String term : parts) {
-                    part.add(new TermQuery(t.createTerm(term.toLowerCase())),
-                            Occur.MUST);
-                }
-                q.add(part, Occur.SHOULD);
+            BooleanQuery part = new BooleanQuery();
+            for (String term : parts) {
+                // already lower cased by analyzer
+                part.add(new TermQuery(TAG_TERM.createTerm(term)), Occur.MUST);
             }
+            q.add(part, Occur.SHOULD);
 
             query.add(q, Occur.MUST);
         }
