@@ -7,9 +7,12 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 
 import javax.sql.DataSource;
 
@@ -61,6 +64,8 @@ public class Searcher {
     public static final String CONTENT = "content";
     public static final String TAG = "tag";
 
+    public static final int DELAY = 3;
+
     static final float AUTHOR_BOOST = 2;
     static final float TITLE_BOOST = 3;
     static final float TAG_BOOST = 2;
@@ -74,10 +79,61 @@ public class Searcher {
     static Term FEED_ID_TERM = new Term(FEED_ID);
     static Term RSS_ID_TERM = new Term(RSS_ID);
 
+    private volatile boolean closed = false;
+
     public static Term[] ANALYZE_FIELDS = new Term[] { TITLE_TERM, CONTNET_TERM };
     public static Term[] ALL_FIELDS = new Term[] { TITLE_TERM, CONTNET_TERM,
             TAG_TERM, AUTHOR_TERM };
     public static final TermVector TV = TermVector.WITH_POSITIONS_OFFSETS;
+    private RefreshThead mRefreshThead = new RefreshThead();
+
+    private class RefreshThead extends Thread {
+        public RefreshThead() {
+            setName("refresh-reader");
+            setDaemon(true);
+        }
+
+        private List<IndexReader> pendingReader = new LinkedList<IndexReader>();
+
+        public void closeReaders() throws IOException {
+            Iterator<IndexReader> it = pendingReader.iterator();
+            while (it.hasNext()) {
+                IndexReader r = it.next();
+                if (r.getRefCount() == 1) {
+                    r.decRef();
+                    it.remove();
+                }
+            }
+        }
+
+        public void run() {
+            try {
+                while (!closed) {
+                    TimeUnit.MINUTES.sleep(DELAY);
+                    logger.info("refresh");
+                    IndexReader tmp = IndexReader.open(mIndexer, false);
+                    synchronized (Searcher.this) {
+                        pendingReader.add(mReader);
+                        mReader = tmp; // change with new one
+                        mSearcher = new IndexSearcher(mReader);
+                        closeReaders();
+                    }
+                }
+            } catch (InterruptedException ignore) {
+            } catch (Exception e) {
+                logger.error("refresh read thread died", e);
+            }
+            synchronized (Searcher.this) {
+                try {
+                    closeReaders();
+                } catch (IOException ignore) {
+                }
+            }
+            if (pendingReader.size() > 0) {
+                logger.error("pending readers to close " + pendingReader.size());
+            }
+        }
+    }
 
     public static Searcher initGlobalSearcher(String path,
             Map<Keyword, Object> config) throws IOException {
@@ -86,12 +142,14 @@ public class Searcher {
         return SEARCHER;
     }
 
-    private IndexWriter indexer = null;
-    private final String path;
+    private IndexWriter mIndexer = null;
+    private IndexReader mReader = null;
+    private IndexSearcher mSearcher = null;
+    private final String mPath;
 
-    private Map<Keyword, Object> config;
-    private DataSource ds;
-    private Map<String, Float> boosts = new TreeMap<String, Float>();
+    private final Map<Keyword, Object> mConfig;
+    private final DataSource mDs;
+    private final Map<String, Float> mBoosts = new TreeMap<String, Float>();
     public static Searcher SEARCHER; // global
 
     public static void closeGlobalSearcher() {
@@ -107,11 +165,11 @@ public class Searcher {
     private Searcher(Map<Keyword, Object> config, String path)
             throws IOException {
         final IndexWriterConfig cfg = new IndexWriterConfig(V, analyzer);
-        this.path = path;
-        this.config = config;
+        this.mPath = path;
+        this.mConfig = config;
 
-        this.ds = (DataSource) config.get(K_DATA_SOURCE);
-        if (this.ds == null) {
+        this.mDs = (DataSource) config.get(K_DATA_SOURCE);
+        if (this.mDs == null) {
             throw new NullPointerException("ds can not be null");
         }
 
@@ -123,12 +181,15 @@ public class Searcher {
             dir = FSDirectory.open(new File(path));
         }
         // used by classifier
-        boosts.put(AUTHOR, AUTHOR_BOOST);
-        boosts.put(TITLE, TITLE_BOOST);
-        boosts.put(CONTENT, CONTENT_BOOST);
-        boosts.put(TAG, TAG_BOOST);
+        mBoosts.put(AUTHOR, AUTHOR_BOOST);
+        mBoosts.put(TITLE, TITLE_BOOST);
+        mBoosts.put(CONTENT, CONTENT_BOOST);
+        mBoosts.put(TAG, TAG_BOOST);
 
-        indexer = new IndexWriter(dir, cfg);
+        mIndexer = new IndexWriter(dir, cfg);
+        mReader = IndexReader.open(mIndexer, false);
+        mSearcher = new IndexSearcher(mReader);
+        mRefreshThead.start();
     }
 
     private List<String> getTerms(String text) throws IOException {
@@ -198,14 +259,16 @@ public class Searcher {
     }
 
     public void close(boolean optimize) throws IOException {
-        if (indexer != null) {
+        if (mIndexer != null) {
             if (optimize) {
                 logger.info("optimize index");
-                indexer.forceMerge(1);
+                mIndexer.forceMerge(1);
             }
-            logger.info("close Searcher@" + path);
-            indexer.close();
-            indexer = null;
+            logger.info("close Searcher@" + mPath);
+            mIndexer.close();
+            mIndexer = null;
+            closed = true;
+            mRefreshThead.interrupt();
         }
     }
 
@@ -278,73 +341,88 @@ public class Searcher {
     public int[] feedID2DocIDs(List<Integer> feeds) throws IOException {
         int[] array = new int[feeds.size()];
         IndexReader reader = getReader();
-        IndexSearcher searcher = new IndexSearcher(reader);
-        for (int i = 0; i < feeds.size(); i++) {
-            int l = feeds.get(i);
-            array[i] = feedID2DocID(searcher, l);
+        try {
+            IndexSearcher searcher = new IndexSearcher(reader);
+            for (int i = 0; i < feeds.size(); i++) {
+                int l = feeds.get(i);
+                array[i] = feedID2DocID(searcher, l);
+            }
+        } finally {
+            releaseReader();
         }
-        // searcher.close() will not close reader
-        reader.close();
         return array;
     }
 
     public Map<String, Float> getBoost() {
-        return boosts;
+        return mBoosts;
     }
 
-    public IndexReader getReader() throws IOException {
-        return IndexReader.open(indexer, false);
+    public synchronized IndexSearcher getSearcher() { // need to call release
+        mReader.incRef();
+        return mSearcher;
+    }
+
+    // only searcher exits
+    public synchronized IndexReader getReader() throws IOException {
+        mReader.incRef();
+        return mReader;
+    }
+
+    public synchronized void releaseReader() throws IOException {
+        mReader.decRef();
     }
 
     public void index(int feeID, int rssID, String author, String title,
             String summary, String tags) throws IOException {
         Document doc = createDocument(feeID, rssID, author, title, summary,
                 tags);
-        indexer.addDocument(doc);
+        mIndexer.addDocument(doc);
     }
 
     public Map<String, Object> search(String q, String tags, String authors,
             int userID, int limit, int offset, boolean facted)
             throws IOException, ParseException, SQLException {
-        List<Integer> subids = DBHelper.getUserSubIDS(ds, userID);
-        IndexReader reader = getReader();
-        IndexSearcher searcher = new IndexSearcher(reader);
-        BooleanQuery query = buildQuery(q, subids);
-        addFilter(query, tags, authors);
+        List<Integer> subids = DBHelper.getUserSubIDS(mDs, userID);
+        IndexSearcher searcher = getSearcher();
+        try {
+            BooleanQuery query = buildQuery(q, subids);
+            addFilter(query, tags, authors);
 
-        TopScoreDocCollector top = TopScoreDocCollector.create(limit + offset,
-                false);
-        Map<String, Object> ret = new TreeMap<String, Object>();
-        if (facted) {
-            FacetCollector f = new FacetCollector(reader);
-            Collector col = MultiCollector.wrap(top, f);
-            searcher.search(query, col);
-            ret.put("authors", f.getAuthor(15));
-            ret.put("tags", f.getTag(15));
-        } else {
-            searcher.search(query, top);
-        }
+            TopScoreDocCollector top = TopScoreDocCollector.create(limit
+                    + offset, false);
+            Map<String, Object> ret = new TreeMap<String, Object>();
+            if (facted) {
+                FacetCollector f = new FacetCollector(searcher.getIndexReader());
+                Collector col = MultiCollector.wrap(top, f);
+                searcher.search(query, col);
+                ret.put("authors", f.getAuthor(15));
+                ret.put("tags", f.getTag(15));
+            } else {
+                searcher.search(query, top);
+            }
 
-        TopDocs docs = top.topDocs(offset);
-        final int count = docs.scoreDocs.length;
-        List<Integer> feedids = new ArrayList<Integer>(count);
-        for (int i = 0; i < count; i++) {
-            int docid = docs.scoreDocs[i].doc;
-            Document doc = searcher.doc(docid);
-            feedids.add(Integer.valueOf(doc.get(FEED_ID)));
+            TopDocs docs = top.topDocs(offset);
+            final int count = docs.scoreDocs.length;
+            List<Integer> feedids = new ArrayList<Integer>(count);
+            for (int i = 0; i < count; i++) {
+                int docid = docs.scoreDocs[i].doc;
+                Document doc = searcher.doc(docid);
+                feedids.add(Integer.valueOf(doc.get(FEED_ID)));
+            }
+            ret.put("total", docs.totalHits);
+            if (feedids.isEmpty()) {
+                ret.put("feeds", new ArrayList<Feed>(0));
+            } else {
+                MinerDAO db = new MinerDAO(mConfig);
+                ret.put("feeds", db.fetchFeedsWithScore(userID, feedids));
+            }
+            return ret;
+        } finally {
+            releaseReader();
         }
-        reader.close(); // searcher.close will not close reader
-        ret.put("total", docs.totalHits);
-        if (feedids.isEmpty()) {
-            ret.put("feeds", new ArrayList<Feed>(0));
-        } else {
-            MinerDAO db = new MinerDAO(config);
-            ret.put("feeds", db.fetchFeedsWithScore(userID, feedids));
-        }
-        return ret;
     }
 
     public String toString() {
-        return "Searcher@" + path;
+        return "Searcher@" + mPath;
     }
 }

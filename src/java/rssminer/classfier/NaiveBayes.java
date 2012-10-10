@@ -147,26 +147,32 @@ public class NaiveBayes {
         int[] ids = SEARCHER.feedID2DocIDs(feeds);
         double[] result = new double[ids.length];
         IndexReader reader = SEARCHER.getReader();
-        for (int i = 0; i < ids.length; i++) {
-            int id = ids[i];
-            if (id != -1) {
-                result[i] = classfiy(model, reader, id);
-            } else {
-                result[i] = 1;
+        try {
+            for (int i = 0; i < ids.length; i++) {
+                int id = ids[i];
+                if (id != -1) {
+                    result[i] = classfiy(model, reader, id);
+                } else {
+                    result[i] = 1;
+                }
             }
+        } finally {
+            SEARCHER.releaseReader();
         }
-        reader.close();
         return result;
     }
 
     public static double classify(Map<String, Map<String, Double>> model,
                                   int feedid) throws IOException {
         IndexReader reader = SEARCHER.getReader();
-        IndexSearcher searcher = new IndexSearcher(reader);
-        int docid = SEARCHER.feedID2DocID(searcher, feedid);
-        double score = classfiy(model, reader, docid);
-        reader.close();
-        return score;
+        try {
+            IndexSearcher searcher = new IndexSearcher(reader);
+            int docid = SEARCHER.feedID2DocID(searcher, feedid);
+            double score = classfiy(model, reader, docid);
+            return score;
+        } finally {
+            SEARCHER.releaseReader();
+        }
     }
 
     public static Map<String, Map<String, Double>> train(List<Vote> votes)
@@ -181,14 +187,17 @@ public class NaiveBayes {
             votes.get(i).setDocID(docIDs[i]);
         }
         IndexReader reader = SEARCHER.getReader();
+        try {
+            Map<String, Map<String, Double>> result = new HashMap<String, Map<String, Double>>();
+            for (Term field : Searcher.ALL_FIELDS) {
+                Map<String, Double> sub = trainField(reader, votes, field);
+                result.put(field.field(), sub);
+            }
+            return result;
 
-        Map<String, Map<String, Double>> result = new HashMap<String, Map<String, Double>>();
-        for (Term field : Searcher.ALL_FIELDS) {
-            Map<String, Double> sub = trainField(reader, votes, field);
-            result.put(field.field(), sub);
+        } finally {
+            SEARCHER.releaseReader();
         }
-        reader.close();
-        return result;
     }
 
     private static Map<String, Double> trainField(IndexReader reader,

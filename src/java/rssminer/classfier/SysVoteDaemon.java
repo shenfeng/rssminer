@@ -1,26 +1,34 @@
 package rssminer.classfier;
 
-import clojure.lang.Keyword;
+import static rssminer.Utils.K_DATA_SOURCE;
+import static rssminer.Utils.K_EVENTS_THRESHOLD;
+import static rssminer.Utils.K_REDIS_SERVER;
+import static rssminer.classfier.NaiveBayes.classify;
+import static rssminer.classfier.NaiveBayes.train;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.DelayQueue;
+
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Pipeline;
 import rssminer.Utils;
 import rssminer.db.DBHelper;
 import rssminer.db.Vote;
-
-import javax.sql.DataSource;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.*;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import static rssminer.Utils.*;
-import static rssminer.classfier.NaiveBayes.classify;
-import static rssminer.classfier.NaiveBayes.train;
+import clojure.lang.Keyword;
 
 public class SysVoteDaemon implements Runnable {
 
@@ -34,10 +42,11 @@ public class SysVoteDaemon implements Runnable {
     private final DataSource ds;
     private JedisPool jedis;
     private volatile boolean running = false;
-    private LinkedBlockingQueue<Event> queue = new LinkedBlockingQueue<Event>();
+    private DelayQueue<Event> queue = new DelayQueue<Event>();
     private Thread deamonThread;
 
     static final Map<String, Map<String, Double>> noModel = new TreeMap<String, Map<String, Double>>();
+    // single thread
     private Map<Integer, Integer> combineEvents = new TreeMap<Integer, Integer>();
     private Map<Integer, Map<String, Map<String, Double>>> modelCache = new TreeMap<Integer, Map<String, Map<String, Double>>>();
 
@@ -80,7 +89,7 @@ public class SysVoteDaemon implements Runnable {
             }
             logger.info(
                     "compute and save score for user {}, {} feeds, takes {}ms",
-                    new Object[] {userID, unVoted.size(), w.time()});
+                    new Object[] { userID, unVoted.size(), w.time() });
         }
     }
 
@@ -112,8 +121,7 @@ public class SysVoteDaemon implements Runnable {
                     List<Integer> feedids = e.feedids;
                     for (Integer feedid : feedids) {
                         double score = NaiveBayes.classify(model, feedid);
-                        pipeline.zadd(key, score, feedid.toString()
-                                .getBytes());
+                        pipeline.zadd(key, score, feedid.toString().getBytes());
                     }
                 }
             }
@@ -122,11 +130,10 @@ public class SysVoteDaemon implements Runnable {
             jedis.returnResource(redis);
         }
         logger.info("rss:{}, feed cnt:{}, {} users, take {}ms", new Object[] {
-                e.subid, e.feedids.size(), userIDs.size(), w.time()});
+                e.subid, e.feedids.size(), userIDs.size(), w.time() });
     }
 
-    public void handlerUserEvent(UserEvent e) throws
-            SQLException, IOException {
+    public void handlerUserEvent(UserEvent e) throws SQLException, IOException {
         Integer c = combineEvents.get(e.userID);
         if (c == null) {
             c = 0;
@@ -155,6 +162,7 @@ public class SysVoteDaemon implements Runnable {
         while (running) {
             try {
                 event = queue.take();
+                // logger.error("take event " + event);
                 if (event instanceof FetcherEvent) {
                     handlerFetcherEvent((FetcherEvent) event);
                 } else if (event instanceof UserEvent) {
@@ -249,7 +257,7 @@ public class SysVoteDaemon implements Runnable {
         }
         // System.out.println(model);
         logger.info("train model for user {} with {} feeds takes {}ms",
-                new Object[] {userID, votes.size(), w.time()});
+                new Object[] { userID, votes.size(), w.time() });
         return model;
     }
 }
