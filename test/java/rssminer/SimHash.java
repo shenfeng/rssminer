@@ -192,7 +192,7 @@ public class SimHash {
             return -1;
         }
         TermFreqVector tv = reader.getTermFreqVector(docid, Searcher.CONTENT);
-        if (tv == null) {
+        if (tv == null || tv.getTerms().length < 5) {
             return -1;
         }
         int[] bits = new int[64];
