@@ -146,7 +146,7 @@ public class NaiveBayes {
                                     List<Integer> feeds) throws IOException {
         int[] ids = SEARCHER.feedID2DocIDs(feeds);
         double[] result = new double[ids.length];
-        IndexReader reader = SEARCHER.getReader();
+        IndexReader reader = SEARCHER.acquireReader();
         try {
             for (int i = 0; i < ids.length; i++) {
                 int id = ids[i];
@@ -164,7 +164,7 @@ public class NaiveBayes {
 
     public static double classify(Map<String, Map<String, Double>> model,
                                   int feedid) throws IOException {
-        IndexReader reader = SEARCHER.getReader();
+        IndexReader reader = SEARCHER.acquireReader();
         try {
             IndexSearcher searcher = new IndexSearcher(reader);
             int docid = SEARCHER.feedID2DocID(searcher, feedid);
@@ -186,7 +186,7 @@ public class NaiveBayes {
         for (int i = 0; i < docIDs.length; i++) {
             votes.get(i).setDocID(docIDs[i]);
         }
-        IndexReader reader = SEARCHER.getReader();
+        IndexReader reader = SEARCHER.acquireReader();
         try {
             Map<String, Map<String, Double>> result = new HashMap<String, Map<String, Double>>();
             for (Term field : Searcher.ALL_FIELDS) {

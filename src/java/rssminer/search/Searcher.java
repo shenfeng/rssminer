@@ -24,6 +24,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.Field.TermVector;
+import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -86,6 +87,31 @@ public class Searcher {
             TAG_TERM, AUTHOR_TERM };
     public static final TermVector TV = TermVector.WITH_POSITIONS_OFFSETS;
     private RefreshThead mRefreshThead = new RefreshThead();
+    private List<IndexReader> pendingReader = new LinkedList<IndexReader>();
+
+    private void closeReaders() {
+        Iterator<IndexReader> it = pendingReader.iterator();
+        while (it.hasNext()) {
+            IndexReader r = it.next();
+            if (r.getRefCount() == 1) {
+                try {
+                    r.decRef();
+                } catch (IOException ignore) {
+                }
+                it.remove();
+            }
+        }
+    }
+
+    public void refreshReader() throws CorruptIndexException, IOException {
+        IndexReader tmp = IndexReader.open(mIndexer, false);
+        synchronized (this) {
+            pendingReader.add(mReader);
+            closeReaders();
+            mReader = tmp; // swap with the new one
+            mSearcher = new IndexSearcher(mReader);
+        }
+    }
 
     private class RefreshThead extends Thread {
         public RefreshThead() {
@@ -93,44 +119,15 @@ public class Searcher {
             setDaemon(true);
         }
 
-        private List<IndexReader> pendingReader = new LinkedList<IndexReader>();
-
-        public void closeReaders() throws IOException {
-            Iterator<IndexReader> it = pendingReader.iterator();
-            while (it.hasNext()) {
-                IndexReader r = it.next();
-                if (r.getRefCount() == 1) {
-                    r.decRef();
-                    it.remove();
-                }
-            }
-        }
-
         public void run() {
             try {
                 while (!closed) {
                     TimeUnit.MINUTES.sleep(DELAY);
-                    logger.info("refresh");
-                    IndexReader tmp = IndexReader.open(mIndexer, false);
-                    synchronized (Searcher.this) {
-                        pendingReader.add(mReader);
-                        mReader = tmp; // change with new one
-                        mSearcher = new IndexSearcher(mReader);
-                        closeReaders();
-                    }
+                    refreshReader();
                 }
             } catch (InterruptedException ignore) {
             } catch (Exception e) {
                 logger.error("refresh read thread died", e);
-            }
-            synchronized (Searcher.this) {
-                try {
-                    closeReaders();
-                } catch (IOException ignore) {
-                }
-            }
-            if (pendingReader.size() > 0) {
-                logger.error("pending readers to close " + pendingReader.size());
             }
         }
     }
@@ -340,7 +337,7 @@ public class Searcher {
 
     public int[] feedID2DocIDs(List<Integer> feeds) throws IOException {
         int[] array = new int[feeds.size()];
-        IndexReader reader = getReader();
+        IndexReader reader = acquireReader();
         try {
             IndexSearcher searcher = new IndexSearcher(reader);
             for (int i = 0; i < feeds.size(); i++) {
@@ -357,13 +354,14 @@ public class Searcher {
         return mBoosts;
     }
 
-    public synchronized IndexSearcher getSearcher() { // need to call release
+    public synchronized IndexSearcher acquireSearcher() { // need to call
+                                                          // release
         mReader.incRef();
         return mSearcher;
     }
 
     // only searcher exits
-    public synchronized IndexReader getReader() throws IOException {
+    public synchronized IndexReader acquireReader() throws IOException {
         mReader.incRef();
         return mReader;
     }
@@ -383,7 +381,7 @@ public class Searcher {
             int userID, int limit, int offset, boolean facted)
             throws IOException, ParseException, SQLException {
         List<Integer> subids = DBHelper.getUserSubIDS(mDs, userID);
-        IndexSearcher searcher = getSearcher();
+        IndexSearcher searcher = acquireSearcher();
         try {
             BooleanQuery query = buildQuery(q, subids);
             addFilter(query, tags, authors);

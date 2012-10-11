@@ -5,7 +5,7 @@
         [clojure.data.json :only [json-str]]
         [clojure.java.jdbc :only [print-sql-exception-chain]]
         [rssminer.handlers.subscriptions :only [subscribe]]
-        (rssminer [search :only [use-index-writer!
+        (rssminer [search :only [use-index-writer! searcher
                                  close-global-index-writer!]]
                   [util :only [user-id-from-session now-seconds]]
                   [parser :only [parse-feed]]
@@ -63,6 +63,7 @@
     (let [sub (subscribe "http://link-to-scottgu's rss" (:id user1) nil nil)
           feeds (parse-feed (slurp resource))]
       (save-feeds feeds (:rss_link_id sub)))
+    (.refreshReader @searcher)
     (test-fn)))
 
 (defn lucene-fixture [test-fn]

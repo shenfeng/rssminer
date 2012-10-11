@@ -185,7 +185,7 @@ final class MurmurHash {
 
 public class SimHash {
     public static long simHash(int feedid) throws IOException {
-        IndexReader reader = Searcher.SEARCHER.getReader();
+        IndexReader reader = Searcher.SEARCHER.acquireReader();
         IndexSearcher searcher = new IndexSearcher(reader);
         int docid = Searcher.SEARCHER.feedID2DocID(searcher, feedid);
         if (docid == -1) {

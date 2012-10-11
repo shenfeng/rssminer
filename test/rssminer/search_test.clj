@@ -10,9 +10,19 @@
 (deftest test-search
   (let [rss-ids (range 1 100)
         ids (apply str (interpose "," rss-ids))]
-    (doseq [term ["onsummary" "acategory" "ascottgu"]]
+    (doseq [term ["onsummary" "acategory"]]
       (let [resp (auth-app {:uri "/api/search"
                             :request-method :get
                             :params {"q" term  "limit" 10}})]
         (is (= 200 (:status resp)))
-        (is (= 1 (count (-> resp :body read-json :feeds))))))))
+        (is (= 1 (count (-> resp :body read-json :feeds))))))
+    (let [resp (auth-app {:uri "/api/search"
+                          :request-method :get
+                          :params {"authors"  "aScottgu" "limit" 10}})]
+      (is (= 200 (:status resp)))
+      (is (= 1 (count (-> resp :body read-json :feeds)))))
+    (let [resp (auth-app {:uri "/api/search"
+                          :request-method :get
+                          :params {"tags"  "acategory;mvc" "limit" 10}})]
+      (is (= 200 (:status resp)))
+      (is (= 1 (count (-> resp :body read-json :feeds)))))))
