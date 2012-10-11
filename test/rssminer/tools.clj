@@ -29,9 +29,8 @@ join feeds f on f.id = d.id
 where d.id >= ?  limit ?" start step]))
 
 (defn- fetch-data-by-id [id]
-  (first (mysql-query ["SELECT d.*, f.link, f.title from feed_data d
-join feeds f on f.id = d.id
-where d.id =? " id])))
+  (first (mysql-query ["SELECT d.*, f.link, f.title, f.rss_link_id
+from feed_data d join feeds f on f.id = d.id where d.id =? " id])))
 
 (defn compare-data [req]
   (let [start (Integer/parseInt (or (-> req :params :start) "0"))
@@ -48,11 +47,23 @@ where d.id =? " id])))
                                    (+ start 60) step)})
       (redirect (str "/compare?start=" (+ start (* 100 step)))))))
 
+(defn find-it? [duplicates]
+  (> (count duplicates) 1))
+
+(def distance 2)
+
+;;; TODO, not perfect 2599, 193870[2]CZ.
 (defn find-silimar [req]
   (let [id (Integer/parseInt (or (-> req :params :id) "0"))
-        duplicates (filter #(> % 0) (NearDuplicate/similar id 3))]
-    (to-html similar_tpl {:article (fetch-data-by-id id)
-                          :similars (map fetch-data-by-id duplicates)})))
+        duplicates (filter #(> % 0) (NearDuplicate/similar id distance))]
+    (if (find-it? duplicates)
+      (to-html similar_tpl {:article (fetch-data-by-id id)
+                            :pages (range id (+ id 10))
+                            :similars (map fetch-data-by-id duplicates)})
+      (loop [i (inc id)]
+        (if (find-it? (filter #(> % 0) (NearDuplicate/similar i distance)))
+          (redirect (str "/s?id=" i))
+          (recur (inc i)))))))
 
 (defroutes all-routes
   (GET "/s" [] find-silimar)
@@ -91,7 +102,7 @@ where d.id =? " id])))
   (let [[options _ banner]
         (cli args
              ["-p" "--port" "Port to listen" :default 9091 :parse-fn to-int]
-             ["--worker" "Http worker thread count" :default 2
+             ["--worker" "Http worker thread count" :default 4
               :parse-fn to-int]
              ["--redis-host" "Redis for session store"
               :default "127.0.0.1"]

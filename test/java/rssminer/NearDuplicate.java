@@ -1,11 +1,13 @@
 package rssminer;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -21,12 +23,21 @@ import clojure.lang.Keyword;
 
 class Result {
     final int id;
-    final long[] counter;
+    final int[] counter;
 
-    public Result(int id, long[] counter) {
+    public Result(int id, int[] counter) {
         this.id = id;
         this.counter = counter;
     }
+}
+
+class Int {
+    int i = 0;
+
+    public String toString() {
+        return Integer.toString(i);
+    }
+
 }
 
 class Worker extends Thread {
@@ -50,7 +61,7 @@ class Worker extends Thread {
             long me = feedhashes[i];
             // logger.info("handle {}, me: {}", i, me);
             if (me != -1) {
-                long innerCounter[] = new long[65];
+                int innerCounter[] = new int[65];
                 for (int j = i + 1; j < feedhashes.length; j++) {
                     long other = feedhashes[j];
                     if (other != -1) {
@@ -70,6 +81,7 @@ class Worker extends Thread {
 public class NearDuplicate implements Runnable {
 
     static Logger logger = LoggerFactory.getLogger(NearDuplicate.class);
+    private static final TreeMap<Integer, Int> distCounter = new TreeMap<Integer, Int>();
 
     private static volatile long[] feedhashes;
 
@@ -77,13 +89,15 @@ public class NearDuplicate implements Runnable {
     }
 
     public static void init() {
-        Thread thread = new Thread(new NearDuplicate(), "duplicate");
-        thread.setDaemon(true);
-        thread.start();
+        if (feedhashes == null) {
+            Thread thread = new Thread(new NearDuplicate(), "duplicate");
+            thread.setDaemon(true);
+            thread.start();
+        }
     }
 
     public static List<Integer> similar(int feedid, int distance) {
-        if (feedhashes == null) {
+        if (feedhashes == null || feedhashes[feedid] == -1) {
             return new ArrayList<Integer>(0);
         }
         ArrayList<Integer> result = new ArrayList<Integer>();
@@ -126,15 +140,34 @@ public class NearDuplicate implements Runnable {
         int counter[] = new int[65];
         while (id.get() < feedhashes.length) {
             Result r = done.take();
-            long innerCounter[] = r.counter;
+            int innerCounter[] = r.counter;
+
+            for (int i = 0; i < 4; ++i) {
+                int d = innerCounter[i];
+                if (d > 0) {
+                    Int c = distCounter.get(d);
+                    if (c == null) {
+                        c = new Int();
+                        distCounter.put(d, c);
+                    }
+                    c.i += 1;
+                }
+            }
+
             for (int j = 0; j < innerCounter.length; j++) {
                 counter[j] += innerCounter[j];
             }
             if (r.id % 5000 == 0) {
                 logger.info(r.id + ": " + Arrays.toString(counter));
+                // logger.info("{}: {}", r.id, distCounter.toString());
             }
         }
-        logger.info(Arrays.toString(counter));
+        FileOutputStream fso = new FileOutputStream("/tmp/result");
+        fso.write(Arrays.toString(counter).getBytes());
+        fso.write("\n\n".getBytes());
+        fso.write(distCounter.toString().getBytes());
+        // logger.info();
+        // logger.info();
     }
 
     public void run() {

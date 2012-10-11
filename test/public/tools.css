@@ -22,7 +22,12 @@ img {
 
 #near-duplicate li {
     max-height: 200px;
-    overflow: hidden;
+    overflow: auto;
     margin: 10px;
     border-bottom: 1px solid blue;
+}
+
+.pager li {
+    display: inline;
+    padding: 3px 10px;
 }

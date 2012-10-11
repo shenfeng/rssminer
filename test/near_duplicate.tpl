@@ -8,12 +8,20 @@
   </head>
   <body>
     <div id="page-wrap">
+      <ul class="pager">
+        {{#pages}}
+          <li>
+            <a href="/s?id={{.}}">{{ . }}</a>
+          </li>
+        {{/pages}}
+      </ul>
       <ul id="near-duplicate">
         {{#article}}
           <li class="article">
             <h3>
-              <a href="{{link}}">[{{id}}] {{ title }} </a>
+              <a href="{{link}}">[{{rss_link_id}}:{{id}}] {{ title }} </a>
             </h3>
+            <span class="link">{{ link }}</span>
             <div class="summary">
               {{{summary}}}
             </div>
@@ -22,8 +30,9 @@
         {{#similars}}
           <li class="duplicate">
             <h3>
-              <a href="{{link}}"> [{{id}}] {{ title }}</a>
+              <a href="{{link}}"> [{{rss_link_id}}:{{id}}] {{ title }}</a>
             </h3>
+            <span class="link">{{ link }}</span>
             <div class="summary">
               {{{summary}}}
             </div>
