@@ -54,9 +54,8 @@ import rssminer.jsoup.HtmlUtils;
 import clojure.lang.Keyword;
 
 public class Searcher {
-
     static final Version V = Version.LUCENE_35;
-    static final Analyzer analyzer = new RssminerAnalyzer();
+    public static final Analyzer analyzer = new RssminerAnalyzer();
     public static final Logger logger = LoggerFactory.getLogger(Searcher.class);
     public static final String FEED_ID = "id";
     public static final String RSS_ID = "rid";
