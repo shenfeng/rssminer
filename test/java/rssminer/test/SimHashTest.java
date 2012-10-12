@@ -89,19 +89,15 @@ public class SimHashTest {
         PreparedStatement update = con
                 .prepareStatement("update feeds set simhash = ? where id = ?");
 
-        for (int i = 204565; i < 214565; i++) {
+        for (int i = 891850; i < 891850 + 10; i++) {
             ps.setInt(1, i);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
                 String summary = rs.getString(1);
-                // long h1 = SimHash.simHash(summary);
+                long h1 = SimHash.simHash(summary);
                 long h2 = SimHash.simHash(i);
-                if (h2 != -1) {
-                    update.setLong(1, h2);
-                    update.setInt(1, i);
-                    update.execute();
-                }
+                System.out.println(h1);
                 // if (h1 != h2) {
                 // System.out
                 // .println("not equal " + i + "\t" + h1 + "\t" + h2);
