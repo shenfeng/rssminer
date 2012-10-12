@@ -27,8 +27,15 @@ public class FeedAdapter extends ArrayAdapter<Feed> {
 		if (convertView == null) {
 			convertView = inflater.inflate(layoutId, null);
 		}
+		Feed feed = this.getItem(position);
 		TextView title = (TextView) convertView.findViewById(R.id.feed_title);
-		title.setText(this.getItem(position).title);
+		title.setText(feed.title);
+
+		TextView time = (TextView) convertView.findViewById(R.id.feed_time);
+		time.setText(Utils.dateStr(feed.publishTs));
+
+		TextView author = (TextView) convertView.findViewById(R.id.feed_author);
+		author.setText(feed.author);
 
 		return convertView;
 	}

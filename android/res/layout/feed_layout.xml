@@ -7,7 +7,30 @@
     <TextView
         android:id="@+id/feed_title"
         android:layout_width="fill_parent"
+        android:textSize="16dp"
         android:layout_height="wrap_content"
         android:padding="10dp" />
+
+    <LinearLayout
+        android:paddingLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/feed_time"
+            android:textSize="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#aaa" />
+
+        <TextView
+            android:id="@+id/feed_author"
+            android:paddingLeft="10dp"
+            android:textSize="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#aaa" />
+    </LinearLayout>
 
 </LinearLayout>

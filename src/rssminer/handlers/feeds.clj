@@ -26,6 +26,9 @@
 (defn get-feeds [req]
   (let [fids (map to-int (str/split (-> req :params :id) #"-"))
         user-id (user-id-from-session req)]
+    (when (and (= 1 (count fids))
+               (-> req :params :mr))
+      (mark-read (first fids) user-id))
     {:body (db/fetch-feeds user-id fids) :headers cache-control}))
 
 (defn save-reading-time [req]

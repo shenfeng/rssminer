@@ -10,6 +10,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 
 import android.net.http.AndroidHttpClient;
 import android.util.Log;
@@ -44,5 +45,12 @@ public class RHttpClient {
 		long time = System.currentTimeMillis() - start;
 		Log.d("HTTP", "get " + uri + " takes " + time + " ms");
 		return sb.toString();
+	}
+
+	public static void post(String uri) throws IOException {
+		HttpPost post = new HttpPost(Constants.SERVER + uri);
+		post.addHeader("Cookie", "_id_=zk15v22ul");
+
+		mClient.execute(post);
 	}
 }

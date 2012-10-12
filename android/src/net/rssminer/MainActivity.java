@@ -53,12 +53,13 @@ public class MainActivity extends ListActivity {
 		Feed f = ((FeedAdapter) l.getAdapter()).getItem(position);
 		Intent intent = new Intent(this, DetailActivity.class);
 		intent.putExtra(Constants.FEED_ID_KEY, f.id);
+		intent.putExtra(Constants.FEED_TITLE_KEY, f.title);
 		startActivity(intent);
 	}
 
 	protected void onResume() {
 		super.onResume();
-		mFullScreen = mPreferences.getBoolean(PREF_FULLSCREEN, true);
+		mFullScreen = mPreferences.getBoolean(PREF_FULLSCREEN, false);
 		setFullscreen(mFullScreen);
 	}
 
