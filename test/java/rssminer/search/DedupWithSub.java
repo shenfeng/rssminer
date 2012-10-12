@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -17,7 +16,7 @@ import java.util.TreeMap;
 //    public final int 
 //}
 
-public class SimHashTester {
+public class DedupWithSub {
 
     static String JDBC_URL = "jdbc:mysql://localhost/rssminer?cachePrepStmts=true&useServerPrepStmts=true";
     final static int STEP = 1000;

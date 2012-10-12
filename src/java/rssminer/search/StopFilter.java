@@ -44,7 +44,7 @@ public class StopFilter extends FilteringTokenFilter {
                 "far", "few", "fifth", "first", "five", "followed",
                 "following", "follows", "for", "former", "formerly", "forth",
                 "four", "from", "further", "furthermore", "g", "get", "gets",
-                "getting", "given", "gives", "go", "goes", "going", "gone",
+                "getting", "given", "gives", "goes", "going", "gone",
                 "got", "gotten", "greetings", "h", "had", "happens",
                 "hardly", "has", "have", "having", "he", "hello", "help",
                 "hence", "her", "here", "hereafter", "hereby", "herein",

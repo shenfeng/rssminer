@@ -32,5 +32,13 @@ public class SearcherTest {
 		// List<Feed> result = searcher.search("java technology", 1, 10);
 		// System.out.println(Arrays.toString(result));
 	}
+	
+	public static void main(String[] args) {
+		String[] strings = "abc; sdfsdf".split(";\\s");
+		for (String string : strings) {
+			
+			System.out.println(string);
+		}
+	}
 
 }

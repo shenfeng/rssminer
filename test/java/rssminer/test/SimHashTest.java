@@ -5,23 +5,24 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.Assert;
 import me.shenfeng.dbcp.PerThreadDataSource;
 
-import org.apache.lucene.index.IndexReader;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import clojure.lang.Keyword;
 import rssminer.SimHash;
 import rssminer.search.Searcher;
+import clojure.lang.Keyword;
 
 public class SimHashTest {
+    private static final Logger logger = LoggerFactory
+            .getLogger(SimHashTest.class);
+
     @Test
     public void testHammingDistance() {
         int diff = 1;
@@ -50,58 +51,32 @@ public class SimHashTest {
         }
     }
 
-    private int simhash(String[] terms) {
-        int[] bits = new int[32];
-        for (String term : terms) {
-            int code = term.hashCode();
-            for (int i = 0; i < bits.length; i++) {
-                if (((code >>> i) & 0x1) == 0x1) {
-                    ++bits[i];
-                } else {
-                    --bits[i];
-                }
-            }
-        }
-        int fingerprint = 0;
-        for (int i = 0; i < bits.length; i++) {
-            if (bits[i] > 0) {
-                fingerprint += (1 << i);
-            }
-        }
-        return fingerprint;
-    }
+    private static Connection con;
+    private static final int TOTAL = 1000000;
 
-    private static final Logger logger = LoggerFactory
-            .getLogger(SimHashTest.class);
-
-    public static void main(String[] args) throws IOException, SQLException {
+    static {
         Map<Keyword, Object> config = new HashMap<Keyword, Object>();
         PerThreadDataSource db = new PerThreadDataSource(
                 "jdbc:mysql://localhost/rssminer", "feng", "");
         config.put(rssminer.Utils.K_DATA_SOURCE, db);
-        Searcher.initGlobalSearcher("/var/rssminer/index", config);
+        try {
+            Searcher.initGlobalSearcher("/var/rssminer/index", config);
+            con = db.getConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-        Connection con = db.getConnection();
-
+    @Test
+    public void testWithLuence() throws SQLException {
         PreparedStatement ps = con
                 .prepareStatement("select summary from feed_data where id = ?");
-
-        PreparedStatement update = con
-                .prepareStatement("update feeds set simhash = ? where id = ?");
-
-        for (int i = 891850; i < 891850 + 10; i++) {
+        for (int i = 1; i < TOTAL; i++) {
             ps.setInt(1, i);
             ResultSet rs = ps.executeQuery();
-
             if (rs.next()) {
                 String summary = rs.getString(1);
-                long h1 = SimHash.simHash(summary);
-                long h2 = SimHash.simHash(i);
-                System.out.println(h1);
-                // if (h1 != h2) {
-                // System.out
-                // .println("not equal " + i + "\t" + h1 + "\t" + h2);
-                // }
+                SimHash.simHash(summary);
             }
             if (i % 5000 == 0) {
                 logger.info("handle " + i);
@@ -111,10 +86,17 @@ public class SimHashTest {
     }
 
     @Test
+    public void testWithOutLuence() throws IOException {
+        for (int i = 1; i < TOTAL; i++) {
+            SimHash.simHash(i);
+        }
+    }
+
+    @Test
     public void testSimHash() {
-        int h1 = simhash("the cat sat on a mat".split(" "));
-        int h2 = simhash("the cat sat on the mat".split(" "));
-        int h3 = simhash("we all scream for ice cream".split(" "));
+        long h1 = SimHash.simHash("the cat sat on a mat");
+        long h2 = SimHash.simHash("the cat sat on the mat");
+        long h3 = SimHash.simHash("we all scream for ice cream");
         System.out.println(SimHash.hammingDistance(h1, h2));
         System.out.println(SimHash.hammingDistance(h1, h3));
         System.out.println(SimHash.hammingDistance(h2, h3));

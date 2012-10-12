@@ -219,7 +219,7 @@ final class MurmurHash {
 }
 
 public class SimHash {
-    static final int MIN_TERM = 5;
+    static final int MIN_TERM = 20;
 
     public static long simHash(String html) {
         String text = Mapper.toSimplified(HtmlUtils.text(html));
@@ -289,6 +289,7 @@ public class SimHash {
                 }
             }
         }
+
         long fingerprint = 0;
         for (int i = 0; i < bits.length; i++) {
             if (bits[i] > 0) {

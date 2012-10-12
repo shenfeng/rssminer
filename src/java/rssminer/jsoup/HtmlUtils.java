@@ -31,7 +31,7 @@ public class HtmlUtils {
     static final String[] IGNORE_TAGS = new String[] {"script", "style",
             "link", "#comment"};
 
-    static String[] TEXT_IGNORE = new String[] {"code", "pre"};
+    static String[] TEXT_IGNORE = new String[] {"code"};
 
     public static String compact(String html, String baseUri) {
         if (html == null || html.isEmpty()) {
