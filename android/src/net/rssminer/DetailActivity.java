@@ -77,10 +77,15 @@ public class DetailActivity extends Activity {
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		detector = new GestureDetector(this, listener);
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		mWin = getWindow();
-		mWin.requestFeature(Window.FEATURE_ACTION_BAR);
+		requestWindowFeature(Window.FEATURE_ACTION_BAR);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		
+//		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
 		mFeedID = getIntent().getExtras().getInt(FEED_ID_KEY);
 		String title = getIntent().getExtras().getString(
 				Constants.FEED_TITLE_KEY);
@@ -92,6 +97,7 @@ public class DetailActivity extends Activity {
 		// return detector.onTouchEvent(event);
 		// }
 		// });
+		setProgressBarIndeterminateVisibility(true);
 		new Thread(new Runnable() {
 			public void run() {
 				try {
@@ -102,6 +108,7 @@ public class DetailActivity extends Activity {
 							"summary");
 					mHandler.post(new Runnable() {
 						public void run() {
+							setProgressBarIndeterminateVisibility(false);
 							mDetail.loadDataWithBaseURL(null, Constants.CSS
 									+ summary, "text/html", "utf-8", null);
 						}

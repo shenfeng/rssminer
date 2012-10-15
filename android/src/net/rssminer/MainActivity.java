@@ -45,7 +45,8 @@ public class MainActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		mWin = getWindow();
-		mWin.requestFeature(Window.FEATURE_ACTION_BAR);
+		requestWindowFeature(Window.FEATURE_ACTION_BAR);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		getList();
 	}
 
@@ -69,8 +70,13 @@ public class MainActivity extends ListActivity {
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.item_settings) {
-			startActivity(new Intent(this, RssminerPref.class));
+		switch (item.getItemId()) {
+		case R.id.item_settings:
+			setFullscreen(!mFullScreen);
+			break;
+		case R.id.item_refresh:
+			getList();
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -89,11 +95,12 @@ public class MainActivity extends ListActivity {
 	}
 
 	private void getList() {
+		setProgressBarIndeterminateVisibility(true);
 		new Thread(new Runnable() {
 			public void run() {
 				try {
 					String body = RHttpClient
-							.get("/api/welcome?section=newest&limit=50&offset=0");
+							.get("/api/welcome?section=recommend&limit=50&offset=0");
 					JSONArray array = new JSONArray(body);
 					final ArrayList<Feed> feeds = new ArrayList<Feed>(array
 							.length());
@@ -102,6 +109,7 @@ public class MainActivity extends ListActivity {
 					}
 					mHandler.post(new Runnable() {
 						public void run() {
+							setProgressBarIndeterminateVisibility(false);
 							setListAdapter(new FeedAdapter(getBaseContext(),
 									R.layout.feed_layout, feeds));
 						}
