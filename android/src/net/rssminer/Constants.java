@@ -1,5 +1,7 @@
 package net.rssminer;
 
+import android.graphics.Color;
+
 public class Constants {
 
 	// public static final String SERVER = "http://192.168.1.101:9090";
@@ -10,6 +12,8 @@ public class Constants {
 
 	public static final String GOOGLE_ACCOUNT = "com.google";
 	public static final String USER_AGENT = "android-client";
+
+	public static final int DIM_COLOR = Color.rgb(170, 170, 170);
 
 	public static final String CSS = "<style>"
 			+ "img { max-width: 600px !important; display: block; margin: 0 auto;}"

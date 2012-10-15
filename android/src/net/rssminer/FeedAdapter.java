@@ -3,6 +3,7 @@ package net.rssminer;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,11 @@ public class FeedAdapter extends ArrayAdapter<Feed> {
 
 		TextView author = (TextView) convertView.findViewById(R.id.feed_author);
 		author.setText(feed.author);
+
+		if (feed.readts > 0) {
+			Log.d("AAA", feed.title);
+			title.setTextColor(Constants.DIM_COLOR);
+		}
 
 		return convertView;
 	}

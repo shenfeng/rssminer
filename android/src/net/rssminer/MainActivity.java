@@ -12,6 +12,7 @@ import android.accounts.AccountManager;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class MainActivity extends ListActivity {
 	static final String LOG_TAG = "main";
@@ -56,6 +58,8 @@ public class MainActivity extends ListActivity {
 		intent.putExtra(Constants.FEED_ID_KEY, f.id);
 		intent.putExtra(Constants.FEED_TITLE_KEY, f.title);
 		startActivity(intent);
+		TextView title = (TextView) v.findViewById(R.id.feed_title);
+		title.setTextColor(Constants.DIM_COLOR);
 	}
 
 	protected void onResume() {

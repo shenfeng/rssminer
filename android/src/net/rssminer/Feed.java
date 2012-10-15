@@ -10,6 +10,7 @@ public class Feed {
 	public final int id;
 	public final int publishTs;
 	public final String author;
+	public final int readts;
 
 	public Feed(JSONObject obj) throws JSONException {
 		title = obj.getString("title");
@@ -17,5 +18,6 @@ public class Feed {
 		id = obj.getInt("id");
 		author = obj.getString("author");
 		publishTs = obj.getInt("pts");
+		readts = obj.getInt("readts");
 	}
 }
