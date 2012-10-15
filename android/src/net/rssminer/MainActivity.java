@@ -75,7 +75,7 @@ public class MainActivity extends ListActivity {
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.item_settings:
+		case R.id.item_fullscreen:
 			setFullscreen(!mFullScreen);
 			break;
 		case R.id.item_refresh:

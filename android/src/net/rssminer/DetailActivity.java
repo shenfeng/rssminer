@@ -5,8 +5,8 @@ import static net.rssminer.Constants.PREF_FULLSCREEN;
 
 import org.json.JSONArray;
 
+import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,7 +20,7 @@ import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 public class DetailActivity extends Activity {
 
@@ -64,33 +64,38 @@ public class DetailActivity extends Activity {
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main_menu, menu);
+		getMenuInflater().inflate(R.menu.detail_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.item_settings) {
-			startActivity(new Intent(this, RssminerPref.class));
+		switch (item.getItemId()) {
+		case R.id.item_fullscreen:
+			setFullscreen(!mFullScreen);
+			break;
+		default:
+			Toast.makeText(this, "not implemented", Toast.LENGTH_SHORT).show();
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		detector = new GestureDetector(this, listener);
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		mWin = getWindow();
 		requestWindowFeature(Window.FEATURE_ACTION_BAR);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		
-//		getActionBar().setDisplayHomeAsUpEnabled(true);
-		
+
+		ActionBar bar = getActionBar();
+		bar.setTitle(getIntent().getExtras()
+				.getString(Constants.FEED_TITLE_KEY));
+		bar.setDisplayShowTitleEnabled(true);
+
 		mFeedID = getIntent().getExtras().getInt(FEED_ID_KEY);
-		String title = getIntent().getExtras().getString(
-				Constants.FEED_TITLE_KEY);
 		setContentView(R.layout.feed_detail);
-		((TextView) findViewById(R.id.detail_title)).setText(title);
 		mDetail = (WebView) findViewById(R.id.feed_detail);
 		// mDetail.setOnTouchListener(new OnTouchListener() {
 		// public boolean onTouch(View v, MotionEvent event) {

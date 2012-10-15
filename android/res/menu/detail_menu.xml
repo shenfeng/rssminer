@@ -2,16 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/item_refresh"
-        android:icon="@android:drawable/ic_menu_zoom"
+        android:id="@+id/item_votedown"
+        android:icon="@android:drawable/star_big_off"
         android:showAsAction="ifRoom"
-        android:title="@string/settings">
-    </item>
+        android:title="@string/vote_down"/>
     <item
         android:id="@+id/item_fullscreen"
         android:icon="@android:drawable/ic_menu_preferences"
         android:showAsAction="ifRoom"
-        android:title="@string/settings">
+        android:title="@string/full_screen">
     </item>
 
 </menu>

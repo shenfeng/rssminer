@@ -2,9 +2,9 @@
 <resources>
 
     <string name="app_name">Rssminer</string>
-
     <string name="settings">Settings</string>
-
     <string name="full_screen">Full Screen</string>
+    <string name="vote_up">Vote up</string>
+    <string name="vote_down">Vote Down</string>
 
 </resources>
