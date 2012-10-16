@@ -12,7 +12,6 @@ import android.accounts.AccountManager;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -20,7 +19,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,7 +27,6 @@ public class MainActivity extends ListActivity {
 	private final Handler mHandler = new Handler();
 	private boolean mFullScreen;
 	private SharedPreferences mPreferences;
-	private Window mWin;
 
 	public List<String> getAccountEmail() {
 		AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
@@ -46,17 +43,23 @@ public class MainActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		mWin = getWindow();
 		requestWindowFeature(Window.FEATURE_ACTION_BAR);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		getList();
 	}
 
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Feed f = ((FeedAdapter) l.getAdapter()).getItem(position);
+		FeedAdapter fa = ((FeedAdapter) l.getAdapter());
+
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < fa.getCount(); i++) {
+			sb.append(fa.getItem(i).id).append("-");
+		}
+		sb.setLength(sb.length() - 1);
+
 		Intent intent = new Intent(this, DetailActivity.class);
-		intent.putExtra(Constants.FEED_ID_KEY, f.id);
-		intent.putExtra(Constants.FEED_TITLE_KEY, f.title);
+		intent.putExtra(Constants.FEED_ID_KEYS, sb.toString());
+		intent.putExtra(Constants.FEED_ID_POSITION, position);
 		startActivity(intent);
 		TextView title = (TextView) v.findViewById(R.id.feed_title);
 		title.setTextColor(Constants.DIM_COLOR);
@@ -86,16 +89,8 @@ public class MainActivity extends ListActivity {
 	}
 
 	private void setFullscreen(boolean on) {
-		WindowManager.LayoutParams winParams = mWin.getAttributes();
-		final int bits = WindowManager.LayoutParams.FLAG_FULLSCREEN;
-		if (on) {
-			winParams.flags |= bits;
-		} else {
-			winParams.flags &= ~bits;
-		}
-		mWin.setAttributes(winParams);
+		Utils.setFullScreen(getWindow(), mPreferences, on);
 		mFullScreen = on;
-		mPreferences.edit().putBoolean(PREF_FULLSCREEN, on).commit();
 	}
 
 	private void getList() {
@@ -104,7 +99,7 @@ public class MainActivity extends ListActivity {
 			public void run() {
 				try {
 					String body = RHttpClient
-							.get("/api/welcome?section=recommend&limit=50&offset=0");
+							.get("/api/welcome?section=recommend&limit=20&offset=0");
 					JSONArray array = new JSONArray(body);
 					final ArrayList<Feed> feeds = new ArrayList<Feed>(array
 							.length());

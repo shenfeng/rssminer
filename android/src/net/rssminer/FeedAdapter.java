@@ -14,11 +14,13 @@ public class FeedAdapter extends ArrayAdapter<Feed> {
 
 	private final LayoutInflater inflater;
 	private final int layoutId;
+	public final List<Feed> feeds;
 
 	public FeedAdapter(Context context, int textViewResourceId,
 			List<Feed> objects) {
 		super(context, textViewResourceId, objects);
 		layoutId = textViewResourceId;
+		this.feeds = objects;
 		inflater = (LayoutInflater) getContext().getSystemService(
 				Context.LAYOUT_INFLATER_SERVICE);
 	}

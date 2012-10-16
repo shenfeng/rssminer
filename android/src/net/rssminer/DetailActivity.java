@@ -1,66 +1,87 @@
 package net.rssminer;
 
-import static net.rssminer.Constants.FEED_ID_KEY;
 import static net.rssminer.Constants.PREF_FULLSCREEN;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
-import android.view.GestureDetector.SimpleOnGestureListener;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.Toast;
 
-public class DetailActivity extends Activity {
+public class DetailActivity extends FragmentActivity {
 
-	private OnGestureListener listener = new SimpleOnGestureListener() {
-		public boolean onFling(android.view.MotionEvent e1,
-				android.view.MotionEvent e2, float velocityX, float velocityY) {
-			return true;
-		};
-	};
-
-	private int mFeedID;
-	private WebView mDetail;
 	private boolean mFullScreen;
 	private SharedPreferences mPreferences;
-	private Window mWin;
+	private ViewPager mPager;
 	private Handler mHandler = new Handler();
-	private GestureDetector detector;
 
-	private void setFullscreen(boolean on) {
-		WindowManager.LayoutParams winParams = mWin.getAttributes();
-		final int bits = WindowManager.LayoutParams.FLAG_FULLSCREEN;
-		if (on) {
-			winParams.flags |= bits;
-		} else {
-			winParams.flags &= ~bits;
-		}
-		mWin.setAttributes(winParams);
-		mFullScreen = on;
-		mPreferences.edit().putBoolean(PREF_FULLSCREEN, on).commit();
-	}
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-	protected void onResume() {
-		super.onResume();
-		mFullScreen = mPreferences.getBoolean(PREF_FULLSCREEN, false);
-		setFullscreen(mFullScreen);
-	}
+		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		requestWindowFeature(Window.FEATURE_ACTION_BAR);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
-	public boolean onTouchEvent(MotionEvent event) {
+		final Bundle extras = getIntent().getExtras();
+		final ActionBar bar = getActionBar();
 
-		return super.onTouchEvent(event);
+		setContentView(R.layout.feeds_pager);
+		final String ids = extras.getString(Constants.FEED_ID_KEYS);
+		mPager = (ViewPager) findViewById(R.id.feeds_pager);
+
+		setProgressBarIndeterminateVisibility(true);
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+					String body = RHttpClient
+							.get("/api/feeds/" + ids + "?mr=1");
+					JSONArray data = new JSONArray(body);
+					final ArrayList<Feed> feeds = new ArrayList<Feed>(data
+							.length());
+
+					for (int i = 0; i < data.length(); ++i) {
+						feeds.add(new Feed(data.getJSONObject(i)));
+					}
+					mHandler.post(new Runnable() {
+						public void run() {
+							setProgressBarIndeterminateVisibility(false);
+							mPager.setAdapter(new MyAdapter(
+									getSupportFragmentManager(), feeds));
+							int current = extras
+									.getInt(Constants.FEED_ID_POSITION);
+							mPager.setCurrentItem(current);
+							bar.setTitle(feeds.get(current).title);
+							mPager.setOnPageChangeListener(new SimpleOnPageChangeListener() {
+								public void onPageSelected(int position) {
+									bar.setTitle(feeds.get(position).title);
+								};
+							});
+						}
+					});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -80,48 +101,51 @@ public class DetailActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		detector = new GestureDetector(this, listener);
-		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		mWin = getWindow();
-		requestWindowFeature(Window.FEATURE_ACTION_BAR);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
-		ActionBar bar = getActionBar();
-		bar.setTitle(getIntent().getExtras()
-				.getString(Constants.FEED_TITLE_KEY));
-		bar.setDisplayShowTitleEnabled(true);
-
-		mFeedID = getIntent().getExtras().getInt(FEED_ID_KEY);
-		setContentView(R.layout.feed_detail);
-		mDetail = (WebView) findViewById(R.id.feed_detail);
-		// mDetail.setOnTouchListener(new OnTouchListener() {
-		// public boolean onTouch(View v, MotionEvent event) {
-		// return detector.onTouchEvent(event);
-		// }
-		// });
-		setProgressBarIndeterminateVisibility(true);
-		new Thread(new Runnable() {
-			public void run() {
-				try {
-					String body = RHttpClient.get("/api/feeds/" + mFeedID
-							+ "?mr=1");
-					JSONArray data = new JSONArray(body);
-					final String summary = data.getJSONObject(0).getString(
-							"summary");
-					mHandler.post(new Runnable() {
-						public void run() {
-							setProgressBarIndeterminateVisibility(false);
-							mDetail.loadDataWithBaseURL(null, Constants.CSS
-									+ summary, "text/html", "utf-8", null);
-						}
-					});
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}).start();
+	protected void onResume() {
+		super.onResume();
+		mFullScreen = mPreferences.getBoolean(PREF_FULLSCREEN, false);
+		setFullscreen(mFullScreen);
 	}
+
+	private void setFullscreen(boolean on) {
+		Utils.setFullScreen(getWindow(), mPreferences, on);
+		mFullScreen = on;
+	}
+}
+
+class DetailFragment extends Fragment {
+	private Feed feed;
+
+	public DetailFragment(Feed feed) {
+		this.feed = feed;
+	}
+
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.feed_detail, container, false);
+		WebView detail = (WebView) view.findViewById(R.id.feed_detail);
+		detail.loadDataWithBaseURL(null, Constants.CSS + feed.summary,
+				"text/html", "utf-8", null);
+
+		return view;
+	}
+
+}
+
+class MyAdapter extends FragmentPagerAdapter {
+	private List<Feed> feeds;
+
+	public MyAdapter(FragmentManager fm, List<Feed> feeds) {
+		super(fm);
+		this.feeds = feeds;
+	}
+
+	public int getCount() {
+		return feeds.size();
+	}
+
+	public Fragment getItem(int position) {
+		return new DetailFragment(feeds.get(position));
+	}
+
 }
