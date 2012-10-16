@@ -30,25 +30,37 @@ public class SimHashUpdater {
 
         Connection con = db.getConnection();
         Statement stat = con.createStatement();
+
         ResultSet rs = stat.executeQuery("select max(id) from feed_data");
-
         rs.next();
-
         int max = rs.getInt(1);
+
+        PreparedStatement ps = con
+                .prepareStatement("select id, summary from feed_data where id >= ? and id < ?");
 
         PreparedStatement update = con
                 .prepareStatement("update feeds set simhash = ? where id = ?");
 
-        for (int i = 0; i <= max; i++) {
-            long h2 = SimHash.simHash(i);
-            if (h2 != -1) {
-                update.setLong(1, h2);
-                update.setInt(2, i);
-                update.execute();
+        final int step = 5000;
+
+        for (int i = 1; i <= max; i++) {
+            ps.setInt(1, i);
+            ps.setInt(2, i + step);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                i = rs.getInt(1); // update id;
+                String summary = rs.getString(2);
+                long h2 = SimHash.simHash(summary);
+                if (h2 != -1) {
+                    update.setLong(1, h2);
+                    update.setInt(2, i);
+                    update.addBatch();
+                }
+                if (i % 5000 == 0) {
+                    logger.info("handle " + i);
+                }
             }
-            if (i % 5000 == 0) {
-                logger.info("handle " + i);
-            }
+            update.executeBatch();
         }
     }
 }

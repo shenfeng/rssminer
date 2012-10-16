@@ -92,7 +92,7 @@ task :clean  do
   rm_rf "public/css"
   rm_rf "classes"
   sh 'rm -vf public/js/*min.js'
-  sh 'find . -name "*.class" | xargs rm'
+  # sh 'find . -name "*.class" | xargs rm'
 end
 
 desc "Prepare for development"

@@ -7,18 +7,22 @@ import org.jsoup.select.NodeVisitor;
 public class TextAccumVisitor implements NodeVisitor {
 
     private StringBuilder sb;
+    private boolean withA;
 
     public void head(Node node, int depth) {
     }
 
-    public TextAccumVisitor(StringBuilder sb) {
+    public TextAccumVisitor(StringBuilder sb, boolean withA) {
+        this.withA = withA;
         this.sb = sb;
     }
 
     public void tail(Node node, int depth) {
         if (node instanceof TextNode) {
             String text = ((TextNode) node).getWholeText();
-            if (node.parent().nodeName() == "a" && text.startsWith("http")) {
+
+            if (!withA && node.parent().nodeName() == "a"
+                    && text.startsWith("http")) {
                 // do not care if this is <a href="href">href</a>
                 return;
             }

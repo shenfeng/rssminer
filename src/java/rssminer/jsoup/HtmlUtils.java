@@ -28,10 +28,10 @@ public class HtmlUtils {
     final static Pattern comment = Pattern.compile("comment",
             Pattern.CASE_INSENSITIVE);
 
-    static final String[] IGNORE_TAGS = new String[] {"script", "style",
-            "link", "#comment"};
+    static final String[] IGNORE_TAGS = new String[] { "script", "style",
+            "link", "#comment" };
 
-    static String[] TEXT_IGNORE = new String[] {"code"};
+    static String[] TEXT_IGNORE = new String[] { "code" };
 
     public static String compact(String html, String baseUri) {
         if (html == null || html.isEmpty()) {
@@ -124,14 +124,19 @@ public class HtmlUtils {
         return d.body().text();
     }
 
-    public static String text(String html) {
+    public static String text(String html, boolean withA) {
         if (html == null) {
             return "";
         }
         StringBuilder sb = new StringBuilder(html.length() / 2);
-        TextAccumVisitor vistor = new TextAccumVisitor(sb);
+        TextAccumVisitor vistor = new TextAccumVisitor(sb, withA);
         PartialTraversor traversor = new PartialTraversor(vistor, TEXT_IGNORE);
         traversor.traverse(Jsoup.parse(html).body());
         return sb.toString();
+    }
+
+    public static String text(String html) {
+        // default ignore if <a href="href">href</a>
+        return text(html, false);
     }
 }

@@ -12,7 +12,6 @@ import org.apache.lucene.index.TermFreqVector;
 import org.apache.lucene.search.IndexSearcher;
 
 import rssminer.jsoup.HtmlUtils;
-import rssminer.search.Mapper;
 import rssminer.search.Searcher;
 
 // https://github.com/tnm/murmurhash-java
@@ -219,13 +218,14 @@ final class MurmurHash {
 }
 
 public class SimHash {
-    static final int MIN_TERM = 20;
+    static final int MIN_TERM = 15;
 
     public static long simHash(String html) {
-        String text = Mapper.toSimplified(HtmlUtils.text(html));
+        String text = HtmlUtils.text(html, true);
         if (html.isEmpty()) {
             return -1;
         }
+
         int[] bits = new int[64];
         TokenStream stream = Searcher.analyzer.tokenStream("",
                 new StringReader(text));

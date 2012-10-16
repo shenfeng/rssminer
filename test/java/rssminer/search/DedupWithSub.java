@@ -16,6 +16,9 @@ import java.util.TreeMap;
 //    public final int 
 //}
 
+// 5996: 	[697203, 665429, 665430, 665441, 716582, 708895, 750705, 750704, 787612, 687214]
+// 45:  [153621, 145187, 147411, 150362]
+
 public class DedupWithSub {
 
     static String JDBC_URL = "jdbc:mysql://localhost/rssminer?cachePrepStmts=true&useServerPrepStmts=true";
@@ -57,7 +60,7 @@ public class DedupWithSub {
             }
 
         }
-        
+
         System.out.println(count);
 
     }
