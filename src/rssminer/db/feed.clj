@@ -1,6 +1,7 @@
 (ns rssminer.db.feed
   (:use [rssminer.database :only [mysql-query with-mysql mysql-insert]]
         (rssminer [search :only [index-feed]]
+                  [redis :only [zrem]]
                   [util :only [to-int now-seconds ignore-error]]
                   [config :only [rssminer-conf]]
                   [classify :only [on-fetcher-event]])
@@ -8,6 +9,7 @@
         [clojure.tools.logging :only [warn]]
         [clojure.java.jdbc :only [do-prepared]])
   (:import rssminer.db.MinerDAO
+           rssminer.Utils
            rssminer.jsoup.HtmlUtils))
 
 (defn update-total-feeds [rssid]
@@ -77,7 +79,8 @@
       (with-mysql (do-prepared ;; rss_link_id default 0
                    "INSERT INTO user_feed (user_id, feed_id, rss_link_id, read_date)
        VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE read_date = ?"
-                   [user-id feed-id rssid now now])))))
+                   [user-id feed-id rssid now now]))
+      (zrem (Utils/genKey user-id rssid) (str feed-id)))))
 
 (def update-sql ["update user_feed set read_time = read_time + ? where user_id = ? and feed_id = ?"])
 

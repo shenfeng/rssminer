@@ -272,21 +272,19 @@ public class MinerDAO {
         byte[] key = Utils.genKey(userID);
         Jedis redis = jedis.getResource();
         try {
-            if (!redis.exists(key)) {
-                List<Integer> subIDS = DBHelper.getUserSubIDS(ds, userID);
-                int count = subIDS.size();
-                if (count < 1) {
-                    return new ArrayList<Feed>(0);
-                }
-                byte[][] keys = new byte[count][];
-                for (int i = 0; i < count; i++) {
-                    keys[i] = Utils.genKey(userID, subIDS.get(i));
-                }
-                redis.zunionstore(key, keys);
-                redis.expire(key, COMBINED_KEY_EXPIRE);
+            List<Integer> subIDS = DBHelper.getUserSubIDS(ds, userID);
+            int count = subIDS.size();
+            if (count < 1) {
+                return new ArrayList<Feed>(0);
             }
+            byte[][] keys = new byte[count][];
+            for (int i = 0; i < count; i++) {
+                keys[i] = Utils.genKey(userID, subIDS.get(i));
+            }
+            redis.zunionstore(key, keys);
             Set<Tuple> scores = redis.zrevrangeWithScores(key, offset, offset
                     + limit - 1);
+            redis.del(key);
             return fetchFeedsWithScore(userID, scores);
         } finally {
             jedis.returnResource(redis);
@@ -359,8 +357,8 @@ public class MinerDAO {
         return fetchFeedsWithScore(userID, sb.toString());
     }
 
-    public List<Feed> fetchSubRead(int userID, int subID, int limit, int offset)
-            throws SQLException {
+    public List<Feed> fetchSubRead(int userID, int subID, int limit,
+            int offset) throws SQLException {
         StringBuilder sb = createBuilder(null);
         sb.append(FEED_FIELD).append(userID);
         sb.append(" where uf.read_date > 0 and uf.rss_link_id = ");
@@ -403,7 +401,8 @@ public class MinerDAO {
                         byte[] key = Utils.genKey(userID, s.getId());
                         Response<Long> l = pipeline.zcount(key, like,
                                 Double.MAX_VALUE);
-                        Response<Long> n = pipeline.zcount(key, neutral, like);
+                        Response<Long> n = pipeline
+                                .zcount(key, neutral, like);
                         scores.add(l);
                         scores.add(n);
                     }
@@ -433,11 +432,12 @@ public class MinerDAO {
         sb.append(" join feed_data d on d.id = f.id and f.id in ");
         appendIn(sb, feedIDs);
 
-        return sortbyOrder(feedIDs, fetchFeedsWithScore(userID, sb.toString()));
+        return sortbyOrder(feedIDs,
+                fetchFeedsWithScore(userID, sb.toString()));
     }
 
-    public List<Feed> fetchSubVote(int userID, int subID, int limit, int offset)
-            throws SQLException {
+    public List<Feed> fetchSubVote(int userID, int subID, int limit,
+            int offset) throws SQLException {
         StringBuilder sb = createBuilder(null);
         sb.append(FEED_FIELD).append(userID);
         sb.append(" where uf.vote_date > 0 and uf.vote_user != 0 and uf.rss_link_id = ");
@@ -451,7 +451,8 @@ public class MinerDAO {
             + "COALESCE(l.alternate, l.url) as url, l.total_feeds FROM user_subscription u "
             + "join rss_links l ON l.id = u.rss_link_id WHERE";
 
-    public Subscription fetchUserSub(int userid, int rssid) throws SQLException {
+    public Subscription fetchUserSub(int userid, int rssid)
+            throws SQLException {
         StringBuilder sb = new StringBuilder(SUB_FIELDS.length() + 20);
         sb.append(SUB_FIELDS);
         sb.append(" u.rss_link_id = ").append(rssid);

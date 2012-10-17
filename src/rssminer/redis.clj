@@ -1,6 +1,7 @@
 (ns rssminer.redis
   (:use [rssminer.config :only [rssminer-conf]])
-  (:import [redis.clients.jedis JedisPool Protocol Jedis JedisPoolConfig]))
+  (:import [redis.clients.jedis JedisPool Protocol Jedis JedisPoolConfig]
+           rssminer.Utils))
 
 (defonce redis-pool (atom nil))
 
@@ -19,6 +20,9 @@
 (def ^String fetcher-key "fetcher-queue")
 
 (def ^"[Ljava.lang.String;" fetcher-key-arr (into-array (list fetcher-key)))
+
+(defn zrem [key member]
+  (Utils/zrem @redis-pool key (.getBytes ^String member)))
 
 (defn fetcher-enqueue [data]
   (let [^JedisPool client @redis-pool
