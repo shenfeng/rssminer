@@ -197,10 +197,11 @@ public class Utils {
         return proxy(new URI(uri));
     }
 
-    public static void zrem(JedisPool pool, byte[] key, byte[] member) {
+    public static void zrem(JedisPool pool, int userid, int rssid, int feedid) {
         Jedis jedis = pool.getResource();
         try {
-            jedis.zrem(key, member);
+            jedis.zrem(genKey(userid, rssid), Integer.toString(feedid)
+                    .getBytes());
         } finally {
             pool.returnResource(jedis);
         }

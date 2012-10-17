@@ -1,7 +1,7 @@
 (ns rssminer.db.feed
   (:use [rssminer.database :only [mysql-query with-mysql mysql-insert]]
         (rssminer [search :only [index-feed]]
-                  [redis :only [zrem]]
+                  [redis :only [redis-pool]]
                   [util :only [to-int now-seconds ignore-error]]
                   [config :only [rssminer-conf]]
                   [classify :only [on-fetcher-event]])
@@ -80,7 +80,7 @@
                    "INSERT INTO user_feed (user_id, feed_id, rss_link_id, read_date)
        VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE read_date = ?"
                    [user-id feed-id rssid now now]))
-      (zrem (Utils/genKey user-id rssid) (str feed-id)))))
+      (Utils/zrem @redis-pool user-id rssid feed-id))))
 
 (def update-sql ["update user_feed set read_time = read_time + ? where user_id = ? and feed_id = ?"])
 
