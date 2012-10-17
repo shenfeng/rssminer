@@ -50,9 +50,9 @@
                              :request-method :get
                              :params {"limit" "13" "offset" "0" "sort" s}})]
         ;; test has some data
-        (is (empty? (-> resp :body read-json)))
+        (is (empty? (-> resp :body read-json :feeds)))
         (is (= 200 (:status resp)))
-        (is (empty? (-> resp2 :body read-json)))
+        (is (empty? (-> resp2 :body read-json :feeds)))
         (is (= 200 (:status resp2)))))))
 
 (deftest test-list-subscription

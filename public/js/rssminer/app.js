@@ -160,13 +160,16 @@
   }
 
   function cleanup ($me) {
-    $reading_area.find('p').each(function (idx, p) {
-      var $p = $(p);
-      // only remove if no chillren and no text. 516264
-      if(!$.trim($p.text()) && !$p.find('img').length) {
-        $p.hide();            // 4037/330457
-      }
+    _.each(["p", 'pre'], function (selector) {
+      $reading_area.find(selector).each(function (idx, p) {
+        var $e = $(p);
+        // only remove if no chillren and no text. 516264
+        if(!$.trim($e.text()) && !$e.find('img').length) {
+          $e.hide();            // 4037/330457
+        }
+      });
     });
+
 
     $reading_area.find('.summary a').each(function (idx, a) {
       $(a).attr('target', '_blank');

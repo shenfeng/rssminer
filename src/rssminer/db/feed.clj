@@ -95,58 +95,62 @@
                            [(min (* 10 60 5) time)
                             user-id (to-int (name feedid))]) data))))))
 
+(defn- dedup [feeds]
+  {:count (count feeds)
+   :feeds (MinerDAO/removeDuplicate feeds)})
+
 (defn fetch-newest [userid limit offset]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (.fetchGNewest db userid limit offset)))
+    (dedup (.fetchGNewest db userid limit offset))))
 
 (defn fetch-likest [userid limit offset]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (.fetchGLikest db userid limit offset)))
+    (dedup (.fetchGLikest db userid limit offset))))
 
 (defn fetch-recent-read [userid limit offset]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (.fetchGRead db userid limit offset)))
+    (dedup (.fetchGRead db userid limit offset))))
 
 (defn fetch-recent-vote [userid limit offset]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (.fetchGVote db userid limit offset)))
+    (dedup (.fetchGVote db userid limit offset))))
 
 (defn fetch-sub-newest [userid subid limit offset]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (.fetchSubNewest db userid subid limit offset)))
+    (dedup (.fetchSubNewest db userid subid limit offset))))
 
 (defn fetch-sub-oldest [userid subid limit offset]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (.fetchSubOldest db userid subid limit offset)))
+    (dedup (.fetchSubOldest db userid subid limit offset))))
 
 (defn fetch-sub-likest [userid subid limit offset]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (.fetchSubLikest db userid subid limit offset)))
+    (dedup (.fetchSubLikest db userid subid limit offset))))
 
 (defn fetch-sub-read [userid subid limit offset]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (.fetchSubRead db userid subid limit offset)))
+    (dedup (.fetchSubRead db userid subid limit offset))))
 
 (defn fetch-sub-vote [userid subid limit offset]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (.fetchSubVote db userid subid limit offset)))
+    (dedup (.fetchSubVote db userid subid limit offset))))
 
 (defn fetch-folder-newest [userid subids limit offset]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (.fetchFolderNewest db userid subids limit offset)))
+    (dedup (.fetchFolderNewest db userid subids limit offset))))
 
 (defn fetch-folder-oldest [userid subids limit offset]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (.fetchFolderOldest db userid subids limit offset)))
+    (dedup (.fetchFolderOldest db userid subids limit offset))))
 
 (defn fetch-folder-likest [userid subids limit offset]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (.fetchFolderLikest db userid subids limit offset)))
+    (dedup (.fetchFolderLikest db userid subids limit offset))))
 
 (defn fetch-folder-read [userid subids limit offset]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (.fetchFolderRead db userid subids limit offset)))
+    (dedup (.fetchFolderRead db userid subids limit offset))))
 
 (defn fetch-folder-vote [userid subids limit offset]
   (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (.fetchFolderVote db userid subids limit offset)))
+    (dedup (.fetchFolderVote db userid subids limit offset))))

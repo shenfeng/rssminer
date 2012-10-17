@@ -124,7 +124,7 @@ public class MinerDAO {
             }
             Utils.closeQuietly(rs);
             Utils.closeQuietly(stat);
-            return removeDuplicate(feeds);
+            return feeds;
         } finally {
             Utils.closeQuietly(con);
         }
@@ -172,7 +172,7 @@ public class MinerDAO {
         }
     }
 
-    private List<Feed> removeDuplicate(List<Feed> feeds) {
+    public static List<Feed> removeDuplicate(List<Feed> feeds) {
         List<Feed> results = new ArrayList<Feed>(feeds.size());
         for (Feed f : feeds) {
             boolean c = false;

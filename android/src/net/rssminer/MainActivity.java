@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -100,7 +101,7 @@ public class MainActivity extends ListActivity {
 				try {
 					String body = RHttpClient
 							.get("/api/welcome?section=recommend&limit=20&offset=0");
-					JSONArray array = new JSONArray(body);
+					JSONArray array = new JSONObject(body).getJSONArray("feeds");
 					final ArrayList<Feed> feeds = new ArrayList<Feed>(array
 							.length());
 					for (int i = 0; i < array.length(); ++i) {

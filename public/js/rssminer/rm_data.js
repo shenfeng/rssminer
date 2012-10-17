@@ -278,7 +278,7 @@
 
     ajax.get('/api/welcome?' + params, function (resp) {
       resp = resp || [];
-      var feeds = _.map(resp, function (feed) {
+      var feeds = _.map(resp.feeds, function (feed) {
         return transform_item(feed, page, 'score', section);
       });
 
@@ -286,7 +286,7 @@
       cb({
         title: section + ' - Rssminer, an intelligent RSS reader',
         feeds: feeds,
-        pager: compute_welcome_paging(section, page, resp.length),
+        pager: compute_welcome_paging(section, page, resp.count),
         sort: sort_data
       });
     });
@@ -379,9 +379,9 @@
       if(sort === NEWEST_TAB || data.sort === OLDEST_TAB) {
         total = sub_group.total;
       } else if(sort === READ_TAB || sort === VOTED_TAB) {
-        total = resp.length === PER_PAGE_FEEDS;
+        total = resp.count === PER_PAGE_FEEDS;
       }
-      var feeds = _.map(resp, function (feed) {
+      var feeds = _.map(resp.feeds, function (feed) {
         return transform_item(feed, data.page, sort, data.section);
       });
 
