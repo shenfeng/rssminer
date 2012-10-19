@@ -21,7 +21,7 @@
         &:hover {
             box-shadow: 0px 1px 2px 1px #e3e5eb;
         }
-        border: 1px solid #ddd;
+        border: 1px solid #dedede;
         padding: 5px 0 10px 25px;
         box-shadow: 0 0 2px #e3e5eb;
         margin: 10px 0 20px;
@@ -101,16 +101,17 @@
             display: block;
             margin: 5px auto;
         }
+        $table_color: #e2e2e2;
         table {
             border-collapse: collapse;
             margin: 0 auto;
-            border: 1px solid #dedede;
+            border: 1px solid $table_color;
             td {
                 padding: 0 5px;
-                border-bottom: 1px solid #dedede;
+                border-bottom: 1px solid $table_color;
             }
             td + td {
-                border-left: 1px solid #dedede;
+                border-left: 1px solid $table_color;
             }
         }
     }

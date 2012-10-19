@@ -32,7 +32,7 @@
           <input id="q" autocomplete="off"/>
         </div>
         <div id="dropdown">
-          <a data-title="Change your avatar at gravatar.com"
+          <a data-title="Change your avatar at gravatar.com" target="_blank"
              href="http://gravatar.com/emails/">
             <img height=25 width=25
                  src="http://www.gravatar.com/avatar/{{{md5}}}?s=25"/>

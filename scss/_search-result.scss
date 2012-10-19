@@ -38,7 +38,7 @@
 #search-result {
     padding-top: 10px;
     table {
-        width: 850px;
+        width: $body_width - $nav_width - 50px;
         background: #f9f9f9;
         border-radius: 10px;
         margin-left: 20px;
