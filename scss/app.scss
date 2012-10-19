@@ -71,7 +71,7 @@ a { outline: 0; text-decoration: none;}
             display: none;
             border-radius: 0 0 5px 5px;
             padding-bottom: 4px;
-            top: 44px;
+            top: $header_height - 2px;
             width: 100%;
             background: lighten($header_color, 1%);
             z-index: 100;
@@ -98,7 +98,7 @@ a { outline: 0; text-decoration: none;}
         left: $search_right;
         @include border-radius(5px);
         background: white;
-        top: 8px;
+        top: 7px;
         span {
             top: 5px;
             left: 9px;
@@ -111,8 +111,8 @@ a { outline: 0; text-decoration: none;}
         background: transparent;
         border: none;
         font-size: 14px;
-        height: 20px;
-        padding: 5px;
+        height: 21px;
+        padding: 4px;
         width: $input_width;
     }
 }
@@ -133,7 +133,7 @@ html, body {
 body {
     font: 400 14px/1.431 'Lucida Grande', "Helvetica Neue","Microsoft YaHei", Helvetica, Arial, sans-serif;
     background: #F6F6F6 url('/s/imgs/bg-content.png') repeat center top;
-/* text-rendering: optimizeLegibility; */
+    text-rendering: optimizeLegibility;
 }
 
 #content { margin-left: $nav_width + 3px; }

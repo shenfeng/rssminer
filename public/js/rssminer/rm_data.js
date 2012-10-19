@@ -17,17 +17,23 @@
   var MAX_PAGER = 9,
       WELCOME_MAX_PAGE = 7,
       SEPERATOR = ';',
-      h = screen.height,
-      // works for 900, 800, 1080 screen (height)
-      // per item 34.85 pixel, first feed to top 138px, 140 px for brower use
-      PER_PAGE_FEEDS = Math.floor((h - 138 - 140) / 40),
-      SEARCH_PAGE_SIZE = PER_PAGE_FEEDS - 3,
-      // PER_PAGE_FEEDS = Math.floor((screen.height - 138 - 140) / 32.9),
-      // show search result count according to screen height
-      SEARCH_RESUTL_COUNT = Math.min(Math.floor((h - 370) / 35), 17),
+      PER_PAGE_FEEDS,
+      SEARCH_PAGE_SIZE,
+      SEARCH_RESUTL_COUNT,
       LIKE_SCORE = user_data.like_score, // default 1
       NEUTRAL_SCORE =  user_data.neutral_score, // db default 0
       MIN_COUNT = 5;
+
+  function count_count () {
+    var _h = $(window).height();
+    // per item 38 pixel, first feed to top 138px
+    PER_PAGE_FEEDS = Math.floor((_h - 138) / 40);
+    SEARCH_PAGE_SIZE = PER_PAGE_FEEDS - 4;
+    SEARCH_RESUTL_COUNT = Math.min(Math.floor((_h - 230) / 40), 17);
+  }
+
+  $(window).resize(count_count);
+  count_count();
 
   // how many pages does each section has
   var WELCOME_TABS = {recommend: 1, newest: 1, read: 1, voted: 1};
