@@ -4,6 +4,8 @@
   var $tooltip = $('#tooltip'),
       $text = $tooltip.find('span');
 
+  var timer;
+
   function on_mouseenter (ele, e) {
     var $this = $(ele),
         pos = $this.offset();
@@ -13,11 +15,13 @@
     pos.top += $this.height() + 8;
     pos.left = e.clientX;
     $tooltip.css(pos).show();
+
+    if(timer) { clearTimeout(timer); }
+    timer = setTimeout(on_mouseleave, 3400);
   }
 
   function on_mouseleave (ele) {
     $tooltip.hide();
-    // console.log('leave', $ele);
   }
 
   $(document).delegate('[data-title]', 'hover', function (e) {

@@ -107,7 +107,7 @@
       date = ymdate(feed.votets);
     }
     return {
-      author: feed.author || util.hostname(feed.link),
+      author: feed.author || get_subscription(feed.rssid).title,
       sub: sub_titles[rssid],    // use to show search result
       rssid: rssid,
       cls: feed_css_class(feed),
