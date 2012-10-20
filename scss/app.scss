@@ -134,7 +134,7 @@ body {
         a { color: #111;  }
         margin: 0; padding: 8px 0 8px 5px; @include overflow-ellipsis();
     }
-    .date { margin-left: 4px; }
+    .date { margin: 4px 0 0 0; }
     .loader {
         display: block;
         margin: 15px auto;

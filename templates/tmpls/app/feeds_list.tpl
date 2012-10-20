@@ -6,7 +6,7 @@
       {{#author}}
         <!-- <span class="author">{{author}}</span> -->
       {{/author}}
-      <span class="date">{{ date }}</span>
+      <div class="date">{{ date }}</div>
     </a>
   </li>
 {{/feeds}}
