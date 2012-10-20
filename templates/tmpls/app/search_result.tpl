@@ -1,6 +1,6 @@
 <div id="search-result">
   <div id="search-go">
-    <input value="{{q}}"/>
+    <input value="{{q}}" placeholder="keyword"/>
     <a href="#search?q={{q}}&tags=&authors=&offset=0">search</a>
     {{#total}}
       <span>About {{ total }} results</span>
