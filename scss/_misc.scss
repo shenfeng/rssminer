@@ -190,7 +190,7 @@ $demo_warn_bg_color: #fcfcac;
     padding: 3px 8px;
     font-size: 12px;
     z-index: 1000;
-    background: black;
+    background: #333;
     display: none;
     .arrow {
         width: 70px;
@@ -203,3 +203,14 @@ $demo_warn_bg_color: #fcfcac;
     }
 }
 
+
+.scroll-wrap {
+    width: 310px;
+    overflow: hidden;
+    border-right: 1px solid $border_right;
+}
+
+.scroll-inner::-webkit-scrollbar, .scroll-inner::scrollbar {
+    width: 0;
+    height: 0;
+}

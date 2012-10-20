@@ -22,7 +22,9 @@
       <div class="wrapper">
         <div id="logo" class="show-nav">
           <h1><a href="#">Rssminer</a></h1>
-          <ul id="sub-list"></ul>
+          <div class="scroll-wrap">
+            <ul id="sub-list" class="scroll-inner"></ul>
+          </div>
         </div>
         <div id="warn-msg">
           this is public account, <a href="/">create your own</a>
@@ -76,8 +78,10 @@
       </div>
     </div>
     <div id="main">
-      <div id="navigation">
-        <ul id="feed-list" class="feeds"></ul>
+      <div class="scroll-wrap">
+        <div id="navigation" class="scroll-inner">
+          <ul id="feed-list" class="feeds"></ul>
+        </div>
       </div>
       <div id="content">
         <div id="reading-area">

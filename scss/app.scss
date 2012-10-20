@@ -2,27 +2,6 @@
 @import "font-awesome";
 @import "vars";
 
-::-webkit-scrollbar {
-    width: 7px;
-    height: 7px;
-}
-
-::-webkit-scrollbar-track {
-    background: #e4e4e4;
-    border-radius: 10px;
-    background: #eee;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #a1a0a0;
-    border-radius: 10px;
-    background: #c0c0c0;
-}
-
-::-webkit-scrollbar-thumb:vertical:hover {
-    background: #747474;
-}
-
 img { border: 0; }
 a { outline: 0; text-decoration: none;}
 
@@ -138,13 +117,16 @@ body {
     margin: 0 auto;
     background: white;
     position: relative;
+    .scroll-wrap {
+        position: fixed;
+        top: $header_height;
+    }
 }
 
 
 #content { margin-left: $nav_width + 3px; }
 
 #navigation {
-    position: fixed;
     width: $nav_width;
     font-size: 13px;
     overflow-y: scroll;
@@ -185,10 +167,8 @@ ul { list-style: none; padding: 0; margin: 0; }
 .ficon-ok .icon-rss { display: none; }
 
 #sub-list {                     /* in logo */
-    width: $nav_width;
     background: white url($bg_url) repeat center top;
     overflow-y: scroll;
-    overflow-x: hidden;
     padding-top: 3px;
     display: none;
 }
@@ -258,7 +238,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 .ie8 .count { right: 19px; span { font-size: 9px; }}
 .count {
     position: absolute;
-    right: 2px;
+    right: 6px;
     top: 8px;
     font-size: 10px;
     font-family: sans-serif;
@@ -368,13 +348,11 @@ ul { list-style: none; padding: 0; margin: 0; }
 }
 
 .sort {                         /* in welcome-list*/
-    border-bottom: 1px solid #dcdee0;
+    border-bottom: 1px solid $border_right;
     padding-right: 65px;
     font-size: 15px;
     /* margin-left: 20px; */
     ul {
-        padding: 0;
-        margin: 0;
         text-align: right;
     }
     li {
@@ -514,7 +492,6 @@ ul { list-style: none; padding: 0; margin: 0; }
     z-index: 100;
     box-shadow: 1px 1px 4px 1px $color;
 }
-
 
 @import "misc.scss";
 @import "readable.scss";
