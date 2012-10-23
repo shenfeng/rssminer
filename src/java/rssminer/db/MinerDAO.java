@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer.db;
 
 import clojure.lang.Keyword;
@@ -199,7 +204,7 @@ public class MinerDAO {
 
     // for click on folder
     public List<Feed> fetchFolderLikest(int userID, List<Integer> rssIDs,
-            int limit, int offset) throws SQLException {
+                                        int limit, int offset) throws SQLException {
         Jedis redis = jedis.getResource();
         rssIDs = new ArrayList<Integer>(rssIDs);
         byte[] key = Utils.genKey(userID, rssIDs);
@@ -222,7 +227,7 @@ public class MinerDAO {
     }
 
     public List<Feed> fetchFolderNewest(int userID, List<Integer> rssIDs,
-            int limit, int offset) throws SQLException {
+                                        int limit, int offset) throws SQLException {
         StringBuilder sb = createBuilder(rssIDs);
         sb.append(FEED_FIELD).append(userID);
         sb.append(" WHERE f.rss_link_id in ");
@@ -234,7 +239,7 @@ public class MinerDAO {
 
     // for folder
     public List<Feed> fetchFolderOldest(int userID, List<Integer> rssIDs,
-            int limit, int offset) throws SQLException {
+                                        int limit, int offset) throws SQLException {
         StringBuilder sb = createBuilder(rssIDs);
         sb.append(FEED_FIELD).append(userID);
         sb.append(" WHERE f.rss_link_id in ");
@@ -245,7 +250,7 @@ public class MinerDAO {
     }
 
     public List<Feed> fetchFolderRead(int userID, List<Integer> rssIDs,
-            int limit, int offset) throws SQLException {
+                                      int limit, int offset) throws SQLException {
         StringBuilder sb = createBuilder(rssIDs);
         sb.append(FEED_FIELD).append(userID);
         sb.append(" where uf.read_date > 0 and uf.rss_link_id in ");
@@ -256,7 +261,7 @@ public class MinerDAO {
     }
 
     public List<Feed> fetchFolderVote(int userID, List<Integer> rssIDs,
-            int limit, int offset) throws SQLException {
+                                      int limit, int offset) throws SQLException {
         StringBuilder sb = createBuilder(rssIDs);
         sb.append(FEED_FIELD).append(userID);
         sb.append(" where uf.vote_date > 0 and uf.vote_user != 0 and uf.rss_link_id in ");
@@ -325,7 +330,7 @@ public class MinerDAO {
     }
 
     public List<Feed> fetchSubLikest(int userID, int subID, int limit,
-            int offset) throws SQLException {
+                                     int offset) throws SQLException {
         byte[] key = Utils.genKey(userID, subID);
         Jedis redis = jedis.getResource();
         try {
@@ -338,7 +343,7 @@ public class MinerDAO {
     }
 
     public List<Feed> fetchSubNewest(int userID, int subID, int limit,
-            int offset) throws SQLException {
+                                     int offset) throws SQLException {
         StringBuilder sb = createBuilder(null);
         sb.append(FEED_FIELD).append(userID);
         sb.append(" WHERE f.rss_link_id = ").append(subID);
@@ -348,7 +353,7 @@ public class MinerDAO {
     }
 
     public List<Feed> fetchSubOldest(int userID, int subID, int limit,
-            int offset) throws SQLException {
+                                     int offset) throws SQLException {
         StringBuilder sb = createBuilder(null);
         sb.append(FEED_FIELD).append(userID);
         sb.append(" WHERE f.rss_link_id = ").append(subID);
@@ -358,7 +363,7 @@ public class MinerDAO {
     }
 
     public List<Feed> fetchSubRead(int userID, int subID, int limit,
-            int offset) throws SQLException {
+                                   int offset) throws SQLException {
         StringBuilder sb = createBuilder(null);
         sb.append(FEED_FIELD).append(userID);
         sb.append(" where uf.read_date > 0 and uf.rss_link_id = ");
@@ -437,7 +442,7 @@ public class MinerDAO {
     }
 
     public List<Feed> fetchSubVote(int userID, int subID, int limit,
-            int offset) throws SQLException {
+                                   int offset) throws SQLException {
         StringBuilder sb = createBuilder(null);
         sb.append(FEED_FIELD).append(userID);
         sb.append(" where uf.vote_date > 0 and uf.vote_user != 0 and uf.rss_link_id = ");

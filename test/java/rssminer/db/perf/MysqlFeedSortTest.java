@@ -1,14 +1,14 @@
-package rssminer.db.perf;
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+package rssminer.db.perf;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import java.sql.*;
 
 public class MysqlFeedSortTest extends AbstractPerfTest {
 

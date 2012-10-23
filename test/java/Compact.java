@@ -1,14 +1,13 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import rssminer.jsoup.HtmlUtils;
+
+import java.sql.*;
 
 public class Compact {
 
@@ -30,7 +29,7 @@ public class Compact {
                 .prepareStatement("update feed_data set summary = ? where id = ?");
         if (rs.next()) {
             int count = rs.getInt(1);
-            for (int i = 0; i <= count + STEP;) {
+            for (int i = 0; i <= count + STEP; ) {
                 if (i % REPORT == 0) {
                     logger.info("deal {}, max {}", i, count);
                 }

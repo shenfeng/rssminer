@@ -1,16 +1,9 @@
-package rssminer.tools;
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.StringReader;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map.Entry;
+package rssminer.tools;
 
 import org.ccil.cowan.tagsoup.Parser;
 import org.jsoup.Jsoup;
@@ -23,6 +16,15 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.StringReader;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map.Entry;
 
 class Cmp implements Comparator<Entry<String, Integer>> {
 
@@ -62,7 +64,7 @@ class TextHandler3 extends DefaultHandler {
     }
 
     public void startElement(String uri, String localName, String qName,
-            Attributes atts) throws SAXException {
+                             Attributes atts) throws SAXException {
         if (localName.equalsIgnoreCase("script")
                 || localName.equalsIgnoreCase("style")) {
             keep = false;

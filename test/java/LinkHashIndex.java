@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +27,7 @@ public class LinkHashIndex {
             ps.setInt(2, id);
             ps.executeUpdate();
 
-            if(count % 40000 == 0){
+            if (count % 40000 == 0) {
                 logger.info("dealed {}", count);
             }
         }

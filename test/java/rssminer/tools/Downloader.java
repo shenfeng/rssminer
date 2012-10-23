@@ -1,38 +1,25 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer.tools;
+
+import me.shenfeng.http.DynamicBytes;
+import me.shenfeng.http.HttpUtils;
+import me.shenfeng.http.client.*;
+import me.shenfeng.http.client.TextRespListener.IFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
+import java.net.*;
 import java.net.Proxy.Type;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-
-import me.shenfeng.http.DynamicBytes;
-import me.shenfeng.http.HttpUtils;
-import me.shenfeng.http.client.HttpClient;
-import me.shenfeng.http.client.HttpClientConfig;
-import me.shenfeng.http.client.ITextHandler;
-import me.shenfeng.http.client.TextRespListener;
-import me.shenfeng.http.client.TextRespListener.IFilter;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.sql.*;
+import java.util.*;
+import java.util.concurrent.*;
 
 public class Downloader {
     static Logger logger = LoggerFactory.getLogger(Downloader.class);
@@ -169,7 +156,7 @@ class TextHandler implements ITextHandler {
 
     public void onSuccess(int status, Map<String, String> headers, String body) {
         semaphore.release();
-        logger.info("{}, {}:{}", new Object[] { status, job.id, job.url });
+        logger.info("{}, {}:{}", new Object[]{status, job.id, job.url});
         if (status == 200) {
             try {
                 FileOutputStream fo = new FileOutputStream(job.file);

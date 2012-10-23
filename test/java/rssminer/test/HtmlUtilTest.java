@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer.test;
 
 import org.apache.commons.io.IOUtils;
@@ -22,19 +27,19 @@ public class HtmlUtilTest {
 
     @Test
     public void testCompactHtml() {
-        String[] snippets = new String[] { "<pre>a <span>b</span>c  d</pre>",
+        String[] snippets = new String[]{"<pre>a <span>b</span>c  d</pre>",
                 "<div></div>", "<div>aa  aa</div>",
                 "<div class='aaa' id='bbb' style='ccc'>aaaa</div>",
                 "<div><p>aaaa</p></div>", "<div>a<p>aaaa</p>b</div>",
                 "<div><div>a</div><div>b</div><div>c</div></div>",
                 "<div a='b'></div>",
-                "<div><p>12</p><style>.a{color:red}</style></div>" };
+                "<div><p>12</p><style>.a{color:red}</style></div>"};
 
-        String[] expects = new String[] { "<pre>a <span>b</span>c  d</pre>",
+        String[] expects = new String[]{"<pre>a <span>b</span>c  d</pre>",
                 "<div></div>", "<div>aa aa</div>", "<div>aaaa</div>",
                 "<div><p>aaaa</p></div>", "<div>a<p>aaaa</p>b</div>",
                 "<div><div>a</div><div>b</div><div>c</div></div>",
-                "<div></div>", "<div><p>12</p></div>" };
+                "<div></div>", "<div><p>12</p></div>"};
 
         for (int i = 0; i < snippets.length; i++) {
             String expect = HtmlUtils.compact(snippets[i],

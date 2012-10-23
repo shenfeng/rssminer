@@ -105,7 +105,6 @@ Usage:
  --fetch-size             100                              Bulk fetch size
  --profile                :dev                             dev or prod
  --redis-host             127.0.0.1                        Redis for session store
- --proxy-server           //192.168.1.3                    proxy server
  --static-server          //192.168.1.3                    static server
  --db-url                 jdbc:mysql://localhost/rssminer  jdbc url
  --db-user                feng                             MySQL Database user name
@@ -117,3 +116,7 @@ Usage:
  --no-help, --help        false                            Print this help
 
 ```
+
+### Copyright
+
+Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.

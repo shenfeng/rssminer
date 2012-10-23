@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2012. shenedu@gmail.com
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
  */
 
 package rssminer.classfier;
@@ -15,10 +16,7 @@ import rssminer.tools.Utils;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;

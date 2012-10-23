@@ -1,7 +1,9 @@
-package rssminer.search;
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
 
-import java.io.File;
-import java.io.IOException;
+package rssminer.search;
 
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
@@ -9,6 +11,9 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.store.FSDirectory;
+
+import java.io.File;
+import java.io.IOException;
 
 public class FactedSearch {
 

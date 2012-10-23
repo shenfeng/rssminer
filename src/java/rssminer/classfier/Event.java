@@ -1,12 +1,17 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer.classfier;
 
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.MINUTES;
+import rssminer.search.Searcher;
 
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
-import rssminer.search.Searcher;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
 
 // just interface
 public abstract class Event implements Delayed {

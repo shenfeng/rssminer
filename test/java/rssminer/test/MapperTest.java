@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer.test;
 
 import junit.framework.Assert;
@@ -25,7 +30,7 @@ public class MapperTest {
         String shouldSimple = Mapper.toSimplified(taiwan);
 
         for (int i = 0; i < shouldSimple.length(); i++) {
-            if(shouldSimple.charAt(i) != simple.charAt(i)) {
+            if (shouldSimple.charAt(i) != simple.charAt(i)) {
                 System.out.println("---------" + simple.charAt(i) + "\t" + shouldSimple.charAt(i) + "\t" + i);
             }
         }

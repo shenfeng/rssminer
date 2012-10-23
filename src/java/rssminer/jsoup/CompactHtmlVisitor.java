@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer.jsoup;
 
 import org.jsoup.nodes.*;
@@ -10,7 +15,7 @@ import java.util.Map;
 
 public class CompactHtmlVisitor implements NodeVisitor {
 
-    static final String[] KEEP_ATTRS = new String[] {"href", "src", "title",
+    static final String[] KEEP_ATTRS = new String[]{"href", "src", "title",
             "type", "alt", "width", // feedburner track
             "height"};
 

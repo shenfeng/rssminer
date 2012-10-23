@@ -1,17 +1,20 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer.search;
 
-import java.io.IOException;
-import java.io.StringReader;
-
 import me.shenfeng.mmseg.SimpleMMsegTokenizer;
-
 import org.apache.lucene.analysis.PorterStemFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.KeywordAttribute;
 import org.junit.Test;
-
 import rssminer.search.RssminerAnalyzer.DictHolder;
+
+import java.io.IOException;
+import java.io.StringReader;
 
 public class AnalyzerTest {
 
@@ -24,8 +27,8 @@ public class AnalyzerTest {
         PorterStemFilter f = new PorterStemFilter(tok);
         CharTermAttribute termAttr = f.getAttribute(CharTermAttribute.class);
         KeywordAttribute keywordAttr = f.getAttribute(KeywordAttribute.class);
-        
-        while(f.incrementToken()) {
+
+        while (f.incrementToken()) {
             System.out.println(termAttr.toString());
             System.out.println(keywordAttr.isKeyword());
         }

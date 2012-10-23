@@ -1,28 +1,32 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer;
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.List;
-
-import org.junit.Test;
 
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedInput;
+import org.junit.Test;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.List;
 
 public class RssParserTest {
 
-	public static String file = "/tmp/list";
+    public static String file = "/tmp/list";
 
-	@Test
-	public void testParse() throws IllegalArgumentException,
-			FileNotFoundException, FeedException {
-		SyndFeed s = new SyndFeedInput().build(new FileReader(file));
-		@SuppressWarnings("unchecked")
+    @Test
+    public void testParse() throws IllegalArgumentException,
+            FileNotFoundException, FeedException {
+        SyndFeed s = new SyndFeedInput().build(new FileReader(file));
+        @SuppressWarnings("unchecked")
         List<SyndEntry> entries = s.getEntries();
-		for (SyndEntry en : entries) {
-			System.out.println(en.getPublishedDate());
-		}
-	}
+        for (SyndEntry en : entries) {
+            System.out.println(en.getPublishedDate());
+        }
+    }
 }

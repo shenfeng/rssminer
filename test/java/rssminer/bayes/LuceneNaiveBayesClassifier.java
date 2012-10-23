@@ -1,10 +1,9 @@
-package rssminer.bayes;
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+package rssminer.bayes;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -12,25 +11,17 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.index.TermDocs;
-import org.apache.lucene.index.TermEnum;
-import org.apache.lucene.search.CachingWrapperFilter;
-import org.apache.lucene.search.DocIdSet;
-import org.apache.lucene.search.DocIdSetIterator;
-import org.apache.lucene.search.Filter;
-import org.apache.lucene.search.QueryWrapperFilter;
-import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.index.*;
+import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import rssminer.search.Searcher;
+
+import java.io.IOException;
+import java.util.*;
 
 public class LuceneNaiveBayesClassifier {
 
@@ -77,9 +68,8 @@ public class LuceneNaiveBayesClassifier {
      * and the ratio of documents in a certain category. Expects a Lucene index
      * created with the tokenized document bodies, and a category field that is
      * specified in the setters and populated with the specified category value.
-     * 
-     * @throws Exception
-     *             if one is thrown.
+     *
+     * @throws Exception if one is thrown.
      */
     public void train() throws Exception {
         trainingSet = new HashMap<String, double[]>();
@@ -154,7 +144,7 @@ public class LuceneNaiveBayesClassifier {
     }
 
     public double classify(Map<String, double[]> wordProbabilities,
-            double categoryDocRatio, String text) throws Exception {
+                           double categoryDocRatio, String text) throws Exception {
         RAMDirectory ramdir = new RAMDirectory();
         IndexWriterConfig cfg = new IndexWriterConfig(Version.LUCENE_35,
                 analyzer);

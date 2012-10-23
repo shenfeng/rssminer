@@ -1,20 +1,24 @@
-package rssminer.test;
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
 
-import java.io.File;
-import java.io.IOException;
+package rssminer.test;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Test;
-
 import rssminer.jsoup.CompactHtmlVisitor;
 import rssminer.jsoup.PartialTraversor;
 import rssminer.tools.Utils;
 
+import java.io.File;
+import java.io.IOException;
+
 public class JsoupBench {
 
-    static final String[] IGNORE_TAGS = new String[] { "script", "style",
-            "link", "#comment" };
+    static final String[] IGNORE_TAGS = new String[]{"script", "style",
+            "link", "#comment"};
 
     @Test
     public void testJsoup() {

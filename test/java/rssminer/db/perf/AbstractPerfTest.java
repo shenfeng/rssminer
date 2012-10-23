@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer.db.perf;
 
 import java.util.Random;
@@ -46,6 +51,6 @@ public abstract class AbstractPerfTest {
     public abstract void testPerSubPerf() throws Exception;
 
     public abstract void testFewSubsPerf() throws Exception;
-    
+
     public abstract void testCountPerf() throws Exception;
 }

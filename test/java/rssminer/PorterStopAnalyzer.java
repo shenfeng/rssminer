@@ -1,16 +1,17 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer;
 
-import java.io.Reader;
-
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.LowerCaseFilter;
-import org.apache.lucene.analysis.PorterStemFilter;
-import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.*;
 import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.util.Version;
-
 import rssminer.search.StopFilter;
+
+import java.io.Reader;
 
 public class PorterStopAnalyzer extends Analyzer {
 

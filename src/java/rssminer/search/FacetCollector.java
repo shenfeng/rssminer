@@ -1,16 +1,18 @@
-package rssminer.search;
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
+package rssminer.search;
 
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.TermFreqVector;
 import org.apache.lucene.search.Collector;
 import org.apache.lucene.search.Scorer;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
 
 class Int {
     int i;

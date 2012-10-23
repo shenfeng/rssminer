@@ -1,20 +1,19 @@
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
 
+import clojure.lang.Keyword;
 import me.shenfeng.dbcp.PerThreadDataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import rssminer.SimHash;
 import rssminer.search.Searcher;
-import clojure.lang.Keyword;
+
+import java.io.IOException;
+import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SimHashUpdater {
 

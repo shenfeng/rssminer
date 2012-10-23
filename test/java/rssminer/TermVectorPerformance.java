@@ -1,18 +1,13 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.*;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.index.TermEnum;
-import org.apache.lucene.index.TermFreqVector;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.junit.After;
@@ -20,6 +15,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TermVectorPerformance {
 

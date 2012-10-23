@@ -1,15 +1,11 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 import me.shenfeng.mmseg.BSDictionary;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -18,16 +14,22 @@ import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.util.Version;
 import org.junit.Assert;
 import org.junit.Test;
-
 import rssminer.search.RssminerAnalyzer;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 public class AnalyzerTest {
-    
+
     @Test
     public void test() throws IOException {
         URL url = BSDictionary.class.getClassLoader().getResource(
                 "data/words.dic");
-        
+
         InputStream is = BSDictionary.class.getClassLoader().getResourceAsStream("data/words.dic");
         System.out.println(is);
 //        new BSDictionary(new File(url.getFile()));

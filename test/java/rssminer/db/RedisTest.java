@@ -1,15 +1,19 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer.db;
+
+import org.junit.Before;
+import org.junit.Test;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 public class RedisTest {
 

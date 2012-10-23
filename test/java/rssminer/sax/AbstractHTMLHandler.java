@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer.sax;
 
 import org.xml.sax.helpers.DefaultHandler;
@@ -15,14 +20,14 @@ public abstract class AbstractHTMLHandler extends DefaultHandler {
     static final char SLASH = '/';
     static final char EQUAL = '=';
     static final char QUOTE = '\"';
-    static final String[] UN_ClOSEABLE_TATS = new String[] {"img", "input",
+    static final String[] UN_ClOSEABLE_TATS = new String[]{"img", "input",
             "hr", "br", "meta", "link"};
     static final String PRE = "pre";
     static final String SCRIPT = "script";
 
     static final String STYLE = "style";
 
-    static final String[] PRESEVE_WHITESPACE_TAGS = new String[] {PRE,
+    static final String[] PRESEVE_WHITESPACE_TAGS = new String[]{PRE,
             SCRIPT, STYLE};
 
     static boolean isQuoteNeeded(String val) {

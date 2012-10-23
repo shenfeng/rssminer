@@ -1,15 +1,13 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer.search;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.sql.*;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 
 //class HashID {
 //    public final int id;

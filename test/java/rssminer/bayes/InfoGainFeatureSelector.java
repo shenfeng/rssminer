@@ -1,10 +1,11 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer.bayes;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InfoGainFeatureSelector {
 
@@ -29,7 +30,7 @@ public class InfoGainFeatureSelector {
             if (word.pInCat > 0.0D) {
                 word.infoGain = word.pInCat
                         * Math.log(word.pInCat
-                                / ((word.pInCat + word.pNotInCat) * pCategory));
+                        / ((word.pInCat + word.pNotInCat) * pCategory));
             } else {
                 word.infoGain = 0.0D;
             }
@@ -39,8 +40,8 @@ public class InfoGainFeatureSelector {
                 (int) Math.round(Math.sqrt(wordProbabilities.size())));
         Map<String, double[]> topFeatures = new HashMap<String, double[]>();
         for (Word topFeature : topFeaturesList) {
-            topFeatures.put(topFeature.term, new double[] {
-                    topFeature.pInCat, topFeature.pNotInCat });
+            topFeatures.put(topFeature.term, new double[]{
+                    topFeature.pInCat, topFeature.pNotInCat});
         }
         return topFeatures;
     }

@@ -1,18 +1,17 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
 
-
+import javax.crypto.*;
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Enumeration;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
 
 public class TestTest {
 
@@ -51,7 +50,7 @@ public class TestTest {
             // System.out.println(bytes.length);
 
             String s = DatatypeConverter.printBase64Binary(bytes);
-             System.out.println(s);
+            System.out.println(s);
 //            continue;
             bytes = DatatypeConverter.parseBase64Binary(s);
 //

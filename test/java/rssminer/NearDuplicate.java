@@ -1,25 +1,23 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer;
+
+import clojure.lang.Keyword;
+import me.shenfeng.dbcp.PerThreadDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import rssminer.search.Searcher;
+import rssminer.tools.Utils;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import me.shenfeng.dbcp.PerThreadDataSource;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import rssminer.search.Searcher;
-import rssminer.tools.Utils;
-import clojure.lang.Keyword;
 
 class Result {
     final int id;
@@ -49,7 +47,7 @@ class Worker extends Thread {
     private BlockingQueue<Result> done;
 
     public Worker(long[] feedhashes, AtomicInteger id,
-            BlockingQueue<Result> done) {
+                  BlockingQueue<Result> done) {
         this.feedhashes = feedhashes;
         this.id = id;
         this.done = done;
@@ -107,8 +105,8 @@ public class NearDuplicate implements Runnable {
                 int d = SimHash.hammingDistance(md, feedhashes[i]);
                 if (d < distance) {
                     result.add(i);
-                    logger.info("{}:{} {}:{}, distance: {}", new Object[] {
-                            feedid, md, i, feedhashes[i], d });
+                    logger.info("{}:{} {}:{}, distance: {}", new Object[]{
+                            feedid, md, i, feedhashes[i], d});
                 }
             }
         }

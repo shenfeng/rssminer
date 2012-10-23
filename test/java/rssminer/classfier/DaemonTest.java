@@ -1,17 +1,22 @@
-package rssminer.classfier;
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
 
-import java.util.Arrays;
+package rssminer.classfier;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 public class DaemonTest {
 
-	@Test
-	public void testArrayToString() {
-		double []ds = new double[] { 1.111, 2.1212 };
-		String s = Arrays.toString(ds);
-		System.out.println(s);
-		
-		System.out.println(ds[0] + ", " + ds[1]);
-	}
+    @Test
+    public void testArrayToString() {
+        double[] ds = new double[]{1.111, 2.1212};
+        String s = Arrays.toString(ds);
+        System.out.println(s);
+
+        System.out.println(ds[0] + ", " + ds[1]);
+    }
 }

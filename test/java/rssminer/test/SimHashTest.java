@@ -1,23 +1,23 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer.test;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-
+import clojure.lang.Keyword;
 import junit.framework.Assert;
 import me.shenfeng.dbcp.PerThreadDataSource;
-
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import rssminer.SimHash;
 import rssminer.search.Searcher;
-import clojure.lang.Keyword;
+
+import java.io.IOException;
+import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SimHashTest {
     private static final Logger logger = LoggerFactory

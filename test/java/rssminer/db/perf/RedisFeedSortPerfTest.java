@@ -1,18 +1,15 @@
-package rssminer.db.perf;
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+package rssminer.db.perf;
 
 import org.junit.Before;
 import org.junit.Test;
+import redis.clients.jedis.*;
 
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.Pipeline;
-import redis.clients.jedis.Response;
-import redis.clients.jedis.Tuple;
+import java.util.*;
 
 public class RedisFeedSortPerfTest extends AbstractPerfTest {
 

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer.classfier;
 
 import org.apache.commons.io.IOUtils;
@@ -14,7 +19,7 @@ public class EmitTextFile {
         Connection db = Utils.getRssminerDB();
         Statement stat = db.createStatement();
         ResultSet rs = stat.executeQuery("select * from feed_data where id > 100000 limit 20000");
-        while(rs.next()) {
+        while (rs.next()) {
             int id = rs.getInt("id");
             String summary = rs.getString("summary");
             String text = HtmlUtils.text(summary);

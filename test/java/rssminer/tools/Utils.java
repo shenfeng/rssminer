@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer.tools;
 
 import org.apache.commons.io.IOUtils;
@@ -40,7 +45,7 @@ class ExtractTextHandler extends DefaultHandler {
     }
 
     public void startElement(String uri, String localName, String qName,
-            Attributes atts) throws SAXException {
+                             Attributes atts) throws SAXException {
         if (localName.equalsIgnoreCase("script")
                 || localName.equalsIgnoreCase("style")) {
             keep = false;

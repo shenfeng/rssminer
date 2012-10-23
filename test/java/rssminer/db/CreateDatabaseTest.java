@@ -1,25 +1,27 @@
-package rssminer.db;
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+package rssminer.db;
 
 import org.junit.Test;
 
+import java.sql.*;
+
 public class CreateDatabaseTest {
 
-	@Test
-	public void testCreateDatabasePerformance() throws SQLException {
-		// about 3s
-		for (int i = 0; i < 1000; ++i) {
-			Connection con = DriverManager.getConnection(
-					"jdbc:mysql://localhost/mysql", "root", "rssminer.net");
-			Statement s = con.createStatement();
-			s.execute("create database test_" + i);
-			s.execute("drop database test_" + i);
-			s.close();
-			con.close();
-		}
-	}
+    @Test
+    public void testCreateDatabasePerformance() throws SQLException {
+        // about 3s
+        for (int i = 0; i < 1000; ++i) {
+            Connection con = DriverManager.getConnection(
+                    "jdbc:mysql://localhost/mysql", "root", "rssminer.net");
+            Statement s = con.createStatement();
+            s.execute("create database test_" + i);
+            s.execute("drop database test_" + i);
+            s.close();
+            con.close();
+        }
+    }
 }

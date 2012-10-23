@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer.jsoup;
 
 import org.jsoup.Jsoup;
@@ -28,10 +33,10 @@ public class HtmlUtils {
     final static Pattern comment = Pattern.compile("comment",
             Pattern.CASE_INSENSITIVE);
 
-    static final String[] IGNORE_TAGS = new String[] { "script", "style",
-            "link", "#comment" };
+    static final String[] IGNORE_TAGS = new String[]{"script", "style",
+            "link", "#comment"};
 
-    static String[] TEXT_IGNORE = new String[] { "code" };
+    static String[] TEXT_IGNORE = new String[]{"code"};
 
     public static String compact(String html, String baseUri) {
         if (html == null || html.isEmpty()) {

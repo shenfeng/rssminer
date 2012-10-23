@@ -1,24 +1,26 @@
-package rssminer.db;
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
 
-import java.util.Random;
+package rssminer.db;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+import java.util.Random;
+
 /**
- *
  * Simple Redis performance Test
- *
+ * <p/>
  * LOCAL: redis server and client are on the same machine(M1).
  * REMOTE: redis server(M2) and client(M1) are on different machine.
- *
+ * <p/>
  * M1: CPU Intel i7 2600 @ 3.4G, MEM 16G
  * M2: CPU Intel T7200 @ 2.0G, MEM 3G
- *
  */
 
 public class RedisPerfTest {

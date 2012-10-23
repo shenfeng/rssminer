@@ -1,34 +1,31 @@
+/*
+ * Copyright (c) Feng Shen<shenedu@gmail.com>. All rights reserved.
+ * You must not remove this notice, or any other, from this software.
+ */
+
 package rssminer.classfier;
 
-import static rssminer.Utils.K_DATA_SOURCE;
-import static rssminer.Utils.K_EVENTS_THRESHOLD;
-import static rssminer.Utils.K_REDIS_SERVER;
-import static rssminer.classfier.NaiveBayes.classify;
-import static rssminer.classfier.NaiveBayes.train;
-
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.DelayQueue;
-
-import javax.sql.DataSource;
-
+import clojure.lang.Keyword;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Pipeline;
 import rssminer.Utils;
 import rssminer.db.DBHelper;
 import rssminer.db.Vote;
-import clojure.lang.Keyword;
+
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.concurrent.DelayQueue;
+
+import static rssminer.Utils.*;
+import static rssminer.classfier.NaiveBayes.classify;
+import static rssminer.classfier.NaiveBayes.train;
 
 public class SysVoteDaemon implements Runnable {
 
@@ -89,7 +86,7 @@ public class SysVoteDaemon implements Runnable {
             }
             logger.info(
                     "compute and save score for user {}, {} feeds, takes {}ms",
-                    new Object[] { userID, unVoted.size(), w.time() });
+                    new Object[]{userID, unVoted.size(), w.time()});
         }
     }
 
@@ -129,8 +126,8 @@ public class SysVoteDaemon implements Runnable {
         } finally {
             jedis.returnResource(redis);
         }
-        logger.info("rss:{}, feed cnt:{}, {} users, take {}ms", new Object[] {
-                e.subid, e.feedids.size(), userIDs.size(), w.time() });
+        logger.info("rss:{}, feed cnt:{}, {} users, take {}ms", new Object[]{
+                e.subid, e.feedids.size(), userIDs.size(), w.time()});
     }
 
     public void handlerUserEvent(UserEvent e) throws SQLException, IOException {
@@ -257,7 +254,7 @@ public class SysVoteDaemon implements Runnable {
         }
         // System.out.println(model);
         logger.info("train model for user {} with {} feeds takes {}ms",
-                new Object[] { userID, votes.size(), w.time() });
+                new Object[]{userID, votes.size(), w.time()});
         return model;
     }
 }
