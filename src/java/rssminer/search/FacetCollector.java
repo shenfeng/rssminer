@@ -88,7 +88,8 @@ public class FacetCollector extends Collector {
     private final Counter author = new Counter(1024);
     private final Counter tag = new Counter(1024);
 
-    private static final int STEP = 1024;
+    private static final int STEP0 = 512;
+    private static final int STEP1 = 1024;
     private static final int STEP2 = 5120;
     private static final int STEP3 = 12288;
 
@@ -103,18 +104,23 @@ public class FacetCollector extends Collector {
         int id = doc + base;
         count += 1;
         if (count > STEP3) {
-            step = 8;
-            if (count % 8 != 0) {
+            step = 16;
+            if (count % step != 0) {
                 return;
             }
         } else if (count > STEP2) {
-            step = 4;
-            if (count % 4 != 0) { // 25%
+            step = 8;
+            if (count % step != 0) {
                 return;
             }
-        } else if (count > STEP) {
+        } else if (count > STEP1) {
+            step = 4;
+            if (count % step != 0) {
+                return;
+            }
+        } else if (count > STEP0) { // 50%
             step = 2;
-            if (count % 2 != 0) { // 50%
+            if (count % step != 0) {
                 return;
             }
         }
