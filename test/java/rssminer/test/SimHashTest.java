@@ -11,7 +11,7 @@ import me.shenfeng.dbcp.PerThreadDataSource;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import rssminer.SimHash;
+import rssminer.Utils;
 import rssminer.search.Searcher;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class SimHashTest {
         for (int i = 0; i < 63; i++) {
             long x = Long.parseLong(strx, 2);
             long y = Long.parseLong(stry, 2);
-            Assert.assertSame(SimHash.hammingDistance(x, y), diff);
+            Assert.assertSame(Utils.hammingDistance(x, y), diff);
             double r = Math.random();
             if (r > 0.7) {
                 diff += 1;
@@ -76,7 +76,7 @@ public class SimHashTest {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 String summary = rs.getString(1);
-                SimHash.simHash(summary);
+                Utils.simHash(summary);
             }
             if (i % 5000 == 0) {
                 logger.info("handle " + i);
@@ -88,17 +88,17 @@ public class SimHashTest {
     @Test
     public void testWithOutLuence() throws IOException {
         for (int i = 1; i < TOTAL; i++) {
-            SimHash.simHash(i);
+//            SimHash.simHash(i);
         }
     }
 
     @Test
     public void testSimHash() {
-        long h1 = SimHash.simHash("the cat sat on a mat");
-        long h2 = SimHash.simHash("the cat sat on the mat");
-        long h3 = SimHash.simHash("we all scream for ice cream");
-        System.out.println(SimHash.hammingDistance(h1, h2));
-        System.out.println(SimHash.hammingDistance(h1, h3));
-        System.out.println(SimHash.hammingDistance(h2, h3));
+        long h1 = Utils.simHash("the cat sat on a mat");
+        long h2 = Utils.simHash("the cat sat on the mat");
+        long h3 = Utils.simHash("we all scream for ice cream");
+        System.out.println(Utils.hammingDistance(h1, h2));
+        System.out.println(Utils.hammingDistance(h1, h3));
+        System.out.println(Utils.hammingDistance(h2, h3));
     }
 }

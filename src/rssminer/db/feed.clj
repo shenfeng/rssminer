@@ -9,26 +9,25 @@
         [clojure.tools.logging :only [warn]]
         [clojure.java.jdbc :only [do-prepared]])
   (:import rssminer.db.MinerDAO
-           rssminer.Utils
-           rssminer.jsoup.HtmlUtils))
+           rssminer.Utils))
 
 (defn update-total-feeds [rssid]
   (with-mysql (do-prepared "UPDATE rss_links SET total_feeds =
                  (SELECT COUNT(*) FROM feeds where rss_link_id = ?)
                  WHERE id = ?" [rssid rssid])))
 
-(defn- feed-exits? [rssid link]
-  (mysql-query
-   ["SELECT 1 FROM feeds WHERE rss_link_id = ? AND link_hash = ? AND link = ?"
-    rssid (.hashCode ^String link) link]))
+(defn- feed-exits? [feed rssid]
+  (if (= -1 (:simhash feed))
+    (mysql-query
+     ["SELECT 1 FROM feeds WHERE rss_link_id = ? AND link = ?"
+      rssid (:link feed)])
+    (mysql-query
+     ["SELECT 1 FROM feeds WHERE rss_link_id = ? AND simhash = ?"
+      rssid (:simhash feed)])))
 
 (defn- save-feed [feed rssid]
   (try (let [id (mysql-insert :feeds (dissoc (assoc feed :rss_link_id rssid)
-                                             :summary))
-             ;; always compact html to save disk storage
-             feed (assoc feed :summary
-                         (HtmlUtils/compact (:summary feed)
-                                            (:link feed)))]
+                                             :summary))]
          (index-feed id rssid feed)
          (mysql-insert :feed_data {:id id :summary (:summary feed)})
          id)                            ; return id
@@ -36,13 +35,8 @@
          (warn "insert for rss" rssid e))))
 
 (defn save-feeds [feeds rssid]
-  (let [ids (map (fn [{:keys [link] :as feed}]
-                   (when (and link (not (blank? link)))
-                     ;; link is the only cared,
-                     (if-not (feed-exits? rssid link)
-                       (save-feed (assoc feed
-                                    :link_hash (.hashCode ^String link))
-                                  rssid))))
+  (let [ids (map (fn [feed] (if-not (feed-exits? feed rssid)
+                             (save-feed feed rssid)))
                  (:entries feeds))
         inserted (filter identity (doall ids))]
     (when (seq inserted)

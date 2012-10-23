@@ -7,7 +7,7 @@ import clojure.lang.Keyword;
 import me.shenfeng.dbcp.PerThreadDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import rssminer.SimHash;
+import rssminer.Utils;
 import rssminer.search.Searcher;
 
 import java.io.IOException;
@@ -49,7 +49,7 @@ public class SimHashUpdater {
             while (rs.next()) {
                 i = rs.getInt(1); // update id;
                 String summary = rs.getString(2);
-                long h2 = SimHash.simHash(summary);
+                long h2 = Utils.simHash(summary);
                 if (h2 != -1) {
                     update.setLong(1, h2);
                     update.setInt(2, i);

@@ -63,7 +63,7 @@ class Worker extends Thread {
                 for (int j = i + 1; j < feedhashes.length; j++) {
                     long other = feedhashes[j];
                     if (other != -1) {
-                        int d = SimHash.hammingDistance(me, other);
+                        int d = rssminer.Utils.hammingDistance(me, other);
                         innerCounter[d] += 1;
                     }
                 }
@@ -102,7 +102,7 @@ public class NearDuplicate implements Runnable {
         long md = feedhashes[feedid];
         for (int i = 0; i < feedhashes.length; i++) {
             if (i != feedid) {
-                int d = SimHash.hammingDistance(md, feedhashes[i]);
+                int d = rssminer.Utils.hammingDistance(md, feedhashes[i]);
                 if (d < distance) {
                     result.add(i);
                     logger.info("{}:{} {}:{}, distance: {}", new Object[]{
@@ -178,8 +178,8 @@ public class NearDuplicate implements Runnable {
                 if (i % 60000 == 0) {
                     logger.info("handing {}, max {}", i, max);
                 }
-                long hash = SimHash.simHash(i);
-                hashes[i] = hash;
+//                long hash = SimHash.simHash(i);
+//                hashes[i] = hash;
             }
             feedhashes = hashes;
         } catch (Exception e) {

@@ -9,6 +9,8 @@ import clojure.lang.Keyword;
 import me.shenfeng.http.HttpUtils;
 import me.shenfeng.http.client.HttpClient;
 import me.shenfeng.http.client.HttpClientConfig;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
@@ -18,6 +20,8 @@ import org.xml.sax.helpers.DefaultHandler;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import rssminer.db.SubItem;
+import rssminer.jsoup.HtmlUtils;
+import rssminer.search.Searcher;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -93,6 +97,9 @@ class GoogleExportHandler extends DefaultHandler {
 
 public class Utils {
     final static Logger logger = LoggerFactory.getLogger(Utils.class);
+
+    static final int MIN_TERM = 15;
+
     public static final HttpClient CLIENT;
     public static final String USER_AGETNT = "Mozilla/5.0 (compatible; Rssminer/1.0; +http://rssminer.net)";
     public static final String[] NO_IFRAME = new String[]{"groups.google"}; // X-Frame-Options
@@ -293,5 +300,59 @@ public class Utils {
             strs.add(str.substring(start + 1));
         }
         return strs;
+    }
+
+    public static long simHash(String html) {
+        String text = HtmlUtils.text(html, true);
+        if (html.isEmpty()) {
+            return -1;
+        }
+
+        int[] bits = new int[64];
+        TokenStream stream = Searcher.analyzer.tokenStream("",
+                new StringReader(text));
+        CharTermAttribute c = stream.getAttribute(CharTermAttribute.class);
+        boolean b = false;
+        Set<String> unique = new HashSet<String>();
+        try {
+            while (stream.incrementToken()) {
+                String term = new String(c.buffer(), 0, c.length());
+                if (!b) {
+                    unique.add(term);
+                    b = unique.size() >= MIN_TERM;
+                }
+                long code = MurmurHash.hash64(term);
+                for (int j = 0; j < bits.length; j++) {
+                    if (((code >>> j) & 0x1) == 0x1) {
+                        bits[j] += 1;
+                    } else {
+                        bits[j] -= 1;
+                    }
+                }
+            }
+        } catch (IOException ignore) { // can not happen
+        }
+
+        if (!b) {
+            return -1;
+        }
+
+        long fingerprint = 0;
+        for (int i = 0; i < bits.length; i++) {
+            if (bits[i] > 0) {
+                fingerprint += (1 << i);
+            }
+        }
+        return fingerprint;
+    }
+
+    public static int hammingDistance(long x, long y) {
+        int dist = 0;
+        long val = x ^ y;
+        while (val != 0) {
+            ++dist;
+            val &= val - 1;
+        }
+        return dist;
     }
 }

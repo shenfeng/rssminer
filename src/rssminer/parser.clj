@@ -4,6 +4,8 @@
   (:require [clojure.string :as s])
   (:import [com.sun.syndication.io SyndFeedInput ParsingFeedException]
            java.util.Date
+           rssminer.Utils
+           rssminer.jsoup.HtmlUtils
            java.io.StringReader))
 
 (defn- rss-bean? [e]
@@ -45,24 +47,26 @@
 ;; http://hi.baidu.com/maczhijia/rss 0 feeds
 ;;; http://blogs.innodb.com/wp/feed/
 
-(defn- parse-entry [e site-url]
-  (let [link (most-len (or (-> e :link trim) site-url) 512)] ; most 512 chars
-    (assoc-if {}
-              :author (most-len (-> e :author trim) 64)
-              :title (most-len (-> e :title trim) 256)
-              :summary (or
-                        (-> e :contents first :value trim)
-                        (-> e :description :value trim))
-              :link link
-              :tags (let [t (s/join ";" (filter tag?
-                                                (map #(-> % :name trim)
-                                                     (:categories e))))]
-                      (most-len t 128))
-              :updated_ts (:updatedDate e)
-              :published_ts (let [s (or (:publishedDate e)
-                                        (:updatedDate e)
-                                        (now-seconds))]
-                              (if (< s 0) (now-seconds) s)))))
+(defn- parse-entry [e]
+  ;; most 512 chars
+  (when-let [link (-> e :link trim (most-len 512))]
+    (let [summary (HtmlUtils/compact (or (-> e :contents first :value trim)
+                                         (-> e :description :value trim))
+                                     link)]
+      {:author (most-len (-> e :author trim) 64)
+       :title (most-len (-> e :title trim) 256)
+       :summary summary
+       :simhash (Utils/simHash summary)
+       :link link
+       :tags (let [t (s/join ";" (filter tag?
+                                         (map #(-> % :name trim)
+                                              (:categories e))))]
+               (most-len t 128))
+       :updated_ts (:updatedDate e)
+       :published_ts (let [s (or (:publishedDate e)
+                                 (:updatedDate e)
+                                 (now-seconds))]
+                       (if (< s 0) (now-seconds) s))})))
 
 (defn parse-feed [str]
   (when str
@@ -75,9 +79,7 @@
          :language (-> feed :link trim)
          :published_ts (:publishedDate feed)
          :description (most-len (-> feed :description trim) 1024)
-         :entries (map (fn [e]
-                         (parse-entry e link)) (:entries feed))})
-      ;; (catch ParsingFeedException e
-      ;;   (warn "ParsingFeedException" (.getMessage e)))
+         :entries (filter identity (map (fn [e]
+                                          (parse-entry e)) (:entries feed)))})
       (catch Exception e
         (warn "parse feed exception:" (.getMessage e))))))
