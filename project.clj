@@ -6,7 +6,7 @@
                  [compojure "1.1.1"]
                  [me.shenfeng/http-kit "1.1.1"]
                  [me.shenfeng/mustache "0.0.4"]
-                 [me.shenfeng/mmseg "0.0.2"]
+                 [me.shenfeng/mmseg "0.0.4"]
                  [me.shenfeng/dbcp "0.0.1"]
                  [mysql/mysql-connector-java "5.1.21"]
                  [net.java.dev.rome/rome "1.0.0"]

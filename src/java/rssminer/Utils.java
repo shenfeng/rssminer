@@ -30,8 +30,14 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static java.lang.Character.OTHER_PUNCTUATION;
 
@@ -146,8 +152,7 @@ public class Utils {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < text.length(); i++) {
             char ch = text.charAt(i);
-            if (!Character.isHighSurrogate(ch)
-                    && !Character.isLowSurrogate(ch)) {
+            if (!Character.isHighSurrogate(ch) && !Character.isLowSurrogate(ch)) {
                 sb.append(ch);
             }
         }
@@ -321,7 +326,7 @@ public class Utils {
 
     private static void simHash(String text, int[] bits) {
         TokenStream stream = Searcher.analyzer.tokenStream("",
-                new StringReader(text));
+                new me.shenfeng.mmseg.StringReader(text));
         CharTermAttribute c = stream.getAttribute(CharTermAttribute.class);
         try {
             while (stream.incrementToken()) {

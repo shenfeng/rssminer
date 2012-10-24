@@ -6,6 +6,7 @@
 package rssminer.search;
 
 import clojure.lang.Keyword;
+import me.shenfeng.mmseg.StringReader;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -34,7 +35,6 @@ import rssminer.jsoup.HtmlUtils;
 import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;

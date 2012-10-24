@@ -1,6 +1,11 @@
 #!/bin/sh
 
-ABSOLUTE_PATH=$(readlink -f $0)
+READLINK=readlink
+if which greadlink > /dev/null; then
+    READLINK=greadlink
+fi
+
+ABSOLUTE_PATH=$(${READLINK} -f $0)
 HOME="${ABSOLUTE_PATH%/*/*/*}"
 cd "${HOME}"
 rake javac_debug
