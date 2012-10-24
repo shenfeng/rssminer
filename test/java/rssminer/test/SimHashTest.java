@@ -76,7 +76,7 @@ public class SimHashTest {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 String summary = rs.getString(1);
-                Utils.simHash(summary);
+                Utils.simHash(summary, "");
             }
             if (i % 5000 == 0) {
                 logger.info("handle " + i);
@@ -94,9 +94,9 @@ public class SimHashTest {
 
     @Test
     public void testSimHash() {
-        long h1 = Utils.simHash("the cat sat on a mat");
-        long h2 = Utils.simHash("the cat sat on the mat");
-        long h3 = Utils.simHash("we all scream for ice cream");
+        long h1 = Utils.simHash("the cat sat on a mat", "");
+        long h2 = Utils.simHash("the cat sat on the mat", "");
+        long h3 = Utils.simHash("we all scream for ice cream", "");
         System.out.println(Utils.hammingDistance(h1, h2));
         System.out.println(Utils.hammingDistance(h1, h3));
         System.out.println(Utils.hammingDistance(h2, h3));

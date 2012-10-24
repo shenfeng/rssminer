@@ -20,6 +20,8 @@
 (deftemplate compare_tpl (slurp (resource "compare.tpl")))
 (deftemplate similar_tpl (slurp (resource "near_duplicate.tpl")))
 
+(deftemplate dedup_sub (slurp (resource "dedup_sub.tpl")))
+
 (def step 5)
 (defonce server (atom nil))
 
@@ -65,8 +67,32 @@ from feed_data d join feeds f on f.id = d.id where d.id =? " id])))
           (redirect (str "/s?id=" i))
           (recur (inc i)))))))
 
+(defn simhash-in-sub [rssid]
+  (filter (fn [[k v]] (> (count v) 1))
+          (reduce (fn [m item]
+                    (let [hash (:simhash item)]
+                      (if (= hash -1)
+                        m (assoc m hash
+                                 (conj (get m hash []) (:id item))))))
+                  {}
+                  (mysql-query ["select id, simhash from feeds
+                               where rss_link_id = ?" rssid]))))
+
+(defn find-silimar-in-sub [req]
+  (let [id (Integer/parseInt (or (-> req :params :id) "0"))
+        dup (simhash-in-sub id)]
+    (if (seq dup)
+      (to-html dedup_sub {:sections (map (fn [[simash ids]]
+                                           {:subs (map fetch-data-by-id ids)}) dup)
+                          :pages (range id (+ id 10))})
+      (loop [i id]
+        (if (seq (simhash-in-sub i))
+          (redirect (str "/sub?id=" i))
+          (recur (inc i)))))))
+
 (defroutes all-routes
   (GET "/s" [] find-silimar)
+  (GET "/sub" [] find-silimar-in-sub)
   (GET "/compare" [] compare-data)
   (route/files "/static" {:root "test/public"}) ;; files under public folder
   (route/not-found "<p>Page not found.</p>" ))
@@ -114,5 +140,6 @@ from feed_data d join feeds f on f.id = d.id where d.id =? " id])))
               :default "/var/rssminer/index"]
              ["--[no-]help" "Print this help"])]
     (when (:help options) (println banner) (System/exit 0))
-    (start-server options)
-    (NearDuplicate/init)))
+    (reset! server (start-server options))
+    ;; (NearDuplicate/init)
+    ))

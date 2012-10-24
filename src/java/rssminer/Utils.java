@@ -79,7 +79,7 @@ class GoogleExportHandler extends DefaultHandler {
     }
 
     public void startElement(String uri, String localName, String qName,
-                             Attributes att) throws SAXException {
+            Attributes att) throws SAXException {
         if (qName.equals("object")) {
             ++objectDepth;
         } else if ("string".equals(qName)) {
@@ -98,14 +98,12 @@ class GoogleExportHandler extends DefaultHandler {
 public class Utils {
     final static Logger logger = LoggerFactory.getLogger(Utils.class);
 
-    static final int MIN_TERM = 15;
-
     public static final HttpClient CLIENT;
     public static final String USER_AGETNT = "Mozilla/5.0 (compatible; Rssminer/1.0; +http://rssminer.net)";
-    public static final String[] NO_IFRAME = new String[]{"groups.google"}; // X-Frame-Options
-    public static final String[] RESETED_DOMAINS = new String[]{
+    public static final String[] NO_IFRAME = new String[] { "groups.google" }; // X-Frame-Options
+    public static final String[] RESETED_DOMAINS = new String[] {
             "wordpress", "appspot", "emacsblog", "blogger", "blogspot",
-            "mikemccandless", "feedproxy", "blogblog"};
+            "mikemccandless", "feedproxy", "blogblog" };
 
     public static final String FINAL_URI = "X-final-uri";
 
@@ -302,25 +300,32 @@ public class Utils {
         return strs;
     }
 
-    public static long simHash(String html) {
-        String text = HtmlUtils.text(html, true);
-        if (html.isEmpty()) {
+    public static long simHash(String html, String title) {
+        if (html == null || html.length() < 120) {
             return -1;
         }
-
+        String text = HtmlUtils.text(html, true);
         int[] bits = new int[64];
+        simHash(text, bits);
+        if (title != null && !title.isEmpty()) {
+            simHash(title, bits);
+        }
+        long fingerprint = 0;
+        for (int i = 0; i < bits.length; i++) {
+            if (bits[i] > 0) {
+                fingerprint += (1 << i);
+            }
+        }
+        return fingerprint;
+    }
+
+    private static void simHash(String text, int[] bits) {
         TokenStream stream = Searcher.analyzer.tokenStream("",
                 new StringReader(text));
         CharTermAttribute c = stream.getAttribute(CharTermAttribute.class);
-        boolean b = false;
-        Set<String> unique = new HashSet<String>();
         try {
             while (stream.incrementToken()) {
                 String term = new String(c.buffer(), 0, c.length());
-                if (!b) {
-                    unique.add(term);
-                    b = unique.size() >= MIN_TERM;
-                }
                 long code = MurmurHash.hash64(term);
                 for (int j = 0; j < bits.length; j++) {
                     if (((code >>> j) & 0x1) == 0x1) {
@@ -332,18 +337,6 @@ public class Utils {
             }
         } catch (IOException ignore) { // can not happen
         }
-
-        if (!b) {
-            return -1;
-        }
-
-        long fingerprint = 0;
-        for (int i = 0; i < bits.length; i++) {
-            if (bits[i] > 0) {
-                fingerprint += (1 << i);
-            }
-        }
-        return fingerprint;
     }
 
     public static int hammingDistance(long x, long y) {

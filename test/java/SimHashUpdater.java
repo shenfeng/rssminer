@@ -3,31 +3,23 @@
  * You must not remove this notice, or any other, from this software.
  */
 
-import clojure.lang.Keyword;
-import me.shenfeng.dbcp.PerThreadDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rssminer.Utils;
-import rssminer.search.Searcher;
 
 import java.io.IOException;
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SimHashUpdater {
 
     private static final Logger logger = LoggerFactory
             .getLogger(SimHashUpdater.class);
 
-    public static void main(String[] args) throws IOException, SQLException {
-        Map<Keyword, Object> config = new HashMap<Keyword, Object>();
-        PerThreadDataSource db = new PerThreadDataSource(
-                "jdbc:mysql://localhost/rssminer", "feng", "");
-        config.put(rssminer.Utils.K_DATA_SOURCE, db);
-        Searcher.initGlobalSearcher("/var/rssminer/index", config);
+    static String JDBC_URL = "jdbc:mysql://localhost/rssminer?cachePrepStmts=true&useServerPrepStmts=true";
 
-        Connection con = db.getConnection();
+    public static void main(String[] args) throws IOException, SQLException {
+
+        Connection con = DriverManager.getConnection(JDBC_URL, "feng", "");
         Statement stat = con.createStatement();
 
         ResultSet rs = stat.executeQuery("select max(id) from feed_data");
@@ -35,21 +27,21 @@ public class SimHashUpdater {
         int max = rs.getInt(1);
 
         PreparedStatement ps = con
-                .prepareStatement("select id, summary from feed_data where id >= ? and id < ?");
+                .prepareStatement("select d.id, d.summary, f.title from feed_data d join feeds f on f.id = d.id where f.id >= ? and f.id <= ?");
 
         PreparedStatement update = con
                 .prepareStatement("update feeds set simhash = ? where id = ?");
 
         final int step = 5000;
 
-        for (int i = 1; i <= max; i++) {
+        for (int i = 1; i <= max; ++i) {
             ps.setInt(1, i);
             ps.setInt(2, i + step);
             rs = ps.executeQuery();
             while (rs.next()) {
                 i = rs.getInt(1); // update id;
                 String summary = rs.getString(2);
-                long h2 = Utils.simHash(summary);
+                long h2 = Utils.simHash(summary, rs.getString(3));
                 if (h2 != -1) {
                     update.setLong(1, h2);
                     update.setInt(2, i);

@@ -27,7 +27,33 @@ img {
     border-bottom: 1px solid blue;
 }
 
+
+.near-duplicate {
+    border-bottom: 4px solid blue;
+}
+
+.near-duplicate .duplicate {
+    max-height: 400px;
+    margin: 5px 0;
+    width: 1000px;
+    border: 1px solid #ccc;
+    overflow-y: auto;
+}
+
+.pager {
+    position: fixed;
+    left: 1050px;
+}
+
 .pager li {
-    display: inline;
-    padding: 3px 10px;
+    list-style: none;
+}
+
+.pager li a {
+    display: block;
+    padding: 4px 10px;
+}
+
+.pager li a:hover {
+    background: #ccc;
 }

@@ -52,11 +52,12 @@
   (when-let [link (-> e :link trim (most-len 512))]
     (let [summary (HtmlUtils/compact (or (-> e :contents first :value trim)
                                          (-> e :description :value trim))
-                                     link)]
+                                     link)
+          title (most-len (-> e :title trim) 256)]
       {:author (most-len (-> e :author trim) 64)
-       :title (most-len (-> e :title trim) 256)
+       :title title
        :summary summary
-       :simhash (Utils/simHash summary)
+       :simhash (Utils/simHash summary title)
        :link link
        :tags (let [t (s/join ";" (filter tag?
                                          (map #(-> % :name trim)
