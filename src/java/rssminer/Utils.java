@@ -9,7 +9,6 @@ import clojure.lang.Keyword;
 import me.shenfeng.http.HttpUtils;
 import me.shenfeng.http.client.HttpClient;
 import me.shenfeng.http.client.HttpClientConfig;
-import me.shenfeng.mmseg.SimpleMMsegTokenizer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.slf4j.Logger;
@@ -22,7 +21,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import rssminer.db.SubItem;
 import rssminer.jsoup.HtmlUtils;
-import rssminer.search.RssminerAnalyzer.DictHolder;
+import rssminer.search.Searcher;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -80,7 +79,7 @@ class GoogleExportHandler extends DefaultHandler {
     }
 
     public void startElement(String uri, String localName, String qName,
-            Attributes att) throws SAXException {
+                             Attributes att) throws SAXException {
         if (qName.equals("object")) {
             ++objectDepth;
         } else if ("string".equals(qName)) {
@@ -101,10 +100,10 @@ public class Utils {
 
     public static final HttpClient CLIENT;
     public static final String USER_AGETNT = "Mozilla/5.0 (compatible; Rssminer/1.0; +http://rssminer.net)";
-    public static final String[] NO_IFRAME = new String[] { "groups.google" }; // X-Frame-Options
-    public static final String[] RESETED_DOMAINS = new String[] {
+    public static final String[] NO_IFRAME = new String[]{"groups.google"}; // X-Frame-Options
+    public static final String[] RESETED_DOMAINS = new String[]{
             "wordpress", "appspot", "emacsblog", "blogger", "blogspot",
-            "mikemccandless", "feedproxy", "blogblog" };
+            "mikemccandless", "feedproxy", "blogblog"};
 
     public static final String FINAL_URI = "X-final-uri";
 
@@ -324,7 +323,11 @@ public class Utils {
     }
 
     private static void simHash(String text, int[] bits) {
-        TokenStream stream = new SimpleMMsegTokenizer(DictHolder.dic,
+//        TokenStream stream = new SimpleMMsegTokenizer(DictHolder.dic,
+//                new me.shenfeng.mmseg.StringReader(text));
+
+        // TODO much better than above: steam and stop words removal
+        TokenStream stream = Searcher.analyzer.tokenStream("",
                 new me.shenfeng.mmseg.StringReader(text));
         CharTermAttribute c = stream.getAttribute(CharTermAttribute.class);
         try {
