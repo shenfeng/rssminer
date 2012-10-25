@@ -3,8 +3,6 @@
  * You must not remove this notice, or any other, from this software.
  */
 
-package rssminer.search;
-
 import java.sql.*;
 import java.util.*;
 import java.util.Map.Entry;
@@ -30,6 +28,12 @@ public class DedupWithSub {
         PreparedStatement ps = con
                 .prepareStatement("select id, simhash from feeds where rss_link_id = ?");
 
+        PreparedStatement deleteData = con
+                .prepareStatement("delete from feed_data where id = ?");
+
+        PreparedStatement deleteFeed = con
+                .prepareStatement("delete from feeds where id = ?");
+
         int count = 0;
 
         for (int i = 1; i < 6558; i++) {
@@ -51,12 +55,19 @@ public class DedupWithSub {
             }
 
             for (Entry<Long, List<Integer>> e : map.entrySet()) {
-                if (e.getValue().size() > 1) {
+                List<Integer> feeds = e.getValue();
+                if (feeds.size() > 1) {
                     System.out.println(i + ": " + "\t" + e.getValue());
                     count += e.getValue().size() - 1;
+                    for (int k = 1; k < feeds.size(); ++k) {
+                        deleteData.setInt(1, feeds.get(k));
+//                        deleteData.execute();
+
+                        deleteFeed.setInt(1, feeds.get(k));
+//                        deleteFeed.execute();
+                    }
                 }
             }
-
         }
 
         System.out.println(count);

@@ -19,8 +19,8 @@ import java.io.Reader;
 
 public class RssminerAnalyzer extends Analyzer {
 
-    static class DictHolder {
-        static final Dictionary dic;
+    public static class DictHolder {
+        public static final Dictionary dic;
 
         static {
             InputStream is = RssminerAnalyzer.class.getClassLoader()

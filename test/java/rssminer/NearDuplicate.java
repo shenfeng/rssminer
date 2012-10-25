@@ -14,6 +14,9 @@ import rssminer.tools.Utils;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -47,7 +50,7 @@ class Worker extends Thread {
     private BlockingQueue<Result> done;
 
     public Worker(long[] feedhashes, AtomicInteger id,
-                  BlockingQueue<Result> done) {
+            BlockingQueue<Result> done) {
         this.feedhashes = feedhashes;
         this.id = id;
         this.done = done;
@@ -76,7 +79,7 @@ class Worker extends Thread {
     }
 }
 
-public class NearDuplicate implements Runnable {
+public class NearDuplicate {
 
     static Logger logger = LoggerFactory.getLogger(NearDuplicate.class);
     private static final TreeMap<Integer, Int> distCounter = new TreeMap<Integer, Int>();
@@ -88,9 +91,26 @@ public class NearDuplicate implements Runnable {
 
     public static void init() {
         if (feedhashes == null) {
-            Thread thread = new Thread(new NearDuplicate(), "duplicate");
-            thread.setDaemon(true);
-            thread.start();
+            try {
+                logger.info("init NearDuplicate");
+                int max = Utils.getMaxID();
+                long[] hashes = new long[max + 1];
+                Connection db = Utils.getRssminerDB();
+                Statement stat = db.createStatement();
+
+                ResultSet rs = stat
+                        .executeQuery("select id, simhash from feeds");
+                for (int i = 0; i < hashes.length; i++) {
+                    hashes[i] = -1;
+                }
+                while (rs.next()) {
+                    hashes[rs.getInt(1)] = rs.getLong(2);
+                }
+                feedhashes = hashes;
+                logger.info("init ok");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -99,14 +119,14 @@ public class NearDuplicate implements Runnable {
             return new ArrayList<Integer>(0);
         }
         ArrayList<Integer> result = new ArrayList<Integer>();
-        long md = feedhashes[feedid];
-        for (int i = 0; i < feedhashes.length; i++) {
-            if (i != feedid) {
-                int d = rssminer.Utils.hammingDistance(md, feedhashes[i]);
+        long hash = feedhashes[feedid];
+        for (int idx = 0; idx < feedhashes.length; idx++) {
+            if (idx != feedid && feedhashes[idx] != -1) {
+                int d = rssminer.Utils.hammingDistance(hash, feedhashes[idx]);
                 if (d < distance) {
-                    result.add(i);
-                    logger.info("{}:{} {}:{}, distance: {}", new Object[]{
-                            feedid, md, i, feedhashes[i], d});
+                    result.add(idx);
+                    logger.info("{}:{} {}:{}, distance: {}", new Object[] {
+                            feedid, hash, idx, feedhashes[idx], d });
                 }
             }
         }
@@ -121,9 +141,7 @@ public class NearDuplicate implements Runnable {
         config.put(rssminer.Utils.K_DATA_SOURCE, db);
         Searcher.initGlobalSearcher("/var/rssminer/index", config);
 
-        NearDuplicate duplicate = new NearDuplicate();
-        duplicate.run();
-        logger.info("all computed");
+        init();
 
         AtomicInteger id = new AtomicInteger(0);
         BlockingQueue<Result> done = new ArrayBlockingQueue<Result>(100);
@@ -168,22 +186,4 @@ public class NearDuplicate implements Runnable {
         // logger.info();
     }
 
-    public void run() {
-        try {
-            logger.info("init NearDuplicate");
-            int max = Utils.getMaxID();
-            long[] hashes = new long[max + 1];
-
-            for (int i = 0; i <= max; i++) {
-                if (i % 60000 == 0) {
-                    logger.info("handing {}, max {}", i, max);
-                }
-//                long hash = SimHash.simHash(i);
-//                hashes[i] = hash;
-            }
-            feedhashes = hashes;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

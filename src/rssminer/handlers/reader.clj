@@ -22,18 +22,18 @@
 (def app-css (slurp "public/css/app.css"))
 
 (defn show-unsupported-page [req]
-  (to-html unsupported-page {:dev (cfg/in-dev?)
-                             :prod (cfg/in-prod?)
-                             :css landing-css}))
+  (unsupported-page {:dev (cfg/in-dev?)
+                     :prod (cfg/in-prod?)
+                     :css landing-css}))
 
 (defn show-landing-page [req]
   (if (= (-> req :params :r) "d")       ; redirect to /demo
     (redirect "/demo")
     (if (cfg/real-user? req)
       (redirect "/a")
-      (let [body (to-html landing-page {:dev (cfg/in-dev?)
-                                        :prod (cfg/in-prod?)
-                                        :css landing-css})]
+      (let [body (landing-page {:dev (cfg/in-dev?)
+                                :prod (cfg/in-prod?)
+                                :css landing-css})]
         (if (cfg/demo-user? req) {:status 200
                                   :session nil ;; delete cookie
                                   :session-cookie-attrs {:max-age -1}
@@ -49,12 +49,12 @@
                      :gw (-> req :params :gw) ; google import wait
                      :ge (-> req :params :ge) ; google import error
                      :static_server (:static-server @cfg/rssminer-conf)}}]
-      (to-html app-page {:dev (cfg/in-dev?)
-                         :prod (cfg/in-prod?)
-                         :css app-css
-                         :email (:email user)
-                         :md5 (-> user :email md5-sum)
-                         :data (serialize-to-js data)}))))
+      (app-page {:dev (cfg/in-dev?)
+                 :prod (cfg/in-prod?)
+                 :css app-css
+                 :email (:email user)
+                 :md5 (-> user :email md5-sum)
+                 :data (serialize-to-js data)}))))
 
 (defn show-demo-page [req]
   (if (cfg/real-user? req)
@@ -68,12 +68,12 @@
             data {:rm {:user user
                        :demo true
                        :static_server (:static-server @cfg/rssminer-conf)}}]
-        {:body (to-html app-page {:dev (cfg/in-dev?)
-                                  :prod (cfg/in-prod?)
-                                  :email (:email user)
-                                  :md5 (-> user :email md5-sum)
-                                  :css app-css
-                                  :data (serialize-to-js data)})
+        {:body (app-page {:dev (cfg/in-dev?)
+                          :prod (cfg/in-prod?)
+                          :email (:email user)
+                          :md5 (-> user :email md5-sum)
+                          :css app-css
+                          :data (serialize-to-js data)})
          :status 200
          :session (:demo-user @cfg/rssminer-conf)}))))
 

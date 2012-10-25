@@ -21,8 +21,8 @@ public class StopFilter extends FilteringTokenFilter {
     public static final CharArraySet STOP_WORDS_SET;
 
     static {
-        final List<String> stopWords = Arrays.asList("a", "an", "and", "are",
-                "a", "able", "about", "above", "according", "accordingly",
+        final List<String> stopWords = Arrays.asList("an", "and", "are",
+                "able", "about", "above", "according", "accordingly",
                 "across", "actually", "after", "afterwards", "again",
                 "against", "all", "allow", "allows", "almost", "alone",
                 "along", "already", "also", "although", "always", "am",
@@ -49,17 +49,17 @@ public class StopFilter extends FilteringTokenFilter {
                 "far", "few", "fifth", "first", "five", "followed",
                 "following", "follows", "for", "former", "formerly", "forth",
                 "four", "from", "further", "furthermore", "g", "get", "gets",
-                "getting", "given", "gives", "goes", "going", "gone",
-                "got", "gotten", "greetings", "h", "had", "happens",
-                "hardly", "has", "have", "having", "he", "hello", "help",
-                "hence", "her", "here", "hereafter", "hereby", "herein",
-                "hereupon", "hers", "herself", "hi", "him", "himself", "his",
-                "hither", "hopefully", "how", "howbeit", "however", "i",
-                "ie", "if", "ignored", "immediate", "in", "inasmuch", "inc",
-                "indeed", "indicate", "indicated", "indicates", "inner",
-                "insofar", "instead", "into", "inward", "is", "it", "its",
-                "itself", "j", "just", "k", "keep", "keeps", "kept", "know",
-                "knows", "known", "l", "last", "lately", "later", "latter",
+                "getting", "given", "gives", "goes", "going", "gone", "got",
+                "gotten", "greetings", "h", "had", "happens", "hardly",
+                "has", "have", "having", "he", "hello", "help", "hence",
+                "her", "here", "hereafter", "hereby", "herein", "hereupon",
+                "hers", "herself", "hi", "him", "himself", "his", "hither",
+                "hopefully", "how", "howbeit", "however", "i", "ie", "if",
+                "ignored", "immediate", "in", "inasmuch", "inc", "indeed",
+                "indicate", "indicated", "indicates", "inner", "insofar",
+                "instead", "into", "inward", "is", "it", "its", "itself",
+                "j", "just", "k", "keep", "keeps", "kept", "know", "knows",
+                "known", "l", "last", "lately", "later", "latter",
                 "latterly", "least", "less", "lest", "let", "like", "liked",
                 "likely", "little", "look", "looking", "looks", "ltd", "m",
                 "mainly", "many", "may", "maybe", "me", "mean", "meanwhile",
@@ -105,12 +105,11 @@ public class StopFilter extends FilteringTokenFilter {
                 "whoever", "whole", "whom", "whose", "why", "will",
                 "willing", "wish", "with", "within", "without", "wonder",
                 "would", "would", "x", "y", "yes", "yet", "you", "your",
-                "yours", "yourself", "yourselves", "z", "zero", "as", "at",
-                "be", "but", "by", "for", "if", "in", "into", "is", "it",
-                "no", "not", "of", "on", "or", "such", "that", "the",
-                "their", "then", "there", "these", "they", "this", "to",
-                "was", "will", "with", "一", "与", "且", "个", "为", "么", "乎",
-                "上", "中",
+                "yours", "yourself", "yourselves", "zero", "as", "at", "be",
+                "but", "by", "for", "if", "in", "into", "is", "it", "no",
+                "not", "of", "on", "or", "such", "that", "the", "their",
+                "then", "there", "these", "they", "this", "to", "was",
+                "will", "with", "一", "与", "且", "个", "为", "么", "乎", "上", "中",
                 "于", "人", "以", "们", "会", "但", "你", "到", "后", "对", "将", "就",
                 "年", "我", "时", "是", "有", "来", "用", "而", "被", "这", "都", "在",
                 "和", "了", "从", "吗", "吧", "的", "也", "要", "也", "里", "或", "该",
@@ -137,12 +136,6 @@ public class StopFilter extends FilteringTokenFilter {
             int type = getType(buffer[0]);
             // ignore number or char, is lowercased by upper logic
             if (type == DECIMAL_DIGIT_NUMBER || type == LOWERCASE_LETTER) {
-                return false;
-            }
-        } else if (length == 2) {
-            // only 2, one of them is number, ignore
-            if (getType(buffer[0]) == DECIMAL_DIGIT_NUMBER ||
-                    getType(buffer[1]) == DECIMAL_DIGIT_NUMBER) {
                 return false;
             }
         }

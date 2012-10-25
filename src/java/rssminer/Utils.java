@@ -9,6 +9,7 @@ import clojure.lang.Keyword;
 import me.shenfeng.http.HttpUtils;
 import me.shenfeng.http.client.HttpClient;
 import me.shenfeng.http.client.HttpClientConfig;
+import me.shenfeng.mmseg.SimpleMMsegTokenizer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.slf4j.Logger;
@@ -21,7 +22,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import rssminer.db.SubItem;
 import rssminer.jsoup.HtmlUtils;
-import rssminer.search.Searcher;
+import rssminer.search.RssminerAnalyzer.DictHolder;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -30,14 +31,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.sql.*;
+import java.util.*;
 
 import static java.lang.Character.OTHER_PUNCTUATION;
 
@@ -152,7 +147,8 @@ public class Utils {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < text.length(); i++) {
             char ch = text.charAt(i);
-            if (!Character.isHighSurrogate(ch) && !Character.isLowSurrogate(ch)) {
+            if (!Character.isHighSurrogate(ch)
+                    && !Character.isLowSurrogate(ch)) {
                 sb.append(ch);
             }
         }
@@ -306,10 +302,13 @@ public class Utils {
     }
 
     public static long simHash(String html, String title) {
-        if (html == null || html.length() < 120) {
+        if (html == null || html.length() < 100) {
             return -1;
         }
         String text = HtmlUtils.text(html, true);
+        if (text.length() < 50) {
+            return -1;
+        }
         int[] bits = new int[64];
         simHash(text, bits);
         if (title != null && !title.isEmpty()) {
@@ -325,7 +324,7 @@ public class Utils {
     }
 
     private static void simHash(String text, int[] bits) {
-        TokenStream stream = Searcher.analyzer.tokenStream("",
+        TokenStream stream = new SimpleMMsegTokenizer(DictHolder.dic,
                 new me.shenfeng.mmseg.StringReader(text));
         CharTermAttribute c = stream.getAttribute(CharTermAttribute.class);
         try {

@@ -15,9 +15,9 @@
 (def cookie-attr {:max-age (* 3600 24 60)})
 
 (defn show-login-page [req]
-  (to-html login-page {:return_url (or (-> req :params :return_url) "/a")}))
+  (login-page {:return_url (or (-> req :params :return_url) "/a")}))
 
-(defn show-signup-page [req] (to-html signup-page nil))
+(defn show-signup-page [req] (signup-page nil))
 
 (defn login [req]
   (let [{:keys [email password return-url persistent]} (:params req)
@@ -27,8 +27,8 @@
       (assoc (redirect return-url)
         :session {:id (:id user)}      ; IE does not persistent cookie
         :session-cookie-attrs cookie-attr)
-      (to-html login-page {:return_url return-url
-                           :msg "Login failed, Email or password error"}))))
+      (login-page {:return_url return-url
+                   :msg "Login failed, Email or password error"}))))
 
 (defn logout [req]
   (assoc (redirect "/")

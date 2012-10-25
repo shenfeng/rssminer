@@ -19,7 +19,6 @@
 
 (deftemplate compare_tpl (slurp (resource "compare.tpl")))
 (deftemplate similar_tpl (slurp (resource "near_duplicate.tpl")))
-
 (deftemplate dedup_sub (slurp (resource "dedup_sub.tpl")))
 
 (def step 5)
@@ -43,10 +42,9 @@ from feed_data d join feeds f on f.id = d.id where d.id =? " id])))
                   (get-data start))]
 
     (if (seq data)
-      (to-html compare_tpl {:feeds data
-                            :links
-                            (range (max (- start 60) 0)
-                                   (+ start 60) step)})
+      (compare_tpl {:feeds data
+                    :links (range (max (- start 60) 0)
+                                  (+ start 60) step)})
       (redirect (str "/compare?start=" (+ start (* 100 step)))))))
 
 (defn find-it? [duplicates]
@@ -56,14 +54,14 @@ from feed_data d join feeds f on f.id = d.id where d.id =? " id])))
 
 ;;; TODO, not perfect 2599, 193870[2]CZ.
 (defn find-silimar [req]
-  (let [id (Integer/parseInt (or (-> req :params :id) "0"))
-        duplicates (filter #(> % 0) (NearDuplicate/similar id distance))]
+  (let [id (to-int (or (-> req :params :id) "0"))
+        duplicates (NearDuplicate/similar id distance)]
     (if (find-it? duplicates)
-      (to-html similar_tpl {:article (fetch-data-by-id id)
-                            :pages (range id (+ id 10))
-                            :similars (map fetch-data-by-id duplicates)})
+      (similar_tpl {:article (fetch-data-by-id id)
+                    :pages (range id (+ id 10))
+                    :similars (map fetch-data-by-id duplicates)})
       (loop [i (inc id)]
-        (if (find-it? (filter #(> % 0) (NearDuplicate/similar i distance)))
+        (if (find-it? (NearDuplicate/similar i distance))
           (redirect (str "/s?id=" i))
           (recur (inc i)))))))
 
@@ -79,12 +77,12 @@ from feed_data d join feeds f on f.id = d.id where d.id =? " id])))
                                where rss_link_id = ?" rssid]))))
 
 (defn find-silimar-in-sub [req]
-  (let [id (Integer/parseInt (or (-> req :params :id) "0"))
+  (let [id (to-int (or (-> req :params :id) "0"))
         dup (simhash-in-sub id)]
     (if (seq dup)
-      (to-html dedup_sub {:sections (map (fn [[simash ids]]
-                                           {:subs (map fetch-data-by-id ids)}) dup)
-                          :pages (range id (+ id 10))})
+      (dedup_sub {:sections (map (fn [[simash ids]]
+                                   {:subs (map fetch-data-by-id ids)}) dup)
+                  :pages (range id (+ id 10))})
       (loop [i id]
         (if (seq (simhash-in-sub i))
           (redirect (str "/sub?id=" i))
@@ -141,5 +139,4 @@ from feed_data d join feeds f on f.id = d.id where d.id =? " id])))
              ["--[no-]help" "Print this help"])]
     (when (:help options) (println banner) (System/exit 0))
     (reset! server (start-server options))
-    ;; (NearDuplicate/init)
-    ))
+    (NearDuplicate/init)))

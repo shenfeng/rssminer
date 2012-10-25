@@ -23,6 +23,7 @@ img {
 #near-duplicate li {
     max-height: 200px;
     overflow: auto;
+    width: 1000px;
     margin: 10px;
     border-bottom: 1px solid blue;
 }
@@ -43,6 +44,7 @@ img {
 .pager {
     position: fixed;
     left: 1050px;
+    background: #efefef;
 }
 
 .pager li {
