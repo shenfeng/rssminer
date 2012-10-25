@@ -63,7 +63,7 @@
                                          (map #(-> % :name trim)
                                               (:categories e))))]
                (most-len t 128))
-       :updated_ts (:updatedDate e)
+       :updated_ts (or (:updatedDate e) 0)
        :published_ts (let [s (or (:publishedDate e)
                                  (:updatedDate e)
                                  (now-seconds))]
