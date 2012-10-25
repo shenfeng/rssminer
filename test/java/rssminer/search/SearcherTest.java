@@ -5,16 +5,21 @@
 
 package rssminer.search;
 
-import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.queryParser.ParseException;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import me.shenfeng.mmseg.SimpleMMsegTokenizer;
+import me.shenfeng.mmseg.StringReader;
+
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.queryParser.ParseException;
+import org.junit.Before;
+import org.junit.Test;
 
 public class SearcherTest {
 
@@ -22,7 +27,7 @@ public class SearcherTest {
 
     @Before
     public void setup() throws IOException {
-        searcher = Searcher.initGlobalSearcher("/var/rssminer/index", null);
+        // searcher = Searcher.initGlobalSearcher("/var/rssminer/index", null);
     }
 
     @Test
@@ -36,6 +41,24 @@ public class SearcherTest {
         }
         // List<Feed> result = searcher.search("java technology", 1, 10);
         // System.out.println(Arrays.toString(result));
+    }
+
+    private void print(String input) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        TokenStream stream = Searcher.analyzer.tokenStream("",
+                new StringReader(input));
+        CharTermAttribute termAtt = stream
+                .getAttribute(CharTermAttribute.class);
+        while (stream.incrementToken()) {
+            String word = new String(termAtt.buffer(), 0, termAtt.length());
+            sb.append(word).append("|");
+        }
+        System.out.println(input + " => " + sb.toString());
+    }
+
+    @Test
+    public void testSeg() throws IOException {
+        print("[漫猫字幕组][TARI TARI][01][GB][1280x720][10bit][mp4]");
     }
 
     public static void main(String[] args) {
