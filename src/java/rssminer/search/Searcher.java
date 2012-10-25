@@ -20,9 +20,7 @@ import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.*;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.RAMDirectory;
+import org.apache.lucene.store.*;
 import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +42,8 @@ import static rssminer.Utils.K_DATA_SOURCE;
 public class Searcher {
     static final Version V = Version.LUCENE_35;
     public static final Analyzer analyzer = new RssminerAnalyzer();
-    public static final Logger logger = LoggerFactory.getLogger(Searcher.class);
+    public static final Logger logger = LoggerFactory
+            .getLogger(Searcher.class);
     public static final String FEED_ID = "id";
     public static final String RSS_ID = "rid";
     public static final String AUTHOR = "author";
@@ -69,7 +68,8 @@ public class Searcher {
 
     private volatile boolean closed = false;
 
-    public static Term[] ANALYZE_FIELDS = new Term[]{TITLE_TERM, CONTNET_TERM};
+    public static Term[] ANALYZE_FIELDS = new Term[]{TITLE_TERM,
+            CONTNET_TERM};
     public static Term[] ALL_FIELDS = new Term[]{TITLE_TERM, CONTNET_TERM,
             TAG_TERM, AUTHOR_TERM};
     public static final TermVector TV = TermVector.WITH_POSITIONS_OFFSETS;
@@ -264,8 +264,8 @@ public class Searcher {
                 Store.YES, Index.NOT_ANALYZED, TermVector.NO);
         doc.add(fid);
 
-        Field rid = new Field(RSS_ID, false, Integer.toString(rssID), Store.NO,
-                Index.NOT_ANALYZED, TermVector.NO);
+        Field rid = new Field(RSS_ID, false, Integer.toString(rssID),
+                Store.NO, Index.NOT_ANALYZED, TermVector.NO);
         doc.add(rid);
 
         if (author != null && author.length() > 0) {
@@ -278,8 +278,8 @@ public class Searcher {
 
         if (title != null) {
             title = Mapper.toSimplified(title);
-            Field f = new Field(TITLE, false, title, Store.NO, Index.ANALYZED,
-                    TV);
+            Field f = new Field(TITLE, false, title, Store.NO,
+                    Index.ANALYZED, TV);
             f.setBoost(TITLE_BOOST);
             doc.add(f);
         }
@@ -341,15 +341,29 @@ public class Searcher {
         return mBoosts;
     }
 
-    public synchronized IndexSearcher acquireSearcher() { // need to call
-        // release
-        mReader.incRef();
+    private void incRef() { // need to hold lock
+        while (true) {
+            try {
+                mReader.incRef(); // throw if closed
+                break;
+            } catch (AlreadyClosedException e) {
+                try {
+                    refreshReader(); // renew
+                } catch (Exception ignore) {
+                }
+            }
+        }
+    }
+
+    // need to call release
+    public synchronized IndexSearcher acquireSearcher() {
+        incRef();
         return mSearcher;
     }
 
     // only searcher exits
     public synchronized IndexReader acquireReader() throws IOException {
-        mReader.incRef();
+        incRef();
         return mReader;
     }
 
@@ -377,7 +391,8 @@ public class Searcher {
                     + offset, false);
             Map<String, Object> ret = new TreeMap<String, Object>();
             if (facted) {
-                FacetCollector f = new FacetCollector(searcher.getIndexReader());
+                FacetCollector f = new FacetCollector(
+                        searcher.getIndexReader());
                 Collector col = MultiCollector.wrap(top, f);
                 searcher.search(query, col);
                 ret.put("authors", f.getAuthor(15));
