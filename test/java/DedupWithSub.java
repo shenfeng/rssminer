@@ -61,10 +61,10 @@ public class DedupWithSub {
                     count += e.getValue().size() - 1;
                     for (int k = 1; k < feeds.size(); ++k) {
                         deleteData.setInt(1, feeds.get(k));
-//                        deleteData.execute();
+                        deleteData.execute();
 
                         deleteFeed.setInt(1, feeds.get(k));
-//                        deleteFeed.execute();
+                        deleteFeed.execute();
                     }
                 }
             }

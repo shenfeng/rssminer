@@ -17,6 +17,8 @@ public class Feed implements Comparable<Feed> {
     private int publishedts;
     private int readts;
     private int votets;
+    public long simhash; // public, better
+
     private String summary;
 
     public int compareTo(Feed o) {
@@ -53,6 +55,10 @@ public class Feed implements Comparable<Feed> {
 
     public double getScore() {
         return score;
+    }
+
+    public long getSimhash() {
+        return simhash;
     }
 
     public String getSummary() {
@@ -101,6 +107,10 @@ public class Feed implements Comparable<Feed> {
 
     public void setScore(double score) {
         this.score = score;
+    }
+
+    public void setSimhash(long simhash) {
+        this.simhash = simhash;
     }
 
     public void setSummary(String summary) {

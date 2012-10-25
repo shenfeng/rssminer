@@ -26,11 +26,11 @@ public class MinerDAO {
 
     // sub newest, oldest
     static final String FEED_FIELD = "SELECT f.id,f.rss_link_id,f.title,f.author,f.link,tags,"
-            + "f.published_ts,uf.read_date,uf.vote_user, uf.vote_date FROM feeds "
+            + "f.published_ts,uf.read_date,uf.vote_user, uf.vote_date,f.simhash FROM feeds "
             + "f LEFT JOIN user_feed uf ON uf.feed_id = f.id and uf.user_id =";
 
     static final String FETCH_FEED = "SELECT f.id,f.rss_link_id,f.title,f.author,f.link,tags,"
-            + "f.published_ts,uf.read_date,uf.vote_user,uf.vote_date,d.summary FROM feeds "
+            + "f.published_ts,uf.read_date,uf.vote_user,uf.vote_date,f.simhash,d.summary FROM feeds "
             + "f LEFT JOIN user_feed uf ON uf.feed_id = f.id and uf.user_id = ";
 
     // + "join feed_data d on d.id = f.id and f.id ";
@@ -111,8 +111,9 @@ public class MinerDAO {
         f.setReadts(rs.getInt(8));
         f.setVote(rs.getInt(9));
         f.setVotets(rs.getInt(10));
+        f.setSimhash(rs.getLong(11));
         if (withSummary) {
-            f.setSummary(rs.getString(11));
+            f.setSummary(rs.getString(12));
         }
         return f;
     }
@@ -123,7 +124,7 @@ public class MinerDAO {
             Statement stat = con.createStatement();
             List<Feed> feeds = new ArrayList<Feed>(20);
             ResultSet rs = stat.executeQuery(sql);
-            boolean withsummary = rs.getMetaData().getColumnCount() == 11;
+            boolean withsummary = rs.getMetaData().getColumnCount() == 12;
             while (rs.next()) {
                 feeds.add(createFeed(rs, withsummary));
             }
@@ -180,16 +181,18 @@ public class MinerDAO {
     public static List<Feed> removeDuplicate(List<Feed> feeds) {
         List<Feed> results = new ArrayList<Feed>(feeds.size());
         for (Feed f : feeds) {
-            boolean c = false;
-            for (Feed e : results) {
-                if (e.getTitle().equals(f.getTitle())
-                        || e.getLink().equals(f.getLink())) {
-                    c = true;
-                    break;
-                }
-            }
-            if (!c) {
+            if (f.simhash == -1) {
                 results.add(f);
+            } else {
+                boolean find = false;
+                for (Feed e : results) {
+                    if (Utils.hammingDistance(f.simhash, e.simhash) < 2) {
+                        find = true;
+                        break;
+                    }
+                }
+                if (!find)
+                    results.add(f);
             }
         }
         return results;

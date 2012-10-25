@@ -64,7 +64,8 @@ CREATE TABLE feeds (
   -- fetched_ts INT UNSIGNED,
   rss_link_id INT UNSIGNED NOT NULL,
   simhash bigint NOT NULL DEFAULT -1,
-  key simhash_idx(simhash)
+  key simhash_idx(simhash),
+  key rss_id_idx(rss_link_id)
 
   -- summary MEDIUMTEXT,           -- rss summary, given by download rss
 
