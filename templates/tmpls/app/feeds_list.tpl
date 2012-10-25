@@ -3,10 +3,12 @@
     <a href="#{{href}}">
       <span class="indicator"></span>
       <span class="title">{{{title}}}</span>
-      {{#author}}
-        <!-- <span class="author">{{author}}</span> -->
-      {{/author}}
-      <div class="date">{{ date }}</div>
+      <div>
+        <span class="date">{{ date }}</span>
+        {{#author}}
+          <span class="author">{{author}}</span>
+        {{/author}}
+      </div>
     </a>
   </li>
 {{/feeds}}

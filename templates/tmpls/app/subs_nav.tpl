@@ -9,11 +9,10 @@
     {{/group}}
     <ul class="rss-category">
       {{#subs}}
-        <li class="item ficon-error {{cls}}"
-          id="item-{{id}}" data-id="{{id}}"
-          {{#tooltip}}data-title="{{tooltip}}"{{/tooltip}}>
-            <a href="#{{href}}">
-              {{#img}}<img src="{{img}}" width="16" height="16" />{{/img}}
+        <li class="item ficon-error {{cls}}" id="item-{{id}}"
+          data-id="{{id}}" data-title="{{tooltip}}">
+          <a href="#{{href}}">
+            {{#img}}<img src="{{img}}" width="16" height="16" />{{/img}}
               <i class="icon-rss"></i>
               <span class="title"> {{{title}}} </span>
               <span class="count">
@@ -30,7 +29,7 @@
                     data-title="like count">{{like}}</span>
                 {{/like}}
               </span>
-            </a>
+          </a>
         </li>
       {{/subs}}
     </ul>

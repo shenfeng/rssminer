@@ -8,16 +8,17 @@
 
   function on_mouseenter (ele, e) {
     var $this = $(ele),
-        pos = $this.offset();
+        pos = $this.offset(),
+        tip = $.trim($this.attr('data-title'));
+    if(tip) {
+      $text.text(tip);
+      pos.top += $this.height() + 8;
+      pos.left = e.clientX;
+      $tooltip.css(pos).show();
 
-    $text.text($this.attr('data-title'));
-
-    pos.top += $this.height() + 8;
-    pos.left = e.clientX;
-    $tooltip.css(pos).show();
-
-    if(timer) { clearTimeout(timer); }
-    timer = setTimeout(on_mouseleave, 3400);
+      if(timer) { clearTimeout(timer); }
+      timer = setTimeout(on_mouseleave, 3400);
+    }
   }
 
   function on_mouseleave (ele) {

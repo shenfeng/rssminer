@@ -323,7 +323,6 @@
   }
 
   function show_feeds (data) {
-    util.add_even(data.feeds);
     gcur_has_more = data.pager.has_more;
     show_server_message();
     // iframe.src = 'about:blank';

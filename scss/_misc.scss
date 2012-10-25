@@ -181,8 +181,6 @@ $demo_warn_bg_color: #fcfcac;
 
 #tooltip {
     position: absolute;
-    top: 100px;
-    left: 100px;
     color: white;
     border-radius: 4px;
     padding: 3px 8px;
@@ -190,6 +188,7 @@ $demo_warn_bg_color: #fcfcac;
     z-index: 1000;
     background: #333;
     display: none;
+    max-width: 230px;
     .arrow {
         width: 70px;
         height: 16px;

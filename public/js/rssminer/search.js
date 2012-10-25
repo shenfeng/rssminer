@@ -81,8 +81,6 @@
   }
 
   function show_search_result (data) {
-    util.add_even(data.feeds);
-    util.add_even(data.subs);
     var html = to_html(tmpls.instant_search, data);
     hide_search_context_menu();
     $header.append(html).find('img').each(util.favicon_ok);

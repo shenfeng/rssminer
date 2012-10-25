@@ -19,21 +19,6 @@
     return data;
   }
 
-  function add_even (arr) {
-    if(_.isArray(arr)) {
-      for(var i = 0; i < arr.length; i++) {
-        if((i + 1) % 2 === 0) {
-          var item = arr[i];
-          if(item.cls) {
-            item.cls += ' even';
-          } else {
-            item.cls = 'even';
-          }
-        }
-      }
-    }
-  }
-
   var eventSplitter = /^(\S+)\s*(.*)$/;
 
   function delegate_events($ele, events) {
@@ -63,6 +48,21 @@
     };
   }
 
+  function tooltip (title, maxlength) {
+    var count = 0,
+        length = title.length;
+    for(var i = 0; i < length; ++i) {
+      if(title.charCodeAt(i) > 255) {
+        count += 2;
+      } else {
+        count += 1;
+      }
+    }
+    if(maxlength < count) {
+      return title;
+    }
+  }
+
   function params (p) {
     var arr = [];
     for(var k in p) {
@@ -77,8 +77,8 @@
       delegate_events: delegate_events,
       favicon_ok: favicon_ok,
       call_if_fn: call_if_fn,
+      tooltip: tooltip,
       params: params,
-      add_even: add_even,
       extract_data: extract_data,
       hostname: hostname
     }

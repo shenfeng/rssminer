@@ -136,7 +136,8 @@ body {
         a { color: #111;  }
         margin: 0; padding: 8px 0 8px 5px; @include overflow-ellipsis();
     }
-    .date { margin: 4px 0 0 0; }
+    .date { margin: 4px 0 0 0; float: right; }
+    .author { max-width: 210px; }
     .loader {
         display: block;
         margin: 15px auto;
@@ -198,12 +199,14 @@ ul { list-style: none; padding: 0; margin: 0; }
         i, img { top: 6px; }
         padding-left: 2em;
         position: relative;
-        a { display: block; padding: 5px 0 4px 0; }
+        height: 31px;
+        a { display: block; padding: 6px 0 5px 0;}
         img { left: 2em; }
     }
     .folder {
         i, img { top: 2px; }
         display: block;
+        padding: 2px 0;
         position: relative;
         span { padding: 3px 0 3px 26px; display: inline-block; }
         i {
@@ -239,7 +242,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 .count {
     position: absolute;
     right: 6px;
-    top: 8px;
+    top: 10px;
     font-size: 10px;
     font-family: sans-serif;
     span {
@@ -258,7 +261,7 @@ ul { list-style: none; padding: 0; margin: 0; }
     line-height: 1;
     top: 10px;
     color: $thumb_light_color;
-    right: 90px;
+    right: 85px;
     z-index: 20;
     font-size: 17px;
     i {
@@ -328,7 +331,7 @@ ul { list-style: none; padding: 0; margin: 0; }
         top: 12px;
         right: 1em;
     }
-    .author { position: absolute; top: 10px; margin-left: 20px; }
+    .author { position: absolute; top: 10px; margin-left: 22px; }
     .feed {
         a { height: 21px; padding: 9px 3px 7px 3px; }
         margin-left: 20px;
@@ -336,7 +339,7 @@ ul { list-style: none; padding: 0; margin: 0; }
     }
     .feeds {
         .title {
-            max-width: $body_width - $nav_width - 400px;
+            max-width: $body_width - $nav_width - 408px;
             display: inline-block;
             @include overflow-ellipsis();
         }
@@ -401,7 +404,7 @@ ul { list-style: none; padding: 0; margin: 0; }
     font-size: 12px;
     color: #666;
     display: inline-block;
-    max-width: 130px;
+    max-width: 150px;
     @include overflow-ellipsis();
     padding: 2px;
 }

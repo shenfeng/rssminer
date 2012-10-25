@@ -8,9 +8,7 @@
   var user_data = (_RM_ && _RM_.user) || {},
       user_conf = JSON.parse(user_data.conf || "{}");
 
-  var subscriptions_cache,
-      feeds_cache = {},
-      sub_titles = {};          // use by transform_item
+  var subscriptions_cache;
 
   var last_search_ajax;
 
@@ -73,21 +71,6 @@
     return cls;
   }
 
-  function tooltip (title, maxlength) {
-    var count = 0,
-        length = title.length;
-    for(var i = 0; i < length; ++i) {
-      if(title.charCodeAt(i) > 255) {
-        count += 2;
-      } else {
-        count += 1;
-      }
-    }
-    if(maxlength < count) {
-      return title;
-    }
-  }
-
   function ymdate (i) {
     var d = new Date(i * 1000),
         m = d.getMonth() + 1,
@@ -106,9 +89,15 @@
     } else if(section === VOTED_TAB || sort === VOTED_TAB) {
       date = ymdate(feed.votets);
     }
+    var sub_title = get_subscription(feed.rssid).title,
+        author = sub_title;
+    if(feed.author) {
+      author = feed.author + '@' + author;
+    }
     return {
-      author: feed.author || get_subscription(feed.rssid).title,
-      sub: sub_titles[rssid],    // use to show search result
+      tooltip: util.tooltip(author, 24),
+      author: author,
+      sub: sub_title[rssid],    // use to show search result
       rssid: rssid,
       cls: feed_css_class(feed),
       user_like: feed.vote > 0,
@@ -140,7 +129,7 @@
     return {
       img: img,
       title: title,
-      tooltip: tooltip(title, 30),
+      tooltip: util.tooltip(title, 30),
       link: sub.url,
       group: sub.group,
       title_l: title.toLowerCase(),
@@ -207,13 +196,6 @@
     if(page) { h += '?p=' + page + '&s=' + sort; }
     return h;
   }
-  function gen_sub_titles () {
-    sub_titles = {};
-    _.each(subscriptions_cache, function (sub) {
-      sub_titles[sub.id] = transorm_sub(sub);
-    });
-  }
-
   // helper funciton end here
   // -------------------------------------------
 
@@ -227,7 +209,6 @@
         try_sync_with_storage(resp);
         // exclude subscription that has no title
         subscriptions_cache = _.filter(resp, function (s) { return s.title; });
-        gen_sub_titles();
         get_user_subs(cb);
       });
     }
@@ -453,7 +434,6 @@
           });
           if(!find) {
             subscriptions_cache.push(sub);
-            gen_sub_titles();
             sub.refresh = true;
           }
           call_if_fn(cb, sub);  // fetcher successfully
@@ -494,7 +474,6 @@
         }
       });
       subscriptions_cache = cache;
-      gen_sub_titles();
       call_if_fn(cb);
     });
   }

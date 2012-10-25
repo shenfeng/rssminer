@@ -13,25 +13,23 @@
 }
 
 #feed-content {
+    position: relative;
+    font-size: 15px;
+    line-height: 1.82;
+    color: #333;
+    padding: 0 0 0 15px;
     > li {
+        margin: 20px 0;
+        padding: 5px 0 10px 15px;
+        border: 1px solid $border_right;
         &.reading {
-            box-shadow: 0px 2px 3px 1px #e3e5eb;
             border-left-color: #4d90f0;
         }
         &:hover {
             box-shadow: 0px 1px 2px 1px #e3e5eb;
         }
-        border: 1px solid #dedede;
-        padding: 5px 0 10px 25px;
-        box-shadow: 0 0 2px #e3e5eb;
-        margin: 10px 0 20px;
         * { max-width: 740px; }
     }
-    position: relative;
-    font-size: 15px;
-    line-height: 1.82;
-    color: #333;
-    padding: 0 25px 0 5px;
     .date { float: right; padding: 4px 0 0 8px; font-family: sans-serif;}
     .link {
         @include overflow-ellipsis();
@@ -63,6 +61,9 @@
         position: static;
         i { padding: 0; visibility: visible; }
     }
+}
+
+#feed-content {
     .summary {
         h1 { font-size: 18px;}
         h2, h3 { font-size: 16px; }
@@ -116,4 +117,3 @@
         }
     }
 }
-

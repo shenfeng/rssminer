@@ -12,9 +12,8 @@
             data-title="dislike, less in recommend tab">
           </i>
         </i>
-        <span class="author"
-          data-title="author">{{author}}</span>
-          <span class="date">{{ date }}</span>
+        <span class="author" data-title="{{tooltip}}">{{author}}</span>
+        <span class="date">{{ date }}</span>
       </a>
     </li>
   {{/feeds}}
