@@ -1,4 +1,5 @@
 (function () {
+  "use strict";
   $('#slides').slides({
     preload: false,
     play: 5000,

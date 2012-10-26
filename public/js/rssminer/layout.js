@@ -1,4 +1,5 @@
 (function () {
+  "use strict";
   // cache
   var $win = $(window),
       $nav = $('#navigation'),

@@ -1,4 +1,5 @@
 (function () {
+  "use strict";
   var _RM_ = window._RM_ || {},
       RM = window.RM,
       router = RM.Router,

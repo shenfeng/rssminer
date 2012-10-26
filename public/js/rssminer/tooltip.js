@@ -1,4 +1,5 @@
 (function () {
+  "use strict";
   var current_element = 0;
 
   var $tooltip = $('#tooltip'),

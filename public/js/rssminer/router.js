@@ -1,4 +1,5 @@
 (function () {
+  "use strict";
   // Cached regular expressions for matching named param parts and splatted
   // parts of route strings.
   var namedParam    = /:([\w\d]+)/g;

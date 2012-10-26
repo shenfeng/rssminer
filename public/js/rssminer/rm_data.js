@@ -1,4 +1,5 @@
 (function (undefined) {
+  "use strict";
   var RM = window.RM,           // namespace
       _RM_ = window._RM_,       // inject to html, data
       ajax = RM.ajax,

@@ -1,4 +1,5 @@
 (function () {
+  "use strict";
   var RM = window.RM,
       tmpls = RM.tmpls,
       to_html = Mustache.render,

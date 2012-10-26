@@ -1,4 +1,5 @@
 (function($, undefined){
+  "use strict";
   var $nofity = $('<div id="notification"><p></p></div>')
         .prependTo($('body')),
       $p = $('p', $nofity),

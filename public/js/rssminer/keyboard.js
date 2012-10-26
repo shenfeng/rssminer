@@ -1,4 +1,5 @@
 (function () {
+  "use strict";
   var location = window.location,
       notify = window.RM.notify;
 

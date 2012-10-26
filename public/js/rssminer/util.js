@@ -1,4 +1,5 @@
 (function(){
+  "use strict";
   var hostname = (function () {
     var l = document.createElement("a");
     return function (uri) {
