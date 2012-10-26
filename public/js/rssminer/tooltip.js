@@ -17,7 +17,7 @@
       $tooltip.css(pos).show();
 
       if(timer) { clearTimeout(timer); }
-      timer = setTimeout(on_mouseleave, 3400);
+      timer = setTimeout(on_mouseleave, 5000);
     }
   }
 

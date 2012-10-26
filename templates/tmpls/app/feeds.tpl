@@ -3,7 +3,7 @@
     <li class="feed {{cls}}" data-id="{{id}}">
       <a href="#{{href}}">
         <span class="indicator"></span>
-        <span class="title">{{{title}}}</span>
+        <span class="title" data-title="{{title_booltip}}">{{{title}}}</span>
         <i class="thumbs">
           <i class="icon-thumbs-up"
             data-title="like it, give me more like this in recommend tab">

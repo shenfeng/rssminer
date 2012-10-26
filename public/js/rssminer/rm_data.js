@@ -89,7 +89,8 @@
     } else if(section === VOTED_TAB || sort === VOTED_TAB) {
       date = ymdate(feed.votets);
     }
-    var sub_title = get_subscription(feed.rssid).title,
+    var title = $.trim(feed.title || feed.link),
+        sub_title = get_subscription(feed.rssid).title,
         author = sub_title;
     if(feed.author) {
       author = feed.author + '@' + author;
@@ -108,7 +109,8 @@
       link: feed.link,
       link_d: decodeURI(feed.link),
       tags: split_tags(feed.tags),
-      title: $.trim(feed.title || feed.link)
+      title: title,
+      title_booltip: util.tooltip(title, 70)
     };
   }
 

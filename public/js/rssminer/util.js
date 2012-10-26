@@ -58,9 +58,7 @@
         count += 1;
       }
     }
-    if(maxlength < count) {
-      return title;
-    }
+    if(maxlength < count) { return title; }
   }
 
   function params (p) {
