@@ -14,6 +14,7 @@ html, body {
 body {
     font: 400 14px/1.431 'Lucida Grande', "Helvetica Neue","Microsoft YaHei", Helvetica, Arial, sans-serif;
     background: #F6F6F6 url('/s/imgs/bg-content.png') repeat center top;
+    /* background: #F6F6F6 url('/s/imgs/bg.png') repeat center top; */
     text-rendering: optimizeLegibility;
 }
 
@@ -92,9 +93,9 @@ body {
 #header {
     z-index: 30;
     position: relative;
-    background: $header_color;
     Height: $header_height;
     width: 100%;
+    background: $header_color;
     background: -webkit-linear-gradient(rgba($header_color, 0.9), $header_color);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     .wrapper {
@@ -131,6 +132,8 @@ body {
 #navigation {
     width: $nav_width;
     font-size: 13px;
+    /* background: white url($bg_url) repeat center top; */
+    background: $background;
     overflow-y: scroll;
     h3 {
         a { color: #111;  }
@@ -148,9 +151,12 @@ body {
     .indicator { top: 11px; }
     li {
         border-top: 1px solid white;
-        line-height: 1.62;
+        line-height: 2;
         border-bottom: 1px dotted $feed_border_color;
-        a { padding: 10px 12px 10px 5px; }
+        a { padding: 5px 12px 4px 5px; }
+    }
+    div {
+        padding-top: 4px;
     }
     .selected { background: $selected_color; }
 }
@@ -170,7 +176,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 .ficon-ok .icon-rss { display: none; }
 
 #sub-list {                     /* in logo */
-    background: white url($bg_url) repeat center top;
+    background: $background;
     overflow-y: scroll;
     padding-top: 3px;
     display: none;
@@ -179,7 +185,6 @@ ul { list-style: none; padding: 0; margin: 0; }
 #sub-list {                     /* in navigation */
     .icon-folder-close { display: none; }
     li.collapse {
-        /* show close icon when folder is closed */
         .icon-folder-open { display: none; }
         .icon-folder-close { display: inline-block; }
         > ul { display: none; }
@@ -349,7 +354,7 @@ ul { list-style: none; padding: 0; margin: 0; }
 }
 
 .sort {                         /* in welcome-list*/
-    border-bottom: 1px solid $border_right;
+    border-bottom: 1px solid $border_color;
     padding-right: 65px;
     font-size: 15px;
     /* margin-left: 20px; */
@@ -396,7 +401,7 @@ ul { list-style: none; padding: 0; margin: 0; }
     > li {
         position: relative;
         a { display: block; }
-        &:hover { background: $hover_color; }
+    /* &:hover { background: $hover_color; } */
     }
 }
 

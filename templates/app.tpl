@@ -105,7 +105,7 @@
           <h2>Keyboard shortcuts</h2>
           <dl><dt>j</dt><dd>Next item</dd></dl>
           <dl><dt>k</dt><dd>Previous item</dd></dl>
-          <dl><dt>o</dt><dd>Open first item</dd></dl>
+          <dl><dt>o</dt><dd>Open first item / Open current in new tab</dd></dl>
           <dl><dt>n</dt><dd>Scroll down article</dd></dl>
           <dl><dt>p</dt><dd>Scroll up article</dd></dl>
           <dl><dt>u</dt><dd>Return to list</dd></dl>

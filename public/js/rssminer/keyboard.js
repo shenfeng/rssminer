@@ -83,12 +83,14 @@
   }
 
   function reading_shortcuts (e) {
+    console.log(e.which);
     var $feed_list = $('#feed-list'),
         $current = $('#feed-list .selected'),
         $next = $current.next(),
         $prev = $current.prev();
     switch(e.which) {
     case 79:                    // o open the link
+      window.open($('.reading .link').attr('href'));
       break;
     case 85:                    // u, return to list
       var args = /#read\/(.+)\/\d+\?(.+?)s=(.+)/.exec(location.hash);
@@ -98,13 +100,13 @@
         location.hash = '?s=' + args[1] + '&p=1';
       }
       break;
-    case 75:                  // k
+    case 75:                    // k
       if(!$prev.length) {
         $prev = $('#feed-list .feed:first');
       }
       location.hash = $prev.find('a').attr('href');
       break;
-    case 74:                  // j
+    case 74:                    // j
       //  load more, logic in app.js
       if(!$next.next().length) {
         $navigation.scroll();
