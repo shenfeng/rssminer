@@ -12,9 +12,8 @@ html, body {
 }
 
 body {
-    font: 400 14px/1.431 'Lucida Grande', "Helvetica Neue","Microsoft YaHei", Helvetica, Arial, sans-serif;
+    font: 400 14px/1.431 'Lucida Grande', "Helvetica Neue", Helvetica, Arial, sans-serif;
     background: #F6F6F6 url('/s/imgs/bg-content.png') repeat center top;
-    /* background: #F6F6F6 url('/s/imgs/bg.png') repeat center top; */
     text-rendering: optimizeLegibility;
 }
 
@@ -321,7 +320,7 @@ ul { list-style: none; padding: 0; margin: 0; }
         a {
             color: #02060e;
             @include overflow-ellipsis();
-            max-width: 750px;
+            max-width: 700px;
             display: inline-block;
         }
         text-transform: capitalize;
@@ -336,9 +335,9 @@ ul { list-style: none; padding: 0; margin: 0; }
         top: 12px;
         right: 1em;
     }
-    .author { position: absolute; top: 10px; margin-left: 22px; }
+    .author { margin-left: 15px; }
     .feed {
-        a { height: 21px; padding: 9px 3px 7px 3px; }
+        a { height: 21px; padding: 9px 3px; }
         margin-left: 20px;
         border-bottom: 1px dotted $feed_border_color;
     }

@@ -17,7 +17,7 @@
     <!--[if lt IE 8 ]><script>location.href="/browser"</script><![endif]-->
   </head>
   <!--[if IE 8]><body class="ie8"> <![endif]-->
-  <!--[if !IE]><!--><body><!--<![endif]-->
+  <!--[if !IE]><body><![endif]-->
     <div id="header">
       <div class="wrapper">
         <div id="logo" class="show-nav">
@@ -26,8 +26,9 @@
             <ul id="sub-list" class="scroll-inner"></ul>
           </div>
         </div>
-        <div id="warn-msg">
-          this is public account, <a href="/">create your own</a>
+        <div id="warn-msg"
+          data-title="signup to save subscriptions, get personal recommendation">
+          <a href="/">this is demo account</a>
         </div>
         <div id="search">
           <span>search feed, subscription...</span>

@@ -25,9 +25,9 @@
 
   function count_count () {
     var _h = $(window).height();
-    // per item 38 pixel, first feed to top 138px
-    PER_PAGE_FEEDS = Math.floor((_h - 138) / 40);
-    SEARCH_PAGE_SIZE = PER_PAGE_FEEDS - 4;
+    // per item 40 pixel, first feed top: 126px, pager 24px, bottom 15px
+    PER_PAGE_FEEDS = Math.floor((_h - 137 - 24 - 15) / 40);
+    SEARCH_PAGE_SIZE = PER_PAGE_FEEDS - 3;
     SEARCH_RESUTL_COUNT = Math.min(Math.floor((_h - 230) / 40), 17);
   }
 
