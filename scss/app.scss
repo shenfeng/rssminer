@@ -95,7 +95,7 @@ body {
     Height: $header_height;
     width: 100%;
     background: $header_color;
-    background: -webkit-linear-gradient(rgba($header_color, 0.9), $header_color);
+    /* background: -webkit-linear-gradient(rgba($header_color, 0.9), $header_color); */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     .wrapper {
         width: $body_width;
