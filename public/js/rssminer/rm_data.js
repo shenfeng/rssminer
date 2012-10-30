@@ -588,10 +588,8 @@
       });
       var pages = [], os = 0;
       for(var i = 0; i < 7; i++) {
-        if(resp.total > (os + 1)) {
-          var page = {};
-          page.page = (i + 1);
-          page.href = filter_hash(tags, authors, q, os);
+        if(resp.total > SEARCH_PAGE_SIZE && resp.total >= (os + 1)) {
+          var page = {page: (i + 1), href: filter_hash(tags, authors, q, os)};
           if(os === offset) { page.current = true; }
           pages.push(page);
           os += SEARCH_PAGE_SIZE;

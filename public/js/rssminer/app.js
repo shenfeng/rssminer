@@ -546,18 +546,22 @@
 
   function search (q, tags, authors, offset) {
     var fs = !$('#search-result').length || offset === 0;
-    data_api.fetch_search(q, tags, authors, offset, fs, function (data) {
-      data.q = q;
-      var $html = $(to_html(tmpls.search_result, data));
+    if(q) {
+      data_api.fetch_search(q, tags, authors, offset, fs, function (data) {
+        data.q = q;
+        var $html = $(to_html(tmpls.search_result, data));
+        $reading_area.removeClass(SHOW_CONTENT);
+        if(fs) {
+          $welcome_list.empty().append($html);
+        } else {
+          $('#search-result .feeds').replaceWith($('.feeds', $html));
+          $('#search-result .pager').replaceWith($('.pager', $html));
+        }
+      });
+    } else {
       $reading_area.removeClass(SHOW_CONTENT);
-      if(fs) {
-        $welcome_list.empty().append($html);
-      } else {
-        $('#search-result .feeds').replaceWith($('.feeds', $html));
-        $('#search-result .pager').replaceWith($('.pager', $html));
-      }
-      // $('#search-go input').focus();
-    });
+      $welcome_list.empty().append(to_html(tmpls.search_result, {}));
+    }
   }
 
   function update_search_hash (e) {

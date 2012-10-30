@@ -88,10 +88,12 @@ public class FacetCollector extends Collector {
     private final Counter author = new Counter(1024);
     private final Counter tag = new Counter(1024);
 
-    private static final int STEP0 = 512;
-    private static final int STEP1 = 1024;
-    private static final int STEP2 = 5120;
-    private static final int STEP3 = 12288;
+    private static final int STEP0 = 256;
+    private static final int STEP1 = 512;
+    private static final int STEP2 = 1024;
+    private static final int STEP3 = 5120;
+
+    // private static final int STEP4 = 12288;
 
     public FacetCollector(IndexReader reader) {
         this.reader = reader;
