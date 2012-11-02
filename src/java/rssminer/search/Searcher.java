@@ -41,7 +41,7 @@ import static rssminer.Utils.K_DATA_SOURCE;
 
 public class Searcher {
     static final Version V = Version.LUCENE_35;
-    public static final Analyzer analyzer = new RssminerAnalyzer();
+    public static final Analyzer analyzer = new rssminer.search.RssminerAnalyzer();
     public static final Logger logger = LoggerFactory
             .getLogger(Searcher.class);
     public static final String FEED_ID = "id";
@@ -414,7 +414,9 @@ public class Searcher {
                 ret.put("feeds", new ArrayList<Feed>(0));
             } else {
                 MinerDAO db = new MinerDAO(mConfig);
-                ret.put("feeds", db.fetchFeedsWithScore(userID, feedids));
+                List<Feed> feeds = MinerDAO.removeDuplicate(db
+                        .fetchFeedsWithScore(userID, feedids));
+                ret.put("feeds", feeds);
             }
             return ret;
         } finally {

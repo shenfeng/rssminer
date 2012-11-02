@@ -186,7 +186,9 @@ public class MinerDAO {
             } else {
                 boolean find = false;
                 for (Feed e : results) {
-                    if (Utils.hammingDistance(f.simhash, e.simhash) < 2) {
+                    if (e.getLink().equals(f.getLink()) ||
+                            e.getTitle().equals(f.getTitle()) ||
+                            Utils.hammingDistance(f.simhash, e.simhash) < 2) {
                         find = true;
                         break;
                     }
