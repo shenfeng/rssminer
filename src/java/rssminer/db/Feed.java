@@ -10,10 +10,10 @@ public class Feed implements Comparable<Feed> {
     private int rssid;
     private double score;
     private int vote;
-    private String link;
-    private String title;
-    private String author;
-    private String tags;
+    private String link = "";
+    private String title = "";
+    private String author = "";
+    private String tags = "";
     private int publishedts;
     private int readts;
     private int votets;

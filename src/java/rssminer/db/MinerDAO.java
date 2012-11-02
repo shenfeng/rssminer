@@ -181,21 +181,17 @@ public class MinerDAO {
     public static List<Feed> removeDuplicate(List<Feed> feeds) {
         List<Feed> results = new ArrayList<Feed>(feeds.size());
         for (Feed f : feeds) {
-            if (f.simhash == -1) {
-                results.add(f);
-            } else {
-                boolean find = false;
-                for (Feed e : results) {
-                    if (e.getLink().equals(f.getLink()) ||
-                            e.getTitle().equals(f.getTitle()) ||
-                            Utils.hammingDistance(f.simhash, e.simhash) < 2) {
-                        find = true;
-                        break;
-                    }
+            boolean dup = false;
+            for (Feed e : results) {
+                if (e.getLink().equals(f.getLink()) ||
+                        e.getTitle().equals(f.getTitle()) ||
+                        (f.simhash != -1 && Utils.hammingDistance(f.simhash, e.simhash) < 2)) {
+                    dup = true;
+                    break;
                 }
-                if (!find)
-                    results.add(f);
             }
+            if (!dup)
+                results.add(f);
         }
         return results;
     }
