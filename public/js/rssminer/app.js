@@ -462,7 +462,7 @@
     var total_height = $navigation[0].scrollHeight, // ie8, ff, chrome
         scrollTop = $navigation.scrollTop(),
         height = $navigation.height();
-    if(scrollTop + height === total_height) {
+    if(scrollTop + height >= total_height - 10) {
       var fn = data_api.fetch_sub_feeds;
       if( gcur_group === GROUP_FOLDER) {
         fn = data_api.fetch_group_feeds;

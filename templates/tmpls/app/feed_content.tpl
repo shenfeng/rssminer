@@ -1,7 +1,7 @@
 {{#feeds}}
   <li id="s-{{id}}">
     <div class="feed {{ cls }}" data-id={{ id }}>
-      <h2>{{ title }}</h2>
+      <h2><a href="{{link}}" target="_blank">{{ title }}</a></h2>
       <a class="link" href="{{ link }}" target="_blank">{{{ link_d }}}</a>
       <div class="meta">
         <i class="thumbs">
