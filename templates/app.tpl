@@ -40,9 +40,7 @@
             <img height=25 width=25
                  src="http://www.gravatar.com/avatar/{{{md5}}}?s=25"/>
           </a>
-          <a href="#">
-            <span>{{ email }}</span>
-          </a>
+          <a href="#"><span>{{ email }}</span></a>
           <ul>
             <li>
               <a href="#s/add" class="btn">

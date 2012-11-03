@@ -27,8 +27,7 @@
 (defn- write-json-date [^Date d ^PrintWriter out escape-unicode?]
   (.print out (int (/ (.getTime d) 1000))))
 
-(defn json-str2 [json]
-  (json-str json :escape-unicode false))
+(defn json-str2 [json] (json-str json :escape-unicode false))
 
 (defn read-if-json [str]
   (when str (read-json str)) )
@@ -68,8 +67,7 @@
   (if (= {} (:session req)) ; ring return empty map if session is null
     nil (:session req)))
 
-(definline now-seconds []
-  `(quot (System/currentTimeMillis) 1000))
+(definline now-seconds [] `(quot (System/currentTimeMillis) 1000))
 
 (defn serialize-to-js [data]
   (let [stats (map
@@ -79,11 +77,10 @@
     (apply str stats)))
 
 (defmacro ignore-error [& body]
-  `(try ~@body
-        (catch Exception _#)))
+  `(try ~@body (catch Exception _#)))
 
+;; "like assoc, but drop false value"
 (defn assoc-if [map & kvs]
-  "like assoc, but drop false value"
   (let [kvs (apply concat
                    (filter #(second %) (partition 2 kvs)))]
     (if (seq kvs) (apply assoc map kvs) map)))

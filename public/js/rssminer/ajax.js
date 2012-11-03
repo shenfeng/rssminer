@@ -19,10 +19,9 @@
   function show_msg(msg, time) {
     $p.html(msg).removeClass(ERROR_CLASS).addClass(MSG_CLASS);
     $nofity.css({ marginLeft: -$p.width() / 2, visibility: 'visible' });
-    if(time) {
-      _clear_timer();
-      hide_timer_id = setTimeout(hide_notif, time);
-    }
+    time = time || 10000;
+    _clear_timer();
+    hide_timer_id = setTimeout(hide_notif, time);
   }
 
   function show_error_msg(msg) {
@@ -41,9 +40,7 @@
 
   function hide_notif() {
     _clear_timer();
-    hide_timer_id = setTimeout(function () {
-      $nofity.css('visibility', 'hidden');
-    }, 600);
+    hide_timer_id = setTimeout(function () {$nofity.css('visibility', 'hidden');}, 600);
   }
 
   function handler (url, method, success, silent) {

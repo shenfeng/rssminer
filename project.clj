@@ -21,12 +21,10 @@
                  [ring/ring-core "1.1.3"]]
   :dev-resources-path "/usr/lib/jvm/java-6-sun/lib/tools.jar:/usr/lib/jvm/java-6-sun/lib/src.zip"
   :exclusions [javax.activation/activation]
-  :repositories {"java.net" {:url "http://download.java.net/maven/2/"
-                             :snapshots false}}
+  :repositories {"java.net" {:url "http://download.java.net/maven/2/" :snapshots false}}
   ;; :plugins [[lein-eclipse "1.0.0"]]
   :warn-on-reflection true
-  :javac-options {:source "1.7" :target "1.7" :debug "true"
-                  :fork "true" :encoding "utf8"}
+  :javac-options {:source "1.7" :target "1.7" :debug "true" :fork "true" :encoding "utf8"}
   :java-source-path "src/java"
   :aot [rssminer.main, rssminer.admin]
   ;; :omit-source true

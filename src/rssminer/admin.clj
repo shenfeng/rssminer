@@ -1,7 +1,6 @@
 (ns rssminer.admin
   (:gen-class)
-  (:use (rssminer [search :only [index-feed use-index-writer!
-                                 close-global-index-writer!]]
+  (:use (rssminer [search :only [index-feed use-index-writer! close-global-index-writer!]]
                   [util :only [user-id-from-session to-int]]
                   [classify :only [on-feed-event]]
                   [database :only [mysql-query with-mysql mysql-insert]])
@@ -60,15 +59,12 @@
     {:status 401 :body "error"}))
 
 (defn -main [& args]
-  "Rssminer admin"
   (let [[options _ banner]
         (cli args
              ["-c" "--command" "rebuild-index" :parse-fn keyword]
-             ["--db-url" "Mysql Database url"
-              :default "jdbc:mysql://localhost/rssminer"]
+             ["--db-url" "Mysql Database url" :default "jdbc:mysql://localhost/rssminer"]
              ["--db-user" "Mysql Database user name" :default "feng"]
-             ["--index-path" "Path to store lucene index"
-              :default "/var/rssminer/index"]
+             ["--index-path" "Path to store lucene index" :default "/var/rssminer/index"]
              ["--[no-]help" "Print this help"])]
     (when (:help options) (println banner) (System/exit 0))
     (if (= (:command options) :rebuild-index)

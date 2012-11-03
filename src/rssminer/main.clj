@@ -46,14 +46,11 @@
                           (str static-server ":" port) static-server)
          :proxy (if proxy socks-proxy Proxy/NO_PROXY))
   (start-classify-daemon!)
-  (reset! server (run-server (app) {:port port
-                                    :ip bind-ip
-                                    :thread worker}))
+  (reset! server (run-server (app) {:port port :ip bind-ip :thread worker}))
   (use-index-writer! index-path)
   (when fetcher (start-fetcher)))
 
 (defn -main [& args]
-  "Start rssminer server"
   (let [[options _ banner]
         (cli args
              ["-p" "--port" "Port to listen" :default 9090 :parse-fn to-int]

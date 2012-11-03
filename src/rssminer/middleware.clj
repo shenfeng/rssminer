@@ -18,8 +18,8 @@
             (redirect "/login"))
           (handler req))))))
 
-(defn wrap-cache-header
-  "set no-cache header." [handler]
+;; "set no-cache header."
+(defn wrap-cache-header [handler]
   (fn [req]
     (let [resp (handler req)
           headers (get resp :headers {})
@@ -33,9 +33,8 @@
           (assoc resp :headers new-headers))
         resp))))
 
-(defn wrap-failsafe
-  "show an error page instead of a stacktrace when error happens."
-  [handler]
+;; "show an error page instead of a stacktrace when error happens."
+(defn wrap-failsafe [handler]
   (fn [req]
     (try (handler req)
          (catch Exception e
@@ -45,8 +44,7 @@
 (def ^{:private true} json-resp-header {"Content-Type"
                                         "application/json; charset=utf-8"})
 
-(defn wrap-json
-  [handler]
+(defn wrap-json [handler]
   (fn [req]
     ;; it must be json, keywordize by default
     (let [json-body (if-let [body (:body req)]
