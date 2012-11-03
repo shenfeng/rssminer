@@ -83,7 +83,6 @@
   }
 
   function reading_shortcuts (e) {
-    console.log(e.which);
     var $feed_list = $('#feed-list'),
         $current = $('#feed-list .selected'),
         $next = $current.next(),
