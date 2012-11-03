@@ -101,11 +101,11 @@
       (loop [i 20]
         (when-not (.exists j key)
           (Thread/sleep i)
-          (recur (+ 20 i))))
+          (recur i)))
       (finally (.returnResource client j)))))
 
 (defn feeds-score-fixture [test-fn]
-  (start-classify-daemon)
+  (start-classify-daemon!)
   (let [subid (:rss_link_id (subscribe "http://test-rss-ink"
                                        (:id user1) nil nil))
         feeds (update-in (parse-feed (slurp "test/atom.xml"))
@@ -122,7 +122,7 @@
                    :body (json-body {:vote (if (even? id) 1 -1)})})))
     (wait-redis-key-present (Utils/genKey (:id user1) subid)))
   (test-fn)
-  (stop-classify-daemon))
+  (stop-classify-daemon!))
 
 (defmacro mocking [var new-f & forms]
   `(let [old# (atom nil)]

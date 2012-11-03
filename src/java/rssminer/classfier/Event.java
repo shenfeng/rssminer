@@ -5,20 +5,17 @@
 
 package rssminer.classfier;
 
-import rssminer.search.Searcher;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
 
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
-
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.MINUTES;
 
 // just interface
 public abstract class Event implements Delayed {
     private final long due;
 
     // more than two minute
-    public static final int DELAY = Searcher.DELAY + 2;
 
     public Event(int minute) {
         due = System.currentTimeMillis() + MINUTES.toMillis(minute);

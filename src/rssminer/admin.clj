@@ -75,4 +75,3 @@
       (do (db/use-mysql-database! (:db-url options) (:db-user options))
           (use-index-writer! (:index-path options))
           (rebuild-index)))))
-
