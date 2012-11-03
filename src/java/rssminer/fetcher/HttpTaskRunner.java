@@ -263,7 +263,6 @@ public class HttpTaskRunner {
 
     void tryFillTask() {
         while (mTaskQueue.isEmpty()) {
-            // slow things down a bit
             if (addTask(mBlockingProvider.getTask(1))) {// high priority
                 break;
             }
@@ -280,6 +279,7 @@ public class HttpTaskRunner {
                     break;
                 }
             }
+            // slow things down a bit
             if (addTask(mBlockingProvider.getTask(mBlockingGetTimeout))) {
                 break;
             }
