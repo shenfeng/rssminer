@@ -120,8 +120,8 @@ end
 desc "Javac debug"
 task :javac_debug do
   sh 'rm -rf classes && mkdir classes'
-  sh 'find src/java -name "*.java" | xargs javac -Xlint:unchecked -encoding utf8 -cp "classes:lib/*:src/"  -g -d classes -sourcepath src/java/'
-  sh 'find test/java -name "*.java" | xargs javac -Xlint:unchecked -encoding utf8 -cp "classes:lib/*:src/:lib/dev/*"  -d classes -sourcepath test/java'
+  sh 'find src/java -name "*.java" | xargs javac -g -Xlint:unchecked -encoding utf8 -cp "classes:lib/*:src/"  -g -d classes -sourcepath src/java/'
+  sh 'find test/java -name "*.java" | xargs javac -g -Xlint:unchecked -encoding utf8 -cp "classes:lib/*:src/:lib/dev/*"  -d classes -sourcepath test/java'
 end
 
 
