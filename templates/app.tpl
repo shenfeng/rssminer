@@ -11,7 +11,7 @@
           content="Rssminer is an intelligent web-based RSS
                    reader. It sort all unread feeds according to your
                    personal taste: the already read items">
-    {{#prod}}<style type="text/css">{{{ css }}}</style>{{/prod}}
+    {{^dev}}<style type="text/css">{{{ css }}}</style>{{/dev}}
     {{#dev}}<link rel="stylesheet" href="/s/css/app.css">{{/dev}}
     <script>{{{ data }}}</script>
     <!--[if lt IE 8 ]><script>location.href="/browser"</script><![endif]-->
@@ -133,9 +133,9 @@
     <script src="/s/js/rssminer/tooltip.js"></script>
     <script src="/s/js/rssminer/app.js"></script>
     {{/dev}}
-    {{#prod}}
+    {{^dev}}
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script src="/s/js/app-min.js?{VERSION}"></script>
-    {{/prod}}
+    {{/dev}}
   </body>
 </html>

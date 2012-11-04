@@ -1,23 +1,20 @@
 (ns rssminer.handlers.users
   (:use  [ring.util.response :only [redirect]]
          [clojure.java.io :only [resource]]
-         me.shenfeng.mustache
          (rssminer [util :only [user-id-from-session to-int md5-sum
                                 json-str2 read-if-json]]
                    [config :only [rssminer-conf cache-control]]))
   (:require [rssminer.db.user :as db]
             [rssminer.db.feed :as fdb]
+            [rssminer.tmpls :as tmpls]
             [clojure.string :as str]))
-
-(deftemplate login-page (slurp (resource "templates/login.tpl")))
-(deftemplate signup-page (slurp (resource "templates/signup.tpl")))
 
 (def cookie-attr {:max-age (* 3600 24 60)})
 
 (defn show-login-page [req]
-  (login-page {:return_url (or (-> req :params :return_url) "/a")}))
+  (tmpls/login {:return_url (or (-> req :params :return_url) "/a")}))
 
-(defn show-signup-page [req] (signup-page nil))
+(defn show-signup-page [req] (tmpls/signup))
 
 (defn login [req]
   (let [{:keys [email password return-url persistent]} (:params req)
@@ -27,8 +24,8 @@
       (assoc (redirect return-url)
         :session {:id (:id user)}      ; IE does not persistent cookie
         :session-cookie-attrs cookie-attr)
-      (login-page {:return_url return-url
-                   :msg "Login failed, Email or password error"}))))
+      (tmpls/login {:return_url return-url
+                    :msg "Login failed, Email or password error"}))))
 
 (defn logout [req]
   (assoc (redirect "/")

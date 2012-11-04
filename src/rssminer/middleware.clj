@@ -70,6 +70,9 @@
 (defn wrap-request-logging-in-dev [handler]
   (if (conf/in-dev?)
     (fn [{:keys [request-method uri] :as req}]
+      (when-not (or (.startsWith ^String uri "/api/")
+                    (.startsWith ^String uri "/s/"))
+        (require :reload 'rssminer.tmpls))
       (let [start (System/currentTimeMillis)
             resp (handler req)
             finish (System/currentTimeMillis)]

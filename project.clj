@@ -5,7 +5,7 @@
                  [commons-io "2.1"]
                  [compojure "1.1.1"]
                  [me.shenfeng/http-kit "1.1.1"]
-                 [me.shenfeng/mustache "0.0.5"]
+                 [me.shenfeng/mustache "0.0.8"]
                  [me.shenfeng/mmseg "0.0.4"]
                  [me.shenfeng/dbcp "0.0.1"]
                  [mysql/mysql-connector-java "5.1.21"]
@@ -30,12 +30,15 @@
   ;; :omit-source true
   ;; :bootclasspath true
   :uberjar-name "rssminer-standalone.jar"
-  :uberjar-exclusions [#".+\.java$" #".+\.sql$" #".+tmpls/.+\.tpl"]
+  :uberjar-exclusions [#".+\.java$" #".+\.sql$" #".+tmpls/.+\.tpl"
+                       #".+\.clj$" #"pom.xml"]
   :main rssminer.main
   :test-selectors {:default (complement :benchmark)
                    :benchmark :benchmark
                    :all (fn [_] true)}
   :jvm-opts ["-Dclojure.compiler.disable-locals-clearing=true"
+             ;; does not work
+             ;; "-Dclojure.compiler.elide-meta='[:doc :file :line :added]'"
              "-Djava.net.preferIPv4Stack=true"
              "-Dsun.net.inetaddr.ttl=0"
              "-XX:+TieredCompilation"
@@ -54,3 +57,7 @@
                      [org.apache.commons/commons-email "1.2"]
                      [com.google.guava/guava "11.0.2"]
                      [org.apache.lucene/lucene-spellchecker "3.6.1"]])
+
+;; (map meta (vals (ns-publics 'clojure.core)))
+;; (require 'rssminer.admin)
+;; (map meta (apply concat (map vals (map ns-publics (loaded-libs)))))
