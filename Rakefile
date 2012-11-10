@@ -102,7 +102,7 @@ desc "Prepare for production"
 task :prepare_prod => [:css_compile, "js:minify"]
 
 desc "lein swank"
-task :swank => :javac_debug do
+task :swank => [:javac_debug, :prepare] do
   sh "lein swank"
 end
 

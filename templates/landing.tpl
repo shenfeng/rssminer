@@ -12,7 +12,7 @@
                    reader. It sort all unread feeds according to your
                    personal taste: the already read items">
     {{^dev}}<style type="text/css">{{{ css }}}</style>{{/dev}}
-    {{#dev}}<link rel="stylesheet" href="/s/css/app.css">{{/dev}}
+    {{#dev}}<link rel="stylesheet" href="/s/css/landing.css">{{/dev}}
   </head>
   <body>
     <a href="https://github.com/shenfeng/rssminer">
