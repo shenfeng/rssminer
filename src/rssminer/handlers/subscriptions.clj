@@ -1,6 +1,6 @@
 (ns rssminer.handlers.subscriptions
   (:use (rssminer [redis :only [fetcher-enqueue]]
-                  [util :only [to-int user-id-from-session time-since]])
+                  [util :only [to-int defhandler time-since]])
         [rssminer.database :only [mysql-insert-and-return]]
         [clojure.tools.logging :only [info]])
   (:require [rssminer.db.subscription :as db]
@@ -9,43 +9,38 @@
 
 (def ^{:private true} enqueue-keys [:id :url :check_interval :last_modified])
 
-(defn subscribe [url user-id title group-name]
+(defn subscribe [url uid title group-name]
   (when url
     (let [sub (or (db/fetch-rss-link-by-url url)
                   (mysql-insert-and-return :rss_links {:url url
-                                                       :user_id user-id}))]
+                                                       :user_id uid}))]
       (fetcher-enqueue (select-keys sub enqueue-keys))
-      (if-let [us (db/fetch-subscription user-id (:id sub))]
+      (if-let [us (db/fetch-subscription uid (:id sub))]
         us
         (mysql-insert-and-return :user_subscription
-                                 {:user_id user-id
+                                 {:user_id uid
                                   :group_name group-name
                                   :title title
                                   :rss_link_id (:id sub)})))))
 
-(defn polling-fetcher [req]             ;; wait for fetcher return
-  (let [rss-id (-> req :params :rss-id to-int)]
-    (db/fetch-user-sub (user-id-from-session req) rss-id)))
+(defhandler polling-fetcher [req rss-id uid]             ;; wait for fetcher return
+  (db/fetch-user-sub uid rss-id))
 
-(defn list-subscriptions [req]
-  (db/fetch-user-subs (user-id-from-session req))  )
+(defhandler list-subscriptions [req uid]
+  (db/fetch-user-subs uid)  )
 
-(defn add-subscription [req]
-  (let [{:keys [link g]}  (-> req :body)
-        user-id (user-id-from-session req)]
-    (info (str "user: " user-id " add sub: " link))
+(defhandler add-subscription [req uid]
+  (let [{:keys [link g]}  (-> req :body)]
+    (info (str "user: " uid " add sub: " link))
     ;; enqueue, client need to poll for result
-    (subscribe link user-id nil g)))
+    (subscribe link uid nil g)))
 
-(defn save-sort-order [req]
-  (let [uid (user-id-from-session req)
-        ;; [{:g group :ids [id, id, id]}]
+(defhandler save-sort-order [req uid]
+  (let [;; [{:g group :ids [id, id, id]}]
         data (mapcat (fn [{:keys [ids g]}]
                        (map (fn [id] {:g g :id id}) ids)) (:body req))]
     (db/update-sort-order uid data)
     {:status 204}))
 
-(defn unsubscribe [req]
-  (let [user-id (user-id-from-session req)
-        rss-id (-> req :params :rss-id to-int)]
-    (db/delete-subscription user-id rss-id)))
+(defhandler unsubscribe [req uid rss-id]
+  (db/delete-subscription uid rss-id))

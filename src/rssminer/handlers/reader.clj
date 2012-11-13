@@ -1,6 +1,5 @@
 (ns rssminer.handlers.reader
-  (:use (rssminer [util :only [user-id-from-session md5-sum ignore-error
-                               to-int serialize-to-js]]
+  (:use (rssminer [util :only [md5-sum ignore-error serialize-to-js defhandler]]
                   [search :only [search*]])
         [clojure.java.io :only [resource]]
         [ring.util.response :only [redirect]]
@@ -30,11 +29,11 @@
                                   :body body}
             body)))))
 
-(defn show-app-page [req]
+(defhandler show-app-page [req uid]
   (if (cfg/demo-user? req)
     (assoc (redirect "/") :session nil ;; delete cookie
            :session-cookie-attrs {:max-age -1})
-    (when-let [user (find-user-by-id (user-id-from-session req))]
+    (when-let [user (find-user-by-id uid)]
       (tmpls/app {:css app-css
                   :email (:email user)
                   :md5 (-> user :email md5-sum)
@@ -63,13 +62,8 @@
          :status 200
          :session (:demo-user @cfg/rssminer-conf)}))))
 
-(defn search [req]
-  (let [{:keys [q limit tags authors fs offset]} (:params req)
-        uid (user-id-from-session req)
-        limit (min 20 (to-int limit))
-        offset (min (to-int (or offset "0")) 80)
-        fs (= fs "1")]
-    (search* q tags authors uid limit offset fs)))
+(defhandler search [req q limit tags authors fs offset uid]
+  (search* q tags authors uid limit offset (= fs "1")))
 
 (defn get-favicon [req]
   (if-let [hostname (-> req :params :h str/reverse)]

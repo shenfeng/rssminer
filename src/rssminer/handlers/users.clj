@@ -2,7 +2,7 @@
   (:use  [ring.util.response :only [redirect]]
          [clojure.java.io :only [resource]]
          (rssminer [util :only [user-id-from-session to-int md5-sum
-                                json-str2 read-if-json]]
+                                json-str2 read-if-json defhandler]]
                    [config :only [rssminer-conf cache-control]]))
   (:require [rssminer.db.user :as db]
             [rssminer.db.feed :as fdb]
@@ -13,6 +13,9 @@
 
 (defn show-login-page [req]
   (tmpls/login {:return_url (or (-> req :params :return_url) "/a")}))
+
+(defhandler show-login-page [req return_url]
+  (tmpls/login {:return_url (or return_url "/a")}))
 
 (defn show-signup-page [req] (tmpls/signup))
 
@@ -42,39 +45,52 @@
         (assoc (redirect "/a")           ; no conf currently
           :session {:id (:id user)})))))
 
+(defhandler signup [req email password]
+  (if (or (str/blank? email)
+          (str/blank? password))
+    (redirect "/") ;; TODO error reporting
+    (let [user (db/create-user {:email email
+                                :password password})]
+      (assoc (redirect "/a")           ; no conf currently
+        :session {:id (:id user)}))))
+
 (defn- update-conf [uid req key]
   (when-let [data (-> req :body key)]
     (let [conf (merge (-> uid db/find-user-by-id :conf read-if-json)
                       {key data})]
       (db/update-user uid {:conf (json-str2 conf)}))))
 
+(defhandler save-settings [req uid]
+  (when-let [password (-> req :body :password)]
+    (let [user (db/find-user-by-id uid)
+          p (md5-sum (str (:email user) "+" password))]
+      (db/update-user uid {:password p})))
+  (update-conf uid req :nav)
+  (update-conf uid req :pref_sort)
+  {:status 204 :body nil})
+
 ;;; :nav => show and hide of left nav
 ;;; :pref_sort => show recommand or newest
-(defn save-settings [req]
-  (let [uid (user-id-from-session req)]
-    (when-let [password (-> req :body :password)]
-      (let [user (db/find-user-by-id uid)
-            p (md5-sum (str (:email user) "+" password))]
-        (db/update-user uid {:password p})))
-    (update-conf uid req :nav)
-    (update-conf uid req :pref_sort)
-    {:status 204 :body nil}))
+(defhandler save-settings [req uid]
+  (when-let [password (-> req :body :password)]
+    (let [user (db/find-user-by-id uid)
+          p (md5-sum (str (:email user) "+" password))]
+      (db/update-user uid {:password p})))
+  (update-conf uid req :nav)
+  (update-conf uid req :pref_sort)
+  {:status 204 :body nil})
 
-(defn summary [req]
-  (let [u-id (user-id-from-session req)
-        limit (min (-> req :params :limit to-int) 40)
-        offset (-> req :params :offset to-int)
-        sort (-> req :params :section)
-        data (case sort
-               "newest" (fdb/fetch-newest u-id limit offset)
-               "voted" (fdb/fetch-recent-vote u-id limit offset)
-               "read" (fdb/fetch-recent-read u-id limit offset)
-               "recommend" (fdb/fetch-likest u-id limit offset))]
-    (if (and (seq data) (not= "read" sort) (not= "voted" sort))
-      {:body data       ;; ok, just cache for 10 miniutes
+
+(defhandler summary [req limit offset section uid]
+  (let [data (case section
+               "newest" (fdb/fetch-newest uid limit offset)
+               "voted" (fdb/fetch-recent-vote uid limit offset)
+               "read" (fdb/fetch-recent-read uid limit offset)
+               "recommend" (fdb/fetch-likest uid limit offset))]
+    (if (and (seq data) (not= "read" section) (not= "voted" section))
+      {:body data ;; ok, just cache for 10 miniutes
        :headers cache-control}
-      data))) ;; no cache
-
+      data)))
 
 (defn google-openid [req]
   (let [spec "http://specs.openid.net/auth/2.0/identifier_select"

@@ -1,47 +1,39 @@
 (ns rssminer.handlers.feeds
-  (:use (rssminer [util :only [user-id-from-session to-int assoc-if]]
+  (:use (rssminer [util :only [to-int defhandler]]
                   [classify :only [on-feed-event]]
                   [config :only [cache-control]]))
   (:require [rssminer.db.feed :as db]
             [clojure.string :as str]))
 
-(defn user-vote [req]
-  (let [fid (-> req :params :id to-int)
-        vote (-> req :body :vote to-int)
-        user-id (user-id-from-session req)]
-    (when (db/insert-user-vote user-id fid vote)
-      (on-feed-event user-id fid))
+(defhandler user-vote [req fid uid]
+  (let [vote (-> req :body :vote to-int)
+        fid (to-int fid)]
+    (when (db/insert-user-vote uid fid vote)
+      (on-feed-event uid fid))
     {:status 204 :body nil}))
 
-(defn- mark-read [fid user-id]
-  (when (db/mark-as-read user-id fid)
-    (on-feed-event user-id fid)))
+(defn- mark-read [fid uid]
+  (when (db/mark-as-read uid (to-int fid))
+    (on-feed-event uid (to-int fid))))
 
-(defn mark-as-read [req]
-  (let [fid (-> req :params :id to-int)
-        user-id (user-id-from-session req)]
-    (mark-read fid user-id)
-    {:status 204 :body nil}))
-
-(defn get-feeds [req]
-  (let [fids (map to-int (str/split (-> req :params :id) #"-"))
-        user-id (user-id-from-session req)]
-    (when (and (= 1 (count fids))
-               (-> req :params :mr))
-      (mark-read (first fids) user-id))
-    {:body (db/fetch-feeds user-id fids) :headers cache-control}))
-
-(defn save-reading-time [req]
-  (let [user-id (user-id-from-session req)]
-    (db/update-reading-time user-id (:body req)))
+(defhandler mark-as-read [req fid uid]
+  (mark-read (to-int fid) uid)
   {:status 204 :body nil})
 
-(defn get-by-subscription [req]
-  (let [{:keys [rid limit sort offset]} (:params req)
-        uid (user-id-from-session req)
-        limit (to-int limit)
-        offset (to-int offset)
-        data (if (= -1 (.indexOf ^String rid (int \-)))
+(defhandler get-feeds [req fid uid]
+  ;; fid may be a list of ids
+  (let [fids (map to-int (str/split fid #"-"))]
+    (when (and (= 1 (count fids))
+               (-> req :params :mr))
+      (mark-read (first fids) uid))
+    {:body (db/fetch-feeds uid fids) :headers cache-control}))
+
+(defhandler save-reading-time [req uid]
+  (db/update-reading-time uid (:body req))
+  {:status 204 :body nil})
+
+(defhandler get-by-subscription [req rid limit sort offset uid]
+  (let [data (if (= -1 (.indexOf ^String rid (int \-)))
                (let [rssid (to-int rid)]
                  (case sort
                    "newest" (db/fetch-sub-newest uid rssid limit offset)
@@ -58,4 +50,4 @@
                    "voted" (db/fetch-folder-vote uid ids limit offset))))]
     (if (and (seq data) (not= "read" sort) (not= "voted" sort))
       {:body data :headers cache-control }
-      data))) ;; cache one hour
+      data)))

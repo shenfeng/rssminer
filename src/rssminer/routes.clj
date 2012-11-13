@@ -32,7 +32,7 @@
   (JPOST "/settings" [] user/save-settings)
   (JGET "/welcome" [] user/summary)
   (JPOST "/feeds" [] feed/save-reading-time)
-  (context "/feeds/:id" []
+  (context "/feeds/:fid" []
            (JGET "/" [] feed/get-feeds) ; or ids
            (JPOST "/vote" [] feed/user-vote)
            (POST "/read" [] feed/mark-as-read)))
