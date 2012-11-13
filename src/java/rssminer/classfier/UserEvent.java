@@ -5,10 +5,9 @@
 
 package rssminer.classfier;
 
-import java.util.concurrent.TimeUnit;
 
 // user vote, read a feed.
-public class UserEvent extends Event {
+public class UserEvent implements Event {
 
     final int userID;
     // -1 means recompute for user
@@ -16,13 +15,12 @@ public class UserEvent extends Event {
 
     public UserEvent(int userID, int feedID) {
         // do it now
-        super(0);
         this.userID = userID;
         this.feedID = feedID;
     }
 
     public String toString() {
-        return "user:" + userID + ", feedid:" + feedID + " due in "
-                + getDelay(TimeUnit.SECONDS) + " s";
+        return "user:" + userID + ", feedid:" + feedID;
+
     }
 }

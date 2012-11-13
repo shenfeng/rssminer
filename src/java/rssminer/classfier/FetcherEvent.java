@@ -6,25 +6,23 @@
 package rssminer.classfier;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import rssminer.search.Searcher;
 
-public class FetcherEvent extends Event {
+public class FetcherEvent implements Event {
     final int subid;
     final List<Integer> feedids;
-    
+
     public static final int DELAY = Searcher.DELAY + 2;
 
     public FetcherEvent(int subid, List<Integer> feedids) {
         // delay compute, wait for Lucence index
-        super(DELAY);
         this.subid = subid;
         this.feedids = feedids;
     }
 
     public String toString() {
-        return "fetcher:" + subid + ", count:" + feedids.size() + " due in "
-                + getDelay(TimeUnit.SECONDS) + " s";
+        return "fetcher:" + subid + ", count:" + feedids.size();
+
     }
 }

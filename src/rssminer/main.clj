@@ -17,13 +17,13 @@
 
 (defn stop-server []
   (stop-fetcher)
+  ;; (stop-classify-daemon!) no need to stop it, run as it is
+  (close-global-index-writer!)
   (when-not (nil? @server)
     (info "shutdown Rssminer server....")
     (@server)
     (reset! server nil))
-  ;; (stop-classify-daemon!) no need to stop it, run as it is
-  (close-global-mysql-factory!)
-  (close-global-index-writer!))
+  (close-global-mysql-factory!))
 
 (defonce shutdown-hook (Thread. ^Runnable stop-server))
 
@@ -46,8 +46,8 @@
                           (str static-server ":" port) static-server)
          :proxy (if proxy socks-proxy Proxy/NO_PROXY))
   (start-classify-daemon!)
-  (reset! server (run-server (app) {:port port :ip bind-ip :thread worker}))
   (use-index-writer! index-path)
+  (reset! server (run-server (app) {:port port :ip bind-ip :thread worker}))
   (when fetcher (start-fetcher)))
 
 (defn -main [& args]

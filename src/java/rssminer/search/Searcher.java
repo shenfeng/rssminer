@@ -20,7 +20,9 @@ import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.*;
-import org.apache.lucene.store.*;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +37,6 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 import static rssminer.Utils.K_DATA_SOURCE;
 
@@ -73,51 +74,7 @@ public class Searcher {
     public static Term[] ALL_FIELDS = new Term[]{TITLE_TERM, CONTNET_TERM,
             TAG_TERM, AUTHOR_TERM};
     public static final TermVector TV = TermVector.WITH_POSITIONS_OFFSETS;
-    private RefreshThead mRefreshThead = new RefreshThead();
     private List<IndexReader> pendingReader = new LinkedList<IndexReader>();
-
-    private void closeReaders() {
-        Iterator<IndexReader> it = pendingReader.iterator();
-        while (it.hasNext()) {
-            IndexReader r = it.next();
-            if (r.getRefCount() == 1) {
-                try {
-                    r.decRef();
-                } catch (IOException ignore) {
-                }
-                it.remove();
-            }
-        }
-    }
-
-    public void refreshReader() throws CorruptIndexException, IOException {
-        IndexReader tmp = IndexReader.open(mIndexer, false);
-        synchronized (this) {
-            pendingReader.add(mReader);
-            closeReaders();
-            mReader = tmp; // swap with the new one
-            mSearcher = new IndexSearcher(mReader);
-        }
-    }
-
-    private class RefreshThead extends Thread {
-        public RefreshThead() {
-            setName("refresh-reader");
-            setDaemon(true);
-        }
-
-        public void run() {
-            try {
-                while (!closed) {
-                    TimeUnit.MINUTES.sleep(DELAY);
-                    refreshReader();
-                }
-            } catch (InterruptedException ignore) {
-            } catch (Exception e) {
-                logger.error("refresh read thread died", e);
-            }
-        }
-    }
 
     public static Searcher initGlobalSearcher(String path,
                                               Map<Keyword, Object> config) throws IOException {
@@ -128,7 +85,6 @@ public class Searcher {
 
     private IndexWriter mIndexer = null;
     private IndexReader mReader = null;
-    private IndexSearcher mSearcher = null;
     private final String mPath;
 
     private final Map<Keyword, Object> mConfig;
@@ -158,7 +114,7 @@ public class Searcher {
         }
 
         cfg.setOpenMode(OpenMode.CREATE_OR_APPEND);
-        Directory dir = null;
+        Directory dir;
         if (path.equals("RAM")) {
             dir = new RAMDirectory();
         } else {
@@ -172,8 +128,6 @@ public class Searcher {
 
         mIndexer = new IndexWriter(dir, cfg);
         mReader = IndexReader.open(mIndexer, false);
-        mSearcher = new IndexSearcher(mReader);
-        mRefreshThead.start();
     }
 
     private List<String> getTerms(String text) throws IOException {
@@ -252,7 +206,6 @@ public class Searcher {
             mIndexer.close();
             mIndexer = null;
             closed = true;
-            mRefreshThead.interrupt();
         }
     }
 
@@ -324,7 +277,7 @@ public class Searcher {
 
     public int[] feedID2DocIDs(List<Integer> feeds) throws IOException {
         int[] array = new int[feeds.size()];
-        IndexReader reader = acquireReader();
+        IndexReader reader = openReader();
         try {
             IndexSearcher searcher = new IndexSearcher(reader);
             for (int i = 0; i < feeds.size(); i++) {
@@ -341,29 +294,34 @@ public class Searcher {
         return mBoosts;
     }
 
-    private void incRef() { // need to hold lock
-        while (true) {
-            try {
-                mReader.incRef(); // throw if closed
-                break;
-            } catch (AlreadyClosedException e) {
-                try {
-                    refreshReader(); // renew
-                } catch (Exception ignore) {
-                }
-            }
+    public synchronized IndexSearcher openSearcher() throws IOException {
+        // faster path
+        while (!mReader.tryIncRef()) {
+            // already closed, open a new one
+            mReader = IndexReader.open(mIndexer, false);
         }
-    }
-
-    // need to call release
-    public synchronized IndexSearcher acquireSearcher() {
-        incRef();
-        return mSearcher;
+        return new IndexSearcher(mReader);
     }
 
     // only searcher exits
-    public synchronized IndexReader acquireReader() throws IOException {
-        incRef();
+    public IndexReader openReader() throws IOException {
+        IndexReader tmp = IndexReader.open(mIndexer, false);
+        synchronized (this) {
+            pendingReader.add(mReader);
+            Iterator<IndexReader> it = pendingReader.iterator();
+            while (it.hasNext()) {
+                IndexReader r = it.next();
+                if (r.getRefCount() == 1) {
+                    try {
+                        r.decRef(); // close
+                    } catch (IOException ignore) {
+                    }
+                    it.remove();
+                }
+            }
+            mReader = tmp;
+            mReader.incRef();
+        }
         return mReader;
     }
 
@@ -382,7 +340,7 @@ public class Searcher {
                                       int userID, int limit, int offset, boolean facted)
             throws IOException, ParseException, SQLException {
         List<Integer> subids = DBHelper.getUserSubIDS(mDs, userID);
-        IndexSearcher searcher = acquireSearcher();
+        IndexSearcher searcher = openSearcher();
         try {
             BooleanQuery query = buildQuery(q, subids);
             addFilter(query, tags, authors);

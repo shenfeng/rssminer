@@ -13,16 +13,23 @@
 
 (defn use-index-writer! [path]
   (close-global-index-writer!)          ; close previous searcher
-  (let [path (if (= path :RAM) "RAM" path)]
-    (info "use index path" path)
-    (reset! searcher (Searcher/initGlobalSearcher path @rssminer-conf))))
+  (info "using index path" path)
+  (if (= path :RAM)
+    (reset! searcher (Searcher/initGlobalSearcher "RAM" @rssminer-conf))
+    ;;  helps quicker startup time
+    (doto (Thread. (fn [] (reset! searcher
+                                 (Searcher/initGlobalSearcher path @rssminer-conf))))
+      (.start))))
 
 (defn index-feed [id rss-id {:keys [author tags title summary]}]
-  (.index ^Searcher @searcher id rss-id author title summary tags))
+  (when-not (nil? @searcher)
+    (.index ^Searcher @searcher id rss-id author title summary tags)))
 
 (defn search* [term tags authors userid limit offset fs]
-  {:body (.search ^Searcher @searcher term tags authors userid limit offset fs)
-   :headers cache-control})
+  (if (nil? @searcher)
+    {:body []}
+    {:body (.search ^Searcher @searcher term tags authors userid limit offset fs)
+     :headers cache-control}))
 
 ;; (defn search-within-subs [term uid subids limit]
 ;;   {:body (.searchInSubIDs ^Searcher @searcher term uid subids limit)
