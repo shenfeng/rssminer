@@ -23,5 +23,4 @@
          (apply concat
                 (map mapper (resources #".*templates/.*")))))
 
-(deftemplates tmpls (fn [context] (assoc context :dev (cfg/in-dev?))))
-
+(deftemplates tmpls (fn [context] (assoc context :dev (= (cfg/cfg :profile) :dev))))

@@ -67,7 +67,7 @@
     (test-fn)))
 
 (defn lucene-fixture [test-fn]
-  (use-index-writer! :RAM)
+  (use-index-writer! :path :RAM)
   (test-fn))
 
 (defn- run-admin [cmd params]
@@ -78,9 +78,10 @@
         test-user "feng_test"]
     (try
       (run-admin "init-db" ["-d" test-db-name "-u" test-user])
-      (db/use-mysql-database! (str "jdbc:mysql://localhost/" test-db-name
-                                   "?noAccessToProcedureBodies=true")
-                              test-user)
+      (db/use-mysql-database! :url (str "jdbc:mysql://localhost/" test-db-name
+                                        "?noAccessToProcedureBodies=true")
+                              :user test-user
+                              :password "")
       (test-fn)
       (catch SQLException e
         (print-sql-exception-chain e)
@@ -90,7 +91,7 @@
 
 (defn redis-fixture [test-fn]
   (sh "redis-cli" "-n" 2  "flushdb")            ; just clean all
-  (set-redis-pool! "127.0.0.1" :database 2)
+  (set-redis-pool! :database 2)
   (swap! rssminer-conf assoc :events-threshold (int 3))
   (test-fn))
 

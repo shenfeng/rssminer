@@ -1,7 +1,7 @@
 (ns rssminer.database
   (:use [clojure.java.jdbc :only [with-connection do-commands]]
         [clojure.tools.logging :only [debug info]]
-        [rssminer.config :only [rssminer-conf]]
+        [rssminer.config :only [rssminer-conf cfg]]
         [clojure.java.jdbc :only [with-connection do-commands
                                   as-identifier
                                   with-query-results insert-record]])
@@ -54,10 +54,13 @@
   (let [f (SimpleDateFormat. "EEE, dd MMM yyyy HH:mm:ss ZZZ" Locale/US)]
     (Timestamp. (.getTime (.parse f str)))))
 
-(defn use-mysql-database! [^String url user]
-  (let [url (if (= -1 (.indexOf url (int \?)))
+(defn use-mysql-database! [& {:keys [url user password]}]
+  (let [^String url (or url (cfg :db-url))
+        url (if (= -1 (.indexOf url (int \?)))
               (str url "?" (jdbc-params)) (str url "&" (jdbc-params)))
-        ds (PerThreadDataSource. url user "")]
+        ds (PerThreadDataSource. url
+                                 (or user (cfg :db-user))
+                                 (or password (cfg :db-pass)))]
     (swap! rssminer-conf assoc :data-source ds)
     (reset! mysql-db-factory {:factory (fn [& args] (.getConnection ds))
                               :ds ds})
@@ -65,4 +68,3 @@
     (swap! rssminer-conf assoc :demo-user
            (first (mysql-query ["SELECT id, conf, like_score, neutral_score
                   FROM users WHERE email = 'demo@rssminer.net'"])))))
-

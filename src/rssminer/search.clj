@@ -1,7 +1,7 @@
 (ns rssminer.search
   (:use [clojure.tools.logging :only [info]]
         [rssminer.util :only [ignore-error]]
-        [rssminer.config :only [rssminer-conf cache-control]])
+        [rssminer.config :only [rssminer-conf cache-control cfg]])
   (:import rssminer.search.Searcher))
 
 (defonce searcher (atom nil))
@@ -11,15 +11,16 @@
     (.close ^Searcher @searcher (= optimize true))
     (reset! searcher nil)))
 
-(defn use-index-writer! [path]
-  (close-global-index-writer!)          ; close previous searcher
-  (info "using index path" path)
-  (if (= path :RAM)
-    (reset! searcher (Searcher/initGlobalSearcher "RAM" @rssminer-conf))
-    ;;  helps quicker startup time
-    (doto (Thread. (fn [] (reset! searcher
-                                 (Searcher/initGlobalSearcher path @rssminer-conf))))
-      (.start))))
+(defn use-index-writer! [& {:keys [path]}]
+  (let [path (or path (cfg :index-path))]
+    (close-global-index-writer!)        ; close previous searcher
+    (info "using index path" path)
+    (if (= path :RAM)
+      (reset! searcher (Searcher/initGlobalSearcher "RAM" @rssminer-conf))
+      ;;  helps quicker startup time
+      (doto (Thread. (fn [] (reset! searcher
+                                   (Searcher/initGlobalSearcher path @rssminer-conf))))
+        (.start)))))
 
 (defn index-feed [id rss-id {:keys [author tags title summary]}]
   (when-not (nil? @searcher)

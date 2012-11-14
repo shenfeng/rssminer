@@ -12,7 +12,7 @@
                   [util :only [to-int]]
                   [database :only [mysql-query with-mysql mysql-insert]]
                   [search :only [use-index-writer! close-global-index-writer!]]
-                  [config :only [rssminer-conf socks-proxy]])
+                  [config :only [rssminer-conf cfg socks-proxy]])
         [clojure.java.io :only [resource]])
   (:require [compojure.route :as route])
   (:import rssminer.NearDuplicate))
@@ -108,35 +108,29 @@ from feed_data d join feeds f on f.id = d.id where d.id =? " id])))
   (close-global-mysql-factory!)
   (close-global-index-writer!))
 
-(defn start-server
-  [{:keys [port index-path profile db-url worker
-           db-user bind-ip]}]
+(defn start-server []
   (stop-server)
-  (use-mysql-database! db-url db-user)
-  (use-index-writer! index-path)
-  (swap! rssminer-conf assoc
-         :profile profile
-         :worker worker)
-  (reset! server (run-server (app) {:port port
-                                    :ip bind-ip
-                                    :thread worker})))
+  (use-mysql-database!)
+  (use-index-writer!)
+  (reset! server (run-server (app) {:port (cfg :port)
+                                    :ip (cfg :bind-ip)
+                                    :thread (cfg :worker)})))
 
 (defn -main [& args]
   "Start toolserver server"
   (let [[options _ banner]
         (cli args
              ["-p" "--port" "Port to listen" :default 9091 :parse-fn to-int]
-             ["--worker" "Http worker thread count" :default 4
-              :parse-fn to-int]
-             ["--redis-host" "Redis for session store"
-              :default "127.0.0.1"]
-             ["--db-url" "MySQL Database url"
-              :default "jdbc:mysql://localhost/rssminer"]
+             ["--worker" "Http worker thread count" :default 4 :parse-fn to-int]
+             ["--redis-host" "Redis for session store" :default "127.0.0.1"]
+             ["--db-url" "MySQL Database url" :default "jdbc:mysql://localhost/rssminer"]
              ["--db-user" "MySQL Database user name" :default "feng"]
+             ["--db-pass" "MySQL password " :default ""]
              ["--bind-ip" "Which ip to bind" :default "0.0.0.0"]
              ["--index-path" "Path to store lucene index"
               :default "/var/rssminer/index"]
              ["--[no-]help" "Print this help"])]
     (when (:help options) (println banner) (System/exit 0))
-    (reset! server (start-server options))
+    (swap! rssminer-conf merge options)
+    (reset! server (start-server))
     (NearDuplicate/init)))

@@ -81,6 +81,10 @@ path is in `tmpfs`, It will much faster(12s vs 40+s).
 ### Command line args
 
 ```sh
+rake prepare javac && ./scripts/run --help  # rake -T list commands
+```
+
+```sh
 Usage:
 
  Switches                 Default                          Desc
@@ -90,17 +94,18 @@ Usage:
  --fetcher-concurrency    10
  --fetch-size             20                               Bulk fetch size
  --profile                :dev                             dev or prod
- --redis-host             127.0.0.1                        Redis for session store
+ --redis-host             127.0.0.1                        Redis host
+ --redis-port             6379                             Redis port
  --static-server          //192.168.1.200                  static server
  --db-url                 jdbc:mysql://localhost/rssminer  MySQL Database url
- --db-user                feng                             MySQL Database user name
+ --db-user                feng                             MySQL user name
+ --db-pass                                                 MySQL password
  --bind-ip                0.0.0.0                          Which ip to bind
  --events-threshold       20                               How many user feed events buffered before recompute again
  --index-path             /var/rssminer/index              Path to store lucene index
  --no-fetcher, --fetcher  false                            Start rss fetcher
  --no-proxy, --proxy      false                            Enable Socks proxy
  --no-help, --help        false                            Print this help
-
 
 ```
 

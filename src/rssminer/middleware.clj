@@ -68,7 +68,7 @@
          :body (json-str2 resp)}))))
 
 (defn wrap-request-logging-in-dev [handler]
-  (if (conf/in-dev?)
+  (if (= (conf/cfg :profile) :dev)
     (fn [{:keys [request-method uri] :as req}]
       (when-not (or (.startsWith ^String uri "/api/")
                     (.startsWith ^String uri "/s/"))
