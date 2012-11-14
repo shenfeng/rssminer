@@ -162,7 +162,7 @@ public class NaiveBayes {
                 }
             }
         } finally {
-            SEARCHER.releaseReader();
+            reader.decRef();
         }
         return result;
     }
@@ -176,7 +176,7 @@ public class NaiveBayes {
             double score = classfiy(model, reader, docid);
             return score;
         } finally {
-            SEARCHER.releaseReader();
+            reader.decRef();
         }
     }
 
@@ -201,7 +201,7 @@ public class NaiveBayes {
             return result;
 
         } finally {
-            SEARCHER.releaseReader();
+            reader.decRef();
         }
     }
 

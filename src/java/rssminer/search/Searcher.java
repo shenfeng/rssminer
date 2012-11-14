@@ -285,7 +285,7 @@ public class Searcher {
                 array[i] = feedID2DocID(searcher, l);
             }
         } finally {
-            releaseReader();
+            reader.decRef();
         }
         return array;
     }
@@ -316,6 +316,8 @@ public class Searcher {
                         r.decRef(); // close
                     } catch (IOException ignore) {
                     }
+                }
+                if(r.getRefCount() <= 0) {
                     it.remove();
                 }
             }
@@ -323,10 +325,6 @@ public class Searcher {
             mReader.incRef();
         }
         return mReader;
-    }
-
-    public synchronized void releaseReader() throws IOException {
-        mReader.decRef();
     }
 
     public void index(int feeID, int rssID, String author, String title,
@@ -378,7 +376,7 @@ public class Searcher {
             }
             return ret;
         } finally {
-            releaseReader();
+            searcher.getIndexReader().decRef();
         }
     }
 
