@@ -47,50 +47,36 @@
 
 ## How to run it
 
-### Dependencies
+### Install Instructions
+1. Install Dependencies
+[leiningen](https://github.com/technomancy/leiningen), JDK7(JDK6 works), Redis, MySQL, [sass](http://sass-lang.com/), rake
 
-jdk, redis, [lein](https://github.com/technomancy/leiningen),
-mysql-server, [sass](http://sass-lang.com/), rake
-
-### Instructions
-
-1. clone this repo, fetch deps
-
+2. clone this repo, install dependency
 ```sh
 git clone git://github.com/shenfeng/rssminer.git && cd rssminer && lein deps
 ```
 
-2. Initialize database, create user, import schema
-
+3. Initialize database, create user, import schema
 ```sh
 cd rssminer && ./scripts/admin init-db
 ```
-3. install tools
-
-```sh
-brew install coreutils  # if you are using os x
-rake deps
-sudo gem install sass
-```
-
 4. Run it
 
 ```sh
 rake run:dev # run server in dev profile, view it: http://127.0.0.1:9090
 ```
-
 ### Run unit test
 
 ```sh
 rake test
 ```
 
-It will create/drop a temp MySQL database for each test. If MySQL's db
-path is in `tmpfs`, It will much faster(12s vs 40+s).
-
 ```sh
 rake mysql_dev # replace my.cnf will a dev one, run mysql in /tmp, run it after understand it.
 ```
+It will create/drop a temp MySQL database for each test. If MySQL's db
+path is in `tmpfs`, It will much faster(12s vs 40+s).
+
 
 ### Command line args
 
@@ -101,19 +87,20 @@ Usage:
  --------                 -------                          ----
  -p, --port               9090                             Port to listen
  --worker                 2                                Http worker thread count
- --fetcher-concurrency    20
- --fetch-size             100                              Bulk fetch size
+ --fetcher-concurrency    10
+ --fetch-size             20                               Bulk fetch size
  --profile                :dev                             dev or prod
  --redis-host             127.0.0.1                        Redis for session store
- --static-server          //192.168.1.3                    static server
- --db-url                 jdbc:mysql://localhost/rssminer  jdbc url
+ --static-server          //192.168.1.200                  static server
+ --db-url                 jdbc:mysql://localhost/rssminer  MySQL Database url
  --db-user                feng                             MySQL Database user name
  --bind-ip                0.0.0.0                          Which ip to bind
- --events-threshold       2                                How many user feed events buffered before recompute again
+ --events-threshold       20                               How many user feed events buffered before recompute again
  --index-path             /var/rssminer/index              Path to store lucene index
  --no-fetcher, --fetcher  false                            Start rss fetcher
  --no-proxy, --proxy      false                            Enable Socks proxy
  --no-help, --help        false                            Print this help
+
 
 ```
 
