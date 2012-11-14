@@ -63,8 +63,7 @@
     (let [sub (subscribe "http://link-to-scottgu's rss" (:id user1) nil nil)
           feeds (parse-feed (slurp resource))]
       (save-feeds feeds (:rss_link_id sub)))
-    (.openReader @searcher)
-    (.releaseReader @searcher)          ; just refresh reader
+    (.decRef (.openReader @searcher)) ; just refresh reader
     (test-fn)))
 
 (defn lucene-fixture [test-fn]
