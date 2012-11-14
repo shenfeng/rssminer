@@ -11,8 +11,6 @@ import me.shenfeng.http.client.HttpClient;
 import me.shenfeng.http.client.HttpClientConfig;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -96,8 +94,6 @@ class GoogleExportHandler extends DefaultHandler {
 }
 
 public class Utils {
-    final static Logger logger = LoggerFactory.getLogger(Utils.class);
-
     public static final HttpClient CLIENT;
     public static final String USER_AGETNT = "Mozilla/5.0 (compatible; Rssminer/1.0; +http://rssminer.net)";
     public static final String[] NO_IFRAME = new String[]{"groups.google"}; // X-Frame-Options
