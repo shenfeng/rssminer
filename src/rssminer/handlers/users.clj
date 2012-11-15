@@ -84,8 +84,8 @@
 (defhandler summary [req limit offset section uid]
   (let [data (case section
                "newest" (fdb/fetch-newest uid limit offset)
-               "voted" (fdb/fetch-recent-vote uid limit offset)
-               "read" (fdb/fetch-recent-read uid limit offset)
+               "voted" (fdb/fetch-vote uid limit offset)
+               "read" (fdb/fetch-read uid limit offset)
                "recommend" (fdb/fetch-likest uid limit offset))]
     (if (and (seq data) (not= "read" section) (not= "voted" section))
       {:body data ;; ok, just cache for 10 miniutes

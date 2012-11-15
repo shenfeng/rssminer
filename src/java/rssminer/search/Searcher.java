@@ -5,7 +5,6 @@
 
 package rssminer.search;
 
-import clojure.lang.Keyword;
 import me.shenfeng.mmseg.StringReader;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -26,6 +25,7 @@ import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import redis.clients.jedis.JedisPool;
 import rssminer.Utils;
 import rssminer.db.DBHelper;
 import rssminer.db.Feed;
@@ -37,8 +37,6 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
-
-import static rssminer.Utils.K_DATA_SOURCE;
 
 public class Searcher {
     static final Version V = Version.LUCENE_35;
@@ -75,11 +73,11 @@ public class Searcher {
             TAG_TERM, AUTHOR_TERM};
     public static final TermVector TV = TermVector.WITH_POSITIONS_OFFSETS;
     private List<IndexReader> pendingReader = new LinkedList<IndexReader>();
+    private final JedisPool mJedis;
 
-    public static Searcher initGlobalSearcher(String path,
-                                              Map<Keyword, Object> config) throws IOException {
+    public static Searcher initGlobalSearcher(String path, DataSource ds, JedisPool jedis) throws IOException {
         closeGlobalSearcher();
-        SEARCHER = new Searcher(config, path);
+        SEARCHER = new Searcher(path, ds, jedis);
         return SEARCHER;
     }
 
@@ -87,7 +85,7 @@ public class Searcher {
     private IndexReader mReader = null;
     private final String mPath;
 
-    private final Map<Keyword, Object> mConfig;
+
     private final DataSource mDs;
     private final Map<String, Float> mBoosts = new TreeMap<String, Float>();
     public static Searcher SEARCHER; // global
@@ -102,13 +100,12 @@ public class Searcher {
         }
     }
 
-    private Searcher(Map<Keyword, Object> config, String path)
+    private Searcher(String path, DataSource ds, JedisPool jedis)
             throws IOException {
         final IndexWriterConfig cfg = new IndexWriterConfig(V, analyzer);
         this.mPath = path;
-        this.mConfig = config;
-
-        this.mDs = (DataSource) config.get(K_DATA_SOURCE);
+        this.mDs = ds;
+        this.mJedis = jedis;
         if (this.mDs == null) {
             throw new NullPointerException("ds can not be null");
         }
@@ -317,7 +314,7 @@ public class Searcher {
                     } catch (IOException ignore) {
                     }
                 }
-                if(r.getRefCount() <= 0) {
+                if (r.getRefCount() <= 0) {
                     it.remove();
                 }
             }
@@ -369,7 +366,7 @@ public class Searcher {
             if (feedids.isEmpty()) {
                 ret.put("feeds", new ArrayList<Feed>(0));
             } else {
-                MinerDAO db = new MinerDAO(mConfig);
+                MinerDAO db = new MinerDAO(mDs, mJedis);
                 List<Feed> feeds = MinerDAO.removeDuplicate(db
                         .fetchFeedsWithScore(userID, feedids));
                 ret.put("feeds", feeds);

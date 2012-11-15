@@ -67,7 +67,7 @@
     (test-fn)))
 
 (defn lucene-fixture [test-fn]
-  (use-index-writer! :path :RAM)
+  (use-index-writer! :path "RAM")
   (test-fn))
 
 (defn- run-admin [cmd params]

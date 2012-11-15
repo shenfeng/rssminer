@@ -83,7 +83,7 @@ public class NaiveBayesTest {
 
     @Before
     public void setup() throws FileNotFoundException, IOException {
-        searcher = Searcher.initGlobalSearcher("RAM", null);
+        searcher = Searcher.initGlobalSearcher("RAM", null, null);
         int id = 0;
         File[] train = TRAIN.listFiles();
         for (File folder : train) {

@@ -41,7 +41,7 @@
                          {:rm {:user user
                                :gw (-> req :params :gw) ; google import wait
                                :ge (-> req :params :ge) ; google import error
-                               :static_server (:static-server @cfg/rssminer-conf)}})}))))
+                               :static_server (cfg/cfg :static-server)}})}))))
 
 (defn show-demo-page [req]
   (if (cfg/real-user? req)
@@ -70,5 +70,6 @@
     {:status 200
      :body (FaviconFuture. hostname
                            {"User-Agent" ((:headers req) "user-agent")}
-                           @cfg/rssminer-conf)}
+                           (cfg/cfg :proxy)
+                           (cfg/cfg :data-source))}
     {:status 404}))

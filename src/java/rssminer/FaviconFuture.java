@@ -219,9 +219,9 @@ public class FaviconFuture implements IListenableFuture {
     }
 
     public FaviconFuture(String hostname, Map<String, String> headers,
-                         Map<Keyword, Object> config) {
-        this.proxy = (Proxy) (config.get(K_PROXY));
-        this.dataSource = (DataSource) config.get(K_DATA_SOURCE);
+                         Proxy proxy, DataSource dataSource) {
+        this.proxy = proxy;
+        this.dataSource = dataSource;
         this.reqHeaders = headers;
         this.hostname = hostname;
 

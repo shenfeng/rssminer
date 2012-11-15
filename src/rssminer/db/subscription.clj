@@ -2,7 +2,7 @@
   (:use [rssminer.database :only [mysql-insert-and-return
                                   mysql-query with-mysql]]
         [rssminer.util :only [now-seconds]]
-        [rssminer.config :only [rssminer-conf]]
+        [rssminer.config :only [cfg]]
         [clojure.java.jdbc :only [delete-rows update-values do-commands]])
   (:import rssminer.db.MinerDAO))
 
@@ -79,9 +79,9 @@
                 data (range 400 200000 4)))))
 
 (defn fetch-user-sub [userid id]
-  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+  (let [^MinerDAO db (MinerDAO. (cfg :data-source) (cfg :redis-server))]
     (.fetchUserSub db userid id)))
 
 (defn fetch-user-subs [userid]
-  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+  (let [^MinerDAO db (MinerDAO. (cfg :data-source) (cfg :redis-server))]
     (.fetchUserSubs db userid)))

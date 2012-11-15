@@ -5,35 +5,25 @@
 
 package rssminer.classfier;
 
-import static rssminer.Utils.K_DATA_SOURCE;
-import static rssminer.Utils.K_EVENTS_THRESHOLD;
-import static rssminer.Utils.K_REDIS_SERVER;
-import static rssminer.classfier.NaiveBayes.classify;
-import static rssminer.classfier.NaiveBayes.train;
-
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.ArrayBlockingQueue;
-
-import javax.sql.DataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Pipeline;
 import rssminer.Utils;
 import rssminer.db.DBHelper;
 import rssminer.db.Vote;
-import clojure.lang.Keyword;
+
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
+
+import static rssminer.classfier.NaiveBayes.classify;
+import static rssminer.classfier.NaiveBayes.train;
 
 public class SysVoteDaemon implements Runnable {
 
@@ -55,10 +45,10 @@ public class SysVoteDaemon implements Runnable {
     private Map<Integer, Integer> combineEvents = new TreeMap<Integer, Integer>();
     private Map<Integer, Map<String, Map<String, Double>>> modelCache = new TreeMap<Integer, Map<String, Map<String, Double>>>();
 
-    public SysVoteDaemon(Map<Keyword, Object> config) {
-        this.jedis = (JedisPool) config.get(K_REDIS_SERVER);
-        this.ds = (DataSource) config.get(K_DATA_SOURCE);
-        this.eventsThreashold = (Integer) config.get(K_EVENTS_THRESHOLD);
+    public SysVoteDaemon(DataSource ds, JedisPool jedis, int eventsThreashold) {
+        this.jedis = jedis;
+        this.ds = ds;
+        this.eventsThreashold = eventsThreashold;
         if (this.jedis == null || this.ds == null) {
             throw new NullPointerException("jedis and ds can not be null");
         }

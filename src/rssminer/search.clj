@@ -12,15 +12,16 @@
     (reset! searcher nil)))
 
 (defn use-index-writer! [& {:keys [path]}]
-  (let [path (or path (cfg :index-path))]
+  (let [path (or path (cfg :index-path))
+        start (fn [] (reset! searcher
+                            (Searcher/initGlobalSearcher path
+                                                         (cfg :data-source)
+                                                         (cfg :redis-server))))]
     (close-global-index-writer!)        ; close previous searcher
     (info "using index path" path)
-    (if (= path :RAM)
-      (reset! searcher (Searcher/initGlobalSearcher "RAM" @rssminer-conf))
-      ;;  helps quicker startup time
-      (doto (Thread. (fn [] (reset! searcher
-                                   (Searcher/initGlobalSearcher path @rssminer-conf))))
-        (.start)))))
+    (if (= path "RAM")
+      (start)
+      (.start (Thread. start)))))
 
 (defn index-feed [id rss-id {:keys [author tags title summary]}]
   (when-not (nil? @searcher)

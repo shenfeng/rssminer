@@ -1,13 +1,14 @@
 (ns rssminer.classify
-  (:use [rssminer.config :only [rssminer-conf]]
-        [rssminer.util :only [to-int]])
+  (:use [rssminer.config :only [cfg]])
   (:import rssminer.classfier.SysVoteDaemon))
 
 (defonce daemon (atom nil))
 
 (defn start-classify-daemon! []
   (when (nil? @daemon)
-    (reset! daemon (doto (SysVoteDaemon. @rssminer-conf)
+    (reset! daemon (doto (SysVoteDaemon. (cfg :data-source)
+                                         (cfg :redis-server)
+                                         (cfg :events-threshold))
                      (.start)))))
 
 (defn stop-classify-daemon! []

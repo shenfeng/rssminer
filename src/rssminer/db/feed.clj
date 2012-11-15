@@ -3,13 +3,14 @@
         (rssminer [search :only [index-feed]]
                   [redis :only [redis-pool]]
                   [util :only [to-int now-seconds ignore-error]]
-                  [config :only [rssminer-conf]]
+                  [config :only [rssminer-conf cfg]]
                   [classify :only [on-fetcher-event]])
         [clojure.string :only [blank?]]
         [clojure.tools.logging :only [warn]]
         [clojure.java.jdbc :only [do-prepared]])
   (:import rssminer.db.MinerDAO
-           rssminer.Utils))
+           rssminer.Utils)
+  (:require [clojure.string :as str]))
 
 (defn update-total-feeds [rssid]
   (with-mysql (do-prepared "UPDATE rss_links SET total_feeds =
@@ -47,7 +48,8 @@
   (:link (first (mysql-query ["SELECT link FROM feeds WHERE id = ?" id]))))
 
 (defn fetch-feeds [userid ids]
-  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
+  (let [^MinerDAO db (MinerDAO. (cfg :data-source)
+                                (cfg :redis-server))]
     (.fetchFeedsWithSummary db userid ids)))
 
 (defn- get-rssid-by-feedid [id]
@@ -93,58 +95,31 @@
   {:count (count feeds)
    :feeds (MinerDAO/removeDuplicate feeds)})
 
-(defn fetch-newest [userid limit offset]
-  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (dedup (.fetchGNewest db userid limit offset))))
+(defmacro defg [func]
+  (let [method (symbol
+                (str/replace (name func) #"-(\w)"
+                             (fn [[m l]] (str "G"(str/upper-case l)))))]
+    `(defn ~func [userid# limit# offset#]
+       (let [^MinerDAO db# (MinerDAO. (cfg :data-source)
+                                      (cfg :redis-server))]
+         (dedup (. db# ~method userid# limit# offset#))))))
 
-(defn fetch-likest [userid limit offset]
-  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (dedup (.fetchGLikest db userid limit offset))))
+(doseq [m '[fetch-newest fetch-likest fetch-read fetch-vote]]
+  (eval `(defg ~m)))
 
-(defn fetch-recent-read [userid limit offset]
-  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (dedup (.fetchGRead db userid limit offset))))
+(defmacro defsub [func]
+  (let [method (symbol
+                (str/replace (name func) #"-(\w)"
+                             (fn [[m l]] (str/upper-case l))))]
+    `(defn ~func [userid# subid# limit# offset#]
+       (let [^MinerDAO db# (MinerDAO. (cfg :data-source)
+                                      (cfg :redis-server))]
+         (dedup (. db# ~method userid# subid# limit# offset#))))))
 
-(defn fetch-recent-vote [userid limit offset]
-  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (dedup (.fetchGVote db userid limit offset))))
+(doseq [m '[fetch-sub-newest fetch-sub-oldest fetch-sub-likest
+            fetch-sub-read fetch-sub-vote]]
+  (eval `(defsub ~m)))
 
-(defn fetch-sub-newest [userid subid limit offset]
-  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (dedup (.fetchSubNewest db userid subid limit offset))))
-
-(defn fetch-sub-oldest [userid subid limit offset]
-  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (dedup (.fetchSubOldest db userid subid limit offset))))
-
-(defn fetch-sub-likest [userid subid limit offset]
-  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (dedup (.fetchSubLikest db userid subid limit offset))))
-
-(defn fetch-sub-read [userid subid limit offset]
-  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (dedup (.fetchSubRead db userid subid limit offset))))
-
-(defn fetch-sub-vote [userid subid limit offset]
-  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (dedup (.fetchSubVote db userid subid limit offset))))
-
-(defn fetch-folder-newest [userid subids limit offset]
-  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (dedup (.fetchFolderNewest db userid subids limit offset))))
-
-(defn fetch-folder-oldest [userid subids limit offset]
-  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (dedup (.fetchFolderOldest db userid subids limit offset))))
-
-(defn fetch-folder-likest [userid subids limit offset]
-  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (dedup (.fetchFolderLikest db userid subids limit offset))))
-
-(defn fetch-folder-read [userid subids limit offset]
-  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (dedup (.fetchFolderRead db userid subids limit offset))))
-
-(defn fetch-folder-vote [userid subids limit offset]
-  (let [^MinerDAO db (MinerDAO. @rssminer-conf)]
-    (dedup (.fetchFolderVote db userid subids limit offset))))
+(doseq [m '[fetch-folder-newest fetch-folder-oldest fetch-folder-likest
+            fetch-folder-read fetch-folder-vote]]
+  (eval `(defsub ~m)))

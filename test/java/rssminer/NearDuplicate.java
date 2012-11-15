@@ -135,11 +135,9 @@ public class NearDuplicate {
 
     public static void main(String[] args) throws IOException,
             InterruptedException {
-        Map<Keyword, Object> config = new HashMap<Keyword, Object>();
         PerThreadDataSource db = new PerThreadDataSource(
                 "jdbc:mysql://localhost/rssminer", "feng", "");
-        config.put(rssminer.Utils.K_DATA_SOURCE, db);
-        Searcher.initGlobalSearcher("/var/rssminer/index", config);
+        Searcher.initGlobalSearcher("/var/rssminer/index", db, null);
 
         init();
 

@@ -5,7 +5,6 @@
 
 package rssminer.db;
 
-import clojure.lang.Keyword;
 import me.shenfeng.http.HttpUtils;
 import redis.clients.jedis.*;
 import rssminer.Utils;
@@ -14,9 +13,6 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.*;
 import java.util.*;
-
-import static rssminer.Utils.K_DATA_SOURCE;
-import static rssminer.Utils.K_REDIS_SERVER;
 
 public class MinerDAO {
     static final int COMBINED_KEY_EXPIRE = 1800; // cache half an hour
@@ -35,9 +31,9 @@ public class MinerDAO {
 
     // + "join feed_data d on d.id = f.id and f.id ";
 
-    public MinerDAO(Map<Keyword, Object> config) {
-        this.jedis = (JedisPool) config.get(K_REDIS_SERVER);
-        this.ds = (DataSource) config.get(K_DATA_SOURCE);
+    public MinerDAO(DataSource ds, JedisPool jedis) {
+        this.jedis = jedis;
+        this.ds = ds;
         if (this.jedis == null || this.ds == null) {
             throw new NullPointerException("jedis and ds can not be null");
         }

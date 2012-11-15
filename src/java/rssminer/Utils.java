@@ -5,7 +5,6 @@
 
 package rssminer;
 
-import clojure.lang.Keyword;
 import me.shenfeng.http.HttpUtils;
 import me.shenfeng.http.client.HttpClient;
 import me.shenfeng.http.client.HttpClientConfig;
@@ -102,15 +101,6 @@ public class Utils {
             "mikemccandless", "feedproxy", "blogblog"};
 
     public static final String FINAL_URI = "X-final-uri";
-
-    // config key
-    public static final Keyword K_PROXY = Keyword.intern("proxy");
-    public static final Keyword K_REDIS_SERVER = Keyword
-            .intern("redis-server");
-    public static final Keyword K_DATA_SOURCE = Keyword.intern("data-source");
-
-    public static final Keyword K_EVENTS_THRESHOLD = Keyword
-            .intern("events-threshold");
 
     static {
         try {

@@ -55,12 +55,10 @@ public class SimHashTest {
     private static final int TOTAL = 1000000;
 
     static {
-        Map<Keyword, Object> config = new HashMap<Keyword, Object>();
         PerThreadDataSource db = new PerThreadDataSource(
                 "jdbc:mysql://localhost/rssminer", "feng", "");
-        config.put(rssminer.Utils.K_DATA_SOURCE, db);
         try {
-            Searcher.initGlobalSearcher("/var/rssminer/index", config);
+            Searcher.initGlobalSearcher("/var/rssminer/index", db, null);
             con = db.getConnection();
         } catch (Exception e) {
             e.printStackTrace();
