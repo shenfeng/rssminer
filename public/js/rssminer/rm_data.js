@@ -40,6 +40,7 @@
       NEWEST_TAB = 'newest',
       OLDEST_TAB = 'oldest',
       READ_TAB = 'read',
+      RCMD_TIP = 'Sorting feeds by leaning from your reading and voting history',
       VOTED_TAB = 'voted';
   var SUB_TABS = [RECOMMEND_TAB, NEWEST_TAB, OLDEST_TAB, READ_TAB, VOTED_TAB];
 
@@ -262,7 +263,8 @@
       return {
         text: tab,
         selected: section === tab,
-        href: welcome_tab_hash(tab, 1)
+        href: welcome_tab_hash(tab, 1),
+        tip: tab === RECOMMEND_TAB ? RCMD_TIP : ''
       };
     });
 
@@ -375,13 +377,13 @@
         return transform_item(feed, data.page, sort, data.section);
       });
 
-      var sort_tabs = [];
-      _.each(SUB_TABS, function (s) {
-        sort_tabs.push({
+      var sort_tabs = _.map(SUB_TABS, function (s) {
+        return {
           selected: !sort || s === sort,
           href: sub_hash(data.section, 1, s),
-          text: s
-        });
+          text: s,
+          tip: s === RECOMMEND_TAB ? RCMD_TIP : ''
+        };
       });
 
       data.cb({

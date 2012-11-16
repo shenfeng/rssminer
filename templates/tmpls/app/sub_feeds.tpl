@@ -7,7 +7,7 @@
 <div class="sort">
   <ul>
     {{#sort}}
-      <li {{#selected}} class="selected" {{/selected}}>
+      <li {{#selected}} class="selected" {{/selected}} data-title="{{tip}}">
         <a href="#{{href}}"> {{text}} </a>
       </li>
     {{/sort}}
