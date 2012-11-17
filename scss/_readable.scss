@@ -35,7 +35,7 @@ hr {
         &:hover {
             border-bottom-color: darken($border_color, 10%);
         }
-        * { max-width: 740px; }
+
     }
     .date { float: right; padding: 4px 0 0 8px; font-family: sans-serif;}
     .link {
@@ -58,7 +58,7 @@ hr {
                 color: $unread_color;
             }
         }
-        .author { margin-left: 0; display: inline; padding: 2px 5px;}
+        .author { margin-left: 0; padding: 2px 5px;}
     }
     .feed {
         padding-bottom: 3px;
@@ -72,6 +72,7 @@ hr {
 
 #feed-content {
     .summary {
+        * { max-width: 740px; }
         h1 { font-size: 18px;}
         h2, h3 { font-size: 16px; }
         h4, h5 { font-size: 15px; }

@@ -9,7 +9,8 @@
   var user_data = (_RM_ && _RM_.user) || {},
       user_conf = JSON.parse(user_data.conf || "{}");
 
-  var subscriptions_cache;
+  var subscriptions_cache,
+      summary_cache = util.LRUCache(50);
 
   var last_search_ajax;
 
@@ -298,6 +299,7 @@
 
   function mark_as_read (feedid, cb) {
     ajax.spost('/api/feeds/' + feedid + '/read', function () {
+      // console.log(feedid);
       call_if_fn(cb);
     });
   }
@@ -642,20 +644,36 @@
     return result;
   }
 
+  function _handle_resp (ids, cached, fetched, cb) {
+    _.each(fetched, function (f) { summary_cache.put(f.id, f); });
+    var results = _.map(ids, function (id) {
+      var feed = cached[id] || _.find(fetched, function (f) { return f.id === id; });
+      feed = _.clone(feed);
+      var t = transform_item(feed);
+      t.summary = feed.summary;
+      if(feed.readts) {
+        t.rdate = ymdate(feed.readts);
+      }
+      t.sub = get_subscription(t.rssid);
+      return t;
+    });
+    cb(results);
+  }
+
   function fetch_summary (ids, cb) {
-    var url = '/api/feeds/' + ids.join('-');
-    ajax.get(url, function (feeds) {
-      var results = _.map(feeds, function (feed) {
-        var t = transform_item(feed);
-        t.summary = feed.summary;
-        if(feed.readts) {
-          t.rdate = ymdate(feed.readts);
-        }
-        t.sub = get_subscription(t.rssid);
-        return t;
-      });
-      cb(results);
-    }, ids.length < 3);         // less than 3, silent
+    ids = _.map(ids, function (id) { return +id; }); // convert to ints
+    var cached = summary_cache.get(ids),
+        fetch_ids = _.filter(ids, function (id) { return !(id in cached); });
+    // console.log('cached: ', _.keys(cached), cached);
+    if(fetch_ids.length) {
+      var url = '/api/feeds/' + fetch_ids.join('-');
+      ajax.get(url, function (fetched) { // array list of feeds
+        _handle_resp(ids, cached, fetched, cb);
+      }, ids.length < 3);         // less than 3, silent
+    } else {
+      // console.log("-----------------------done----------------");
+      _handle_resp(ids, cached, [], cb);
+    }
   }
 
   function save_reading_times (data, cb) {

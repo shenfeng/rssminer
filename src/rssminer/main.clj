@@ -44,7 +44,7 @@
   (let [[options _ banner]
         (cli args
              ["-p" "--port" "Port to listen" :default 9090 :parse-fn to-int]
-             ["--worker" "Http worker thread count" :default 2 :parse-fn to-int]
+             ["--worker" "Http worker thread count" :default 4 :parse-fn to-int]
              ["--fetcher-concurrency" "" :default 10 :parse-fn to-int]
              ["--fetch-size" "Bulk fetch size" :default 20 :parse-fn to-int]
              ["--profile" "dev or prod" :default :dev :parse-fn keyword]

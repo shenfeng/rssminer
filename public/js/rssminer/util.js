@@ -62,6 +62,42 @@
     if(maxlength < count) { return title; }
   }
 
+  function LRUCache (cachesize) {
+    var entries = [];
+    function get (ids) {
+      if(_.isArray(ids)) {
+        var m = {};
+        _.each(ids, function (id) {
+          var e = get(id);
+          if(e) { m[id] = e[id]; }
+        });
+        return m;
+      } else {
+        var f = _.find(entries, function (e) { return e.key === ids; });
+        if(f) {
+          entries = _.filter(entries, function (e) { return e.key !== ids; });
+          entries.unshift(f);   // move it to the first one
+          var o = {};
+          o[ids] = f.value;
+          return o;
+        }
+      }
+    }
+    return {
+      entries: function () { return entries; },
+      get: get,
+      put: function (id, entry) {
+        var o = get(id);
+        if(o) {
+          entries[0] = {key: id, value: entry}; // replace
+        } else {
+          entries.unshift({key: id, value: entry}); // put to front
+          entries = entries.slice(0, cachesize);
+        }
+      }
+    };
+  }
+
   function params (p) {
     var arr = [];
     for(var k in p) {
@@ -75,6 +111,7 @@
     util: {
       delegate_events: delegate_events,
       favicon_ok: favicon_ok,
+      LRUCache: LRUCache,
       call_if_fn: call_if_fn,
       tooltip: tooltip,
       params: params,

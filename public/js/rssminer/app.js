@@ -22,22 +22,18 @@
       MIN_TIME = 400,           // at least 400ms, then record
       SAVE_THREASH_HOLD = 3,
       DATA_ID = 'data-id',
-      PRE_LOAD_ITEM = 5,
-      TOP_DIFF = 300,
       SUMMARY_SELECTOR = '#s-',
       FEED_SELECTOR = '#feed-',
-      BOTTOM_DIFF = 400,
       READING_CLS = 'reading',
+      D_READING_CLS = '.reading',
       NEWEST_TAB = 'newest',
       READ_URL_PATTEN = 'read/:id/:id?p=:page&s=:sort',
       SHOW_CONTENT = 'show-content';
 
-  var $footer = $('#footer'),
-      $reading_area = $('#reading-area'),
+  var $reading_area = $('#reading-area'),
       $navigation = $('#navigation'), // feed list
       $subs_list = $('#sub-list'),    // sub list
       $feed_content = $('#feed-content'),
-      $dropdown = $('#dropdown'),
       $logo = $('#logo'),
       $welcome_list = $('#welcome-list');
 
@@ -127,37 +123,16 @@
     }
   }
 
-  function select_and_compute_fetch_ids (feedid, scroll_up) {
-    var $me = $(FEED_SELECTOR + feedid);
-    $reading_area.addClass(SHOW_CONTENT);
-    $welcome_list.empty();
-    $logo.removeClass(SHOW_NAV);
-    layout.select('#feed-list', $me);
-    $navigation.scroll(); // trigger scroll if has need load more
-
-    var ids=  [feedid];
-    var next = PRE_LOAD_ITEM - 1, prev = PRE_LOAD_ITEM -1;
-    if(scroll_up === true) {
-      prev = PRE_LOAD_ITEM;
-      next = 1;
-    } else if(scroll_up === false) {
-      prev = 1;
-      next = PRE_LOAD_ITEM;
+  function fetch_and_apppend (selected_id, clean, cb) {
+    var ids = get_fetch_ids(selected_id);
+    if(ids.length) {
+      data_api.fetch_summary(ids, function (feeds) {
+        var html = to_html(tmpls.feed_content, {feeds: feeds});
+        if(clean) { $feed_content.empty(); }
+        $feed_content.append(html);
+        call_if_fn(cb);
+      });
     }
-
-    var $prev = $me.prev();
-    while($prev.length && --prev >= 0) {
-      ids.unshift($prev.attr(DATA_ID));
-      $prev = $prev.prev();
-    }
-
-    // if(prev >= 1) { next += 1; }
-    var $next = $me.next();
-    while($next.length && --next >= 0) {
-      ids.push($next.attr(DATA_ID));
-      $next = $next.next();
-    }
-    return ids;
   }
 
   function cleanup ($me) {
@@ -171,133 +146,28 @@
       });
     });
 
-
     $reading_area.find('.summary a').each(function (idx, a) {
       $(a).attr('target', '_blank');
     });
   }
 
-  function cleaning_and_scrollto (feedid, subid, scroll_up) {
-    // console.log('reading', feedid);
-    var $me = $(SUMMARY_SELECTOR + feedid);
-    if(!$me.hasClass(READING_CLS)) {
-      set_document_title($me.find('.feed h2').text());
-
-      router.navigate($(FEED_SELECTOR + feedid).find('a').attr('href'));
-
-      $me.find('img').css({display: 'block'});
-      cleanup($me);
-
-      $feed_content.find('.' + READING_CLS).removeClass(READING_CLS);
-      $me.addClass(READING_CLS);
-
-      var $feed = $(FEED_SELECTOR + feedid);
-      if(!$feed.hasClass('read')) {
-        decrement_number($feed, subid);
-        $feed.removeClass('unread sys-read').addClass('read');
-        data_api.mark_as_read(feedid);
-      }
-    }
-
-    var count = 0;
-    var $next = $me.next(), $prev = $me.prev();
-    while($next.length) {
-      if(count ++ > PRE_LOAD_ITEM - 1) {        // keep most PRE_LOAD_ITEM
-        $next.remove();
-      }
-      $next = $next.next();
-    }
-
-    keep_position(feedid, function () {
-      count = 0;
-      while($prev.length) {
-        if(count ++ > PRE_LOAD_ITEM - 1) {
-          $prev.remove();
-        }
-        $prev = $prev.prev();
-      }
-    });
-
-    if(scroll_up === undefined) {
-      $me.prevAll().find('img').css({display: 'none'});
-      $me.nextAll().find('img').css({display: 'block'});
-      var p = $me.position();
-      if(p) {                   // scroll based on current postion
-        var s = $reading_area.scrollTop();
-        disabled_scroll(p.top - s);
-      }
-    }
+  function reading_feed (id) {
+    var $me = $(FEED_SELECTOR+id);
+    router.navigate($me.find('a').attr('href'));
+    set_document_title($me.find('.feed h2').text());
+    $reading_area.addClass(SHOW_CONTENT);
+    layout.select('#feed-list', $me); // layout
+    $(D_READING_CLS).removeClass(READING_CLS);
+    $('#s-'+id).addClass(READING_CLS);
   }
 
-  function keep_position (feedid, f) {
-    var $me = $(SUMMARY_SELECTOR + feedid);
-    if($me.length) {
-      var top = $me.position().top;
-      f();
-      var newtop = $me.position().top;
-      disabled_scroll(newtop - top);
-    } else {
-      f();
-    }
-  }
-
-  function disabled_scroll (diff) {
-    if(diff) {
-      ignore_scroll_event = true;
-      // console.log('scroll', diff);
-      $reading_area[0].scrollTop += diff;
-      _.delay(function () { ignore_scroll_event = false; }, 20);
-    }
-  }
-
-  function read_callback (subid, feedid, page, sort, scroll_up) {
-    return function () {
-      gcur_subid = subid;
-      gcur_sort = sort;
-      gcur_page = page;
-
-      var ids = select_and_compute_fetch_ids(feedid, scroll_up);
-      ids = _.filter(ids, function (id) {
-        return !$(SUMMARY_SELECTOR + id).length || id === feedid;
+  function read_feed (subid, feedid, page, sort, folder) {
+    var read_cb = function () {
+      $logo.removeClass(SHOW_NAV);
+      fetch_and_apppend(feedid, true, function () {
+        reading_feed(feedid);
       });
-      var idx = _.indexOf(ids, feedid);
-      var insert_before = idx !== 0;
-      ids = _.filter(ids, function (id) { // remove feedid if exits
-        return !$(SUMMARY_SELECTOR + id).length;
-      });
-      // console.log(ids);
-      var $f = $(FEED_SELECTOR + feedid); // only one
-      if(ids.length > 1 ||(ids.length === 1 && !$f.next().next().length)) {
-        data_api.fetch_summary(ids, function (feeds) {
-          var $content = $(to_html(tmpls.feed_content, {feeds: feeds}));
-
-          var duplicates = [];
-          $content.filter('li').each(function (idx, li) {
-            if($('#' + li.id).length) { duplicates.push(li); }
-          });
-          _.each(duplicates, function (li) {
-            // console.log('remove', li);
-            li.parentNode.removeChild(li);
-          });
-
-          if(insert_before === true) {
-            keep_position(feedid, function () {
-              $feed_content.prepend($content);
-            });
-          } else {
-            $feed_content.append($content);
-          }
-          cleaning_and_scrollto(feedid, subid, scroll_up);
-        });
-      } else {
-        cleaning_and_scrollto(feedid, subid, scroll_up);
-      }
     };
-  }
-
-  function read_feed (subid, feedid, page, sort, folder, scroll_up) {
-    // console.log('read', feedid);
-    var read_cb = read_callback(subid, feedid, page, sort, scroll_up);
     if(gcur_subid === subid) {
       read_cb();                   // just read feed
     } else {
@@ -326,7 +196,6 @@
   function show_feeds (data) {
     gcur_has_more = data.pager.has_more;
     show_server_message();
-    // iframe.src = 'about:blank';
     var html = to_html(tmpls.feeds_nav, data);
     $navigation.empty().append(html);
     html = to_html(tmpls.sub_feeds, data);
@@ -484,33 +353,44 @@
     }
   };
 
-  function is_reading () {
-    return $reading_area.hasClass(SHOW_CONTENT);
-  }
-
-  var previous_scroll = 0;
-  var ignore_scroll_event = false; // app call scroll, ignore event
   function on_readarea_scroll(e) {
-    if(ignore_scroll_event || !is_reading()) { return; }
+    if(!$reading_area.hasClass(SHOW_CONTENT)) { return; }
     var current_scroll = $reading_area.scrollTop(),
-        $reading = $reading_area.find('.reading'),
-        // TODO, not just prev, next, since HOME/END key
-        $prev = $reading.prev(),
-        $next = $reading.next();
-    if (current_scroll > previous_scroll && $next.length) { // down
-      if($next.position().top - current_scroll < TOP_DIFF) {
-        var id = parseInt($next.find('.feed').attr(DATA_ID));
-        read_feed(gcur_subid, id, gcur_page, gcur_sort, gcur_group, false);
-      }
-    } else if($prev.length) {                  // up
-      var height = $reading_area.height();
-      if($reading.position().top - current_scroll - height > -BOTTOM_DIFF) {
-        id = parseInt($prev.find('.feed').attr(DATA_ID));
-        read_feed(gcur_subid, id, gcur_page, gcur_sort, gcur_group, true);
+        $reading = $reading_area.find(D_READING_CLS);
+
+    var height = $reading_area.height() / 3; // top 30%
+    var $articles = _.map($('#feed-content > li'), function (a) { return $(a); });
+
+    var $n = _.find($articles, function ($a) {
+      var o = $a.offset(), top = o.top, bottom = o.top + $a.height();
+      return top < height && bottom > height;
+    });
+
+    if($n) {
+      var feed_id = $n.attr(DATA_ID);
+      if(!$n.hasClass(READING_CLS)) { reading_feed(feed_id); }
+
+      // console.log($feed_content.height() - current_scroll, $reading_area.height() * 2);
+      // keep one more screen
+      if($feed_content.height() - current_scroll < $reading_area.height() * 2) {
+        fetch_and_apppend(feed_id);
       }
     }
-    previous_scroll = current_scroll;
   };
+
+  function get_fetch_ids (current_id) {
+    var $me = $(FEED_SELECTOR + current_id),
+        n = 7;
+    var ids = [current_id];
+    var $next = $me.next();
+    while($next.length && --n >= 0) {
+      ids.push($next.attr(DATA_ID));
+      $next = $next.next();
+    }
+    return _.filter(ids, function (id) {
+      return !$(SUMMARY_SELECTOR + id).length;
+    });
+  }
 
   function show_server_message () { // only show once
     if(_RM_.gw) {               // google import wait
@@ -587,7 +467,6 @@
     'click #save-settings': save_settings,
     'click #overlay': close_shortcut_help,
     'click .icon-ok-circle': close_shortcut_help,
-    'click #dropdown li': function () { $dropdown.addClass('clicked'); },
     'mouseenter #logo': function () { $logo.addClass(SHOW_NAV); },
     'mouseleave #logo': function () {
       if(/#read\/.+\/\d+/.test(location.hash)) { // if reading feed
@@ -609,10 +488,8 @@
     });
   });
 
-
-  $reading_area.scroll(on_readarea_scroll);
+  $reading_area.scroll(_.debounce(on_readarea_scroll, 40));
   $navigation.scroll(on_navigation_scroll);
 
   if(_RM_.demo) { $('#warn-msg').show(); }
-  $dropdown.hover(function () { $dropdown.removeClass('clicked'); });
 })();
