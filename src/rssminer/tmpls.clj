@@ -3,7 +3,7 @@
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
             [rssminer.config :as cfg])
-  (:import me.shenfeng.mustache.ResourceList))
+  (:import [me.shenfeng.mustache ResourceList Mustache]))
 
 ;;; templates/help.tpl => help
 (defn- mapper [file]
@@ -23,4 +23,6 @@
          (apply concat
                 (map mapper (resources #".*templates/.*")))))
 
+
+(.clear Mustache/CACHE)       ; prevent OOM when dev
 (deftemplates tmpls (fn [context] (assoc context :dev (= (cfg/cfg :profile) :dev))))
