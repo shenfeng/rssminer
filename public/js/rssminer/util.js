@@ -84,7 +84,6 @@
       }
     }
     return {
-      entries: function () { return entries; },
       get: get,
       put: function (id, entry) {
         var o = get(id);
