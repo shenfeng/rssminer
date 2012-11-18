@@ -25,6 +25,9 @@ hr {
     color: #333;
     padding: 0 0 0 15px;
     > li {
+        > * {
+            width: 760px;
+        }
         margin: 20px 0;
         padding: 5px 0 10px 15px;
         border-bottom: 1px solid $border_color;
@@ -72,7 +75,7 @@ hr {
 
 #feed-content {
     .summary {
-        * { max-width: 740px; }
+        * { max-width: 750px; }
         h1 { font-size: 18px;}
         h2, h3 { font-size: 16px; }
         h4, h5 { font-size: 15px; }

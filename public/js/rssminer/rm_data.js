@@ -299,7 +299,6 @@
 
   function mark_as_read (feedid, cb) {
     ajax.spost('/api/feeds/' + feedid + '/read', function () {
-      // console.log(feedid);
       call_if_fn(cb);
     });
   }
@@ -661,7 +660,6 @@
   }
 
   function fetch_summary (ids, cb) {
-    ids = _.map(ids, function (id) { return +id; }); // convert to ints
     var cached = summary_cache.get(ids),
         fetch_ids = _.filter(ids, function (id) { return !(id in cached); });
     // console.log('cached: ', _.keys(cached), cached);
@@ -669,7 +667,7 @@
       var url = '/api/feeds/' + fetch_ids.join('-');
       ajax.get(url, function (fetched) { // array list of feeds
         _handle_resp(ids, cached, fetched, cb);
-      }, ids.length < 3);         // less than 3, silent
+      }, fetch_ids.length < 3);         // less than 3, silent
     } else {
       // console.log("-----------------------done----------------");
       _handle_resp(ids, cached, [], cb);

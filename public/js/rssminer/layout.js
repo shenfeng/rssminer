@@ -39,7 +39,7 @@
     if($me.length) {
       var me = $me[0],
           rect = me.getBoundingClientRect();
-      if(rect.top <= 30 || rect.top >= $win.height() - 30) {
+      if(rect.top <= 30 || rect.bottom >= $win.height() - 5) {
         me.scrollIntoView();
       }
     }

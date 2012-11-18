@@ -125,10 +125,18 @@
 
   function fetch_and_apppend (selected_id, clean, cb) {
     var ids = get_fetch_ids(selected_id);
+    if(!clean) {                // filter out already added items
+      ids = _.filter(ids, function (id) {
+        return !$(SUMMARY_SELECTOR + id).length;
+      });
+    }
     if(ids.length) {
       data_api.fetch_summary(ids, function (feeds) {
         var html = to_html(tmpls.feed_content, {feeds: feeds});
-        if(clean) { $feed_content.empty(); }
+        if(clean) {
+          $reading_area.scrollTop(0);
+          $feed_content.empty();
+        }
         $feed_content.append(html);
         call_if_fn(cb);
       });
@@ -162,6 +170,10 @@
   }
 
   function read_feed (subid, feedid, page, sort, folder) {
+    var is_group = _.isString(subid) && subid.indexOf('f_') === 0;
+    if(is_group) {
+      subid = subid.substring(2);
+    }
     var read_cb = function () {
       $logo.removeClass(SHOW_NAV);
       fetch_and_apppend(feedid, true, function () {
@@ -173,16 +185,12 @@
     } else {
       if(_.isNumber(subid)) {
         read_subscription(subid, page, sort, read_cb);
-      } else if(folder) {
+      } else if(is_group) {
         read_group_subs(subid, page, sort, read_cb);
       } else {
         show_welcome(subid, page, read_cb);
       }
     }
-  }
-
-  function read_group_feed (group, feedid, page, sort) {
-    read_feed(group, feedid, page, sort, group);
   }
 
   function mark_feed_as_read ($me, feedid, subid) {
@@ -380,16 +388,14 @@
 
   function get_fetch_ids (current_id) {
     var $me = $(FEED_SELECTOR + current_id),
-        n = 7;
-    var ids = [current_id];
+        n = 5;
+    var ids = [+current_id];
     var $next = $me.next();
     while($next.length && --n >= 0) {
-      ids.push($next.attr(DATA_ID));
+      ids.push(+ $next.attr(DATA_ID)); // convert to int
       $next = $next.next();
     }
-    return _.filter(ids, function (id) {
-      return !$(SUMMARY_SELECTOR + id).length;
-    });
+    return ids;
   }
 
   function show_server_message () { // only show once
@@ -481,8 +487,8 @@
       '?s=:section&p=:p': show_welcome,
       's/:section': show_settings,
       'read/f_:group?p=:page&s=:sort': read_group_subs,
+      'read/:group/:id?p=:page&s=:sort': read_feed,
       'read/:id?p=:page&s=:sort': read_subscription,
-      'read/f_:group/:id?p=:page&s=:sort': read_group_feed,
       'read/:id/:id?p=:page&s=:sort': read_feed,
       'search?q=:q&tags=:tags&authors=:authors&offset=:offset': search
     });
