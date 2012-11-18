@@ -58,6 +58,7 @@
         {:body (tmpls/app {:email (:email user)
                            :md5 (-> user :email md5-sum)
                            :css app-css
+                           :demo true
                            :data (serialize-to-js data)})
          :status 200
          :session (:demo-user @cfg/rssminer-conf)}))))

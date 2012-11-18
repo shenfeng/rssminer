@@ -26,10 +26,12 @@
             <ul id="sub-list" class="scroll-inner"></ul>
           </div>
         </div>
-        <div id="warn-msg"
+        {{#demo}}
+          <div id="warn-msg"
           data-title="signup to save subscriptions, get personal recommendation">
           <a href="/">this is demo account</a>
         </div>
+        {{/demo}}
         <div id="search">
           <span>search feed, subscription...</span>
           <input id="q" autocomplete="off"/>

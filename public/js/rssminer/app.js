@@ -507,5 +507,4 @@
   $reading_area.scroll(_.debounce(on_readarea_scroll, 40));
   $navigation.scroll(on_navigation_scroll);
 
-  if(_RM_.demo) { $('#warn-msg').show(); }
 })();
