@@ -17,8 +17,8 @@
 (defn show-unsupported-page [req]
   (tmpls/browser {:css landing-css}))
 
-(defn show-landing-page [req]
-  (if (= (-> req :params :r) "d")       ; redirect to /demo
+(defhandler show-landing-page [req r]
+  (if (= r "d")       ; redirect to /demo
     (redirect "/demo")
     (if (cfg/real-user? req)
       (redirect "/a")
@@ -29,7 +29,7 @@
                                   :body body}
             body)))))
 
-(defhandler show-app-page [req uid]
+(defhandler show-app-page [req uid gw ge]
   (if (cfg/demo-user? req)
     (assoc (redirect "/") :session nil ;; delete cookie
            :session-cookie-attrs {:max-age -1})
@@ -39,8 +39,8 @@
                   :md5 (-> user :email md5-sum)
                   :data (serialize-to-js
                          {:rm {:user user
-                               :gw (-> req :params :gw) ; google import wait
-                               :ge (-> req :params :ge) ; google import error
+                               :gw gw ; google import wait
+                               :ge ge ; google import error
                                :static_server (cfg/cfg :static-server)}})}))))
 
 (defn show-demo-page [req]
@@ -66,8 +66,8 @@
 (defhandler search [req q limit tags authors fs offset uid]
   (search* q tags authors uid limit offset (= fs "1")))
 
-(defn get-favicon [req]
-  (if-let [hostname (-> req :params :h str/reverse)]
+(defhandler get-favicon [req h]
+  (if-let [hostname (str/reverse h)]
     {:status 200
      :body (FaviconFuture. hostname
                            {"User-Agent" ((:headers req) "user-agent")}

@@ -20,11 +20,10 @@
   (mark-read (to-int fid) uid)
   {:status 204 :body nil})
 
-(defhandler get-feeds [req fid uid]
+(defhandler get-feeds [req fid uid mr]
   ;; fid may be a list of ids
   (let [fids (map to-int (str/split fid #"-"))]
-    (when (and (= 1 (count fids))
-               (-> req :params :mr))
+    (when (and (= 1 (count fids)) mr)   ;
       (mark-read (first fids) uid))
     {:body (db/fetch-feeds uid fids) :headers cache-control}))
 

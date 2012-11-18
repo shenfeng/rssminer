@@ -46,7 +46,7 @@
             </td>
           </tr>
         </table>
-        <input value="{{{return_url}}}" name="return-url" type="hidden" />
+        <input value="{{{return-url}}}" name="return-url" type="hidden" />
       </form>
       <div class="s">
         <h3>Try with a live demo</h3>

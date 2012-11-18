@@ -11,23 +11,19 @@
 
 (def cookie-attr {:max-age (* 3600 24 60)})
 
-(defn show-login-page [req]
-  (tmpls/login {:return_url (or (-> req :params :return_url) "/a")}))
-
-(defhandler show-login-page [req return_url]
-  (tmpls/login {:return_url (or return_url "/a")}))
+(defhandler show-login-page [req return-url]
+  (tmpls/login {:return-url (or return-url "/a")}))
 
 (defn show-signup-page [req] (tmpls/signup))
 
-(defn login [req]
-  (let [{:keys [email password return-url persistent]} (:params req)
-        user (db/authenticate email password)
+(defhandler login [req email password return-url persistent]
+  (let [user (db/authenticate email password)
         return-url (or return-url "/a")]
     (if user
       (assoc (redirect return-url)
         :session {:id (:id user)}      ; IE does not persistent cookie
         :session-cookie-attrs cookie-attr)
-      (tmpls/login {:return_url return-url
+      (tmpls/login {:return-url return-url
                     :msg "Login failed, Email or password error"}))))
 
 (defn logout [req]
@@ -35,15 +31,14 @@
     :session nil ;; delete cookie
     :session-cookie-attrs {:max-age -1}))
 
-(defn signup [req]
-  (let [{:keys [email password]} (:params req)]
-    (if (or (str/blank? email)
-            (str/blank? password))
-      (redirect "/") ;; TODO error reporting
-      (let [user (db/create-user {:email email
-                                  :password password})]
-        (assoc (redirect "/a")           ; no conf currently
-          :session {:id (:id user)})))))
+(defhandler signup [req email password]
+  (if (or (str/blank? email)
+          (str/blank? password))
+    (redirect "/") ;; TODO error reporting
+    (let [user (db/create-user {:email email
+                                :password password})]
+      (assoc (redirect "/a")           ; no conf currently
+        :session {:id (:id user)}))))
 
 (defhandler signup [req email password]
   (if (or (str/blank? email)
