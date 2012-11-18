@@ -94,7 +94,8 @@ class GoogleExportHandler extends DefaultHandler {
 
 public class Utils {
     public static final HttpClient CLIENT;
-    public static final String USER_AGETNT = "Mozilla/5.0 (compatible; Rssminer/1.0; +http://rssminer.net)";
+    public static final String USER_AGETNT = "Mozilla/5.0 (X11; Linux x86_64; rv:10.0.9) Gecko/20100101 Firefox/10.0.9 Iceweasel/10.0.9";
+//    public static final String USER_AGETNT = "Mozilla/5.0 (compatible; Rssminer/1.0; +http://rssminer.net)";
     public static final String[] NO_IFRAME = new String[]{"groups.google"}; // X-Frame-Options
     public static final String[] RESETED_DOMAINS = new String[]{
             "wordpress", "appspot", "emacsblog", "blogger", "blogspot",

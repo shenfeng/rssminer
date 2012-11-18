@@ -28,8 +28,7 @@ hr {
         > * {
             width: 760px;
         }
-        margin: 20px 0;
-        padding: 5px 0 10px 15px;
+        padding: 25px 0 10px 15px;
         border-bottom: 1px solid $border_color;
         &.reading {
             /* border-left: 1px solid #4d90f0; */
@@ -113,7 +112,7 @@ hr {
             display: block;
             margin: 5px auto;
         }
-        $table_color: #e2e2e2;
+        $table_color: #f7f7f7;
         table {
             border-collapse: collapse;
             margin: 0 auto;
