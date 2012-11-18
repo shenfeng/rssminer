@@ -165,6 +165,16 @@
     set_document_title($me.find('.feed h2').text());
     $reading_area.addClass(SHOW_CONTENT);
     layout.select('#feed-list', $me); // layout
+    if(!$me.hasClass('read')) {
+      data_api.mark_as_read(id);
+      data_api.fetch_summary([id], function (feeds) {
+        if(feeds.length) {
+          decrement_number($me, feeds[0].sub.id);
+        }
+      });
+      $me.removeClass('unread sys-read').addClass('read');
+    }
+
     $(D_READING_CLS).removeClass(READING_CLS);
     $('#s-'+id).addClass(READING_CLS);
   }

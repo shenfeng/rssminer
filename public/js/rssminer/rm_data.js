@@ -299,6 +299,10 @@
 
   function mark_as_read (feedid, cb) {
     ajax.spost('/api/feeds/' + feedid + '/read', function () {
+      var s = summary_cache.get(feedid);
+      if(s && s[feedid]) {
+        s[feedid].readts = Math.floor(new Date().getTime() / 1000);
+      }
       call_if_fn(cb);
     });
   }
