@@ -30,39 +30,40 @@
                                   :body body}
             body)))))
 
-(defhandler show-app-page [req uid gw ge]
+(defhandler show-app-page [req uid gw ge mobile?]
   (if (cfg/demo-user? req)
     (assoc (redirect "/") :session nil ;; delete cookie
            :session-cookie-attrs {:max-age -1})
-    (when-let [user (find-user-by-id uid)]
-      (tmpls/app {:css app-css
-                  :email (:email user)
-                  :md5 (-> user :email md5-sum)
-                  :data (serialize-to-js
-                         {:rm {:user user
-                               :gw gw ; google import wait
-                               :ge ge ; google import error
-                               :static_server (cfg/cfg :static-server)}})}))))
+    (if mobile?
+      (redirect "/m")
+      (when-let [user (find-user-by-id uid)]
+        (tmpls/app {:css app-css
+                    :email (:email user)
+                    :md5 (-> user :email md5-sum)
+                    :data (serialize-to-js
+                           {:rm {:user user
+                                 :gw gw  ; google import wait
+                                 :ge ge  ; google import error
+                                 :static_server (cfg/cfg :static-server)}})})))))
 
-(defn show-demo-page [req]
+(defhandler show-demo-page [req mobile?]
   (if (cfg/real-user? req)
     (assoc (redirect "/?r=d") :session nil ;; delete cookie
            :session-cookie-attrs {:max-age -1})
-    (do
-      (swap! cfg/rssminer-conf assoc :demo-user ;in case score updated
-             (dissoc (find-user-by-email "demo@rssminer.net")
-                     :password))
-      (let [user (:demo-user @cfg/rssminer-conf)
-            data {:rm {:user user
-                       :demo true
-                       :static_server (:static-server @cfg/rssminer-conf)}}]
-        {:body (tmpls/app {:email (:email user)
-                           :md5 (-> user :email md5-sum)
-                           :css app-css
-                           :demo true
-                           :data (serialize-to-js data)})
-         :status 200
-         :session (:demo-user @cfg/rssminer-conf)}))))
+    (let [user (dissoc (find-user-by-email "demo@rssminer.net") :password)]
+      (swap! cfg/rssminer-conf assoc :demo-user user)
+      (if mobile?
+        (assoc (redirect "/m") :session user)
+        (let [data {:rm {:user user
+                         :demo true
+                         :static_server (:static-server @cfg/rssminer-conf)}}]
+          {:body (tmpls/app {:email (:email user)
+                             :md5 (-> user :email md5-sum)
+                             :css app-css
+                             :demo true
+                             :data (serialize-to-js data)})
+           :status 200
+           :session user})))))
 
 (defhandler search [req q limit tags authors fs offset uid]
   (search* q tags authors uid limit offset (= fs "1")))

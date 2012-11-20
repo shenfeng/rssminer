@@ -4,6 +4,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <!--
+    <ProgressBar
+        android:id="@+id/pbar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="3dp"
+        android:max="100"
+        android:visibility="visible" />
+    -->
+
     <WebView
         android:id="@+id/rssminer"
         android:layout_width="fill_parent"

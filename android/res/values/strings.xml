@@ -6,5 +6,6 @@
     <string name="full_screen">Full Screen</string>
     <string name="vote_up">Vote up</string>
     <string name="vote_down">Vote Down</string>
+    <string name="warn_exits">Press again to exits</string>
 
 </resources>

@@ -15,7 +15,6 @@ end
 
 def gen_jstempls(folder)
   print "Generating #{folder}-tmpls.js, please wait....\n"
-  mkdir_p 'public/js/gen'
   html_tmpls = FileList["src/templates/tmpls/#{folder}/**/*.*"]
   data = "(function(){var tmpls = {};"
   html_tmpls.each do |f|
@@ -151,7 +150,7 @@ namespace :js do
     mkdir_p "public/js/gen"
     gen_jstempls("app");
     gen_jstempls("chrome");
-    sh 'mv public/js/gen/chrome-tmpls.js chrome/tmpls.js'
+    # sh 'mv public/js/gen/chrome-tmpls.js chrome/tmpls.js'
   end
 
   desc 'Combine all js into one, minify it using google closure'

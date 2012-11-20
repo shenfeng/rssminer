@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-height, initial-scale=1.0, user-scalable=no" />
+    <!-- <meta name="viewport" content="width=device-height, initial-scale=1.0, user-scalable=no" /> -->
     <title>Rssminer</title>
     <link href="/s/css/m.css" rel="stylesheet" type="text/css" />
   </head>
