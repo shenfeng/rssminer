@@ -498,6 +498,30 @@ ul { list-style: none; padding: 0; margin: 0; }
     box-shadow: 1px 1px 4px 1px $color;
 }
 
+/* move here from readable.css */
+
+.tags {
+    display: inline-block;
+    padding-left: 10px;
+    li {
+        color: #555;
+        background: #f1f1f1;
+        display: inline-block;
+        padding: 1px 2px;
+        @include border-radius(3px);
+    }
+}
+
+#feed-content {
+    li > * {
+        width: 760px;
+    }
+    .summary * {
+        max-width: 750px;
+    }
+}
+
+
 @import "misc.scss";
 @import "readable.scss";
 @import "search-result.scss";

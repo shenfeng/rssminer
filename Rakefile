@@ -15,6 +15,7 @@ end
 
 def gen_jstempls(folder)
   print "Generating #{folder}-tmpls.js, please wait....\n"
+  mkdir_p 'public/js/gen'
   html_tmpls = FileList["src/templates/tmpls/#{folder}/**/*.*"]
   data = "(function(){var tmpls = {};"
   html_tmpls.each do |f|

@@ -127,38 +127,21 @@
 (defn time-since [user]                ;45 day
   (- (now-seconds) (* (or (-> user :conf :expire) 45) 3600 24)))
 
+(defn mobile? [req]
+  (when-let [ua (get-in req  [:headers "user-agent"])]
+    (re-find #"Android" ua)))
+
 (defmacro defhandler [handler bindings & body]
   (let [req (bindings 0)
         bindings (rest bindings)
         ks (map (fn [s] (keyword (name s))) bindings)
         vals (map (fn [k]
-                    (cond (= :limit k) `(min 30 (to-int (or (~k (:params ~req)) 15)))
+                    (cond (= :limit k) `(min 30 (to-int (or (~k (:params ~req)) 20)))
                           (= :offset k) `(to-int (or (~k (:params ~req)) 0))
                           (= :rss-id k) `(to-int (~k (:params ~req)))
                           (= :uid k) `(user-id-from-session ~req)
+                          (= :mobile? k) `(mobile? ~req)
                           :else `(~k (:params ~req)))) ks)]
     `(defn ~handler [~req]
        (let [~@(interleave bindings vals)]
          ~@body))))
-
-;; (defmacro mlet [req bindings & body]
-;;   (let [a (bindings 0)
-;;         ks (map (fn [s] (keyword (name s))) bindings)
-;;         vals (map (fn [k]
-;;                     (if (= :limit k)
-;;                       `(min 1000 (to-int (or (~k (:params ~req)) 15)))
-;;                       `(~k (:params ~req)))) ks)]
-;;     `(let [~@(interleave bindings vals)]
-;;        ~@body)))
-
-;; (def m {:params {:a 1 :b 2 :c 3}})
-
-;; (mlet m [a b c limit]
-;;       (println a b c limit))
-
-;; (defhandler what [req limit what offset]
-;;   (println limit what offset))
-
-;; (what nil)
-
-;; (rest [1 2 3])

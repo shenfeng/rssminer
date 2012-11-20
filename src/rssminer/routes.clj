@@ -18,7 +18,8 @@
             (rssminer.handlers [reader :as reader]
                                [subscriptions :as subs]
                                [users :as user]
-                               [feeds :as feed])))
+                               [feeds :as feed]
+                               [mobile :as mobile])))
 
 (defroutes api-routes
   (context "/subs" []
@@ -37,11 +38,17 @@
            (JPOST "/vote" [] feed/user-vote)
            (POST "/read" [] feed/mark-as-read)))
 
+(defroutes mobile-routes
+  (GET "/" [] mobile/landing-page)
+  (GET "/:sid" [] mobile/list-feeds)
+  (GET "/f/:fid" [] mobile/show-feed))
+
 (defroutes all-routes
   (GET "/" [] reader/show-landing-page)
   (GET "/fav" [] reader/get-favicon)
   (GET "/browser" []  reader/show-unsupported-page)
   (GET "/a" [] reader/show-app-page)
+  (context "/m" [] mobile-routes)
   (GET "/demo" [] reader/show-demo-page)
   (context "/login" []
            (GET "/" [] user/show-login-page)

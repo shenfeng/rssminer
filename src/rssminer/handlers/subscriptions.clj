@@ -27,7 +27,7 @@
   (db/fetch-user-sub uid rss-id))
 
 (defhandler list-subscriptions [req uid]
-  (db/fetch-user-subs uid)  )
+  (db/fetch-user-subs uid))
 
 (defhandler add-subscription [req uid]
   (let [{:keys [link g]}  (-> req :body)]

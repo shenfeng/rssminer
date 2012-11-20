@@ -1,16 +1,5 @@
 @import "vars";
-
-.tags {
-    display: inline-block;
-    padding-left: 10px;
-    li {
-        color: #555;
-        background: #f1f1f1;
-        display: inline-block;
-        padding: 1px 2px;
-        @include border-radius(3px);
-    }
-}
+@import "css3";
 
 hr {
     height: 0;
@@ -25,9 +14,6 @@ hr {
     color: #333;
     padding: 0 0 0 15px;
     > li {
-        > * {
-            width: 760px;
-        }
         padding: 25px 0 10px 15px;
         border-bottom: 1px solid $border_color;
         &.reading {
@@ -74,7 +60,6 @@ hr {
 
 #feed-content {
     .summary {
-        * { max-width: 750px; }
         h1 { font-size: 18px;}
         h2, h3 { font-size: 16px; }
         h4, h5 { font-size: 15px; }

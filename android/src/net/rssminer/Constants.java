@@ -11,8 +11,10 @@ public class Constants {
 	public static final String FEED_ID_KEYS = "feed_ids";
 	public static final String FEED_TITLE_KEY = "feed_title";
 
+	public static final String VERSION = "0.1";
+
 	public static final String GOOGLE_ACCOUNT = "com.google";
-	public static final String USER_AGENT = "android-client";
+	public static final String USER_AGENT = "ac-" + VERSION;
 
 	public static final int DIM_COLOR = Color.rgb(170, 170, 170);
 

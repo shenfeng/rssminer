@@ -6,6 +6,7 @@
         [rssminer.db.user :only [find-user-by-email find-user-by-id]])
   (:require [rssminer.config :as cfg]
             [clojure.string :as str]
+            [rssminer.db.subscription :as sdb]
             [rssminer.db.feed :as db]
             [rssminer.tmpls :as tmpls])
   (:import rssminer.Utils
@@ -17,11 +18,11 @@
 (defn show-unsupported-page [req]
   (tmpls/browser {:css landing-css}))
 
-(defhandler show-landing-page [req r]
+(defhandler show-landing-page [req r mobile?]
   (if (= r "d")       ; redirect to /demo
     (redirect "/demo")
     (if (cfg/real-user? req)
-      (redirect "/a")
+      (redirect (if mobile? "/m" "/a"))
       (let [body (tmpls/landing { :css landing-css})]
         (if (cfg/demo-user? req) {:status 200
                                   :session nil ;; delete cookie

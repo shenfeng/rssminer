@@ -1,0 +1,48 @@
+
+html, body {
+    margin: 0;
+    padding: 0;
+/* overflow: hidden; */
+}
+
+body {
+    font: 400 14px/1.431 'Lucida Grande', "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-rendering: optimizeLegibility;
+}
+
+.lists {
+    list-style: none;
+    padding: 0;
+    p {
+        font-size: 16px;
+        margin: 4px;
+        /* padding: 3px; */
+    }
+    li {
+        padding: 6px;
+    }
+    a {
+        text-decoration: none;
+        color: #259;
+    }
+}
+
+.meta {
+    color: #888;
+    span {
+        padding: 4px;
+    }
+}
+
+#feed-content {
+    .summary {
+        padding: 3px 10px 0 0;
+    }
+    img {
+        max-width: 300px;
+    }
+}
+
+
+
+@import "readable.scss";
