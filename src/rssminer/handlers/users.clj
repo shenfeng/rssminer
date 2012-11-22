@@ -16,15 +16,18 @@
 
 (defn show-signup-page [req] (tmpls/signup))
 
-(defhandler login [req email password return-url persistent]
+(defhandler login [req email password return-url persistent mobile?]
   (let [user (db/authenticate email password)
         return-url (or return-url "/a")]
     (if user
       (assoc (redirect return-url)
         :session {:id (:id user)}      ; IE does not persistent cookie
         :session-cookie-attrs cookie-attr)
-      (tmpls/login {:return-url return-url
-                    :msg "Login failed, Email or password error"}))))
+      (if mobile?
+        (tmpls/m-landing {:return-url return-url
+                          :msg "Login failed, Email or password error"})
+        (tmpls/login {:return-url return-url
+                      :msg "Login failed, Email or password error"})))))
 
 (defn logout [req]
   (assoc (redirect "/")

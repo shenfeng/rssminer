@@ -23,7 +23,8 @@
     (redirect "/demo")
     (if (cfg/real-user? req)
       (redirect (if mobile? "/m" "/a"))
-      (let [body (tmpls/landing { :css landing-css})]
+      (let [body (if mobile? (tmpls/m-landing)
+                     (tmpls/landing { :css landing-css}))]
         (if (cfg/demo-user? req) {:status 200
                                   :session nil ;; delete cookie
                                   :session-cookie-attrs {:max-age -1}

@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>title</title>
+    <title>{{ title }}</title>
     <link href="/s/css/m.css" rel="stylesheet" type="text/css" />
   </head>
   <body>

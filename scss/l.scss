@@ -1,0 +1,131 @@
+@import "vars";
+
+html, body {
+    text-rendering: optimizelegibility;
+    margin: 0;
+}
+
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.container {
+    width: 900px;
+    margin: 0 auto;
+}
+
+.seperator {
+    padding: 15px 0;
+    text-align: center;
+    background-color: whiteSmoke;
+    border-top: 1px solid white;
+    border-bottom: 1px solid #DDD;
+}
+
+#header {
+    background: -webkit-gradient(linear, left bottom, right top, color-stop(0%,#020031), color-stop(100%,#6D3353));
+    color: white;
+    padding: 80px 0;
+    .container {
+        text-align: center;
+    }
+    h1 {
+        margin: 0;
+        font-size: 120px;
+        line-height: 1;
+        letter-spacing: -2px;
+    }
+    p {
+        font-size: 40px;
+    }
+    .demo {
+        padding-top: 10px;
+        a {
+            color: #ddd;
+            font-size: 20px;
+            text-decoration: none;
+        }
+    }
+}
+
+form {
+    text-align: center;
+    margin-top: 30px;
+    > div {
+        margin: 5px;
+    }
+}
+
+
+.txt {
+    padding: 6px;
+    width: 350px;
+    margin: 4px;
+}
+
+.submit {
+    input {
+        padding: 3px;
+    }
+}
+
+.btn {
+    text-decoration: none;
+    color: white;
+    padding: 17px 24px;
+    background-color: #006DCC;
+    &:hover {
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1), 0 1px 5px rgba(0, 0, 0, .25);
+    }
+}
+
+
+@media (max-width: 767px) {
+    .login > * {
+        min-width: auto;
+    }
+    .container {
+        width: auto;
+        .btn {
+            padding: 12px 20px;
+        }
+    }
+    #header {
+        padding: 60px 0;
+        h1 {
+            font-size: 90px;
+        }
+        p {
+            font-size: 24px;
+        }
+    }
+    .login {
+        margin-top: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .txt {
+        width: 220px;
+    }
+    .container {
+        .btn {
+            padding: 9px 18px;
+        }
+    }
+    #header {
+        padding: 40px 0;
+        h1 {
+            font-size: 45px;
+        }
+        p {
+            font-size: 18px;
+        }
+        .demo a {
+            font-size: 15px;
+        }
+    }
+}
+.msg {
+    color: #c00;
+}

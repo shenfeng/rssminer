@@ -129,7 +129,7 @@
 
 (defn mobile? [req]
   (when-let [ua (get-in req  [:headers "user-agent"])]
-    (re-find #"Android" ua)))
+    (re-find #"Android|iPad|iPhone" ua)))
 
 (defmacro defhandler [handler bindings & body]
   (let [req (bindings 0)
