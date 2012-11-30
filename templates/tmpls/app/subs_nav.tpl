@@ -18,15 +18,15 @@
               <span class="count">
                 {{#dislike}}
                   <span class="unread-dislike"
-                    data-title="dislike count">{{dislike}}</span>
+                    data-title="{{m_unread_dislike}}">{{dislike}}</span>
                 {{/dislike}}
                 {{#neutral}}
                   <span class="unread-neutral"
-                    data-title="neutral count">{{neutral}}</span>
+                    data-title="{{m_neutral_count}}">{{neutral}}</span>
                 {{/neutral}}
                 {{#like}}
                   <span class="unread-like"
-                    data-title="like count">{{like}}</span>
+                    data-title="{{m_like_count}}">{{like}}</span>
                 {{/like}}
               </span>
           </a>

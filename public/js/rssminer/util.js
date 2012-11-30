@@ -49,6 +49,17 @@
     };
   }
 
+  function to_html () {
+    var args = _.toArray(arguments);
+    if(args.length === 2) {
+      args.push(window.RM.tmpls);
+    }
+    for (var k in _MESGS_) {
+      args[1][k] = _LANG_ZH_ ? _MESGS_[k][1]: _MESGS_[k][0];
+    }
+    return Mustache.render.apply({}, args);
+  }
+
   function tooltip (title, maxlength) {
     var count = 0,
         length = title.length;
@@ -114,6 +125,7 @@
       call_if_fn: call_if_fn,
       tooltip: tooltip,
       params: params,
+      to_html: to_html,
       extract_data: extract_data,
       hostname: hostname
     }

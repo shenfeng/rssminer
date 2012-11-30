@@ -1,9 +1,9 @@
-<h2> {{ selected }} - Rssminer </h2>
+<h2> {{ title }} - Rssminer </h2>
 <div class="sort">
   <ul>
     {{#tabs}}
       <li {{#s}} class="selected" {{/s}}>
-        <a href="#s/{{ n }}">{{ n }}</a>
+        <a href="#s/{{ n }}">{{text}}</a>
       </li>
     {{/tabs}}
   </ul>
@@ -18,20 +18,19 @@
       </p>
     {{/demo}}
     <div>
-      <h4>Import</h4>
+      <h4>{{m_import}}</h4>
       <div>
         <p>
-          <a href="/import/google" class="import"
-          title="Import all you google reader subscriptions:">
+          <a href="/import/google" class="import" data-title="{{m_import_grader}}">
           <img src="/s/imgs/import-greader.png"/>
           </a>
         </p>
       </div>
     </div>
     <div>
-      <h4>URL</h4>
+      <h4>{{m_url}}</h4>
       <div>
-        <input id="rss_atom_url" placeholder="paste atom/rss url here"/>
+        <input id="rss_atom_url" placeholder="{{m_paste_url}}"/>
         <ul class="refs">
           <li>
             <a target="_blank"
@@ -50,7 +49,7 @@
       </div>
     </div>
     <div>
-      <button id="add-subscription">add</button>
+      <button id="add-subscription">{{m_add}}</button>
     </div>
   </li>
   <li class="section settings">

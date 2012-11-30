@@ -37,13 +37,15 @@
 
   // how many pages does each section has
   var WELCOME_TABS = {recommend: 1, newest: 1, read: 1, voted: 1};
+
   var RECOMMEND_TAB = 'recommend',
       NEWEST_TAB = 'newest',
       OLDEST_TAB = 'oldest',
       READ_TAB = 'read',
-      RCMD_TIP = 'Sorting feeds by leaning from your reading and voting history',
+      RCMD_TIP = _LANG_ZH_? '依据您以往的阅读，和你喜欢过的文章，精心为您推荐': 'Sorting feeds by leaning from your reading and voting history',
       VOTED_TAB = 'voted';
   var SUB_TABS = [RECOMMEND_TAB, NEWEST_TAB, OLDEST_TAB, READ_TAB, VOTED_TAB];
+
 
   // --------------HELPER functions-------------
   function favicon_path (url) {
@@ -240,7 +242,7 @@
       }
       if(has_more) {
         pages.push({
-          page: 'next',
+          page: _LANG_('next'),
           current: false,
           href: welcome_tab_hash(section, page + 1)
         });
@@ -262,7 +264,7 @@
     });
     var sort_data = _.map(_.keys(WELCOME_TABS), function (tab) {
       return {
-        text: tab,
+        text: _LANG_(tab),
         selected: section === tab,
         href: welcome_tab_hash(tab, 1),
         tip: tab === RECOMMEND_TAB ? RCMD_TIP : ''
@@ -386,7 +388,7 @@
         return {
           selected: !sort || s === sort,
           href: sub_hash(data.section, 1, s),
-          text: s,
+          text: _LANG_(s),
           tip: s === RECOMMEND_TAB ? RCMD_TIP : ''
         };
       });

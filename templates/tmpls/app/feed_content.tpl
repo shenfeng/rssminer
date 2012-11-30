@@ -6,10 +6,10 @@
       <div class="meta">
         <i class="thumbs">
           <i class="icon-thumbs-up"
-            data-title="like it, give me more like this in recommend tab">
+            data-title="{{m_like_title}}">
           </i>
           <i class="icon-thumbs-down"
-            data-title="dislike, less in recommend tab">
+            data-title="{{m_dislike_title}}">
           </i>
         </i>
         <span data-title="author" class="author">{{author}}</span>
@@ -25,9 +25,9 @@
             {{/tags}}
           </ul>
         {{/tags.length}}
-        <span class="date">publish: {{date}}</span>
+        <span class="date">{{m_publish}} {{date}}</span>
         {{#rdate}}
-          <span class="date">read: {{rdate}}</span> <!-- read date -->
+          <span class="date">{{m_read}} {{rdate}}</span> <!-- read date -->
         {{/rdate}}
       </div>
     </div>

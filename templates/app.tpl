@@ -13,31 +13,30 @@
                    personal taste: the already read items">
     {{^dev}}<style type="text/css">{{{ css }}}</style>{{/dev}}
     {{#dev}}<link rel="stylesheet" href="/s/css/app.css">{{/dev}}
-    <script>{{{ data }}}</script>
+    <script>{{{ data }}} var _LANG_ZH_ = {{zh?}};</script>
     <!--[if lt IE 8 ]><script>location.href="/browser"</script><![endif]-->
   </head>
   <!--[if IE 8]><body class="ie8"> <![endif]-->
   <!--[if !IE]><body><![endif]-->
     <div id="header">
       <div class="wrapper">
-        <div id="logo" class="show-nav" data-title="show subscription list when you hover the logo">
+        <div id="logo" class="show-nav" data-title="{{m-logo-title}}">
           <h1><a href="#">Rssminer</a></h1>
           <div class="scroll-wrap">
             <ul id="sub-list" class="scroll-inner"></ul>
           </div>
         </div>
         {{#demo}}
-          <div id="warn-msg"
-          data-title="signup to save subscriptions, get personal recommendation">
-          <a href="/">this is demo account</a>
-        </div>
+          <div id="warn-msg" data-title="{{m-signup-warn}}">
+            <a href="/">{{m-demo-account}}</a>
+          </div>
         {{/demo}}
         <div id="search">
-          <span>search feed, subscription...</span>
+          <span>{{m-search-placeholder}}</span>
           <input id="q" autocomplete="off"/>
         </div>
         <div id="dropdown">
-          <a data-title="Change your avatar at gravatar.com" target="_blank"
+          <a data-title="{{m-change-avata}}" target="_blank"
              href="http://gravatar.com/emails/">
             <img height=25 width=25
                  src="http://www.gravatar.com/avatar/{{{md5}}}?s=25"/>
@@ -46,32 +45,32 @@
           <ul>
             <li>
               <a href="#s/add" class="btn">
-                <i class="icon-edit"></i><span>Add subscription</span>
+                <i class="icon-edit"></i><span>{{m-add-sub}}</span>
               </a>
             </li>
             <li>
               <a href="#" class="show-shortcuts">
-                <i class="icon-legal"></i><span>Keyboard shortcuts</span>
+                <i class="icon-legal"></i><span>{{m-keyboard-shortcut}}</span>
               </a>
             </li>
             <li>
               <a href="#s/settings">
-                <i class="icon-wrench"></i><span>Settings</span>
+                <i class="icon-wrench"></i><span>{{m-settings}}</span>
               </a>
             </li>
             <li>
               <a href="#search?q=&tags=&authors=&offset=0">
-                <i class="icon-search"></i><span>Search</span>
+                <i class="icon-search"></i><span>{{m-search}}</span>
               </a>
             </li>
             <li>
               <a href="#s/help">
-                <i class="icon-info-sign"></i><span>Help</span>
+                <i class="icon-info-sign"></i><span>{{m-help}}</span>
               </a>
             </li>
             <li>
               <a href="/logout">
-                <i class="icon-signout"></i><span>Logout</span>
+                <i class="icon-signout"></i><span>{{m-logout}}</span>
               </a>
             </li>
           </ul>
@@ -87,7 +86,7 @@
       <div id="content">
         <div id="reading-area">
           <div id="welcome-list">
-            <p id="loading-msg">Loading....</p>
+            <p id="loading-msg"></p>
           </div>
           <ul id="feed-content"></ul>
         </div>
@@ -96,25 +95,25 @@
     <ul id="ct-menu"></ul>
     <div id="tooltip">
       <!-- <div class="arrow"></div> -->
-      <span>This is a test tip</span>
+      <span></span>
     </div>
     <div id="overlay"></div>
     <div id="shortcuts">
-      <i class="icon-ok-circle" data-title="close"></i>
+      <i class="icon-ok-circle" data-title="{{m-close}}"></i>
       <div>
         <div>
-          <h2>Keyboard shortcuts</h2>
-          <dl><dt>j</dt><dd>Next item</dd></dl>
-          <dl><dt>k</dt><dd>Previous item</dd></dl>
-          <dl><dt>o</dt><dd>Open first item / Open current in new tab</dd></dl>
-          <dl><dt>n</dt><dd>Scroll down article</dd></dl>
-          <dl><dt>p</dt><dd>Scroll up article</dd></dl>
-          <dl><dt>u</dt><dd>Return to list</dd></dl>
-          <dl><dt>t</dt><dd>Focus next tab</dd></dl>
-          <dl><dt>/</dt><dd>Focus search</dd></dl>
-          <dl><dt>?</dt><dd>Bring up this help dialog</dd></dl>
-          <dl><dt>Esc</dt><dd>Close or cancel</dd></dl>
-          <dl><dt>g <b>then</b> h</dt><dd>go home</dd></dl>
+          <h2>{{m-keyboard-shortcut}}</h2>
+          <dl><dt>j</dt><dd>{{m-k-next}}</dd></dl>
+          <dl><dt>k</dt><dd>{{m-k-prev}}</dd></dl>
+          <dl><dt>o</dt><dd>{{m-k-open}}</dd></dl>
+          <dl><dt>n</dt><dd>{{m-k-scroll-down}}</dd></dl>
+          <dl><dt>p</dt><dd>{{m-k-scroll-up}}</dd></dl>
+          <dl><dt>u</dt><dd>{{m-k-return-list}}</dd></dl>
+          <dl><dt>t</dt><dd>{{m-k-focus-tab}}</dd></dl>
+          <dl><dt>/</dt><dd>{{m-k-focus-search}}</dd></dl>
+          <dl><dt>?</dt><dd>{{m-k-show-help}}</dd></dl>
+          <dl><dt>Esc</dt><dd>{{m-k-close-cancel}}</dd></dl>
+          <dl><dt>g <b>then</b> h</dt><dd>{{m-k-go-home}}</dd></dl>
         </div>
       </div>
     </div>
@@ -123,6 +122,7 @@
     <script src="/s/js/lib/jquery-ui-1.8.18.custom.js"></script>
     <script src="/s/js/lib/underscore.js"></script>
     <script src="/s/js/lib/mustache.js"></script>
+    <script src="/s/js/rssminer/mesgs.js"></script>
     <script src="/s/js/gen/app-tmpls.js"></script>
     <script src="/s/js/rssminer/util.js"></script>
     <script src="/s/js/rssminer/ajax.js"></script>

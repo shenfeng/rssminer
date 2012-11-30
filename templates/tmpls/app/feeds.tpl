@@ -6,10 +6,10 @@
         <span class="title" data-title="{{title_booltip}}">{{{title}}}</span>
         <i class="thumbs">
           <i class="icon-thumbs-up"
-            data-title="like it, give me more like this in recommend tab">
+            data-title="{{m_like_title}}">
           </i>
           <i class="icon-thumbs-down"
-            data-title="dislike, less in recommend tab">
+            data-title="{{m_dislike_title}}">
           </i>
         </i>
         <span class="author" data-title="{{tooltip}}">{{author}}</span>
@@ -17,7 +17,7 @@
       </a>
     </li>
   {{/feeds}}
-  {{^feeds}}<h2>No entries</h2>{{/feeds}}
+  {{^feeds}}<h2>{{m_no_entries}}</h2>{{/feeds}}
 </ul>
 {{#pager}}
   <ul class="pager">

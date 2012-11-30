@@ -2,10 +2,10 @@
   "use strict";
   var RM = window.RM,
       data_api = RM.data,
-      to_html = Mustache.render,
       tmpls = RM.tmpls,
       notify = RM.notify,
-      util = RM.util;
+      util = RM.util,
+      to_html = util.to_html;
 
   var SORTING_KEYS = '__sort__',
       DELAY_TIME = 1000 * 15;   // wait 15 seconds

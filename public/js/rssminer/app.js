@@ -6,14 +6,8 @@
       data_api = RM.data,
       notify = RM.notify,
       tmpls = RM.tmpls,
-      to_html = function () {
-        var args = _.toArray(arguments);
-        if(args.length === 2) {
-          args.push(tmpls);
-        }
-        return Mustache.render.apply({}, args);
-      },
       util = RM.util,
+      to_html = util.to_html,
       layout = RM.layout,
       location = window.location,
       call_if_fn = util.call_if_fn;
@@ -254,10 +248,11 @@
                     {value: 'recommend', // default to recommend
                      s: old_sort === 'recommend'}];
     var d = {
+      title: _LANG_(section),
       selected: section,
       sortings: sortings,
       tabs: _.map(sections, function (s) {
-        return { n: s, s: s === section };
+        return { text: _LANG_(s),  n: s, s: s === section };
       })
     };
     d.demo = _RM_.demo;
