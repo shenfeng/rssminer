@@ -31,21 +31,21 @@
                         [b c] [2 3]]
                        (+ a b c)))))
 
-(deftest test-if-lets
-  (is (= 6 (if-lets [a 1
-                     [b c] [2 3]]
-                    (+ a b c)
-                    2)))
-  (is (= 2 (if-lets [a false
-                     [b c] [2 3]]
-                    (+ a b c)
-                    2)))
-  (is (= 2 (if-lets [a 1
-                     b false]
-                    3 2)))
-  (is (nil? (if-lets [a 1
-                      b false]
-                     3))))
+;; (deftest test-if-lets
+;;   (is (= 6 (if-lets [a 1
+;;                      [b c] [2 3]]
+;;                     (+ a b c)
+;;                     2)))
+;;   (is (= 2 (if-lets [a false
+;;                      [b c] [2 3]]
+;;                     (+ a b c)
+;;                     2)))
+;;   (is (= 2 (if-lets [a 1
+;;                      b false]
+;;                     3 2)))
+;;   (is (nil? (if-lets [a 1
+;;                       b false]
+;;                      3))))
 
 (deftest test-encode-decode-key
   (let [k "zk15v22ul"]
