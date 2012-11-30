@@ -1,6 +1,6 @@
 (ns rssminer.handlers.subscriptions
   (:use (rssminer [redis :only [fetcher-enqueue]]
-                  [util :only [to-int defhandler time-since]])
+                  [util :only [to-int defhandler valid-url?]])
         [rssminer.database :only [mysql-insert-and-return]]
         [clojure.tools.logging :only [info]])
   (:require [rssminer.db.subscription :as db]
@@ -33,7 +33,9 @@
   (let [{:keys [link g]}  (-> req :body)]
     (info (str "user: " uid " add sub: " link))
     ;; enqueue, client need to poll for result
-    (subscribe link uid nil g)))
+    (if (valid-url? link)
+      (subscribe link uid nil g)
+      {:status 200 :body "not valid url"})))
 
 (defhandler save-sort-order [req uid]
   (let [;; [{:g group :ids [id, id, id]}]

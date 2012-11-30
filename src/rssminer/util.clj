@@ -11,10 +11,8 @@
            [rssminer.db Feed Subscription]
            [java.io StringWriter PrintWriter StringReader]
            [java.security NoSuchAlgorithmException MessageDigest]))
-
-(defn md5-sum
-  "Compute the hex MD5 sum of a string."
-  [#^String input]
+;;; "Compute the hex MD5 sum of a string."
+(defn md5-sum [#^String input]
   (let [alg (doto (MessageDigest/getInstance "MD5")
               (.update (.getBytes input)))
         hash (.toString (new BigInteger 1 (.digest alg)) 16)
@@ -100,32 +98,31 @@
        (when-lets [~@(drop 2 bindings)]
                   ~@body))))
 
-(defmacro if-lets
-  ([bindings then]
-     `(if-lets ~bindings ~then nil))
-  ([bindings then else]
-     (if (empty? bindings)
-       `~then
-       `(if-let [~@(take 2 bindings)]
-          (if-lets [~@(drop 2 bindings)]
-                   ~then ~else)
-          ~else))))
+;; (defmacro if-lets
+;;   ([bindings then]
+;;      `(if-lets ~bindings ~then nil))
+;;   ([bindings then else]
+;;      (if (empty? bindings)
+;;        `~then
+;;        `(if-let [~@(take 2 bindings)]
+;;           (if-lets [~@(drop 2 bindings)]
+;;                    ~then ~else)
+;;           ~else))))
 
-(defn trace
-  ([value] (trace nil value))
-  ([name value]
-     (println (str "TRACE" (when name (str " " name)) ": " value))
-     value))
+;; (defn trace
+;;   ([value] (trace nil value))
+;;   ([name value]
+;;      (println (str "TRACE" (when name (str " " name)) ": " value))
+;;      value))
 
-(defn tracep
-  ([value] (tracep nil value))
-  ([name value]
-     (println (str "TRACE" (when name (str " " name)) ":"))
-     (pprint value)
-     value))
+;; (defn tracep
+;;   ([value] (tracep nil value))
+;;   ([name value]
+;;      (println (str "TRACE" (when name (str " " name)) ":"))
+;;      (pprint value)
+;;      value))
 
-(defn time-since [user]                ;45 day
-  (- (now-seconds) (* (or (-> user :conf :expire) 45) 3600 24)))
+(defn valid-url? [url] (ignore-error (.getHost (URI/create url))))
 
 (defn mobile? [req]
   (when-let [ua (get-in req  [:headers "user-agent"])]

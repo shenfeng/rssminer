@@ -463,14 +463,15 @@
   function add_subscription (url, added_cb, fetcher_finished) {
     var POLLING_INTERVAL = 1500,
         POLLING_TIMES = 4;
-
     ajax.jpost('/api/subs/add' , {link: url, g: get_first_group() }, function (data) {
-      window.setTimeout(function () {
-        var id = data.rss_link_id;
-        polling_rss_link(id, POLLING_INTERVAL, POLLING_TIMES,
-                         fetcher_finished);
-      }, 300);
-      call_if_fn(added_cb);     // added successfully
+      if(data.rss_link_id) {
+        window.setTimeout(function () {
+          var id = data.rss_link_id;
+          polling_rss_link(id, POLLING_INTERVAL, POLLING_TIMES,
+                           fetcher_finished);
+        }, 300);
+      }
+      call_if_fn(added_cb, data);     // added successfully
     });
   }
 

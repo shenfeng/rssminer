@@ -284,7 +284,7 @@
 
   function fetcher_finished (result) {
     if(!result) {
-      notify.show_msg('Sorry, Fetcher is too busy.. job batched.', 10000);
+      notify.show_msg('Sorry, Fetcher is too busy.. job queued.', 10000);
       return ;
     }
     if(result.refresh) {
@@ -310,7 +310,11 @@
   function add_subscription (e) {
     var $input = $("#rss_atom_url"),
         url = $.trim($input.val()),
-        added = function () {
+        added = function (result) {
+          if(!result.rss_link_id) {
+            notify.show_msg('Not a valid rss/atom link', 3000);
+            return;
+          }
           $input.val('');
           notify.show_msg('Subscription added successfully', 400);
           window.setTimeout(function () {
