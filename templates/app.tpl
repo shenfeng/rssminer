@@ -20,7 +20,7 @@
   <!--[if !IE]><body><![endif]-->
     <div id="header">
       <div class="wrapper">
-        <div id="logo" class="show-nav">
+        <div id="logo" class="show-nav" data-title="show subscription list when you hover the logo">
           <h1><a href="#">Rssminer</a></h1>
           <div class="scroll-wrap">
             <ul id="sub-list" class="scroll-inner"></ul>
