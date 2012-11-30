@@ -54,13 +54,13 @@
 
 (defn- update-conf [uid req key]
   (when-let [data (-> req :body key)]
-    (let [conf (merge (-> uid db/find-user-by-id :conf read-if-json)
+    (let [conf (merge (-> uid db/find-by-id :conf read-if-json)
                       {key data})]
       (db/update-user uid {:conf (json-str2 conf)}))))
 
 (defhandler save-settings [req uid]
   (when-let [password (-> req :body :password)]
-    (let [user (db/find-user-by-id uid)
+    (let [user (db/find-by-id uid)
           p (md5-sum (str (:email user) "+" password))]
       (db/update-user uid {:password p})))
   (update-conf uid req :nav)
@@ -71,7 +71,7 @@
 ;;; :pref_sort => show recommand or newest
 (defhandler save-settings [req uid]
   (when-let [password (-> req :body :password)]
-    (let [user (db/find-user-by-id uid)
+    (let [user (db/find-by-id uid)
           p (md5-sum (str (:email user) "+" password))]
       (db/update-user uid {:password p})))
   (update-conf uid req :nav)
@@ -113,8 +113,8 @@
 (defn checkauth [req]
   (if-let [email ((:params req) "openid.ext1.value.email")]
     (assoc (redirect "/a")
-      :session {:id (:id (or (db/find-user-by-email email)
-                             (db/create-user {:email email
-                                              :provider "google"})))}
+      :session (or (db/find-by-email email)
+                   (db/create-user {:email email
+                                    :provider "google"}))
       :session-cookie-attrs cookie-attr)
     (redirect "/")))

@@ -10,18 +10,18 @@
                                   (when password
                                     (md5-sum (str email "+" password))))))
 
-(defn find-user-by-email [email]
+(defn find-by-email [email]
   (first
    (mysql-query ["SELECT id, password, email, conf, like_score, neutral_score
                   FROM users WHERE email = ?" email])))
 
-(defn find-user-by-id [id]
+(defn find-by-id [id]
   (first
    (mysql-query ["SELECT email, conf, like_score, neutral_score
                   FROM users WHERE id = ?" id])))
 
 (defn authenticate [email plain-password]
-  (if-let [user (find-user-by-email email)]
+  (if-let [user (find-by-email email)]
     (when (= (md5-sum (str email "+" plain-password)) (:password user))
       user)))
 

@@ -1,6 +1,6 @@
 (ns rssminer.views.users-test
   (:use clojure.test
-        [rssminer.db.user :only [find-user-by-id]]
+        [rssminer.db.user :only [find-by-id]]
         [rssminer.util :only [read-if-json]]
         [rssminer.test-common :only [test-app app-fixture user1
                                      auth-app json-body]]))
@@ -51,7 +51,7 @@
                         :request-method :post
                         :body (json-body conf)})]
     (is (= 204 (:status resp)))
-    (is (= conf (-> user1 :id find-user-by-id :conf read-if-json)))))
+    (is (= conf (-> user1 :id find-by-id :conf read-if-json)))))
 
 (deftest test-welcome-list
   (doseq [section ["newest" "voted" "read" "recommend"]]

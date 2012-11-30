@@ -2,11 +2,11 @@
   (:use (rssminer [util :only [md5-sum ignore-error serialize-to-js defhandler]]
                   [search :only [search*]])
         [clojure.java.io :only [resource]]
-        [ring.util.response :only [redirect]]
-        [rssminer.db.user :only [find-user-by-email find-user-by-id]])
+        [ring.util.response :only [redirect]])
   (:require [rssminer.config :as cfg]
             [clojure.string :as str]
             [rssminer.db.subscription :as sdb]
+            [rssminer.db.user :as udb]
             [rssminer.db.feed :as db]
             [rssminer.tmpls :as tmpls])
   (:import rssminer.Utils
@@ -37,7 +37,7 @@
            :session-cookie-attrs {:max-age -1})
     (if mobile?
       (redirect "/m")
-      (when-let [user (find-user-by-id uid)]
+      (when-let [user (udb/find-by-id uid)]
         (tmpls/app {:css app-css
                     :email (:email user)
                     :md5 (-> user :email md5-sum)
@@ -51,7 +51,7 @@
   (if (cfg/real-user? req)
     (assoc (redirect "/?r=d") :session nil ;; delete cookie
            :session-cookie-attrs {:max-age -1})
-    (let [user (dissoc (find-user-by-email "demo@rssminer.net") :password)]
+    (let [user (dissoc (udb/find-by-email "demo@rssminer.net") :password)]
       (swap! cfg/rssminer-conf assoc :demo-user user)
       (if mobile?
         (assoc (redirect "/m") :session user)
