@@ -279,7 +279,7 @@
 
       // feeds = _.filter(feeds, function (f) { return f.title; });
       cb({
-        title: section + ' - Rssminer, an intelligent RSS reader',
+        title: _LANG_(section) + ' - Rssminer, an intelligent RSS reader',
         feeds: feeds,
         pager: compute_welcome_paging(section, page, resp.count),
         sort: sort_data

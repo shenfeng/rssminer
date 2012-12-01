@@ -11,9 +11,9 @@
     <div id="header">
       <div class="container">
         <h1>Rssminer</h1>
-        <p>Yet another news reader</p>
+        <p>{{m-yet-another}}</p>
         <p>
-          <a class="btn" href="/login/google">Login with GoogleID</a>
+          <a class="btn" href="/login/google">{{m-login-with-google}}</a>
         </p>
         <p class="demo">
           <a href="/demo">Try out Rssminer</a>
@@ -25,12 +25,12 @@
     <div class="container">
       <form action="/login" method="post">
       {{#msg}} <p class="msg">{{ msg }}</p>{{/msg}}
-        <div><input class="txt" name="email"placeholder="Email"/></div>
-        <div><input class="txt" type="password" name="password" placeholder="Password"/></div>
+        <div><input class="txt" name="email" placeholder="{{m-email}}"/></div>
+        <div><input class="txt" type="password" name="password" placeholder="{{m-password}}"/></div>
         <div>
           <label>
             <input type="checkbox" checked name="persistent">
-            Keep me logged in
+            {{m-persistent}}
           </label>
         </div>
         <input type="hidden" name="return-url" value="/a"/>

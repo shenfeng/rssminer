@@ -242,10 +242,12 @@
   function show_settings (section) {
     $reading_area.removeClass(SHOW_CONTENT);
     var old_sort = data_api.user_conf.pref_sort;
-    var sections = ['add', 'settings', 'help'],
+    var sections = ['add', 'settings'],
         sortings = [{value: NEWEST_TAB,
+                     text: _LANG_(NEWEST_TAB),
                      s: old_sort === NEWEST_TAB},
                     {value: 'recommend', // default to recommend
+                     text: _LANG_('recommend'),
                      s: old_sort === 'recommend'}];
     var d = {
       title: _LANG_(section),

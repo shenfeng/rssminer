@@ -1,6 +1,7 @@
 (ns rssminer.middleware
   (:use [rssminer.util :only [user-id-from-session json-str2]]
         [ring.util.response :only [redirect]]
+        [rssminer.mesgs :only [*req*]]
         [clojure.tools.logging :only [debug error info]]
         [compojure.core :only [GET POST DELETE PUT]])
   (:require [rssminer.config :as conf]
@@ -23,17 +24,17 @@
 ;; "set no-cache header."
 (defn wrap-cache-header [handler]
   (fn [req]
-    (let [resp (handler req)
-          headers (get resp :headers {})
-          ctype (headers "Content-Type")]
-      (if (and (or (not= 200 (:status resp))
-                   (and ctype (re-find #"text|json" ctype)))
-               (not (get headers "Cache-Control")))
-        ;; do not cache non-200; do not cache text, json, or xml.
-        (let [new-headers (assoc headers
-                            "Cache-Control" "no-cache")]
-          (assoc resp :headers new-headers))
-        resp))))
+    (binding [*req* req]                ; for 118n
+      (let [resp (handler req)
+            headers (get resp :headers {})
+            ctype (headers "Content-Type")]
+        (if (and (or (not= 200 (:status resp))
+                     (and ctype (re-find #"text|json" ctype)))
+                 (not (get headers "Cache-Control")))
+          ;; do not cache non-200; do not cache text, json, or xml.
+          (let [new-headers (assoc headers "Cache-Control" "no-cache")]
+            (assoc resp :headers new-headers))
+          resp)))))
 
 ;; "show an error page instead of a stacktrace when error happens."
 (defn wrap-failsafe [handler]

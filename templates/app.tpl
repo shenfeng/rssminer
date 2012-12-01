@@ -64,11 +64,6 @@
               </a>
             </li>
             <li>
-              <a href="#s/help">
-                <i class="icon-info-sign"></i><span>{{m-help}}</span>
-              </a>
-            </li>
-            <li>
               <a href="/logout">
                 <i class="icon-signout"></i><span>{{m-logout}}</span>
               </a>

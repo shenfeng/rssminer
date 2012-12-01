@@ -24,7 +24,7 @@
     (if (cfg/real-user? req)
       (redirect (if mobile? "/m" "/a"))
       (let [body (if mobile? (tmpls/m-landing)
-                     (tmpls/landing { :css landing-css}))]
+                     (tmpls/landing {:css landing-css}))]
         (if (cfg/demo-user? req) {:status 200
                                   :session nil ;; delete cookie
                                   :session-cookie-attrs {:max-age -1}
@@ -39,7 +39,6 @@
       (redirect "/m")
       (when-let [user (udb/find-by-id uid)]
         (tmpls/app {:css app-css
-                    :req req
                     :email (:email user)
                     :md5 (-> user :email md5-sum)
                     :data (serialize-to-js
@@ -60,7 +59,6 @@
                          :demo true
                          :static_server (:static-server @cfg/rssminer-conf)}}]
           {:body (tmpls/app {:email (:email user)
-                             :req req
                              :md5 (-> user :email md5-sum)
                              :css app-css
                              :demo true

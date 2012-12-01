@@ -12,7 +12,7 @@
         <li>
           <!-- <img src="//192.168.1.200:9090/fav?h=moc.ativgi.www" width="32" height="32"> -->
           <p>
-            <a href="/m/{{id}}"> {{ title }} </a>
+            <a href="/m/{{id}}?limit=30"> {{ title }} </a>
           </p>
           <div class="meta">
             <span>猜你喜欢{{ like }}</span>

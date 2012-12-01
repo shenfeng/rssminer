@@ -23,16 +23,17 @@
          (apply concat
                 (map mapper (resources #".*templates/.*")))))
 
-
-
 (defn- add-info [context]
-  (let [zh? (or (= "zh" (-> context :req :params :lang))
-                (re-find #"zh" (or (get-in context [:req :headers "accept-language"]) ""))
-                false)
+  (let [zh? (if-let [lang (-> m/*req* :params :lang)]
+              (= "zh" lang)
+              (if (re-find #"zh" (or (get-in m/*req* [:headers "accept-language"]) ""))
+                true
+                false))
         context (assoc context
                   :dev (= (cfg/cfg :profile) :dev)
                   :zh? zh?)]
     (merge (if zh? m/zh-messages m/en-messages) context)))
 
 (.clear Mustache/CACHE)       ; prevent OOM when dev
+
 (deftemplates tmpls add-info)
