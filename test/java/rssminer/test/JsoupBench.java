@@ -5,20 +5,20 @@
 
 package rssminer.test;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Test;
+
 import rssminer.jsoup.CompactHtmlVisitor;
 import rssminer.jsoup.PartialTraversor;
 import rssminer.tools.Utils;
 
-import java.io.File;
-import java.io.IOException;
-
 public class JsoupBench {
 
-    static final String[] IGNORE_TAGS = new String[]{"script", "style",
-            "link", "#comment"};
+    static final String[] IGNORE_TAGS = new String[] { "script", "style", "link", "#comment" };
 
     @Test
     public void testJsoup() {
@@ -36,10 +36,8 @@ public class JsoupBench {
                 String html = Utils.readFile(f.getAbsolutePath());
 
                 StringBuilder sb = new StringBuilder(html.length());
-                CompactHtmlVisitor vistor = new CompactHtmlVisitor(sb,
-                        baseUri);
-                PartialTraversor traversor = new PartialTraversor(vistor,
-                        IGNORE_TAGS);
+                CompactHtmlVisitor vistor = new CompactHtmlVisitor(sb, baseUri);
+                PartialTraversor traversor = new PartialTraversor(vistor, IGNORE_TAGS);
                 Document doc = Jsoup.parse(html, baseUri);
                 traversor.traverse(doc);
                 // System.out.println(sb.toString());

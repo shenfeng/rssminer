@@ -5,7 +5,15 @@
 
 package rssminer;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import me.shenfeng.mmseg.BSDictionary;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -14,57 +22,44 @@ import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.util.Version;
 import org.junit.Assert;
 import org.junit.Test;
-import rssminer.search.RssminerAnalyzer;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import rssminer.search.RssminerAnalyzer;
 
 public class AnalyzerTest {
 
     @Test
     public void test() throws IOException {
-        URL url = BSDictionary.class.getClassLoader().getResource(
-                "data/words.dic");
+        URL url = BSDictionary.class.getClassLoader().getResource("data/words.dic");
 
-        InputStream is = BSDictionary.class.getClassLoader().getResourceAsStream("data/words.dic");
+        InputStream is = BSDictionary.class.getClassLoader().getResourceAsStream(
+                "data/words.dic");
         System.out.println(is);
-//        new BSDictionary(new File(url.getFile()));
+        // new BSDictionary(new File(url.getFile()));
     }
 
-    private List<String> getTerms(Analyzer analyzer, String content)
-            throws IOException {
+    private List<String> getTerms(Analyzer analyzer, String content) throws IOException {
         List<String> tokens = new ArrayList<String>();
-        TokenStream stream = analyzer.tokenStream(field, new StringReader(
-                content));
+        TokenStream stream = analyzer.tokenStream(field, new StringReader(content));
         stream.reset();
 
-        CharTermAttribute termAtt = stream
-                .addAttribute(CharTermAttribute.class);
+        CharTermAttribute termAtt = stream.addAttribute(CharTermAttribute.class);
         while (stream.incrementToken()) {
             tokens.add(termAtt.toString());
         }
         return tokens;
     }
 
-    private void printTerms(Analyzer analyzer, String content)
-            throws IOException {
+    private void printTerms(Analyzer analyzer, String content) throws IOException {
         System.out.println("-------" + analyzer);
-        TokenStream stream = analyzer.tokenStream(field, new StringReader(
-                content));
+        TokenStream stream = analyzer.tokenStream(field, new StringReader(content));
         stream.reset();
 
-        CharTermAttribute termAtt = stream
-                .addAttribute(CharTermAttribute.class);
+        CharTermAttribute termAtt = stream.addAttribute(CharTermAttribute.class);
         OffsetAttribute offAtt = stream.addAttribute(OffsetAttribute.class);
 
         while (stream.incrementToken()) {
             String term = new String(termAtt.buffer(), 0, termAtt.length());
-            System.out.println(term + "\t" + offAtt.startOffset() + " "
-                    + offAtt.endOffset());
+            System.out.println(term + "\t" + offAtt.startOffset() + " " + offAtt.endOffset());
         }
     }
 

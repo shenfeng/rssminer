@@ -22,8 +22,7 @@ public class HrefRewriter {
     private String mHtml;
     private String lowerCaseHtml;
 
-    public HrefRewriter(String html, String urlBase, String proxyUrl)
-            throws URISyntaxException {
+    public HrefRewriter(String html, String urlBase, String proxyUrl) throws URISyntaxException {
         sb = new StringBuilder(html.length() + 100);
         this.mHtml = html;
         this.lowerCaseHtml = html.toLowerCase(Locale.US);
@@ -113,8 +112,7 @@ public class HrefRewriter {
 
     }
 
-    public String rewrite() throws URISyntaxException,
-            UnsupportedEncodingException {
+    public String rewrite() throws URISyntaxException, UnsupportedEncodingException {
         String nextLink;
         while ((nextLink = getNextLink()) != null) {
             String s = urlBase.resolve(nextLink).toString();

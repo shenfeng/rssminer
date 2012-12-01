@@ -35,8 +35,7 @@ public class FeedScore implements Comparable<FeedScore> {
     }
 
     public String toString() {
-        return "FeedScore [id=" + feedID + ", subid=" + subid + ", score="
-                + score + "]";
+        return "FeedScore [id=" + feedID + ", subid=" + subid + ", score=" + score + "]";
     }
 
 }

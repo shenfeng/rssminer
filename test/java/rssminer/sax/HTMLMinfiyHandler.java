@@ -28,8 +28,7 @@ public class HTMLMinfiyHandler extends AbstractHTMLHandler {
         }
     }
 
-    public void characters(char[] ch, int start, int length)
-            throws SAXException {
+    public void characters(char[] ch, int start, int length) throws SAXException {
         squashWithspace = !isInPre && !isInScript && !isInStyle;
         if (squashWithspace) {
             boolean isLastWhiteSpace = false;
@@ -46,7 +45,7 @@ public class HTMLMinfiyHandler extends AbstractHTMLHandler {
             }
         } else if (isInStyle) {
             final int total = start + length;
-            for (int i = start; i < total; ) {
+            for (int i = start; i < total;) {
                 // skip leading space
                 while (i < total && Character.isWhitespace(ch[i])) {
                     ++i;
@@ -70,8 +69,8 @@ public class HTMLMinfiyHandler extends AbstractHTMLHandler {
         }
     }
 
-    public void startElement(String uri, String localName, String qName,
-                             Attributes attrs) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attrs)
+            throws SAXException {
         qName = qName.toLowerCase();
         sb.append(START).append(qName);
         int length = attrs.getLength();
@@ -100,8 +99,7 @@ public class HTMLMinfiyHandler extends AbstractHTMLHandler {
         }
     }
 
-    public void endElement(String uri, String localName, String qName)
-            throws SAXException {
+    public void endElement(String uri, String localName, String qName) throws SAXException {
         String l = qName.toLowerCase();
         boolean close = true;
         for (String tag : UN_ClOSEABLE_TATS) {

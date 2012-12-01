@@ -20,7 +20,6 @@ public class Vote {
     }
 
     public String toString() {
-        return "Vote [feedID=" + feedID + ", vote=" + vote + ", docID="
-                + docID + "]";
+        return "Vote [feedID=" + feedID + ", vote=" + vote + ", docID=" + docID + "]";
     }
 }

@@ -5,11 +5,19 @@
 
 package rssminer.db.perf;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
-import redis.clients.jedis.*;
 
-import java.util.*;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.Response;
+import redis.clients.jedis.Tuple;
 
 public class RedisFeedSortPerfTest extends AbstractPerfTest {
 
@@ -48,8 +56,7 @@ public class RedisFeedSortPerfTest extends AbstractPerfTest {
                 byte[] key = gen_key(userid, subid);
                 Pipeline p = jedis.pipelined();
                 for (int feedid = start; feedid < feedCount + start; feedid++) {
-                    p.zadd(key, getScore(), Integer.toString(feedid)
-                            .getBytes());
+                    p.zadd(key, getScore(), Integer.toString(feedid).getBytes());
                 }
                 start += feedCount;
                 p.sync();
@@ -71,8 +78,7 @@ public class RedisFeedSortPerfTest extends AbstractPerfTest {
                 keys[i] = gen_key(userid, i + SUB_ID_START);
             }
             jedis.zunionstore(gen_key(userid), keys);
-            Set<Tuple> result = jedis.zrevrangeWithScores(gen_key(userid), 0,
-                    29);
+            Set<Tuple> result = jedis.zrevrangeWithScores(gen_key(userid), 0, 29);
             // System.out.println(result.size());
             jedis.del(gen_key(userid));
         }
@@ -94,8 +100,7 @@ public class RedisFeedSortPerfTest extends AbstractPerfTest {
                 keys[i] = gen_key(userid, ids[i]);
             }
             jedis.zunionstore(test_tmp_key.getBytes(), keys);
-            Set<Tuple> result = jedis.zrevrangeWithScores(
-                    test_tmp_key.getBytes(), 0, 29);
+            Set<Tuple> result = jedis.zrevrangeWithScores(test_tmp_key.getBytes(), 0, 29);
             jedis.del(test_tmp_key.getBytes());
             // System.out.println(result.size());
         }
@@ -108,8 +113,7 @@ public class RedisFeedSortPerfTest extends AbstractPerfTest {
         for (int userid = USER_ID_START; userid < USER_ID_END + NUM_TEST; userid++) {
             int rssLinkID = random.nextInt(NUM_SUBS_PER_USER) + SUB_ID_START;
 
-            Set<Tuple> a = jedis.zrevrangeWithScores(
-                    gen_key(userid, rssLinkID), 0, 19);
+            Set<Tuple> a = jedis.zrevrangeWithScores(gen_key(userid, rssLinkID), 0, 19);
             System.out.println(a.size());
             for (Tuple tuple : a) {
                 String e = tuple.getElement();
@@ -126,8 +130,7 @@ public class RedisFeedSortPerfTest extends AbstractPerfTest {
         for (int userid = USER_ID_START; userid < USER_ID_START + NUM_TEST; userid++) {
             int subcount = getSubsPerUser();
             Pipeline pipeline = jedis.pipelined();
-            List<Response<Long>> results = new ArrayList<Response<Long>>(
-                    subcount * 2);
+            List<Response<Long>> results = new ArrayList<Response<Long>>(subcount * 2);
             for (int i = 0; i < subcount; i++) {
                 byte[] key = gen_key(userid, i + SUB_ID_START);
                 results.add(pipeline.zcount(key, 70, 100));

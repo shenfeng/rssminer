@@ -13,8 +13,7 @@ import java.net.URL;
 
 public class HttpTest {
 
-    public static void main(String[] args) throws IOException,
-            InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         URL url = new URL("http://127.0.0.1:10000");
 
         HttpURLConnection con = (HttpURLConnection) url.openConnection();

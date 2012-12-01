@@ -5,8 +5,25 @@
 
 package rssminer.classfier;
 
+import static rssminer.classfier.NaiveBayes.classify;
+import static rssminer.classfier.NaiveBayes.train;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.ArrayBlockingQueue;
+
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Pipeline;
@@ -14,24 +31,12 @@ import rssminer.Utils;
 import rssminer.db.DBHelper;
 import rssminer.db.Vote;
 
-import javax.sql.DataSource;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
-
-import static rssminer.classfier.NaiveBayes.classify;
-import static rssminer.classfier.NaiveBayes.train;
-
 public class SysVoteDaemon implements Runnable {
 
     public static final int EXPIRE_SECONDS = 3600 * 24 * 10; // 10 days
     public static final double LIKE_RATIO = 0.2;
     public static final double DISLIKE_RATIO = 0.5;
-    private static final Logger logger = LoggerFactory
-            .getLogger(SysVoteDaemon.class);
+    private static final Logger logger = LoggerFactory.getLogger(SysVoteDaemon.class);
 
     public final int eventsThreashold;
     private final DataSource ds;
@@ -54,15 +59,13 @@ public class SysVoteDaemon implements Runnable {
         }
     }
 
-    private void computeAddSaveScore(int userID) throws SQLException,
-            IOException {
+    private void computeAddSaveScore(int userID) throws SQLException, IOException {
         Map<String, Map<String, Double>> model = trainModel(userID);
         if (model != null) {
             Watch w = new Watch().start();
             List<FeedScore> unVoted = DBHelper.getUnvotedFeeds(ds, userID);
             if (!unVoted.isEmpty()) {
-                List<Integer> unVotedIDs = new ArrayList<Integer>(
-                        unVoted.size());
+                List<Integer> unVotedIDs = new ArrayList<Integer>(unVoted.size());
                 for (FeedScore feed : unVoted) {
                     unVotedIDs.add(feed.feedID);
                 }
@@ -73,8 +76,7 @@ public class SysVoteDaemon implements Runnable {
                     if (results[i] > 0) {
                         // kind of news site, the newer, the better.
                         // per 4 hour, +2 for always positive
-                        double t = Math.log((double) (now - feed.publishTs)
-                                / (3600 * 4) + 2);
+                        double t = Math.log((double) (now - feed.publishTs) / (3600 * 4) + 2);
                         results[i] /= t;
                     }
                     feed.setScore(results[i]); // add score to it
@@ -82,14 +84,13 @@ public class SysVoteDaemon implements Runnable {
                 saveScoresToRedis(userID, unVoted);
                 saveScoresToMysql(userID, results);
             }
-            logger.info(
-                    "compute and save score for user {}, {} feeds, takes {}ms",
-                    new Object[]{userID, unVoted.size(), w.time()});
+            logger.info("compute and save score for user {}, {} feeds, takes {}ms",
+                    new Object[] { userID, unVoted.size(), w.time() });
         }
     }
 
-    private Map<String, Map<String, Double>> getModel(int userID)
-            throws SQLException, IOException {
+    private Map<String, Map<String, Double>> getModel(int userID) throws SQLException,
+            IOException {
         Map<String, Map<String, Double>> cache = modelCache.get(userID);
         if (cache != null) {
             if (cache == noModel) {
@@ -102,8 +103,7 @@ public class SysVoteDaemon implements Runnable {
         }
     }
 
-    public void handlerFetcherEvent(FetcherEvent e) throws SQLException,
-            IOException {
+    public void handlerFetcherEvent(FetcherEvent e) throws SQLException, IOException {
         Watch w = new Watch().start();
         List<Integer> userIDs = DBHelper.fetchUserIDsBySubID(ds, e.subid);
         Jedis redis = jedis.getResource();
@@ -124,8 +124,8 @@ public class SysVoteDaemon implements Runnable {
         } finally {
             jedis.returnResource(redis);
         }
-        logger.info("rss:{}, feed cnt:{}, {} users, take {}ms", new Object[]{
-                e.subid, e.feedids.size(), userIDs.size(), w.time()});
+        logger.info("rss:{}, feed cnt:{}, {} users, take {}ms", new Object[] { e.subid,
+                e.feedids.size(), userIDs.size(), w.time() });
     }
 
     public void handlerUserEvent(UserEvent e) throws SQLException, IOException {
@@ -172,8 +172,7 @@ public class SysVoteDaemon implements Runnable {
         logger.debug("user vote daemon stopped");
     }
 
-    private void saveScoresToMysql(int usreID, double[] results)
-            throws SQLException {
+    private void saveScoresToMysql(int usreID, double[] results) throws SQLException {
         Arrays.sort(results);
         double neutral = results[(int) (results.length * DISLIKE_RATIO)];
         double like = results[(int) (results.length * (1 - LIKE_RATIO))];
@@ -229,8 +228,7 @@ public class SysVoteDaemon implements Runnable {
         deamonThread.setName("score-daemon");
         deamonThread.setDaemon(true);
         deamonThread.start();
-        logger.info("score daemon started, eventsThreashold: "
-                + eventsThreashold);
+        logger.info("score daemon started, eventsThreashold: " + eventsThreashold);
     }
 
     public void stop() {
@@ -238,8 +236,8 @@ public class SysVoteDaemon implements Runnable {
         deamonThread.interrupt();
     }
 
-    private Map<String, Map<String, Double>> trainModel(int userID)
-            throws SQLException, IOException {
+    private Map<String, Map<String, Double>> trainModel(int userID) throws SQLException,
+            IOException {
         Watch w = new Watch().start();
         List<Vote> votes = DBHelper.fetchVotedIds(ds, userID);
         Map<String, Map<String, Double>> model = null;
@@ -251,8 +249,8 @@ public class SysVoteDaemon implements Runnable {
             modelCache.put(userID, noModel);
         }
         // System.out.println(model);
-        logger.info("train model for user {} with {} feeds takes {}ms",
-                new Object[]{userID, votes.size(), w.time()});
+        logger.info("train model for user {} with {} feeds takes {}ms", new Object[] { userID,
+                votes.size(), w.time() });
         return model;
     }
 }

@@ -5,15 +5,18 @@
 
 package rssminer.search;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermFreqVector;
-import org.apache.lucene.search.*;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 import org.junit.Test;
-
-import java.io.File;
-import java.io.IOException;
 
 public class IDFTest {
 
@@ -24,7 +27,7 @@ public class IDFTest {
 
         IndexReader r = IndexReader.open(directory);
 
-//        IndexSearcher searcher = IndexReader.open(directory);
+        // IndexSearcher searcher = IndexReader.open(directory);
 
         IndexSearcher searcher = new IndexSearcher(r);
         TopDocs result = searcher.search(new TermQuery(new Term(Searcher.RSS_ID, "4787")), 100);
@@ -39,24 +42,22 @@ public class IDFTest {
                 int[] frequencies = vector.getTermFrequencies();
                 for (int i = 0; i < terms.length; i++) {
                     Term term = t.createTerm(terms[i]);
-//                    TermEnum termEnum = r.terms(term);
-//                    int df = termEnum.docFreq();
+                    // TermEnum termEnum = r.terms(term);
+                    // int df = termEnum.docFreq();
                     int df2 = r.docFreq(term);
-//                    System.out.println(id + "\t" + terms[i] + "\t"
-//                            + termEnum.term().text() + "\t" +
-//                            + frequencies[i] + "\t" + df + "\t" + df2);
+                    // System.out.println(id + "\t" + terms[i] + "\t"
+                    // + termEnum.term().text() + "\t" +
+                    // + frequencies[i] + "\t" + df + "\t" + df2);
                 }
             }
-//            r.ter
-//            System.out.println(id);
+            // r.ter
+            // System.out.println(id);
         }
 
-
-//        TermEnum terms = r.terms(new Term(Searcher.TITLE, "stubborn"));
-//        while (terms.next()){
-////            System.out.println(terms.term() +"\t" + terms.docFreq());
-//        }
-
+        // TermEnum terms = r.terms(new Term(Searcher.TITLE, "stubborn"));
+        // while (terms.next()){
+        // // System.out.println(terms.term() +"\t" + terms.docFreq());
+        // }
 
     }
 }

@@ -5,22 +5,26 @@
 
 package rssminer;
 
-import clojure.lang.Keyword;
-import me.shenfeng.dbcp.PerThreadDataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import rssminer.search.Searcher;
-import rssminer.tools.Utils;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.TreeMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import me.shenfeng.dbcp.PerThreadDataSource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import rssminer.search.Searcher;
+import rssminer.tools.Utils;
 
 class Result {
     final int id;
@@ -49,8 +53,7 @@ class Worker extends Thread {
     private AtomicInteger id;
     private BlockingQueue<Result> done;
 
-    public Worker(long[] feedhashes, AtomicInteger id,
-            BlockingQueue<Result> done) {
+    public Worker(long[] feedhashes, AtomicInteger id, BlockingQueue<Result> done) {
         this.feedhashes = feedhashes;
         this.id = id;
         this.done = done;
@@ -98,8 +101,7 @@ public class NearDuplicate {
                 Connection db = Utils.getRssminerDB();
                 Statement stat = db.createStatement();
 
-                ResultSet rs = stat
-                        .executeQuery("select id, simhash from feeds");
+                ResultSet rs = stat.executeQuery("select id, simhash from feeds");
                 for (int i = 0; i < hashes.length; i++) {
                     hashes[i] = -1;
                 }
@@ -125,18 +127,17 @@ public class NearDuplicate {
                 int d = rssminer.Utils.hammingDistance(hash, feedhashes[idx]);
                 if (d < distance) {
                     result.add(idx);
-                    logger.info("{}:{} {}:{}, distance: {}", new Object[] {
-                            feedid, hash, idx, feedhashes[idx], d });
+                    logger.info("{}:{} {}:{}, distance: {}", new Object[] { feedid, hash, idx,
+                            feedhashes[idx], d });
                 }
             }
         }
         return result;
     }
 
-    public static void main(String[] args) throws IOException,
-            InterruptedException {
-        PerThreadDataSource db = new PerThreadDataSource(
-                "jdbc:mysql://localhost/rssminer", "feng", "");
+    public static void main(String[] args) throws IOException, InterruptedException {
+        PerThreadDataSource db = new PerThreadDataSource("jdbc:mysql://localhost/rssminer",
+                "feng", "");
         Searcher.initGlobalSearcher("/var/rssminer/index", db, null);
 
         init();

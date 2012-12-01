@@ -5,6 +5,10 @@
 
 package rssminer.jsoup;
 
+import java.net.URI;
+import java.util.List;
+import java.util.regex.Pattern;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,14 +17,9 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
-import java.util.List;
-import java.util.regex.Pattern;
-
 public class HtmlUtils {
 
-    private static final Logger logger = LoggerFactory
-            .getLogger(HtmlUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(HtmlUtils.class);
 
     final static String HREF = "href";
     final static String LINK = "link";
@@ -30,13 +29,11 @@ public class HtmlUtils {
     final static String TYPE = "type";
     final static String REL = "rel";
     final static String ALTERNATE = "alternate";
-    final static Pattern comment = Pattern.compile("comment",
-            Pattern.CASE_INSENSITIVE);
+    final static Pattern comment = Pattern.compile("comment", Pattern.CASE_INSENSITIVE);
 
-    static final String[] IGNORE_TAGS = new String[]{"script", "style",
-            "link", "#comment"};
+    static final String[] IGNORE_TAGS = new String[] { "script", "style", "link", "#comment" };
 
-    static String[] TEXT_IGNORE = new String[]{"code"};
+    static String[] TEXT_IGNORE = new String[] { "code" };
 
     public static String compact(String html, String baseUri) {
         if (html == null || html.isEmpty()) {
@@ -106,8 +103,8 @@ public class HtmlUtils {
             while (--i >= 0) {
                 char c = val.charAt(i);
                 // http://www.cs.tut.fi/~jkorpela/qattr.html
-                if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z')
-                        || (c >= 'A' && c <= 'Z') || c == '-' || c == '.') {
+                if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+                        || c == '-' || c == '.') {
                 } else {
                     return true;
                 }

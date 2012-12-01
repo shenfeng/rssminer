@@ -5,14 +5,17 @@
 
 package rssminer.search;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.TermFreqVector;
 import org.apache.lucene.search.Collector;
 import org.apache.lucene.search.Scorer;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.Map.Entry;
 
 class Int {
     int i;
@@ -151,8 +154,7 @@ public class FacetCollector extends Collector {
         return tag.getTop(limit);
     }
 
-    public void setNextReader(IndexReader reader, int docBase)
-            throws IOException {
+    public void setNextReader(IndexReader reader, int docBase) throws IOException {
         this.base = docBase;
     }
 

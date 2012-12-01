@@ -5,15 +5,15 @@
 
 package rssminer.sax;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
+import static java.net.URLEncoder.encode;
+import static rssminer.Utils.reverse;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static java.net.URLEncoder.encode;
-import static rssminer.Utils.reverse;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 public class RewriteHandler extends AbstractHTMLHandler {
 
@@ -27,16 +27,14 @@ public class RewriteHandler extends AbstractHTMLHandler {
         this.proxyURI = proxyURl;
     }
 
-    public void characters(char[] ch, int start, int length)
-            throws SAXException {
+    public void characters(char[] ch, int start, int length) throws SAXException {
         sb.append(ch, start, length);
     }
 
-    public void startElement(String uri, String localName, String qName,
-                             Attributes attrs) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attrs)
+            throws SAXException {
         qName = qName.toLowerCase();
-        boolean rw = "script".equals(qName) || "img".equals(qName)
-                || "link".equals(qName);
+        boolean rw = "script".equals(qName) || "img".equals(qName) || "link".equals(qName);
         sb.append(START).append(qName);
         int length = attrs.getLength();
         for (int i = 0; i < length; ++i) {
@@ -64,8 +62,7 @@ public class RewriteHandler extends AbstractHTMLHandler {
         sb.append(END);
     }
 
-    public void endElement(String uri, String localName, String qName)
-            throws SAXException {
+    public void endElement(String uri, String localName, String qName) throws SAXException {
         String l = qName.toLowerCase();
         boolean close = true;
         for (String tag : UN_ClOSEABLE_TATS) {

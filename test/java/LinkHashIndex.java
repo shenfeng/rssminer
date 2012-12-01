@@ -3,10 +3,15 @@
  * You must not remove this notice, or any other, from this software.
  */
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.*;
 
 public class LinkHashIndex {
 
@@ -17,7 +22,8 @@ public class LinkHashIndex {
         Connection db = DriverManager.getConnection(JDBC_URL, "feng", "");
         Statement stat = db.createStatement();
         ResultSet rs = stat.executeQuery("select id, link from feeds");
-        PreparedStatement ps = db.prepareStatement("update feeds set link_hash = ? where id = ?");
+        PreparedStatement ps = db
+                .prepareStatement("update feeds set link_hash = ? where id = ?");
         int count = 0;
         while (rs.next()) {
             count++;

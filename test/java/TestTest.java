@@ -3,9 +3,6 @@
  * You must not remove this notice, or any other, from this software.
  */
 
-import javax.crypto.*;
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.security.InvalidKeyException;
@@ -13,14 +10,19 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Enumeration;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
+
 public class TestTest {
 
-    public static void main(String[] args) throws SocketException,
-            NoSuchAlgorithmException, NoSuchPaddingException,
-            InvalidKeyException, IllegalBlockSizeException,
+    public static void main(String[] args) throws SocketException, NoSuchAlgorithmException,
+            NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException,
             BadPaddingException {
-        Enumeration<NetworkInterface> interfaces = NetworkInterface
-                .getNetworkInterfaces();
+        Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
         byte[] key = null;
         while (interfaces.hasMoreElements()) {
             NetworkInterface in = interfaces.nextElement();
@@ -45,22 +47,20 @@ public class TestTest {
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
 
-            byte[] bytes = cipher
-                    .doFinal(Integer.toString(112132).getBytes());
+            byte[] bytes = cipher.doFinal(Integer.toString(112132).getBytes());
             // System.out.println(bytes.length);
 
             String s = DatatypeConverter.printBase64Binary(bytes);
             System.out.println(s);
-//            continue;
+            // continue;
             bytes = DatatypeConverter.parseBase64Binary(s);
-//
+            //
             cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-//
+            //
             int id = Integer.parseInt(new String(cipher.doFinal(bytes)));
-//             System.out.println(input);
+            // System.out.println(input);
         }
         long time = System.currentTimeMillis() - start;
-        System.out.println("time " + time + "ms" + "; " + time
-                / (double) times);
+        System.out.println("time " + time + "ms" + "; " + time / (double) times);
     }
 }

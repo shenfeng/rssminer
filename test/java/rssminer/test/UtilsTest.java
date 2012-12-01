@@ -5,12 +5,13 @@
 
 package rssminer.test;
 
+import java.util.List;
 
 import junit.framework.Assert;
-import org.junit.Test;
-import rssminer.Utils;
 
-import java.util.List;
+import org.junit.Test;
+
+import rssminer.Utils;
 
 public class UtilsTest {
 
@@ -48,7 +49,6 @@ public class UtilsTest {
         list = Utils.split("abc ", ';');
         Assert.assertEquals(1, list.size());
         Assert.assertEquals("abc", list.get(0));
-
 
         list = Utils.split("abc; ", ';');
         Assert.assertEquals(1, list.size());

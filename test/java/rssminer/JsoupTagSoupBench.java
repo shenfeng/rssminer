@@ -5,14 +5,18 @@
 
 package rssminer;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-import rssminer.jsoup.HtmlUtils;
-import rssminer.tools.Utils;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import rssminer.jsoup.HtmlUtils;
+import rssminer.tools.Utils;
 
 public class JsoupTagSoupBench {
     static List<String> summarys = new ArrayList<String>();

@@ -5,10 +5,15 @@
 
 package rssminer.db.perf;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import java.sql.*;
 
 public class MysqlFeedSortTest extends AbstractPerfTest {
 
@@ -16,8 +21,7 @@ public class MysqlFeedSortTest extends AbstractPerfTest {
 
     @Before
     public void setup() throws SQLException {
-        con = DriverManager.getConnection("jdbc:mysql://localhost/rssminer",
-                "feng", "");
+        con = DriverManager.getConnection("jdbc:mysql://localhost/rssminer", "feng", "");
     }
 
     // used_memory_human:241.37M => 8021364
@@ -80,8 +84,8 @@ public class MysqlFeedSortTest extends AbstractPerfTest {
         for (int userid = USER_ID_START; userid < USER_ID_END + NUM_TEST; userid++) {
             int[] ids = randSubIds();
             StringBuilder sb = new StringBuilder(
-                    "select feed_id, vote_sys from user_feed where user_id = "
-                            + userid + " and rss_link_id in (");
+                    "select feed_id, vote_sys from user_feed where user_id = " + userid
+                            + " and rss_link_id in (");
             for (int id : ids) {
                 sb.append(id);
                 sb.append(",");

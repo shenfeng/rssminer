@@ -5,7 +5,6 @@
 
 package rssminer.classfier;
 
-
 // user vote, read a feed.
 public class UserEvent implements Event {
 

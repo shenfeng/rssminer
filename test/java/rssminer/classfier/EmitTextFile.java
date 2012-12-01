@@ -5,20 +5,25 @@
 
 package rssminer.classfier;
 
-import org.apache.commons.io.IOUtils;
-import rssminer.jsoup.HtmlUtils;
-import rssminer.tools.Utils;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import org.apache.commons.io.IOUtils;
+
+import rssminer.jsoup.HtmlUtils;
+import rssminer.tools.Utils;
 
 public class EmitTextFile {
     public static void main(String[] args) throws SQLException, IOException {
 
         Connection db = Utils.getRssminerDB();
         Statement stat = db.createStatement();
-        ResultSet rs = stat.executeQuery("select * from feed_data where id > 100000 limit 20000");
+        ResultSet rs = stat
+                .executeQuery("select * from feed_data where id > 100000 limit 20000");
         while (rs.next()) {
             int id = rs.getInt("id");
             String summary = rs.getString("summary");

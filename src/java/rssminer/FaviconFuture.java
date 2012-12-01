@@ -5,24 +5,39 @@
 
 package rssminer;
 
-import clojure.lang.Keyword;
-import me.shenfeng.http.DynamicBytes;
-import me.shenfeng.http.client.*;
-import me.shenfeng.http.server.IListenableFuture;
-import me.shenfeng.http.server.ServerConstant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import rssminer.jsoup.HtmlUtils;
+import static me.shenfeng.http.HttpUtils.ACCEPT_ENCODING;
+import static me.shenfeng.http.HttpUtils.CACHE_CONTROL;
+import static me.shenfeng.http.HttpUtils.CONTENT_TYPE;
+import static me.shenfeng.http.HttpUtils.LOCATION;
+import static rssminer.Utils.CLIENT;
 
-import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
 import java.net.Proxy;
 import java.net.URI;
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
-import static me.shenfeng.http.HttpUtils.*;
-import static rssminer.Utils.*;
+import javax.sql.DataSource;
+
+import me.shenfeng.http.DynamicBytes;
+import me.shenfeng.http.client.BinaryRespListener;
+import me.shenfeng.http.client.IBinaryHandler;
+import me.shenfeng.http.client.ITextHandler;
+import me.shenfeng.http.client.TextRespListener;
+import me.shenfeng.http.server.ClojureRing;
+import me.shenfeng.http.server.IListenableFuture;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import rssminer.jsoup.HtmlUtils;
+import clojure.lang.Keyword;
 
 public class FaviconFuture implements IListenableFuture {
 
@@ -77,8 +92,7 @@ public class FaviconFuture implements IListenableFuture {
             }
         }
         if (data != null) {
-            done(200, getHeaders("image/x-icon"), new ByteArrayInputStream(
-                    data));
+            done(200, getHeaders("image/x-icon"), new ByteArrayInputStream(data));
         } else {
             // browser js will do it right
             done(200, getHeaders(null), null);
@@ -87,9 +101,9 @@ public class FaviconFuture implements IListenableFuture {
 
     protected void done(int status, Map<String, String> headers, Object body) {
         Map<Keyword, Object> r = new HashMap<Keyword, Object>(6);
-        r.put(ServerConstant.STATUS, status);
-        r.put(ServerConstant.HEADERS, headers);
-        r.put(ServerConstant.BODY, body);
+        r.put(ClojureRing.STATUS, status);
+        r.put(ClojureRing.HEADERS, headers);
+        r.put(ClojureRing.BODY, body);
         resp = r;
         if (listener != null) {
             listener.run(); // will call get, get resp
@@ -103,8 +117,7 @@ public class FaviconFuture implements IListenableFuture {
             this.base = u;
         }
 
-        public void onSuccess(int status, Map<String, String> headers,
-                              DynamicBytes bytes) {
+        public void onSuccess(int status, Map<String, String> headers, DynamicBytes bytes) {
             if (status == 301 || status == 302) {
                 String loc = headers.get(LOCATION);
                 if (loc != null) {
@@ -131,8 +144,7 @@ public class FaviconFuture implements IListenableFuture {
             this.base = u;
         }
 
-        public void onSuccess(int status, Map<String, String> headers,
-                              String body) {
+        public void onSuccess(int status, Map<String, String> headers, String body) {
             if (status == 301 || status == 302) {
                 String loc = headers.get(LOCATION);
                 if (loc != null) {
@@ -144,8 +156,8 @@ public class FaviconFuture implements IListenableFuture {
                 try {
                     URI uri = HtmlUtils.extractFavicon(body, base);
                     if (uri == null) {
-                        uri = new URI(base.getScheme() + "://"
-                                + base.getHost() + "/favicon.ico");
+                        uri = new URI(base.getScheme() + "://" + base.getHost()
+                                + "/favicon.ico");
                     }
                     doIt(uri, true);
                 } catch (Exception e) {
@@ -178,11 +190,9 @@ public class FaviconFuture implements IListenableFuture {
             if (img) {
                 Map<String, String> headers = new TreeMap<String, String>(reqHeaders);
                 headers.put(ACCEPT_ENCODING, null);
-                CLIENT.get(u, headers, proxy, new BinaryRespListener(
-                        new FaviconHandler(u)));
+                CLIENT.get(u, headers, proxy, new BinaryRespListener(new FaviconHandler(u)));
             } else {
-                CLIENT.get(u, reqHeaders, proxy, new TextRespListener(
-                        new WebPageHandler(u)));
+                CLIENT.get(u, reqHeaders, proxy, new TextRespListener(new WebPageHandler(u)));
             }
         } catch (Exception e) {
             noIcon();
@@ -202,8 +212,7 @@ public class FaviconFuture implements IListenableFuture {
                 int code = rs.getInt(2);
                 if (code == 200) {
                     byte[] data = rs.getBytes(1);
-                    done(200, getHeaders("image/x-icon"),
-                            new ByteArrayInputStream(data));
+                    done(200, getHeaders("image/x-icon"), new ByteArrayInputStream(data));
                 } else {
                     noIcon();
                 }
@@ -218,16 +227,15 @@ public class FaviconFuture implements IListenableFuture {
         return false;
     }
 
-    public FaviconFuture(String hostname, Map<String, String> headers,
-                         Proxy proxy, DataSource dataSource) {
+    public FaviconFuture(String hostname, Map<String, String> headers, Proxy proxy,
+            DataSource dataSource) {
         this.proxy = proxy;
         this.dataSource = dataSource;
         this.reqHeaders = headers;
         this.hostname = hostname;
 
         if (proxy == null || dataSource == null) {
-            throw new NullPointerException(
-                    "proxy, redis, datasource can's be null");
+            throw new NullPointerException("proxy, redis, datasource can's be null");
         }
         if (!tryCache()) {
             try {

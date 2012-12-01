@@ -37,6 +37,7 @@
   (start-classify-daemon!)
   (reset! server (run-server (app) {:port (cfg :port)
                                     :ip (cfg :bind-ip)
+                                    :worker-name-prefix "w"
                                     :thread (cfg :worker)}))
   (when (cfg :fetcher) (start-fetcher)))
 

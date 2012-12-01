@@ -5,6 +5,18 @@
 
 package rssminer.tools;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.StringReader;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map.Entry;
+
 import org.ccil.cowan.tagsoup.Parser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attributes;
@@ -16,15 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.StringReader;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map.Entry;
 
 class Cmp implements Comparator<Entry<String, Integer>> {
 
@@ -40,8 +43,7 @@ class TextHandler3 extends DefaultHandler {
     private boolean prev = false, current = false;
     private StringBuilder sb = new StringBuilder();
 
-    public void characters(char[] ch, int start, int length)
-            throws SAXException {
+    public void characters(char[] ch, int start, int length) throws SAXException {
         if (keep) {
             end = start + length;
             for (i = start; i < end; ++i) {
@@ -54,8 +56,7 @@ class TextHandler3 extends DefaultHandler {
         }
     }
 
-    public void endElement(String uri, String localName, String qName)
-            throws SAXException {
+    public void endElement(String uri, String localName, String qName) throws SAXException {
         keep = true;
     }
 
@@ -63,10 +64,9 @@ class TextHandler3 extends DefaultHandler {
         return sb.toString();
     }
 
-    public void startElement(String uri, String localName, String qName,
-                             Attributes atts) throws SAXException {
-        if (localName.equalsIgnoreCase("script")
-                || localName.equalsIgnoreCase("style")) {
+    public void startElement(String uri, String localName, String qName, Attributes atts)
+            throws SAXException {
+        if (localName.equalsIgnoreCase("script") || localName.equalsIgnoreCase("style")) {
             keep = false;
         }
     }
@@ -89,8 +89,7 @@ public class HtmlParserBench {
         logger.info("total files: " + files.size());
         Connection con = Utils.getRssminerDB();
         Statement stat = con.createStatement();
-        ResultSet rs = stat
-                .executeQuery("select summary from feed_data limit 1000");
+        ResultSet rs = stat.executeQuery("select summary from feed_data limit 1000");
         while (rs.next()) {
             String str = rs.getString(1);
             if (str != null && !str.isEmpty()) {

@@ -5,19 +5,23 @@
 
 package rssminer.jsoup;
 
-import org.jsoup.nodes.*;
-import org.jsoup.nodes.Entities.EscapeMode;
-import org.jsoup.select.NodeVisitor;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+import org.jsoup.nodes.Attribute;
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Entities.EscapeMode;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.select.NodeVisitor;
+
 public class CompactHtmlVisitor implements NodeVisitor {
 
-    static final String[] KEEP_ATTRS = new String[]{"href", "src", "title",
-            "type", "alt", "width", // feedburner track
-            "height"};
+    static final String[] KEEP_ATTRS = new String[] { "href", "src", "title", "type", "alt",
+            "width", // feedburner track
+            "height" };
 
     static final char SPACE = ' ';
     static final char START = '<';
@@ -30,8 +34,7 @@ public class CompactHtmlVisitor implements NodeVisitor {
 
     private static boolean preserveWhitespace(Node node) {
         while (node != null) {
-            if (node instanceof Element
-                    && ((Element) node).tag().preserveWhitespace()) {
+            if (node instanceof Element && ((Element) node).tag().preserveWhitespace()) {
                 return true;
             } else {
                 node = node.parent();
@@ -112,8 +115,7 @@ public class CompactHtmlVisitor implements NodeVisitor {
         } else {
             sb.append(START).append(name);
             Attributes attrs = node.attributes();
-            if ("iframe".equals(name) || "object".equals(name)
-                    || "embed".equals(name)) {
+            if ("iframe".equals(name) || "object".equals(name) || "embed".equals(name)) {
                 // keep all attrs
                 for (Attribute attr : attrs) {
                     addAttr(name, attr.getKey(), attr.getValue());

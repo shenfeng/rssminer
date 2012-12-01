@@ -5,26 +5,31 @@
 
 package rssminer.fetcher;
 
-import me.shenfeng.http.DynamicBytes;
-import me.shenfeng.http.client.ITextHandler;
-import me.shenfeng.http.client.TextRespListener;
-import me.shenfeng.http.client.TextRespListener.IFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import rssminer.Utils;
-import rssminer.jsoup.HtmlUtils;
+import static java.lang.String.format;
+import static java.lang.System.currentTimeMillis;
+import static me.shenfeng.http.HttpUtils.LOCATION;
+import static rssminer.Utils.CLIENT;
 
 import java.net.URI;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
-import static java.lang.String.format;
-import static java.lang.System.currentTimeMillis;
-import static me.shenfeng.http.HttpUtils.LOCATION;
-import static rssminer.Utils.CLIENT;
+import me.shenfeng.http.DynamicBytes;
+import me.shenfeng.http.client.ITextHandler;
+import me.shenfeng.http.client.TextRespListener;
+import me.shenfeng.http.client.TextRespListener.IFilter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import rssminer.Utils;
+import rssminer.jsoup.HtmlUtils;
 
 class Filter implements IFilter {
 
@@ -66,8 +71,7 @@ public class HttpTaskRunner {
             return false;
         }
 
-        public void finish(int status, String body,
-                           Map<String, String> headers) {
+        public void finish(int status, String body, Map<String, String> headers) {
             body = Utils.trimRemoveBom(body);
             if (status == 200 && isHtml(headers, body)) {
                 try {
@@ -88,14 +92,12 @@ public class HttpTaskRunner {
         }
 
         // run in the HTTP client loop thread
-        public void onSuccess(int status, Map<String, String> headers,
-                              String body) {
+        public void onSuccess(int status, Map<String, String> headers, String body) {
             try {
                 if (status == 301) {
                     String l = headers.get(LOCATION);
                     if (l == null) {
-                        task.onThrowable(new Exception(
-                                "301: but has no location header"));
+                        task.onThrowable(new Exception("301: but has no location header"));
                         return;
                     } else {
                         l = task.getUri().resolve(l).toString();
@@ -105,8 +107,7 @@ public class HttpTaskRunner {
                 } else if (status == 302) {
                     String l = headers.get(LOCATION);
                     if (l == null) {
-                        task.onThrowable(new Exception(
-                                "302: but has no location header"));
+                        task.onThrowable(new Exception("302: but has no location header"));
                         return;
                     }
                     URI loc = task.getUri().resolve(l);
@@ -114,8 +115,7 @@ public class HttpTaskRunner {
                     if (retry.retryTimes() < 4) {
                         addTask(retry);
                     } else {
-                        task.onThrowable(new Exception(
-                                "redirect more than 4 times"));
+                        task.onThrowable(new Exception("redirect more than 4 times"));
                     }
                 } else {
                     finish(status, body, headers);
@@ -142,10 +142,9 @@ public class HttpTaskRunner {
                     tryFillTask();
                     mConcurrent.acquire(); // limit concurrency
                     final IHttpTask task = mTaskQueue.poll(); // can not be null
-                    TextRespListener listener = new TextRespListener(
-                            new TextHandler(task), filter);
-                    CLIENT.get(task.getUri(), task.getHeaders(), task.getProxy(),
-                            listener);
+                    TextRespListener listener = new TextRespListener(new TextHandler(task),
+                            filter);
+                    CLIENT.get(task.getUri(), task.getHeaders(), task.getProxy(), listener);
                 } catch (InterruptedException e) { // die
                 } catch (Exception e) {
                     logger.error("loop exception, catch it", e);

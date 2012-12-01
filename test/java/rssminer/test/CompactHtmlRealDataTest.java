@@ -5,11 +5,16 @@
 
 package rssminer.test;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import org.junit.Test;
+
 import rssminer.jsoup.HtmlUtils;
 import rssminer.tools.Utils;
-
-import java.sql.*;
 
 public class CompactHtmlRealDataTest {
 

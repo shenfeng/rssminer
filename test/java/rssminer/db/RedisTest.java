@@ -5,15 +5,16 @@
 
 package rssminer.db;
 
-import org.junit.Before;
-import org.junit.Test;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 public class RedisTest {
 
@@ -41,7 +42,6 @@ public class RedisTest {
         pool.returnResource(redis);
 
     }
-
 
     private void putToRedis(int status, String type) {
         Jedis redis = pool.getResource();

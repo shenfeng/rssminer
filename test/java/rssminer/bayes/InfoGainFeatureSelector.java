@@ -5,7 +5,11 @@
 
 package rssminer.bayes;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InfoGainFeatureSelector {
 
@@ -20,8 +24,7 @@ public class InfoGainFeatureSelector {
         this.wordProbabilities = new ArrayList<Word>();
         for (String word : wordProbabilities.keySet()) {
             double[] probabilities = wordProbabilities.get(word);
-            this.wordProbabilities.add(new Word(word, probabilities[0],
-                    probabilities[1]));
+            this.wordProbabilities.add(new Word(word, probabilities[0], probabilities[1]));
         }
     }
 
@@ -29,8 +32,7 @@ public class InfoGainFeatureSelector {
         for (Word word : wordProbabilities) {
             if (word.pInCat > 0.0D) {
                 word.infoGain = word.pInCat
-                        * Math.log(word.pInCat
-                        / ((word.pInCat + word.pNotInCat) * pCategory));
+                        * Math.log(word.pInCat / ((word.pInCat + word.pNotInCat) * pCategory));
             } else {
                 word.infoGain = 0.0D;
             }
@@ -40,8 +42,8 @@ public class InfoGainFeatureSelector {
                 (int) Math.round(Math.sqrt(wordProbabilities.size())));
         Map<String, double[]> topFeatures = new HashMap<String, double[]>();
         for (Word topFeature : topFeaturesList) {
-            topFeatures.put(topFeature.term, new double[]{
-                    topFeature.pInCat, topFeature.pNotInCat});
+            topFeatures.put(topFeature.term, new double[] { topFeature.pInCat,
+                    topFeature.pNotInCat });
         }
         return topFeatures;
     }

@@ -25,8 +25,7 @@ public class DebupAll {
 
         Connection con = DriverManager.getConnection(JDBC_URL, "feng", "");
 
-        PreparedStatement ps = con
-                .prepareStatement("select id, simhash from feeds");
+        PreparedStatement ps = con.prepareStatement("select id, simhash from feeds");
         Map<Long, List<Integer>> map = new TreeMap<Long, List<Integer>>();
         ResultSet rs = ps.executeQuery();
 
@@ -60,14 +59,11 @@ public class DebupAll {
             }
         }
         System.out.println(count);
-        
-        
 
         count = 0;
         for (int i = 0; i < hashes.length; i++) {
             if (i % 10000 == 0) {
-                logger.info("handing {}, count {}, total " + hashes.length,
-                        i, count);
+                logger.info("handing {}, count {}, total " + hashes.length, i, count);
             }
             long hash = hashes[i];
             if (hash == -1) {

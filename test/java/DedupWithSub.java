@@ -3,9 +3,16 @@
  * You must not remove this notice, or any other, from this software.
  */
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 //class HashID {
 //    public final int id;
@@ -31,8 +38,7 @@ public class DedupWithSub {
         PreparedStatement deleteData = con
                 .prepareStatement("delete from feed_data where id = ?");
 
-        PreparedStatement deleteFeed = con
-                .prepareStatement("delete from feeds where id = ?");
+        PreparedStatement deleteFeed = con.prepareStatement("delete from feeds where id = ?");
 
         int count = 0;
 

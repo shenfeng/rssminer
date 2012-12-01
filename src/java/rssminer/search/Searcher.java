@@ -5,7 +5,20 @@
 
 package rssminer.search;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import javax.sql.DataSource;
+
 import me.shenfeng.mmseg.StringReader;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -14,17 +27,27 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.Field.TermVector;
-import org.apache.lucene.index.*;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.BooleanClause.Occur;
-import org.apache.lucene.search.*;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.Collector;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.MultiCollector;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import redis.clients.jedis.JedisPool;
 import rssminer.Utils;
 import rssminer.db.DBHelper;
@@ -32,17 +55,10 @@ import rssminer.db.Feed;
 import rssminer.db.MinerDAO;
 import rssminer.jsoup.HtmlUtils;
 
-import javax.sql.DataSource;
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.*;
-
 public class Searcher {
     static final Version V = Version.LUCENE_35;
     public static final Analyzer analyzer = new rssminer.search.RssminerAnalyzer();
-    public static final Logger logger = LoggerFactory
-            .getLogger(Searcher.class);
+    public static final Logger logger = LoggerFactory.getLogger(Searcher.class);
     public static final String FEED_ID = "id";
     public static final String RSS_ID = "rid";
     public static final String AUTHOR = "author";
@@ -65,17 +81,15 @@ public class Searcher {
     static Term FEED_ID_TERM = new Term(FEED_ID);
     static Term RSS_ID_TERM = new Term(RSS_ID);
 
-    private volatile boolean closed = false;
-
-    public static Term[] ANALYZE_FIELDS = new Term[]{TITLE_TERM,
-            CONTNET_TERM};
-    public static Term[] ALL_FIELDS = new Term[]{TITLE_TERM, CONTNET_TERM,
-            TAG_TERM, AUTHOR_TERM};
+    public static Term[] ANALYZE_FIELDS = new Term[] { TITLE_TERM, CONTNET_TERM };
+    public static Term[] ALL_FIELDS = new Term[] { TITLE_TERM, CONTNET_TERM, TAG_TERM,
+            AUTHOR_TERM };
     public static final TermVector TV = TermVector.WITH_POSITIONS_OFFSETS;
     private List<IndexReader> pendingReader = new LinkedList<IndexReader>();
     private final JedisPool mJedis;
 
-    public static Searcher initGlobalSearcher(String path, DataSource ds, JedisPool jedis) throws IOException {
+    public static Searcher initGlobalSearcher(String path, DataSource ds, JedisPool jedis)
+            throws IOException {
         closeGlobalSearcher();
         SEARCHER = new Searcher(path, ds, jedis);
         return SEARCHER;
@@ -84,7 +98,6 @@ public class Searcher {
     private IndexWriter mIndexer = null;
     private IndexReader mReader = null;
     private final String mPath;
-
 
     private final DataSource mDs;
     private final Map<String, Float> mBoosts = new TreeMap<String, Float>();
@@ -100,8 +113,7 @@ public class Searcher {
         }
     }
 
-    private Searcher(String path, DataSource ds, JedisPool jedis)
-            throws IOException {
+    private Searcher(String path, DataSource ds, JedisPool jedis) throws IOException {
         final IndexWriterConfig cfg = new IndexWriterConfig(V, analyzer);
         this.mPath = path;
         this.mDs = ds;
@@ -139,8 +151,7 @@ public class Searcher {
         return terms;
     }
 
-    private BooleanQuery buildQuery(String text, List<Integer> rssids)
-            throws IOException {
+    private BooleanQuery buildQuery(String text, List<Integer> rssids) throws IOException {
         BooleanQuery query = new BooleanQuery();
         if (text != null && !text.isEmpty()) {
             List<String> terms = getTerms(text);
@@ -165,8 +176,7 @@ public class Searcher {
         }
         BooleanQuery ids = new BooleanQuery();
         for (Integer rid : rssids) {
-            ids.add(new TermQuery(RSS_ID_TERM.createTerm(rid.toString())),
-                    Occur.SHOULD);
+            ids.add(new TermQuery(RSS_ID_TERM.createTerm(rid.toString())), Occur.SHOULD);
         }
         query.add(ids, Occur.MUST);
         return query;
@@ -186,8 +196,7 @@ public class Searcher {
             List<String> as = Utils.split(authors, ';');
             BooleanQuery part = new BooleanQuery();
             for (String author : as) {
-                part.add(new TermQuery(AUTHOR_TERM.createTerm(author)),
-                        Occur.MUST);
+                part.add(new TermQuery(AUTHOR_TERM.createTerm(author)), Occur.MUST);
             }
             query.add(part, Occur.MUST);
         }
@@ -202,34 +211,31 @@ public class Searcher {
             logger.info("close Searcher@" + mPath);
             mIndexer.close();
             mIndexer = null;
-            closed = true;
         }
     }
 
-    private Document createDocument(int feeId, int rssID, String author,
-                                    String title, String summary, String tags) {
+    private Document createDocument(int feeId, int rssID, String author, String title,
+            String summary, String tags) {
         Document doc = new Document();
         // not intern, already interned
-        Field fid = new Field(FEED_ID, false, Integer.toString(feeId),
-                Store.YES, Index.NOT_ANALYZED, TermVector.NO);
+        Field fid = new Field(FEED_ID, false, Integer.toString(feeId), Store.YES,
+                Index.NOT_ANALYZED, TermVector.NO);
         doc.add(fid);
 
-        Field rid = new Field(RSS_ID, false, Integer.toString(rssID),
-                Store.NO, Index.NOT_ANALYZED, TermVector.NO);
+        Field rid = new Field(RSS_ID, false, Integer.toString(rssID), Store.NO,
+                Index.NOT_ANALYZED, TermVector.NO);
         doc.add(rid);
 
         if (author != null && author.length() > 0) {
             author = Mapper.toSimplified(author);
-            Field f = new Field(AUTHOR, false, author, Store.NO,
-                    Index.NOT_ANALYZED, TV);
+            Field f = new Field(AUTHOR, false, author, Store.NO, Index.NOT_ANALYZED, TV);
             f.setBoost(AUTHOR_BOOST);
             doc.add(f);
         }
 
         if (title != null) {
             title = Mapper.toSimplified(title);
-            Field f = new Field(TITLE, false, title, Store.NO,
-                    Index.ANALYZED, TV);
+            Field f = new Field(TITLE, false, title, Store.NO, Index.ANALYZED, TV);
             f.setBoost(TITLE_BOOST);
             doc.add(f);
         }
@@ -238,8 +244,7 @@ public class Searcher {
             tags = Mapper.toSimplified(tags).toLowerCase();
             List<String> ts = Utils.split(tags, ';');
             for (String tag : ts) {
-                Field f = new Field(TAG, false, tag, Store.NO,
-                        Index.NOT_ANALYZED, TV);
+                Field f = new Field(TAG, false, tag, Store.NO, Index.NOT_ANALYZED, TV);
                 f.setBoost(TAG_BOOST);
                 doc.add(f);
             }
@@ -250,8 +255,7 @@ public class Searcher {
                 // String content = Utils.extractText(summary);
                 String content = HtmlUtils.text(summary);
                 content = Mapper.toSimplified(content);
-                Field f = new Field(CONTENT, false, content, Store.NO,
-                        Index.ANALYZED, TV);
+                Field f = new Field(CONTENT, false, content, Store.NO, Index.ANALYZED, TV);
                 doc.add(f);
             } catch (Exception ignore) {
                 logger.error("feed:" + feeId, ignore);
@@ -260,10 +264,8 @@ public class Searcher {
         return doc;
     }
 
-    public int feedID2DocID(IndexSearcher searcher, int feedid)
-            throws IOException {
-        TermQuery query = new TermQuery(FEED_ID_TERM.createTerm(Integer
-                .toString(feedid)));
+    public int feedID2DocID(IndexSearcher searcher, int feedid) throws IOException {
+        TermQuery query = new TermQuery(FEED_ID_TERM.createTerm(Integer.toString(feedid)));
         TopDocs docs = searcher.search(query, 1);
         if (docs.totalHits == 1) {
             return docs.scoreDocs[0].doc;
@@ -324,28 +326,25 @@ public class Searcher {
         return mReader;
     }
 
-    public void index(int feeID, int rssID, String author, String title,
-                      String summary, String tags) throws IOException {
-        Document doc = createDocument(feeID, rssID, author, title, summary,
-                tags);
+    public void index(int feeID, int rssID, String author, String title, String summary,
+            String tags) throws IOException {
+        Document doc = createDocument(feeID, rssID, author, title, summary, tags);
         mIndexer.addDocument(doc);
     }
 
-    public Map<String, Object> search(String q, String tags, String authors,
-                                      int userID, int limit, int offset, boolean facted)
-            throws IOException, ParseException, SQLException {
+    public Map<String, Object> search(String q, String tags, String authors, int userID,
+            int limit, int offset, boolean facted) throws IOException, ParseException,
+            SQLException {
         List<Integer> subids = DBHelper.getUserSubIDS(mDs, userID);
         IndexSearcher searcher = openSearcher();
         try {
             BooleanQuery query = buildQuery(q, subids);
             addFilter(query, tags, authors);
 
-            TopScoreDocCollector top = TopScoreDocCollector.create(limit
-                    + offset, false);
+            TopScoreDocCollector top = TopScoreDocCollector.create(limit + offset, false);
             Map<String, Object> ret = new TreeMap<String, Object>();
             if (facted) {
-                FacetCollector f = new FacetCollector(
-                        searcher.getIndexReader());
+                FacetCollector f = new FacetCollector(searcher.getIndexReader());
                 Collector col = MultiCollector.wrap(top, f);
                 searcher.search(query, col);
                 ret.put("authors", f.getAuthor(15));
@@ -367,8 +366,8 @@ public class Searcher {
                 ret.put("feeds", new ArrayList<Feed>(0));
             } else {
                 MinerDAO db = new MinerDAO(mDs, mJedis);
-                List<Feed> feeds = MinerDAO.removeDuplicate(db
-                        .fetchFeedsWithScore(userID, feedids));
+                List<Feed> feeds = MinerDAO.removeDuplicate(db.fetchFeedsWithScore(userID,
+                        feedids));
                 ret.put("feeds", feeds);
             }
             return ret;

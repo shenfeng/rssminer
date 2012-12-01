@@ -5,22 +5,22 @@
 
 package rssminer.db;
 
+import java.util.Random;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
-import java.util.Random;
-
 /**
  * Simple Redis performance Test
  * <p/>
- * LOCAL: redis server and client are on the same machine(M1).
- * REMOTE: redis server(M2) and client(M1) are on different machine.
+ * LOCAL: redis server and client are on the same machine(M1). REMOTE: redis
+ * server(M2) and client(M1) are on different machine.
  * <p/>
- * M1: CPU Intel i7 2600 @ 3.4G, MEM 16G
- * M2: CPU Intel T7200 @ 2.0G, MEM 3G
+ * M1: CPU Intel i7 2600 @ 3.4G, MEM 16G M2: CPU Intel T7200 @ 2.0G, MEM 3G
  */
 
 public class RedisPerfTest {

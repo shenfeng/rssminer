@@ -5,6 +5,16 @@
 
 package rssminer.tools;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.StringReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import org.apache.commons.io.IOUtils;
 import org.ccil.cowan.tagsoup.Parser;
 import org.xml.sax.Attributes;
@@ -12,17 +22,13 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.io.*;
-import java.sql.*;
-
 class ExtractTextHandler extends DefaultHandler {
     private int i, end;
     private boolean keep = true;
     private boolean prev = false, current = false;
     private StringBuilder sb = new StringBuilder();
 
-    public void characters(char[] ch, int start, int length)
-            throws SAXException {
+    public void characters(char[] ch, int start, int length) throws SAXException {
         if (keep) {
             end = start + length;
             for (i = start; i < end; ++i) {
@@ -35,8 +41,7 @@ class ExtractTextHandler extends DefaultHandler {
         }
     }
 
-    public void endElement(String uri, String localName, String qName)
-            throws SAXException {
+    public void endElement(String uri, String localName, String qName) throws SAXException {
         keep = true;
     }
 
@@ -44,10 +49,9 @@ class ExtractTextHandler extends DefaultHandler {
         return sb.toString();
     }
 
-    public void startElement(String uri, String localName, String qName,
-                             Attributes atts) throws SAXException {
-        if (localName.equalsIgnoreCase("script")
-                || localName.equalsIgnoreCase("style")) {
+    public void startElement(String uri, String localName, String qName, Attributes atts)
+            throws SAXException {
+        if (localName.equalsIgnoreCase("script") || localName.equalsIgnoreCase("style")) {
             keep = false;
         }
     }
@@ -73,8 +77,7 @@ public class Utils {
         return con;
     }
 
-    public static String extractText(String html) throws IOException,
-            SAXException {
+    public static String extractText(String html) throws IOException, SAXException {
         Parser p = new Parser();
         ExtractTextHandler h = new ExtractTextHandler();
         p.setContentHandler(h);
@@ -82,8 +85,7 @@ public class Utils {
         return h.getText();
     }
 
-    public static String readFile(String file) throws FileNotFoundException,
-            IOException {
+    public static String readFile(String file) throws FileNotFoundException, IOException {
         FileInputStream is = new FileInputStream(file);
         String txt = IOUtils.toString(is);
         is.close();

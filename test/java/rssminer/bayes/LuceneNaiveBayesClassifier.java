@@ -5,23 +5,37 @@
 
 package rssminer.bayes;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
-import org.apache.lucene.index.*;
-import org.apache.lucene.search.*;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.index.TermDocs;
+import org.apache.lucene.index.TermEnum;
+import org.apache.lucene.search.CachingWrapperFilter;
+import org.apache.lucene.search.DocIdSet;
+import org.apache.lucene.search.DocIdSetIterator;
+import org.apache.lucene.search.Filter;
+import org.apache.lucene.search.QueryWrapperFilter;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import rssminer.search.Searcher;
 
-import java.io.IOException;
-import java.util.*;
+import rssminer.search.Searcher;
 
 public class LuceneNaiveBayesClassifier {
 
@@ -68,8 +82,9 @@ public class LuceneNaiveBayesClassifier {
      * and the ratio of documents in a certain category. Expects a Lucene index
      * created with the tokenized document bodies, and a category field that is
      * specified in the setters and populated with the specified category value.
-     *
-     * @throws Exception if one is thrown.
+     * 
+     * @throws Exception
+     *             if one is thrown.
      */
     public void train() throws Exception {
         trainingSet = new HashMap<String, double[]>();
@@ -114,9 +129,10 @@ public class LuceneNaiveBayesClassifier {
                 for (int i = 0; i < pWord.length; i++) {
                     if (preventOverfitting) {
                         // apply smoothening formula
-//                        pWord[i] = ((pWord[i] + 1) / (nWords + nUniqueWords));
+                        // pWord[i] = ((pWord[i] + 1) / (nWords +
+                        // nUniqueWords));
                     } else {
-//                        pWord[i] /= nWords;
+                        // pWord[i] /= nWords;
                     }
                 }
             }
@@ -124,8 +140,7 @@ public class LuceneNaiveBayesClassifier {
                 InfoGainFeatureSelector featureSelector = new InfoGainFeatureSelector();
                 featureSelector.setWordProbabilities(trainingSet);
                 featureSelector.setPCategory(matchedDocs / nDocs);
-                Map<String, double[]> topFeatures = featureSelector
-                        .selectFeatures();
+                Map<String, double[]> topFeatures = featureSelector.selectFeatures();
                 this.trainingSet = topFeatures;
             }
         } finally {
@@ -143,11 +158,10 @@ public class LuceneNaiveBayesClassifier {
         return this.categoryDocRatio;
     }
 
-    public double classify(Map<String, double[]> wordProbabilities,
-                           double categoryDocRatio, String text) throws Exception {
+    public double classify(Map<String, double[]> wordProbabilities, double categoryDocRatio,
+            String text) throws Exception {
         RAMDirectory ramdir = new RAMDirectory();
-        IndexWriterConfig cfg = new IndexWriterConfig(Version.LUCENE_35,
-                analyzer);
+        IndexWriterConfig cfg = new IndexWriterConfig(Version.LUCENE_35, analyzer);
         IndexWriter writer = null;
         IndexReader reader = null;
         try {
@@ -194,11 +208,9 @@ public class LuceneNaiveBayesClassifier {
         }
     }
 
-    private Set<Integer> computeMatchedDocIds(IndexReader reader)
-            throws IOException {
-        Filter categoryFilter = new CachingWrapperFilter(
-                new QueryWrapperFilter(new TermQuery(new Term(
-                        categoryFieldName, matchCategoryValue))));
+    private Set<Integer> computeMatchedDocIds(IndexReader reader) throws IOException {
+        Filter categoryFilter = new CachingWrapperFilter(new QueryWrapperFilter(new TermQuery(
+                new Term(categoryFieldName, matchCategoryValue))));
         DocIdSet docIdSet = categoryFilter.getDocIdSet(reader);
         DocIdSetIterator docIdSetIterator = docIdSet.iterator();
         Set<Integer> matchedDocIds = new HashSet<Integer>();

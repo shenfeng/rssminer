@@ -5,18 +5,23 @@
 
 package rssminer.classfier;
 
+import static rssminer.search.Searcher.SEARCHER;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermFreqVector;
 import org.apache.lucene.search.IndexSearcher;
+
 import rssminer.db.Vote;
 import rssminer.search.Searcher;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.Map.Entry;
-
-import static rssminer.search.Searcher.SEARCHER;
 
 class TermFeature implements Comparable<TermFeature> {
 
@@ -56,8 +61,8 @@ class TermFeature implements Comparable<TermFeature> {
     }
 
     public String toString() {
-        return String.format("[l=%.4f, r=%.4f, dis=%.4f, r=%.4f, t=%.4f]",
-                like, read, dislike, getLogScore(), getScore());
+        return String.format("[l=%.4f, r=%.4f, dis=%.4f, r=%.4f, t=%.4f]", like, read, dislike,
+                getLogScore(), getScore());
     }
 }
 
@@ -102,8 +107,7 @@ public class NaiveBayes {
             TermScoreEntry all[] = new TermScoreEntry[map.size()];
             int index = 0;
             for (Entry<String, TermFeature> e : map.entrySet()) {
-                all[index] = new TermScoreEntry(e.getKey(), e.getValue()
-                        .getLogScore());
+                all[index] = new TermScoreEntry(e.getKey(), e.getValue().getLogScore());
                 index += 1;
             }
             Arrays.sort(all);
@@ -115,8 +119,8 @@ public class NaiveBayes {
         return result;
     }
 
-    private static double classfiy(Map<String, Map<String, Double>> model,
-                                   IndexReader reader, int docid) throws IOException {
+    private static double classfiy(Map<String, Map<String, Double>> model, IndexReader reader,
+            int docid) throws IOException {
         double result = 1.0D;
         int total = reader.numDocs();
         for (Term field : Searcher.ALL_FIELDS) {
@@ -147,8 +151,8 @@ public class NaiveBayes {
         return result;
     }
 
-    public static double[] classify(Map<String, Map<String, Double>> model,
-                                    List<Integer> feeds) throws IOException {
+    public static double[] classify(Map<String, Map<String, Double>> model, List<Integer> feeds)
+            throws IOException {
         int[] ids = SEARCHER.feedID2DocIDs(feeds);
         double[] result = new double[ids.length];
         IndexReader reader = SEARCHER.openReader();
@@ -167,8 +171,8 @@ public class NaiveBayes {
         return result;
     }
 
-    public static double classify(Map<String, Map<String, Double>> model,
-                                  int feedid) throws IOException {
+    public static double classify(Map<String, Map<String, Double>> model, int feedid)
+            throws IOException {
         IndexReader reader = SEARCHER.openReader();
         try {
             IndexSearcher searcher = new IndexSearcher(reader);
@@ -180,8 +184,7 @@ public class NaiveBayes {
         }
     }
 
-    public static Map<String, Map<String, Double>> train(List<Vote> votes)
-            throws IOException {
+    public static Map<String, Map<String, Double>> train(List<Vote> votes) throws IOException {
         // get ids
         List<Integer> feedids = new ArrayList<Integer>(votes.size());
         for (Vote vote : votes) {
@@ -205,8 +208,8 @@ public class NaiveBayes {
         }
     }
 
-    private static Map<String, Double> trainField(IndexReader reader,
-                                                  List<Vote> votes, Term field) throws IOException {
+    private static Map<String, Double> trainField(IndexReader reader, List<Vote> votes,
+            Term field) throws IOException {
         int total = reader.numDocs();
         Map<String, TermFeature> map;
         if (Searcher.CONTNET_TERM.equals(field)) {
@@ -218,8 +221,7 @@ public class NaiveBayes {
             if (vote.docID == -1) {
                 continue;
             }
-            TermFreqVector termVector = reader.getTermFreqVector(vote.docID,
-                    field.field());
+            TermFreqVector termVector = reader.getTermFreqVector(vote.docID, field.field());
             if (termVector != null) {
                 String[] terms = termVector.getTerms();
                 int[] freqs = termVector.getTermFrequencies();
@@ -229,7 +231,7 @@ public class NaiveBayes {
                     int df = reader.docFreq(field.createTerm(text));
                     if (df > MIN_DF) {
                         double tfidf = freqs[j] * Math.log(total / df);
-//                    int count = freqs[j];
+                        // int count = freqs[j];
                         TermFeature h = map.get(text);
                         if (h == null) {
                             h = new TermFeature();

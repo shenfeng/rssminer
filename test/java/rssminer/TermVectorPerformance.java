@@ -5,9 +5,19 @@
 
 package rssminer;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.index.*;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.index.TermEnum;
+import org.apache.lucene.index.TermFreqVector;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.junit.After;
@@ -16,22 +26,15 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 public class TermVectorPerformance {
 
-    private static Logger logger = LoggerFactory
-            .getLogger(TermVectorPerformance.class);
+    private static Logger logger = LoggerFactory.getLogger(TermVectorPerformance.class);
     private IndexReader reader;
 
     @Before
     public void setup() throws IOException {
         Version v = Version.LUCENE_33;
-        IndexWriterConfig config = new IndexWriterConfig(v,
-                new StandardAnalyzer(v));
+        IndexWriterConfig config = new IndexWriterConfig(v, new StandardAnalyzer(v));
         config.setOpenMode(OpenMode.CREATE_OR_APPEND);
         config.setRAMBufferSizeMB(128);
         FSDirectory dir = FSDirectory.open(new File("/tmp/index"));
@@ -74,13 +77,11 @@ public class TermVectorPerformance {
             if (reader.isDeleted(i))
                 continue;
             count++;
-            TermFreqVector termFreqVector = reader.getTermFreqVector(i,
-                    "content");
+            TermFreqVector termFreqVector = reader.getTermFreqVector(i, "content");
             if (termFreqVector != null) {
                 int[] frequencies = termFreqVector.getTermFrequencies();
                 String[] terms = termFreqVector.getTerms();
-                Map<String, Integer> map = new HashMap<String, Integer>(
-                        frequencies.length);
+                Map<String, Integer> map = new HashMap<String, Integer>(frequencies.length);
 
                 for (int j = 0; j < frequencies.length; ++j) {
                     String text = terms[j];
@@ -105,8 +106,7 @@ public class TermVectorPerformance {
     public void testIsLetter() {
         String s = "去年，《abc def   3,085";
         for (int i = 0; i < s.length(); ++i) {
-            System.out.println(s.charAt(i) + "\t"
-                    + Character.isLetter(s.charAt(i)));
+            System.out.println(s.charAt(i) + "\t" + Character.isLetter(s.charAt(i)));
         }
     }
 }

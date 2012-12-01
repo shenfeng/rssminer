@@ -5,32 +5,41 @@
 
 package rssminer;
 
+import static java.lang.Character.OTHER_PUNCTUATION;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import me.shenfeng.http.HttpUtils;
 import me.shenfeng.http.client.HttpClient;
 import me.shenfeng.http.client.HttpClientConfig;
+
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import rssminer.db.SubItem;
 import rssminer.jsoup.HtmlUtils;
 import rssminer.search.Searcher;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.IOException;
-import java.io.StringReader;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.sql.*;
-import java.util.*;
-
-import static java.lang.Character.OTHER_PUNCTUATION;
 
 class GoogleExportHandler extends DefaultHandler {
 
@@ -43,8 +52,7 @@ class GoogleExportHandler extends DefaultHandler {
     private SubItem current = new SubItem();
     private boolean isUrl = true;
 
-    public void characters(char[] ch, int start, int length)
-            throws SAXException {
+    public void characters(char[] ch, int start, int length) throws SAXException {
         if (isTitle) {
             current.setTitle(new String(ch, start, length).trim());
         } else if (isLabel) {
@@ -59,8 +67,7 @@ class GoogleExportHandler extends DefaultHandler {
         }
     }
 
-    public void endElement(String uri, String localName, String qName)
-            throws SAXException {
+    public void endElement(String uri, String localName, String qName) throws SAXException {
         if (qName.equals("object") && --objectDepth == 1) {
             items.add(current);
             current = new SubItem();
@@ -75,8 +82,8 @@ class GoogleExportHandler extends DefaultHandler {
         return items;
     }
 
-    public void startElement(String uri, String localName, String qName,
-                             Attributes att) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes att)
+            throws SAXException {
         if (qName.equals("object")) {
             ++objectDepth;
         } else if ("string".equals(qName)) {
@@ -94,12 +101,12 @@ class GoogleExportHandler extends DefaultHandler {
 
 public class Utils {
     public static final HttpClient CLIENT;
-    public static final String USER_AGETNT = "Mozilla/5.0 (X11; Linux x86_64; rv:10.0.9) Gecko/20100101 Firefox/10.0.9 Iceweasel/10.0.9";
-//    public static final String USER_AGETNT = "Mozilla/5.0 (compatible; Rssminer/1.0; +http://rssminer.net)";
-    public static final String[] NO_IFRAME = new String[]{"groups.google"}; // X-Frame-Options
-    public static final String[] RESETED_DOMAINS = new String[]{
-            "wordpress", "appspot", "emacsblog", "blogger", "blogspot",
-            "mikemccandless", "feedproxy", "blogblog"};
+    // public static final String USER_AGETNT =
+    // "Mozilla/5.0 (X11; Linux x86_64; rv:10.0.9) Gecko/20100101 Firefox/10.0.9 Iceweasel/10.0.9";
+    public static final String USER_AGETNT = "Mozilla/5.0 (compatible; Rssminer/1.0; +http://rssminer.net)";
+    public static final String[] NO_IFRAME = new String[] { "groups.google" }; // X-Frame-Options
+    public static final String[] RESETED_DOMAINS = new String[] { "wordpress", "appspot",
+            "emacsblog", "blogger", "blogspot", "mikemccandless", "feedproxy", "blogblog" };
 
     public static final String FINAL_URI = "X-final-uri";
 
@@ -133,8 +140,7 @@ public class Utils {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < text.length(); i++) {
             char ch = text.charAt(i);
-            if (!Character.isHighSurrogate(ch)
-                    && !Character.isLowSurrogate(ch)) {
+            if (!Character.isHighSurrogate(ch) && !Character.isLowSurrogate(ch)) {
                 sb.append(ch);
             }
         }
@@ -188,8 +194,7 @@ public class Utils {
     public static void zrem(JedisPool pool, int userid, int rssid, int feedid) {
         Jedis jedis = pool.getResource();
         try {
-            jedis.zrem(genKey(userid, rssid), Integer.toString(feedid)
-                    .getBytes());
+            jedis.zrem(genKey(userid, rssid), Integer.toString(feedid).getBytes());
         } finally {
             pool.returnResource(jedis);
         }
@@ -270,8 +275,7 @@ public class Utils {
         char ch;
         for (int i = 0; i < str.length(); ++i) {
             ch = str.charAt(i);
-            if (Character.isWhitespace(ch)
-                    || Character.getType(ch) == OTHER_PUNCTUATION) {
+            if (Character.isWhitespace(ch) || Character.getType(ch) == OTHER_PUNCTUATION) {
                 if (!splitter) {
                     strs.add(str.substring(start + 1, i));
                 }
@@ -310,8 +314,8 @@ public class Utils {
     }
 
     private static void simHash(String text, int[] bits) {
-//        TokenStream stream = new SimpleMMsegTokenizer(DictHolder.dic,
-//                new me.shenfeng.mmseg.StringReader(text));
+        // TokenStream stream = new SimpleMMsegTokenizer(DictHolder.dic,
+        // new me.shenfeng.mmseg.StringReader(text));
 
         // TODO much better than above: steam and stop words removal
         TokenStream stream = Searcher.analyzer.tokenStream("",

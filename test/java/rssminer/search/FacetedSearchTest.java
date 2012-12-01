@@ -5,6 +5,22 @@
 
 package rssminer.search;
 
+import static rssminer.search.Searcher.AUTHOR;
+import static rssminer.search.Searcher.AUTHOR_BOOST;
+import static rssminer.search.Searcher.CONTENT;
+import static rssminer.search.Searcher.FEED_ID;
+import static rssminer.search.Searcher.TAG;
+import static rssminer.search.Searcher.TAG_BOOST;
+import static rssminer.search.Searcher.analyzer;
+import static rssminer.search.Searcher.logger;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.facet.index.CategoryDocumentBuilder;
@@ -20,21 +36,20 @@ import org.apache.lucene.facet.taxonomy.TaxonomyReader;
 import org.apache.lucene.facet.taxonomy.TaxonomyWriter;
 import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyReader;
 import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter;
-import org.apache.lucene.index.*;
-import org.apache.lucene.search.*;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.MultiCollector;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
+
 import rssminer.jsoup.HtmlUtils;
 import rssminer.tools.Utils;
-
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static rssminer.search.Searcher.*;
 
 public class FacetedSearchTest {
 
@@ -43,12 +58,14 @@ public class FacetedSearchTest {
         RAMDirectory indexDir = new RAMDirectory();
         RAMDirectory taxoDir = new RAMDirectory();
 
-//        Directory indexDir = FSDirectory.open(new File("/tmp/idx"));
-//        Directory taxoDir = FSDirectory.open(new File("/tmp/taxidx"));
+        // Directory indexDir = FSDirectory.open(new File("/tmp/idx"));
+        // Directory taxoDir = FSDirectory.open(new File("/tmp/taxidx"));
 
-        IndexWriter writer = new IndexWriter(indexDir, new IndexWriterConfig(Version.LUCENE_36, analyzer));
+        IndexWriter writer = new IndexWriter(indexDir, new IndexWriterConfig(Version.LUCENE_36,
+                analyzer));
 
-        TaxonomyWriter taxo = new DirectoryTaxonomyWriter(taxoDir, IndexWriterConfig.OpenMode.CREATE);
+        TaxonomyWriter taxo = new DirectoryTaxonomyWriter(taxoDir,
+                IndexWriterConfig.OpenMode.CREATE);
 
         Connection db = Utils.getRssminerDB();
 
@@ -63,23 +80,19 @@ public class FacetedSearchTest {
             String summary = rs.getString("summary");
             int id = rs.getInt("id");
 
-
             Document doc = createDocument(id, author, summary, tags);
-
 
             CategoryDocumentBuilder builder = new CategoryDocumentBuilder(taxo);
             List<CategoryPath> paths = createPath(tags, author);
             builder.setCategoryPaths(paths);
             builder.build(doc);
 
-//            System.out.println(doc);
+            // System.out.println(doc);
             writer.addDocument(doc);
 
+            // builder.setCategoryPaths(new cre)
 
-//            builder.setCategoryPaths(new cre)
-
-
-//            System.out.println(author);
+            // System.out.println(author);
         }
 
         writer.commit();
@@ -87,7 +100,6 @@ public class FacetedSearchTest {
 
         taxo.commit();
         taxo.close();
-
 
         IndexReader reader = IndexReader.open(indexDir);
         IndexSearcher searcher = new IndexSearcher(reader);
@@ -104,14 +116,17 @@ public class FacetedSearchTest {
 
             FacetIndexingParams ip = new DefaultFacetIndexingParams();
             FacetSearchParams facetSearchParams = new FacetSearchParams();
-            facetSearchParams.addFacetRequest(new CountFacetRequest(new CategoryPath(AUTHOR), 100));
-            facetSearchParams.addFacetRequest(new CountFacetRequest(new CategoryPath("tag"), 100));
+            facetSearchParams.addFacetRequest(new CountFacetRequest(new CategoryPath(AUTHOR),
+                    100));
+            facetSearchParams.addFacetRequest(new CountFacetRequest(new CategoryPath("tag"),
+                    100));
 
-            FacetsCollector facetsCollector = new FacetsCollector(facetSearchParams, reader, taxo2);
+            FacetsCollector facetsCollector = new FacetsCollector(facetSearchParams, reader,
+                    taxo2);
             searcher.search(q, MultiCollector.wrap(tdc, facetsCollector));
             List<FacetResult> res = facetsCollector.getFacetResults();
 
-//            System.out.println(res.size());
+            // System.out.println(res.size());
             for (FacetResult re : res) {
                 FacetResultNode node = re.getFacetResultNode();
                 for (FacetResultNode n : node.getSubResults()) {
@@ -124,12 +139,11 @@ public class FacetedSearchTest {
             long time = System.currentTimeMillis() - start;
             System.out.println(tdc.topDocs().totalHits + "\t" + time + "ms");
         }
-//        System.out.println(res);
+        // System.out.println(res);
 
-//        System.out.println(indexDir.sizeInBytes());
+        // System.out.println(indexDir.sizeInBytes());
 
-
-//        System.out.println(taxoDir.sizeInBytes());
+        // System.out.println(taxoDir.sizeInBytes());
 
         indexDir.close();
         taxoDir.close();
@@ -150,14 +164,12 @@ public class FacetedSearchTest {
         return paths;
     }
 
-    private static Document createDocument(int feeId, String author,
-                                           String summary, String tags) {
+    private static Document createDocument(int feeId, String author, String summary, String tags) {
         Document doc = new Document();
         // not intern, already interned
-        Field fid = new Field(FEED_ID, false, Integer.toString(feeId),
-                Field.Store.YES, Field.Index.NOT_ANALYZED, Field.TermVector.NO);
+        Field fid = new Field(FEED_ID, false, Integer.toString(feeId), Field.Store.YES,
+                Field.Index.NOT_ANALYZED, Field.TermVector.NO);
         doc.add(fid);
-
 
         if (author != null && author.length() > 0) {
             author = Mapper.toSimplified(author);
@@ -195,6 +207,5 @@ public class FacetedSearchTest {
         }
         return doc;
     }
-
 
 }

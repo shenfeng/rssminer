@@ -7,7 +7,7 @@ package rssminer.db;
 
 /**
  * google export
- *
+ * 
  * @author feng
  */
 public class SubItem {
@@ -40,7 +40,6 @@ public class SubItem {
     }
 
     public String toString() {
-        return "Item [title=" + title + ", url=" + url + ", category="
-                + category + "]";
+        return "Item [title=" + title + ", url=" + url + ", category=" + category + "]";
     }
 }

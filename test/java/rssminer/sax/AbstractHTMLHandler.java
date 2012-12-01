@@ -20,15 +20,14 @@ public abstract class AbstractHTMLHandler extends DefaultHandler {
     static final char SLASH = '/';
     static final char EQUAL = '=';
     static final char QUOTE = '\"';
-    static final String[] UN_ClOSEABLE_TATS = new String[]{"img", "input",
-            "hr", "br", "meta", "link"};
+    static final String[] UN_ClOSEABLE_TATS = new String[] { "img", "input", "hr", "br",
+            "meta", "link" };
     static final String PRE = "pre";
     static final String SCRIPT = "script";
 
     static final String STYLE = "style";
 
-    static final String[] PRESEVE_WHITESPACE_TAGS = new String[]{PRE,
-            SCRIPT, STYLE};
+    static final String[] PRESEVE_WHITESPACE_TAGS = new String[] { PRE, SCRIPT, STYLE };
 
     static boolean isQuoteNeeded(String val) {
         if (val.isEmpty() || val.length() > 10) {
@@ -38,8 +37,8 @@ public abstract class AbstractHTMLHandler extends DefaultHandler {
             while (--i >= 0) {
                 char c = val.charAt(i);
                 // http://www.cs.tut.fi/~jkorpela/qattr.html
-                if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z')
-                        || (c >= 'A' && c <= 'Z') || c == '-' || c == '.') {
+                if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+                        || c == '-' || c == '.') {
                 } else {
                     return true;
                 }

@@ -26,15 +26,13 @@ public class TextAccumVisitor implements NodeVisitor {
         if (node instanceof TextNode) {
             String text = ((TextNode) node).getWholeText();
 
-            if (!withA && node.parent().nodeName() == "a"
-                    && text.startsWith("http")) {
+            if (!withA && node.parent().nodeName() == "a" && text.startsWith("http")) {
                 // do not care if this is <a href="href">href</a>
                 return;
             }
 
             boolean lastWhiteSpace = sb.length() > 0;
-            if (sb.length() > 0
-                    && !Character.isWhitespace(sb.charAt(sb.length() - 1))) {
+            if (sb.length() > 0 && !Character.isWhitespace(sb.charAt(sb.length() - 1))) {
                 sb.append(' ');
             }
             for (int i = 0; i < text.length(); ++i) {

@@ -5,10 +5,18 @@
 
 package rssminer.db;
 
-import org.junit.Test;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
-import java.sql.*;
-import java.util.*;
+import org.junit.Test;
 
 class UserFeed {
     public int userID;
@@ -24,8 +32,8 @@ public class BatchUpdate {
 
     @Test
     public void testBatch() throws SQLException {
-        Connection con = DriverManager.getConnection(
-                "jdbc:mysql://localhost/rssminer", "feng", "");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost/rssminer", "feng",
+                "");
 
         con.setAutoCommit(false);
         Statement st = con.createStatement();

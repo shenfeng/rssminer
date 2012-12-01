@@ -5,23 +5,24 @@
 
 package rssminer.test;
 
-import clojure.lang.Keyword;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import junit.framework.Assert;
 import me.shenfeng.dbcp.PerThreadDataSource;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import rssminer.Utils;
 import rssminer.search.Searcher;
 
-import java.io.IOException;
-import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
-
 public class SimHashTest {
-    private static final Logger logger = LoggerFactory
-            .getLogger(SimHashTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(SimHashTest.class);
 
     @Test
     public void testHammingDistance() {
@@ -55,8 +56,8 @@ public class SimHashTest {
     private static final int TOTAL = 1000000;
 
     static {
-        PerThreadDataSource db = new PerThreadDataSource(
-                "jdbc:mysql://localhost/rssminer", "feng", "");
+        PerThreadDataSource db = new PerThreadDataSource("jdbc:mysql://localhost/rssminer",
+                "feng", "");
         try {
             Searcher.initGlobalSearcher("/var/rssminer/index", db, null);
             con = db.getConnection();
@@ -86,7 +87,7 @@ public class SimHashTest {
     @Test
     public void testWithOutLuence() throws IOException {
         for (int i = 1; i < TOTAL; i++) {
-//            SimHash.simHash(i);
+            // SimHash.simHash(i);
         }
     }
 

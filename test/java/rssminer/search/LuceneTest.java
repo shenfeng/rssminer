@@ -5,24 +5,31 @@
 
 package rssminer.search;
 
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.BooleanClause.Occur;
-import org.apache.lucene.search.*;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause.Occur;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.Collector;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.Scorer;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.TopScoreDocCollector;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.junit.Before;
+import org.junit.Test;
 
 class DelegateCollector extends Collector {
 
@@ -38,7 +45,7 @@ class DelegateCollector extends Collector {
     }
 
     public void collect(int doc) throws IOException {
-//        System.out.println("collect---------- " + doc);
+        // System.out.println("collect---------- " + doc);
         collector.collect(doc);
     }
 
@@ -63,17 +70,14 @@ public class LuceneTest {
     public void setup() throws IOException {
         Directory dir = FSDirectory.open(new File("/var/rssminer/index"));
         IndexReader reader = IndexReader.open(dir);
-        System.out.println(reader.maxDoc()
-        );
+        System.out.println(reader.maxDoc());
         searcher = new IndexSearcher(reader);
     }
-
 
     @Test
     public void testPrioriyQueue() {
 
-
-//        PriorityQueue
+        // PriorityQueue
     }
 
     @Test
@@ -91,18 +95,17 @@ public class LuceneTest {
 
         Query q = new TermQuery(new Term(Searcher.CONTENT, "java"));
 
-//        System.out.println();
+        // System.out.println();
 
         searcher.search(q, new DelegateCollector(TopScoreDocCollector.create(100, false)));
 
-//        searcher.search()
+        // searcher.search()
 
-//        searcher.search(ids);
+        // searcher.search(ids);
 
-//        searcher.search()
+        // searcher.search()
 
     }
-
 
     @Test
     public void testSearch() throws IOException {
@@ -131,8 +134,7 @@ public class LuceneTest {
             BooleanQuery ids = new BooleanQuery();
             int count = r.nextInt(450);
             for (int i = 0; i < count; i++) {
-                ids.add(new TermQuery(new Term("rid", Integer.toString(i))),
-                        Occur.SHOULD);
+                ids.add(new TermQuery(new Term("rid", Integer.toString(i))), Occur.SHOULD);
             }
 
             BooleanQuery query = new BooleanQuery();

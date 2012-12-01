@@ -5,17 +5,18 @@
 
 package rssminer.search;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+
 import me.shenfeng.mmseg.BSDictionary;
 import me.shenfeng.mmseg.Dictionary;
 import me.shenfeng.mmseg.SimpleMMsegTokenizer;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.PorterStemFilter;
 import org.apache.lucene.analysis.TokenStream;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
 
 public class RssminerAnalyzer extends Analyzer {
 
@@ -23,8 +24,8 @@ public class RssminerAnalyzer extends Analyzer {
         public static final Dictionary dic;
 
         static {
-            InputStream is = RssminerAnalyzer.class.getClassLoader()
-                    .getResourceAsStream("words.dic");
+            InputStream is = RssminerAnalyzer.class.getClassLoader().getResourceAsStream(
+                    "words.dic");
             Dictionary tmp = null;
             try {
                 tmp = new BSDictionary(is);
@@ -38,14 +39,14 @@ public class RssminerAnalyzer extends Analyzer {
         }
     }
 
-    public final TokenStream reusableTokenStream(String fieldName, Reader reader) throws IOException {
+    public final TokenStream reusableTokenStream(String fieldName, Reader reader)
+            throws IOException {
         return super.reusableTokenStream(fieldName, reader);
     }
 
     public final TokenStream tokenStream(String fieldName, Reader reader) {
 
-        SimpleMMsegTokenizer msegTokenizer = new SimpleMMsegTokenizer(
-                DictHolder.dic, reader);
+        SimpleMMsegTokenizer msegTokenizer = new SimpleMMsegTokenizer(DictHolder.dic, reader);
 
         // System.out.println("-----------");
         // setPreviousTokenStream(mmsegTokenizer); // 保存实例
@@ -57,7 +58,7 @@ public class RssminerAnalyzer extends Analyzer {
         TokenStream tok = new StopFilter(msegTokenizer);
         tok = new PorterStemFilter(tok);
         return tok;
-//        return new StopFilter(msegTokenizer);
+        // return new StopFilter(msegTokenizer);
         // return tok;
         // return new KStemFilter(tok);
     }

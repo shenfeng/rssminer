@@ -5,10 +5,6 @@
 
 package rssminer;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -16,37 +12,35 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 class Request {
 
-    static String[] search = new String[]{
-            "java", "ios", "clojure", "谷歌四面树敌", "史诗般的战争",
-            "debian", "做正确的加法", "编程", "网页中的平面构成", "企业开发者", "Nosql", "google",
-            "2从原理分析PHP性能", "nginx", "排名算法", "电子商务", "software",
-            "创新工场", "手机", "周鸿祎", "sql", "企业应用测试平台", "融资", "github", "语言"
-    };
+    static String[] search = new String[] { "java", "ios", "clojure", "谷歌四面树敌", "史诗般的战争",
+            "debian", "做正确的加法", "编程", "网页中的平面构成", "企业开发者", "Nosql", "google", "2从原理分析PHP性能",
+            "nginx", "排名算法", "电子商务", "software", "创新工场", "手机", "周鸿祎", "sql", "企业应用测试平台", "融资",
+            "github", "语言" };
 
     static String cookie(int userID) {
         return "zk" + Integer.toString(Integer.MAX_VALUE - (userID + 1), 35);
     }
 
-    static String[] sorts = new String[]{
-            "recommend", "newest", "oldest", "read", "voted"
-    };
+    static String[] sorts = new String[] { "recommend", "newest", "oldest", "read", "voted" };
 
-    static String[] getUrls = new String[]{
-            "/api/subs",
-            "/a",
-            "/",
+    static String[] getUrls = new String[] { "/api/subs", "/a", "/",
             "/api/welcome?section=newest&limit=26&offset=0",
             "/api/welcome?section=newest&limit=26&offset=20",
             "/api/welcome?section=recommend&limit=26&offset=0",
             "/api/welcome?section=read&limit=26&offset=0",
-            "/api/welcome?section=voted&limit=26&offset=0"
-    };
+            "/api/welcome?section=voted&limit=26&offset=0" };
     public static final int RSS_COUNT = 6000;
     public static final int FEED_COUNT = 700000;
 
@@ -60,7 +54,9 @@ class Request {
         Random r = new Random();
         userID = r.nextInt(70);
         headers.put("Accept", "*/*");
-        headers.put("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_0) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1");
+        headers.put(
+                "User-Agent",
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_0) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1");
         headers.put("Pragma", "no-cache");
         headers.put("Connection", r.nextBoolean() ? "keep-alive" : "close");
         headers.put("Accept-Encoding", "gzip,deflate,sdch");
@@ -70,8 +66,8 @@ class Request {
         if (next > 80) {
             url = getUrls[r.nextInt(getUrls.length)];
         } else if (next > 75) { // 5% search
-            url = "/api/search?q=" + search[r.nextInt(search.length)] +
-                    "&limit=" + (r.nextInt(5) + 11);
+            url = "/api/search?q=" + search[r.nextInt(search.length)] + "&limit="
+                    + (r.nextInt(5) + 11);
         } else if (next > 55) { // 20% mark read
             post = true;
             url = "/api/feeds/" + r.nextInt(FEED_COUNT) + "/read";
@@ -138,9 +134,8 @@ public class PerfTest {
 
         int time = (int) (System.currentTimeMillis() - start);
         if (id % 100 == 0)
-            logger.info("{}: {} {} {}, {}ms", new Object[]{
-                    req.userID, req.post ? "POST" : "GET", code, req.url, time
-            });
+            logger.info("{}: {} {} {}, {}ms", new Object[] { req.userID,
+                    req.post ? "POST" : "GET", code, req.url, time });
 
         return time;
     }
@@ -159,23 +154,23 @@ public class PerfTest {
             count = Integer.parseInt(args[idx++]);
         }
 
-        logger.info("thread: {}, total: {}, host: {}", new Object[]{
-                threadCount, count, host
-        });
+        logger.info("thread: {}, total: {}, host: {}",
+                new Object[] { threadCount, count, host });
         final AtomicInteger remaining = new AtomicInteger(count);
 
         final AtomicLong totalTime = new AtomicLong(0);
         long start = System.currentTimeMillis();
         final AtomicInteger ider = new AtomicInteger(0);
-        ExecutorService service = Executors.newFixedThreadPool(threadCount, new ThreadFactory() {
-            public Thread newThread(Runnable r) {
-                Thread t = new Thread(r);
-                t.setName("t" + ider.incrementAndGet());
-                return t;
-            }
+        ExecutorService service = Executors.newFixedThreadPool(threadCount,
+                new ThreadFactory() {
+                    public Thread newThread(Runnable r) {
+                        Thread t = new Thread(r);
+                        t.setName("t" + ider.incrementAndGet());
+                        return t;
+                    }
 
-            ;
-        });
+                    ;
+                });
         for (int i = 0; i < threadCount; i++) {
             service.submit(new Runnable() {
                 public void run() {
@@ -195,8 +190,7 @@ public class PerfTest {
         service.shutdown();
         service.awaitTermination(1000, TimeUnit.MINUTES);
         long time = System.currentTimeMillis() - start;
-        logger.info("thread: {}, total: {}, per request time: {}ms, per: {}ms", new Object[]{
-                threadCount, count, totalTime.get() / count, time / count
-        });
+        logger.info("thread: {}, total: {}, per request time: {}ms, per: {}ms", new Object[] {
+                threadCount, count, totalTime.get() / count, time / count });
     }
 }

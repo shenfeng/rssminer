@@ -13,10 +13,9 @@ public class LinkDownloader {
 
     static final String NO_CONTNET = "select f.id, f.link from feeds f join feed_data d on f.id = d.id where length(compact) < 600";
 
-    public static void main(String[] args) throws IOException,
-            InterruptedException, URISyntaxException, SQLException {
-        Downloader d = new Downloader("/home/feng/Downloads/htmls/",
-                NO_CONTNET, 150);
+    public static void main(String[] args) throws IOException, InterruptedException,
+            URISyntaxException, SQLException {
+        Downloader d = new Downloader("/home/feng/Downloads/htmls/", NO_CONTNET, 150);
         d.start();
     }
 }

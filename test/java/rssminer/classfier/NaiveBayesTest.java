@@ -5,37 +5,38 @@
 
 package rssminer.classfier;
 
-import clojure.lang.ArraySeq;
-import org.apache.commons.io.IOUtils;
-import org.apache.lucene.index.CorruptIndexException;
-import org.junit.Before;
-import org.junit.Test;
-import rssminer.search.Searcher;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.lucene.index.CorruptIndexException;
+import org.junit.Before;
+import org.junit.Test;
+
+import rssminer.search.Searcher;
+import clojure.lang.ArraySeq;
+
 @SuppressWarnings("unchecked")
 public class NaiveBayesTest {
 
-    static final File TRAIN = new File(
-            "/home/feng/workspace/rssminer/test/20news-bydate-train");
-    static final File TEST = new File(
-            "/home/feng/workspace/rssminer/test/20news-bydate-test");
+    static final File TRAIN = new File("/home/feng/workspace/rssminer/test/20news-bydate-train");
+    static final File TEST = new File("/home/feng/workspace/rssminer/test/20news-bydate-test");
     Searcher searcher;
     Map<String, Map<String, Double>> model;
 
-    String[] likes = new String[]{"comp.os.ms-windows.misc",
-            "comp.sys.ibm.pc.hardware", "comp.windows.x", "misc.forsale",
-            "rec.autos", "rec.motorcycles", "rec.sport.baseball",
-            "rec.sport.hockey", "sci.crypt", "sci.electronics", "sci.med",
-            "sci.space", "soc.religion.christian", "talk.politics.guns",
-            "talk.politics.mideast", "talk.politics.misc", "talk.religion.misc"};
-    String[] disLikes = new String[]{"talk.politics.misc", "sci.electronics",
-            "comp.sys.mac.hardware", "comp.graphics"};
+    String[] likes = new String[] { "comp.os.ms-windows.misc", "comp.sys.ibm.pc.hardware",
+            "comp.windows.x", "misc.forsale", "rec.autos", "rec.motorcycles",
+            "rec.sport.baseball", "rec.sport.hockey", "sci.crypt", "sci.electronics",
+            "sci.med", "sci.space", "soc.religion.christian", "talk.politics.guns",
+            "talk.politics.mideast", "talk.politics.misc", "talk.religion.misc" };
+    String[] disLikes = new String[] { "talk.politics.misc", "sci.electronics",
+            "comp.sys.mac.hardware", "comp.graphics" };
 
     private List<Integer> trainLikeIds = new ArrayList<Integer>();
 
@@ -46,8 +47,7 @@ public class NaiveBayesTest {
 
     final int MAX_PERCATEGORY = 5000;
 
-    public void indexFile(File f, long id) throws FileNotFoundException,
-            IOException {
+    public void indexFile(File f, long id) throws FileNotFoundException, IOException {
         List<String> lines = IOUtils.readLines(new FileInputStream(f));
         String subject = null;
         boolean isContent = false;
@@ -120,9 +120,9 @@ public class NaiveBayesTest {
                 }
             }
         }
-        System.out.println("train like: " + trainLikeIds.size()
-                + "\t dislike: " + trainDisLikeIds.size());
-//		model = NaiveBayes.train(trainLikeIds, trainDisLikeIds);
+        System.out.println("train like: " + trainLikeIds.size() + "\t dislike: "
+                + trainDisLikeIds.size());
+        // model = NaiveBayes.train(trainLikeIds, trainDisLikeIds);
 
         printModelDetail(model);
     }
@@ -150,8 +150,7 @@ public class NaiveBayesTest {
     @Test
     public void testBayes() throws CorruptIndexException, IOException {
         int count = 0;
-        double guard = (double) trainLikeIds.size()
-                / (double) trainDisLikeIds.size();
+        double guard = (double) trainLikeIds.size() / (double) trainDisLikeIds.size();
 
         // guard = 1.0D;
         // testDisLikeIds = trainDisLikeIds;
@@ -172,8 +171,7 @@ public class NaiveBayesTest {
 
         int discount = 0;
         for (Integer dislike : testDisLikeIds) {
-            double classify = NaiveBayes.classify(model,
-                    ArraySeq.create(dislike))[0];
+            double classify = NaiveBayes.classify(model, ArraySeq.create(dislike))[0];
             // System.out.println(classify);
             if (classify < guard) {
                 discount++;
@@ -182,11 +180,10 @@ public class NaiveBayesTest {
             }
         }
 
-        System.out.println("like:     " + count + "/" + testLikeIds.size()
-                + "\t" + (double) count / testLikeIds.size());
-        System.out.println("dislike:  " + discount + "/"
-                + testDisLikeIds.size() + "\t" + (double) discount
-                / testDisLikeIds.size());
+        System.out.println("like:     " + count + "/" + testLikeIds.size() + "\t"
+                + (double) count / testLikeIds.size());
+        System.out.println("dislike:  " + discount + "/" + testDisLikeIds.size() + "\t"
+                + (double) discount / testDisLikeIds.size());
         // System.out.println(discount);
     }
 

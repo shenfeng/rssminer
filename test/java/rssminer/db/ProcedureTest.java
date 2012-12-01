@@ -5,9 +5,12 @@
 
 package rssminer.db;
 
-import me.shenfeng.dbcp.PerThreadDataSource;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import java.sql.*;
+import me.shenfeng.dbcp.PerThreadDataSource;
 
 public class ProcedureTest {
 

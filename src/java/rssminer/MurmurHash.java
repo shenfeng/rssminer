@@ -9,10 +9,13 @@ package rssminer;
 public final class MurmurHash {
     /**
      * Generates 64 bit hash from byte array of the given length and seed.
-     *
-     * @param data   byte array to hash
-     * @param length length of the array to hash
-     * @param seed   initial seed value
+     * 
+     * @param data
+     *            byte array to hash
+     * @param length
+     *            length of the array to hash
+     * @param seed
+     *            initial seed value
      * @return 64 bit hash of the given array
      */
     public static long hash64(final byte[] data, int length, int seed) {
@@ -25,8 +28,7 @@ public final class MurmurHash {
 
         for (int i = 0; i < length8; i++) {
             final int i8 = i * 8;
-            long k = ((long) data[i8 + 0] & 0xff)
-                    + (((long) data[i8 + 1] & 0xff) << 8)
+            long k = ((long) data[i8 + 0] & 0xff) + (((long) data[i8 + 1] & 0xff) << 8)
                     + (((long) data[i8 + 2] & 0xff) << 16)
                     + (((long) data[i8 + 3] & 0xff) << 24)
                     + (((long) data[i8 + 4] & 0xff) << 32)
@@ -43,21 +45,21 @@ public final class MurmurHash {
         }
 
         switch (length % 8) {
-            case 7:
-                h ^= (long) (data[(length & ~7) + 6] & 0xff) << 48;
-            case 6:
-                h ^= (long) (data[(length & ~7) + 5] & 0xff) << 40;
-            case 5:
-                h ^= (long) (data[(length & ~7) + 4] & 0xff) << 32;
-            case 4:
-                h ^= (long) (data[(length & ~7) + 3] & 0xff) << 24;
-            case 3:
-                h ^= (long) (data[(length & ~7) + 2] & 0xff) << 16;
-            case 2:
-                h ^= (long) (data[(length & ~7) + 1] & 0xff) << 8;
-            case 1:
-                h ^= (long) (data[length & ~7] & 0xff);
-                h *= m;
+        case 7:
+            h ^= (long) (data[(length & ~7) + 6] & 0xff) << 48;
+        case 6:
+            h ^= (long) (data[(length & ~7) + 5] & 0xff) << 40;
+        case 5:
+            h ^= (long) (data[(length & ~7) + 4] & 0xff) << 32;
+        case 4:
+            h ^= (long) (data[(length & ~7) + 3] & 0xff) << 24;
+        case 3:
+            h ^= (long) (data[(length & ~7) + 2] & 0xff) << 16;
+        case 2:
+            h ^= (long) (data[(length & ~7) + 1] & 0xff) << 8;
+        case 1:
+            h ^= (long) (data[length & ~7] & 0xff);
+            h *= m;
         }
         ;
 
@@ -70,9 +72,11 @@ public final class MurmurHash {
 
     /**
      * Generates 64 bit hash from byte array with default seed value.
-     *
-     * @param data   byte array to hash
-     * @param length length of the array to hash
+     * 
+     * @param data
+     *            byte array to hash
+     * @param length
+     *            length of the array to hash
      * @return 64 bit hash of the given string
      */
     public static long hash64(final byte[] data, int length) {
@@ -81,8 +85,9 @@ public final class MurmurHash {
 
     /**
      * Generates 64 bit hash from a string.
-     *
-     * @param text string to hash
+     * 
+     * @param text
+     *            string to hash
      * @return 64 bit hash of the given string
      */
     public static long hash64(final String text) {
@@ -91,4 +96,3 @@ public final class MurmurHash {
     }
 
 }
-

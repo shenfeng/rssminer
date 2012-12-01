@@ -5,16 +5,21 @@
 
 package rssminer;
 
-import org.apache.commons.io.IOUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.xml.sax.SAXException;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.io.IOUtils;
+import org.junit.Before;
+import org.junit.Test;
+import org.xml.sax.SAXException;
 
 public class UtilsTest {
 
@@ -53,8 +58,7 @@ public class UtilsTest {
     }
 
     static String getContent(String file) throws IOException {
-        InputStream s = UtilsTest.class.getClassLoader().getResourceAsStream(
-                file);
+        InputStream s = UtilsTest.class.getClassLoader().getResourceAsStream(file);
         String content = "";
         BufferedReader br = new BufferedReader(new InputStreamReader(s));
         String line = null;
@@ -78,6 +82,5 @@ public class UtilsTest {
         System.out.println(System.currentTimeMillis() / 1000);
         System.out.println(str);
     }
-
 
 }

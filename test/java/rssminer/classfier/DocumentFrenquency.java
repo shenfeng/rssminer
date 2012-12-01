@@ -5,21 +5,25 @@
 
 package rssminer.classfier;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.StringReader;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import rssminer.jsoup.HtmlUtils;
 import rssminer.search.RssminerAnalyzer;
 import rssminer.tools.Utils;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.StringReader;
-import java.sql.*;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 class Counter {
 
@@ -48,8 +52,7 @@ class Counter {
 }
 
 /**
- * Date: 8/15/12
- * Time: 8:09 PM
+ * Date: 8/15/12 Time: 8:09 PM
  */
 public class DocumentFrenquency {
 
@@ -67,7 +70,7 @@ public class DocumentFrenquency {
         while (stream.incrementToken()) {
             String t = new String(term.buffer(), 0, term.length());
             c.add(t);
-//            tmp.add(prev + "_" + t);
+            // tmp.add(prev + "_" + t);
             prev = t;
         }
 
@@ -95,19 +98,19 @@ public class DocumentFrenquency {
         tmp.getCounter().clear();
     }
 
-    public static void main(String[] args) throws SQLException, IOException, InterruptedException {
+    public static void main(String[] args) throws SQLException, IOException,
+            InterruptedException {
         long start = System.currentTimeMillis();
         Connection con = Utils.getRssminerDB();
         int maxID = Utils.getMaxID();
-//        int maxID = 100000;
+        // int maxID = 100000;
         String sql = "select summary from feed_data where id = ?";
         PreparedStatement ps = con.prepareStatement(sql);
         for (int i = 1; i < maxID; i++) {
             if (i % 20000 == 0) {
-//                remove();
-                logger.info("handle {}, max {}, term: {}",
-                        new Object[]{i, maxID,
-                                df.getCounter().size()});
+                // remove();
+                logger.info("handle {}, max {}, term: {}", new Object[] { i, maxID,
+                        df.getCounter().size() });
 
             }
 
@@ -116,12 +119,12 @@ public class DocumentFrenquency {
             if (rs.next()) {
                 String summary = rs.getString(1);
                 summary = HtmlUtils.text(summary);
-//                summary = Mapper.toSimplified(HtmlUtils.text(summary));
+                // summary = Mapper.toSimplified(HtmlUtils.text(summary));
                 addDocument(summary);
             }
             rs.close();
         }
-        //        remove();
+        // remove();
         FileOutputStream fout = new FileOutputStream("/tmp/df");
         for (Map.Entry<String, Integer> entry : df.getCounter().entrySet()) {
             String str = entry.getValue() + "\t" + entry.getKey() + "\n";

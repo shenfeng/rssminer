@@ -3,10 +3,15 @@
  * You must not remove this notice, or any other, from this software.
  */
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.*;
 
 public class Tags {
 
@@ -41,7 +46,7 @@ public class Tags {
                 .prepareStatement("update feeds set tags = ? where id = ?");
         if (rs.next()) {
             int count = rs.getInt(1);
-            for (int i = 0; i <= count + STEP; ) {
+            for (int i = 0; i <= count + STEP;) {
                 if (i % REPORT == 0) {
                     logger.info("deal {}, max {}", i, count);
                 }

@@ -6,7 +6,9 @@
 package rssminer.test;
 
 import junit.framework.Assert;
+
 import org.junit.Test;
+
 import rssminer.search.Mapper;
 
 public class MapperTest {
@@ -15,7 +17,8 @@ public class MapperTest {
     public void testToSimplifed() {
         Assert.assertEquals(Mapper.toSimplified("萬网友留言拚"), "万网友留言拚");
         Assert.assertEquals(Mapper.toSimplified("網上文字轉語音及繁簡翻譯服務"), "网上文字转语音及繁简翻译服务");
-        Assert.assertEquals(Mapper.toSimplified("abcdef123網上文字轉語音及繁簡翻譯服務"), "abcdef123网上文字转语音及繁简翻译服务");
+        Assert.assertEquals(Mapper.toSimplified("abcdef123網上文字轉語音及繁簡翻譯服務"),
+                "abcdef123网上文字转语音及繁简翻译服务");
         Assert.assertEquals(Mapper.toSimplified("萬网友留言拚"), "万网友留言拚");
         Assert.assertSame(Mapper.toSimplified("网友留言"), "网友留言");
 
@@ -31,11 +34,12 @@ public class MapperTest {
 
         for (int i = 0; i < shouldSimple.length(); i++) {
             if (shouldSimple.charAt(i) != simple.charAt(i)) {
-                System.out.println("---------" + simple.charAt(i) + "\t" + shouldSimple.charAt(i) + "\t" + i);
+                System.out.println("---------" + simple.charAt(i) + "\t"
+                        + shouldSimple.charAt(i) + "\t" + i);
             }
         }
 
-//        System.out.println(simple.length() + "\t" + );
+        // System.out.println(simple.length() + "\t" + );
         Assert.assertEquals(simple, Mapper.toSimplified(simple));
         Assert.assertEquals(simple, Mapper.toSimplified(taiwan));
         String s = "5. Data Structures — Python v2.7.3 documentation";

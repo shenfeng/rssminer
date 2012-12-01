@@ -5,6 +5,9 @@
 
 package rssminer.search;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
@@ -12,16 +15,12 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.store.FSDirectory;
 
-import java.io.File;
-import java.io.IOException;
-
 public class FactedSearch {
 
-    public static void main(String[] args) throws CorruptIndexException,
-            IOException {
+    public static void main(String[] args) throws CorruptIndexException, IOException {
 
-        IndexReader reader = IndexReader.open(FSDirectory.open(new File(
-                "/var/rssminer/index")));
+        IndexReader reader = IndexReader
+                .open(FSDirectory.open(new File("/var/rssminer/index")));
         IndexSearcher searcher = new IndexSearcher(reader);
 
         for (int i = 0; i < 100; i++) {
