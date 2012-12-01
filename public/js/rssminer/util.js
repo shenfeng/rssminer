@@ -36,6 +36,15 @@
     }
   }
 
+  function get_val ($input) {
+    var ph = $.trim($input.attr('placeholder')),
+        val = $.trim($input.val());
+    if(val === ph) {
+      return '';
+    }
+    return val;
+  }
+
   function call_if_fn (f) {
     if(typeof f === 'function') {
       f.apply(null, _.toArray(arguments).slice(1));
@@ -126,6 +135,7 @@
       tooltip: tooltip,
       params: params,
       to_html: to_html,
+      get_val: get_val,
       extract_data: extract_data,
       hostname: hostname
     }

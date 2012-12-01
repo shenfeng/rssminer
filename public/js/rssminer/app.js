@@ -400,10 +400,10 @@
   function get_fetch_ids (current_id) {
     var $me = $(FEED_SELECTOR + current_id),
         n = 5;
-    var ids = [+current_id];
+    var ids = [current_id];
     var $next = $me.next();
     while($next.length && --n >= 0) {
-      ids.push(+ $next.attr(DATA_ID)); // convert to int
+      ids.push($next.attr(DATA_ID));
       $next = $next.next();
     }
     return ids;

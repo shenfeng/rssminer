@@ -667,6 +667,7 @@
   }
 
   function fetch_summary (ids, cb) {
+    ids = _.map(ids, function (id) { return +id; }); // convert to int
     var cached = summary_cache.get(ids),
         fetch_ids = _.filter(ids, function (id) { return !(id in cached); });
     // console.log('cached: ', _.keys(cached), cached);

@@ -17,6 +17,10 @@ body {
     text-rendering: optimizeLegibility;
 }
 
+.placeholder {
+    color: #888;
+}
+
 #logo {                         /* in header */
     &.show-nav #sub-list { display: block; }
     h1 {

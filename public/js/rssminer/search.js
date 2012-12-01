@@ -4,8 +4,8 @@
       tmpls = RM.tmpls,
       to_html = Mustache.render,
       util = RM.util,
+      get_val = util.get_val,
       $q = $('#header input'),
-      $placehoder = $('#search span'),
       $header = $('#header .wrapper');
 
   var SELECTED = 'selected',
@@ -22,6 +22,10 @@
   function select_by_index () {
     $lis.removeClass(SELECTED);
     $($lis[current_idx]).addClass(SELECTED);
+  }
+
+  function get_q () {
+    return util.get_val($q);
   }
 
   function navigation (e) {
@@ -51,7 +55,7 @@
   }
 
   function search_input_keyup (e) {
-    var q = $.trim($q.val());
+    var q = get_q();
     switch(e.which) {
     case 13:                    // enter
       var $selected = $('#' + INSTANT_SEARCH + ' .selected');
@@ -131,14 +135,14 @@
     // }
   }
 
+
   function search_on_click () {
-    $placehoder.hide();
     $q[0].select();
-    do_search($.trim($q.val()));
+    do_search(get_q());
     return false;
   }
 
-  $q.blur(function () { if(!$q.val()) {$placehoder.show();}});
+  $('#search form').submit(function () { return false; }); // prevent IE
 
   util.delegate_events($(document), {
     'click #header input': search_on_click,

@@ -36,18 +36,25 @@
 
 .section {
     h4 { width: 115px; }
+    td:first-child {
+        font-weight: bold;
+        width: 100px;
+    }
+    .pass td {
+        padding: 2px;
+    }
+    td {
+        padding: 17px 0;
+    }
+
     > div {
         padding: 10px 0;
         border-bottom: 1px dotted #ECECEC;
-        h4, > div {
-            padding: 17px 0;
-            display: table-cell;
-            vertical-align: baseline;
-        }
     }
     img {
-        &:hover { @include box-shadow(0, 0, 6px, #666); }
-        @include box-shadow(0, 0, 3px, #666);
+        &:hover { border-color: #ccc; }
+        /* @include box-shadow(0, 0, 3px, #666); */
+        border: 1px solid #ddd;
     }
     input {
         margin-top: 5px;

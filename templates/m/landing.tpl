@@ -16,7 +16,7 @@
           <a class="btn" href="/login/google">{{m-login-with-google}}</a>
         </p>
         <p class="demo">
-          <a href="/demo">Try out Rssminer</a>
+          <a href="/demo">{{m-tryout}}</a>
         </p>
       </div>
     </div>
@@ -35,7 +35,7 @@
         </div>
         <input type="hidden" name="return-url" value="/a"/>
         <div class="submit">
-          <input type="submit" value="Login" />
+          <input type="submit" value="{{m-login}}" />
         </div>
       </form>
     </div>

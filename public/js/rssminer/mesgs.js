@@ -26,8 +26,10 @@ var _MESGS_ = {
   // sub_ct_menu
   'm_new_folder': ['new folder', '新建文件夹'],
   'm_unsubscribe': ['unsubscribe', '取消订阅'],
-  'm_visite': ['visite', '访问']
+  'm_visite': ['visite', '访问'],
 
+  // search_result
+  'm_search': ["Enter search keyword", "输入关键字"]
 };
 
 function _LANG_ (k) {

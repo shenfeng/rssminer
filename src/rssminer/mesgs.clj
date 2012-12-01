@@ -30,6 +30,8 @@
                :m-login-with-google ["Login with Google Account" "以google帐户登陆"]
                :m-yet-another ["Yet another news reader" "又一个阅读器"]
                :m-email ["Email" "邮箱"]
+               :m-login ["Login" "登陆"]
+               :m-tryout ["Try out Rssminer", "随便看看"]
                :m-password ["Password" "密码"]
                :m-persistent ["Keep me logged in" "一个月不用再登陆"]})
 

@@ -1,6 +1,6 @@
 <div id="search-result">
   <div id="search-go">
-    <input value="{{q}}" placeholder="enter to search" autofocus="autofocus"/>
+    <input value="{{q}}" placeholder="{{m_search}}" autofocus="autofocus"/>
     <a href="#search?q={{q}}&tags=&authors=&offset=0">search</a>
     {{#total}}<span>About {{ total }} results</span>{{/total}}
   </div>

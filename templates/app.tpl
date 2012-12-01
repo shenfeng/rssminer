@@ -32,8 +32,9 @@
           </div>
         {{/demo}}
         <div id="search">
-          <span>{{m-search-placeholder}}</span>
-          <input id="q" autocomplete="off"/>
+          <form>
+            <input id="q" autocomplete="off" placeholder="{{m-search-placeholder}}"/>
+          </form>
         </div>
         <div id="dropdown">
           <a data-title="{{m-change-avata}}" target="_blank"
@@ -120,6 +121,7 @@
     <script src="/s/js/rssminer/mesgs.js"></script>
     <script src="/s/js/gen/app-tmpls.js"></script>
     <script src="/s/js/rssminer/util.js"></script>
+    <script src="/s/js/rssminer/placeholder.js"></script>
     <script src="/s/js/rssminer/ajax.js"></script>
     <script src="/s/js/rssminer/router.js"></script>
     <script src="/s/js/rssminer/layout.js"></script>
