@@ -1,5 +1,6 @@
 (ns rssminer.handlers.mobile
-  (:use (rssminer [util :only [defhandler to-int now-seconds]]))
+  (:use (rssminer [util :only [defhandler to-int now-seconds]]
+                  [classify :only [on-feed-event]]))
   (:require [rssminer.config :as cfg]
             [rssminer.db.subscription :as sdb]
             [rssminer.db.feed :as fdb]
@@ -15,6 +16,7 @@
   (let [now (now-seconds)]
     (map (fn [f]
            (assoc f
+             :read?  (> (:readts f) 0)
              :pts (let [ts (- now (:publishedts f))]
                     (cond (< ts 60) (str ts " 秒前")
                           (< ts 3600) (str (quot ts 60) " 分前")
@@ -28,8 +30,12 @@
                     :title (:title sub)})))
 
 (defhandler show-feed [req fid uid]
-  (let [feed (-> (fdb/fetch-feeds 1 [ (to-int fid)])
+  (let [fid (to-int fid)
+        feed (-> (fdb/fetch-feeds uid [fid])
                  first bean)]
+    (when (= 0 (:readts feed))
+      (fdb/mark-as-read uid fid)
+      (on-feed-event uid fid))
     (tmpls/m-feed (assoc feed
                     :summary (HtmlUtils/cleanForMobile (:summary feed)
                                                        (:link feed))))))

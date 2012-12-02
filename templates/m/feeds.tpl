@@ -10,7 +10,7 @@
     <h2>{{title}}</h2>
     <ul class="lists">
       {{#feeds}}
-        <li>
+        <li {{#read?}}class=r{{/read?}}>
           <p>
             <a href="/m/f/{{id}}">{{ title }}</a>
           </p>
