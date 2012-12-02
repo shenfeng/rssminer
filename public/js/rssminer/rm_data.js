@@ -65,15 +65,17 @@
     else if(i.readts > 1) { cls = 'read';}
     else {cls = 'unread';}
 
-    if (i.vote < 0) { cls += ' dislike'; }
-    else if (i.vote > 0) { cls += ' like'; }
-    else if(i.score > LIKE_SCORE) { cls += ' like sys'; }
+    var tooltip = '';
+
+    if (i.vote < 0) { cls += ' dislike'; tooltip = _LANG_('m_e_dislike');}
+    else if (i.vote > 0) { cls += ' like'; tooltip = _LANG_('m_e_like');}
+    else if(i.score > LIKE_SCORE) { cls += ' like sys'; tooltip = _LANG_('m_like');}
     // score === 0 means server give no score info
     else if(i.score > NEUTRAL_SCORE || i.score === 0) {
-      cls +=' neutral sys';
-    } else { cls += ' dislike sys';}
+      cls +=' neutral sys'; tooltip = _LANG_('m_neutral');
+    } else { cls += ' dislike sys'; tooltip = _LANG_('m_dislike');}
 
-    return cls;
+    return [cls, tooltip];
   }
 
   function ymdate (i) {
@@ -100,12 +102,12 @@
     if(feed.author) {
       author = feed.author + '@' + author;
     }
+    var cls_tip = feed_css_class(feed);
     return {
-      tooltip: util.tooltip(author, 24),
       author: author,
       sub: sub_title[rssid],    // use to show search result
       rssid: rssid,
-      cls: feed_css_class(feed),
+      cls: cls_tip[0],
       user_like: feed.vote > 0,
       user_dislike: feed.vote < 0,
       date: date,
@@ -115,7 +117,9 @@
       link_d: decodeURI(feed.link),
       tags: split_tags(feed.tags),
       title: title,
-      title_booltip: util.tooltip(title, 70)
+      i_tooltip: cls_tip[1],
+      title_booltip: util.tooltip(title, 70),
+      tooltip: util.tooltip(author, 24)
     };
   }
 

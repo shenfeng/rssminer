@@ -2,7 +2,7 @@
   {{#feeds}}
     <li class="feed {{cls}}" data-id="{{id}}">
       <a href="#{{href}}">
-        <span class="indicator"></span>
+        <span class="indicator" data-title="{{i_tooltip}}"></span>
         <span class="title" data-title="{{title_booltip}}">{{{title}}}</span>
         <i class="thumbs">
           <i class="icon-thumbs-up"

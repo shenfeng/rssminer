@@ -29,7 +29,14 @@ var _MESGS_ = {
   'm_visite': ['visite', '访问'],
 
   // search_result
-  'm_search': ["Enter search keyword", "输入关键字"]
+  'm_search': ["Enter search keyword", "输入关键字"],
+
+  // tooltip
+  'm_like': ["Guess you may like the content of this article",'猜测你喜欢这篇文章的内容'],
+  'm_neutral': ["Guess you may like the content of this article",'猜测你可能喜欢这篇文章的内容'],
+  'm_dislike': ["Guess you may not very like the content of this article",'猜测你可能不是很喜欢这篇文章的内容'],
+  'm_e_like': ["You have mark this article as like",'你曾把这篇文章标记为喜欢'],
+  'm_e_dislike': ["You mark this as dislike",'你曾把这篇文章标记为不喜欢']
 };
 
 function _LANG_ (k) {
@@ -38,12 +45,17 @@ function _LANG_ (k) {
     voted: '喜欢过', oldest: '最旧', next: '下一页',
     add: '添加订阅', settings: '设置', help: '帮助'
   };
-  if(_LANG_ZH_) {
-    if(!words[k]) {
-      throw k + " not has ch";
+  if(words[k]) {
+    if(_LANG_ZH_) {
+      return words[k];
+    } else {
+      return k;
     }
-    return words[k];
-  } else {
-    return k;
+  } else if(_MESGS_[k]){
+    if(_LANG_ZH_) {
+      return _MESGS_[k][1];
+    } else {
+      return _MESGS_[k][0];
+    }
   }
 }
