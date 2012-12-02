@@ -3,13 +3,12 @@
   (:require [rssminer.config :as cfg]
             [rssminer.db.subscription :as sdb]
             [rssminer.db.feed :as fdb]
-            [rssminer.tmpls :as tmpls]))
+            [rssminer.tmpls :as tmpls])
+  (:import rssminer.jsoup.HtmlUtils))
 
 (defhandler landing-page [req uid]
   (let [sub (sort-by :like >
-                     (filter (fn [s]
-                               (and (:title s) (> (:like s) 0)) )
-                             (map bean (sdb/fetch-user-subs uid))))]
+                     (filter :title (map bean (sdb/fetch-user-subs uid))))]
     (tmpls/m-subs {:subs sub})))
 
 (defn- readable [feeds]
@@ -23,9 +22,14 @@
                           :else (str (quot ts 86400) " 天前"))))) feeds)))
 
 (defhandler list-feeds [req uid sid limit offset]
-  (let [feeds (map bean (:feeds (fdb/fetch-sub-newest uid (to-int sid) 30 offset)))]
-    (tmpls/m-feeds {:feeds (readable feeds)})))
+  (let [sub (sdb/fetch-rss-link-by-id sid)
+        feeds (map bean (:feeds (fdb/fetch-sub-newest uid (to-int sid) 30 offset)))]
+    (tmpls/m-feeds {:feeds (readable feeds)
+                    :title (:title sub)})))
 
 (defhandler show-feed [req fid uid]
-  (tmpls/m-feed (-> (fdb/fetch-feeds 1 [ (to-int fid)])
-                    first bean)))
+  (let [feed (-> (fdb/fetch-feeds 1 [ (to-int fid)])
+                 first bean)]
+    (tmpls/m-feed (assoc feed
+                    :summary (HtmlUtils/cleanForMobile (:summary feed)
+                                                       (:link feed))))))

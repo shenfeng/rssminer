@@ -50,6 +50,18 @@ public class HtmlUtils {
         return vistor.toString();
     }
 
+    public static String cleanForMobile(String html, String baseUri) {
+        StringBuilder sb = new StringBuilder(html.length());
+        MobileCleanerVisitor vistor = new MobileCleanerVisitor(sb, baseUri);
+        MobileTranversor traversor = new MobileTranversor(vistor);
+        Document doc = Jsoup.parse(html, baseUri);
+        List<Node> nodes = doc.body().childNodes();
+        for (Node e : nodes) {
+            traversor.traverse(e);
+        }
+        return vistor.toString();
+    }
+
     public static URI extractFavicon(String html, URI base) {
         try {
             Document d = Jsoup.parse(html);
@@ -91,7 +103,6 @@ public class HtmlUtils {
                 }
             }
         }
-
         return null;
     }
 

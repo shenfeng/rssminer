@@ -7,8 +7,8 @@
     <link href="/s/css/m.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
+    <h2>{{ title }}</h2>
     <div id="feed-content">
-      <h2>{{ title }}</h2>
       <div class="summary">
         {{{summary}}}
       </div>

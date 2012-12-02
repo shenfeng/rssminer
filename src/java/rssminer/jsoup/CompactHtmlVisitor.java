@@ -23,6 +23,10 @@ public class CompactHtmlVisitor implements NodeVisitor {
             "width", // feedburner track
             "height" };
 
+    public String[] getKeepAttr() {
+        return KEEP_ATTRS;
+    }
+
     static final char SPACE = ' ';
     static final char START = '<';
     static final char END = '>';
@@ -43,8 +47,8 @@ public class CompactHtmlVisitor implements NodeVisitor {
         return false;
     }
 
-    private StringBuilder sb;
-    private URI baseUri;
+    protected StringBuilder sb;
+    protected URI baseUri;
 
     public CompactHtmlVisitor(StringBuilder sb, String baseUri) {
         this.sb = sb;
@@ -78,40 +82,43 @@ public class CompactHtmlVisitor implements NodeVisitor {
         }
     }
 
+    protected void addTextNode(TextNode t) {
+        boolean squash = !preserveWhitespace(t.parent());
+        boolean lastWhiteSpace = false;
+
+        // TODO, optimize it. leading \n can not be removed #144490
+        // String html = t.toString();
+        String html = t.getWholeText();
+        if (squash) {
+            html = trimLeft(html);
+        }
+        for (int i = 0; i < html.length(); ++i) {
+            char c = html.charAt(i);
+            if (squash) {
+                if (Character.isWhitespace(c)) {
+                    if (!lastWhiteSpace) {
+                        sb.append(' ');
+                    }
+                    lastWhiteSpace = true;
+                    continue;
+                } else {
+                    lastWhiteSpace = false;
+                }
+            }
+
+            String encoded = encode.get(c);
+            if (encoded != null) {
+                sb.append('&').append(encoded).append(';');
+            } else {
+                sb.append(c);
+            }
+        }
+    }
+
     public void head(Node node, int depth) {
         String name = node.nodeName();
         if (node instanceof TextNode) {
-            TextNode t = (TextNode) node;
-            boolean squash = !preserveWhitespace(t.parent());
-            boolean lastWhiteSpace = false;
-
-            // TODO, optimize it. leading \n can not be removed #144490
-            // String html = t.toString();
-            String html = t.getWholeText();
-            if (squash) {
-                html = trimLeft(html);
-            }
-            for (int i = 0; i < html.length(); ++i) {
-                char c = html.charAt(i);
-                if (squash) {
-                    if (Character.isWhitespace(c)) {
-                        if (!lastWhiteSpace) {
-                            sb.append(' ');
-                        }
-                        lastWhiteSpace = true;
-                        continue;
-                    } else {
-                        lastWhiteSpace = false;
-                    }
-                }
-
-                String encoded = encode.get(c);
-                if (encoded != null) {
-                    sb.append('&').append(encoded).append(';');
-                } else {
-                    sb.append(c);
-                }
-            }
+            addTextNode((TextNode) node);
         } else {
             sb.append(START).append(name);
             Attributes attrs = node.attributes();
@@ -124,7 +131,7 @@ public class CompactHtmlVisitor implements NodeVisitor {
                 for (Attribute attr : attrs) {
                     String key = attr.getKey();
                     // ignore unknown attribute
-                    for (String k : KEEP_ATTRS) {
+                    for (String k : getKeepAttr()) {
                         if (k.equals(key)) {
                             addAttr(name, k, attr.getValue());
                             break;
@@ -136,7 +143,7 @@ public class CompactHtmlVisitor implements NodeVisitor {
         }
     }
 
-    private void addAttr(String name, String k, String val) {
+    protected void addAttr(String name, String k, String val) {
         sb.append(SPACE).append(k);
         if (!val.isEmpty()) {
             sb.append(EQUAL);

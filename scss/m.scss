@@ -11,9 +11,14 @@ body {
     width: auto;
 }
 
+h2 {
+    margin: 10px 0;
+}
+
 .lists {
     list-style: none;
     padding: 0;
+    margin: 0;
     p {
         font-size: 16px;
         margin: 0;
@@ -48,6 +53,7 @@ i {
     .summary {
         padding: 3px 0 0 0;
     }
+    a { text-decoration: none;}
     img {
         max-width: 300px;
     }

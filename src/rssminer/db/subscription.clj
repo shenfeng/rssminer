@@ -17,7 +17,7 @@
 
 (defn fetch-rss-link-by-id [id]
   (first (mysql-query
-          ["SELECT id, url, check_interval, last_modified, etag
+          ["SELECT id, title, url, check_interval, last_modified, etag
               FROM rss_links where id = ?" id])))
 
 (defn fetch-rss-links [limit]           ; for fetcher
