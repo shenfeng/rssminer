@@ -2,21 +2,25 @@
   (:use me.shenfeng.mustache)
   (:require [clojure.java.io :as io]
             [rssminer.i18n :as i]
-            [rssminer.config :as cfg])
+            [rssminer.config :as cfg]
+            [clojure.string :as str])
   (:import [me.shenfeng.mustache ResourceList Mustache]))
 
 ;;; templates/help.tpl => help
-(defn- mapper [file]
-  (let [content (slurp
-                 (or (io/resource file)
-                     (try (io/reader file)
-                          (catch Exception e))))
-        name (let [idx (.indexOf file "templates")
+
+(defn- get-content [file]
+  (str/replace (slurp (or (io/resource file)
+                          (try (io/reader file) (catch Exception e))))
+               ;; remove extra space
+               #">\W<" "><"))
+
+(defn- mapper [^String file]
+  (let [name (let [idx (.indexOf file "templates")
                    remain (.substring file (+ idx (count "templates") 1))]
                ;; drop extention
                (keyword (.substring remain 0
                                     (.lastIndexOf remain (int \.)))))]
-    [name content]))
+    [name (get-content file)]))
 
 (def tmpls
   (apply hash-map

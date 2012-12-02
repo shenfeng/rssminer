@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/s/favicon.ico" />
-    <title>Landing</title>
+    <title>Rssminer</title>
     <link href="/s/css/l.css?{VERSION}" rel="stylesheet" type="text/css" />
   </head>
   <body>
@@ -24,7 +24,8 @@
     </div>
     <div class="container">
       <form action="/login" method="post">
-      {{#msg}} <p class="msg">{{ msg }}</p>{{/msg}}
+      <p>{{m-has-password}}</p>
+      {{#msg}} <p class="msg">{{m-login-error}}</p>{{/msg}}
         <div><input class="txt" name="email" placeholder="{{m-email}}"/></div>
         <div><input class="txt" type="password" name="password" placeholder="{{m-password}}"/></div>
         <div>

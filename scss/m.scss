@@ -7,6 +7,8 @@ html, body {
 body {
     font: 400 14px/1.431 'Lucida Grande', "Helvetica Neue", Helvetica, Arial, sans-serif;
     text-rendering: optimizeLegibility;
+    padding: 6px;
+    width: auto;
 }
 
 .lists {
@@ -14,10 +16,13 @@ body {
     padding: 0;
     p {
         font-size: 16px;
-        margin: 4px;
+        margin: 0;
+        a {
+            display: inline-block;
+            padding: 7px 0 5px 0;
+        }
     }
     li {
-        padding: 6px;
     }
     a {
         text-decoration: none;
@@ -25,20 +30,26 @@ body {
     }
 }
 
+i {
+    font-style: normal;
+    font-size: 90%;
+}
+
 .meta {
     color: #888;
-    span {
+    i {
         padding: 4px;
     }
 }
 
+@import "readable.scss";
+
 #feed-content {
     .summary {
-        padding: 3px 10px 0 0;
+        padding: 3px 0 0 0;
     }
     img {
         max-width: 300px;
     }
+    padding: 0 3px 0 1px;
 }
-
-@import "readable.scss";

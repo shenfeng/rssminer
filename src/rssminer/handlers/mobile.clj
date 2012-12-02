@@ -6,7 +6,7 @@
             [rssminer.tmpls :as tmpls]))
 
 (defhandler landing-page [req uid]
-  (let [sub (sort-by (comp - :like)
+  (let [sub (sort-by :like >
                      (filter (fn [s]
                                (and (:title s) (> (:like s) 0)) )
                              (map bean (sdb/fetch-user-subs uid))))]
@@ -23,7 +23,7 @@
                           :else (str (quot ts 86400) " 天前"))))) feeds)))
 
 (defhandler list-feeds [req uid sid limit offset]
-  (let [feeds (map bean (:feeds (fdb/fetch-sub-newest uid (to-int sid) limit offset)))]
+  (let [feeds (map bean (:feeds (fdb/fetch-sub-newest uid (to-int sid) 30 offset)))]
     (tmpls/m-feeds {:feeds (readable feeds)})))
 
 (defhandler show-feed [req fid uid]

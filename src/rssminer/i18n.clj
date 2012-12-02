@@ -12,6 +12,8 @@
                :m-search ["Search" "搜索"]
                :m-logout ["Logout" "退出"]
 
+               ;;
+
                ;; app.tpl
                :m-k-next ["Next item" "上一篇文章或者上一个订阅"]
                :m-k-prev ["Previous item" "下一篇文章或者下一个订阅"]
@@ -28,12 +30,18 @@
 
                ;; mobile landing page
                :m-login-with-google ["Login with Google Account" "以google帐户登陆"]
-               :m-yet-another ["Yet another news reader" "又一个阅读器"]
+               :m-yet-another ["Yet another RSS reader" "又一个订阅阅读器"]
+               :m-login-error ["Login failed, Email or password error" "用户名或者密码错误，请检查"]
+               :m-has-password ["Already has an account with password" "已有帐户，并设置过登陆密码"]
                :m-email ["Email" "邮箱"]
                :m-login ["Login" "登陆"]
                :m-tryout ["Try out Rssminer", "随便看看"]
-               :m-password ["Password" "密码"]
-               :m-persistent ["Keep me logged in" "一个月不用再登陆"]})
+               :m-password ["Password" "登陆密码"]
+               :m-persistent ["Keep me logged in" "一个月不用再登陆"]
+
+               :m-sub-list ["Subscription list", "订阅列表"]
+
+               })
 
 (def zh-messages (into {} (map (fn [[k [en zh]]] [k zh]) messages)))
 
