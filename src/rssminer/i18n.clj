@@ -1,8 +1,8 @@
-(ns rssminer.mesgs)
+(ns rssminer.i18n)
 
 (def messages {:m-logo-title ["tip: show subscription list when you hover the logo" "提示：hover显示订阅列表"]
                :m-signup-warn ["signup free, and save your subscriptions, get personal recommendation" "点击免费注册，注册后可添加自己的订阅，并得到个性化推荐"]
-               :m-demo-account ["This account is public, Signup free" "免费创建您自己的帐户"]
+               :m-demo-account ["This account is public, signup free" "免费创建您自己的帐户"]
                :m-search-placeholder ["search feed, subscription..." "搜索订阅或文章，快速直达..."]
                :m-change-avata ["Change your avatar at gravatar.com" "点击到gravatar.com更改头像"]
                ;; app.tpl menu

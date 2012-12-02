@@ -118,7 +118,7 @@
     <script src="/s/js/lib/jquery-ui-1.8.18.custom.js"></script>
     <script src="/s/js/lib/underscore.js"></script>
     <script src="/s/js/lib/mustache.js"></script>
-    <script src="/s/js/rssminer/mesgs.js"></script>
+    <script src="/s/js/rssminer/i18n.js"></script>
     <script src="/s/js/gen/app-tmpls.js"></script>
     <script src="/s/js/rssminer/util.js"></script>
     <script src="/s/js/rssminer/placeholder.js"></script>

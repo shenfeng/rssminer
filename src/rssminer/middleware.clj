@@ -1,7 +1,7 @@
 (ns rssminer.middleware
   (:use [rssminer.util :only [user-id-from-session json-str2]]
         [ring.util.response :only [redirect]]
-        [rssminer.mesgs :only [*req*]]
+        [rssminer.i18n :only [*req*]]
         [clojure.tools.logging :only [debug error info]]
         [compojure.core :only [GET POST DELETE PUT]])
   (:require [rssminer.config :as conf]
