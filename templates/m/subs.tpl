@@ -1,11 +1,6 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <title>{{m-sub-list}}</title>
-    <link href="/s/css/m.css" rel="stylesheet" type="text/css" />
-  </head>
+  {{>m/p_header}}
   <body>
     <h2>{{m-sub-list}}</h2>
     <ul class="lists">
