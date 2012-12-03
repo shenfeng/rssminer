@@ -34,6 +34,7 @@
                 true
                 false))
         context (assoc context
+                  :static-server (cfg/cfg :static-server)
                   :dev (= (cfg/cfg :profile) :dev)
                   :zh? zh?)]
     (merge (if zh? i/zh-messages i/en-messages) context)))

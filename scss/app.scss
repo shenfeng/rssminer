@@ -517,12 +517,18 @@ ul { list-style: none; padding: 0; margin: 0; }
 }
 
 #feed-content {
+    font-size: 15px;
     li > * {
         width: 760px;
     }
-    .summary * {
-        max-width: 750px;
+    blockquote { font-size: 15px; }
+    .summary {
+        h1 { font-size: 18px; }
+        h2, h3 { font-size: 16px; }
+        h4, h5 { font-size: 15px; }
+        * { max-width: 750px; }
     }
+
 }
 
 

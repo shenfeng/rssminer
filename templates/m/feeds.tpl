@@ -2,7 +2,7 @@
 <html>
   {{>m/p_header}}
   <body>
-    <h2>{{title}}</h2>
+    <h2>{{title}} <span class="c">{{ category }}</span></h2>
     <ul class="lists">
       {{#feeds}}
         <li {{#read?}}class=r{{/read?}}>
@@ -12,7 +12,7 @@
           <div class="meta">
             <i>{{ pts }}</i>
             <i>{{ author }}</i>
-            <i>{{ tags }}</i>
+            {{#tags}}<i class=t>{{.}}</i>{{/tags}}
           </div>
         </li>
       {{/feeds}}

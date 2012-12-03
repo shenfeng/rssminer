@@ -40,8 +40,8 @@
 
 (defroutes mobile-routes
   (GET "/" [] mobile/landing-page)
-  (GET "/:sid" [] mobile/list-feeds)
-  (GET "/f/:fid" [] mobile/show-feed))
+  (GET "/f/:fid" [] mobile/show-feed)
+  (GET "/:sid/:sortby" [] mobile/list-feeds))
 
 (defroutes all-routes
   (GET "/" [] reader/show-landing-page)

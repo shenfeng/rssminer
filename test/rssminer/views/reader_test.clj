@@ -18,8 +18,10 @@
     (is (= "/?r=d" (get-in (auth-app {:uri "/demo"
                                       :request-method :get})
                            [:headers "Location"])))
-    (is (= "/a" (get-in (auth-app {:uri "/"
-                                   :request-method :get})
+    (is (= "/a" (get-in (auth-app {:uri "/" :request-method :get})
+                        [:headers "Location"])))
+    (is (= "/m" (get-in (auth-app {:uri "/" :request-method :get
+                                   :headers {"user-agent" "Mozilla/5.0 (Linux; Android 4.1.1; Galaxy Nexus Build/JRO03C) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19"}})
                         [:headers "Location"])))
     (is (= "no-cache" ((:headers resp) "Cache-Control")))
     (is (= "text/html; charset=utf-8" ((:headers resp) "Content-Type")))
@@ -75,4 +77,3 @@
                              (let [resp (.get resp)]
                                (is (= 200 (:status resp)))
                                (is (= host (slurp (:body resp)))))))))))
-

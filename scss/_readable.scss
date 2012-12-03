@@ -1,4 +1,4 @@
-@import "vars";
+ @import "vars";
 @import "css3";
 
 hr {
@@ -9,7 +9,6 @@ hr {
 
 #feed-content {
     position: relative;
-    font-size: 15px;
     line-height: 1.82;
     color: #333;
     padding: 0 0 0 15px;
@@ -60,10 +59,7 @@ hr {
 
 #feed-content {
     .summary {
-        h1 { font-size: 18px;}
-        h2, h3 { font-size: 16px; }
-        h4, h5 { font-size: 15px; }
-        p {
+         p {
             text-align: justify;
             margin: 11px 0;
         }
@@ -75,7 +71,6 @@ hr {
         }
         blockquote {
             margin: 13px;
-            font-size: 15px;
             padding:0 7px;
             background: #f1f0ea;
         }

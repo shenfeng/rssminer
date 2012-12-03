@@ -454,9 +454,9 @@ public class MinerDAO {
     }
 
     public List<Subscription> fetchUserSubs(int userID) throws SQLException {
-        StringBuilder sb = new StringBuilder(SUB_FIELDS.length() + 20);
+        StringBuilder sb = new StringBuilder(SUB_FIELDS.length() + 40);
         sb.append(SUB_FIELDS);
-        sb.append(" u.user_id = ").append(userID);
+        sb.append(" u.user_id = ").append(userID).append(" order by sort_index");
         return fetchSubs(sb.toString(), userID);
     }
 }
