@@ -21,6 +21,7 @@
     ;; this is delayed
     (.onFecherEvent ^SysVoteDaemon @daemon rssid feedids)))
 
+;;; feedid == -1 => recompute
 (defn on-feed-event [userid feedid]
   (when-not (nil? @daemon)
     ;; computed now

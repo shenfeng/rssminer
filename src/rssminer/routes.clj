@@ -43,6 +43,12 @@
   (GET "/f/:fid" [] mobile/show-feed)
   (GET "/:sid/:sortby" [] mobile/list-feeds))
 
+(defroutes admin-routes
+  (GET "/" [] admin/show-admin)
+  (GET "/compute" [] admin/recompute-scores)
+  ;; TODO POST should
+  (GET "/fetcher" [] admin/fetcher))
+
 (defroutes all-routes
   (GET "/" [] reader/show-landing-page)
   (GET "/fav" [] reader/get-favicon)
@@ -55,7 +61,7 @@
            (POST "/" [] user/login)
            (GET "/google" [] user/google-openid)
            (GET "/checkauth" [] user/checkauth))
-  (GET "/admin/compute" [] admin/recompute-scores)
+  (context "/admin" [] (admin/wrap-admin admin-routes))
   (GET "/oauth2callback" [] import/oauth2callback)
   (GET "/import/google" [] import/greader-import)
   (context "/signup" []

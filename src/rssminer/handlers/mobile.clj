@@ -15,8 +15,9 @@
                       (when (and (:title s) (> (count (:title s)) 0))
                         (assoc s
                           :like? (> (:like s) 3)
-                          :host (when-let [host ^String (:url s)]
-                                  (str/reverse (.getHost (URI/create host))))))))
+                          :host (when-let [url ^String (:url s)]
+                                  (when-let [host (.getHost (URI/create url))]
+                                    (str/reverse host)))))))
                   (sdb/fetch-user-subs uid))]
     (tmpls/m-subs {:subs (filter identity subs)})))
 

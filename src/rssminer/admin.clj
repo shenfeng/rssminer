@@ -1,13 +1,16 @@
 (ns rssminer.admin
   (:gen-class)
   (:use (rssminer [search :only [index-feed use-index-writer! close-global-index-writer!]]
-                  [util :only [user-id-from-session to-int]]
+                  [util :only [to-int defhandler]]
                   [classify :only [on-feed-event]]
                   [database :only [mysql-query with-mysql mysql-insert]])
         (clojure.tools [logging :only [info]]
                        [cli :only [cli]])
-        [clojure.java.jdbc :only [with-query-results]])
-  (:require [rssminer.database :as db])
+        [clojure.java.jdbc :only [with-query-results]]
+        [ring.util.response :only [redirect]])
+  (:require [rssminer.database :as db]
+            [rssminer.fetcher :as f]
+            [rssminer.tmpls :as tmpl])
   (:import [java.util.concurrent BlockingQueue ArrayBlockingQueue]
            [java.util.concurrent Executors TimeUnit]))
 
@@ -46,17 +49,32 @@
   (close-global-index-writer! :optimize true)
   (info "Rebuild index OK"))
 
-(defn recompute-scores [req]
-  (if (= 1 (:session req)) ;; 1 is myself, who is admin
-    (if-let [id (-> req :params :u)]
-      (do
-        (on-feed-event (to-int id) (to-int -1))
-        {:status 200 :body id})
-      (let [users (map :id (mysql-query ["select id from users"]))]
-        (doseq [id users]
-          (on-feed-event (to-int id) (to-int -1)))
-        {:status 200 :body (map str (interpose ", " users))}))
-    {:status 401 :body "error"}))
+(defn wrap-admin [handler]
+  (fn [req]
+    (when (= 1 (:session req)) ;; 1 is myself, who is admin
+      (handler req))))
+
+(defn show-admin [req]
+  (let [stat (sort-by :key (map (fn [[k v]] {:key (str k) :val v}) (f/fetcher-stat)))]
+    (tmpl/admin {:stat stat
+                 :fetcher (f/running?)})))
+
+(defhandler fetcher [req command]
+  (case command
+    "stop" (f/stop-fetcher)
+    "start" (f/start-fetcher))
+  (redirect "/admin"))
+
+(defhandler recompute-scores [req user-id]
+  (if user-id
+    (do
+      (on-feed-event (to-int user-id) (to-int -1))
+      {:status 200 :body user-id})
+    (let [users (map :id (mysql-query ["select id from users"]))]
+      (doseq [id users]
+        (on-feed-event (to-int id) (to-int -1)))
+      {:status 200 :body (map str (interpose ", " users))}))
+  {:status 404 :body "not found"})
 
 (defn -main [& args]
   (let [[options _ banner]

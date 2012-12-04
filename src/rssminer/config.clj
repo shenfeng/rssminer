@@ -5,6 +5,7 @@
 (defonce rssminer-conf (atom {:fetch-size 100
                               :profile :test
                               :redis-port 6379
+                              :static-server "//127.0.0.1"
                               :redis-host "127.0.0.1"
                               :proxy Proxy/NO_PROXY}))
 

@@ -33,15 +33,15 @@
 (deftest test-admin-recompute-scores
   (let [resp (test-app {:uri "/admin/compute"
                         :request-method :get})]
-    (is (= 401 (:status resp))))
+    (is (= 404 (:status resp))))
   (let [resp (auth-app2 {:uri "/admin/compute"
                          :request-method :get})]
-    (is (= 401 (:status resp))))
+    (is (= 404 (:status resp))))
   (let [resp (auth-app {:uri "/admin/compute"
                         :request-method :get
                         :params {"id" 1}})]
-    ;; should be 401
-    (is (= 401 (:status resp)))))
+    ;; should be 404 user-id-from-session
+    (is (= 404 (:status resp)))))
 
 (deftest test-demo-page
   (let [resp (test-app {:uri "/demo"

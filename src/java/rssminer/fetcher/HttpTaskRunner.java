@@ -10,7 +10,9 @@ import static java.lang.System.currentTimeMillis;
 import static me.shenfeng.http.HttpUtils.LOCATION;
 import static rssminer.Utils.CLIENT;
 
+import java.io.IOException;
 import java.net.URI;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +26,7 @@ import me.shenfeng.http.DynamicBytes;
 import me.shenfeng.http.client.ITextHandler;
 import me.shenfeng.http.client.TextRespListener;
 import me.shenfeng.http.client.TextRespListener.IFilter;
+import me.shenfeng.http.client.TimeoutException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,7 +133,23 @@ public class HttpTaskRunner {
                 logger.debug(task.getUri().toString(), t);
                 task.onThrowable(t);
             } finally {
-                taskFinished(task, 600);
+                if (t instanceof IOException) {
+                    String mesg = t.getMessage();
+                    if (mesg == null) {
+                        mesg = "";
+                    }
+                    // Connection reset by peer
+                    if (mesg.indexOf("reset") != -1) {
+                        taskFinished(task, 610);
+                    } else {
+                        taskFinished(task, 611);
+                    }
+                } else if (t instanceof TimeoutException) {
+                    taskFinished(task, 600);
+                } else {
+                    // logger.error(t.getMessage(), t);
+                    taskFinished(task, 620);
+                }
             }
         }
     }
@@ -147,7 +166,7 @@ public class HttpTaskRunner {
                     CLIENT.get(task.getUri(), task.getHeaders(), task.getProxy(), listener);
                 } catch (InterruptedException e) { // die
                 } catch (Exception e) {
-                    logger.error("loop exception, catch it", e);
+                    logger.error("ERROR! should not happend", e);
                 }
             }
             mRunning = false;
@@ -163,6 +182,7 @@ public class HttpTaskRunner {
     private final ConcurrentLinkedQueue<IHttpTask> mTaskQueue;
     private final Semaphore mConcurrent;
 
+    // mConnter is single Thread: http-client thread
     private volatile int mCounter = 0;
     private volatile long startTime;
     private volatile boolean mRunning;
@@ -210,6 +230,7 @@ public class HttpTaskRunner {
         mStat.put("Permit", mConcurrent.availablePermits());
         double m = (double) (currentTimeMillis() - startTime) / 60000;
         mStat.put("PerMiniute", String.format("%.3f", mCounter / m));
+        mStat.put("Start", new Date(startTime));
         return mStat;
     }
 
@@ -232,7 +253,7 @@ public class HttpTaskRunner {
 
     private void recordStat(int code) {
         Object c = mStat.get(code);
-        Integer count = 0;
+        Integer count = 1;
         if (c instanceof Integer) {
             count = (Integer) c + 1;
         }
