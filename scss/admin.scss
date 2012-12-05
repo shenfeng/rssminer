@@ -1,0 +1,16 @@
+#commands {
+    padding: 0;
+    list-style: none;
+    li {
+        display: inline;
+        a {
+            display: inline-block;
+            background: #ddd;
+            padding: 4px 8px;
+        }
+    }
+}
+
+caption {
+    font-weight: bold;
+}
