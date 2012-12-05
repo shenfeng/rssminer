@@ -31,6 +31,19 @@
                                   :body body}
             body)))))
 
+(defhandler landing-page [req r mobile?]
+  (if (= r "d")       ; redirect to /demo
+    (redirect "/demo")
+    (if (cfg/real-user? req)
+      (redirect (if mobile? "/m" "/a"))
+      (let [body (if mobile? (tmpls/m-landing)
+                     (tmpls/landing2 {:css landing-css}))]
+        (if (cfg/demo-user? req) {:status 200
+                                  :session nil ;; delete cookie
+                                  :session-cookie-attrs {:max-age -1}
+                                  :body body}
+            body)))))
+
 (defhandler show-app-page [req uid gw ge mobile?]
   (if (cfg/demo-user? req)
     (assoc (redirect "/") :session nil ;; delete cookie

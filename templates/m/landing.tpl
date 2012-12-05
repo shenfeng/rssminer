@@ -25,7 +25,7 @@
     <div class="container">
       <form action="/login" method="post">
       <p>{{m-has-password}}</p>
-      {{#msg}} <p class="msg">{{m-login-error}}</p>{{/msg}}
+      {{#login-error}} <p class="msg">{{m-login-error}}</p>{{/login-error}}
         <div><input class="txt" name="email" placeholder="{{m-email}}"/></div>
         <div><input class="txt" type="password" name="password" placeholder="{{m-password}}"/></div>
         <div>

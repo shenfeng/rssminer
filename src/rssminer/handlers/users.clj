@@ -25,9 +25,9 @@
         :session-cookie-attrs cookie-attr)
       (if mobile?
         (tmpls/m-landing {:return-url return-url
-                          :msg "Login failed, Email or password error"})
-        (tmpls/login {:return-url return-url
-                      :msg "Login failed, Email or password error"})))))
+                          :login-error true})
+        (tmpls/landing2 {:return-url return-url
+                         :login-error true})))))
 
 (defn logout [req]
   (assoc (redirect "/")

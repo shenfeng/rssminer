@@ -50,7 +50,9 @@
   (GET "/fetcher" [] admin/fetcher))
 
 (defroutes all-routes
-  (GET "/" [] reader/show-landing-page)
+  (GET "/" [] reader/landing-page)
+  (POST "/" [] user/login)
+  (GET "/l" [] reader/show-landing-page)
   (GET "/fav" [] reader/get-favicon)
   (GET "/browser" []  reader/show-unsupported-page)
   (GET "/a" [] reader/show-app-page)
@@ -58,7 +60,6 @@
   (GET "/demo" [] reader/show-demo-page)
   (context "/login" []
            (GET "/" [] user/show-login-page)
-           (POST "/" [] user/login)
            (GET "/google" [] user/google-openid)
            (GET "/checkauth" [] user/checkauth))
   (context "/admin" [] (admin/wrap-admin admin-routes))
