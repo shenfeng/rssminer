@@ -8,8 +8,8 @@ var _MESGS_ = {
   'm_publish': ["Publish:", "发表于："],
   'm_read': ["Read:", "阅读于："],
   // settings
-  'm_import': ['Import', '导入'],
-  'm_url': ['URL', '直接添加'],
+  'm_import': ['Import: ', '导入：'],
+  'm_url': ['URL: ', '直接添加：'],
   'm_add': ['Add', '添加'],
   'm_paste_url': ['paste atom/rss url here', '把订阅的RSS的地址粘贴在这里，点击添加'],
   'm_import_grader': ['Import all you google reader subscriptions:', "导入您的google Reader订阅列表"],
@@ -19,8 +19,8 @@ var _MESGS_ = {
   'm_set_pass_p2': ['If you may have trouble login with Google OpenID. You can set a password. The user name is your email address.',
                     '如果用Google帐户登陆不是很顺利，你可以设置一个登陆密码，用户名是您的Google帐户邮箱'],
   'm_set_pass_p3': ['You can always login with Google OpenID, even after you set the password','设置了登陆密码后，就可以用登陆秘密登陆，也可以用Google OpenID登陆'],
-  'm_password': ['Password', '登陆密码'],
-  'm_password_again': ['Confirm password', '确认登陆密码'],
+  'm_password': ['Password:', '登陆密码：'],
+  'm_password_again': ['Confirm password:', '确认登陆密码：'],
   'm_save': ['Save', '保存密码'],
 
   // sub_ct_menu

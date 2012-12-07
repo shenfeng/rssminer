@@ -52,7 +52,6 @@
 (defroutes all-routes
   (GET "/" [] reader/landing-page)
   (POST "/" [] user/login)
-  (GET "/l" [] reader/show-landing-page)
   (GET "/fav" [] reader/get-favicon)
   (GET "/browser" []  reader/show-unsupported-page)
   (GET "/a" [] reader/show-app-page)

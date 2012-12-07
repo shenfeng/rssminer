@@ -1,5 +1,5 @@
 (ns rssminer.handlers.reader
-  (:use (rssminer [util :only [md5-sum ignore-error serialize-to-js defhandler]]
+  (:use (rssminer [util :only [md5-sum serialize-to-js defhandler]]
                   [search :only [search*]])
         [clojure.java.io :only [resource]]
         [ring.util.response :only [redirect]])
@@ -9,27 +9,10 @@
             [rssminer.db.user :as udb]
             [rssminer.db.feed :as db]
             [rssminer.tmpls :as tmpls])
-  (:import rssminer.Utils
-           rssminer.FaviconFuture))
-
-(def landing-css (ignore-error (slurp "public/css/landing.css")))
-(def app-css (ignore-error (slurp "public/css/app.css")))
+  (:import rssminer.FaviconFuture))
 
 (defn show-unsupported-page [req]
-  (tmpls/browser {:css landing-css}))
-
-(defhandler show-landing-page [req r mobile?]
-  (if (= r "d")       ; redirect to /demo
-    (redirect "/demo")
-    (if (cfg/real-user? req)
-      (redirect (if mobile? "/m" "/a"))
-      (let [body (if mobile? (tmpls/m-landing)
-                     (tmpls/landing {:css landing-css}))]
-        (if (cfg/demo-user? req) {:status 200
-                                  :session nil ;; delete cookie
-                                  :session-cookie-attrs {:max-age -1}
-                                  :body body}
-            body)))))
+  (tmpls/browser))
 
 (defhandler landing-page [req r mobile?]
   (if (= r "d")       ; redirect to /demo
@@ -37,7 +20,7 @@
     (if (cfg/real-user? req)
       (redirect (if mobile? "/m" "/a"))
       (let [body (if mobile? (tmpls/m-landing)
-                     (tmpls/landing2 {:css landing-css}))]
+                     (tmpls/landing2))]
         (if (cfg/demo-user? req) {:status 200
                                   :session nil ;; delete cookie
                                   :session-cookie-attrs {:max-age -1}
@@ -51,8 +34,7 @@
     (if mobile?
       (redirect "/m")
       (when-let [user (udb/find-by-id uid)]
-        (tmpls/app {:css app-css
-                    :email (:email user)
+        (tmpls/app {:email (:email user)
                     :md5 (-> user :email md5-sum)
                     :data (serialize-to-js
                            {:rm {:user user
@@ -73,7 +55,6 @@
                          :static_server (:static-server @cfg/rssminer-conf)}}]
           {:body (tmpls/app {:email (:email user)
                              :md5 (-> user :email md5-sum)
-                             :css app-css
                              :demo true
                              :data (serialize-to-js data)})
            :status 200

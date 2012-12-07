@@ -52,7 +52,7 @@
   }
 
   function set_document_title (title) {
-    var rssminer = 'Rssminer, intelligent RSS reader';
+    var rssminer = 'Rssminer, yet another RSS reader';
     if(title) {
       if(title.toLowerCase().indexOf('rssminer') !== -1) {
         document.title = title;

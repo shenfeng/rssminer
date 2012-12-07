@@ -18,7 +18,7 @@
 
 (defhandler login [req email password return-url persistent mobile?]
   (let [user (db/authenticate email password)
-        return-url (or return-url "/a")]
+        return-url (if (str/blank? return-url) "/a" return-url)]
     (if user
       (assoc (redirect return-url)
         :session {:id (:id user)}      ; IE does not persistent cookie

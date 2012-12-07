@@ -5,12 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="shortcut icon" href="/s/favicon.ico" />
     <title>{{{m-site-title}}}</title>
-    <meta name="keywords" content="RSS miner, Rssminer, RSS aggregator,
+    <meta name="keywords" content="RSS miner, Rssminer, RSS aggregator, simple, fast,
                                    intelligent RSS reader">
     <meta name="description"
-          content="Rssminer is an intelligent web-based RSS
-                   reader. It sort all unread feeds according to your
-                   personal taste: the already read items">
+          content="Rssminer is yet another RSS reader. Try to be simple:
+                   Just reading your subscriptions">
     {{#landing-css}}<style type="text/css">{{{landing-css}}}</style>{{/landing-css}}
     {{^landing-css}}<link rel="stylesheet" href="/s/css/landing2.css">{{/landing-css}}
   </head>
@@ -22,11 +21,11 @@
         <table>
           <caption>{{m-has-password}}</caption>
           <tr>
-            <td><label for="email">{{m-email}}:</label></td>
+            <td><label for="email">{{m-email}}</label></td>
             <td><input class="txt" name="email" id="email" /></td>
           </tr>
           <tr>
-            <td><label for="password">{{m-password}}:</label>
+            <td><label for="password">{{m-password}}</label>
             </td>
             <td><input class="txt" name="password" id="password" type="password"/></td>
           </tr>
@@ -39,6 +38,7 @@
         </table>
         <input value="{{{return-url}}}" name="return-url" type="hidden" />
       </form>
+      <div class="arrow-up"></div>
     </div>
 
     <div id="body">
@@ -54,18 +54,32 @@
       </div>
     </div>
   </body>
-      <script>
-login_btn.onclick = function(e) {
-  if (login.className) {
-    login.className = '';
-  } else {
-    login.className = 'show-form';
+  <script>
+function f_input() {
+  var email = document.getElementById('email');
+  try {
     if(email.value) {
       password.focus();
     } else {
       email.focus();
     }
+  }catch(e) {}
+}
+
+login_btn.onclick = function(e) {
+  if (!e) e = window.event;
+  if (login.className) {
+    login.className = '';
+  } else {
+    login.className = 'show-form';
+    f_input();
+  }
+  if(e.preventDefault) {
+    e.preventDefault();
+  } else {
+    e.returnValue = false;
   }
 };
-    </script>
+
+f_input();  </script>
 </html>

@@ -4,15 +4,14 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="shortcut icon" href="/s/favicon.ico" />
-    <title>Rssminer, intelligent RSS reader, for readability</title>
-    <meta name="keywords" content="rss miner, rssminer, rss aggregator,
-                                   intelligent rss reader">
+    <title>Rssminer, yet another RSS reader</title>
+    <meta name="keywords" content="RSS miner, Rssminer, RSS aggregator, simple, fast,
+                                   intelligent RSS reader">
     <meta name="description"
-          content="Rssminer is an intelligent web-based RSS
-                   reader. It sort all unread feeds according to your
-                   personal taste: the already read items">
-    {{^dev}}<style type="text/css">{{{ css }}}</style>{{/dev}}
-    {{#dev}}<link rel="stylesheet" href="/s/css/app.css">{{/dev}}
+          content="Rssminer is yet another RSS reader. Try to be simple:
+                   Just reading your subscriptions">
+    {{#app-css}}<style type="text/css">{{{app-css}}}</style>{{/app-css}}
+    {{^app-css}}<link rel="stylesheet" href="/s/css/app.css">{{/app-css}}
     <script>{{{ data }}} var _LANG_ZH_ = {{zh?}};</script>
     <!--[if lt IE 8 ]><script>location.href="/browser"</script><![endif]-->
   </head>

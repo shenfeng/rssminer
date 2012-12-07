@@ -1,5 +1,6 @@
 (ns rssminer.tmpls
-  (:use me.shenfeng.mustache)
+  (:use me.shenfeng.mustache
+        [rssminer.util :only [ignore-error]])
   (:require [clojure.java.io :as io]
             [rssminer.i18n :as i]
             [rssminer.config :as cfg]
@@ -12,7 +13,7 @@
   (str/replace (slurp (or (io/resource file)
                           (try (io/reader file) (catch Exception e))))
                ;; remove extra space
-               #">\W<" "><"))
+               #">\s*<" "><"))
 
 (defn- mapper [^String file]
   (let [name (let [idx (.indexOf file "templates")
@@ -27,17 +28,21 @@
          (apply concat
                 (map mapper (resources #".*templates/.*")))))
 
+(def csses {:app-css (ignore-error (slurp "public/css/app.css"))
+            :landing-css (ignore-error (slurp "public/css/landing2.css"))})
+
 (defn- add-info [context]
   (let [zh? (if-let [lang (-> i/*req* :params :lang)]
               (= "zh" lang)
               (if (re-find #"zh" (or (get-in i/*req* [:headers "accept-language"]) ""))
                 true
                 false))
-        context (assoc context
+        dev? (= (cfg/cfg :profile) :dev)
+        context (assoc (merge (if zh? i/zh-messages i/en-messages) context)
                   :static-server (cfg/cfg :static-server)
-                  :dev (= (cfg/cfg :profile) :dev)
+                  :dev dev?
                   :zh? zh?)]
-    (merge (if zh? i/zh-messages i/en-messages) context)))
+    (if dev? context (merge context csses))))
 
 (.clear Mustache/CACHE)       ; prevent OOM when dev
 

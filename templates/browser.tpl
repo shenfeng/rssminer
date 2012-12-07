@@ -11,8 +11,16 @@
           content="RSSMiner is an intelligent web-based rss reader. By
                    machine learning, RSSMiner highlight stories you
                    like, and help discover stories you may like.">
-    {{^dev}}<style type="text/css">{{{ css }}}</style>{{/dev}}
-    {{#dev}}<link rel="stylesheet" href="/s/css/app.css">{{/dev}}
+    <style type="text/css">
+      #browsers {
+      width: 800px;
+      margin: 20px auto;
+      }
+      body {
+      font: 400 15px/1.431 'Lucida Grande', 'Helvetica Neue', "Microsoft YaHei", Helvetica, Arial, sans-serif;
+      color: #222;
+      }
+    </style>
   </head>
   <body id="browsers">
     <h1>Your browser is not supported.</h1>

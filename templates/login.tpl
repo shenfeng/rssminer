@@ -21,7 +21,7 @@
           <img src="/s/imgs/openid_google.png"/>
         </a>
       </div>
-      <form action="/login" method="post" class="post-form s">
+      <form action="/" method="post" class="post-form s">
         <h3>Password login</h3>
         <table>
           <tr>

@@ -30,21 +30,20 @@
 
                ;; mobile landing page
                :m-login-with-google ["Login with Google OpenID" "以Google帐户登陆"]
-               :m-yet-another ["Yet another RSS reader" "又一个订阅阅读器"]
+               :m-yet-another ["Yet another free RSS reader" "又一个免费RSS阅读器"]
                :m-login-error ["Login failed, Email or password error" "用户名或者密码错误，请检查"]
-               :m-has-password ["Already has an account with password" "已有帐户，并设置过登陆密码"]
-               :m-email ["Email" "邮箱"]
+               :m-has-password ["Already has an account?" "已有帐户？并设置过登陆密码"]
+               :m-email ["Email:" "邮箱："]
+               :m-password ["Password:" "登陆密码："]
                :m-login ["Login" "登陆"]
                :m-tryout ["Try out Rssminer", "随便看看"]
-               :m-password ["Password" "登陆密码"]
                :m-persistent ["Remember me" "记住我"]
 
                :m-sub-list ["Subscription list", "订阅列表"]
 
                ;; landing
-               :m-site-title ["Rssminer, intelligent RSS reader, for readability"
-                              "Rssminer"]
-               })
+               :m-site-title ["Rssminer, yet another RSS reader"
+                              "Rssminer, 又一个订阅阅读器"]})
 
 (def zh-messages (into {} (map (fn [[k [en zh]]] [k zh]) messages)))
 

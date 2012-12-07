@@ -29,18 +29,19 @@
                           :uri "/signup"})
         login (test-app {:request-method :post
                          :params params
-                         :uri "/login"})
+                         :uri "/"})
         remerber-me (test-app {:request-method :post
                                :params (assoc params
                                          "persistent" "on")
-                               :uri "/login"})]
+                               :uri "/"})]
+
     ;; (is (not (re-find #"Expires="
     ;;                   (first ((:headers login) "Set-Cookie")))))
     (is (re-find #"Max-Age="
                  (first ((:headers remerber-me) "Set-Cookie"))))
     (is (= 200 (:status (test-app {:request-method :post
                                    :params {"email" "sdfdsf"}
-                                   :uri "/login"}))))
+                                   :uri "/"}))))
     (is (= 302 (:status signup)))
     (is (= 302 (:status login)))))
 
