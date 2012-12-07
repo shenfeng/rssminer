@@ -33,7 +33,7 @@ nohup java -server -Dsun.jnu.encoding=UTF-8 \
     --bind-ip 127.0.0.1 \
     --worker 3 \
     --port 8100 \
-    ${SHARED}-output.log 2>>${SHARED}-error.log &
+    >>${SHARED}-output.log 2>>${SHARED}-error.log &
 
 pid=$!
 echo $pid > $LOG_DIR/master.pid
