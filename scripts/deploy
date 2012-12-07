@@ -18,12 +18,12 @@ RSSMINER_CODE_ROOT="${ABSOLUTE_PATH%/*/*}"
 # rm classes/templates/tmpls/ -r
 # cd classes
 # jar -cf ../rssminer.jar *
-lein uberjar
 cd $RSSMINER_CODE_ROOT
+lein uberjar
 
 # FRONTEND_HOST="192.168.1.117"
 FRONTEND_HOST=rssminer.net
-DEPLOYMENT_USER="deploy"
+DEPLOYMENT_USER=deploy
 SSH_TARGET="${DEPLOYMENT_USER}@${FRONTEND_HOST}"
 TARGET_DIR="/var/www/rssminer"
 DATA_ROOT="/var/rssminer"
@@ -39,15 +39,16 @@ rsync --rsh='ssh' -vr --delete --delete-excluded \
     --exclude-from conf/exclude.txt \
     "${RSSMINER_CODE_ROOT}/" "${SSH_TARGET}:${TARGET_DIR}/"
 
-remote_run "sudo cp ${TARGET_DIR}/scripts/rssminer /etc/init.d/"
-remote_run "sudo chmod +x /etc/init.d/rssminer"
-remote_run "sudo /etc/init.d/rssminer restart"
+# remote_run "sudo cp ${TARGET_DIR}/scripts/rssminer /etc/init.d/"
+# remote_run "sudo chmod +x /etc/init.d/rssminer"
+# remote_run "sudo /etc/init.d/rssminer restart"
 
-remote_run "sudo cp ${TARGET_DIR}/conf/nginx/rssminer /etc/nginx/sites-available"
-remote_run "sudo cp ${TARGET_DIR}/conf/nginx/gzip.conf /etc/nginx/conf.d"
-remote_run "cd /etc/nginx/sites-enabled  && sudo ln -f -s /etc/nginx/sites-available/rssminer"
-remote_run "sudo service nginx reload"
+# remote_run "sudo cp ${TARGET_DIR}/conf/nginx/rssminer /etc/nginx/sites-available"
+# remote_run "sudo cp ${TARGET_DIR}/conf/nginx/gzip.conf /etc/nginx/conf.d"
+# remote_run "cd /etc/nginx/sites-enabled  && sudo ln -f -s /etc/nginx/sites-available/rssminer"
+# remote_run "sudo service nginx reload"
+
+remote_run "cd ${TARGET_DIR} && ./scripts/remote_run"
 
 # rm .jar
-exit 0
-
+# exit 0

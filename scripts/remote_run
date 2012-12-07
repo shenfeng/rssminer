@@ -1,0 +1,40 @@
+#!/bin/bash
+
+set -u                          # Treat unset variables as an error
+set -e #  Exit immediately if a simple command exits with a non-zero status
+
+APP_HOME=/var/www/rssminer
+cd $APP_HOME
+
+INDEX_PATH=/var/rssminer/index
+TMP_INDEX_PATH=/var/rssminer/index2
+
+LOG_DIR=/var/log/rssminer
+PER_MONGTH=`date +"%Y-%m"`
+SHARED="${LOG_DIR}/${PER_MONGTH}"
+
+nohup java -server -Dsun.jnu.encoding=UTF-8 \
+    -Dfile.encoding=UTF-8 \
+    -Dsun.net.inetaddr.ttl=0 \
+    -Djava.net.preferIPv4Stack=true \
+    -Xms96m -Xmx96m -XX:PermSize=48M -XX:MaxPermSize=48M \
+    -jar rssminer-standalone.jar \
+    --index-path $INDEX_PATH \
+    --profile prod \
+    --redis-host 127.0.0.1 \
+    --no-proxy \
+    --fetcher \
+    --static-server //s.rss-miner.com \
+    --db-url jdbc:mysql://71.19.154.89/rssminer \
+    --db-user feng \
+    --fetcher-concurrency 10 \
+    --fetch-size 15 \
+    --events-threshold 10 \
+    --bind-ip 127.0.0.1 \
+    --worker 3 \
+    --port 8100 \
+    ${SHARED}-output.log 2>>${SHARED}-error.log &
+
+pid=$!
+echo $pid > $LOG_DIR/master.pid
+echo "success, pid is $pid"

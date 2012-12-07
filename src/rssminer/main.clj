@@ -2,6 +2,7 @@
   (:gen-class)
   (:use [clojure.tools.cli :only [cli]]
         [me.shenfeng.http.server :only [run-server]]
+        [clojure.java.shell :only [sh]]
         [clojure.tools.logging :only [info]]
         (rssminer [database :only [use-mysql-database! close-global-mysql-factory!]]
                   [search :only [use-index-writer! close-global-index-writer!]]
@@ -11,7 +12,8 @@
                   [util :only [to-int]]
                   [fetcher :only [start-fetcher stop-fetcher]]
                   [config :only [rssminer-conf socks-proxy cfg]]))
-  (import java.net.Proxy))
+  (:require [clojure.string :as str])
+  (:import java.net.Proxy))
 
 (defonce server (atom nil))
 
@@ -27,18 +29,40 @@
 
 (defonce shutdown-hook (Thread. ^Runnable stop-server))
 
+(defmacro do-kill-if-prod [& body]
+  `(if (= :prod (cfg :profile))
+     (loop [i# 1]
+       (let [pid# (str/trim (:out (sh "lsof"
+                                      "-t" "-sTCP:LISTEN"
+                                      (str "-i:" (cfg :port)))))]
+         (when-not (str/blank? pid#)
+           (info "kill pid" pid# i# "times, status" (:exit (sh "kill" pid#)))))
+       (let [r# (try ~@body 1
+                     (catch java.net.BindException e#
+                       (if (> i# 30)    ; wait about 4.5s
+                         (do
+                           (info "giving up")
+                           (throw e#))
+                         (Thread/sleep 150))))]
+         (when-not r#
+           (recur (inc i#)))))
+     (do ~@body)))
+
 (defn start-server []
   (stop-server)
   (.removeShutdownHook (Runtime/getRuntime) shutdown-hook)
   (.addShutdownHook (Runtime/getRuntime) shutdown-hook)
   (use-mysql-database!)
   (set-redis-pool!)
+  (do-kill-if-prod
+   (reset! server (run-server (app) {:port (cfg :port)
+                                     :ip (cfg :bind-ip)
+                                     :worker-name-prefix "w"
+                                     :thread (cfg :worker)}))
+   (info "server start"  (str (cfg :bind-ip) ":" (cfg :port))
+         "with" (cfg :worker) "workers"))
   (use-index-writer!)
   (start-classify-daemon!)
-  (reset! server (run-server (app) {:port (cfg :port)
-                                    :ip (cfg :bind-ip)
-                                    :worker-name-prefix "w"
-                                    :thread (cfg :worker)}))
   (when (cfg :fetcher) (start-fetcher)))
 
 (defn -main [& args]
