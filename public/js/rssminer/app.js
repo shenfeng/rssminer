@@ -132,25 +132,36 @@
           $feed_content.empty();
         }
         $feed_content.append(html);
+        _.defer(cleanup);
         call_if_fn(cb);
       });
     }
   }
 
-  function cleanup ($me) {
+  function cleanup () {
+    $feed_content.find('.summary a').attr('target', '_blank');
+
     _.each(["p", 'pre'], function (selector) {
-      $reading_area.find(selector).each(function (idx, p) {
-        var $e = $(p);
+      $feed_content.find(selector).each(function (idx, p) {
+        var $p = $(p);
         // only remove if no chillren and no text. 516264
-        if(!$.trim($e.text()) && !$e.find('img').length) {
-          $e.hide();            // 4037/330457
+        if(!$.trim($p.text()) && !$p.find('img').length) {
+          $p.hide();            // 4037/330457
         }
       });
     });
 
-    $reading_area.find('.summary a').each(function (idx, a) {
-      $(a).attr('target', '_blank');
-    });
+    try {
+      var brs = $feed_content[0].querySelectorAll('br');
+      for(var i = 0; i < brs.length; i++) {
+        var br = brs[i],
+            p = br.previousSibling;
+        if(p && p.previousSibling && p.previousSibling.nodeName === 'BR') {
+          br.parentElement.removeChild(br);
+        }
+      }
+    }catch(e) {}
+
   }
 
   function reading_feed (id) {
