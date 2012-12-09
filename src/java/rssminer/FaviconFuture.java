@@ -70,6 +70,8 @@ public class FaviconFuture implements IListenableFuture {
         if (ct != null && !ct.isEmpty()) {
             h.put(CONTENT_TYPE, ct);
         }
+        // rand value, wait for If-Modified-Since
+        h.put("Last-Modified", "Sun, 09 Dec 2012 09:27:29 +0000");
         h.put(CACHE_CONTROL, CACHE_VALUE);
         return h;
     }

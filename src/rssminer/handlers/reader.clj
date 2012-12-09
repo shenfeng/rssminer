@@ -64,10 +64,12 @@
   (search* q tags authors uid limit offset (= fs "1")))
 
 (defhandler get-favicon [req h]
-  (if-let [hostname (str/reverse h)]
-    {:status 200
-     :body (FaviconFuture. hostname
-                           {"User-Agent" ((:headers req) "user-agent")}
-                           (cfg/cfg :proxy)
-                           (cfg/cfg :data-source))}
-    {:status 404}))
+  (if (get-in req [:headers "if-modified-since"])
+    {:status 304}
+    (if-let [hostname (str/reverse h)]
+      {:status 200
+       :body (FaviconFuture. hostname
+                             {"User-Agent" ((:headers req) "user-agent")}
+                             (cfg/cfg :proxy)
+                             (cfg/cfg :data-source))}
+      {:status 404})))
