@@ -1,6 +1,6 @@
 (defproject rssminer "1.0.0"
   :description "Rssminer - an intelligent RSS reader"
-  :dependencies [[clojure "1.4.0"]
+  :dependencies [[org.clojure/clojure "1.4.0"]
                  [commons-codec "1.5"]
                  [commons-io "2.1"]
                  [compojure "1.1.1"]

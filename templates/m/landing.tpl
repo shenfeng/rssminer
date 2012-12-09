@@ -23,7 +23,7 @@
     <div class="seperator">
     </div>
     <div class="container">
-      <form action="/login" method="post">
+      <form action="/" method="post">
       <p>{{m-has-password}}</p>
       {{#login-error}} <p class="msg">{{m-login-error}}</p>{{/login-error}}
         <div><input class="txt" name="email" placeholder="{{m-email}}"/></div>
