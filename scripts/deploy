@@ -19,6 +19,7 @@ RSSMINER_CODE_ROOT="${ABSOLUTE_PATH%/*/*}"
 # cd classes
 # jar -cf ../rssminer.jar *
 cd $RSSMINER_CODE_ROOT
+./scripts/gen_icon
 lein uberjar
 
 # FRONTEND_HOST="192.168.1.117"

@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/s/favicon.ico" />
     <title>Rssminer</title>
+    <link rel="apple-touch-icon" href="/s/imgs/i/apple-57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/s/imgs/i/apple-72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/s/imgs/i/apple-114.png" />
     <link href="/s/css/l.css?{VERSION}" rel="stylesheet" type="text/css" />
   </head>
   <body>

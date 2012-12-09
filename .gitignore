@@ -3,6 +3,7 @@
 .cake
 .classpath
 .emacs.desktop*
+public/imgs/i
 .idea/
 .lein-deps-sum
 .lein-failures
