@@ -11,7 +11,12 @@
         {{{summary}}}
       </div>
     </div>
-
   </body>
-  <!-- <script src="/s/js/rssminer/mobile.js"></script> -->
+  <script>
+var links = document.getElementById('feed-content').querySelectorAll('a');
+for(var i = 0; i < links.length; i++) {
+  var a = links[i];
+  a.setAttribute('target', '_blank');
+}
+  </script>
 </html>
