@@ -18,7 +18,7 @@ body {
     a {
         padding: 10px;
         text-decoration: none;
-        /* background: #eee; */
+    /* background: #eee; */
     }
 }
 
@@ -39,7 +39,7 @@ h2 {
     padding: 0;
     margin: 0;
     img {
-        padding-right: 4px;
+        padding-right: 5px;
         width: 17px;
         height: 17px;
         position: relative;
@@ -79,6 +79,9 @@ i {
     font-size: 16px;
     .summary {
         padding: 3px 0 0 0;
+        p {
+            text-align: left;
+        }
         h1, h2, h3, h4, h5 { margin: 13px 0; line-height: 1.4;}
         h1 { font-size: 21px; }
         h2, h3 { font-size: 19px; }
