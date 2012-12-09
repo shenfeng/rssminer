@@ -1,5 +1,6 @@
 (ns rssminer.handlers.mobile
-  (:use (rssminer [util :only [defhandler to-int now-seconds]]
+  (:use [compojure.core :only [defroutes GET POST DELETE ANY context]]
+        (rssminer [util :only [defhandler to-int now-seconds]]
                   [classify :only [on-feed-event]]))
   (:require [rssminer.config :as cfg]
             [rssminer.db.subscription :as sdb]
@@ -9,17 +10,23 @@
   (:import rssminer.jsoup.HtmlUtils
            java.net.URI))
 
+(defn- user-subs [uid]
+  (filter identity (map (fn [s]
+                          (let [s (bean s)]
+                            (when (and (:title s) (> (count (:title s)) 0))
+                              (assoc s
+                                :like? (> (:like s) 3)
+                                :host (when-let [url ^String (:url s)]
+                                        (when-let [host (.getHost (URI/create url))]
+                                          (str/reverse host)))))))
+                        (sdb/fetch-user-subs uid))))
+
 (defhandler landing-page [req uid]
-  (let [subs (map (fn [s]
-                    (let [s (bean s)]
-                      (when (and (:title s) (> (count (:title s)) 0))
-                        (assoc s
-                          :like? (> (:like s) 3)
-                          :host (when-let [url ^String (:url s)]
-                                  (when-let [host (.getHost (URI/create url))]
-                                    (str/reverse host)))))))
-                  (sdb/fetch-user-subs uid))]
-    (tmpls/m-subs {:subs (filter identity subs)})))
+  (tmpls/m-subs {:subs (user-subs uid)}))
+
+(defhandler show-folder [req folder uid]
+  (tmpls/m-folder {:folder folder
+                   :subs (filter #(= folder (:group %1)) (user-subs uid))}))
 
 (defn- readable [feeds]
   (let [now (now-seconds)]
@@ -38,8 +45,8 @@
   (let [sub (sdb/fetch-rss-link-by-id sid)
         feeds (map bean (:feeds
                          (case sortby
-                           "latest" (fdb/fetch-sub-newest uid (to-int sid) 30 offset)
-                           "likest" (fdb/fetch-sub-likest uid (to-int sid) 30 offset))))]
+                           "latest" (fdb/fetch-sub-newest uid (to-int sid) 35 offset)
+                           "likest" (fdb/fetch-sub-likest uid (to-int sid) 35 offset))))]
     (tmpls/m-feeds {:feeds (readable feeds)
                     :title (:title sub)
                     :category (case sortby

@@ -3,7 +3,7 @@
   {{>m/p_header}}
   <script>function f_e (t) { t.src = "/s/imgs/16px-feed-icon.png"; t.onerror = null; }</script>
   <body>
-    <h2>{{m-sub-list}}</h2>
+    <h2> <a href="/m">ALL</a> - {{folder}}</h2>
     <ul class="lists">
       {{#subs}}
         <li>
@@ -16,9 +16,6 @@
             {{#like?}}
               <a href="/m/{{id}}/likest">猜你喜欢{{ like }}</a>
             {{/like?}}
-            {{#group}}
-              <a href="/m/f/{{group}}">{{group}}</a>
-            {{/group}}
           </div>
         </li>
       {{/subs}}

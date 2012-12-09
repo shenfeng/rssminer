@@ -7,7 +7,7 @@
       {{#feeds}}
         <li {{#read?}}class=r{{/read?}}>
           <p>
-            <a href="/m/f/{{id}}">{{ title }}</a>
+            <a href="/m/r/{{id}}">{{ title }}</a>
           </p>
           <div class="meta">
             <i>{{ pts }}</i>

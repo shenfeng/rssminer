@@ -40,7 +40,8 @@
 
 (defroutes mobile-routes
   (GET "/" [] mobile/landing-page)
-  (GET "/f/:fid" [] mobile/show-feed)
+  (GET ["/f/:folder" :folder ".+"] [] mobile/show-folder)
+  (GET "/r/:fid" [] mobile/show-feed)
   (GET "/:sid/:sortby" [] mobile/list-feeds))
 
 (defroutes admin-routes
