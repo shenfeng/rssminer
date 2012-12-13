@@ -98,30 +98,6 @@
        (when-lets [~@(drop 2 bindings)]
                   ~@body))))
 
-;; (defmacro if-lets
-;;   ([bindings then]
-;;      `(if-lets ~bindings ~then nil))
-;;   ([bindings then else]
-;;      (if (empty? bindings)
-;;        `~then
-;;        `(if-let [~@(take 2 bindings)]
-;;           (if-lets [~@(drop 2 bindings)]
-;;                    ~then ~else)
-;;           ~else))))
-
-;; (defn trace
-;;   ([value] (trace nil value))
-;;   ([name value]
-;;      (println (str "TRACE" (when name (str " " name)) ": " value))
-;;      value))
-
-;; (defn tracep
-;;   ([value] (tracep nil value))
-;;   ([name value]
-;;      (println (str "TRACE" (when name (str " " name)) ":"))
-;;      (pprint value)
-;;      value))
-
 (defn valid-url? [url] (ignore-error (.getHost (URI/create url))))
 
 (defn mobile? [req]
@@ -142,3 +118,58 @@
     `(defn ~handler [~req]
        (let [~@(interleave bindings vals)]
          ~@body))))
+
+
+(comment
+  (defmacro if-lets
+    ([bindings then]
+       `(if-lets ~bindings ~then nil))
+    ([bindings then else]
+       (if (empty? bindings)
+         `~then
+         `(if-let [~@(take 2 bindings)]
+            (if-lets [~@(drop 2 bindings)]
+                     ~then ~else)
+            ~else))))
+
+  (defn trace
+    ([value] (trace nil value))
+    ([name value]
+       (println (str "TRACE" (when name (str " " name)) ": " value))
+       value))
+
+  (defn tracep
+    ([value] (tracep nil value))
+    ([name value]
+       (println (str "TRACE" (when name (str " " name)) ":"))
+       (pprint value)
+       value))
+
+  ;;from clojure/contrib/strint.clj: author Chas Emerick
+  (defn- silent-read [s]
+    (try
+      (let [r (-> s java.io.StringReader. java.io.PushbackReader.)]
+        [(read r) (slurp r)])
+      ;; this indicates an invalid form -- the head of s is just string data
+      (catch Exception e )))
+
+  (defn- interpolate
+    ([s atom?]
+       (if-let [[form rest] (silent-read (subs s (if atom? 2 1)))]
+         (cons form (interpolate (if atom? (subs rest 1) rest)))
+         (cons (subs s 0 2) (interpolate (subs s 2)))))
+    ([^String s]
+       (if-let [start (->> ["~{" "~("]
+                           (map #(.indexOf s ^String %))
+                           (remove #(== -1 %))
+                           sort
+                           first)]
+         (let [f (subs s 0 start)
+               rst (interpolate (subs s start) (= \{ (.charAt s (inc start))))]
+           (if (> (count f) 0)
+             (cons f rst)
+             rst))
+         (if (> (count s) 0) [s] []))))
+
+  (comment (let [a 3] (<< "a: ~{a}; inc: ~(inc a)")))
+  (defmacro << [string] `(str ~@(interpolate string))))
