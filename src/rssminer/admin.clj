@@ -69,12 +69,11 @@
   (if user-id
     (do
       (on-feed-event (to-int user-id) (to-int -1))
-      {:status 200 :body user-id})
+      user-id)
     (let [users (map :id (mysql-query ["select id from users"]))]
       (doseq [id users]
         (on-feed-event (to-int id) (to-int -1)))
-      {:status 200 :body (map str (interpose ", " users))}))
-  {:status 404 :body "not found"})
+      (map str (interpose ", " users)))))
 
 (defn -main [& args]
   (let [[options _ banner]

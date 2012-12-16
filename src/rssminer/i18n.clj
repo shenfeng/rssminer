@@ -32,7 +32,7 @@
                :m-login-with-google ["Login with Google OpenID" "以Google帐户登陆"]
                :m-yet-another ["Yet another free RSS reader" "又一个免费RSS阅读器"]
                :m-login-error ["Login failed, Email or password error" "用户名或者密码错误，请检查"]
-               :m-has-password ["Already has an account?" "已有帐户？并设置过登陆密码"]
+               :m-has-password ["Has an password enabled account?" "已有帐户？并设置过登陆密码"]
                :m-email ["Email:" "邮箱："]
                :m-password ["Password:" "登陆密码："]
                :m-login ["Login" "登陆"]

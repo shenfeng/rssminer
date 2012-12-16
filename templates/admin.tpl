@@ -28,6 +28,9 @@
         <a href="/admin/fetcher?command=start">start fetcher</a>
         {{/fetcher}}
       </li>
+      <li>
+        <a href="/admin/compute">recompute scores</a>
+      </li>
     </ul>
   </body>
 </html>
