@@ -23,6 +23,8 @@ convert -resize 48x48 $ICON ${DEST}/drawable-mdpi/ic_launcher.png
 convert -resize 72x72 $ICON ${DEST}/drawable-hdpi/ic_launcher.png
 convert -resize 96x96 $ICON ${DEST}/drawable-xhdpi/ic_launcher.png
 
+mkdir -p public/imgs/i/
+
 for i in 57 72 114
 do
     convert -resize ${i}x${i} $ICON public/imgs/i/apple-$i.png
