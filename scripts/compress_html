@@ -1,0 +1,21 @@
+#! /bin/bash
+
+version=`date +"%j%H%M"`        # date of year | hour | minute
+
+rm -rf src/templates/
+java -jar thirdparty/htmlcompressor.jar \
+    --type html \
+    --recursive  \
+    --charset utf8 \
+    --mask "*.tpl" \
+    --remove-quotes  \
+    --remove-script-attr \
+    --simple-bool-attr \
+    --remove-link-attr \
+    --remove-style-attr \
+    --remove-intertag-spaces \
+    --output src/templates/ \
+    templates
+
+find src/templates/ -type f | xargs -I {} sed -i -e s/{VERSION}/${version}/g {}
+find src/templates/ -type f -name "*-e" | xargs rm -f

@@ -50,7 +50,7 @@ end
 
 file "thirdparty/#{htmlcompressor}" do
   mkdir_p "thirdparty"
-  sh 'wget http://htmlcompressor.googlecode.com/files/htmlcompressor-1.3.1.jar' +
+  sh 'wget http://htmlcompressor.googlecode.com/files/htmlcompressor-1.5.3.jar' +
     " -O thirdparty/#{htmlcompressor}"
 end
 
@@ -203,21 +203,8 @@ task :mysql_prod do
 end
 
 desc 'Compress html using htmlcompressor, save compressed to src/templates'
-task :html_compress do
-  html_srcs = FileList['templates/**/*.*']
-  html_triples = html_srcs.map {|f| [f, "src/#{f}", get_dir("src/#{f}")]}
-  html_triples.each do |src, tgt, dir|
-    if !File.exist?(dir)
-      mkdir_p dir
-    end
-    if !File.exist?(tgt) || File.mtime(tgt) < File.mtime(src)
-      sh "java -jar thirdparty/#{htmlcompressor} --charset utf8 #{src} -o #{tgt}"
-    end
-  end
-  sh "find src/templates/ -type f " +
-    "| xargs -I {} sed -i -e \"s/{VERSION}/#{version}/g\" {}"
-
-  sh "find src/templates/ -type f -name \"*-e\" | xargs rm -f"
+task :html_compress => :deps do
+  sh "scripts/compress_html"
 end
 
 desc "Using luke to inspect luence index"

@@ -10,15 +10,8 @@
 ;;; templates/help.tpl => help
 
 (defn- get-content [file]
-  (str/replace
-   (str/replace
-    (str/replace
-     (slurp (or (io/resource file)
-                (try (io/reader file) (catch Exception e))))
-     ;; remove extra space
-     #">\s*<" "><")
-    #"}\s*<" "}<")
-   #">\s*\{" ">{"))
+  (slurp (or (io/resource file)
+             (try (io/reader file) (catch Exception e)))))
 
 (defn- mapper [^String file]
   (let [name (let [idx (.indexOf file "templates")
