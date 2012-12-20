@@ -278,19 +278,24 @@ def has_inotify()
   end
 end
 
+desc "reload browser"
+task :reload do
+  sh 'wget http://localhost:9090/dev/c -q -O /dev/null || exit 0'
+end
+
 namespace :watch do
   desc 'Watch css, html'
   task :all => [:deps, :css_compile, "js:tmpls"] do
     if has_inotify
       t1 = Thread.new {
-        sh 'while inotifywait -r -e modify scss/; do rake css_compile; done'
+        sh 'while inotifywait -r -e modify scss/; do rake css_compile reload; done'
       }
       t2 = Thread.new {
-        sh 'while inotifywait -r -e modify templates/; do rake js:tmpls; done'
+        sh 'while inotifywait -r -e modify templates/; do rake js:tmpls reload; done'
       }
     elsif
-      t1 = watch_change('scss/**/*.*', lambda {sh 'rake css_compile'})
-      t2 = watch_change('templates/**/*.*', lambda {sh 'rake js:tmpls'})
+      t1 = watch_change('scss/**/*.*', lambda {sh 'rake css_compile reload'})
+      t2 = watch_change('templates/**/*.*', lambda {sh 'rake js:tmpls reload'})
     end
     trap(:INT) {
       sh "killall inotifywait || exit 0"

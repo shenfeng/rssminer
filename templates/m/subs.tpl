@@ -1,6 +1,9 @@
 <!doctype html>
 <html>
-  {{>m/p_header}}
+  <head>
+    {{>partials/m_header}}
+    <link href="/s/css/m.css?{VERSION}" rel="stylesheet" type="text/css" />
+  </head>
   <script>function f_e (t) { t.src = "/s/imgs/16px-feed-icon.png"; t.onerror = null; }</script>
   <body>
     <h2>{{m-sub-list}}</h2>

@@ -1,16 +1,8 @@
 <!doctype html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <link rel="shortcut icon" href="/s/favicon.ico" />
-    <title>Unsupported browser, rssminer an intelligent RSS reader</title>
-    <meta name="keywords" content="rss miner, rssminer, rss aggregator,
-                                   intelligent rss reader">
-    <meta name="description"
-          content="RSSMiner is an intelligent web-based rss reader. By
-                   machine learning, RSSMiner highlight stories you
-                   like, and help discover stories you may like.">
+    {{> partials/header }}
+    <title>Your browser is not supported.</title>
     <style type="text/css">
       #browsers {
       width: 800px;

@@ -16,6 +16,7 @@
         dev? (= (cfg/cfg :profile) :dev)
         context (assoc (merge (if zh? i/zh-messages i/en-messages) context)
                   :static-server (cfg/cfg :static-server)
+                  :server-host (get-in i/*req* [:headers "host"])
                   :dev dev?
                   :zh? zh?)]
     (if dev? context (merge context csses))))

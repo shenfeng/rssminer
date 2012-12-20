@@ -1,6 +1,9 @@
 <!doctype html>
 <html>
-  {{>m/p_header}}
+  <head>
+    {{>partials/m_header}}
+    <link href="/s/css/m.css?{VERSION}" rel="stylesheet" type="text/css" />
+  </head>
   <body>
     <h2>{{ title }}</h2>
     <p class="orginal">
@@ -13,10 +16,10 @@
     </div>
   </body>
   <script>
-var links = document.getElementById('feed-content').querySelectorAll('a');
-for(var i = 0; i < links.length; i++) {
-  var a = links[i];
-  a.setAttribute('target', '_blank');
-}
+    var links = document.getElementById('feed-content').querySelectorAll('a');
+    for(var i = 0; i < links.length; i++) {
+    var a = links[i];
+    a.setAttribute('target', '_blank');
+    }
   </script>
 </html>

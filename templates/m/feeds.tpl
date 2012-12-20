@@ -1,6 +1,9 @@
 <!doctype html>
 <html>
-  {{>m/p_header}}
+  <head>
+    {{>partials/m_header}}
+    <link href="/s/css/m.css?{VERSION}" rel="stylesheet" type="text/css" />
+  </head>
   <body>
     <h2>{{title}} <span class="c">{{ category }}</span></h2>
     <ul class="lists">

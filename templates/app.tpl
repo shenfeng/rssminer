@@ -1,19 +1,11 @@
 <!doctype html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <link rel="shortcut icon" href="/s/favicon.ico" />
-    <title>Rssminer, yet another RSS reader</title>
-    <meta name="keywords" content="RSS miner, Rssminer, RSS aggregator, simple, fast,
-                                   intelligent RSS reader">
-    <meta name="description"
-          content="Rssminer is yet another RSS reader. Try to be simple:
-                   Just reading your subscriptions">
+    {{> partials/header }}
+    <!--[if lt IE 8 ]><script>location.href="/browser"</script><![endif]-->
     {{#app-css}}<style type="text/css">{{{app-css}}}</style>{{/app-css}}
     {{^app-css}}<link rel="stylesheet" href="/s/css/app.css">{{/app-css}}
     <script>{{{ data }}} var _LANG_ZH_ = {{zh?}};</script>
-    <!--[if lt IE 8 ]><script>location.href="/browser"</script><![endif]-->
   </head>
   <!--[if IE 8]><body class="ie8"> <![endif]-->
   <!--[if !IE]><body><![endif]-->

@@ -2,15 +2,10 @@
   (:use [compojure.core :only [defroutes GET POST DELETE ANY context]]
         ring.middleware.session.store
         (ring.middleware [keyword-params :only [wrap-keyword-params]]
-                         [file-info :only [wrap-file-info make-http-format]]
                          [params :only [wrap-params]]
-                         [session :only [wrap-session]]
-                         [multipart-params :only [wrap-multipart-params]]
-                         [file :only [wrap-file]]
                          [session :only [wrap-session]])
         (rssminer [middleware :only [wrap-auth wrap-cache-header
-                                     wrap-failsafe
-                                     wrap-request-logging-in-dev
+                                     wrap-failsafe wrap-request-logging-in-dev
                                      JPOST JPUT JDELETE JGET]]))
   (:require [compojure.route :as route]
             [rssminer.import :as import]
@@ -18,6 +13,7 @@
             (rssminer.handlers [reader :as reader]
                                [subscriptions :as subs]
                                [users :as user]
+                               [dev :as dev]
                                [feeds :as feed]
                                [mobile :as mobile])))
 
@@ -70,6 +66,7 @@
            (POST "/" [] user/signup))
   (GET "/logout" [] user/logout)
   (context "/api" [] api-routes)
+  (context "/dev" [] dev/dev-routes)
   (route/files "/s") ;; files under public folder
   (route/not-found "<p>Page not found.</p>" ))
 

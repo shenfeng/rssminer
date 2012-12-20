@@ -1,15 +1,9 @@
 <!doctype html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <link rel="shortcut icon" href="/s/favicon.ico" />
+    {{> partials/header }}
     <title>{{{m-site-title}}}</title>
-    <meta name="keywords" content="RSS miner, Rssminer, RSS aggregator, simple, fast,
-                                   intelligent RSS reader">
-    <meta name="description"
-          content="Rssminer is yet another RSS reader. Try to be simple:
-                   Just reading your subscriptions">
+    <!--[if lt IE 8 ]><script>location.href="/browser"</script><![endif]-->
     {{#landing-css}}<style type="text/css">{{{landing-css}}}</style>{{/landing-css}}
     {{^landing-css}}<link rel="stylesheet" href="/s/css/landing2.css">{{/landing-css}}
   </head>
