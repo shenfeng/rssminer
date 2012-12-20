@@ -3,18 +3,4 @@
 set -u                          # Treat unset variables as an error
 set -e #  Exit immediately if a simple command exits with a non-zero status
 
-READLINK=readlink
-if which greadlink > /dev/null; then
-    READLINK=greadlink
-fi
-
-ABSOLUTE_PATH=$(${READLINK} -f $0)
-HOME="${ABSOLUTE_PATH%/*/*}"
-
-cd $HOME
-
-# compile
-
-find test/java -name "*.java" | xargs javac -Xlint:unchecked -cp "classes:lib/*:src/:lib/dev/*"  -d classes -sourcepath test/java
-
-java -cp "lib/*:lib/dev/*:classes/" rssminer.TestRunner
+java -cp `lein classpath` rssminer.TestRunner

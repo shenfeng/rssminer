@@ -2,20 +2,13 @@
 set -u                          # Treat unset variables as an error
 set -e #  Exit immediately if a simple command exits with a non-zero status
 
-READLINK=readlink
-if which greadlink > /dev/null; then
-    READLINK=greadlink
-fi
-
-ABSOLUTE_PATH=$(${READLINK} -f $0)
-HOME="${ABSOLUTE_PATH%/*/*}"
-cd "${HOME}" && java -server \
+java -server \
     -Dfile.encoding=UTF-8 \
     -Djava.net.preferIPv4Stack=true \
     -Dsun.jnu.encoding=UTF-8 \
     -Dsun.net.inetaddr.ttl=0 \
     -Xms96m -Xmx96m -XX:PermSize=48M -XX:MaxPermSize=48M \
-    -server -cp "classes:lib/*:src/" clojure.main \
+    -server -cp `lein classpath` clojure.main \
     -m rssminer.main $@
 
 

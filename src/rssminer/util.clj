@@ -78,6 +78,7 @@
   `(try ~@body (catch Exception _#)))
 
 ;; "like assoc, but drop false value"
+
 (defn assoc-if [map & kvs]
   (let [kvs (apply concat
                    (filter #(second %) (partition 2 kvs)))]

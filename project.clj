@@ -5,7 +5,7 @@
                  [commons-io "2.1"]
                  [compojure "1.1.1"]
                  [me.shenfeng/http-kit "1.2"]
-                 [me.shenfeng/mustache "0.0.8"]
+                 [me.shenfeng/mustache "1.1-SNAPSHOT"]
                  [me.shenfeng/mmseg "0.0.4"]
                  [me.shenfeng/dbcp "0.0.1"]
                  [mysql/mysql-connector-java "5.1.21"]
@@ -22,9 +22,8 @@
   :dev-resources-path "/usr/lib/jvm/java-6-sun/lib/tools.jar:/usr/lib/jvm/java-6-sun/lib/src.zip"
   :exclusions [javax.activation/activation]
   :repositories {"java.net" {:url "http://download.java.net/maven/2/" :snapshots false}}
-  ;; :plugins [[lein-eclipse "1.0.0"]]
   :warn-on-reflection true
-  :javac-options {:source "1.7" :target "1.7" :debug "true" :fork "true" :encoding "utf8"}
+  :javac-options ["-source" "1.7" "-target" "1.7" "-g" "-encoding" "utf8"]
   :java-source-path "src/java"
   :aot [rssminer.main, rssminer.admin]
   ;; :omit-source true
@@ -44,19 +43,19 @@
              "-XX:+TieredCompilation"
              "-Xms512m"
              "-Xmx512m"]
-  ;; :jvm-opts ["-agentlib:hprof=cpu=samples,format=b,file=/tmp/profile.txt"]
   ;; :jvm-opts ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n"]
-  :dev-dependencies [[swank-clojure "1.4.0"]
-                     [junit/junit "4.8.2"]
-                     [commons-lang "2.3"]
-                     [org.ccil.cowan.tagsoup/tagsoup "1.2"]
-                     [org.apache.lucene/lucene-analyzers "3.6.1"]
-                     [org.apache.lucene/lucene-facet "3.6.1"]
-                     [org.apache.lucene/lucene-queries "3.6.1"]
-                     [javax.mail/mail "1.4.4"]
-                     [org.apache.commons/commons-email "1.2"]
-                     [com.google.guava/guava "11.0.2"]
-                     [org.apache.lucene/lucene-spellchecker "3.6.1"]])
+  :plugins [[lein-swank "1.4.4"]]
+  :profiles {:dev {:dependencies [[swank-clojure "1.4.0"]
+                                  [junit/junit "4.8.2"]
+                                  [commons-lang "2.3"]
+                                  [org.ccil.cowan.tagsoup/tagsoup "1.2"]
+                                  [org.apache.lucene/lucene-analyzers "3.6.1"]
+                                  [org.apache.lucene/lucene-facet "3.6.1"]
+                                  [org.apache.lucene/lucene-queries "3.6.1"]
+                                  [javax.mail/mail "1.4.4"]
+                                  [org.apache.commons/commons-email "1.2"]
+                                  [com.google.guava/guava "11.0.2"]
+                                  [org.apache.lucene/lucene-spellchecker "3.6.1"]]}})
 
 ;; (map meta (vals (ns-publics 'clojure.core)))
 ;; (require 'rssminer.admin)

@@ -104,7 +104,7 @@ desc "Prepare for production"
 task :prepare_prod => [:css_compile, "js:minify"]
 
 desc "lein swank"
-task :swank => [:javac_debug, :prepare] do
+task :swank => [:javac, :prepare] do
   sh "lein swank"
 end
 
@@ -115,20 +115,16 @@ end
 
 desc "Javac"
 task :javac do
-  sh 'rm -rf classes && mkdir classes'
-  sh 'find src/java -name "*.java" | xargs javac -Xlint:unchecked -encoding utf8 -cp "classes:lib/*:src/" -d classes -sourcepath src/java/'
+  sh "scripts/javac"
 end
 
 desc "Javac debug"
 task :javac_debug do
-  sh 'rm -rf classes && mkdir classes'
-  sh 'find src/java -name "*.java" | xargs javac -g -Xlint:unchecked -encoding utf8 -cp "classes:lib/*:src/"  -g -d classes -sourcepath src/java/'
-  sh 'find test/java -name "*.java" | xargs javac -g -Xlint:unchecked -encoding utf8 -cp "classes:lib/*:src/:lib/dev/*"  -d classes -sourcepath test/java'
+  sh "scripts/javac with-test"
 end
 
-
 desc "Run junit test"
-task :junit => [:javac] do
+task :junit => [:javac_debug] do
   sh './scripts/junit_test'
 end
 
@@ -136,7 +132,7 @@ desc "Run all test"
 task :all_test => [:test, :junit]
 
 desc "Run lein unit test"
-task :test => [:prepare, :javac_debug] do
+task :test => [:prepare, :java] do
   sh 'lein test'
 end
 
@@ -231,7 +227,7 @@ end
 
 namespace :run do
   desc "Run server in dev profile"
-  task :dev => [:prepare, :javac_debug] do
+  task :dev => [:prepare, :javac] do
     sh 'scripts/run --profile dev'
   end
 
