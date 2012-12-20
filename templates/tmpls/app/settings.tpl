@@ -45,10 +45,11 @@
           </ul>
         </td>
       </tr>
+      <tr>
+        <td></td>
+        <td><button id="add-subscription">{{m_add}}</button></td>
+      </tr>
     </table>
-    <div>
-      <button id="add-subscription">{{m_add}}</button>
-    </div>
   </li>
   <li class="section settings">
     <div>

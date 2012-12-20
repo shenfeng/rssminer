@@ -283,25 +283,28 @@ task :reload do
   sh 'wget http://localhost:9090/dev/c -q -O /dev/null || exit 0'
 end
 
-namespace :watch do
-  desc 'Watch css, html'
-  task :all => [:deps, :css_compile, "js:tmpls"] do
-    if has_inotify
-      t1 = Thread.new {
-        sh 'while inotifywait -r -e modify scss/; do rake css_compile reload; done'
-      }
-      t2 = Thread.new {
-        sh 'while inotifywait -r -e modify templates/; do rake js:tmpls reload; done'
-      }
-    elsif
-      t1 = watch_change('scss/**/*.*', lambda {sh 'rake css_compile reload'})
-      t2 = watch_change('templates/**/*.*', lambda {sh 'rake js:tmpls reload'})
-    end
-    trap(:INT) {
-      sh "killall inotifywait || exit 0"
-      exit
+desc 'Watch css, html'
+task :watch => [:deps, :css_compile, "js:tmpls"] do
+  if has_inotify
+    t1 = Thread.new {
+      sh 'while inotifywait -r -e modify scss/; do rake css_compile reload; done'
     }
-    t1.join
-    t2.join
+    t2 = Thread.new {
+      sh 'while inotifywait -r -e modify templates/; do rake js:tmpls reload; done'
+    }
+    t3 = Thread.new {
+      sh 'while inotifywait -r -e modify public/js/rssminer; do rake reload; done'
+    }
+  elsif
+    t1 = watch_change('scss/**/*.*', lambda {sh 'rake css_compile reload'})
+    t2 = watch_change('templates/**/*.*', lambda {sh 'rake js:tmpls reload'})
+    t2 = watch_change('public/js/rssminer/**/*.*', lambda {sh 'rake reload'})
   end
+  trap(:INT) {
+    sh "killall inotifywait || exit 0"
+    exit
+  }
+  t1.join
+  t2.join
+  t3.join
 end

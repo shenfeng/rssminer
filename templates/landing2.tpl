@@ -34,11 +34,9 @@
       </form>
       <div class="arrow-up"></div>
     </div>
-
     <div id="body">
       <h1>Rssminer</h1>
       <div id="slogo"> <img src="/s/imgs/rss-icon.png"/> <span>{{{m-yet-another}}}</span></div>
-
       <div id="openid">
         <a href="/login/google">{{{m-login-with-google}}}</a>
       </div>

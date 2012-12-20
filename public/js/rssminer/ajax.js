@@ -5,7 +5,7 @@
       $p = $('p', $nofity),
       hide_timer_id;
 
-  var LOADING = 'Loading...',
+  var LOADING = _LANG_('loading'),
       MSG_CLASS = 'message',
       ERROR_CLASS = 'error';
 

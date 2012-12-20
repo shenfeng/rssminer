@@ -30,7 +30,7 @@
 
 #add-subscription {
     padding: 4px 8px;
-    margin-left: 160px;
+    /* margin-left: 160px; */
 }
 
 #rss_atom_url {
@@ -43,7 +43,7 @@
     h4 { width: 115px; }
     td:first-child {
         font-weight: bold;
-        width: 145px;
+        /* width: 95px; */
         padding-right: 10px;
         text-align: right;
     }
@@ -60,17 +60,16 @@
     }
     img {
         &:hover { border-color: #ccc; }
-        /* @include box-shadow(0, 0, 3px, #666); */
         border: 1px solid #ddd;
     }
     input {
         margin-top: 5px;
         width: 300px;
-        padding: 5px;
+        padding: 6px 4px;
     }
 }
 
-$demo_warn_bg_color: #fcfcac;
+$demo_warn_bg_color: #fcf4ca;
 
 #loading-msg {
     font-size: 35px;
@@ -92,25 +91,25 @@ $demo_warn_bg_color: #fcfcac;
 
 #warn-msg {
     z-index: 100;
-    right: 275px;
+    right: 260px;
     background: $demo_warn_bg_color;
     font-size: 13px;
     top: 8px;
     padding: 6px 4px;
     font-weight: bold;
-    border-radius: 4px;
+    border-radius: 2px;
     a { color: blue; }
 }
 
 #notification {
     position: absolute;
     top: 8px;
-    font-size: 12px;
-    left: 50%;
+    font-size: 13px;
+    left: 54%;
     z-index: 1000;
     overflow: hidden;
     p {
-        @include border-radius(4px);
+        @include border-radius(1px);
         padding: 3px 5px;
         margin: 0;
     }

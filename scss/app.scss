@@ -82,7 +82,7 @@ body {
 
 #search {                       /* in #header */
     left: $search_right;
-    @include border-radius(5px);
+    @include border-radius(2px);
     background: white;
     top: 7px;
     span {
