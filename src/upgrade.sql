@@ -120,3 +120,7 @@ alter table feeds add column simhash bigint not null default -1;
 alter table feeds drop column link_hash;
 alter table feeds add index rss_id_idx(rss_link_id);
 alter table feeds add index simhash_idx(simhash);
+
+-- 2012/12/20
+alter table feeds drop index rss_id_idx;
+alter table feeds add index rss_id_url(rss_link_id, link(70));

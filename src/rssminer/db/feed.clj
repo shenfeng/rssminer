@@ -17,14 +17,17 @@
                  (SELECT COUNT(*) FROM feeds where rss_link_id = ?)
                  WHERE id = ?" [rssid rssid])))
 
+(defn- duplicate-link? [feed rssid]
+  (mysql-query
+   ["SELECT 1 FROM feeds WHERE rss_link_id = ? AND link = ?" rssid (:link feed)]))
+
 (defn- feed-exits? [feed rssid]
   (if (= -1 (:simhash feed))
-    (mysql-query
-     ["SELECT 1 FROM feeds WHERE rss_link_id = ? AND link = ?"
-      rssid (:link feed)])
-    (mysql-query
-     ["SELECT 1 FROM feeds WHERE rss_link_id = ? AND simhash = ?"
-      rssid (:simhash feed)])))
+    (duplicate-link? feed rssid)
+    (or (mysql-query
+         ["SELECT 1 FROM feeds WHERE rss_link_id = ? AND simhash = ?"
+          rssid (:simhash feed)])
+        (duplicate-link? feed rssid))))
 
 (defn- save-feed [feed rssid]
   (try (let [id (mysql-insert :feeds (dissoc (assoc feed :rss_link_id rssid)

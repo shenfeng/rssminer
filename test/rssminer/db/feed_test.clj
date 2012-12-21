@@ -15,17 +15,25 @@
   (with-mysql (delete-rows :feeds ["id > 0"]))
   (save-feeds {:entries [{:link link :author "one" :simhash -1}
                          {:link link :author "two" :simhash -1}]} 1)
-  (save-feeds {:entries [{:link link :author "three"}]} 2)
+  (save-feeds {:entries [{:link link :author "three"}]} 2) ; diff rss-link-id
   (let [feeds (mysql-query ["select * from feeds"])]
     ;; should not update
     (is (empty? (filter (fn [f] (= "two" (:author f))) feeds)))
     (is (seq (filter (fn [f] (= "one" (:author f))) feeds)))
     (is (= 2 (count feeds)))))
 
-(deftest test-save-feeds2
+(deftest test-save-feeds2               ; same url
+  (with-mysql (delete-rows :feeds ["id > 0"]))
+  (save-feeds {:entries [{:link link :author "one" :simhash 7}
+                         {:link link :author "two" :simhash 2}]} 1)
+  (let [feeds (mysql-query ["select * from feeds"])]
+    (is (seq (filter (fn [f] (= "one" (:author f))) feeds)))
+    (is (= 1 (count feeds)))))
+
+(deftest test-save-feeds3
   (with-mysql (delete-rows :feeds ["id > 0"]))
   (save-feeds {:entries [{:link link :author "one" :simhash -1}
-                         {:link link :author "two" :simhash 2}]} 1)
+                         {:link (str link "/two") :author "two" :simhash 2}]} 1)
   (let [feeds (mysql-query ["select * from feeds"])]
     ;; should save
     (is (seq (filter (fn [f] (= "two" (:author f))) feeds)))
