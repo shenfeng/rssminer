@@ -12,7 +12,10 @@
                :m-search ["Search" "搜索"]
                :m-logout ["Logout" "退出"]
 
-               ;;
+               :m-description ["Rssminer is yet another RSS reader. Build by Feng Shen, with love of RSS subscription and reading. Free"
+                               "Rssminer，免费的RSS阅读器。专注于订阅，个性化推荐辅助，致力于愉快，高效阅读。为手机特别优化，随时随地最新文章。做得认真，只为使您用得舒心。by 沈锋"]
+               :m-keywords ["RSS miner, Rssminer, RSS aggregator, simple, fast, intelligent, free"
+                            "RSS miner, Rssminer, RSS aggregator, 简单，快速，免费"]
 
                ;; app.tpl
                :m-k-next ["Next item" "上一篇文章或者上一个订阅"]
@@ -30,7 +33,7 @@
 
                ;; mobile landing page
                :m-login-with-google ["Login with Google OpenID" "以Google帐户登陆"]
-               :m-yet-another ["Yet another free RSS reader" "又一个免费RSS阅读器"]
+               :m-yet-another ["Yet another free RSS reader" "认真，免费的RSS阅读器"]
                :m-login-error ["Login failed, Email or password error" "用户名或者密码错误，请检查"]
                :m-has-password ["Has an password enabled account?" "已有帐户？并设置过登陆密码"]
                :m-email ["Email:" "邮箱："]
@@ -42,8 +45,8 @@
                :m-sub-list ["Subscription list", "订阅列表"]
 
                ;; landing
-               :m-site-title ["Rssminer, yet another RSS reader"
-                              "Rssminer, 又一个订阅阅读器"]})
+               :m-site-title ["Rssminer, yet another free RSS reader"
+                              "Rssminer, 认真，免费的RSS阅读器"]})
 
 (def zh-messages (into {} (map (fn [[k [en zh]]] [k zh]) messages)))
 

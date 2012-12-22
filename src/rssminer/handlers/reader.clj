@@ -20,7 +20,7 @@
     (if (cfg/real-user? req)
       (redirect (if mobile? "/m" "/a"))
       (let [body (if mobile? (tmpls/m-landing)
-                     (tmpls/landing2))]
+                     (tmpls/landing))]
         (if (cfg/demo-user? req) {:status 200
                                   :session nil ;; delete cookie
                                   :session-cookie-attrs {:max-age -1}

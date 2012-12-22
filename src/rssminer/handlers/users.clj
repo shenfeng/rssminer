@@ -26,8 +26,8 @@
       (if mobile?
         (tmpls/m-landing {:return-url return-url
                           :login-error true})
-        (tmpls/landing2 {:return-url return-url
-                         :login-error true})))))
+        (tmpls/landing {:return-url return-url
+                        :login-error true})))))
 
 (defn logout [req]
   (assoc (redirect "/")

@@ -64,9 +64,7 @@ task :deps => ["thirdparty/#{jscompiler}",
                "thirdparty/#{luke}",
                "thirdparty/#{htmlcompressor}"]
 
-landing_jss = FileList['public/js/lib/slides.min.jquery.js',
-                       'public/js/rssminer/tooltip.js',
-                       'public/js/rssminer/landing.js']
+landing_jss = FileList['public/js/rssminer/landing.js']
 
 app_jss = FileList['public/js/lib/jquery-ui-1.8.18.custom.js',
                    'public/js/lib/underscore.js',

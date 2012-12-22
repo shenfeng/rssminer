@@ -2,7 +2,10 @@
 <html>
   <head>
     {{>partials/m_header}}
-    <link href="/s/css/l.css?{VERSION}" rel="stylesheet" type="text/css" />
+    <meta name="keywords" content="{{m-keywords}}">
+    <meta name="description" content="{{m-description}}">
+    {{#mobile-l-css}}<style type="text/css">{{{mobile-l-css}}}</style>{{/mobile-l-css}}
+    {{^mobile-l-css}}<link href="/s/css/l.css?{VERSION}" rel="stylesheet" type="text/css" />{{/mobile-l-css}}
   </head>
   <body>
     <div id="header">

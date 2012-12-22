@@ -2,7 +2,7 @@
 <html>
   <head>
     {{> partials/header }}
-    <link rel="stylesheet" href="/s/css/landing.css?{VERSION}">
+    <link rel="stylesheet" href="/s/css/login.css?{VERSION}">
   </head>
   <body>
     <div id="accouts-div">

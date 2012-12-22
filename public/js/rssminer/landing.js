@@ -1,19 +1,28 @@
 (function () {
-  "use strict";
-  $('#slides').slides({
-    preload: false,
-    play: 5000,
-    pause: 2500,
-    hoverPause: true
-  });
+  function f_input() {
+    var email = document.getElementById('email');
+    try {
+      if(email.value) {
+        password.focus();
+      } else {
+        email.focus();
+      }
+    }catch(e) {}
+  }
 
-  setTimeout(function () {
-    var $email = $('#email'),
-        $pwd = $('#password');
-    if($.trim($email.val())) {
-      $pwd.focus();
+  login_btn.onclick = function(e) {
+    if (!e) e = window.event;
+    if (login.className) {
+      login.className = '';
     } else {
-      $email.focus();
-    }                           // wait for browser fill form
-  }, 800);
+      login.className = 'show-form';
+      f_input();
+    }
+    if(e.preventDefault) {
+      e.preventDefault();
+    } else {
+      e.returnValue = false;
+    }
+  };
+  f_input();
 })();
