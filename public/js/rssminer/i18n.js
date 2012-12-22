@@ -20,7 +20,7 @@ var _MESGS_ = {
   m_set_pass_p1: ['Login in with Google OpenID is encouraged. But if you are in China...', '用google帐户登陆当然最好了，那样不需要记忆额外的密码。如果你在中国，我们为您准备了'],
   m_set_pass_p2: ['If you may have trouble login with Google OpenID. You can set a password. The user name is your email address.',
                   '如果用Google帐户登陆不是很顺利，你可以设置一个登陆密码，用户名是您的Google帐户邮箱'],
-  m_set_pass_p3: ['You can always login with Google OpenID, even after you set the password','设置了登陆密码后，就可以用登陆秘密登陆，也可以用Google OpenID登陆'],
+  m_set_pass_p3: ['You can always login with Google OpenID, even after you set the password','设置了登陆密码后，就可以用登陆密码登陆，也可以用Google OpenID登陆'],
   m_password: ['Password:', '登陆密码：'],
   m_password_again: ['Confirm:', '确认登陆密码：'],
   m_save: ['Save', '保存密码'],
