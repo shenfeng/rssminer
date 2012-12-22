@@ -43,39 +43,42 @@ body {
 
 #dropdown {                     /* in #header */
     top: 2px;
-    font-size: 17px;
+    font-size: 15px;
     right: 70px;
     padding-bottom: 25px;
     cursor: pointer;
     min-width: 165px;
-    a {
-        color: white;
-        &:hover span { text-decoration: underline;}
+    a { color: #333; }
+    a:hover { color: white; }
+    > a {
+        padding-left: 3px;
+        span { color: white; }
     }
-    span { color: white; font-size: 12px;}
-    &:hover ul { display: block; }
-    &.clicked ul { display: none; }
+    span { font-size: 12px;}
+    &:hover {
+        background: lighten($header_color, 9%);
+        ul { display: block; }
+    }
     img {
         position: relative;
         top: 8px;
     }
     ul {
         display: none;
-        border-radius: 0 0 5px 5px;
-        padding-bottom: 4px;
+        border: 1px #ccc solid;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        border-radius: 0 0 3px 3px;
         top: $header_height - 2px;
         width: 100%;
-        background: lighten($header_color, 1%);
+        background: white;
         z-index: 100;
         position: absolute;
         a {
-            padding: 8px 4px;
+            padding: 4px;
             display: block;
         }
-        li {
-            border-top: 1px solid darken($header_color, 1%);
-            span { padding-left: 4px; }
-            &:hover { background: lighten($header_color, 6%); }
+        li:hover {
+            background: lighten($header_color, 8%);
         }
     }
 }

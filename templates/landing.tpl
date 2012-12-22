@@ -5,7 +5,7 @@
     <title>{{{m-site-title}}}</title>
     <!--[if lt IE 8 ]><script>location.href="/browser"</script><![endif]-->
     {{#landing-css}}<style type="text/css">{{{landing-css}}}</style>{{/landing-css}}
-    {{^landing-css}}<link rel="stylesheet" href="/s/css/landing2.css">{{/landing-css}}
+    {{^landing-css}}<link rel="stylesheet" href="/s/css/landing.css">{{/landing-css}}
   </head>
   <body>
     <div id="login" {{#login-error}}class="show-form"{{/login-error}}>

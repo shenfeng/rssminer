@@ -2,7 +2,7 @@
 body {
     font-size: 14px;
     font-family:'Lucida Grande', "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background: #e6e6e6;
+    background: #F6F6F7;
 }
 #body {
     text-align: center;
@@ -40,6 +40,7 @@ h1 {
 }
 
 #login {
+    z-index: 100;
     &.show-form form {
         display: block;
     }
@@ -48,6 +49,8 @@ h1 {
     }
 
     form {
+        border: 1px #ddd solid;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
         display: none;
     }
 }
@@ -80,12 +83,14 @@ form {
     }
 }
 
+a {text-decoration: none;}
+
+
 #openid {
     padding-top: 40px;
     a {
         display: inline-block;
         background-color: #7eb2e5;
-        text-decoration: none;
         color: #132be0;
         padding: 6px 24px;
         font-weight: bold;

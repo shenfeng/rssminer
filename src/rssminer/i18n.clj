@@ -7,6 +7,7 @@
                :m-change-avata ["Change your avatar at gravatar.com" "点击到gravatar.com更改头像"]
                ;; app.tpl menu
                :m-add-sub ["Add subscription" "添加订阅"]
+               :m-back-home ["Back home" "回到首页"]
                :m-keyboard-shortcut ["Keyboard shortcuts" "键盘快捷键"]
                :m-settings ["Settings" "设置"]
                :m-search ["Search" "搜索"]

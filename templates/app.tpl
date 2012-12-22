@@ -36,6 +36,11 @@
           <a href="#"><span>{{ email }}</span></a>
           <ul>
             <li>
+              <a href="#" class="btn">
+                <i class="icon-home"></i><span>{{m-back-home}}</span>
+              </a>
+            </li>
+            <li>
               <a href="#s/add" class="btn">
                 <i class="icon-edit"></i><span>{{m-add-sub}}</span>
               </a>
