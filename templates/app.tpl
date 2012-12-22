@@ -125,6 +125,7 @@
     {{/dev}}
     {{^dev}}
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>if (window.jQuery === undefined) {document.write(unescape("%3Cscript%20src%3D%22/s/js/jquery-1.8.3.js%22%3E%3C/script%3E"));}</script>
     <script src="/s/js/app-min.js?{VERSION}"></script>
     {{/dev}}
   </body>
