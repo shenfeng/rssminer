@@ -413,7 +413,7 @@
       return a - b;             // asc sorting
     });
     fetch_feeds({
-      title: sort + " - " + group + ' [folder]',
+      title: _LANG_(sort) + " - " + group + ' (folder)',
       cb: cb,
       id: ids.join('-'),
       section: 'f_' + group,
@@ -428,7 +428,7 @@
       return s.id === subid;
     }) || {};
     fetch_feeds({
-      title: sort + ' - ' + sub.title,
+      title: _LANG_(sort) + ' - ' + sub.title,
       cb: cb,
       id: subid,
       section: subid,
