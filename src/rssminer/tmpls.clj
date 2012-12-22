@@ -5,6 +5,7 @@
             [rssminer.config :as cfg]))
 
 (def csses {:app-css (ignore-error (slurp "public/css/app.css"))
+            :admin-css (ignore-error (slurp "public/css/admin.css"))
             :landing-css (ignore-error (slurp "public/css/landing2.css"))})
 
 (defn- add-info [context]

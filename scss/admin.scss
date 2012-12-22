@@ -14,4 +14,13 @@
 
 caption {
     font-weight: bold;
+    min-width: 200px;
+}
+
+table {
+    border-bottom: 1px #eee solid;
+}
+
+td:first-child {
+    text-transform: capitalize;
 }

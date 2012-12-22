@@ -2,7 +2,8 @@
 <html>
   <head>
     {{>partials/m_header}}
-    <link href="/s/css/admin.css?{VERSION}" rel="stylesheet" type="text/css" >/
+    {{#admin-css}}<style type="text/css">{{{admin-css}}}</style>{{/admin-css}}
+    {{^admin-css}}<link rel="stylesheet" href="/s/css/admin.css">{{/admin-css}}
   </head>
   <body>
     <table>
@@ -14,10 +15,18 @@
         </tr>
       {{/stat}}
     </table>
+    {{#table-stats}}
+      <table>
+        <caption>{{ name }}</caption>
+        {{#stat}}
+          <tr>
+            <td>{{ key }}</td>
+            <td>{{ val }}</td>
+          </tr>
+        {{/stat}}
+      </table>
+    {{/table-stats}}
     <ul id="commands">
-      <li>
-        <a href="/admin">Refresh</a>
-      </li>
       <li>
         {{#fetcher}}
           <a href="/admin/fetcher?command=stop">stop fetcher</a>
