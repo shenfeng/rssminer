@@ -11,7 +11,7 @@
     <div id="login" {{#login-error}}class="show-form"{{/login-error}}>
       <a href="#" id="login_btn">{{m-login}}</a>
       <form action="/" method="post">
-        {{#login-error}}<p>{{m-login-error}}</p>{{/login-error}}
+      {{#login-error}}<p>{{m-login-error}}</p>{{/login-error}}
         <table>
           <caption>{{m-has-password}}</caption>
           <tr>
@@ -36,7 +36,12 @@
     </div>
     <div id="body">
       <h1>Rssminer</h1>
-      <div id="slogo"> <img src="/s/imgs/rss-icon.png"/> <span>{{{m-yet-another}}}</span></div>
+      <div id="slogo">
+        <img src="/s/imgs/rss-icon.png"/>
+        <p>
+          {{{m-yet-another}}}
+        </p>
+      </div>
       <div id="openid">
         <a href="/login/google">{{{m-login-with-google}}}</a>
       </div>

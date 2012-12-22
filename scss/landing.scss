@@ -13,11 +13,14 @@ body {
     color: #727272;
     position: relative;
     height: 80px;
-    span {
+    margin: 0 auto;
+    width: 600px;
+    p {
         padding-left: 85px;
     }
     img {
         top: -17px;
+        left: 100px;
         position: absolute;
     }
 }
@@ -49,8 +52,7 @@ h1 {
     }
 
     form {
-        border: 1px #ddd solid;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+
         display: none;
     }
 }
@@ -58,7 +60,10 @@ h1 {
 form {
     margin-left: -170px;
     background: white;
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+    border: 1px #ddd solid;
+    border-top-color: white;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    /* box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1); */
     margin-top: 20px;
     padding: 6px 10px;
     p {
