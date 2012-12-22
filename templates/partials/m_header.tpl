@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>{{ title }}</title>
+{{#title}}<title>{{ title }}</title>{{/title}}
 <link rel="apple-touch-icon" href="/s/imgs/i/apple-57.png" />
 <link rel="shortcut icon" href="/s/favicon.ico" />
 <link rel="apple-touch-icon" sizes="72x72" href="/s/imgs/i/apple-72.png" />

@@ -15,7 +15,7 @@ java -server -Dsun.jnu.encoding=UTF-8 \
     -Djava.net.preferIPv4Stack=true \
     -Xms96m -Xmx96m -XX:PermSize=48M -XX:MaxPermSize=48M \
     -cp rssminer-standalone.jar \
-    rssminer.admin \
+    rssminer.admin.main \
     -c rebuild-index \
     --db-url jdbc:mysql://71.19.154.89/rssminer \
     --index-path $TMP_INDEX_PATH

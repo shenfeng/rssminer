@@ -120,7 +120,7 @@ rebuild_index () {
         -Dsun.jnu.encoding=UTF-8 \
         -Xms88m -Xmx88m -XX:PermSize=32M -XX:MaxPermSize=32M \
         -server -cp "classes:lib/*:src/" clojure.main \
-        -m rssminer.admin -c rebuild-index
+        -m rssminer.admin.main -c rebuild-index
 }
 
 usage () {

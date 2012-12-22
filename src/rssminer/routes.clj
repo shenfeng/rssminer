@@ -9,7 +9,7 @@
                                      JPOST JPUT JDELETE JGET]]))
   (:require [compojure.route :as route]
             [rssminer.import :as import]
-            [rssminer.admin :as admin]
+            [rssminer.admin.admin :as admin]
             (rssminer.handlers [reader :as reader]
                                [subscriptions :as subs]
                                [users :as user]
@@ -40,12 +40,6 @@
   (GET "/r/:fid" [] mobile/show-feed)
   (GET "/:sid/:sortby" [] mobile/list-feeds))
 
-(defroutes admin-routes
-  (GET "/" [] admin/show-admin)
-  (GET "/compute" [] admin/recompute-scores)
-  ;; TODO POST should
-  (GET "/fetcher" [] admin/fetcher))
-
 (defroutes all-routes
   (GET "/" [] reader/landing-page)
   (POST "/" [] user/login)
@@ -58,7 +52,7 @@
            (GET "/" [] user/show-login-page)
            (GET "/google" [] user/google-openid)
            (GET "/checkauth" [] user/checkauth))
-  (context "/admin" [] (admin/wrap-admin admin-routes))
+  (context "/admin" [] admin/admin-routes)
   (GET "/oauth2callback" [] import/oauth2callback)
   (GET "/import/google" [] import/greader-import)
   (context "/signup" []
