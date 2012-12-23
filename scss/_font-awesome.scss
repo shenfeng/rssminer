@@ -97,18 +97,18 @@ li {
     readers do not read off random characters that represent icons */
 
 /*
-.icon-glass:before                { content: "\f000"; }
-.icon-music:before                { content: "\f001"; }
-.icon-heart:before                { content: "\f004"; }
-.icon-star:before                 { content: "\f005"; }
-.icon-star-empty:before           { content: "\f006"; }
-.icon-film:before                 { content: "\f008"; }
-.icon-th-large:before             { content: "\f009"; }
-.icon-th:before                   { content: "\f00a"; }
-.icon-th-list:before              { content: "\f00b"; }
-.icon-ok:before                   { content: "\f00c"; }
-.icon-remove:before               { content: "\f00d"; }
-.icon-zoom-in:before              { content: "\f00e"; }
+  .icon-glass:before                { content: "\f000"; }
+  .icon-music:before                { content: "\f001"; }
+  .icon-heart:before                { content: "\f004"; }
+  .icon-star:before                 { content: "\f005"; }
+  .icon-star-empty:before           { content: "\f006"; }
+  .icon-film:before                 { content: "\f008"; }
+  .icon-th-large:before             { content: "\f009"; }
+  .icon-th:before                   { content: "\f00a"; }
+  .icon-th-list:before              { content: "\f00b"; }
+  .icon-ok:before                   { content: "\f00c"; }
+  .icon-remove:before               { content: "\f00d"; }
+  .icon-zoom-in:before              { content: "\f00e"; }
 
 .icon-zoom-out:before             { content: "\f010"; }
 .icon-signal:before               { content: "\f012"; }
@@ -128,21 +128,21 @@ li {
 
 /* \f020 doesn't work in Safari. all shifted one down */
 /*
-.icon-refresh:before              { content: "\f021"; }
-.icon-list-alt:before             { content: "\f022"; }
-.icon-lock:before                 { content: "\f023"; }
-.icon-flag:before                 { content: "\f024"; }
-.icon-headphones:before           { content: "\f025"; }
-.icon-volume-off:before           { content: "\f026"; }
-.icon-volume-down:before          { content: "\f027"; }
-.icon-volume-up:before            { content: "\f028"; }
-.icon-qrcode:before               { content: "\f029"; }
-.icon-barcode:before              { content: "\f02a"; }
-.icon-tag:before                  { content: "\f02b"; }
-.icon-tags:before                 { content: "\f02c"; }
-.icon-book:before                 { content: "\f02d"; }
-.icon-bookmark:before             { content: "\f02e"; }
-.icon-print:before                { content: "\f02f"; }
+  .icon-refresh:before              { content: "\f021"; }
+  .icon-list-alt:before             { content: "\f022"; }
+  .icon-lock:before                 { content: "\f023"; }
+  .icon-flag:before                 { content: "\f024"; }
+  .icon-headphones:before           { content: "\f025"; }
+  .icon-volume-off:before           { content: "\f026"; }
+  .icon-volume-down:before          { content: "\f027"; }
+  .icon-volume-up:before            { content: "\f028"; }
+  .icon-qrcode:before               { content: "\f029"; }
+  .icon-barcode:before              { content: "\f02a"; }
+  .icon-tag:before                  { content: "\f02b"; }
+  .icon-tags:before                 { content: "\f02c"; }
+  .icon-book:before                 { content: "\f02d"; }
+  .icon-bookmark:before             { content: "\f02e"; }
+  .icon-print:before                { content: "\f02f"; }
 
 .icon-camera:before               { content: "\f030"; }
 .icon-font:before                 { content: "\f031"; }
@@ -323,7 +323,7 @@ li {
 .icon-folder-open:before          { content: "\f07c"; }
 .icon-envelope:before             { content: "\f003"; }
 .icon-comment-alt:before          { content: "\f0e5"; }
-/* .icon-comment:before              { content: "\f075"; } */
+.icon-caret-down:before           { content: "\f0d7"; }
 .icon-thumbs-up:before            { content: "\f087"; }
 .icon-thumbs-down:before          { content: "\f088"; }
 .icon-github-sign:before          { content: "\f092"; }

@@ -78,10 +78,31 @@
                                 " AND rss_link_id = " (:id d)))
                 data (range 400 200000 4)))))
 
-(defn fetch-user-sub [userid id]
-  (let [^MinerDAO db (MinerDAO. (cfg :data-source) (cfg :redis-server))]
-    (.fetchUserSub db userid id)))
+(defn fetch-subs [uid]
+  (filter :title
+          (mysql-query ["SELECT rss_link_id AS id, l.title, group_name `group`,
+                 sort_index `index`, COALESCE(l.alternate, l.url) url,
+                 l.total_feeds total
+FROM user_subscription u JOIN rss_links l ON l.id = u.rss_link_id
+WHERE u.user_id = ? ORDER BY sort_index" uid])))
 
-(defn fetch-user-subs [userid]
-  (let [^MinerDAO db (MinerDAO. (cfg :data-source) (cfg :redis-server))]
-    (.fetchUserSubs db userid)))
+(defn fetch-sub [uid id]
+  (mysql-query ["SELECT rss_link_id AS id, l.title, group_name `group`,
+                 sort_index `index`, COALESCE(l.alternate, l.url) url,
+                 l.total_feeds total
+FROM user_subscription u JOIN rss_links l ON l.id = u.rss_link_id
+where u.rss_link_id = ?" uid id]))
+
+(defn get-numbers [uid from-seconds]
+  (mysql-query ["SELECT us.rss_link_id id, (SELECT COUNT(f.id) FROM feeds f LEFT JOIN user_feed uf ON f.id = uf.feed_id AND uf.user_id = ?
+WHERE f.rss_link_id = us.rss_link_id AND uf.feed_id IS NULL AND f.published_ts > ?) unread FROM user_subscription us WHERE user_id = ?"
+                uid from-seconds uid]))
+
+(comment                                ; no used
+  (defn fetch-user-sub [userid id]
+    (let [^MinerDAO db (MinerDAO. (cfg :data-source) (cfg :redis-server))]
+      (.fetchUserSub db userid id)))
+
+  (defn fetch-user-subs [userid]
+    (let [^MinerDAO db (MinerDAO. (cfg :data-source) (cfg :redis-server))]
+      (.fetchUserSubs db userid))))

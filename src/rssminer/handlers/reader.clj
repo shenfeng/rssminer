@@ -1,5 +1,5 @@
 (ns rssminer.handlers.reader
-  (:use (rssminer [util :only [md5-sum serialize-to-js defhandler]]
+  (:use (rssminer [util :only [md5-sum json-str2 defhandler]]
                   [search :only [search*]])
         [clojure.java.io :only [resource]]
         [ring.util.response :only [redirect]])
@@ -36,29 +36,28 @@
       (when-let [user (udb/find-by-id uid)]
         (tmpls/app {:email (:email user)
                     :md5 (-> user :email md5-sum)
-                    :data (serialize-to-js
-                           {:rm {:user user
-                                 :gw gw  ; google import wait
-                                 :ge ge  ; google import error
-                                 :static_server (cfg/cfg :static-server)}})})))))
+                    :data (json-str2 {:user user
+                                      :subs (sdb/fetch-subs uid)
+                                      :gw gw      ; google import wait
+                                      :ge ge      ; google import error
+                                      :static_server (cfg/cfg :static-server)})})))))
 
 (defhandler show-demo-page [req mobile?]
   (if (cfg/real-user? req)
     (assoc (redirect "/?r=d") :session nil ;; delete cookie
            :session-cookie-attrs {:max-age -1})
-    (let [user (dissoc (udb/find-by-email "demo@rssminer.net") :password)]
-      (swap! cfg/rssminer-conf assoc :demo-user user)
+    (let [user (cfg/cfg :demo-user)]
       (if mobile?
         (assoc (redirect "/m") :session user)
-        (let [data {:rm {:user user
-                         :demo true
-                         :static_server (:static-server @cfg/rssminer-conf)}}]
-          {:body (tmpls/app {:email (:email user)
-                             :md5 (-> user :email md5-sum)
-                             :demo true
-                             :data (serialize-to-js data)})
-           :status 200
-           :session user})))))
+        {:body (tmpls/app {:email (:email user)
+                           :md5 (-> user :email md5-sum)
+                           :demo true
+                           :data (json-str2 {:user user
+                                             :subs (sdb/fetch-subs (:id user))
+                                             :demo true
+                                             :static_server (cfg/cfg :static-server)})})
+         :status 200
+         :session user}))))
 
 (defhandler search [req q limit tags authors fs offset uid]
   (search* q tags authors uid limit offset (= fs "1")))

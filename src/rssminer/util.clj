@@ -67,13 +67,6 @@
 
 (definline now-seconds [] `(quot (System/currentTimeMillis) 1000))
 
-(defn serialize-to-js [data]
-  (let [stats (map
-               (fn [[k v]]
-                 (str "var _" (str/upper-case (name k))
-                      "_ = " (json-str v) "; ")) data)]
-    (apply str stats)))
-
 (defmacro ignore-error [& body]
   `(try ~@body (catch Exception _#)))
 

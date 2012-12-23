@@ -20,6 +20,7 @@
 (defroutes api-routes
   (context "/subs" []
            (JGET "/" [] subs/list-subscriptions)
+           (JGET "/u" [] subs/unread-count)
            (JGET "/:rid"  [] feed/get-by-subscription)
            (JPOST "/sort" [] subs/save-sort-order)
            (JPOST "/add" [] subs/add-subscription)
@@ -91,10 +92,10 @@
       wrap-auth
       (wrap-session {:store (CookieSessionStore.)
                      :cookie-name "_id_"
-                     :cookie-attrs {:http-only true}})
+                     :cookie-attrs {:http-only true
+                                    :max-age (* 3600 24 60)}})
       wrap-cache-header
       wrap-request-logging-in-dev
       wrap-keyword-params
-      ;; wrap-multipart-params
       wrap-params
       wrap-failsafe))

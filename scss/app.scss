@@ -201,7 +201,8 @@ ul { list-style: none; padding: 0; margin: 0; }
         > ul { display: none; }
     }
     a { color: #2e2e2e; }
-    .has-like .title {
+    /* TODO bold is has not read item */
+    .unread .title {
         color: #222;
         font-weight: bold;
     }
@@ -231,6 +232,8 @@ ul { list-style: none; padding: 0; margin: 0; }
             color: #3E9ACC;
             top: 3px;
         }
+        &:hover .icon-caret-down { visibility: visible; }
+        .icon-caret-down { left: auto; top: 4px; }
     }
     .title {
         @include overflow-ellipsis();
@@ -254,10 +257,26 @@ ul { list-style: none; padding: 0; margin: 0; }
     width: 6px;
     top: 9px;
 }
+
+.c {
+    font-weight: normal;
+    font-size: small;
+}
+
+.item:hover .icon-caret-down {
+    visibility: visible;
+}
+
+.icon-caret-down {
+    position: absolute;
+    right: 6px;
+    visibility: hidden;
+}
+
 /* .ie8 .count { right: 14px; span { font-size: 9px; }} */
 .count {
     position: absolute;
-    right: 6px;
+    right: 12px;
     top: 10px;
     font-size: 10px;
     font-family: sans-serif;

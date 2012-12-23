@@ -80,10 +80,11 @@
       (let [start (System/currentTimeMillis)
             resp (handler req)
             finish (System/currentTimeMillis)]
-        (info (name request-method) (:status resp)
-              (if-let [qs (:query-string req)]
-                (str uri "?" qs) uri)
-              (str (- finish start) "ms"))
+        (when-not (.startsWith uri "/fav")
+          (info (name request-method) (:status resp)
+                (if-let [qs (:query-string req)]
+                  (str uri "?" qs) uri)
+                (str (- finish start) "ms")))
         resp))
     handler))
 

@@ -1,6 +1,6 @@
 (ns rssminer.handlers.subscriptions
   (:use (rssminer [redis :only [fetcher-enqueue]]
-                  [util :only [to-int defhandler valid-url?]])
+                  [util :only [now-seconds defhandler valid-url?]])
         [rssminer.database :only [mysql-insert-and-return]]
         [clojure.tools.logging :only [info]])
   (:require [rssminer.db.subscription :as db]
@@ -24,10 +24,16 @@
                                   :rss_link_id (:id sub)})))))
 
 (defhandler polling-fetcher [req rss-id uid]             ;; wait for fetcher return
-  (db/fetch-user-sub uid rss-id))
+  (db/fetch-sub uid rss-id))
 
 (defhandler list-subscriptions [req uid]
-  (db/fetch-user-subs uid))
+  (db/fetch-subs uid))
+
+(defhandler unread-count [req uid]
+  (let [numbers (db/get-numbers uid (- (now-seconds) (* 3600 24 30)))
+        unread (filter #(> (:unread %) 0) numbers)]
+    (zipmap (map :id unread)
+            (map :unread unread))))
 
 (defhandler add-subscription [req uid]
   (let [{:keys [link g]}  (-> req :body)]

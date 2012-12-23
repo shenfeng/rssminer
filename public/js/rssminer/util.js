@@ -69,6 +69,22 @@
     return Mustache.render.apply({}, args);
   }
 
+  function get_tooltip (title, maxlength) {
+    var count = 0,
+        length = title.length;
+    for(var i = 0; i < length; ++i) {
+      if(title.charCodeAt(i) > 255) {
+        count += 2;
+      } else {
+        count += 1;
+      }
+      if(count > maxlength) {
+        return title.substring(0, i) + '...';
+      }
+    }
+    return title;
+  }
+
   function tooltip (title, maxlength) {
     var count = 0,
         length = title.length;
@@ -129,6 +145,7 @@
   window.RM = $.extend(window.RM || {}, {
     util: {
       delegate_events: delegate_events,
+      get_tooltip: get_tooltip,
       favicon_ok: favicon_ok,
       LRUCache: LRUCache,
       call_if_fn: call_if_fn,

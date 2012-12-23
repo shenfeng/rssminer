@@ -5,7 +5,7 @@
     <!--[if lt IE 8 ]><script>location.href="/browser"</script><![endif]-->
     {{#app-css}}<style type="text/css">{{{app-css}}}</style>{{/app-css}}
     {{^app-css}}<link rel="stylesheet" href="/s/css/app.css">{{/app-css}}
-    <script>{{{ data }}} var _LANG_ZH_ = {{zh?}};</script>
+    <script> var _RM_ = {{{data}}}, _LANG_ZH_ = {{zh?}};</script>
   </head>
   <!--[if IE 8]><body class="ie8"> <![endif]-->
   <!--[if !IE]><body><![endif]-->

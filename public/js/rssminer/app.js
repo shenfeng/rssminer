@@ -85,19 +85,14 @@
   }
 
   function decrement_number ($just_read, subid) {
-    var selector = "#item-" + subid;
-    if($just_read.hasClass('neutral')) {
-      selector += ' .unread-neutral';
-    } else if ($just_read.hasClass('like')) {
-      selector += ' .unread-like';
-    } else { selector += ' .unread-dislike'; }
-    var $n = $(selector),
-        n = parseInt($.trim($n.text()) || "0");
-    if(n === 1) {
-      $n.parents('.has-like').removeClass('has-like');
-      $n.remove();
+    var $c = $("#item-" + subid + ' .c'),
+        c = + /\d+/.exec($c.text())[0] - 1;
+    if(!c) {
+      $c.parents('.unread').removeClass('unread');
+      $c.remove();
+    } else {
+      $c.text('(' + c + ')');
     }
-    else { $n.text(n-1); }
   }
 
   function record_reading_time (url_pattern, args) {
@@ -528,17 +523,24 @@
     }
   });
 
-  fetch_and_show_user_subs(function () { // app start here
-    router.route({
-      '': show_welcome,
-      '?s=:section&p=:p': show_welcome,
-      's/:section': show_settings,
-      'read/f_:group?p=:page&s=:sort': read_group_subs,
-      'read/:group/:id?p=:page&s=:sort': read_feed,
-      'read/:id?p=:page&s=:sort': read_subscription,
-      'read/:id/:id?p=:page&s=:sort': read_feed,
-      'search?q=:q&tags=:tags&authors=:authors&offset=:offset': search
-    });
+  // app start here
+  fetch_and_show_user_subs();   // show quickly
+  data_api.fetch_unread_count(function () {
+    // async show unread numbers
+    var id = $('.item.selected').attr(DATA_ID);
+    fetch_and_show_user_subs();
+    if(id) { $('#item-'+id).addClass('selected'); };
+  });
+
+  router.route({
+    '': show_welcome,
+    '?s=:section&p=:p': show_welcome,
+    's/:section': show_settings,
+    'read/f_:group?p=:page&s=:sort': read_group_subs,
+    'read/:group/:id?p=:page&s=:sort': read_feed,
+    'read/:id?p=:page&s=:sort': read_subscription,
+    'read/:id/:id?p=:page&s=:sort': read_feed,
+    'search?q=:q&tags=:tags&authors=:authors&offset=:offset': search
   });
 
   $reading_area.scroll(_.debounce(on_readarea_scroll, 40));

@@ -453,6 +453,7 @@ public class MinerDAO {
         return subs.get(0);
     }
 
+    // not used
     public List<Subscription> fetchUserSubs(int userID) throws SQLException {
         StringBuilder sb = new StringBuilder(SUB_FIELDS.length() + 40);
         sb.append(SUB_FIELDS);

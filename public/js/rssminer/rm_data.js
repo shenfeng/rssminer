@@ -9,8 +9,7 @@
   var user_data = (_RM_ && _RM_.user) || {},
       user_conf = JSON.parse(user_data.conf || "{}");
 
-  var subscriptions_cache,
-      summary_cache = util.LRUCache(50);
+  var summary_cache = util.LRUCache(50);
 
   var last_search_ajax;
 
@@ -123,40 +122,31 @@
     };
   }
 
-  function default_sort (like, neutral) {
-    // default show newest. 3 place need to change
-    if(user_conf.pref_sort === RECOMMEND_TAB && like + neutral > MIN_COUNT) {
-      return RECOMMEND_TAB;
-    }
-    return NEWEST_TAB;
-  }
-
   function transorm_sub (sub) {
     // the url is site's alternate url
     var title = sub.title || sub.url || '',
         img = null,
         url = sub.url || '';
     if(url.indexOf('http') === 0) { img = favicon_path(url); }
+    var title_e =  util.get_tooltip(title, sub.unread ? 26 : 32);
     return {
       img: img,
-      title: title,
-      tooltip: util.tooltip(title, 30),
+      title: title_e,
+      cls: sub.unread ? 'unread' : '',
+      tooltip: title_e != title ? title : '',
       link: sub.url,
       group: sub.group,
       title_l: title.toLowerCase(),
-      cls: sub.like > 0 ? 'has-like' : 'no-like',
-      // sort by likest if has likest
-      href: sub_hash(sub.id, 1, default_sort(sub.like, sub.neutral)),
-      like: sub.like,
+      href: sub_hash(sub.id, 1, NEWEST_TAB),
       total: sub.total,
+      unread: sub.unread,
       index: sub.index,
-      neutral: sub.neutral,
       id: sub.id        // rss_link_id
     };
   }
 
   function get_first_group () {
-    var grouped = parse_subs(subscriptions_cache);
+    var grouped = parse_subs(_RM_.subs);
     if(grouped && grouped.length) {
       return grouped[0].group.name;
     }
@@ -172,15 +162,12 @@
             .sortBy(function (i) { return i.index; })
             .map(transorm_sub).value();
       list = _.filter(list, function (i) { return i.title; });
-      var like = _.reduce(list, function (m, sub) { return sub.like + m; }, 0),
-          neutral = _.reduce(list, function (m, sub) { return sub.neutral + m; }, 0),
-          total = _.reduce(list, function (m, sub) { return sub.total + m; }, 0),
-          hash = sub_hash('f_' + group, 1, default_sort(like, neutral));
+      var total = _.reduce(list, function (m, sub) { return sub.total + m; }, 0),
+          hash = sub_hash('f_' + group, 1, NEWEST_TAB);
       if(list.length) {
         result.push({
           group: {
-            name: group, like: like, neutral: neutral,
-            hash: hash, total: total
+            name: group, hash: hash, total: total
           },
           subs: list,
           collapse: _.include(collapsed, group)
@@ -213,16 +200,15 @@
 
   // API
   function get_user_subs (cb) {
-    if(subscriptions_cache) {
-      cb(parse_subs(subscriptions_cache));
-    } else {
-      ajax.get('/api/subs', function (resp) {
-        try_sync_with_storage(resp);
-        // exclude subscription that has no title
-        subscriptions_cache = _.filter(resp, function (s) { return s.title; });
-        get_user_subs(cb);
-      });
-    }
+    try_sync_with_storage(_RM_.subs);
+    cb(parse_subs(_RM_.subs));
+  }
+
+  function fetch_unread_count (cb) {
+    ajax.sget('/api/subs/u', function (numbers) {
+      _.each(_RM_.subs, function (sub) { sub.unread = numbers[sub.id]; });
+      call_if_fn(cb);
+    });
   }
 
   function compute_welcome_paging (section, page, last_count) {
@@ -321,7 +307,7 @@
 
 
   function get_subids_for_group (group) {
-    var grouped = parse_subs(subscriptions_cache);
+    var grouped = parse_subs(_RM_.subs);
     var result = _.find(grouped, function (g) { return g.group.name === group; });
     return result;
   }
@@ -424,7 +410,7 @@
   }
 
   function fetch_sub_feeds (subid, page, sort, cb) {
-    var sub =_.find(subscriptions_cache, function (s) {
+    var sub =_.find(_RM_.subs, function (s) {
       return s.id === subid;
     }) || {};
     fetch_feeds({
@@ -445,11 +431,11 @@
         // TODO refetch user subs
         if(sub && sub.title) {  // ok, title is fetched
           sub.group = get_first_group(); // server return no group_name
-          var find = _.find(subscriptions_cache, function (s) {
+          var find = _.find(_RM_.subs, function (s) {
             return s.id === sub.id;
           });
           if(!find) {
-            subscriptions_cache.push(sub);
+            _RM_.subs.push(sub);
             sub.refresh = true;
           }
           call_if_fn(cb, sub);  // fetcher successfully
@@ -485,12 +471,12 @@
     id = parseInt(id);
     ajax.del('/api/subs/' + id, function (resp) {
       var cache = [];
-      _.each(subscriptions_cache, function (sub) {
+      _.each(_RM_.subs, function (sub) {
         if(sub.id !== id) {
           cache.push(sub);
         }
       });
-      subscriptions_cache = cache;
+      _RM_.subs = cache;
       call_if_fn(cb);
     });
   }
@@ -514,7 +500,7 @@
   function instant_search (q, cb) {
     var subs = [],
         count = 0,
-        grouped = parse_subs(subscriptions_cache);
+        grouped = parse_subs(_RM_.subs);
     _.each(grouped, function (group) {
       var g = group.group;
       // if q is empty, indexOf return 0
@@ -632,7 +618,7 @@
 
   function get_subscription (subid) {
     subid = parseInt(subid);
-    var sub = _.find(subscriptions_cache, function (sub) {
+    var sub = _.find(_RM_.subs, function (sub) {
       return subid === sub.id;
     }) || {};
     sub.group = sub.group || 'null';
@@ -642,7 +628,7 @@
   function list_folder_names (subid) {
     var names = {},
         me;
-    _.each(subscriptions_cache, function (sub) {
+    _.each(_RM_.subs, function (sub) {
       names[sub.group] = true;
       if(sub.id === subid) { me = sub.group; }
     });
@@ -699,13 +685,14 @@
       fetch_summary: fetch_summary,
       fetch_welcome: fetch_welcome,
       get_subscription: get_subscription,
-      get_subscriptions: function () { return subscriptions_cache || []; },
+      get_subscriptions: function () { return _RM_.subs || []; },
       get_user_subs: get_user_subs,
       instant_search: instant_search,
       list_folder_names: list_folder_names,
       mark_as_read: mark_as_read,
       save_reading_times: save_reading_times,
       save_settings: save_settings,
+      fetch_unread_count: fetch_unread_count,
       save_vote: save_vote,
       user_conf: user_conf,
       unsubscribe: unsubscribe
@@ -713,7 +700,7 @@
   });
 
   $(RM).bind('sub-sorted.rm',function (e, data) {
-    update_subscrptions(subscriptions_cache, data);
+    update_subscrptions(_RM_.subs, data);
   });
 
   function try_sync_with_storage (subscriptions) {

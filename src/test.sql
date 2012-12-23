@@ -71,3 +71,44 @@ cat /tmp/data.sql| mysql -uroot --port 3307 rssminer
 
 mysql -uroot --port 3307 rssminer
 
+
+select count(s.id) from user_subscription s
+join feeds f on f.rss_link_id = s.rss_link_id
+left join user_feed uf on
+where s.user_id = 1
+
+
+select s.rss_link_id
+from user_subscription s
+where s.user_id = 1
+
+
+
+select count(f.id) from feeds f left join user_feed uf on
+f.id = uf.feed_id where uf.user_id = 1 and uf.feed_id is null;
+
+
+ select count(*) from feeds f left join (
+ select feed_id from user_feed where user_id = 1;
+ ) as c
+
+create temporary table uf select feed_id from user_feed where user_id = 1;
+create temporary table uread_feed
+
+select f.id, f.rss_link_id from user_subscription us join feeds f on f.rss_link_id = us.rss_link_id
+left join uf on uf.feed_id = f.id where us.user_id = 1 and uf.feed_id is null;
+
+drop table uf;
+
+-- all
+select us.rss_link_id as id,
+(select count(f.id) from feeds f left join user_feed uf on f.id = uf.feed_id and uf.user_id = 1
+where f.rss_link_id = us.rss_link_id and uf.feed_id is null and f.published_ts > 1353674636) unread
+from user_subscription us where user_id = 1
+
+-- on subs
+select count(f.id) from feeds f left join user_feed uf on f.id = uf.feed_id and uf.user_id = 1
+where f.rss_link_id = 2315 and uf.feed_id is null and f.published_ts > 1353674636
+
+
+select * from feeds left join user_feed uf on f.id = uf.feed_id where uf.feed_id is null;

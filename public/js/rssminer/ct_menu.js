@@ -8,7 +8,7 @@
       to_html = util.to_html;
 
   var SORTING_KEYS = '__sort__',
-      DELAY_TIME = 1000 * 15;   // wait 15 seconds
+      DELAY_TIME = 1000 * 8;   // wait 8 seconds
 
   var save_timer_id,
       sorting_data;
@@ -21,7 +21,7 @@
       $win = $(window);
 
   function show_folder_context_menu (e) { // hide in search.js
-    $last_menu_ui = $(this);
+    $last_menu_ui = $(this).closest('.folder');
     var html = to_html(tmpls.folder_ct_menu, {});
     $ct_menu.empty().append(html).css({
       left: e.clientX,
@@ -60,7 +60,7 @@
   }
 
   function show_item_context_menu (e) { // hide in search.js
-    $last_menu_ui = $(this);
+    $last_menu_ui = $(this).closest('.item');
     var subid = parseInt($last_menu_ui.attr('data-id')),
         html = to_html(tmpls.sub_ct_menu, {
           folders: data_api.list_folder_names(subid),
@@ -193,8 +193,10 @@
 
   util.delegate_events($subs_list, {
     'click .folder i': toggle_sub_folder,
-    'contextmenu .folder': show_folder_context_menu, // hide in search.js
-    'contextmenu .item': show_item_context_menu
+    // 'contextmenu .folder': show_folder_context_menu, // hide in search.js
+    // 'contextmenu .item': show_item_context_menu,
+    'click .item .icon-caret-down': show_item_context_menu,
+    'click .folder .icon-caret-down': show_folder_context_menu
   });
 
   util.delegate_events($('#main'), {

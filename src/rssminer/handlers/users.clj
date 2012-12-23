@@ -9,8 +9,6 @@
             [rssminer.tmpls :as tmpls]
             [clojure.string :as str]))
 
-(def cookie-attr {:max-age (* 3600 24 60)})
-
 (defhandler show-login-page [req return-url]
   (tmpls/login {:return-url (or return-url "/a")}))
 
@@ -22,7 +20,7 @@
     (if user
       (assoc (redirect return-url)
         :session {:id (:id user)}      ; IE does not persistent cookie
-        :session-cookie-attrs cookie-attr)
+        )
       (if mobile?
         (tmpls/m-landing {:return-url return-url
                           :login-error true})
@@ -115,6 +113,5 @@
     (assoc (redirect "/a")
       :session (or (db/find-by-email email)
                    (db/create-user {:email email
-                                    :provider "google"}))
-      :session-cookie-attrs cookie-attr)
+                                    :provider "google"})))
     (redirect "/")))
