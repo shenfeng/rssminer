@@ -11,7 +11,14 @@
                :m-keyboard-shortcut ["Keyboard shortcuts" "键盘快捷键"]
                :m-settings ["Settings" "设置"]
                :m-search ["Search" "搜索"]
+               :m-feedback ["Feedback" "提交反馈"]
                :m-logout ["Logout" "退出"]
+
+               :m-submit ["Submit" "提交"]
+               :m-placeholder-feedback ["Tell us your feedback about Rssminer. We together make a better RSS reader"
+                                        "告诉我们你对Rssminer的意见或者建议吧，我们会认真听取，提供更好的RSS阅读"]
+               :m-placeholder-email ["Email, in case we keep in touch. Optional."
+                                     "邮箱，选填。以便我们与您进一步沟通"]
 
                :m-description ["Rssminer is yet another RSS reader. Build by Feng Shen, with love of RSS subscription and reading. Free"
                                "Rssminer，免费的RSS阅读器。专注于订阅，个性化推荐辅助，致力于愉快，高效阅读。为手机特别优化，随时随地最新文章。做得认真，只为使您用得舒心。by 沈锋"]

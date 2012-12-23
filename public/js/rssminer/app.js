@@ -29,6 +29,7 @@
       $subs_list = $('#sub-list'),    // sub list
       $feed_content = $('#feed-content'),
       $logo = $('#logo'),
+      $feedback = $('#feedback-form'),
       $welcome_list = $('#welcome-list');
 
   var gcur_page,
@@ -274,7 +275,7 @@
   }
 
   function save_settings (e) {
-    var d = util.extract_data( $('#all-settings .account') );
+    var d = util.extract_data( $('#all-settings .settings') );
     for(var i in d) { if(!d[i]) { delete d[i]; } }
     if(d.password && d.password !== d.password2) {
       alert('password not match');
@@ -452,6 +453,27 @@
     return false;
   }
 
+  function show_feedback_form () {
+    $feedback.show().find('textarea').focus();
+    return false;
+  }
+
+  function submit_feedback () {
+    var data = {email: _RM_.user.email};
+    if(_RM_.demo) {
+      data.email = $.trim($feedback.find('input').val());
+    }
+    var feedback = $.trim($feedback.find('textarea').val());
+    if(feedback) {
+      data.feedback = feedback;
+      data.refer = location.pathname + location.search + location.hash;
+      $.post('/api/feedback', data, function () {
+        notify.show_msg("Thanks, Let's make it better");
+        $feedback.hide();
+      });
+    }
+  }
+
   function search (q, tags, authors, offset) {
     var fs = !$('#search-result').length || offset === 0;
     if(q) {
@@ -492,7 +514,10 @@
     'keyup #search-go input': update_search_hash,
     'click #add-subscription': add_subscription,
     'click .show-shortcuts': show_shortcut_help,
+    'click .show-feedback': show_feedback_form,
     'click #save-settings': save_settings,
+    'click #feedback-form .close': function () { $feedback.hide(); },
+    'click #feedback-form button': submit_feedback,
     'click #overlay': close_shortcut_help,
     'click .icon-ok-circle': close_shortcut_help,
     'mouseenter #logo': function () { $logo.addClass(SHOW_NAV); },

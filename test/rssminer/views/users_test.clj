@@ -2,6 +2,7 @@
   (:use clojure.test
         [rssminer.db.user :only [find-by-id]]
         [rssminer.util :only [read-if-json]]
+        [rssminer.database :only [mysql-query]]
         [rssminer.test-common :only [test-app app-fixture user1
                                      auth-app json-body]]))
 
@@ -73,3 +74,14 @@
                         :query-string "openid.ext1.value.email=abc%40gmail.com"})]
     (is (= "/a" (get (:headers resp) "Location")))
     (is (= 302 (:status resp)))))
+
+
+(deftest test-submit-feedback
+  (let [resp (auth-app {:uri "/api/feedback"
+                        :request-method :post
+                        :remote-addr "192.192.192.192"
+                        :params {"email" "test@rssminer.net"
+                                 "feedback" "rssminer is awesome"
+                                 "refer" "/a#ip=s"}})]
+    (is (= 200 (:status resp)))
+    (is (mysql-query ["select * from feedback"]))))

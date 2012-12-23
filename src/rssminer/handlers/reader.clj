@@ -73,3 +73,11 @@
                              (cfg/cfg :proxy)
                              (cfg/cfg :data-source))}
       {:status 404})))
+
+(defhandler save-feedback [req uid email feedback refer]
+  (udb/save-feedback {:email email
+                      :ip (:remote-addr req)
+                      :feedback feedback
+                      :refer refer
+                      :user_id uid})
+  "ok")

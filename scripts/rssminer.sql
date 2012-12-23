@@ -144,6 +144,16 @@ create table favicon (
      code SMALLINT UNSIGNED     -- fetch result's http status code
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 KEY_BLOCK_SIZE=2;
 
+create table feedback (
+     id int unsigned primary key auto_increment,
+     email varchar(64),
+     ip varchar(15) not null,
+     feedback text,
+     refer varchar(1024),
+     user_id int unsigned,
+     added_ts TIMESTAMP DEFAULT now() -- timestamp is easier to read
+);
+
 delimiter //
 
 create PROCEDURE get_unvoted (p_uid INT)

@@ -26,12 +26,10 @@
   :javac-options ["-source" "1.7" "-target" "1.7" "-g" "-encoding" "utf8"]
   :java-source-path "src/java"
   :aot [rssminer.main, rssminer.admin]
-  ;; :omit-source true
-  ;; :bootclasspath true
+  :main rssminer.main
   :uberjar-name "rssminer-standalone.jar"
   :uberjar-exclusions [#".+\.java$" #".+\.sql$" #".+tmpls/.+\.tpl"
                        #".+\.clj$" #"pom.xml"]
-  :main rssminer.main
   :test-selectors {:default (complement :benchmark)
                    :benchmark :benchmark
                    :all (fn [_] true)}

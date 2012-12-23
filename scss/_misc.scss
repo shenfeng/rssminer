@@ -224,3 +224,47 @@ $demo_warn_bg_color: #fcf4ca;
     width: 0;
     height: 0;
 }
+
+#feedback-form {
+    z-index: 1000;
+    display: none;
+    width: 280px;
+    background: white;
+    position: absolute;
+    bottom: 3px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0 2px 6px;
+    border: 1px #ccc solid;
+    right: 0;
+    div {
+        padding: 8px;
+    }
+    textarea, input {
+        width: 250px;
+        padding: 5px;
+        margin: 3px 0;
+    }
+    textarea {
+        height: 85px;
+    }
+    .close {
+        float: right;
+        padding: 0 4px;
+        margin-right: 7px;
+        font-weight: normal;
+        cursor: pointer;
+        &:hover {
+            background: #777;
+        }
+    }
+    p {
+        margin: 3px 0;
+        float: right;
+    }
+    h3 {
+        color: white;
+        margin: 0;
+        padding: 4px 8px;
+        background: lighten($header_color, 4%);
+        /* background: #333; */
+    }
+}

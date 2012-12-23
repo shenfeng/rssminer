@@ -51,6 +51,11 @@
               </a>
             </li>
             <li>
+              <a href="#" class="show-feedback">
+                <i class="icon-comment-alt"></i><span>{{m-feedback}}</span>
+              </a>
+            </li>
+            <li>
               <a href="#s/settings">
                 <i class="icon-wrench"></i><span>{{m-settings}}</span>
               </a>
@@ -81,6 +86,19 @@
             <p id="loading-msg"></p>
           </div>
           <ul id="feed-content"></ul>
+        </div>
+      </div>
+      <div id="feedback-form">
+        <h3>
+          {{m-feedback}}
+          <span class="close" data-title="{{m-close}}">X</span>
+        </h3>
+        <div>
+          {{#demo}}
+            <input placeholder="{{m-placeholder-email}}"/>
+          {{/demo}}
+          <textarea placeholder="{{m-placeholder-feedback}}"></textarea>
+          <p><button>{{m-submit}}</button></p>
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 (ns rssminer.db.user
-  (:use [rssminer.database :only [mysql-query with-mysql
+  (:use [rssminer.database :only [mysql-query with-mysql mysql-insert
                                   mysql-insert-and-return]]
         [rssminer.util :only [md5-sum]]
         [clojure.java.jdbc :only [update-values]]))
@@ -27,3 +27,6 @@
 
 (defn update-user [id data]
   (with-mysql (update-values :users ["id = ?" id] data)))
+
+(defn save-feedback [feedback]
+  (mysql-insert :feedback feedback))

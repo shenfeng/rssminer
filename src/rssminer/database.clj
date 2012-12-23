@@ -61,10 +61,10 @@
         ds (PerThreadDataSource. url
                                  (or user (cfg :db-user))
                                  (or password (cfg :db-pass)))]
-    (swap! rssminer-conf assoc :data-source ds)
     (reset! mysql-db-factory {:factory (fn [& args] (.getConnection ds))
                               :ds ds})
     ;; init demo-user as soon as possible
-    (swap! rssminer-conf assoc :demo-user
-           (first (mysql-query ["SELECT id, conf, like_score, neutral_score
+    (swap! rssminer-conf assoc
+           :data-source ds
+           :demo-user (first (mysql-query ["SELECT id, conf, like_score, neutral_score
                   FROM users WHERE email = 'demo@rssminer.net'"])))))

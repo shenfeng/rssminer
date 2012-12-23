@@ -25,6 +25,7 @@
            (JPOST "/add" [] subs/add-subscription)
            (JGET "/p/:rss-id" [] subs/polling-fetcher)
            (JDELETE "/:rss-id" [] subs/unsubscribe))
+  (POST "/feedback" [] reader/save-feedback)
   (JGET "/search" [] reader/search)
   (JPOST "/settings" [] user/save-settings)
   (JGET "/welcome" [] user/summary)
