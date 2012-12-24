@@ -19,7 +19,7 @@
                                 :host (when-let [url ^String (:url s)]
                                         (when-let [host (.getHost (URI/create url))]
                                           (str/reverse host)))))))
-                        (sdb/fetch-user-subs uid))))
+                        (sdb/fetch-subs uid))))
 
 (defhandler landing-page [req uid]
   (tmpls/m-subs {:subs (user-subs uid)}))

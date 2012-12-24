@@ -7,11 +7,9 @@
       util = RM.util,
       to_html = util.to_html;
 
-  var SORTING_KEYS = '__sort__',
-      DELAY_TIME = 1000 * 8;   // wait 8 seconds
+  var DATA_NAME = 'data-name';
 
-  var save_timer_id,
-      sorting_data;
+  var sorting_data;
 
   var $ct_menu = $('#ct-menu'),
       $last_menu_ui,
@@ -31,14 +29,6 @@
     return false;
   }
 
-  function save_sorting_data_to_save () {
-    save_timer_id = undefined;
-    if(localStorage) {
-      localStorage.removeItem(SORTING_KEYS);
-    }
-    RM.ajax.spost('/api/subs/sort', sorting_data);
-  }
-
   function dump_and_saving_sorting () {
     sorting_data = [];
     $('>li', $subs_list).each(function (idx, li) {
@@ -51,12 +41,8 @@
       if(!name) { name = 'null'; }
       sorting_data.push({g:name, ids: ids});
     });
-    if(save_timer_id) { clearTimeout(save_timer_id); }
-    if(localStorage) {
-      localStorage.setItem(SORTING_KEYS, JSON.stringify(sorting_data));
-    }
     $(RM).trigger('sub-sorted.rm', [sorting_data]);
-    save_timer_id = setTimeout(save_sorting_data_to_save, DELAY_TIME);
+    RM.ajax.spost('/api/subs/sort', sorting_data);
   }
 
   function show_item_context_menu (e) { // hide in search.js
@@ -81,10 +67,12 @@
 
   function rename_folder_name () {
     $ct_menu.hide();
-    var val = $last_menu_ui.attr('data-name'),
+    var val = $last_menu_ui.attr(DATA_NAME),
         new_name = prompt('new folder name', val);
     if(new_name) {
       $last_menu_ui.find('span').text(new_name);
+      $last_menu_ui.attr(DATA_NAME, new_name);
+      // $last_menu_ui
       dump_and_saving_sorting();
     }
   }
@@ -128,7 +116,10 @@
       var subid = $last_menu_ui.attr('data-id'),
           sub = data_api.get_subscription(subid);
       var html = to_html(tmpls.subs_nav, {
-        groups: [{subs: [sub], group: new_folder}]
+        groups: [{subs: [sub], group: {
+          name: new_folder,
+          hash: data_api.sub_hash('f_' + new_folder, 1, 'newest')
+        }}]
       });
       $last_menu_ui.remove();
       $subs_list.append(html).find('img').each(util.favicon_ok);
@@ -141,24 +132,22 @@
     $(this).closest('li').toggleClass('collapse');
     var collapsed = [];
     $('#sub-list li.collapse .folder').each(function (index, item) {
-      collapsed.push($(item).attr('data-name'));
+      collapsed.push($(item).attr(DATA_NAME));
     });
     RM.ajax.spost('/api/settings', {nav: collapsed});
     return false;
   }
 
   function save_vote_up (e) {
-    var $parent = $(this).closest('.feed');
-    var $feed = $parent.length ? $parent : $last_menu_ui;
+    var $feed = $(this).closest('.feed');
     save_user_vote(1, $feed);
-    if($parent.length) { return false; } // do not click on feed link
+    return false;
   }
 
   function save_vote_down (e) {
-    var $parent = $(this).closest('.feed');
-    var $feed = $parent.length ? $parent : $last_menu_ui;
+    var $feed = $(this).closest('.feed');
     save_user_vote(-1, $feed);
-    if($parent.length) { return false; } // do not click on feed link
+    return false;
   }
 
   function save_user_vote (vote, $feed) {

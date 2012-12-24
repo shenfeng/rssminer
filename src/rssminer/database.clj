@@ -66,5 +66,5 @@
     ;; init demo-user as soon as possible
     (swap! rssminer-conf assoc
            :data-source ds
-           :demo-user (first (mysql-query ["SELECT id, conf, like_score, neutral_score
-                  FROM users WHERE email = 'demo@rssminer.net'"])))))
+           :demo-user (first (mysql-query ["SELECT id, email, conf,
+                 like_score, neutral_score FROM users WHERE email = 'demo@rssminer.net'"])))))

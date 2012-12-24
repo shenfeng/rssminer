@@ -300,7 +300,7 @@ public class MinerDAO {
         sb.append(" where us.user_id = ");
         sb.append(userID).append(" and f.published_ts >");
         // only recent 60 days
-        sb.append((int) (System.currentTimeMillis() / 1000) - 3600 * 24 * 60);
+        sb.append((int) (System.currentTimeMillis() / 1000) - 3600 * 24 * 45);
         sb.append(" order by f.published_ts desc ");
         appendLimitOffset(sb, limit, offset);
         return fetchFeedsWithScore(userID, sb.toString());

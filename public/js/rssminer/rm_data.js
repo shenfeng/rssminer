@@ -200,7 +200,6 @@
 
   // API
   function get_user_subs (cb) {
-    try_sync_with_storage(_RM_.subs);
     cb(parse_subs(_RM_.subs));
   }
 
@@ -694,6 +693,7 @@
       save_settings: save_settings,
       fetch_unread_count: fetch_unread_count,
       save_vote: save_vote,
+      sub_hash: sub_hash,
       user_conf: user_conf,
       unsubscribe: unsubscribe
     }
@@ -702,13 +702,4 @@
   $(RM).bind('sub-sorted.rm',function (e, data) {
     update_subscrptions(_RM_.subs, data);
   });
-
-  function try_sync_with_storage (subscriptions) {
-    if(localStorage) {
-      var data = JSON.parse(localStorage.getItem('__sort__'));
-      if(data) {
-        update_subscrptions(subscriptions, data);
-      }
-    }
-  }
 })();
