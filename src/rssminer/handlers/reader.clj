@@ -37,7 +37,7 @@
         (tmpls/app {:email (:email user)
                     :md5 (-> user :email md5-sum)
                     :data (json-str2 {:user user
-                                      :subs (sdb/fetch-subs uid)
+                                      :subs (filter :title (sdb/fetch-subs uid))
                                       :gw gw      ; google import wait
                                       :ge ge      ; google import error
                                       :static_server (cfg/cfg :static-server)})})))))
@@ -53,7 +53,7 @@
                            :md5 (-> user :email md5-sum)
                            :demo true
                            :data (json-str2 {:user user
-                                             :subs (sdb/fetch-subs (:id user))
+                                             :subs (filter :title (sdb/fetch-subs (:id user)))
                                              :demo true
                                              :static_server (cfg/cfg :static-server)})})
          :status 200

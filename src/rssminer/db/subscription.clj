@@ -79,19 +79,18 @@
                 data (range 400 200000 4)))))
 
 (defn fetch-subs [uid]
-  (filter :title
-          (mysql-query ["SELECT rss_link_id AS id, l.title, group_name `group`,
-                 sort_index `index`, COALESCE(l.alternate, l.url) url,
-                 l.total_feeds total
-FROM user_subscription u JOIN rss_links l ON l.id = u.rss_link_id
-WHERE u.user_id = ? ORDER BY sort_index" uid])))
-
-(defn fetch-sub [uid id]
   (mysql-query ["SELECT rss_link_id AS id, l.title, group_name `group`,
                  sort_index `index`, COALESCE(l.alternate, l.url) url,
                  l.total_feeds total
 FROM user_subscription u JOIN rss_links l ON l.id = u.rss_link_id
-where u.rss_link_id = ?" uid id]))
+WHERE u.user_id = ? ORDER BY sort_index" uid]))
+
+(defn fetch-sub [uid id]
+  (first (mysql-query ["SELECT rss_link_id AS id, l.title, group_name `group`,
+                 sort_index `index`, COALESCE(l.alternate, l.url) url,
+                 l.total_feeds total
+FROM user_subscription u JOIN rss_links l ON l.id = u.rss_link_id
+where u.rss_link_id = ?" id])))
 
 (defn get-numbers [uid from-seconds]
   (mysql-query ["SELECT us.rss_link_id id, (SELECT COUNT(f.id) FROM feeds f LEFT JOIN user_feed uf ON f.id = uf.feed_id AND uf.user_id = ?

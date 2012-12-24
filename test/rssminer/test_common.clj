@@ -43,6 +43,9 @@
   (def user1 (create-user test-user))
   (def user2 (create-user test-user2))
   (create-user {:name "test" :password "123456" :email "demo@rssminer.net"})
+  (swap! rssminer-conf assoc
+         :demo-user (first (db/mysql-query ["SELECT id, email, conf,
+                 like_score, neutral_score FROM users WHERE email = 'demo@rssminer.net'"])))
   (test-fn))
 
 (defn json-body [body]

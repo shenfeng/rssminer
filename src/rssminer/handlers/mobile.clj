@@ -12,13 +12,11 @@
 
 (defn- user-subs [uid]
   (filter identity (map (fn [s]
-                          (let [s (bean s)]
-                            (when (and (:title s) (> (count (:title s)) 0))
-                              (assoc s
-                                :like? (> (:like s) 3)
-                                :host (when-let [url ^String (:url s)]
-                                        (when-let [host (.getHost (URI/create url))]
-                                          (str/reverse host)))))))
+                          (when (and (:title s) (> (count (:title s)) 0))
+                            (assoc s
+                              :host (when-let [url ^String (:url s)]
+                                      (when-let [host (.getHost (URI/create url))]
+                                        (str/reverse host))))))
                         (sdb/fetch-subs uid))))
 
 (defhandler landing-page [req uid]
