@@ -20,8 +20,8 @@
                :m-placeholder-email ["Email, in case we keep in touch. Optional."
                                      "邮箱，选填。以便我们与您进一步沟通"]
 
-               :m-description ["Rssminer is yet another RSS reader. Build by Feng Shen, with love of RSS subscription and reading. Free"
-                               "Rssminer，免费的RSS阅读器。专注于订阅，个性化推荐辅助，致力于愉快，高效阅读。为手机特别优化，随时随地最新文章。做得认真，只为使您用得舒心。by 沈锋"]
+               :m-description ["Rssminer is yet another free RSS reader. Build by Feng Shen, with love of RSS subscription and reading."
+                               "Rssminer，免费的RSS阅读器。专注于订阅读器，辅助于个性化推荐，致力于愉快，高效的阅读；为手机屏幕特别优化，随时随地最新文章；认真，只为使您用得舒心。"]
                :m-keywords ["RSS miner, Rssminer, RSS aggregator, simple, fast, intelligent, free"
                             "RSS miner, Rssminer, RSS aggregator, 简单，快速，免费"]
 
