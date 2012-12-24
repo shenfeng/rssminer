@@ -481,9 +481,9 @@
   }
 
   function save_settings (data, cb) {
-    if(data.pref_sort) {
-      user_conf.pref_sort = data.pref_sort;
-    }
+    // if(data.pref_sort) {
+    //   user_conf.pref_sort = data.pref_sort;
+    // }
     ajax.jpost('/api/settings', data, function () { call_if_fn(cb); });
   }
 
@@ -694,7 +694,7 @@
       fetch_unread_count: fetch_unread_count,
       save_vote: save_vote,
       sub_hash: sub_hash,
-      user_conf: user_conf,
+      // user_conf: user_conf,
       unsubscribe: unsubscribe
     }
   });

@@ -226,7 +226,7 @@
 
   function show_welcome (section, page, cb) {
     var d = !section && !page;
-    section = section || data_api.user_conf.pref_sort || NEWEST_TAB;
+    section = section || NEWEST_TAB;
     page = page || 1;
     _update_state(section, page, section, GROUP_WELCOME);
     $subs_list.find('.selected').removeClass('selected');
@@ -248,18 +248,18 @@
 
   function show_settings (section) {
     $reading_area.removeClass(SHOW_CONTENT);
-    var old_sort = data_api.user_conf.pref_sort;
-    var sections = ['add', 'settings'],
-        sortings = [{value: NEWEST_TAB,
-                     text: _LANG_(NEWEST_TAB),
-                     s: old_sort === NEWEST_TAB},
-                    {value: 'recommend', // default to recommend
-                     text: _LANG_('recommend'),
-                     s: old_sort === 'recommend'}];
+    // var old_sort = data_api.user_conf.pref_sort;
+    var sections = ['add', 'settings'];
+    //     sortings = [{value: NEWEST_TAB,
+    //                  text: _LANG_(NEWEST_TAB),
+    //                  s: old_sort === NEWEST_TAB},
+    //                 {value: 'recommend', // default to recommend
+    //                  text: _LANG_('recommend'),
+    //                  s: old_sort === 'recommend'}];
     var d = {
       title: _LANG_(section),
       selected: section,
-      sortings: sortings,
+      // sortings: sortings,
       tabs: _.map(sections, function (s) {
         return { text: _LANG_(s),  n: s, s: s === section };
       })
@@ -429,13 +429,13 @@
     }
   }
 
-  function save_pref_sort (e) {
-    var val = $(this).val();
-    data_api.save_settings({pref_sort: val}, function () {
-      fetch_and_show_user_subs();
-      notify.show_msg('Settings saved', 3000);
-    });
-  }
+  // function save_pref_sort (e) {
+  //   var val = $(this).val();
+  //   data_api.save_settings({pref_sort: val}, function () {
+  //     fetch_and_show_user_subs();
+  //     notify.show_msg('Settings saved', 3000);
+  //   });
+  // }
 
   function close_shortcut_help () {
     $('#shortcuts').fadeOut();
@@ -505,7 +505,7 @@
 
   util.delegate_events($(document), {
     'click .add-sub a.import': import_from_greader,
-    'change #all-settings select': save_pref_sort,
+    // 'change #all-settings select': save_pref_sort,
     'keyup #search-go input': update_search_hash,
     'click #add-subscription': add_subscription,
     'click .show-shortcuts': show_shortcut_help,

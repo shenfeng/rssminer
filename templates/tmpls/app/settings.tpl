@@ -52,14 +52,14 @@
     </table>
   </li>
   <li class="section settings">
-    <div>
-      <p>{{m_default_list}}</p>
-      <select>
-        {{#sortings}}
-          <option {{#s}}selected{{/s}} value="{{value}}">{{text}}</option>
-        {{/sortings}}
-      </select>
-    </div>
+    <!-- <div> -->
+    <!--   <p>{{m_default_list}}</p> -->
+    <!--   <select> -->
+    <!--     {{#sortings}} -->
+    <!--       <option {{#s}}selected{{/s}} value="{{value}}">{{text}}</option> -->
+    <!--     {{/sortings}} -->
+    <!--   </select> -->
+    <!-- </div> -->
     <div>
       <p class="warn">{{m_set_pass_p1}}</p>
       <p>{{m_set_pass_p2}}</p>
