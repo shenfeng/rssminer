@@ -59,8 +59,12 @@
   }
 
   function feed_css_class (i) {
+    // console.log(i);
     var cls;
-    if(i.readts === 1) { cls = 'sys-read'; }
+
+    if(new Date() / 1000 - i.pts > 3600 * 24 * 30) {
+      cls = 'sys-read';
+    } else if(i.readts === 1) { cls = 'sys-read'; }     // TODO document 1
     else if(i.readts > 1) { cls = 'read';}
     else {cls = 'unread';}
 

@@ -169,7 +169,7 @@
     set_document_title($me.find('.feed h2').text());
     $reading_area.addClass(SHOW_CONTENT);
     layout.select('#feed-list', $me); // layout
-    if(!$me.hasClass('read')) {
+    if($me.hasClass('unread')) {
       data_api.mark_as_read(id);
       data_api.fetch_summary([id], function (feeds) {
         if(feeds.length) {
@@ -204,14 +204,6 @@
       } else {
         show_welcome(subid, page, read_cb);
       }
-    }
-  }
-
-  function mark_feed_as_read ($me, feedid, subid) {
-    if(!$me.hasClass('read')) {
-      data_api.mark_as_read(feedid);
-      decrement_number($me, subid);
-      $me.removeClass('unread sys-read').addClass('read');
     }
   }
 
