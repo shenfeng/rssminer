@@ -51,7 +51,9 @@
   (if (cfg/real-user? req)
     (assoc (redirect "/?r=d") :session nil ;; delete cookie
            :session-cookie-attrs {:max-age -1})
-    (let [user (cfg/cfg :demo-user)]
+    (let [user (udb/find-by-email "demo@rssminer.net")]
+      ;; reload settings
+      (swap! cfg/rssminer-conf assoc :demo-user user)
       (if mobile?
         (assoc (redirect "/m") :session user)
         {:body (tmpls/app {:email (:email user)
