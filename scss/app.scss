@@ -263,11 +263,18 @@ ul { list-style: none; padding: 0; margin: 0; }
     font-size: small;
 }
 
+.ie8 .c {
+    vertical-align: top;
+}
+
 .item:hover .icon-caret-down {
     visibility: visible;
 }
 
 .icon-caret-down {
+    &:hover {
+        color: darken($header_color, 10%);
+    }
     position: absolute;
     right: 6px;
     visibility: hidden;
@@ -407,7 +414,10 @@ ul { list-style: none; padding: 0; margin: 0; }
 }
 
 .pager {                        /* in welcome-list , left feeds nav*/
-    padding: 5px 0 0 25px;
+    /* padding: 5px 0 0 25px; */
+    position: absolute;
+    bottom: 18px;
+    left: $nav_width + 30px;
     li {
         &.current { background: #ccc; font-weight: bold; }
         background: #ECECEC;

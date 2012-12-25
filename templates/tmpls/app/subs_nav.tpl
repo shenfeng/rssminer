@@ -5,7 +5,7 @@
         <i class="icon-folder-open"></i>
         <i class="icon-folder-close"></i>
         <span>{{{name}}}</span>
-        <div class="icon-caret-down"></div>
+        <div class="icon-caret-down" data-title="{{m_item_option}}"></div>
       </a>
     {{/group}}
     <ul class="rss-category">
@@ -19,7 +19,7 @@
               {{#unread}}
                 <span class="c"> ({{ unread }}) </span>
               {{/unread}}
-              <i class="icon-caret-down"></i>
+              <i class="icon-caret-down" data-title="{{m_item_option}}"></i>
           </a>
         </li>
       {{/subs}}

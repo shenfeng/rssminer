@@ -85,14 +85,17 @@
   }
 
   function decrement_number ($just_read, subid) {
-    var $c = $("#item-" + subid + ' .c'),
-        c = + /\d+/.exec($c.text())[0] - 1;
-    if(!c) {
-      $c.parents('.unread').removeClass('unread');
-      $c.remove();
-    } else {
-      $c.text('(' + c + ')');
+    var $c = $("#item-" + subid + ' .c');
+    if($c.length) {
+      var c = + /\d+/.exec($c.text())[0] - 1;
+      if(!c) {
+        $c.parents('.unread').removeClass('unread');
+        $c.remove();
+      } else {
+        $c.text('(' + c + ')');
+      }
     }
+
   }
 
   function record_reading_time (url_pattern, args) {

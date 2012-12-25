@@ -217,7 +217,7 @@ $demo_warn_bg_color: #fcf4ca;
 .scroll-wrap {
     width: 310px;
     overflow: hidden;
-    border-right: 2px solid $border_color;
+    border-right: 2px solid lighten($border_color, 4%);
 }
 
 .scroll-inner::-webkit-scrollbar, .scroll-inner::scrollbar {

@@ -1,7 +1,7 @@
 {{#dev}}
 <script>
 (function () {
-  if(!WebSocket) {return; }
+  if(!window.WebSocket) {return; }
   var TOP = '_r_s_top', conn = new WebSocket("ws://{{server-host}}/dev/ws");
   conn.onmessage = function (e) {
     localStorage.setItem(TOP, JSON.stringify([window.scrollX, window.scrollY]));

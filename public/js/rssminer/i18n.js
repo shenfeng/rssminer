@@ -17,7 +17,7 @@ var _MESGS_ = {
   m_import_grader: ['Import all you google reader subscriptions:', "导入您的google Reader订阅列表"],
   m_demo_add_warn: ['This is a public account, please <a href="/">create your own</a> to add subscription.', '这是一个演示帐户，请点击<a href="/">这里</a>免费创建您自己的帐户，再添加订阅'],
   m_default_list: ['Default list: default show the automatic recommendation or just the newest', '默认显示列表：最新或者推荐'],
-  m_set_pass_p1: ['Login in with Google OpenID is encouraged. But if you are in China...', '用google帐户登陆当然最好了，那样不需要记忆额外的密码。如果你在中国，我们为您准备了'],
+  m_set_pass_p1: ['Login in with Google OpenID is encouraged. But if you are in China...', '用Google帐户登陆当然最好了，那样不需要记忆额外的密码。但是如果身你在中国，可能需要密码登陆'],
   m_set_pass_p2: ['If you may have trouble login with Google OpenID. You can set a password. The user name is your email address.',
                   '如果用Google帐户登陆不是很顺利，你可以设置一个登陆密码，用户名是您的Google帐户邮箱'],
   m_set_pass_p3: ['You can always login with Google OpenID, even after you set the password','设置了登陆密码后，就可以用登陆密码登陆，也可以用Google OpenID登陆'],
@@ -28,7 +28,11 @@ var _MESGS_ = {
   // sub_ct_menu
   m_new_folder: ['new folder', '新建文件夹'],
   m_unsubscribe: ['unsubscribe', '取消订阅'],
+  m_rename: ['rename folder', '修改文件夹名'],
   m_visite: ['visite', '访问'],
+
+  m_item_option: ['Organize subscription, drop and drop to reorder', '点击整理订阅，拖动调整顺序'],
+  m_move_to_folder: ['Move to: ', '移动到：'],
 
   // search_result
   m_search: ["Enter search keyword", "输入关键字"],

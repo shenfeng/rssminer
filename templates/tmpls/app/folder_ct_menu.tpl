@@ -1,1 +1,1 @@
-<li class="rename">rename</li>
+<li class="rename">{{m_rename}}</li>
