@@ -55,8 +55,8 @@
                           :error_msg ""
                           :description (:description feeds)
                           :title (:title feeds))]
-    (info (str "id:" id) status url
-          (str "[" (-> feeds :entries count) "] feeds"))
+    ;; (info (str "id:" id) status url
+    ;;       (str "[" (-> feeds :entries count) "] feeds"))
     (subdb/update-rss-link id updated)
     ;; if url is updated, feeds should be nil
     (when feeds (db/save-feeds feeds id))))

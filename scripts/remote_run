@@ -10,7 +10,7 @@ INDEX_PATH=/var/rssminer/index
 TMP_INDEX_PATH=/var/rssminer/index2
 
 LOG_DIR=/var/log/rssminer
-PER_MONGTH=`date +"%Y-%m"`
+PER_MONGTH=`date +"%Y-%m-%W"`   # year-month-weekofyear
 SHARED="${LOG_DIR}/${PER_MONGTH}"
 
 nohup java -server -Dsun.jnu.encoding=UTF-8 \

@@ -62,7 +62,7 @@ public class SysVoteDaemon implements Runnable {
     private void computeAddSaveScore(int userID) throws SQLException, IOException {
         Map<String, Map<String, Double>> model = trainModel(userID);
         if (model != null) {
-            Watch w = new Watch().start();
+            // Watch w = new Watch().start();
             List<FeedScore> unVoted = DBHelper.getUnvotedFeeds(ds, userID);
             if (!unVoted.isEmpty()) {
                 List<Integer> unVotedIDs = new ArrayList<Integer>(unVoted.size());
@@ -84,8 +84,8 @@ public class SysVoteDaemon implements Runnable {
                 saveScoresToRedis(userID, unVoted);
                 saveScoresToMysql(userID, results);
             }
-            logger.info("compute and save score for user {}, {} feeds, takes {}ms",
-                    new Object[] { userID, unVoted.size(), w.time() });
+            // logger.info("compute and save score for user {}, {} feeds, takes {}ms",
+            // new Object[] { userID, unVoted.size(), w.time() });
         }
     }
 
@@ -104,7 +104,7 @@ public class SysVoteDaemon implements Runnable {
     }
 
     public void handlerFetcherEvent(FetcherEvent e) throws SQLException, IOException {
-        Watch w = new Watch().start();
+        // Watch w = new Watch().start();
         List<Integer> userIDs = DBHelper.fetchUserIDsBySubID(ds, e.subid);
         Jedis redis = jedis.getResource();
         try {
@@ -124,8 +124,9 @@ public class SysVoteDaemon implements Runnable {
         } finally {
             jedis.returnResource(redis);
         }
-        logger.info("rss:{}, feed cnt:{}, {} users, take {}ms", new Object[] { e.subid,
-                e.feedids.size(), userIDs.size(), w.time() });
+        // logger.info("rss:{}, feed cnt:{}, {} users, take {}ms", new Object[]
+        // { e.subid,
+        // e.feedids.size(), userIDs.size(), w.time() });
     }
 
     public void handlerUserEvent(UserEvent e) throws SQLException, IOException {
