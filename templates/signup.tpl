@@ -8,6 +8,7 @@
     <div id="accouts-div">
       <h1> <a href="/">Rssminer</a> signup </h1>
       <form action="" method="post" class="post-form">
+        {{#error}}<p>{{error}}</p>{{/error}}
         <table>
           <tr>
             <td><label for="email">Email: </label>
@@ -29,6 +30,7 @@
           </tr>
         </table>
       </form>
+      <p>Already has an account? <a href="/">Login</a></p>
     </div>
   </body>
 </html>

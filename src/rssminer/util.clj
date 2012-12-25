@@ -113,6 +113,8 @@
        (let [~@(interleave bindings vals)]
          ~@body))))
 
+(defn valid-email? [email]
+  (re-find #"\w{3,}@\w{3,}" (or email "")))
 
 (comment
   (defmacro if-lets

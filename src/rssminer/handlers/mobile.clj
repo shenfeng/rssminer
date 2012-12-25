@@ -12,7 +12,9 @@
 
 (defn- user-subs [uid]
   (filter identity (map (fn [s]
-                          (when (and (:title s) (> (count (:title s)) 0))
+                          (when (and (:title s)
+                                     (> (:total s) 0)
+                                     (> (count (:title s)) 0))
                             (assoc s
                               :host (when-let [url ^String (:url s)]
                                       (when-let [host (.getHost (URI/create url))]

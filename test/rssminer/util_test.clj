@@ -12,6 +12,14 @@
 (deftest test-write-json
   (is (json-str {:date (Date.)})))
 
+(deftest test-valid-email
+  (is (valid-email? "shenedu@gmail.com"))
+  (is (not (valid-email? "shenedu")))
+  (is (not (valid-email? "386297760@qq.com")))
+  (is (not (valid-email? nil)))
+  (is (not (valid-email? "")))
+  (is (valid-email? "feng.shen@onycloud.com")))
+
 (deftest test-assoc-if
   (is (= 3 (-> (assoc-if {} :a 1 :b 2 :c 3) keys count)))
   (is (= 2 (-> (assoc-if {} :a 1 :b 2 :c nil) keys count))))

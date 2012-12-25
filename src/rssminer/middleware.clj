@@ -18,7 +18,7 @@
                 (.startsWith ^String uri "/api"))
           (if (= "XMLHttpRequest" (-> req :headers (get "x-requested-with")))
             {:status 401} ;; easier for script to handle
-            (redirect "/login"))
+            (redirect "/"))
           (handler req))))))
 
 ;; "set no-cache header."

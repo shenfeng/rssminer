@@ -51,7 +51,6 @@
   (context "/m" [] mobile-routes)
   (GET "/demo" [] reader/show-demo-page)
   (context "/login" []
-           (GET "/" [] user/show-login-page)
            (GET "/google" [] user/google-openid)
            (GET "/checkauth" [] user/checkauth))
   (context "/admin" [] admin/admin-routes)

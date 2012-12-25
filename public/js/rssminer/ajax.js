@@ -11,7 +11,6 @@
 
   var ERROR_MESGS = {
     400: 'Bad Request',
-    401: 'Not Logined',
     502: 'Server updating, retry in few seconds'
     // 0: 'Could not reach server'
   };
@@ -54,12 +53,20 @@
         }
       },
       error: function (xhr) {
-        var t = xhr.responseText || ERROR_MESGS[xhr.status];
-        if(t) {
-          try {
-            show_error_msg(JSON.parse(t).message);
-          } catch(e) {
-            show_error_msg(t);
+        if(xhr.status === 401) {
+          show_error_msg('Not Logined, redirecting');
+          setTimeout(function () {
+            var r = location.pathname + location.search + location.hash;
+            location.href = "/?return-url=" + encodeURIComponent(r);
+          }, 1000);
+        } else {
+          var t = xhr.responseText || ERROR_MESGS[xhr.status];
+          if(t) {
+            try {
+              show_error_msg(JSON.parse(t).message);
+            } catch(e) {
+              show_error_msg(t);
+            }
           }
         }
       }

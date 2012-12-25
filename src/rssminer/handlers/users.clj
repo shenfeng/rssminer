@@ -1,16 +1,11 @@
 (ns rssminer.handlers.users
   (:use  [ring.util.response :only [redirect]]
-         [clojure.java.io :only [resource]]
-         (rssminer [util :only [user-id-from-session to-int md5-sum
-                                json-str2 read-if-json defhandler]]
+         (rssminer [util :only [md5-sum valid-email? json-str2 read-if-json defhandler]]
                    [config :only [rssminer-conf cache-control]]))
   (:require [rssminer.db.user :as db]
             [rssminer.db.feed :as fdb]
             [rssminer.tmpls :as tmpls]
             [clojure.string :as str]))
-
-(defhandler show-login-page [req return-url]
-  (tmpls/login {:return-url (or return-url "/a")}))
 
 (defn show-signup-page [req] (tmpls/signup))
 
@@ -33,22 +28,16 @@
     :session-cookie-attrs {:max-age -1}))
 
 (defhandler signup [req email password]
-  (if (or (str/blank? email)
-          (str/blank? password))
-    (redirect "/") ;; TODO error reporting
-    (let [user (db/create-user {:email email
-                                :password password})]
-      (assoc (redirect "/a")           ; no conf currently
-        :session {:id (:id user)}))))
-
-(defhandler signup [req email password]
-  (if (or (str/blank? email)
-          (str/blank? password))
-    (redirect "/") ;; TODO error reporting
-    (let [user (db/create-user {:email email
-                                :password password})]
-      (assoc (redirect "/a")           ; no conf currently
-        :session {:id (:id user)}))))
+  (cond (not (valid-email? email))
+        (tmpls/signup {:error "Invalid Email"})
+        (or (str/blank? password) (> 6 (count password)))
+        (tmpls/signup {:error "Password at least 6 chars"})
+        (db/find-by-email email)
+        (tmpls/signup {:error "Email is already been token"})
+        :else (let [user (db/create-user {:email email
+                                          :password password})]
+                (assoc (redirect "/a")           ; no conf currently
+                  :session user))))
 
 (defn- update-conf [uid req key]
   (when-let [data (-> req :body key)]

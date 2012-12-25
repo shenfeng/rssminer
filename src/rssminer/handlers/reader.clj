@@ -14,18 +14,23 @@
 (defn show-unsupported-page [req]
   (tmpls/browser))
 
-(defhandler landing-page [req r mobile?]
+(defhandler landing-page [req r mobile? return-url]
   (if (= r "d")       ; redirect to /demo
     (redirect "/demo")
     (if (cfg/real-user? req)
       (redirect (if mobile? "/m" "/a"))
       (let [body (if mobile? (tmpls/m-landing)
-                     (tmpls/landing))]
+                     (tmpls/landing {:return-url return-url}))]
         (if (cfg/demo-user? req) {:status 200
                                   :session nil ;; delete cookie
                                   :session-cookie-attrs {:max-age -1}
                                   :body body}
             body)))))
+
+(defn- get-subs [uid]
+  (filter (fn [s]
+            (and (:title s) (> (:total s) 0)))
+          (sdb/fetch-subs uid)))
 
 (defhandler show-app-page [req uid gw ge mobile?]
   (if (cfg/demo-user? req)
@@ -37,7 +42,7 @@
         (tmpls/app {:email (:email user)
                     :md5 (-> user :email md5-sum)
                     :data (json-str2 {:user user
-                                      :subs (filter :title (sdb/fetch-subs uid))
+                                      :subs (get-subs uid)
                                       :gw gw      ; google import wait
                                       :ge ge      ; google import error
                                       :static_server (cfg/cfg :static-server)})})))))
@@ -53,7 +58,7 @@
                            :md5 (-> user :email md5-sum)
                            :demo true
                            :data (json-str2 {:user user
-                                             :subs (filter :title (sdb/fetch-subs (:id user)))
+                                             :subs (get-subs (:id user))
                                              :demo true
                                              :static_server (cfg/cfg :static-server)})})
          :status 200

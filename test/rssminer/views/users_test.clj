@@ -8,20 +8,6 @@
 
 (use-fixtures :each app-fixture)
 
-(deftest test-login-sign-page
-  (let [resp (test-app {:uri "/login"
-                        :request-method :get})
-        body (apply str (:body resp))]
-    (is (= 200 (:status resp)))
-    (is (re-find #"name=.*email" body))
-    (is (re-find #"name=.*password" body)))
-  (let [resp (test-app {:uri "/signup"
-                        :request-method :get})
-        body (apply str (:body resp))]
-    (is (= 200 (:status resp)))
-    (is (re-find #"name=.*email" body))
-    (is (re-find #"name=.*password" body))))
-
 (deftest test-signup-login-process
   (let [params {"email" "test@test.com"
                 "password" "123456"}
