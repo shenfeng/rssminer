@@ -50,6 +50,9 @@
         <a href="/demo">{{{m-tryout}}}</a>
       </div>
     </div>
+    <div id="author">
+      <p>Built by <a target="_blank" href="http://shenfeng.me">Feng Shen</a>, proudly, with love of the world. Hope it's helpful. <a target="_blank" href="https://github.com/shenfeng/rssminer">code</a></p>
+    </div>
   </body>
   {{#landing-js}}<script>{{{landing-js}}}</script>{{/landing-js}}
   {{^landing-js}}<script src="/s/js/rssminer/landing.js"></script>{{/landing-js}}
