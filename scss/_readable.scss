@@ -1,4 +1,4 @@
- @import "vars";
+@import "vars";
 @import "css3";
 
 hr {
@@ -60,7 +60,7 @@ hr {
 
 #feed-content {
     .summary {
-         p {
+        p {
             text-align: justify;
             margin: 11px 0;
         }
@@ -71,9 +71,13 @@ hr {
             li { margin: 5px 0; }
         }
         blockquote {
-            margin: 13px;
-            padding:0 7px;
-            background: #f1f0ea;
+            /* margin: 10px; */
+            margin: 5px 5px;
+            padding: 5px 0;
+
+            /* padding: ; */
+            /* padding:0 7px; */
+            background: #fffff7;
         }
         ol {
             list-style-type: decimal;
@@ -85,7 +89,12 @@ hr {
             display: block;
             box-shadow: 0 0 8px #999;
         }
+        pre {
+            /* background: #ffe; */
+            padding: 5px;
+        }
         code, pre {
+            background: #f1f0ea;
             white-space: pre-wrap;
             font: 13px/1.4 Consolas, Monaco, monospace;
         }
