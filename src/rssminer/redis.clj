@@ -38,3 +38,6 @@
       (when-let [d (.blpop j (int timeout) fetcher-key-arr)]
         (-> d second read-string))
       (finally (.returnResource client j)))))
+
+(defn fetch-rss [sub]
+  (fetcher-enqueue (select-keys sub [:id :url :check_interval :last_modified])))

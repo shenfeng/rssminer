@@ -1,26 +1,90 @@
-#commands {
+@import "vars";
+.links {
     padding: 0;
-    list-style: none;
+    /* font-family: monospace; */
     li {
-        display: inline;
+        display: inline-block;
         padding: 2px 4px;
+        /* border-right: 2px solid #ccc; */
         a {
-            display: inline-block;
+            text-decoration: none;
+            padding: 3px 6px;
             background: #ddd;
-            padding: 4px 8px;
+            text-transform: capitalize;
         }
+    /* &:last-child { */
+    /*     border: none; */
+    /* } */
     }
+
+}
+
+.date {
+    font-size: 12px;
+    color: #555;
+}
+
+#services {
+    td {
+        padding: 0 4px;
+    }
+}
+
+#notification {
+    background: #ffd;
+    p {
+        margin: 4px;
+    }
+}
+
+.txt {
+    padding: 4px 2px;
 }
 
 caption {
     font-weight: bold;
+    padding: 4px;
+    background: $hover_color;
     min-width: 200px;
+}
+
+@media (max-width: 1200px) {
+    table {
+        width: 100%;
+    }
+}
+
+.subs {
+    font: 13px monospace;
+    td {
+        padding: 5px 2px;
+        white-space: nowrap;
+        &:last-child {
+            max-width: 280px;
+            overflow: hidden;
+        }
+    }
 }
 
 table {
     border-bottom: 1px #eee solid;
 }
 
-td:first-child {
-    text-transform: capitalize;
+.db td:first-child {
+    width: 200px;
+}
+
+.db td:last-child {
+    width: 100px;
+}
+
+#configs {
+    font: 12px monospace;
+    td {
+        padding: 2px;
+    }
+}
+
+tr:nth-child(2n) td {
+    background: #eee;
 }

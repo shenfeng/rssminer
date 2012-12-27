@@ -1,5 +1,5 @@
 (ns rssminer.handlers.subscriptions
-  (:use (rssminer [redis :only [fetcher-enqueue]]
+  (:use (rssminer [redis :only [fetch-rss]]
                   [util :only [now-seconds defhandler valid-url?]])
         [rssminer.database :only [mysql-insert-and-return]]
         [clojure.tools.logging :only [info]])
@@ -7,14 +7,12 @@
             [rssminer.db.feed :as fdb]
             [clojure.string :as str]))
 
-(def ^{:private true} enqueue-keys [:id :url :check_interval :last_modified])
-
 (defn subscribe [url uid title group-name]
   (when url
     (let [sub (or (db/fetch-rss-link-by-url url)
                   (mysql-insert-and-return :rss_links {:url url
                                                        :user_id uid}))]
-      (fetcher-enqueue (select-keys sub enqueue-keys))
+      (fetch-rss sub)
       (if-let [us (db/fetch-subscription uid (:id sub))]
         us
         (mysql-insert-and-return :user_subscription

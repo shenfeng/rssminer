@@ -4,25 +4,27 @@
 
 (defonce daemon (atom nil))
 
+(defn running? [] @daemon)
+
 (defn start-classify-daemon! []
-  (when (nil? @daemon)
+  (when-not (running?)
     (reset! daemon (doto (SysVoteDaemon. (cfg :data-source)
                                          (cfg :redis-server)
                                          (cfg :events-threshold))
                      (.start)))))
 
 (defn stop-classify-daemon! []
-  (when-not (nil? @daemon)
+  (when (running?)
     (.stop ^SysVoteDaemon @daemon)
     (reset! daemon nil)))
 
 (defn on-fetcher-event [rssid feedids]
-  (when-not (nil? @daemon)
+  (when (running?)
     ;; this is delayed
     (.onFecherEvent ^SysVoteDaemon @daemon rssid feedids)))
 
 ;;; feedid == -1 => recompute
 (defn on-feed-event [userid feedid]
-  (when-not (nil? @daemon)
+  (when (running?)
     ;; computed now
     (.onFeedEvent ^SysVoteDaemon @daemon userid feedid)))
