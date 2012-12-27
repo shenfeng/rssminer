@@ -5,6 +5,7 @@
   (:import [com.sun.syndication.io SyndFeedInput ParsingFeedException]
            java.util.Date
            rssminer.Utils
+           java.net.URI
            rssminer.jsoup.HtmlUtils
            java.io.StringReader))
 
@@ -33,9 +34,9 @@
 (definline trim [^String s]
   `(when ~s (s/trim ~s)))
 
-(defn most-len [^String s len]
+(defn ^String most-len [^String s len]
   (when s
-    (if (> (.length s) len) (.substring s 0 len) s)))
+    (if (> (.length s) len) (subs s 0 len) s)))
 
 (defn- tag? [^String s]
   (let [c (.length s)]
@@ -47,7 +48,7 @@
 ;; http://hi.baidu.com/maczhijia/rss 0 feeds
 ;;; http://blogs.innodb.com/wp/feed/
 
-(defn- parse-entry [e]
+(defn- parse-entry [e ^URI uri]
   ;; most 512 chars
   (when-let [link (-> e :link trim (most-len 512))]
     (let [summary (HtmlUtils/compact (or (-> e :contents first :value trim)
@@ -58,7 +59,7 @@
        :title title
        :summary summary
        :simhash (Utils/simHash summary title)
-       :link link
+       :link (.toString (.resolve uri link))
        :tags (let [t (s/join ";" (filter tag?
                                          (map #(-> % :name trim)
                                               (:categories e))))]
@@ -69,18 +70,23 @@
                                  (now-seconds))]
                        (if (< s 0) (now-seconds) s))})))
 
+(defn- absolute-url? [^String url]
+  (when (and url (.startsWith url "http"))
+    url))
+
 (defn parse-feed [str]
   (when str
     (try
       (let [feed (->> str StringReader.
                       (.build (SyndFeedInput.)) decode-bean)
-            link (-> feed :link trim)]
+            link (or (absolute-url? (-> feed :link trim)) (-> feed :uri trim))
+            uri (URI. link)]
         {:title (-> feed :title trim)
          :link link
          :language (-> feed :link trim)
          :published_ts (:publishedDate feed)
          :description (most-len (-> feed :description trim) 1024)
          :entries (filter identity (map (fn [e]
-                                          (parse-entry e)) (:entries feed)))})
+                                          (parse-entry e uri)) (:entries feed)))})
       (catch Exception e
         (warn "parse feed exception:" (.getMessage e))))))

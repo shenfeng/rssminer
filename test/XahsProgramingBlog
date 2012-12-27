@@ -1,0 +1,2827 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" media="screen" href="/~d/styles/atom10full.xsl"?><?xml-stylesheet type="text/css" media="screen" href="http://feeds.feedburner.com/~d/styles/itemcontent.css"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:feedburner="http://rssnamespace.org/feedburner/ext/1.0" xml:base="http://xahlee.info/comp/">
+
+ <title>Xah's Programing Blog</title>
+ <subtitle>Programing, Computing, Tech Geeking</subtitle>
+ 
+ <link rel="alternate" href="blog.html" />
+ <updated>2012-12-25T08:06:57-08:00</updated>
+ <author>
+   <name>Xah Lee</name>
+   <uri>http://xahlee.info/</uri>
+ </author>
+ <id>http://xahlee.info/comp/blog.html</id>
+ <icon>http://xahlee.org/ics/sum.png</icon>
+ <rights>© 2011, 2012 Xah Lee</rights>
+
+<atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="self" type="application/atom+xml" href="http://feeds.feedburner.com/XahsProgramingBlog" /><feedburner:info uri="xahsprogramingblog" /><atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="hub" href="http://pubsubhubbub.appspot.com/" /><entry>
+<title>asking for help</title>
+<id>tag:xahlee.org,2012-12-25:160657</id>
+<updated>2012-12-25T08:06:57-08:00</updated>
+<summary>Xah Lee</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<figure>
+<iframe title="YouTube video player" class="youtube-player" width="640" height="385" src="http://www.youtube.com/embed/UJCKNMbiPdY?rel=0" />
+<figcaption>Xah Lee Asking for Help</figcaption>
+</figure>
+
+<p><a href="http://www.pledgie.com/campaigns/18959"><img alt="Click here to lend your support to: Programmer to be homeless and make a donation at www.pledgie.com !" src="http://www.pledgie.com/campaigns/18959.png?skin_name=chrome" border="0" /></a></p>
+
+<p>Click the pledgie icon for full description. If you can help out, i'd greatful. If you have any questions, just ask me.</p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/DYzRus9lEI0" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/DYzRus9lEI0/18959" />
+<feedburner:origLink>http://www.pledgie.com/campaigns/18959</feedburner:origLink></entry>
+
+<entry>
+<title>Python, Ruby, Perl: Applying a Function to a List</title>
+<id>tag:xahlee.org,2012-12-24:094110</id>
+<updated>2012-12-24T01:41:10-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>Added Ruby: <a href="../perl-python/map.html">Python, Ruby, Perl: Applying a Function to a List</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/aMCO13nHff8" height="1" width="1" /></div></content>
+<link rel="alternate" href="../perl-python/map.html" />
+</entry>
+
+<entry>
+<title>Xah Lee's life on the line</title>
+<id>tag:xahlee.org,2012-12-24:005229</id>
+<updated>2012-12-23T16:52:29-08:00</updated>
+<summary>Xah Lee</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>My life is on the line. In the past 6 years, my annual income is under 3 thousand US dollars. I need to find a job. Here's my resume: <a href="http://xahlee.org/PageTwo_dir/Personal_dir/Xah_Lee_Resume.html">Xah Lee's Resume</a>. I started to look for a job few months ago. However, my last interview few days ago failed. This means, i'll need to raise $1500 in 6 days for Jan's rent. Else i'll be out on the street, and my life-time's computer data and website basically fucked. I'll post something asking for help tomorrow, maybe a public kickstart asking for help. Meanwhile, if you can help, let me know.</p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/76HuKL08pTI" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/76HuKL08pTI/blog.html" />
+<feedburner:origLink>http://xahlee.info/comp/blog.html</feedburner:origLink></entry>
+
+<entry>
+<title>Keyboard Shortcut Design: Repeatable vs Non-Repeatable Commands and Keys</title>
+<id>tag:xahlee.org,2012-12-23:050551</id>
+<updated>2012-12-22T21:05:51-08:00</updated>
+<summary>thoughts</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../kbd/repeatable_vs_non-repeatable_keys_commands.html">Keyboard Shortcut Design: Repeatable vs Non-Repeatable Commands and Keys</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/mF3uGJTI4CU" height="1" width="1" /></div></content>
+<link rel="alternate" href="../kbd/repeatable_vs_non-repeatable_keys_commands.html" />
+</entry>
+
+<entry>
+<title>git tutorial</title>
+<id>tag:xahlee.org,2012-12-23:042114</id>
+<updated>2012-12-22T20:21:14-08:00</updated>
+<summary>updated</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>updated: <a href="../linux/git.html">git Tutorial</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/6j8BurYoCsw" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/git.html" />
+</entry>
+
+<entry>
+<title>git nag</title>
+<id>tag:xahlee.org,2012-12-23:020641</id>
+<updated>2012-12-22T18:06:41-08:00</updated>
+<summary>nag</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+
+<p>been using git for several months now. Before was svn. (and cvs before)</p>
+
+<p>can't say i find git better (except being one of the distributed RCS). Git's man pages are totally incomprehensible. The MD5 for commit id is a pain. You have to type much more, using more than one command, to do routine commit. Then the concept of staging/cache/index is confusing. (why can't they stick with one term? or is there actual technical difference?)</p>
+
+<p>git being perhaps most popular has a lot to do with tie to Linus celebrity.</p>
+
+<p>was mentioning git on g+, then <a class="sorc" href="https://plus.google.com/+jsalsman/posts" data-accessed="2012-12-22">James Salsman</a> mentioned Bazaar.</p>
+
+<p><a href="http://en.wikipedia.org/wiki/Bazaar_%28software%29">Bazaar (software)</a>. Apparently, a few big companies are using Bazaar, including Launchpad, Ubuntu, MySQL, GNU Emacs.</p>
+
+<p>〔<cite>Why Switch to Bazaar?</cite> <time>2009-10-30</time> By Canonical. @ <a class="sorc" href="http://doc.bazaar.canonical.com/migration/en/why-switch-to-bazaar.html" data-accessed="2012-12-22">doc.bazaar.canonical.com…</a>〕</p>
+
+<div class="rltd">
+<ul>
+<li><a href="../linux/git.html">git Tutorial</a></li>
+<li><a href="../UnixResource_dir/svn.html">Subversion Basics (svn tutorial)</a></li>
+</ul>
+</div>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>What Does it Means When a Programing Language Claims “Whitespace is Insignificant”?</title>
+<id>tag:xahlee.org,2012-12-22:081936</id>
+<updated>2012-12-22T00:19:36-08:00</updated>
+<summary>tutorial; essay</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="whitespace_in_programing_language.html">What Does it Means When a Programing Language Claims “Whitespace is Insignificant”?</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/olOhmNfKsqo" height="1" width="1" /></div></content>
+<link rel="alternate" href="whitespace_in_programing_language.html" />
+</entry>
+
+<entry>
+<title>Confusion of Whitespace in Language Tutorials. Example: Ruby</title>
+<id>tag:xahlee.org,2012-12-20:051239</id>
+<updated>2012-12-19T21:12:39-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<h1>Confusion of Whitespace in Language Tutorials. Example: Ruby</h1>
+
+<p>Ruby has a confusing newline issue.</p>
+
+<p>This newline issue is in fact confused by many languages. Some language tutorial will claim that whitespace in lang x are insignificant. That is often incorrect.</p>
+
+<p>Here's a Ruby issue.</p>
+
+<p>Following is a syntax error:</p>
+
+<pre class="ruby"><span class="comment-delimiter"># </span><span class="comment">-*- coding: utf-8 -*-
+</span><span class="comment-delimiter"># </span><span class="comment">ruby
+</span>
+aa = [1,2,3]
+aa.each 
+{ |xx|
+  p xx
+}
+</pre>
+
+<p>But if you remove a newline, it's ok:</p>
+
+<pre class="ruby"><span class="comment-delimiter"># </span><span class="comment">-*- coding: utf-8 -*-
+</span><span class="comment-delimiter"># </span><span class="comment">ruby
+</span>
+aa = [1,2,3]
+aa.each { |xx|
+  p xx
+}
+</pre>
+
+<p>What is the technical explanation for this?</p>
+
+<p>A non-technical explanation is that methods that take input must be on the same line. (or, something like that) But can anyone give a concise, or simple, explanation that's more technical? (reciting a section of grammar spec wouldn't count here, unless it's really cogent.)</p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/76HuKL08pTI" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/76HuKL08pTI/blog.html" />
+<feedburner:origLink>http://xahlee.info/comp/blog.html</feedburner:origLink></entry>
+
+<entry>
+<title>Python, Ruby, Perl: Loop Thru a List</title>
+<id>tag:xahlee.org,2012-12-20:040016</id>
+<updated>2012-12-19T20:00:16-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>Added Ruby: <a href="../perl-python/loop_thru_list.html">Python, Ruby, Perl: Loop Thru a List</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/GYJmFoAw-zQ" height="1" width="1" /></div></content>
+<link rel="alternate" href="../perl-python/loop_thru_list.html" />
+</entry>
+
+<entry>
+<title>Unicode in Ruby, Perl, Python, JavaScript, Java, Emacs Lisp, Mathematica</title>
+<id>tag:xahlee.org,2012-12-20:003927</id>
+<updated>2012-12-19T16:39:27-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>Updated: <a href="unicode_support_ruby_python_elisp.html">Unicode in Ruby, Perl, Python, JavaScript, Java, Emacs Lisp, Mathematica</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/CEfeBXzxSQE" height="1" width="1" /></div></content>
+<link rel="alternate" href="unicode_support_ruby_python_elisp.html" />
+</entry>
+
+<entry>
+<title>Python, Ruby, Perl: Dictionary, Hash</title>
+<id>tag:xahlee.org,2012-12-19:084541</id>
+<updated>2012-12-19T00:45:41-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>from this, you can see which language is better: <a href="../perl-python/keyed_list.html">Python, Ruby, Perl: Dictionary, Hash</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/poeX-pIjgRM" height="1" width="1" /></div></content>
+<link rel="alternate" href="../perl-python/keyed_list.html" />
+</entry>
+
+<entry>
+<title>Perl Folks Tries To Delete History!</title>
+<id>tag:xahlee.org,2012-12-19:073352</id>
+<updated>2012-12-18T23:33:52-08:00</updated>
+<summary>programer culture</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="perl_delete_history.html">Perl Folks Try to Erase History!</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/xRe3Cjv8_4U" height="1" width="1" /></div></content>
+<link rel="alternate" href="perl_delete_history.html" />
+</entry>
+
+<entry>
+<title>Unicode: W3C Proposed Icons {Image, Video, Sound File, Trash, Keyboard, Mouse, …}</title>
+<id>tag:xahlee.org,2012-12-18:232116</id>
+<updated>2012-12-18T15:21:16-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>updated: <a href="unicode_w3c_icons.html">Unicode: W3C Proposed Icons {Image, Video, Sound File, Trash, Keyboard, Mouse, …}</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/tFQ3RbCukoQ" height="1" width="1" /></div></content>
+<link rel="alternate" href="unicode_w3c_icons.html" />
+</entry>
+
+<entry>
+<title>Python, Ruby, Perl: List Basics</title>
+<id>tag:xahlee.org,2012-12-18:013748</id>
+<updated>2012-12-17T17:37:48-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>New today: <a href="../perl-python/list_basics.html">Python, Ruby, Perl: List Basics</a>.</p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/TLqcMlNwXCU" height="1" width="1" /></div></content>
+<link rel="alternate" href="../perl-python/list_basics.html" />
+</entry>
+
+<entry>
+<title>Python, Ruby, Perl, comparative study</title>
+<id>tag:xahlee.org,2012-12-17:022145</id>
+<updated>2012-12-16T18:21:45-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>in past 3 hours, added Ruby to my Perl+Python tutorial. Completed the following pages.</p>
+
+<ul>
+<li><a href="../perl-python/python_basics.html">Python Basics</a></li>
+<li><a href="../ruby/ruby_basics.html">Ruby Basics</a></li>
+</ul>
+
+<p>Comparative Study</p>
+
+<ul>
+<li><a href="../perl-python/print_version.html">Print Version String</a></li>
+<li><a href="../perl-python/quoting_strings.html">Quoting Strings</a></li>
+<li><a href="../perl-python/string_operations.html">Basic String Operations</a></li>
+<li><a href="../perl-python/if_statement.html">if statement</a></li>
+<li><a href="../perl-python/for_statement.html">for loop</a></li>
+<li><a href="../perl-python/while_statement.html">while loop</a></li>
+<li><a href="../perl-python/true_false.html">True and False</a></li>
+</ul>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/FZpxWjPP8QM" height="1" width="1" /></div></content>
+<link rel="alternate" href="../perl-python/index.html" />
+</entry>
+
+<entry>
+<title>Annoying Invisible ZERO WIDTH NO-BREAK SPACE Character from Google Plus, Twitter</title>
+<id>tag:xahlee.org,2012-12-16:204723</id>
+<updated>2012-12-16T12:47:23-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>These days, when copying text from Google Plus or Twitter, often you'll get a invisible ZERO WIDTH NO-BREAK SPACE (aka BYTE ORDER MARK) (Unicode #65279). If you write blogs, that's really annoying. It taints your blog. When in the future, when you apply regex to systematically process your site, it may silently fail due to invisible character. Also, more common is the NO-BREAK SPACE (Unicode #160).</p>
+
+<p>So, i use these emacs lisp code to solve the problem:</p>
+
+<pre class="elisp">
+<span class="comment-delimiter">;; </span><span class="comment">remove ZERO WIDTH NO-BREAK SPACE (aka BYTE ORDER MARK) (Unicode #65279)
+</span>(xah-find-replace-text (char-to-string 65279) <span class="string">""</span> <span class="string">"~/web/"</span> <span class="string">"\\.html$"</span>)
+
+<span class="comment-delimiter">;; </span><span class="comment">find NO-BREAK SPACE
+</span>(xah-find-count (char-to-string 160) <span class="string">"&gt;"</span> <span class="string">"0"</span> <span class="string">"~/web/"</span> <span class="string">"\\.html$"</span>)
+</pre>
+
+<p>These commands are from 〔xah_file_util.el〕 at <a class="sorc" href="http://code.google.com/p/ergoemacs/source/checkout" data-accessed="2012-12-16">http://code.google.com/p/ergoemacs/source/checkout</a></p>
+
+<p>Try to write a {Perl, Python, Ruby} or {Bash, Sed} script to solve the problem.</p>
+
+<p>See also : <a href="unicode_BOM_byte_orde_mark.html">Unicode BOM Byte Order Mark Hack</a>.</p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/h7nyslIzPkw" height="1" width="1" /></div></content>
+<link rel="alternate" href="unicode_BOM_byte_orde_mark.html" />
+</entry>
+
+<entry>
+<title>functional programing issue: functional dependency</title>
+<id>tag:xahlee.org,2012-12-16:101557</id>
+<updated>2012-12-16T02:15:57-08:00</updated>
+<summary>thoughts</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>In functional programing, a function's behavior should depend only on its arguments. However, there's another issue that's been bugging me for over a decade. That is, there's no list of what other functions this function depends on.  In the past i've tried to pass all functions it calls as parameters in the function definition, but that's crazy.  I haven't heard this issue mentioned anywhere.</p>
+
+<p>Haskell people, any thoughts?</p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>Ubuntu Bug: Pydoc modules Core Dump</title>
+<id>tag:xahlee.org,2012-12-15:232814</id>
+<updated>2012-12-15T15:28:14-08:00</updated>
+<summary>info</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../perl-python/pydoc_modules_core_dump.html">Ubuntu Bug: Pydoc modules Core Dump</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/ZEddJgaF_FA" height="1" width="1" /></div></content>
+<link rel="alternate" href="../perl-python/pydoc_modules_core_dump.html" />
+</entry>
+
+<entry>
+<title>Dvorak, Maltron, Colemak, NEO, Bépo, Turkish-F, Keyboard Layouts Fight!</title>
+<id>tag:xahlee.org,2012-12-15:182701</id>
+<updated>2012-12-15T10:27:01-08:00</updated>
+<summary>keyboard layout; info</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>updated: <a href="../kbd/dvorak_and_all_keyboard_layouts.html">Dvorak, Maltron, Colemak, NEO, Bépo, Turkish-F, Keyboard Layouts Fight!</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/bvUCFEB8Nco" height="1" width="1" /></div></content>
+<link rel="alternate" href="../kbd/dvorak_and_all_keyboard_layouts.html" />
+</entry>
+
+<entry>
+<title>efficient keyboard layout for Portuguese</title>
+<id>tag:xahlee.org,2012-12-15:145058</id>
+<updated>2012-12-15T06:50:58-08:00</updated>
+<summary>info</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>updated. A efficient keyboard layout for Portuguese. <a href="../kbd/pt-nativo_keyboard_layout.html">pt-Nativo (Portuguese) Efficient Keyboard Layout</a>.</p>
+
+<p>See also: <a href="../kbd/dvorak_and_all_keyboard_layouts.html">Dvorak, Maltron, Colemak, NEO, Bépo, Turkish-F, Keyboard Layouts Fight!</a>.</p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/mIzoHwQc7Rs" height="1" width="1" /></div></content>
+<link rel="alternate" href="../kbd/pt-nativo_keyboard_layout.html" />
+</entry>
+
+<entry>
+<title>Question to Readers: {Perl, Python, Ruby}, Together on One Page, or Separate?</title>
+<id>tag:xahlee.org,2012-12-15:020451</id>
+<updated>2012-12-14T18:04:51-08:00</updated>
+<summary>news</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>I have a <a href="../perl-python/index.html">Perl ＆ Python Tutorial</a>. There, each page, has both languages for comparative study.</p>
+
+<p>My question is, should i also put my new <a href="../ruby/ruby_index.html">Ruby Tutorial</a> there for comparative study? Or, should Ruby by itself?</p>
+
+<p>I can actually also put {Emacs Lisp, PHP} there for comparative study too. But then each page will be long. Alternatively, if each language is on separate page, with inter-links, then people could page between any two languages.</p>
+
+<p>Which way do you prefer?</p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>python in one day</title>
+<id>tag:xahlee.org,2012-12-13:214253</id>
+<updated>2012-12-13T13:42:53-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>updated a bit. Added tuple and explanation of Python sequence types. <a href="../perl-python/python_basics.html">Python in One Day</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/zzXyrd-80cQ" height="1" width="1" /></div></content>
+<link rel="alternate" href="../perl-python/python_basics.html" />
+</entry>
+
+<entry>
+<title>ruby rails ruby rails</title>
+<id>tag:xahlee.org,2012-12-10:233117</id>
+<updated>2012-12-10T15:31:17-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>when you start  to learn a new tech, often there's a sea of info. All the confusing terminologies, tools, structures, and tens of tutorials compete to confuse you.</p>
+
+<p>been reading Ruby+Rails for the past 10 days. Now i finally have a pretty good grasp.</p>
+
+<p>lots updates to my tutorial in parallel. In pretty good shape for a start. <a href="../ruby/ruby_index.html">Xah's Ruby Tutorial</a></p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/gzoAZCVI56U" height="1" width="1" /></div></content>
+<link rel="alternate" href="../ruby/ruby_index.html" />
+</entry>
+
+<entry>
+<title>Linux: sort Examples</title>
+<id>tag:xahlee.org,2012-12-09:182338</id>
+<updated>2012-12-09T10:23:38-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>separated into new page: <a href="../UnixResource_dir/unix_shell_sort_example.html">Linux: sort Examples</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/Ih9NiJhNRxY" height="1" width="1" /></div></content>
+<link rel="alternate" href="../UnixResource_dir/unix_shell_sort_example.html" />
+</entry>
+
+<entry>
+<title>Git Synctax for GitHub, Google Code, GitCafe</title>
+<id>tag:xahlee.org,2012-12-09:010537</id>
+<updated>2012-12-08T17:05:37-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>minor update: <a href="../linux/git_hosting_site_github_googlecode_gitcafe.html">Git Synctax for GitHub, Google Code, GitCafe</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/GY0RJMA1RvA" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/git_hosting_site_github_googlecode_gitcafe.html" />
+</entry>
+
+<entry>
+<title>software jargons and tech 2012: blackbox/whitebox testing, Jenkins, Puppet, Selenium</title>
+<id>tag:xahlee.org,2012-12-07:153852</id>
+<updated>2012-12-07T07:38:52-08:00</updated>
+<summary>essay</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="http://en.wikipedia.org/wiki/Black-box_testing">Black-box testing</a> and <a href="http://en.wikipedia.org/wiki/White-box_testing">White-box testing</a>. Quote:</p>
+
+<blockquote>
+<p>Black-box testing is a method of software testing that tests the functionality of an application as opposed to its internal structures or workings (see white-box testing).</p>
+
+<p>White-box testing (also known as clear box testing, glass box testing, transparent box testing, and structural testing) is a method of testing software that tests internal structures or workings of an application, as opposed to its functionality (i.e. black-box testing).</p>
+</blockquote>
+
+<p><a href="http://en.wikipedia.org/wiki/Jenkins_%28software%29">Jenkins (software)</a>. Quote:</p>
+
+<blockquote>
+<p>Jenkins is an open source continuous integration tool written in Java. The project was forked from Hudson after a dispute with Oracle, which claims the right to trademark the Hudson name and has applied for such a trademark as of December 2010.</p>
+</blockquote>
+
+
+<p><a href="http://en.wikipedia.org/wiki/Continuous_integration">Continuous integration</a>. Quote:</p>
+
+<blockquote>
+<p>In software engineering, continuous integration (CI) is the practice of merging all developer workspaces with a shared mainline several times a day. It was first named and proposed as part of <mark>extreme programming</mark> (XP). Its main aim is to prevent integration problems, referred to as “integration hell” in early descriptions of XP. CI can be seen as an intensification of practices of periodic integration advocated by earlier published methods of incremental and iterative software development, such as the Booch method. CI isn't universally accepted as an improvement over frequent integration by supporters of the latter. It is important to distinguish between the two forms as there is disagreement about the virtues of each.</p>
+</blockquote>
+
+<p>If you hear “eXtreme Programing”, it's voodoo.
+One of its premise is “pair-programing”, meaning, 2 programers get together, then you code while i suck you, then i code while you suck me.</p>
+
+<p>XP was the rage around 2001, with tens of books written on the subject.
+ But it has subsided, and mutated to perhaps a milder form called Agile Programing.
+When XP was hot, in the same time is the “design patterns” movement. Then, it bursted into a hoard of “anti-patterns”.</p>
+
+<p>What these voodoo encourages is less brain, less knowledge, less responsibility, less creativity. 
+Instead, it emphasize collaboration, good attitude, follow the template, following the management.</p>
+
+<p>One characteristics of these voodoo is lots jargons and use of fancy diagrams.</p>
+
+<figure>
+<img src="i/extreme_programing_diagram.png" alt="extreme programing diagram" width="517" height="432" />
+<img src="i/agile_software_development_methodology.png" alt="agile software development methodology" width="389" height="480" />
+<figcaption>“eXtreme Programing” and “Agile” voodoo diagrams.
+<a class="sorc" href="http://en.wikipedia.org/wiki/File:XP-feedback.gif" data-accessed="2012-12-07">img src</a>
+<a class="sorc" href="http://en.wikipedia.org/wiki/File:Agile_Software_Development_methodology.svg" data-accessed="2012-12-07">img src</a>
+</figcaption>
+</figure>
+
+<p>What “methodology” should you use? Understand mathematics, be healthy, and good general education such as history, philosophy, literature, and, be a nice person.
+See:
+<a href="../UnixResource_dir/writ/why_software_suck.html">Why Software Suck: Design Patterns Quackery</a></p>
+
+<p><a href="http://en.wikipedia.org/wiki/Puppet_%28software%29">Puppet (software)</a>. Quote:</p>
+
+<blockquote>
+<p>Puppet, from Puppet Labs, founded by Luke Kanies in 2005, is an open source configuration management tool. It is written in Ruby.</p>
+</blockquote>
+
+<p><a href="http://en.wikipedia.org/wiki/Selenium_%28software%29">Selenium (software)</a></p>
+
+<blockquote>
+<p>Selenium is a portable software testing framework for web applications. Selenium provides a record/playback tool for authoring tests without learning a test scripting language (Selenium IDE). It also provides a test domain-specific language (Selenese)  to write tests in a number of popular programming languages, including C#, Java, Groovy, Perl, PHP, Python and Ruby. The tests can then be run against most modern web browsers. Selenium deploys on Windows, Linux, and Macintosh platforms.</p>
+</blockquote>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/BRiCoBJQle8" height="1" width="1" /></div></content>
+<link rel="alternate" href="software_jargons_and_tech_2012_jenkins_puppet_selenium.html" />
+</entry>
+
+<entry>
+<title>Is XML the Stupid Brother of Lisp? Hey, Check Out Their Young Sister HTML5!</title>
+<id>tag:xahlee.org,2012-12-07:045936</id>
+<updated>2012-12-06T20:59:36-08:00</updated>
+<summary>essay</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<article>
+<h1>Is XML the Stupid Brother of Lisp? Hey, Check Out Their Young Sister HTML5!</h1>
+
+<p>In around 2004 to 2008, when XML is raging, there's a widespread sense among lisp circles that finally the world understood the advantage lisp syntax, yet did it in a botched form as XML.</p>
+
+<p>You can see such sentiments here:</p>
+
+<ul>
+<li>〔<cite>The Nature of Lisp</cite> <time>2006-05-08</time> By Slava Akhmechet. @ <a class="sorc" href="http://www.defmacro.org/ramblings/lisp.html" data-accessed="2012-11-09">www.defmacro.org…</a>〕</li>
+<li>〔<cite>The Emacs Problem</cite> <time>2005-02-28</time> By Steve Yegge. @ <a class="sorc" href="https://sites.google.com/site/steveyegge2/the-emacs-problem" data-accessed="2012-12-06">sites.google.com…</a>〕</li>
+</ul>
+
+<p>There's also rebuttal. For example, this: <cite>XML is not S-Expressions</cite> made popular on Hacker News at <a class="sorc" href="http://news.ycombinator.com/item?id=431285" data-accessed="2012-12-06">http://news.ycombinator.com/item?id=431285</a>. The URL of the orginial article is 〔http://www.prescod.net/xml/sexprs.html〕 and it seems dead. Here a copy: 
+<a href="http://xahlee.org/diklo/XML_is_not_S-Expressions.txt">XML_is_not_S-Expressions.txt</a>.</p>
+
+<p>Today, such sentiment is largely gone, and XML is deemed a abomination. Nobody wants to be mentioned alone with it. The cutie now is HTML5!</p>
+
+<p>Lisper are quick to point out the regularity of lisp syntax as advantage, and its simplicity beats XML, yet, if you point out that the lisp syntax is not exactly regular, they think of something else to say.</p>
+
+<ul>
+<li><a href="../UnixResource_dir/writ/lisp_problems.html">Programing Language: Fundamental Problems of Lisp</a></li>
+<li><a href="html6.html">HTML6: Your JSON and SXML Simplified</a></li>
+<li><a href="../UnixResource_dir/writ/notations.html">The Concepts and Confusions of Prefix, Infix, Postfix and Fully Nested Notations</a></li>
+<li><a href="../math/function_and_operators.html">What's Function, What's Operator?</a></li>
+</ul>
+</article>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>classic lisp logo</title>
+<id>tag:xahlee.org,2012-12-07:040241</id>
+<updated>2012-12-06T20:02:41-08:00</updated>
+<summary>communication arts</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>updated: <a href="http://ergoemacs.org/emacs/lisp_logo.html">LISP Logo</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IjNTVOQlBU4" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/IjNTVOQlBU4/lisp_logo.html" />
+<feedburner:origLink>http://ergoemacs.org/emacs/lisp_logo.html</feedburner:origLink></entry>
+
+<entry>
+<title>nice bash ls format</title>
+<id>tag:xahlee.org,2012-12-06:164856</id>
+<updated>2012-12-06T08:48:56-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<pre class="bash">
+alias <span class="variable-name">l</span>=<span class="string">'ls -AlF --color --time-style=long-iso'</span>
+</pre>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>ruby rvm suck?</title>
+<id>tag:xahlee.org,2012-12-05:184331</id>
+<updated>2012-12-05T10:43:31-08:00</updated>
+<summary>rant</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>i think i start to dislike the rvm ruby installer. Because:</p>
+
+<ul>
+<li>None-standard install methods. e.g. <code>\curl -L https://get.rvm.io | bash -s stable --ruby</code>. This directly download and run a script on your machine. Also, it uses curl instead of the more standard wget. You have to install curl on Ubuntu first. This directly running a script is a questionable practice.</li>
+<li>After you install it, you see that it's a massive number of bash shell scripts. Today, bash scripts should never be written. Even if you have to, use perl. Even python is standard in linuxes and Mac OS X.</li>
+<li>Doesn't respect linux system standard ways.</li>
+<li>Doesn't work out of the box. After install, it asks you confusingly and questionably to run a shell script, and ask you to run it in a separate terminal.</li>
+<li>It add lines to your shell init file to load a massive shell script. Not simply append to your $PATH. This is questionable practice again. It slows down your shell startup.</li>
+<li>But when you restart, it doesn't work. Because it adds to “.bash_profile” but not to “.bashrc”</li>
+<li><code>rvm</code> isn't a normal tool. It's not a script or binary. Instead, “rvm” is a bash function.</li>
+<li>After install, when you <code>type gem</code>, it's also a shell function. Very annoying. It seems to have lots wrappers, and fuckup standard ways of doing things. For example, when you <code>type rvm</code> to see what/where it is, pages scrolls thru.</li>
+</ul>
+
+<p>the whole shebang smells bad.</p>
+
+<p>It appears to me, the whole rvm is a one-man's project, and somehow got very popular. Doesn't respect standard ways. Written in 30 years old tech.</p>
+
+<p>Addendum: thanks to ruby rvm dev <a class="sorc" href="https://twitter.com/mpapis" data-accessed="2012-12-05">Michal Papis</a> who helped me solve a problem. When installing rvm, be sure to read <code>rvm requirements</code>.</p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>ruby ri shows empty?</title>
+<id>tag:xahlee.org,2012-12-05:125729</id>
+<updated>2012-12-05T04:57:29-08:00</updated>
+<summary>tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p class="q">Ruby's ri shows empty. What to do?</p>
+<div class="a">
+<p>On linux, you should not install ruby or rails using the package manager such as apt-get, because usually it's a old version and not well maintained. You should either compile yourself, or use “rvm”. <a href="http://en.wikipedia.org/wiki/Ruby_Version_Manager">Ruby Version Manager</a> (rvm) a ruby installation manager. For installation, follow instructions on their site at: <a class="sorc" href="https://rvm.io/rvm/install/" data-accessed="2012-12-02">https://rvm.io/rvm/install/</a></p>
+</div>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>linux: finding dir size</title>
+<id>tag:xahlee.org,2012-12-05:123458</id>
+<updated>2012-12-05T04:34:58-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>updated: <a href="../linux/linux_du_command.html">Linux: Directory Size: du Command Units</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/H_jP9QvKehk" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/linux_du_command.html" />
+</entry>
+
+<entry>
+<title>Unicode Full-Width Characters</title>
+<id>tag:xahlee.org,2012-12-05:102502</id>
+<updated>2012-12-05T02:25:02-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>updated: <a href="unicode_full-width_chars.html">Unicode Full-Width Characters</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/YfaNKhV7Hsc" height="1" width="1" /></div></content>
+<link rel="alternate" href="unicode_full-width_chars.html" />
+</entry>
+
+<entry>
+<title>The Complexity ＆ Tedium of Software Engineering</title>
+<id>tag:xahlee.org,2012-12-05:011328</id>
+<updated>2012-12-04T17:13:28-08:00</updated>
+<summary>A collection of software engineering pain. </summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>A collection of software engineering pain. <a href="complexity_software_engineering.html">The Complexity ＆ Tedium of Software Engineering</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/m5D382gtw0E" height="1" width="1" /></div></content>
+<link rel="alternate" href="complexity_software_engineering.html" />
+</entry>
+
+<entry>
+<title>Linux Problem: wmctrl, Documentation</title>
+<id>tag:xahlee.org,2012-12-05:003946</id>
+<updated>2012-12-04T16:39:46-08:00</updated>
+<summary>essay</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../linux/linux_problem_wmctrl.html">Linux Problem: wmctrl, Documentation</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/Vt3cxycWMPI" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/linux_problem_wmctrl.html" />
+</entry>
+
+<entry>
+<title>Guy Steele on Parallel Programing: Get rid of cons!</title>
+<id>tag:xahlee.org,2012-12-04:224207</id>
+<updated>2012-12-04T14:42:07-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>worth reading again: <a href="Guy_Steele_parallel_computing.html">Guy Steele on Parallel Programing: Get rid of cons!</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/FX4RhS5O7QA" height="1" width="1" /></div></content>
+<link rel="alternate" href="Guy_Steele_parallel_computing.html" />
+</entry>
+
+<entry>
+<title>when nobody kisses your ass, what you do?</title>
+<id>tag:xahlee.org,2012-12-03:053749</id>
+<updated>2012-12-02T21:37:49-08:00</updated>
+<summary>programing language quotes; humor</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p class="q">When nobody kisses your ass, what you do?</p>
+<div class="a">
+<p>You kiss your own.</p>
+</div>
+
+<p><cite>The Contempt Page</cite> ≈<time>2002-07-21</time> By Mr. Schnada. @ <a class="sorc" href="http://www.schnada.de/quotes/contempt.html" data-accessed="2012-07-21">www.schnada.de…</a></p>
+
+<blockquote>
+<p>The basis of computer languages' merit lies in their mathematical properties. It is this metric, that we should use as a guide for direction. As an analogy, we measure the quality of a hammer by scientific principles: ergonomics, material (weight, hardness. . .), construction, statistical analysis of accidents/productivity/… …etc., not by vogue or lore. If we go by feelings and preferences, hammer's future will deviate and perhaps become dildos or maces.</p>
+
+<p>—Xah Lee in comp.lang.lisp, July 2000. <a href="../UnixResource_dir/writ/measure_lang.html">the Measure of a Language</a></p>
+</blockquote>
+
+<blockquote>
+<p>Perl's gluing ability goes beyond computation, to people. To the poor and have-nots. It unites people in the computing field who are not endowed with fancy engaging brains. It is the sanctuary of dunces. The expressions of those thoughtless. The godsend for brainless coders. The means and banner of sys admins. The lingua franca of trial-and-error hackers. The song and dance of stultified engineers.</p>
+
+<p>—Xah Lee in comp.lang.lisp, December 2000. <a href="../UnixResource_dir/writ/perl_raison.html">Perl's raison d'être</a></p>
+</blockquote>
+
+<blockquote>
+<p>If people are sane, if the world keeps moving forward, if we intellectuals keep fulfilling our duty of education, then good things will spread, and happiness will rain on earth.</p>
+<pre>
+    Xah Lee in comp.lang.lisp, July 2000
+</pre>
+</blockquote>
+
+<p>Archived at <a href="programing_quotes.html">Xah Computer Programing Quotes</a></p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/vNhPEfzhqbI" height="1" width="1" /></div></content>
+<link rel="alternate" href="programing_quotes.html" />
+</entry>
+
+<entry>
+<title>Ruby basics</title>
+<id>tag:xahlee.org,2012-12-01:170145</id>
+<updated>2012-12-01T09:01:45-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>Learned Ruby in 2 days. Here's a draft version of tutorial. <a href="../ruby/ruby_basics.html">Ruby Language Basics</a></p>
+
+<p>The next few days i'll be getting onto Ruby on Rails.</p>
+
+<p>Ruby experts, please hit me with comment and suggestion.</p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/gDsoSwuDkco" height="1" width="1" /></div></content>
+<link rel="alternate" href="../ruby/ruby_basics.html" />
+</entry>
+
+<entry>
+<title>Ruby in 2 days</title>
+<id>tag:xahlee.org,2012-12-01:165018</id>
+<updated>2012-12-01T08:50:18-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>Learned Ruby in 2 days.</p>
+
+<p>Here's a draft version of tutorial. <a href="../ruby/ruby_basics.html">Ruby Language Basics</a></p>
+
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/gDsoSwuDkco" height="1" width="1" /></div></content>
+<link rel="alternate" href="../ruby/ruby_basics.html" />
+</entry>
+
+<entry>
+<title>Bad Advices from Programers about Typing and Keyboard (RSI)</title>
+<id>tag:xahlee.org,2012-11-22:234854</id>
+<updated>2012-11-22T15:48:54-08:00</updated>
+<summary>tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../kbd/programer_keyboarding_advice.html">Bad Advices from Programers about Typing and Keyboard (RSI)</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/J7rh4hvQerU" height="1" width="1" /></div></content>
+<link rel="alternate" href="../kbd/programer_keyboarding_advice.html" />
+</entry>
+
+<entry>
+<title>Symbol for the Menu Key</title>
+<id>tag:xahlee.org,2012-11-22:031437</id>
+<updated>2012-11-21T19:14:37-08:00</updated>
+<summary>Unicode, tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+
+<p>Unicode joy. Found a appropriate symbol to represent the menu key. e.g. <kbd>▤ Menu</kbd>.</p>
+
+<p>So, now i have: <kbd>⇧ Shift</kbd>, <kbd>⌘ Cmd</kbd>, <kbd>❖ Win</kbd>, <kbd>▤ Menu</kbd>, <kbd>Return ↩</kbd>, <kbd>Enter ↵</kbd>, <kbd>⌥ Opt</kbd>, <kbd>⌫ Backspace</kbd>, <kbd>⌦ Delete</kbd>, <kbd>Tab ↹</kbd>.</p>
+
+<p>Examples:</p>
+
+<ul>
+<li><a href="../kbd/pc_keyboard_modifier_keys.html">PC Keyboard Modifier Keys (A Short Survey)</a></li>
+<li><a href="../kbd/keyboard_enter_key_symbol.html">Keyboard Enter/Return Key Symbol</a></li>
+<li><a href="http://ergoemacs.org/emacs/emacs_kb_shortcuts.html">Emacs's Keybinding Layout Diagram</a></li>
+<li><a href="../kbd/modernization_hotkey_notation.html">A Short Survey of Keyboard Shortcut Notations</a></li>
+<li><a href="../mswin/windows_key_shortcuts.html">Windows Logo Key Keyboard Shortcuts</a></li>
+<li><a href="../mswin/windows_keyboard_shortcuts.html">Microsoft Windows Keyboard Shortcuts</a></li>
+<li><a href="http://xahsl.org/sl/sl_kbd_shortcuts_cheatsheet.html">Second Life Keyboard Shortcuts Cheatsheet</a></li>
+<li><a href="../kbd/picasa_picture_viewer_keys.html">Picasa and Picasa Picture Viewer Keyboard Shortcut Keys</a></li>
+</ul>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>xor</title>
+<id>tag:xahlee.org,2012-11-21:024451</id>
+<updated>2012-11-20T18:44:51-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>I can never remember what “xor” do. But now i got a easy way to remember it. xor returns true if the values of two sides differ.</p>
+
+<p>See also: <a href="../math/logical_operators.html">Logical Operators, Truth Table, Unicode</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/zPnQcKBwk1U" height="1" width="1" /></div></content>
+<link rel="alternate" href="../math/logical_operators.html" />
+</entry>
+
+<entry>
+<title>How to Secure Delete Files, Shred Files, Wipe Drive, for {Windows, Mac, Linux}</title>
+<id>tag:xahlee.org,2012-11-21:000749</id>
+<updated>2012-11-20T16:07:49-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>updated: <a href="../mswin/file_shredding.html">How to Secure Delete Files, Shred Files, Wipe Drive, for {Windows, Mac, Linux}</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/cjCMeBtf-6E" height="1" width="1" /></div></content>
+<link rel="alternate" href="../mswin/file_shredding.html" />
+</entry>
+
+<entry>
+<title>dropbox signup</title>
+<id>tag:xahlee.org,2012-11-19:232658</id>
+<updated>2012-11-19T15:26:58-08:00</updated>
+<summary>announcement</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>If you haven't signed up with dropbox yet, you can use this link: <a class="sorc" href="http://db.tt/13yKyKB" data-accessed="2012-11-19">http://db.tt/13yKyKB</a>. I get more free space if you from my link. Dropbox lets you store your stuff online. Default is 2.5 GB.</p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/wjUpycIs5bo" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/wjUpycIs5bo/13yKyKB" />
+<feedburner:origLink>http://db.tt/13yKyKB</feedburner:origLink></entry>
+
+<entry>
+<title>How to Write grep in Emacs Lisp</title>
+<id>tag:xahlee.org,2012-11-19:231446</id>
+<updated>2012-11-19T15:14:46-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="http://ergoemacs.org/emacs/elisp_grep_script.html">How to Write grep in Emacs Lisp</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/z6vvf6o2czY" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/z6vvf6o2czY/elisp_grep_script.html" />
+<feedburner:origLink>http://ergoemacs.org/emacs/elisp_grep_script.html</feedburner:origLink></entry>
+
+<entry>
+<title>Single-click Open File, Auto-Raise Window, for {Windows, Linux}</title>
+<id>tag:xahlee.org,2012-11-19:201423</id>
+<updated>2012-11-19T12:14:23-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../mswin/windows_auto-raise_single_click.html">Single-click Open File, Auto-Raise Window, for {Windows, Linux}</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/zQX8sS2aMXE" height="1" width="1" /></div></content>
+<link rel="alternate" href="../mswin/windows_auto-raise_single_click.html" />
+</entry>
+
+<entry>
+<title>Keyboard Shortcut Design: Dedicated keys, Special Buttons, Extra Keys</title>
+<id>tag:xahlee.org,2012-11-18:215136</id>
+<updated>2012-11-18T13:51:36-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>major update: <a href="keyboard_shortcut_design.html">Keyboard Shortcut Design: Dedicated keys, Special Buttons, Extra Keys</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/5PMIMeD2jWQ" height="1" width="1" /></div></content>
+<link rel="alternate" href="keyboard_shortcut_design.html" />
+</entry>
+
+<entry>
+<title>Apple Computer Keyboards Review</title>
+<id>tag:xahlee.org,2012-11-18:203027</id>
+<updated>2012-11-18T12:30:27-08:00</updated>
+<summary>review</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>updated: <a href="../kbd/keyboards_Apple.html">Apple Computer Keyboards Review</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/HkH4HdJvQcc" height="1" width="1" /></div></content>
+<link rel="alternate" href="../kbd/keyboards_Apple.html" />
+</entry>
+
+<entry>
+<title>Computer Keyboards, Layouts, Hotkeys, Macros, RSI ⌨</title>
+<id>tag:xahlee.org,2012-11-17:224245</id>
+<updated>2012-11-17T14:42:45-08:00</updated>
+<summary>info</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>much redesign of the keyboard home page. All you need to know about keyboard. If you have questions, feel free to ask me. Comment, or any of the social network. Thanks. <a href="../kbd/keyboarding.html">Computer Keyboards, Layouts, Hotkeys, Macros, RSI ⌨</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/vQkTyoGnejI" height="1" width="1" /></div></content>
+<link rel="alternate" href="../kbd/keyboarding.html" />
+</entry>
+
+<entry>
+<title>Ruby Creator Cooks Python; Matz and GitCafe</title>
+<id>tag:xahlee.org,2012-11-16:222355</id>
+<updated>2012-11-16T14:23:55-08:00</updated>
+<summary>humor; photo</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>photo. <a href="gitcafe_matz.html">Ruby Creator Cooks Python; Matz and GitCafe</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/fTTrSJD4xW0" height="1" width="1" /></div></content>
+<link rel="alternate" href="gitcafe_matz.html" />
+</entry>
+
+<entry>
+<title>unicode page redesign</title>
+<id>tag:xahlee.org,2012-11-16:080519</id>
+<updated>2012-11-16T00:05:19-08:00</updated>
+<summary>announcement</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>I love Unicode. Here's many articles about Unicode. I just redesigned the page's appearance a bit. Check it out and let me know your thoughts! <a href="unicode_index.html">Unicode Gallery ＆ Tutorial ∑ λ ∞ π © ™ § ¶ ☺ ♀ ♂ ♥</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/niMNkXyESiY" height="1" width="1" /></div></content>
+<link rel="alternate" href="unicode_index.html" />
+</entry>
+
+<entry>
+<title>linux shell text processing: grep cat awk sort uniq find xargs</title>
+<id>tag:xahlee.org,2012-11-16:000415</id>
+<updated>2012-11-15T16:04:15-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>Intro to text processing using linux tools. Slightly Updated. Good for beginners. Comments and suggestions welcome. <a href="../UnixResource_dir/unix_shell_text_processing.html">Unix Shell Text Processing Tutorial: grep, cat, awk, sort, uniq, find, xargs, …</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/Dq0vGoBIumQ" height="1" width="1" /></div></content>
+<link rel="alternate" href="../UnixResource_dir/unix_shell_text_processing.html" />
+</entry>
+
+<entry>
+<title>A design issue: What should be used for source code section marker</title>
+<id>tag:xahlee.org,2012-11-15:193405</id>
+<updated>2012-11-15T11:34:05-08:00</updated>
+<summary>essay</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>A design issue: What should be used for source code section marker. See: <a href="http://ergoemacs.org/emacs/modernization_formfeed.html">Emacs Form Feed (^L) Display Suggestion and Tips</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/iPF0otwlrZk" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/iPF0otwlrZk/modernization_formfeed.html" />
+<feedburner:origLink>http://ergoemacs.org/emacs/modernization_formfeed.html</feedburner:origLink></entry>
+
+<entry>
+<title>Computer Keyboard Layouts: Dvorak vs Colemak vs Workman</title>
+<id>tag:xahlee.org,2012-11-15:173932</id>
+<updated>2012-11-15T09:39:32-08:00</updated>
+<summary>news</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>The workman layout now has a dedicated website. See: <a href="../kbd/dvorak_vs_colemak_vs_workman.html">Computer Keyboard Layouts: Dvorak vs Colemak vs Workman</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/OnbEGy1sQvE" height="1" width="1" /></div></content>
+<link rel="alternate" href="../kbd/dvorak_vs_colemak_vs_workman.html" />
+</entry>
+
+<entry>
+<title>usb 3 flash drive</title>
+<id>tag:xahlee.org,2012-11-14:141315</id>
+<updated>2012-11-14T06:13:15-08:00</updated>
+<summary>tech gadget</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>I tested my USB 2 flash drive speed.</p>
+
+<figure>
+<img src="i/USB2_flash_drive_read_speed_2012-11-13.png" alt="USB2 flash drive read speed 2012-11-13" width="400" height="211" />
+<img src="i/USB2_flash_drive_write_speed_2012-11-13.png" alt="USB2 flash drive write speed 2012-11-13" width="406" height="236" />
+<figcaption>USB 2.0 flash drive speed.
+Read = 26 MB/second.
+Write = 8 MB/second.
+</figcaption>
+</figure>
+
+<p>Over at Jeff Atwood's blog 
+〔<cite>A SSD in Your Pocket</cite> <time>2012-11-13</time> By Jeff Atwood. @ <a class="sorc" href="http://www.codinghorror.com/blog/2012/11/a-ssd-in-your-pocket.html" data-accessed="2012-11-13">www.codinghorror.com…</a>〕, he recommended this 
+<a href="http://en.wikipedia.org/wiki/USB_3.0">USB 3.0</a> flash storage device:</p>
+
+<figure>
+<img src="i/patriot_memory_supersonic_magnum_64_gb_flash_drive.jpg" alt="patriot memory supersonic magnum 64 gb flash drive" width="550" height="345" />
+<figcaption>〈Patriot Memory Supersonic Magnum 64 GB Flash Drive〉
+<a class="amz" href="http://www.amazon.com/dp/B004ZNA3UA/?tag=xahh-20" title="Patriot Memory Direct Supersonic Magnum">amazon</a>
+</figcaption>
+</figure>
+
+<p>The practical speed he got is: “237 MB/s reads; 143 MB/s writes”. That's 9 times faster for read, and 17 times faster for write!</p>
+
+<p>USB 3.0 is in current versions of MacBook Air, MacBook Pro, Mac mini, iMac, except Mac Pro (which is that big tower.)</p>
+
+<p>For Microsoft Windows PC, cheap ones don't have USB 3.0. Those with Window 8 might. e.g. 〔〈Dell Inspiron i660-3036BK Desktop〉 @ <a class="amz" href="http://www.amazon.com/dp/B009JGTVOM/?tag=xahh-20" title="Dell i660 3036BK Inspiron Desktop">amazon</a>〕</p>
+
+<p>The Zenbook Prime does have USB 3.0 ports. (☛ <a href="laptops_2012_comparison.html">Laptops 2012 Comparison: ASUS Zenbook Prime vs Apple MacBook Pro</a>)</p>
+
+<div class="rltd">
+<ul>
+<li><a href="solid_state_drives.html">Technology: Solid-State Drive Comes of Age! (SSD vs HDD)</a></li>
+<li><a href="../mswin/Windows_search.html">How to Use Windows Search; Stop Indexing USB Drives; Rebuilding Index</a></li>
+<li><a href="../mswin/Windows_ReadyBoost_flashdrive.html">Windows: is Your USB Drive Fast Enough for ReadyBoost?</a></li>
+</ul>
+</div>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>Linux: Directory Size: du Command Units</title>
+<id>tag:xahlee.org,2012-11-12:204854</id>
+<updated>2012-11-12T12:48:54-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../linux/linux_du_command.html">Linux: Directory Size: du Command Units</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/H_jP9QvKehk" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/linux_du_command.html" />
+</entry>
+
+<entry>
+<title>ThinkPad external USB keyboard</title>
+<id>tag:xahlee.org,2012-11-10:052425</id>
+<updated>2012-11-09T21:24:25-08:00</updated>
+<summary>keyboard review</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>Discovered this keyboard “ThinkPad USB Keyboard with TrackPoint” <a class="amz" href="http://www.amazon.com/dp/B002ONCC6G/?tag=xahh-20" title="ThinkPad USB Keyboard with TrackPoint">amazon</a></p>
+
+<p>It's a external USB keyboard, with embedded Pointing Stick (a red button between G and H). Compact, laptop style shallow keys.</p>
+
+<p>I don't recommend it. Because laptop style keyboard is the fastest way to get RSI. If you are going to get a external keyboard, get a full-sized one.</p>
+
+<p>My recommendations are:</p>
+
+<ul>
+<li>If you want split keyboard, see: <a href="../kbd/ergonomic_keyboards.html">Ergonomic Keyboards Gallery</a></li>
+<li>If you want straight keyboard, try <a href="../kbd/keyboard_no_numpad.html">Keyboards Without Numeric Keypad</a> and <a href="../kbd/Corsair_keyboards.html">Corsair K60</a></li>
+</ul>
+
+<p>All these have mechanical keys. (but check the page for detail).</p>
+
+<p>Some people like the ThinkPad's Pointing Stick. I didn't like it. Too slow.</p>
+<p>thx to <a class="sorc" href="http://aenonsun.tumblr.com/" data-accessed="2012-11-09">Aenon Sun</a></p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>Git Synctax Examples for GitHub, Google Code, GitCafe</title>
+<id>tag:xahlee.org,2012-11-09:231616</id>
+<updated>2012-11-09T15:16:16-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>New: <a href="../linux/git_hosting_site_github_googlecode_gitcafe.html">Git Synctax Examples for GitHub, Google Code, GitCafe</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/GY0RJMA1RvA" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/git_hosting_site_github_googlecode_gitcafe.html" />
+</entry>
+
+<entry>
+<title>What's the difference between clone and checkout</title>
+<id>tag:xahlee.org,2012-11-09:221208</id>
+<updated>2012-11-09T14:12:08-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p class="q">What's the difference between clone and checkout</p>
+<div class="a">
+
+<p>“git-clone” is for getting a new repository from a remote git server.</p>
+
+<p>“git checkout” is to checkout from a older commit or different branch to your local repository. Use option “-f” (force) to discard local directory changes.</p>
+
+<p>You can call <code>git log</code> first to get a list of commit hash. Then use <code>git checkout -f ‹hash›</code> to update your local repository (if you want to look at old files). Then, <code>git checkout -f master</code> to revert back to your current state.</p>
+</div>
+
+<p>More: <a href="../linux/git.html">git Tutorial</a></p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/6j8BurYoCsw" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/git.html" />
+</entry>
+
+<entry>
+<title>Emacs Lisp Problems: Trim String, Regex Match Data, Lacking Namespace</title>
+<id>tag:xahlee.org,2012-11-09:011012</id>
+<updated>2012-11-08T17:10:12-08:00</updated>
+<summary>essay</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="http://ergoemacs.org/emacs/modernization_elisp_lib_problem.html">Emacs Lisp Problems: Trim String, Regex Match Data, Lacking Namespace</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/ldUOCj9YhBg" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/ldUOCj9YhBg/modernization_elisp_lib_problem.html" />
+<feedburner:origLink>http://ergoemacs.org/emacs/modernization_elisp_lib_problem.html</feedburner:origLink></entry>
+
+<entry>
+<title>learn JavaScript in a day! </title>
+<id>tag:xahlee.org,2012-11-08:201438</id>
+<updated>2012-11-08T12:14:38-08:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>learn JavaScript in a day! <a href="../js/javascript_basics.html">JavaScript Basics Tutorial by Examples</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/zW61s8fvW7Y" height="1" width="1" /></div></content>
+<link rel="alternate" href="../js/javascript_basics.html" />
+</entry>
+
+<entry>
+<title>Prgramer, Simple Living, Shanty Town, Squatter</title>
+<id>tag:xahlee.org,2012-11-05:192951</id>
+<updated>2012-11-05T11:29:51-08:00</updated>
+<summary>thoughts</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><span class="b3">Prgramer, Simple Living, Shanty Town, Squatter</span></p>
+
+<p>[The following was written sometimes in 2010. I wasn't sure i want to post it, but i want to put it out now.]</p>
+
+<p>In 2003, just after the <a href="http://en.wikipedia.org/wiki/Napster">Napster</a> incidence where file sharing became mainstream, there were a growth of anonymous p2p networks or other distributed networks (one of them that survived today is bittorrent.)
+One of them, i recall, is MUTE, where everything on the network is encrypted and guaranteed anonymous. I blogged about it here
+<a href="20031219_ants_systems.html">Ants, Insects, Decentralized Systems</a>.
+Checking on it today, MUTE is dead.
+Though, its author
+<a href="http://en.wikipedia.org/wiki/Jason_Rohrer">Jason Rohrer</a>, seems interesting.
+Quote:</p>
+
+<blockquote>
+<p>Jason Rohrer (born 1977) is a computer programmer, writer, musician, and game designer. He publishes most of his software under the GNU GPL or into the public domain, and charges for the iPhone ports of his games.[1][2] He practices simple living and says his family of four has a budget less than $14,500 per year.[3]</p>
+</blockquote>
+
+<p>What caught my eye is the “Simple Living” part. $14k a year is about $39 per day, divided by 4 person is $10 per person per day. I am a ascetic. My life style is pretty much hermite-like and also “simple living”. For the past 5 years, i live about $3 per day for food. My annual income is about 3.6k (yes, not typo).
+(☛ <a href="http://xaharts.org/misc/Xah_Lee_diet.html">Diet of Xah Lee</a>)
+(your help much appreciated: <a href="http://xahlee.org/thanks.html">Donate</a>)
+</p>
+
+<p>Jason's home page is
+<a href="http://hcsoftware.sourceforge.net/jason-rohrer/">http://hcsoftware.sourceforge.net/jason-rohrer/</a>
+and he has a donation page describing his simple living at <a href="http://hcsoftware.sourceforge.net/jason-rohrer/supportMyWork.php">http://hcsoftware.sourceforge.net/jason-rohrer/supportMyWork.php</a>.
+<a href="http://hcsoftware.sourceforge.net/jason-rohrer/simpleLife.html">http://hcsoftware.sourceforge.net/jason-rohrer/simpleLife.html</a>
+</p>
+
+<p>I wonder what's today's p2p scene. I think it kinda waned.  After the Napster
+fiasco, there was gnutella, eDonkey, Limewire… that i am aware of and
+occasionally used.  Of course, Apple lead the movement of online downloadable
+music for $1 per song, effectively killed CDs.  In mid 2005, i used to use
+Limewire to download music, perhaps around one song per month. Starting in
+≈2009, i use the various bittorrent sites to download movies. Check Wikipedia to
+read about today's p2p scene:
+<a href="http://en.wikipedia.org/wiki/Peer-to-peer_file_sharing">Peer-to-peer file sharing</a>.
+</p>
+
+<p>See also: <a href="../w/pirate_bay.html">Software Piracy, Open Source, Free Software, Copyright</a>.</p>
+
+<p>A online friend meowcat recently showed me this Wikipedia article:
+<a href="http://en.wikipedia.org/wiki/Squatting">Squatting</a>. Quote: </p>
+
+<blockquote>
+<p>Squatting consists of occupying an abandoned or unoccupied space or building, usually residential,[1] that the squatter does not own, rent or otherwise have permission to use.</p>
+
+<p>According to author Robert Neuwirth, there are one billion squatters globally, that is, about one in every six people on the planet.[2] Yet, according to Kesia Reeve, "squatting is largely absent from policy and academic debate and is rarely conceptualized, as a problem, as a symptom, or as a social or housing movement."[3]</p>
+
+<p>In many of the world's poorer countries, there are extensive slums or shanty towns, typically built on the edges of major cities and consisting almost entirely of self-constructed housing built without the landowner's permission.</p>
+</blockquote>
+
+<p>In US or Europe, for most of us, we don't see it.  We sip our coffee at
+Starbucks, and whip out our iPad/Android/Kindle or whatnot devices to gossip
+about latest movements of Google or Steve Jobs.  The closest you see is those
+annoying homeless on city streets.  But you might have seen it in movies, or
+sometimes run into pictures on the net, where in some poor countries such as
+India or Brazil, that there are vast areas called shanty towns, made of piled up
+woods or metal sheets, with no electricity, no water, and thousands of
+people live there, while adjacent to it you have skyscrapers with beautiful
+pools on top.</p>
+
+<p>One movie that gives you a idea of shanty town in District 9, see: <a href="http://xaharts.org/movie/avatar.html">Avatar and District 9 Movie Review</a>.</p>
+
+<p>It's interesting to note, that the Wikipedia article also mentioned Richard Stallman being squatter at MIT. You know, he just sleep there. Kinda hippie style in his time.</p>
+
+<p>Wikipedia says, it's 1 in 6 people in the world lives in slum. Of course, that is a statistical average. It's that high and yet we don't see it, because most are concentrated in South Africa, Brazil, India, and other 3rd world countries. You might wonder, with all our advanced tech and computers and stuff, why does this still happen?</p>
+
+<p>This issues concerns policy makers, and philosophers, economists, have of course thought about this in depth. Actually, they have been for the past few thousand years. Politicians, plays with it. Politicians plays with it because that's the way to become politicians, and that's because the masses, are idiotic, and our behavior are not based on rationality, but on emotion, human psychology, selfishness, (including the massive number of white do-good activists.
+(☛ <a href="http://xahlee.org/Periodic_dosage_dir/forrest_gump_syndrome.html">The White Savior Industrial Complex; Forrest Gump Syndrome</a>)). Human nature.</p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>vertical mouse</title>
+<id>tag:xahlee.org,2012-11-03:220105</id>
+<updated>2012-11-03T15:01:05-07:00</updated>
+<summary>tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>For those of you having RSI issues with mouse, here's a highly recommended mouse:</p>
+
+<figure>
+<img src="../kbd/im/Evoluent_VerticalMouse_lefthand.jpg" alt="Evoluent VerticalMouse lefthand" width="603" height="602" />
+<figcaption>〈Evoluent Right-Handed VerticalMouse 4 Wireless Mouse 〉
+<a class="amz" href="http://www.amazon.com/dp/B006P2594Y/?tag=xahh-20" title="Evoluent Right Handed VerticalMouse Wireless Mouse; comp">amazon</a>
+</figcaption>
+</figure>
+
+<p>There's also a left-hand version: Evoluent VerticalMouse for left hand. <a class="amz" href="http://www.amazon.com/dp/B00427OTEU/?tag=xahh-20" title="Evoluent VerticalMouse 4 Left (VM4L); comp">amazon</a></p>
+
+<p>Or, you can try a trackball: <a href="../kbd/trackball.html">Best Trackball Mouse</a>, or touchpad <a href="../kbd/input_devices.html">Best Input Devices (Jog/Shuttle, Touchpad, Cyborg Mouse, Pen Tablet)</a>.</p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>MIT Tech Review: Futurism</title>
+<id>tag:xahlee.org,2012-11-01:171811</id>
+<updated>2012-11-01T10:18:11-07:00</updated>
+<summary>pic; humor</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<figure>
+<img src="i/futurism_mars_but_facebook.jpg" alt="futurism mars but facebook" width="505" height="648" />
+<figcaption>“You Promised Me Mars Colonies. Instead, I Got Facebook.”</figcaption>
+</figure>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>VirtualBox: Extend Linux Disk Space</title>
+<id>tag:xahlee.org,2012-11-01:153443</id>
+<updated>2012-11-01T08:34:43-07:00</updated>
+<summary>tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../linux/VirtualBox_extend_diskspace.html">VirtualBox: Extend Linux Disk Space</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/1SzluJkO0jI" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/VirtualBox_extend_diskspace.html" />
+</entry>
+
+<entry>
+<title>xah lee chinese blog</title>
+<id>tag:xahlee.org,2012-10-31:140031</id>
+<updated>2012-10-31T07:00:31-07:00</updated>
+<summary>xah lee</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>Started a blog in Chinese. <a href="http://wordyenglish.com/chinese/blog.html">李杀中文博客</a> Posts there will be in Chinese. (topic vary)</p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/KF_8s2DjxHM" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/KF_8s2DjxHM/blog.html" />
+<feedburner:origLink>http://wordyenglish.com/chinese/blog.html</feedburner:origLink></entry>
+
+<entry>
+<title>OOP complexity</title>
+<id>tag:xahlee.org,2012-10-29:145823</id>
+<updated>2012-10-29T07:58:23-07:00</updated>
+<summary>thoughts</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>“this” and “self” are the top 2 manifest complexity in OOP.</p>
+
+<p>See also: <a href="oop.html">What are Object Oriented Programing Jargons and Complexities (OOP Model as Functional Programing)</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/yJeYKRprHFI" height="1" width="1" /></div></content>
+<link rel="alternate" href="oop.html" />
+</entry>
+
+<entry>
+<title>new lang: Rust</title>
+<id>tag:xahlee.org,2012-10-28:045440</id>
+<updated>2012-10-27T21:54:40-07:00</updated>
+<summary>news</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>just learned there's a new lang: Rust, developed by Mozilla Labs. Started in 2010. See bottom: <a href="../UnixResource_dir/writ/new_langs.html">Proliferation of Computing Languages</a>.</p>
+
+<p>thx to Alessandro Stamatto for comment at <a href="../UnixResource_dir/writ/lang_purity_cult_deception.html">Language, Purity, Cult, and Deception</a></p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/QHlmY2xyaJY" height="1" width="1" /></div></content>
+<link rel="alternate" href="../UnixResource_dir/writ/new_langs.html" />
+</entry>
+
+<entry>
+<title>chinese weibo account</title>
+<id>tag:xahlee.org,2012-10-27:070050</id>
+<updated>2012-10-27T00:00:50-07:00</updated>
+<summary>news</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>to my Chinese friends, i have now a weibo account <a class="sorc" href="http://www.weibo.com/xahlee/" data-accessed="2012-10-25">http://www.weibo.com/xahlee/</a> . WILL post there regularly. 求关注! 求粉丝! 谢谢.</p>
+
+<p>开微博第一个原因是，希望能推荐我个人的网页，希望大家喜欢。另一个原因是，希望能借微博，认识一下大陆的的国情，大陆的朋友.</p>
+
+<p>PS <a href="http://en.wikipedia.org/wiki/Sina_Weibo">Sina Weibo</a> is a micro-blogging service in China. It's similar to twitter, but features more like Facebook. Of the past few day's use, i find the User Interface actually much better than Twitter, and faster too.</p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>perl for char encoding conversion</title>
+<id>tag:xahlee.org,2012-10-26:120506</id>
+<updated>2012-10-26T05:05:06-07:00</updated>
+<summary>tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>Perl installs a char encoding converter script at 〔/usr/bin/piconv〕. Type piconv for help. You can also look at the code to see how it's done.</p>
+
+<p>See also: <a href="../perl-python/charset_encoding.html">Python: Converting a File's Encoding</a></p>
+
+<p>thx to “fengxx” for tip.</p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/9awURW_ZR8c" height="1" width="1" /></div></content>
+<link rel="alternate" href="../perl-python/charset_encoding.html" />
+</entry>
+
+<entry>
+<title>Intro to Public-key Cryptography for Sys Admin; What's HTTPS, SSH, SSL, TLS, AES, SHA-1, MD5, …</title>
+<id>tag:xahlee.org,2012-10-24:124341</id>
+<updated>2012-10-24T05:43:41-07:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../linux/intro_to_public-key_cryptography.html">Intro to Public-key Cryptography for Sys Admin; What's HTTPS, SSH, SSL, TLS, AES, SHA-1, MD5, …</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/K0OQ5JIu8dk" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/intro_to_public-key_cryptography.html" />
+</entry>
+
+<entry>
+<title>xah scripts on github</title>
+<id>tag:xahlee.org,2012-10-23:161733</id>
+<updated>2012-10-23T09:17:33-07:00</updated>
+<summary>xah lee</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>My misc scripts now on github. <a class="sorc" href="https://github.com/xahlee" data-accessed="2012-08-16">https://github.com/xahlee</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/UL3jsTz4Odk" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/UL3jsTz4Odk/xahlee" />
+<feedburner:origLink>https:/github.com/xahlee</feedburner:origLink></entry>
+
+<entry>
+<title>linux bash tips</title>
+<id>tag:xahlee.org,2012-10-22:144159</id>
+<updated>2012-10-22T07:41:59-07:00</updated>
+<summary>tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>A few random notes. <a href="../linux/unix_bash_misc_tips.html">Linux: BASH Shell Misc Tips</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/vkeZVhYSiJA" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/unix_bash_misc_tips.html" />
+</entry>
+
+<entry>
+<title>AutoHotkey scripts</title>
+<id>tag:xahlee.org,2012-10-20:042820</id>
+<updated>2012-10-19T21:28:20-07:00</updated>
+<summary>info</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>if you are on Windows, then AutoHotkey is indispensable.  For example, the most useful is to set a single key, <kbd>F9</kbd>, to switch to emacs.  See: <a href="../mswin/autohotkey.html">Windows Programing: AutoHotkey Tutorial</a>.  There are lots examples there.  Also, i just put my ≈50 AutoHotkey scripts on github. See: <a class="sorc" href="https://github.com/xahlee/autohotkey" data-accessed="2012-10-19">https://github.com/xahlee/autohotkey</a>.</p>
+
+<p>For Mac and Linux, you can do the same. See: <a href="../kbd/set_single_key_to_switch_app.html">Keyboard Tip: One Key to Switch to {Firefox, Emacs, Terminal} for {Linux, Mac, Windows}</a>.</p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>The Ease of Making Money by Professional Blogging</title>
+<id>tag:xahlee.org,2012-10-19:080411</id>
+<updated>2012-10-19T01:04:11-07:00</updated>
+<summary>info; essay</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>want to start a blogs? See: <a href="../w/professional_blogging.html">The Ease of Making Money by Professional Blogging</a>.</p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/95CzbJPXR90" height="1" width="1" /></div></content>
+<link rel="alternate" href="../w/professional_blogging.html" />
+</entry>
+
+<entry>
+<title>Windows: Best Anti-virus Software</title>
+<id>tag:xahlee.org,2012-10-19:013259</id>
+<updated>2012-10-18T18:32:59-07:00</updated>
+<summary>tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>Discovered a excellent Windows rootkit (virus) detector. See: <a href="../mswin/Windows_best_anti-virus_software.html">Windows: Best Anti-virus Software</a>. (thx to Adi)</p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/3fEew4piPJU" height="1" width="1" /></div></content>
+<link rel="alternate" href="../mswin/Windows_best_anti-virus_software.html" />
+</entry>
+
+<entry>
+<title>Emacs Lisp: a Command to Execute/Compile Current File</title>
+<id>tag:xahlee.org,2012-10-18:094323</id>
+<updated>2012-10-18T02:43:23-07:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>updated. <a href="http://ergoemacs.org/emacs/elisp_run_current_file.html">Emacs Lisp: a Command to Execute/Compile Current File</a>. Added code to save file if not saved. Thanks to Evgeniy Dolzhenko.</p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/7FYzIEAprPY" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/7FYzIEAprPY/elisp_run_current_file.html" />
+<feedburner:origLink>http://ergoemacs.org/emacs/elisp_run_current_file.html</feedburner:origLink></entry>
+
+<entry>
+<title>unix humor</title>
+<id>tag:xahlee.org,2012-10-17:004823</id>
+<updated>2012-10-16T17:48:23-07:00</updated>
+<summary>humor</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><span class="b3">unix humor</span></p>
+
+<p><code>man false</code>, quote:</p>
+
+<blockquote>
+<p>false - do nothing, unsuccessfully</p>
+</blockquote>
+
+<p>A more rigid documentation would be:</p>
+
+<blockquote>
+<p>false - do nothing, and exit with a status code 1 indicating failure.</p>
+</blockquote>
+
+<p>the problem with embedded programer humor is that when your system is littered with them, it becomes cryptic, and cultivates a culture. This is partly why, unix is hard to use, and forms the “hacker” cult. Just look at the pun of all the command names (more, less, cat, bash, gawk, ash, make, parted, bison, kill, die (perl), man, woman (emacs), …, apt-get, and bash's case/esac, if/fi). For example, if you google “linux less more”, you'll find quite a few people confused by that. The epitome of the hacker cult is the perl. Remember that perl folks calls themselves mongers, and don't hesitate in creating spurious jargons.
+</p>
+
+<p>Though, these days the old school unix culture is pretty much dead. Linux don't have them much, and Linux strive to be easy-to-use for grandma.</p>
+
+<div class="rltd">
+<ul>
+<li><a href="../UnixResource_dir/perlr.html">Perl Books Survey 2002</a></li>
+<li><a href="../UnixResource_dir/writ/jargons.html">Jargons of Info Tech Industry</a></li>
+<li><a href="idiocy_of_comp_lang.html">The Idiocy of Computer Language Docs</a></li>
+</ul>
+</div>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>Linux: users and groups Admin</title>
+<id>tag:xahlee.org,2012-10-16:072654</id>
+<updated>2012-10-16T00:26:54-07:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>new. <a href="../linux/linux_users_groups_admin.html">Linux: users and groups Admin</a> (tutorial)</p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/q0e24Smi4pk" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/linux_users_groups_admin.html" />
+</entry>
+
+<entry>
+<title>linux: xprop, find pid/name of GUI app</title>
+<id>tag:xahlee.org,2012-10-16:004520</id>
+<updated>2012-10-15T17:45:20-07:00</updated>
+<summary>tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>Nice linux tip: To find the name/pid of a window, type <code>xprop</code>, then click the window, then read WM_CLASS, _NET_WM_PID.</p>
+
+<p>Updated at: <a href="../linux/linux_gui_command_line_names.html">Linux GUI Apps Command Line Names</a></p>
+
+<p>thx to <a class="sorc" href="https://twitter.com/amirhoshangi" data-accessed="2012-10-11">amirhoshangi</a></p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/NzTsqihd5H4" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/linux_gui_command_line_names.html" />
+</entry>
+
+<entry>
+<title>Rootkit removal for Windows</title>
+<id>tag:xahlee.org,2012-10-15:200412</id>
+<updated>2012-10-15T13:04:12-07:00</updated>
+<summary>tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><span class="b3">Rootkit removal for Windows</span></p>
+
+<p>do you think you have rootkit on your Windows? I recommend this:</p>
+
+<p>Anti-rootkit utility TDSSKiller, from Kaspersky Lab. Download at <a class="sorc" href="http://support.kaspersky.com/faq/?qid=208283363" data-accessed="2012-10-10">http://support.kaspersky.com/faq/?qid=208283363</a></p>
+
+<p>updated: <a href="../mswin/Windows_software.html">List of Great Free Software for {Windows, Mac}</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/Ee_L01rz9Tw" height="1" width="1" /></div></content>
+<link rel="alternate" href="../mswin/Windows_software.html" />
+</entry>
+
+<entry>
+<title>Guide to Install Linux on VirtualBox for Programers and Sys Admins</title>
+<id>tag:xahlee.org,2012-10-15:080910</id>
+<updated>2012-10-15T01:09:10-07:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../linux/Oracle_VB_install_linux.html">Guide to Install Linux on VirtualBox for Programers and Sys Admins</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/3g5E_y4ZFKA" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/Oracle_VB_install_linux.html" />
+</entry>
+
+<entry>
+<title>my linux setup</title>
+<id>tag:xahlee.org,2012-10-15:073802</id>
+<updated>2012-10-15T00:38:02-07:00</updated>
+<summary>self note</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<figure>
+<img src="../linux/i/xfce_desktop_screenshot_2012-10-15.png" alt="xfce desktop screenshot 2012-10-15" width="1103" height="627" />
+<figcaption>screenshot of my linux desktop, running xfce.</figcaption>
+</figure>
+<p>My linux setup. <a href="../linux/xah_linux_setup.html">Xah Linux Setup</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/CfQF1b9cWhM" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/xah_linux_setup.html" />
+</entry>
+
+<entry>
+<title>The Idiocy of the Happy Hacking Keyboard</title>
+<id>tag:xahlee.org,2012-10-14:221602</id>
+<updated>2012-10-14T15:16:02-07:00</updated>
+<summary>keyboard review</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>Updated photo: <a href="../kbd/idiocy_of_happy_hacking_keyboard.html">The Idiocy of the Happy Hacking Keyboard</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/lyxXqhE-S1c" height="1" width="1" /></div></content>
+<link rel="alternate" href="../kbd/idiocy_of_happy_hacking_keyboard.html" />
+</entry>
+
+<entry>
+<title>Unicode ASCII Art Collection</title>
+<id>tag:xahlee.org,2012-10-14:205559</id>
+<updated>2012-10-14T13:55:59-07:00</updated>
+<summary type="html">fun&lt;img src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/kx2ahRHFBsQ" height="1" width="1"/&gt;</summary>
+<link rel="alternate" href="unicode_ascii_art.html" />
+</entry>
+
+<entry>
+<title>Linux: Put Machine to Sleep by Command Line</title>
+<id>tag:xahlee.org,2012-10-14:040320</id>
+<updated>2012-10-13T21:03:20-07:00</updated>
+<summary type="html">tutorial&lt;img src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/mNSaxXKpMS8" height="1" width="1"/&gt;</summary>
+<link rel="alternate" href="../linux/linux_command_line_to_sleep_hibernate.html" />
+</entry>
+
+<entry>
+<title>The Modernization of Emacs (Simple Changes Emacs Should Adopt)</title>
+<id>tag:xahlee.org,2012-10-13:075247</id>
+<updated>2012-10-13T00:52:47-07:00</updated>
+<summary>essay</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>updated: <a href="http://ergoemacs.org/emacs/modernization.html">The Modernization of Emacs (Simple Changes Emacs Should Adopt)</a>. If for nothing, you should watch Crockford's video there.</p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/aAuJH1awr7E" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/aAuJH1awr7E/modernization.html" />
+<feedburner:origLink>http://ergoemacs.org/emacs/modernization.html</feedburner:origLink></entry>
+
+<entry>
+<title>vim regex!</title>
+<id>tag:xahlee.org,2012-10-13:040754</id>
+<updated>2012-10-12T21:07:54-07:00</updated>
+<summary>tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>linux vim: so, i want to delete ending spaces. So, i did <code>:%s/  +\n/\n/gc</code>. That doesn't work. It turns out, “+” needs to be escaped, like this “\+”.
+Also, the “\n” is wrong. The correct way is <code>:%s/  \+$/ /gc</code>
+So, this means, vim regex isn't perl compatible. Wee, another regex to learn! viva Linux.</p>
+
+<div class="rltd">
+<ul>
+<li><a href="http://ergoemacs.org/emacs/emacs_regex.html">Emacs regex</a></li>
+<li><a href="http://ergoemacs.org/emacs/emergency_vi.html">Emergency vi (vi tutorial)</a></li>
+</ul>
+</div>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/DuJXC-1X304" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/DuJXC-1X304/emacs_regex.html" />
+<feedburner:origLink>http://ergoemacs.org/emacs/emacs_regex.html</feedburner:origLink></entry>
+
+<entry>
+<title>vi vim vim.tiny vim.basic</title>
+<id>tag:xahlee.org,2012-10-12:193646</id>
+<updated>2012-10-12T12:36:46-07:00</updated>
+<summary>learning notes</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>On Ubuntu (11.10 and 12.04), vim is not installed, but vim.tiny instead. vim.tiny doesn't support command history!</p>
+
+<p>Also: <code>vi</code> is a redirect to <code>vim.tiny</code>, thru the <code>update-alternatives</code> mechanism.</p>
+
+<pre class="output">
+$ ls -al `which vim.tiny` `which vi`
+
+lrwxrwxrwx 1 root root     20 2012-04-10 10:06 /usr/bin/vi -&gt; /etc/alternatives/vi
+-rwxr-xr-x 1 root root 713312 2012-02-28 05:53 /usr/bin/vim.tiny
+</pre>
+
+<p>so, <code>apt-cache search vim | grep vim</code> and <code>sudo apt-get install vim</code>. Once installed, “vi” points to “vim.basic”, again by the alternatives mechanism.</p>
+
+<pre class="output">
+# /usr/bin
+
+lrwxrwxrwx  1 root   root          20 2012-10-12 00:37 vi -&gt; /etc/alternatives/vi
+lrwxrwxrwx  1 root   root          21 2012-10-12 00:37 vim -&gt; /etc/alternatives/vim
+-rwxr-xr-x  1 root   root     1883196 2012-02-28 05:53 vim.basic
+lrwxrwxrwx  1 root   root          25 2012-10-12 00:37 vimdiff -&gt; /etc/alternatives/vimdiff
+-rwxr-xr-x  1 root   root      713312 2012-02-28 05:53 vim.tiny
+-rwxr-xr-x  1 root   root        2084 2012-02-28 05:51 vimtutor
+</pre>
+
+
+<pre class="output">
+# /etc/alternatives/
+
+lrwxrwxrwx   1 root root    18 2012-10-12 00:37 vi -&gt; /usr/bin/vim.basic*
+lrwxrwxrwx   1 root root    18 2012-10-12 00:37 vim -&gt; /usr/bin/vim.basic*
+lrwxrwxrwx   1 root root    18 2012-10-12 00:37 vimdiff -&gt; /usr/bin/vim.basic
+</pre>
+
+<p>in summery, there's binaries vim.tiny and vim.basic. By default, Ubuntu only has vim.tiny. The command name points to vim.tiny. After you install vim, the command name vi or vim point to vim.basic. They point by mechanism of the update-alternatives (which is basically round-about soft links.)</p>
+
+<p>also, the whole vim install (which includes docs) is now a whopping 29 MB. Ha, still only 1/5 of emacs!</p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>Linux: monitor processes, top tutorial</title>
+<id>tag:xahlee.org,2012-10-12:070233</id>
+<updated>2012-10-12T00:02:33-07:00</updated>
+<summary type="html">tutorial&lt;img src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/XsX-pwGA8qA" height="1" width="1"/&gt;</summary>
+<link rel="alternate" href="../linux/linux_monitor_processes.html" />
+</entry>
+
+<entry>
+<title>books citing xahlee.org</title>
+<id>tag:xahlee.org,2012-10-11:194920</id>
+<updated>2012-10-11T12:49:20-07:00</updated>
+<summary>pride ＆ vanity</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>discovered several recent books citing my site. e.g. 〈PostgreSQL 9.0 Official Documentation - Volume II. Server ...〉 Page 38.</p>
+
+<p>updated: <a href="http://xahlee.org/PageTwo_dir/Personal_dir/citations_to_xahlee.html">Printed Citations to Xah Lee Site</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IbJITy3Z_48" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/IbJITy3Z_48/citations_to_xahlee.html" />
+<feedburner:origLink>http://xahlee.org/PageTwo_dir/Personal_dir/citations_to_xahlee.html</feedburner:origLink></entry>
+
+<entry>
+<title>Problems of Linux Dictionary App</title>
+<id>tag:xahlee.org,2012-10-11:073123</id>
+<updated>2012-10-11T00:31:23-07:00</updated>
+<summary>thoughts</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<figure>
+<img src="http://wordyenglish.com/musing/i/linux_dictionary_app_screenshot_2012-10-11.png" alt="linux dictionary app screenshot 2012-10-11" width="601" height="516" />
+<figcaption>Linux dictionary, using dict.org</figcaption>
+</figure>
+<p>The open source dictionary dict.org and used by Linux haven't improved a bit. See: <a href="http://wordyenglish.com/musing/dict_open_source_probs.html">Problems of Open Source Dictionaries</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/dqQmuQwNjjQ" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/dqQmuQwNjjQ/dict_open_source_probs.html" />
+<feedburner:origLink>http://wordyenglish.com/musing/dict_open_source_probs.html</feedburner:origLink></entry>
+
+<entry>
+<title>ESR wrote: How not to engage me!</title>
+<id>tag:xahlee.org,2012-10-10:195248</id>
+<updated>2012-10-10T12:52:48-07:00</updated>
+<summary type="html">hackers; programer culture; humor&lt;img src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/rp9fzLJl88Q" height="1" width="1"/&gt;</summary>
+<link rel="alternate" href="../Netiquette_dir/esr_hacker_how_not_to_engage_me.html" />
+</entry>
+
+<entry>
+<title>Windows vs Linux vs Mac</title>
+<id>tag:xahlee.org,2012-10-10:142449</id>
+<updated>2012-10-10T07:24:49-07:00</updated>
+<summary>thoughts</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><span class="b3">Windows vs Linux vs Mac</span></p>
+
+<p>it's so great to be back on unix. Been hardcore Solaris sys admin 10 years ago, but basically haven't done sys admin at that level since. Just got back to linux this month.</p>
+
+<p>I switched from 19 years of Mac to Windows since 2009.  (➲ <a href="../mswin/switch_to_windows.html">Why I'm Switching from Mac to Windows</a>) Since, i made a conscious decision to dive into Microsoft tech for real. Tried to learn PowerShell (➲ <a href="../powershell/index.html">Xah's PowerShell Tutorial</a>), installed Visual Studio, tried to use/learn the Windows sys admin GUI apps, the Registry, all efforts didn't go far.  And didn't even got to any hardcore stuff such as .NET.</p>
+
+<p>On Windows, i have very little idea what are all the processes that shows in Task Manager (actually i use Process Explorer, you should too). Am vague of the dir structure. No idea what files are in 〔c:/Windows/〕. Don't know Windows startup procedure. Dunno Windows's networking mechanism. And don't want to think what muck is lurking in my Registry, and always wonder if i have some rootkit lurking in my system. Whole screen flash for a fraction of sec for no reason now and then… gah.</p>
+
+<p>On unix, i basically know every file in OS, all processes, unix startup processes, how to monitor things, all logs, all shell commands… or can quickly find out if something i don't know. A Joy.</p>
+
+<p>Of the past 3 years on Windows, i did learn something. Basically, a Power User type of thing. Have spent quite a lot time studying AutoHotkey (➲ <a href="../mswin/autohotkey.html">AutoHotkey Tutorial</a>) and <a href="../kbd/ms_keyboard/intellitype_hacks.html">Microsoft IntelliType Hacks</a>.  Compare to setting up elaborate keyboard automation on linux, i'd say Linux is better.  And compare them to the Mac… on the Mac one become Power User without having to know any of the registry, drivers, devices, etc stuff. None. All just works.</p>
+
+<p>For Windows power user tips i learned in past few years, see <a href="../mswin/index.html">Xah Windows Tips</a>.</p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>Review of SpaceNavigator; Mathematical Models of 3D Inputs Control</title>
+<id>tag:xahlee.org,2012-10-10:105859</id>
+<updated>2012-10-10T03:58:59-07:00</updated>
+<summary>review; analysis</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<figure>
+<img src="../3d/_p/SpaceNavigator_1.jpg" alt="SpaceNavigator 1" width="400" height="400" />
+<img src="../3d/_p/SpaceNavigator_controls.jpg" alt="SpaceNavigator controls" width="595" height="123" />
+<figcaption>The SpaceNavigator.
+<a class="amz" href="http://www.amazon.com/dp/B000LB7G00/?tag=xahh-20" title="SpaceNavigator; comp">amazon</a>
+</figcaption>
+</figure>
+
+<p>updated: <a href="../3d/3D_inputs.html">Review of SpaceNavigator ＆ Mathematical Models of 3D Inputs Control</a></p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/Pw-Z5IlNmU0" height="1" width="1" /></div></content>
+<link rel="alternate" href="../3d/3D_inputs.html" />
+</entry>
+
+<entry>
+<title>Firefox Mouse Wheel Scroll Speed, Backspace for Previous Page, Autoscroll, Configurations</title>
+<id>tag:xahlee.org,2012-10-09:201117</id>
+<updated>2012-10-09T13:11:17-07:00</updated>
+<summary type="html">tip&lt;img src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/Xluq7WHUd0E" height="1" width="1"/&gt;</summary>
+<link rel="alternate" href="../mswin/Firefox_mouse_wheel_scroll_speed.html" />
+</entry>
+
+<entry>
+<title>perl ＆ python bundled help system</title>
+<id>tag:xahlee.org,2012-10-09:193128</id>
+<updated>2012-10-09T12:31:28-07:00</updated>
+<summary>tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><span class="b3">perl ＆ python bundled help system</span></p>
+
+<p>In terminal, type <code>pydoc pydoc</code>, or type <code>python</code>, then <code>help()</code>.</p>
+
+<p>In terminal, type <code>perldoc perldoc</code>.</p>
+
+<p>detail: <a href="../perl-python/doc_lookup.html">Perl ＆ Python: How to use Bundled Help System</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/mWZ7kgrB3Kg" height="1" width="1" /></div></content>
+<link rel="alternate" href="../perl-python/doc_lookup.html" />
+</entry>
+
+<entry>
+<title>Linux: How to Get Wireless to Work</title>
+<id>tag:xahlee.org,2012-10-09:075116</id>
+<updated>2012-10-09T00:51:16-07:00</updated>
+<summary type="html">tutorial&lt;img src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/UOms8eIDDAw" height="1" width="1"/&gt;</summary>
+<link rel="alternate" href="../linux/linux_install_wireless.html" />
+</entry>
+
+<entry>
+<title>Incredible State of the Art of Linux</title>
+<id>tag:xahlee.org,2012-10-08:212013</id>
+<updated>2012-10-08T14:20:13-07:00</updated>
+<summary>rant + tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../linux/linux_ubuntu_grub_sdb_error.html">Ubuntu Linux Install Error: “'grub-install /dev/sdb' failed”</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/vrvXzNpJJCk" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/linux_ubuntu_grub_sdb_error.html" />
+</entry>
+
+<entry>
+<title>Linux Command to Download YouTube Video</title>
+<id>tag:xahlee.org,2012-10-07:231910</id>
+<updated>2012-10-07T16:19:10-07:00</updated>
+<summary type="html">tip&lt;img src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/QFlVEyRi7Oc" height="1" width="1"/&gt;</summary>
+<link rel="alternate" href="../linux/linux_download_youtube_video.html" />
+</entry>
+
+<entry>
+<title>linux update-alternatives, file alias mechanism</title>
+<id>tag:xahlee.org,2012-10-07:152523</id>
+<updated>2012-10-07T08:25:23-07:00</updated>
+<summary>tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>learned this linux command <code>update-alternatives</code>.</p>
+
+<p>It's basically another system of {file alias, soft/hard link, Junction, virtual store} — a pest. For detail, see <code>update-alternatives --help</code> and <code>man update-alternatives</code>.</p>
+
+<p>See also: <a href="../UnixResource_dir/writ/hardlink_softlink_alias_junction_plague.html">File Aliases Considered a Plague</a></p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/opG8CtvdHw8" height="1" width="1" /></div></content>
+<link rel="alternate" href="../UnixResource_dir/writ/hardlink_softlink_alias_junction_plague.html" />
+</entry>
+
+<entry>
+<title>Install Bash Info File, Basics of Using Emacs for Reading Info</title>
+<id>tag:xahlee.org,2012-10-07:033828</id>
+<updated>2012-10-06T20:38:28-07:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../linux/bash_doc_info_basic_keys.html">Bash Manual in Chapters; Using Emacs for Reading Info; Info Keys</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/NLPi6p0iZEM" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/bash_doc_info_basic_keys.html" />
+</entry>
+
+<entry>
+<title>haskell the future?</title>
+<id>tag:xahlee.org,2012-10-06:163417</id>
+<updated>2012-10-06T09:34:17-07:00</updated>
+<summary>commentary</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>from my dead Haskell learning notes 2005. Good for a look of what real world code of the lang looks like. <a href="../haskell/real_world_sample.html">Haskell: Real World Code Sample</a></p>
+
+<p>Haskell today is like Scheme Lisp ten year ago. Sure, lots of love from tech geekers, and great mouthings from all over. But ten years down the road, Haskell will be in the same state Scheme Lisp is — nobody ever heard of it. See: <a href="../UnixResource_dir/writ/lang_purity_cult_deception.html">Language, Purity, Cult, and Deception</a>.</p>
+
+<p>If you want the functional future, i recommend
+<a href="../ocaml/ocaml.html">Xah's OCaml Tutorial</a>, F#, erlang. That's where real world gears ＆ cams are made of.</p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>Linux: Bash/Terminal Keybinding List</title>
+<id>tag:xahlee.org,2012-10-06:024102</id>
+<updated>2012-10-05T19:41:02-07:00</updated>
+<summary type="html">tip. New.&lt;img src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/h8Ld6T6z65M" height="1" width="1"/&gt;</summary>
+<link rel="alternate" href="../linux/bash_keybinding.html" />
+</entry>
+
+<entry>
+<title>Windows Sys Admin App Command Line Names</title>
+<id>tag:xahlee.org,2012-10-05:195714</id>
+<updated>2012-10-05T12:57:14-07:00</updated>
+<summary type="html">tech info; update&lt;img src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/ZgPl4c4-6b8" height="1" width="1"/&gt;</summary>
+<link rel="alternate" href="../mswin/Windows_sys_admin_command_line.html" />
+</entry>
+
+<entry>
+<title>linux: nice command line tool for converting units</title>
+<id>tag:xahlee.org,2012-10-05:063809</id>
+<updated>2012-10-04T23:38:09-07:00</updated>
+<summary>tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>learned a new linux command: “units”, for converting thousands type of units. <code>apt-get install units</code>.</p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>Linux: Set Bash Shell Prompt to Color</title>
+<id>tag:xahlee.org,2012-10-05:020156</id>
+<updated>2012-10-04T19:01:56-07:00</updated>
+<summary type="html">tutorial; updated&lt;img src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/udhlUUckqkA" height="1" width="1"/&gt;</summary>
+<link rel="alternate" href="../linux/shell_color_prompt.html" />
+</entry>
+
+<entry>
+<title>Syntax Highlighting Language in emacs, vim, Sublime Text</title>
+<id>tag:xahlee.org,2012-10-04:153832</id>
+<updated>2012-10-04T08:38:32-07:00</updated>
+<summary type="html">commentary&lt;img src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/FlZ3-_OfAmQ" height="1" width="1"/&gt;</summary>
+<link rel="alternate" href="syntax_highlighting_language.html" />
+</entry>
+
+<entry>
+<title>Microsoft cites ErgoEmacs!</title>
+<id>tag:xahlee.org,2012-10-04:015034</id>
+<updated>2012-10-16T01:44:56-07:00</updated>
+<summary>news</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="http://ergoemacs.org/misc/Microsoft_cites_ErgoEmacs.html">Microsoft cites ErgoEmacs!</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/Q1AWVS4akZE" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/Q1AWVS4akZE/Microsoft_cites_ErgoEmacs.html" />
+<feedburner:origLink>http://ergoemacs.org/misc/Microsoft_cites_ErgoEmacs.html</feedburner:origLink></entry>
+
+<entry>
+<title>tip: git add -A .</title>
+<id>tag:xahlee.org,2012-10-03:141928</id>
+<updated>2012-10-03T07:19:28-07:00</updated>
+<summary>tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>learned a new option in git. <code>git add -A .</code>.</p>
+
+<pre class="bash">
+<span class="comment-delimiter"># </span><span class="comment">commiting all files in current dir, including new or deleted file/dir
+</span>git add -A .
+git commit . -m <span class="string">"summary of what you changed."</span>
+</pre>
+
+<p>This is really good option. Because, you simply work on your working dir, including deleting files or dir the normal way, without using special commands to add/remove dir. Then, when you commit, git will just consider your working dir as is, including new/deleted files/dir.</p>
+
+<p>updated: <a href="../linux/git.html">git Tutorial</a>.</p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/6j8BurYoCsw" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/git.html" />
+</entry>
+
+<entry>
+<title>Retro-Put Backup Directories to git as Historical Commits</title>
+<id>tag:xahlee.org,2012-10-02:232749</id>
+<updated>2012-10-02T16:27:49-07:00</updated>
+<summary type="html">tip&lt;img src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/C75_zvD1kUE" height="1" width="1"/&gt;</summary>
+<link rel="alternate" href="../linux/retro_put_backups_to_git.html" />
+</entry>
+
+<entry>
+<title>Microsoft's TypeScript Will Kill CoffeeScript and Dart!</title>
+<id>tag:xahlee.org,2012-10-02:054331</id>
+<updated>2012-10-02T17:22:07-07:00</updated>
+<summary>news</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="TypeScript_kills_CoffeeScript_Dart.html">Microsoft's TypeScript Will Kill CoffeeScript and Dart!</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/4M6usgzqt_A" height="1" width="1" /></div></content>
+<link rel="alternate" href="TypeScript_kills_CoffeeScript_Dart.html" />
+</entry>
+
+<entry>
+<title>Dvorak Keyboard Layout and My Experiences</title>
+<id>tag:xahlee.org,2012-10-01:205334</id>
+<updated>2012-10-01T13:53:34-07:00</updated>
+<summary>update; tips</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>updated: <a href="dvorak_keyboard_layout.html">Dvorak Keyboard Layout and My Experiences</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/EuqLhpQ9OOo" height="1" width="1" /></div></content>
+<link rel="alternate" href="dvorak_keyboard_layout.html" />
+</entry>
+
+<entry>
+<title>Perl ＆ Python: Using Modules/Packages/Library</title>
+<id>tag:xahlee.org,2012-10-01:145323</id>
+<updated>2012-10-01T07:53:23-07:00</updated>
+<summary>tutorial update</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>updated: <a href="../perl-python/standard_modules.html">Perl ＆ Python: Using Modules/Packages/Library</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/mfDVDnwfppI" height="1" width="1" /></div></content>
+<link rel="alternate" href="../perl-python/standard_modules.html" />
+</entry>
+
+<entry>
+<title>spiffy new perl and python logo.</title>
+<id>tag:xahlee.org,2012-09-29:141931</id>
+<updated>2012-09-29T07:19:31-07:00</updated>
+<summary>logo; humor</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><span class="b3">spiffy new perl and python logo.</span></p>
+
+<div>
+<img src="../i/camel_for_perl.svg" alt="camel for perl" width="96" height="85" />
+<img src="../i/snake_for_python.svg" alt="snake for python" width="100" height="87" />
+</div>
+
+<p>Wahaha.</p>
+
+<div class="rltd">
+<ul>
+<li><a href="../logo_design/index.html">Logo Design ＆ Software Industry</a></li>
+<li><a href="../perl-python/index.html">Xah's Perl ＆ Python Tutorial</a></li>
+</ul>
+</div>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>Emacs Lisp Puzzle: Defining a Temp Inner Function Insider a Function</title>
+<id>tag:xahlee.org,2012-09-29:000600</id>
+<updated>2012-09-28T17:06:00-07:00</updated>
+<summary>elisp exercise</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><span class="b3">Emacs Lisp Puzzle: Defining a Temp Inner Function Insider a Function</span></p>
+
+<p>See: <a href="http://ergoemacs.org/emacs/blog.html">Xah Emacs Blog</a></p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/8oIchJEBI1w" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/8oIchJEBI1w/blog.html" />
+<feedburner:origLink>http://ergoemacs.org/emacs/blog.html</feedburner:origLink></entry>
+
+<entry>
+<title>F�ck Ubuntu Unity with its “zeitgeist-datahub” f�ck</title>
+<id>tag:xahlee.org,2012-09-28:153728</id>
+<updated>2012-09-28T08:37:28-07:00</updated>
+<summary>tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><span class="b3">F�ck Ubuntu Unity with its “zeitgeist-datahub” f�ck</span></p>
+
+<p>In Ubuntu, there's this program named “zeitgeist” mucking around in the background as a demon. Do: <code>ps -ef | grep zeit</code> to see. It logs your activity. It seems to be used by Ubuntu's default user interface the “Unity” and also Gnome 3, for things like listing frequently used apps, files.</p>
+
+<p>If you are not mom ＆ pop, unistall the f�ck of it.  <code>sudo apt-get remove zeitgeist*</code></p>
+
+<figure>
+<img src="../linux/i/Ubuntu_Unity_5.12_2012-april_2.png" alt="Ubuntu Unity 5.12 2012-april 2" width="705" height="588" />
+<figcaption>Ubuntu's Unity 5.12 interface, 2012 April.
+<a class="sorc" href="http://en.wikipedia.org/wiki/File:Unity_5.12_on_Ubuntu_12.04.png" data-accessed="2012-09-28">img src</a>
+</figcaption>
+</figure>
+
+<p>Reference:</p>
+
+<ul>
+<li><cite>Disabling Zeitgeist</cite> @ <a class="sorc" href="http://askubuntu.com/questions/45548/disabling-zeitgeist" data-accessed="2012-09-28">http://askubuntu.com/questions/45548/disabling-zeitgeist</a></li>
+<li><cite>Zeitgeist Datahub Purpose in Ubuntu</cite> @ <a class="sorc" href="http://ubuntuforums.org/showthread.php?p=10892713" data-accessed="2012-09-28">http://ubuntuforums.org/showthread.php?p=10892713</a></li>
+</ul>
+
+<p>Don't use Unity or Gnome. Use Xfce instead.
+(➲ <a href="../linux/linux_install_new_windows_manager.html">Intro to Linux Windows Manager (Gnome, KDE, Xfce, xmonad, …)</a>)</p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>FTP vs HTTP, curl vs wget</title>
+<id>tag:xahlee.org,2012-09-28:103823</id>
+<updated>2012-09-28T03:38:23-07:00</updated>
+<summary>tech tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><span class="b3">FTP vs HTTP, curl vs wget</span></p>
+
+<p>FTP is dead. But i thought of looking up. Then, i found a series of great tech tips by the author of curl, Daniel Stenberg.</p>
+
+<ul>
+<li><cite>FTP vs HTTP</cite> <time>2010-10-28</time> By Daniel Stenberg. @ <a class="sorc" href="http://daniel.haxx.se/docs/ftp-vs-http.html" data-accessed="2012-09-28">Source daniel.haxx.se</a></li>
+<li><cite>curl vs wget</cite> <time>2012-07-08</time> By Daniel Stenberg. @ <a class="sorc" href="http://daniel.haxx.se/docs/curl-vs-wget.html" data-accessed="2012-09-28">Source daniel.haxx.se</a></li>
+</ul>
+
+<p>One of his article is curl vs wget. I've had a look of that issue. From users perspective, the difference is that wget lets you grab whole site “recursively”, while curl is just for one single file (or multiple URL by a pattern). But basically, curl can't be used to download a entire site, unless you know all the page's URL. For this reason, i tend to just use wget. Curl is great for download porn pics though, e.g. <code>curl -O http://example.org/somedir/girl[01-20].jpg</code></p>
+
+<p>See also: <a href="../UnixResource_dir/unix_tips.html">Linux Tutorial: rsync, unison, wget, curl</a>.</p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>Gimp Autocrop vs Zealous Crop</title>
+<id>tag:xahlee.org,2012-09-27:222753</id>
+<updated>2012-09-27T15:27:53-07:00</updated>
+<summary>tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><span class="b3">Gimp Autocrop vs Zealous Crop</span></p>
+
+<figure>
+<img src="i/Gimp_autocrop_vs_zealous_crop.png" alt="Gimp autocrop vs zealous crop" width="741" height="266" />
+<figcaption>Gimp autocrop vs zealous crop</figcaption>
+</figure>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>viva Linux</title>
+<id>tag:xahlee.org,2012-09-27:152827</id>
+<updated>2012-09-27T08:28:27-07:00</updated>
+<summary>humor</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<figure>
+<img src="../linux/i/Microsoft_Linux_ad_edge_1-s.jpg" alt="viva Linux" width="755" height="360" />
+<figcaption>viva Linux!</figcaption>
+</figure>
+
+<p><a href="../linux/linux_index.html">Xah Unix/Linux Tutorial</a></p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/bGH4qP8najg" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/linux_index.html" />
+</entry>
+
+<entry>
+<title>php introduced “nowdoc”</title>
+<id>tag:xahlee.org,2012-09-26:212624</id>
+<updated>2012-09-26T14:26:24-07:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>PHP has a “nowdoc” now. It's same as “heredoc”, but vars are not interpreted. New in v5.3.0. See: <a href="../php/quoting_strings.html">PHP: String Syntax and Heredoc</a>.</p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/B6sC2LPi3yI" height="1" width="1" /></div></content>
+<link rel="alternate" href="../php/quoting_strings.html" />
+</entry>
+
+<entry>
+<title>Windows keyboarding tips</title>
+<id>tag:xahlee.org,2012-09-26:121438</id>
+<updated>2012-09-26T05:14:38-07:00</updated>
+<summary>tips</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<figure>
+<img src="../kbd/i/the_day_i_lost_control.jpg" alt="the day i lost control" width="427" height="353" />
+</figure>
+<p>updated: <a href="../mswin/windows_keyboard_shortcuts_faq.html">Windows Keyboard Shortcuts Advanced FAQ</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/8Mv90lPG0jg" height="1" width="1" /></div></content>
+<link rel="alternate" href="../mswin/windows_keyboard_shortcuts_faq.html" />
+</entry>
+
+<entry>
+<title>Parse JSON in PHP and Python</title>
+<id>tag:xahlee.org,2012-09-26:101850</id>
+<updated>2012-09-26T03:18:50-07:00</updated>
+<summary>tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><span class="b3">Parse JSON in PHP and Python</span></p>
+
+<p>See <a href="../js/blog.html">Xah's Web Dev Blog</a></p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/wjdgy3kZ_wo" height="1" width="1" /></div></content>
+<link rel="alternate" href="../js/blog.html" />
+</entry>
+
+<entry>
+<title>Convert Char Encoding in Python and Shell</title>
+<id>tag:xahlee.org,2012-09-25:224955</id>
+<updated>2012-09-25T15:49:55-07:00</updated>
+<summary type="html">tutorial, update&lt;img src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/9awURW_ZR8c" height="1" width="1"/&gt;</summary>
+<link rel="alternate" href="../perl-python/charset_encoding.html" />
+</entry>
+
+<entry>
+<title>PHP and MySQL Redux</title>
+<id>tag:xahlee.org,2012-09-25:152133</id>
+<updated>2012-09-25T08:21:33-07:00</updated>
+<summary>personal experience; thought flow</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><span class="b3">PHP and MySQL Redux</span></p>
+
+<p>I haven't done PHP/MySQL for 5 years. Spent the past 4 days and read almost entire
+PHP manual and half of MySQL manual again, and coded a job interview project. whew. I feel am back in IT.
+(pretty much the entire PHP manual. The MySQL manual, chapter 1, 3, 11, and scan 12, 13. That's the most important chapters.)
+</p>
+
+<p>For the record, here's a list of MySQL manual chapters. Those important i marked with star ★.</p>
+
+<ul>
+<li>1. General Information ★</li>
+<li>2. Installing and Upgrading MySQL</li>
+<li>3. Tutorial ★</li>
+<li>4. MySQL Programs</li>
+<li>5. MySQL Server Administration</li>
+<li>6. Security</li>
+<li>7. Backup and Recovery</li>
+<li>8. Optimization</li>
+<li>9. Language Structure</li>
+<li>10. Globalization</li>
+<li>11. Data Types ★</li>
+<li>12. Functions and Operators ★</li>
+<li>13. SQL Statement Syntax ★</li>
+<li>14. Storage Engines</li>
+<li>15. High Availability and Scalability</li>
+<li>16. Replication</li>
+<li>17. MySQL Cluster NDB 6.1 - 7.1</li>
+<li>18. Partitioning</li>
+<li>19. Stored Programs and Views</li>
+<li>20. INFORMATION_SCHEMA Tables</li>
+<li>21. Connectors and APIs</li>
+<li>22. Extending MySQL</li>
+<li>23. MySQL Enterprise Monitor</li>
+<li>24. MySQL Enterprise Backup</li>
+<li>25. MySQL Workbench</li>
+</ul>
+
+<p>PHP has changed, of course, in past 5 years.
+Now it supports the whole f�ck of OOP: inheritance is core of oop, alrighty, but also {public, private, protected} (yes all that shit), static (yes, static!), interface, abstract. Yes, Interface, and abstract class! It's just like java. And they are going about it seriously.</p>
+
+<p>(Read this page to understand all that shit: <a href="oop.html">What are Object Oriented Programing Jargons and Complexities (OOP Model as Functional Programing)</a>)</p>
+
+<p>PHP's built-in mysql lib is getting deprecated. New is mysqli and PDO. Though, still pretty much the same. (mysqli is “mysql Improved”, while PDO is generic db interface that can work with different db.)</p>
+
+<p>the manual got a bit more complex. Now, the database lib, you have a choice OOP and Procedure interface, getting more and more f�cked up in complexity, just like perl started a oop craze around 1998 that f�cked it up more bad than good. (but actually, for dealing with database, OOP is more natural, because you have db handle, cursor index, etc states.)</p>
+
+<p>the PHP manual, is still a extreme pleasure to read. No f�cking jargons, comp sci pretension (like the python f�ckheads (➲ <a href="../perl-python/python_doc_index.html">Python Documentation Problems</a>)), or unix slang geek joke pun drivels (like perl idiots), and the english writing is also simple and to-the-point. Everything is straight forward, with good code examples.
+(➲ <a href="idiocy_of_comp_lang.html">The Idiocy of Computer Language Docs</a>)
+</p>
+
+<p>in the next few days, i'll be writing a basic tutorial on PHP OOP, and MySQL. Already 40% done each, and i'll be improving my half-assed PHP tutorial. (➲ <a href="../php/index.html">Xah's PHP Tutorial</a>)</p>
+
+<p>PS I love VirtualBox. I think it's even better than dual boot, because you can work in Windows and Linux at the same time. If you haven't already, i recommend it, and take your time to read the manual about Guest Additions. Because that makes the screen larger, and lets you copy/paste across host OS and guest OS. Both are critical to actually practically use VirtualBox. (the manual is the Help file, press <kbd>F1</kbd>.)</p>
+
+<div class="rltd">
+<ul>
+<li><a href="../perl-python/quality_docs.html">Examples of Quality Documentation in Computing Industry</a></li>
+<li><a href="http://ergoemacs.org/emacs/emacs_manual_cover_to_cover.html">Emacs Idolization: Have You Read the Emacs Manual From Cover to Cover?</a></li>
+</ul>
+</div>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/W4uNfOO5268" height="1" width="1" /></div></content>
+<link rel="alternate" href="php_and_mysql_doc_2012.html" />
+</entry>
+
+<entry>
+<title>Keyboard Tip: One Key to Switch to Your Favorite App for {Linux, Mac, Windows} (e.g. F9 to Firefox)</title>
+<id>tag:xahlee.org,2012-09-24:171013</id>
+<updated>2012-09-24T10:10:13-07:00</updated>
+<summary>tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../kbd/set_single_key_to_switch_app.html">Keyboard Tip: One Key to Switch to Your Favorite App (e.g. F9 to Firefox) for {Linux, Mac, Windows}</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/TOwQdFdUlI4" height="1" width="1" /></div></content>
+<link rel="alternate" href="../kbd/set_single_key_to_switch_app.html" />
+</entry>
+
+<entry>
+<title>git says: i no unstand unicode</title>
+<id>tag:xahlee.org,2012-09-24:103825</id>
+<updated>2012-09-24T03:38:25-07:00</updated>
+<summary>humor</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><span class="b3">git says: i no unstand unicode</span></p>
+
+<p>sh�t. seems both svn and git don't understand Unicode in <code>commit -m"♥"</code>.</p>
+
+<p>Try this:</p>
+
+<pre class="bash">
+git add .
+git commit -m<span class="string">"♥"</span>
+git log
+</pre>
+
+<p>and witness:</p>
+
+<pre class="output">
+commit 5b886b1f5ea6a22d30ab66d2e2c93f8f21920e23
+Author: Xah Lee &lt;<a href="mailto:xah@xahlee.org">xah@xahlee.org</a>&gt;
+Date:   Mon Sep 24 03:43:30 2012 -0700
+
+    â™¥
+</pre>
+
+<p>for svn, it's forgivable, because it's written in the 1990s. But for git? Does Linus still live in ASCII land?</p>
+
+<blockquote>
+<p>O, the unix pestilence is still strong with us. —Shakespeare</p>
+</blockquote>
+
+<p>PS It turn out this works fine on Linux. Not on Windows by default (using Cygwin, without dipping into all the encoding setup.) Thanks to <a class="sorc" href="https://plus.google.com/109564459582005085765/posts" data-accessed="2012-09-24">Yuri Khan</a>.</p>
+
+<p>So, ok, i failed in blaming unix, but now i can make a proper blame on software engineering complexity. The question is, why this isn't working on Windows by default? because incompetence of Microsoft? Because linux/Windows impedance because Windows default to UTF-16 and linux UTF-8? Or, it could be that Windows Console is incompetent, doesn't support Unicode well. Or, maybe because Cygwin being semi-incompetent, either didn't have proper encoding setup by default or made a bad choice? Let's spend a few hours to find out. Viva software engineering!</p>
+
+<div class="rltd">
+<ul>
+<li><a href="../mswin/windows_console.html">Windows Console Shortcuts</a></li>
+<li><a href="../linux/git.html">git Tutorial</a></li>
+<li><a href="../UnixResource_dir/svn.html">Subversion Basics (svn tutorial)</a></li>
+<li><a href="unicode_index.html">Xah's Unicode Excursion</a></li>
+<li><a href="complexity_software_engineering.html">The Complexity ＆ Tedium of Software Engineering</a></li>
+</ul>
+</div>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>Laptops 2012 Comparison: ASUS Zenbook Prime vs Apple MacBook Pro</title>
+<id>tag:xahlee.org,2012-09-23:122914</id>
+<updated>2012-09-23T05:29:14-07:00</updated>
+<summary>review</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="laptops_2012_comparison.html">Laptops 2012 Comparison: ASUS Zenbook Prime vs Apple MacBook Pro</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/6Il7OX9fQ7M" height="1" width="1" /></div></content>
+<link rel="alternate" href="laptops_2012_comparison.html" />
+</entry>
+
+<entry>
+<title>What is Monopoly?</title>
+<id>tag:xahlee.org,2012-09-23:093447</id>
+<updated>2012-09-23T02:34:47-07:00</updated>
+<summary>social commentary</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../UnixResource_dir/writ/Microsoft_monopoly.html">What is Monopoly?</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/D5JX-kacUVk" height="1" width="1" /></div></content>
+<link rel="alternate" href="../UnixResource_dir/writ/Microsoft_monopoly.html" />
+</entry>
+
+<entry>
+<title>RMS doppelganger in parallel universe</title>
+<id>tag:xahlee.org,2012-09-22:091958</id>
+<updated>2012-09-22T02:19:58-07:00</updated>
+<summary>humor</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>This is RMS doppelganger in parallel universe: <a href="http://xahmusic.org/music/f_ck_sh_t_stack.html">the Philosophy of F�ck Sh�t Stack</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/fbmbt-9NcIo" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/fbmbt-9NcIo/f_ck_sh_t_stack.html" />
+<feedburner:origLink>http://xahmusic.org/music/f_ck_sh_t_stack.html</feedburner:origLink></entry>
+
+<entry>
+<title>Learn Python in One Day</title>
+<id>tag:xahlee.org,2012-09-21:153218</id>
+<updated>2012-09-21T08:32:18-07:00</updated>
+<summary type="html">tutorial&lt;img src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/zzXyrd-80cQ" height="1" width="1"/&gt;</summary>
+<link rel="alternate" href="../perl-python/python_basics.html" />
+</entry>
+
+<entry>
+<title>Microsoft Natural Elite keyboard discontinued</title>
+<id>tag:xahlee.org,2012-09-21:062634</id>
+<updated>2012-09-20T23:26:34-07:00</updated>
+<summary>news; commentary</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>just discovered that the classic Microsoft Natural Elite keyboard seems no longer being manufactured, and now you are stuck with
+<a href="../kbd/ms_keyboard/ms_natural_keyboard_4000.html">Microsoft Natural Ergonomic Keyboard 4000</a>, with its unusable stiff spacebar.</p>
+
+<p>Just 3 months ago, it's still selling on amazon new for about $30.  When a item is no longer available, you can see its price rise up fast. Right now, on amazon it's going for $60 to $90. Am pretty sure it'll go over hundred.</p>
+
+<p>The Microsoft Trackball Explorer was selling for $500! Looking at amazon now, a used is $225 and a new is $498. See: <a href="../kbd/trackball.html">Best Trackball Mouse</a>.</p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>what is programing?</title>
+<id>tag:xahlee.org,2012-09-21:050237</id>
+<updated>2012-09-20T22:02:37-07:00</updated>
+<summary>humor</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<figure>
+<img src="i/programer_at_work.gif" alt="programer at work" width="256" height="256" />
+</figure>
+
+<p>added to <a href="comp_index.html">Computing ＆ its People</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/5taDkJc2ZG8" height="1" width="1" /></div></content>
+<link rel="alternate" href="comp_index.html" />
+</entry>
+
+<entry>
+<title>cool feature in vi</title>
+<id>tag:xahlee.org,2012-09-20:143119</id>
+<updated>2012-09-20T07:31:19-07:00</updated>
+<summary>humor</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<figure>
+<img src="http://ergoemacs.org/emacs/i/vi_clippy_assistant.gif" alt="vi clippy assistant" width="649" height="499" />
+</figure>
+
+<p>See also: <a href="http://ergoemacs.org/emacs/emergency_vi.html">Emergency vi (vi tutorial)</a>.</p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/8oIchJEBI1w" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/8oIchJEBI1w/blog.html" />
+<feedburner:origLink>http://ergoemacs.org/emacs/blog.html</feedburner:origLink></entry>
+
+<entry>
+<title>a survey of Keyboard Enter/Return Key Symbol</title>
+<id>tag:xahlee.org,2012-09-20:070143</id>
+<updated>2012-09-20T00:01:43-07:00</updated>
+<summary>report; unicode</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../kbd/keyboard_enter_key_symbol.html">Keyboard Enter/Return Key Symbol</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/9-bpGZHm4AI" height="1" width="1" /></div></content>
+<link rel="alternate" href="../kbd/keyboard_enter_key_symbol.html" />
+</entry>
+
+<entry>
+<title>List Comprehension in Python and Perl</title>
+<id>tag:xahlee.org,2012-09-19:164810</id>
+<updated>2012-09-19T09:48:10-07:00</updated>
+<summary>updated tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>Updated: <a href="../perl-python/list_comprehension.html">List Comprehension in Python and Perl</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/p8IJDniVz1g" height="1" width="1" /></div></content>
+<link rel="alternate" href="../perl-python/list_comprehension.html" />
+</entry>
+
+<entry>
+<title>Unix Pestilence: Quotations</title>
+<id>tag:xahlee.org,2012-09-18:221923</id>
+<updated>2012-09-18T15:19:23-07:00</updated>
+<summary>humor??</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../UnixResource_dir/unix_quotes.html">Unix Pestilence: Quotations</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/FZ7ULL6IFhA" height="1" width="1" /></div></content>
+<link rel="alternate" href="../UnixResource_dir/unix_quotes.html" />
+</entry>
+
+<entry>
+<title>java quotes</title>
+<id>tag:xahlee.org,2012-09-18:135807</id>
+<updated>2012-09-18T06:58:07-07:00</updated>
+<summary>humor</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><span class="b3">java quotes</span></p>
+
+<p>how to write hello world in 3 thousand lines = Java</p>
+
+<p>Java ＆ Hackers relationship: 1997 → Microsoft's days are numbered. 2000 → the Java Trap. 2006 → software freedom. 2011 → blood sucker.</p>
+
+<p>“Welcome to the new decade: Java is a restricted platform, Google is evil, Apple is a monopoly and Microsoft are the underdogs” — Phil Nash <time>2010-08-14</time></p>
+
+<p>btw, if you want to write a app for Apple's iPhone, you basically have to use Objective C. And for writing apps for Android phone, you pretty much have to write in Java. Both sucks big time.</p>
+
+<p>See also: <a href="../java-a-day/java.html">Xah's Java Tutorial</a>.</p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/QtUojzZ_ups" height="1" width="1" /></div></content>
+<link rel="alternate" href="../java-a-day/java.html" />
+</entry>
+
+<entry>
+<title>Linux: How to find the command name of a GUI app?</title>
+<id>tag:xahlee.org,2012-09-18:052536</id>
+<updated>2012-09-17T22:25:36-07:00</updated>
+<summary>tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p class="q">How to find the command name of a GUI app?</p>
+<div class="a">
+<p>Launch the app by mouse. Then, in terminal type <code>pgrep -l ‹string›</code>, where ‹string› is what you think is the app name.
+Or, type <code>top</code> first, then launch the app, and watch it appear in top.</p>
+</div>
+
+<p class="q">How to launch GUI app from terminal?</p>
+<div class="a">
+<p>If the name is xyz, do <code>xyz &amp;</code></p>
+</div>
+
+<p>Updated: <a href="../linux/linux_gui_command_line_names.html">Linux GUI Apps, Command Line Names</a></p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/NzTsqihd5H4" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/linux_gui_command_line_names.html" />
+</entry>
+
+<entry>
+<title>Idiocy of unix's dot file names: .svn .htaccess .DS_Store …</title>
+<id>tag:xahlee.org,2012-09-17:170403</id>
+<updated>2012-09-17T10:04:03-07:00</updated>
+<summary>unix rant</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>Updated: <a href="mac_os_xs_DS_Store_unix_init_svn.html">Idiocy of unix's dot file names: .svn .htaccess .DS_Store …</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/dAyK4kz3G8g" height="1" width="1" /></div></content>
+<link rel="alternate" href="mac_os_xs_DS_Store_unix_init_svn.html" />
+</entry>
+
+<entry>
+<title>new git host, based in China</title>
+<id>tag:xahlee.org,2012-09-17:160301</id>
+<updated>2012-09-17T09:03:01-07:00</updated>
+<summary>link</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<figure>
+<img src="i/GitCafe_logo_2.png" alt="GitCafe logo 2" width="33" height="33" />
+<figcaption><a class="sorc" href="http://gitcafe.com/" title="accessed:2012-09-15">gitcafe.com</a> logo.</figcaption>
+</figure>
+
+<p>a new git host, GitCafe, based in China, just opened this month. Check it out <a class="sorc" href="http://gitcafe.com/" title="accessed:2012-09-15">http://gitcafe.com/</a></p>
+
+<p>my account is <a class="sorc" href="http://gitcafe.com/xahlee" title="accessed:2012-09-17">http://gitcafe.com/xahlee</a>, currently nothing there yet.</p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>what's the worst article on monad you've read? Constructive Criticism Anyone?</title>
+<id>tag:xahlee.org,2012-09-16:162809</id>
+<updated>2012-09-16T09:28:09-07:00</updated>
+<summary>commentary</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>shit. just realized i bad mouthed a article on monad few days ago, but now realized its written by a supportive friend (whose programing skill i highly respect).</p>
+
+<p>this pains me. marketing and relationship is always a problem for me. (and by nature i really don't care much for “friends” (the concept of it, philosophy of its nature, and just my personal nature (aka mild schizoid)))</p>
+
+<p>most people don't criticize. They are brought up that way. e.g. the saying goes: if you don't have nice things to say, don't say it.</p>
+
+<p>from some perspective, this is motivated by selfishness. Because, when you criticize, you will not be liked, which is disadvantageous to you. (it reduces your chance of getting supporters, and ferment enemies quick. (i'm sometimes known as a “troll”, and i know there are a few people who will always attack me whenever they see my name mentioned, even though i've never interacted with them.))</p>
+
+<p>but some form of criticism still occur, in some nice, “constructive”, form. (often by sugar coating praises and appreciation first) That's how most people strive for when they really need to say something negative. (the idiotic zeitgeist term for this on the net is “constructive criticism welcome”.)</p>
+
+<p>the problem with me is that i want to say it in the most negative, non-constructive, confrontational way. And in some perspective, that is the job of writers, artists. But i do it too much. The ratio of value/offensiveness is getting low.</p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>discovered xz compression</title>
+<id>tag:xahlee.org,2012-09-16:143010</id>
+<updated>2012-09-16T07:30:10-07:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>Discovered xz compression. Not due to some tech geeking, but because FSF actually uses it for emacs. Size significantly smaller than gzip and bz2.</p>
+
+<pre>
+emacs-24.2.tar.gz  49M
+emacs-24.2.tar.bz2 40M
+emacs-24.2.tar.xz  33M
+</pre>
+
+<p>See: <a href="../linux/linux_gzip_bzip2_xz_7zip.html">Linux Compression How-to: tar gzip bzip2 xz 7zip rar zip</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/HkNkRnZETb0" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/linux_gzip_bzip2_xz_7zip.html" />
+</entry>
+
+<entry>
+<title>Linux: Most Frequently Used Shell Commands</title>
+<id>tag:xahlee.org,2012-09-15:145047</id>
+<updated>2012-09-15T07:50:47-07:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>spent a couple hours and wrote this: <a href="../linux/linux_common_commands.html">Linux: Most Frequently Used Shell Commands</a>. Let me know if i missed anything.</p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/cgG1e4FXK74" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/linux_common_commands.html" />
+</entry>
+
+<entry>
+<title>Unicode Support in Ruby, Perl, Python, JavaScript, Java, Emacs Lisp, Mathematica</title>
+<id>tag:xahlee.org,2012-09-14:104137</id>
+<updated>2012-09-14T03:41:37-07:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>updated:</p>
+
+<ul>
+<li><a href="unicode_support_ruby_python_elisp.html">Unicode Support in Ruby, Perl, Python, JavaScript, Java, Emacs Lisp, Mathematica</a></li>
+<li><a href="../perl-python/unicode.html">Unicode in Python</a></li>
+<li><a href="../perl-python/unicode_perl.html">Unicode in Perl</a></li>
+</ul>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/CEfeBXzxSQE" height="1" width="1" /></div></content>
+<link rel="alternate" href="unicode_support_ruby_python_elisp.html" />
+</entry>
+
+<entry>
+<title>decade old rant: The Unix Pestilence: Shells</title>
+<id>tag:xahlee.org,2012-09-14:082712</id>
+<updated>2012-09-14T01:27:12-07:00</updated>
+<summary>rant</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>a decade old rant. I smell history. <a href="../UnixResource_dir/shells.html">The Unix Pestilence: Shells</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/uldGfK6gX0Y" height="1" width="1" /></div></content>
+<link rel="alternate" href="../UnixResource_dir/shells.html" />
+</entry>
+
+<entry>
+<title>learn php in one day</title>
+<id>tag:xahlee.org,2012-09-13:192207</id>
+<updated>2012-09-13T12:22:07-07:00</updated>
+<summary type="html">tutorial; update&lt;img src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/s9qX8qKPfRw" height="1" width="1"/&gt;</summary>
+<link rel="alternate" href="../php/php_basics.html" />
+</entry>
+
+<entry>
+<title>kernel version, Distro, CPU, RAM, Disk Size</title>
+<id>tag:xahlee.org,2012-09-12:135539</id>
+<updated>2012-09-12T06:55:39-07:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../linux/linux_info.html">Linux: How to Find {kernel version, Distro, CPU, RAM, Disk Size} Info</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/Hw7bORRdFVI" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/linux_info.html" />
+</entry>
+
+<entry>
+<title>Programer Humor: 0099FF Blue</title>
+<id>tag:xahlee.org,2012-09-12:035257</id>
+<updated>2012-09-11T20:52:57-07:00</updated>
+<summary>humor</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><span class="b3">Geek Humor: 0099FF Blue</span></p>
+
+<p>“Sweetie, i saw a dress, the color fits you perfectly.”<br />
+“what color is it?”<br />
+“0099FF”<br />
+“English, please.”<br />
+“Blue.”<br />
+“Ah, blue's my favorite. What kinda blue?”<br />
+“0099FF”</p>
+
+<p>Translated from a Chinese tweet:</p>
+
+<p>“亲爱的，我看到有件衣服，颜色好适合你！”<br />
+“什么颜色？”<br />
+“0099FF！”<br />
+“说人话！”<br />
+“蓝色。。。”<br />
+“呀～我最喜欢蓝色了～是哪种蓝色？”<br />
+“0099FF”</p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>Microsoft Touch Mouse Artistic Edition = GORGEOUS</title>
+<id>tag:xahlee.org,2012-09-10:073237</id>
+<updated>2012-09-10T00:32:37-07:00</updated>
+<summary>mouse</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<figure>
+<img src="../kbd/im/mstouch/Microsoft_touch_mouse_artist_edition_3.jpg" alt="Microsoft touch mouse artist edition 3" width="1024" height="574" />
+<figcaption>“Microsoft Touch Mouse artist edition”
+<a class="amz" href="http://www.amazon.com/dp/B004HYGU18/?tag=xahh-20" title="Microsoft 3KJ 00001 Touch Mouse">amazon</a>
+</figcaption>
+</figure>
+
+<p><a href="../kbd/ms_touch_mouse.html">Microsoft Touch Mouse Artistic Edition = GORGEOUS</a></p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/Y4DqWaunbdM" height="1" width="1" /></div></content>
+<link rel="alternate" href="../kbd/ms_touch_mouse.html" />
+</entry>
+
+<entry>
+<title>Linux Xfce Keyboard Shortcuts</title>
+<id>tag:xahlee.org,2012-09-09:180906</id>
+<updated>2012-09-09T11:09:06-07:00</updated>
+<summary>info</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../linux/linux_xfce_keyboard_shortcuts.html">Linux Xfce Keyboard Shortcuts</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/-SBjLL1s1dI" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/linux_xfce_keyboard_shortcuts.html" />
+</entry>
+
+<entry>
+<title>Daniel Weinreb Died ((1959 ~ 2012) Lisp Programer)</title>
+<id>tag:xahlee.org,2012-09-08:101150</id>
+<updated>2012-09-08T03:11:50-07:00</updated>
+<summary>news; lisp lore</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="http://ergoemacs.org/misc/Daniel_Weinreb_died.html">Daniel Weinreb Died ((1959 ~ 2012) Lisp Programer)</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/isFWtpR32L4" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/isFWtpR32L4/Daniel_Weinreb_died.html" />
+<feedburner:origLink>http://ergoemacs.org/misc/Daniel_Weinreb_died.html</feedburner:origLink></entry>
+
+<entry>
+<title>Computing Symbols in Unicode</title>
+<id>tag:xahlee.org,2012-09-07:083419</id>
+<updated>2012-09-07T01:34:19-07:00</updated>
+<summary>info</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>updated: <a href="unicode_computing_symbols.html">Computing Symbols in Unicode</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/MEdBEnlY40A" height="1" width="1" /></div></content>
+<link rel="alternate" href="unicode_computing_symbols.html" />
+</entry>
+
+<entry>
+<title>CPU Speed Benchmark: BogusMips in Perl</title>
+<id>tag:xahlee.org,2012-09-06:121547</id>
+<updated>2012-09-06T05:15:47-07:00</updated>
+<summary>tech info</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../UnixResource_dir/sultra_skami.html">CPU Speed Benchmark: BogusMips in Perl</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/ysFT40K02Uc" height="1" width="1" /></div></content>
+<link rel="alternate" href="../UnixResource_dir/sultra_skami.html" />
+</entry>
+
+<entry>
+<title>Meet Kurt Schwehr</title>
+<id>tag:xahlee.org,2012-09-06:073210</id>
+<updated>2012-09-06T00:32:10-07:00</updated>
+<summary>commentary</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><span class="b3">Meet Kurt Schwehr</span></p>
+
+<p>if you are a python coder, Kurt Schwehr's blog is worth subscribing to. <a class="sorc" href="http://schwehr.org/blog/" title="accessed:2012-09-06">http://schwehr.org/blog/</a>.
+(<a class="sorc" href="https://plus.google.com/102101513984015207006/about" title="accessed:2012-09-06">Kurt Schwehr</a> is a geologist, computer scientist, and currently a GIS Data Engineer for Oceans at Google, and also teaches at University of New Hampshire.)
+</p>
+
+<p>was doing some writing about python new tech, and i recall there's <a href="http://en.wikipedia.org/wiki/Puppet_%28software%29">Puppet (software)</a>, and checking on wikipedia realized it's written in Ruby, but i recall Google is using it but i thought it's python… and i vaguely recall Kurt wrote a blog about it. So i tried to search Kurt's post about it… Finally, i put kurt's blog on my google reader. Long overdue. Worth regular reading.</p>
+
+<p>I met Kurt first when he commented on my emacs or programing blog about last year. Then we connected on g+. Learned that he works for Google and teaches Python, and his work as a ocean geologist and affiliations with NASA or JPL.</p>
+
+<p>Looking at Kurt's blog… he's been blogging since 2003! Average from 10 to 80 post per month! Lots of it is using python to do geology work. Real work with real code, as opposed to many blogs about python tutorial, technicalities, or software engineering philosophies. For the intellectual programers out there, his blog is a gold mine.</p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>python tech 2012</title>
+<id>tag:xahlee.org,2012-09-05:214320</id>
+<updated>2012-09-05T14:43:20-07:00</updated>
+<summary>info</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="python_tech_2012.html">Python Tech 2012</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/MHgG9-IpA2Q" height="1" width="1" /></div></content>
+<link rel="alternate" href="python_tech_2012.html" />
+</entry>
+
+<entry>
+<title>Laptop Power Saving Tips: White on Black Color, Sleep vs Hibernate</title>
+<id>tag:xahlee.org,2012-09-04:191622</id>
+<updated>2012-09-04T12:16:22-07:00</updated>
+<summary type="html">tips&lt;img src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/xSp5hG52RKw" height="1" width="1"/&gt;</summary>
+<link rel="alternate" href="../linux/laptop_power_saving_tips.html" />
+</entry>
+
+<entry>
+<title>YouTube = Porn Fodder? and Larry Sanger Reported me to FBI</title>
+<id>tag:xahlee.org,2012-09-03:105952</id>
+<updated>2012-09-03T16:00:25-07:00</updated>
+<summary type="html">not programing related; important personal event&lt;img src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/8xLdMIF-Iqo" height="1" width="1"/&gt;</summary>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/8xLdMIF-Iqo/is_YouTube_porn_fodder.html" />
+<feedburner:origLink>http://xahlee.org/Periodic_dosage_dir/is_YouTube_porn_fodder.html</feedburner:origLink></entry>
+
+<entry>
+<title>Unix Problem: zip Utility Path and Unix Environment Variables</title>
+<id>tag:xahlee.org,2012-09-02:231139</id>
+<updated>2012-09-02T16:11:39-07:00</updated>
+<summary>updated article. unix shit</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="unix_zip_problem.html">Unix Problem: zip Utility Path and Unix Environment Variables</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/kKVitMbk9jk" height="1" width="1" /></div></content>
+<link rel="alternate" href="unix_zip_problem.html" />
+</entry>
+
+<entry>
+<title>the unix pestilence</title>
+<id>tag:xahlee.org,2012-09-01:220704</id>
+<updated>2012-09-01T15:07:04-07:00</updated>
+<summary>updated images; artwork, logo, humor</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<figure>
+<img src="../UnixResource_dir/gki/BSD-daemon-chick-s.jpg" alt="BSD-daemon-chick" width="512" height="384" />
+<figcaption>
+A batty BSD daemon girl by <a class="sorc" href="http://www.deaddreamer.com/" title="accessed:2012-01-12">Wilhelm Steiner</a>
+</figcaption>
+</figure>
+
+<p>updated images: <a href="../UnixResource_dir/freebooks.html">The Unix Pestilence</a></p>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/HmwDmXO3TRE" height="1" width="1" /></div></content>
+<link rel="alternate" href="../UnixResource_dir/freebooks.html" />
+</entry>
+
+<entry>
+<title>Should you line break at 80 char in source code?</title>
+<id>tag:xahlee.org,2012-09-01:092407</id>
+<updated>2012-09-01T02:24:07-07:00</updated>
+<summary>Xah's Edict</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<div class="δdate"><time>2012-09-01</time></div>
+
+<p>Xah Code Edict of the Day: Never manually insert line breaks for display purposes. F��� all coding/documentation conventions. Break the 80-char per line of the 1970s that came from punch cards.</p>
+
+<div class="rltd">
+<ul>
+<li><a href="../UnixResource_dir/writ/hard-wrap.html">Programing: the Harm of Hard-wrapping Lines</a></li>
+<li><a href="../UnixResource_dir/writ/truncate_line.html">Unix, RFC, Line Truncation</a></li>
+</ul>
+</div>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/mhfEiiy-RSw" height="1" width="1" /></div></content>
+<link rel="alternate" href="../UnixResource_dir/writ/hard-wrap.html" />
+</entry>
+
+<entry>
+<title>Regex Limits, or, Should You Read Mastering Regular Expressions?</title>
+<id>tag:xahlee.org,2012-08-31:012508</id>
+<updated>2012-08-30T18:25:08-07:00</updated>
+<summary>thoughts</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../UnixResource_dir/writ/regex.html">Regex Limits, or, Should You Read Mastering Regular Expressions?</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/PGWsN4JGU8c" height="1" width="1" /></div></content>
+<link rel="alternate" href="../UnixResource_dir/writ/regex.html" />
+</entry>
+
+<entry>
+<title>Slashdotted by Hacker News?</title>
+<id>tag:xahlee.org,2012-08-30:230755</id>
+<updated>2012-08-30T22:02:00-07:00</updated>
+<summary>info</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>a mention on Hacker News gets you 3.2 k visits.  (<a class="sorc" href="http://news.ycombinator.com/item?id=4309527" title="accessed:2012-08-30">http://news.ycombinator.com/item?id=4309527</a>) I'm not sure how 3.2k compares to average Hacker News item. But i think it's nothing like the good old slashdotted days.﻿</p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>is Google Chromebook good for Programer?</title>
+<id>tag:xahlee.org,2012-08-25:210650</id>
+<updated>2012-08-25T14:06:50-07:00</updated>
+<summary>commentary; tip</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="chromebook_for_programer.html">is Google Chromebook good for Programer?</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/MSZjSBlqs7w" height="1" width="1" /></div></content>
+<link rel="alternate" href="chromebook_for_programer.html" />
+</entry>
+
+<entry>
+<title>when a female engineer got a problem, vs, when a male engineer got a problem</title>
+<id>tag:xahlee.org,2012-08-25:030925</id>
+<updated>2012-08-24T20:09:25-07:00</updated>
+<summary>humor; image</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>humor. <a href="http://xaharts.org/funny/girl_vs_boy_got_problem.html">when a female engineer got a problem, versus, when a male engineer got a problem</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/03UxJajyQlg" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/03UxJajyQlg/girl_vs_boy_got_problem.html" />
+<feedburner:origLink>http://xaharts.org/funny/girl_vs_boy_got_problem.html</feedburner:origLink></entry>
+
+<entry>
+<title>Microsoft has a new logo</title>
+<id>tag:xahlee.org,2012-08-23:225716</id>
+<updated>2012-08-23T15:57:16-07:00</updated>
+<summary>news</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<figure>
+<img src="../UnixResource_dir/gki/Microsoft_Logo_2012-08-23.png" alt="Microsoft Logo 2012-08-23" width="450" height="165" />
+<figcaption>Microsoft's new logo, 2012-08-23</figcaption>
+</figure>
+<p>Rule or Suck?</p>
+<p>See also: <a href="../logo_design/index.html">Logo Design ＆ Software Industry</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>git basics</title>
+<id>tag:xahlee.org,2012-08-20:161723</id>
+<updated>2012-08-20T09:17:23-07:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../linux/git.html">git basics</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/6j8BurYoCsw" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/git.html" />
+</entry>
+
+<entry>
+<title>Unicode 6 Emoticons List</title>
+<id>tag:xahlee.org,2012-08-18:180734</id>
+<updated>2012-08-18T11:07:34-07:00</updated>
+<summary>info</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="unicode_6_emoticons_list.html">Unicode 6 Emoticons List</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/mcVGP3erVXE" height="1" width="1" /></div></content>
+<link rel="alternate" href="unicode_6_emoticons_list.html" />
+</entry>
+
+<entry>
+<title>Github Mascot: The Gitopuss in Many Guises</title>
+<id>tag:xahlee.org,2012-08-17:194343</id>
+<updated>2012-08-17T12:43:43-07:00</updated>
+<summary>geek art</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="http://xaharts.org/funny/octopuss.html">Github Mascot: The Gitopuss in Many Guises</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/70t_0l4fCqA" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/70t_0l4fCqA/octopuss.html" />
+<feedburner:origLink>http://xaharts.org/funny/octopuss.html</feedburner:origLink></entry>
+
+<entry>
+<title>Google Says: Put Your Password Plainly in a File: Linux .netrc</title>
+<id>tag:xahlee.org,2012-08-16:211747</id>
+<updated>2012-08-16T14:17:47-07:00</updated>
+<summary>rant</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../linux/linux_netrc_open_password.html">Google Says: Put Your Password Plainly in a File: Linux .netrc</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/b51sLMsEE1I" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/linux_netrc_open_password.html" />
+</entry>
+
+<entry>
+<title>Convert Your code.google.com Project from svn to git</title>
+<id>tag:xahlee.org,2012-08-16:143426</id>
+<updated>2012-08-16T07:34:26-07:00</updated>
+<summary>tutorial</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../linux/convert_svn_to_git.html">Convert Your code.google.com Project from svn to git</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/r9H8M-wnJZw" height="1" width="1" /></div></content>
+<link rel="alternate" href="../linux/convert_svn_to_git.html" />
+</entry>
+
+<entry>
+<title>the Gitopuss</title>
+<id>tag:xahlee.org,2012-08-15:172428</id>
+<updated>2012-08-15T10:24:28-07:00</updated>
+<summary>humor; geek art</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><span class="b3">the Gitopuss</span></p>
+
+<figure>
+<img src="http://xaharts.org/funny/i/gitopuss/gitopuss.png" alt="gitopuss" width="845" height="110" />
+<figcaption>is gitopuss male or female? (image source <a class="sorc" href="https://github.com/" title="accessed:2012-08-15">github.com</a>)</figcaption>
+</figure>
+
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/IGqve9VZrQo" height="1" width="1" /></div></content>
+<link rel="alternate" href="blog.html" />
+</entry>
+
+<entry>
+<title>put other unixes to /dev/null</title>
+<id>tag:xahlee.org,2012-08-15:104440</id>
+<updated>2012-08-15T03:44:40-07:00</updated>
+<summary>Apple says</summary>
+ <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="http://xaharts.org/funny/Apple_Mac_OS_X_Unix_ad.html">Geek Humor: Apple Mac OS X Unix Ad</a></p>
+ <xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/4ea0TEGYb4o" height="1" width="1" /></div></content>
+<link rel="alternate" href="http://feedproxy.google.com/~r/XahsProgramingBlog/~3/4ea0TEGYb4o/Apple_Mac_OS_X_Unix_ad.html" />
+<feedburner:origLink>http://xaharts.org/funny/Apple_Mac_OS_X_Unix_ad.html</feedburner:origLink></entry>
+
+<entry>
+<title>One Language to Rule Them All?</title>
+<id>tag:xahlee.org,2012-08-13:145356</id>
+<updated>2012-08-13T07:53:56-07:00</updated>
+<summary>essay</summary>
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p>updated: <a href="what_lang_to_use_for_find_replace.html">One Language to Rule Them All?</a></p>
+<xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/6i-2g2w0GHg" height="1" width="1" /></div></content>
+<link rel="alternate" href="what_lang_to_use_for_find_replace.html" />
+</entry>
+
+<entry>
+<title>Steve Jobs</title>
+<id>tag:xahlee.org,2012-08-09:022738</id>
+<updated>2012-08-08T19:27:38-07:00</updated>
+<summary>updates</summary>
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+
+<p>Several updates:</p>
+
+<figure>
+<img src="i/google_dot_com_Steve_Jobs_2011-10-05.png" alt="google dot com Steve Jobs 2011-10-05" width="929" height="622" />
+<figcaption>google.com website on 2011-10-05</figcaption>
+</figure>
+
+<ul>
+<li><a href="../w/Steve_Jobs_Apple_circle_building.html">Last Public Video of Steve Jobs: Jobs Presenting the Apple Circle Building</a></li>
+<li><a href="../w/steve_jobs_photos.html">My Personal Photos of Steve Jobs (1955 〜 2011)</a></li>
+<li><a href="Death_of_Steve_Jobs.html">Steve Jobs on Apple and Google Websites; Screenshots</a></li>
+<li><a href="Richard_Stallman_on_Steve_Jobs_death.html">Richard Stallman on Steve Jobs's Death</a></li>
+</ul>
+
+<xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/55dWqE44ADQ" height="1" width="1" /></div></content>
+<link rel="alternate" href="../w/Steve_Jobs_Apple_circle_building.html" />
+</entry>
+
+<entry>
+<title>Programing Style: Variable Naming: English Words Considered Harmful</title>
+<id>tag:xahlee.org,2012-08-06:225418</id>
+<updated>2012-08-06T15:54:18-07:00</updated>
+<summary>thoughts</summary>
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><span class="b3">Programing Style: Variable Naming: English Words Considered Harmful</span></p>
+
+<p>am thinking of a language, where, all variable names must not carry English meaning, e.g. they are named like math variables α, β, γ or random symbols △, □, or random string x1834. This way, the program is forced to be written in a way to be understood as a flow of the actual semantics.</p>
+
+<p>i wonder what would happen with such a language.</p>
+
+<p>normally, we name variables to help us understand the program. But there's a problem: namely, the names has absolutely no correlation to its real meaning or how it's used. In a sense, you are introducing a secondary semantics, that our brain interprets as priority, but this semantics has no actual relation to the algorithm specified in the code.</p>
+
+<p>normally this isn't problem, but sometimes it can be misleading. Also, strictly speaking, most variables are probably not that well-named, because naming something correctly really takes a lot training in logic and linguistics studies, and is very time consuming to name variables correctly. Normally, we don't do that. Variable names are used simply as a help, indicator, that give as some idea how it'll be used.</p>
+
+<p>but if we eliminate meaningful variable names, it will probably have a significant effect on how the program is written. The code structure will probably change a lot. The use of temp variables will probably reduce a lot.</p>
+
+<p>the gist of this post is to explore the question what would happen with this? What happens to codes of a large project written this way? Will comments or inline documentation be increased naturally? Will it actually increase productivity or readability of the code? What happens if a language is specifically designed for this?</p>
+
+<p>See also: <a href="programing_variable_naming.html">Programing Style: Variable Naming: English Words Considered Harmful</a>.</p>
+
+<xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/HTS08h6MdSc" height="1" width="1" /></div></content>
+<link rel="alternate" href="programing_variable_naming.html" />
+</entry>
+
+<entry>
+<title>Rob Pike on the Origion of unix Dot File Names</title>
+<id>tag:xahlee.org,2012-08-03:204939</id>
+<updated>2012-08-03T13:49:39-07:00</updated>
+<summary>unix history</summary>
+<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">
+<p><a href="../UnixResource_dir/writ/unix_origin_of_dot_filename.html">Rob Pike on the Origion of Dot File Names</a></p>
+<xhtml:img xmlns:xhtml="http://www.w3.org/1999/xhtml" src="http://feeds.feedburner.com/~r/XahsProgramingBlog/~4/YlIAjZytIgU" height="1" width="1" /></div></content>
+<link rel="alternate" href="../UnixResource_dir/writ/unix_origin_of_dot_filename.html" />
+</entry>
+
+
+</feed>

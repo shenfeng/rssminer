@@ -34,8 +34,25 @@
     (is (= "http://weblogs.asp.net/scottgu/default.aspx" (:link feed)))
     (is (:published_ts feed))
     (is (= 1 (-> feed :entries count)))
+    (is (= "http://weblogs.asp.net/scottgu/archive/2011/06/26/june-26th-links-asp-net-asp-net-mvc-net-and-nuget.aspx"
+           (-> feed :entries first :link)))
     (is (= "ASP.NET;aCategory;Link Listing;MVC"
            (-> feed :entries first :tags)))
+    (are [k] (-> feed :entries first k)
+         :author
+         :title
+         :summary
+         :link
+         :updated_ts
+         :published_ts)))
+
+(deftest test-xahsprogramingblog
+  (let [feed (parse-feed (slurp "test/XahsProgramingBlog"))]
+    (is (= "http://xahlee.info/comp/blog.html" (:link feed)))
+    (is (:published_ts feed))
+    (is (= 177 (-> feed :entries count)))
+    (doseq [e (:entries feed)]
+      (is (.startsWith ^String (:link e) "http")))
     (are [k] (-> feed :entries first k)
          :author
          :title
