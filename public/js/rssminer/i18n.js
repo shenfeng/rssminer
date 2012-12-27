@@ -31,7 +31,7 @@ var _MESGS_ = {
   m_rename: ['rename folder', '修改文件夹名'],
   m_visite: ['visite', '访问'],
 
-  m_item_option: ['Organize subscription, drop and drop to reorder', '点击整理订阅，拖动调整顺序'],
+  m_item_option: ['Click to see organize options, drop and drop to reorder', '点击整理订阅，拖动调整顺序'],
   m_move_to_folder: ['Move to: ', '移动到：'],
 
   // search_result

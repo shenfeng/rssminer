@@ -35,15 +35,15 @@
   count_count();
 
   // how many pages does each section has
-  var WELCOME_TABS = {recommend: 1, newest: 1, read: 1, voted: 1};
+  var WELCOME_TABS = {newest: 1, recommend: 1, read: 1, voted: 1};
 
   var RECOMMEND_TAB = 'recommend',
       NEWEST_TAB = 'newest',
       OLDEST_TAB = 'oldest',
       READ_TAB = 'read',
-      RCMD_TIP = _LANG_ZH_? '依据您以往的阅读，和你喜欢过的文章，精心为您推荐': 'Sorting feeds by leaning from your reading and voting history',
+      RCMD_TIP = _LANG_ZH_? '机器通过学习您的阅读习惯，对未读文章进行排序': 'Sorting feeds by leaning from your reading and voting history',
       VOTED_TAB = 'voted';
-  var SUB_TABS = [RECOMMEND_TAB, NEWEST_TAB, OLDEST_TAB, READ_TAB, VOTED_TAB];
+  var SUB_TABS = [NEWEST_TAB, RECOMMEND_TAB,  OLDEST_TAB, READ_TAB, VOTED_TAB];
 
 
   // --------------HELPER functions-------------
