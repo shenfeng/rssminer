@@ -73,10 +73,6 @@
 (defn wrap-request-logging-in-dev [handler]
   (if (= (conf/cfg :profile) :dev)
     (fn [{:keys [request-method ^String uri] :as req}]
-      (when-not (or (.startsWith uri "/api/")
-                    (.startsWith uri "/s/")
-                    (.startsWith uri "/fav"))
-        (require :reload 'rssminer.tmpls))
       (let [start (System/currentTimeMillis)
             resp (handler req)
             finish (System/currentTimeMillis)]

@@ -63,6 +63,7 @@
                                              :subs (get-subs (:id user))
                                              :demo true
                                              :static_server (cfg/cfg :static-server)})})
+         :headers {"Content-Type" "text/html; charset=utf8"}
          :status 200
          :session user}))))
 

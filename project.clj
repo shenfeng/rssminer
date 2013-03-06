@@ -42,7 +42,8 @@
              "-Xms512m"
              "-Xmx512m"]
   ;; :jvm-opts ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n"]
-  :plugins [[lein-swank "1.4.4"]]
+  :plugins [[lein-swank "1.4.4"]
+            [lein-cloverage "1.0.2"]]
   :profiles {:dev {:dependencies [[swank-clojure "1.4.0"]
                                   [junit/junit "4.8.2"]
                                   [commons-lang "2.3"]

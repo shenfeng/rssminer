@@ -4,4 +4,3 @@
 <title>{{m-site-title}}</title>
 <meta name="keywords" content="{{m-keywords}}">
 <meta name="description" content="{{m-description}}">
-{{> partials/reload_in_dev }}

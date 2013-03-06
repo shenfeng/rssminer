@@ -276,13 +276,9 @@ def has_inotify()
   end
 end
 
-desc "reload browser"
-task :reload do
-  sh 'wget http://localhost:9090/dev/c -q -O /dev/null || exit 0'
-end
-
 desc 'Watch css, html'
 task :watch => [:deps, :css_compile, "js:tmpls"] do
+  sh 'http-watcher -root ~/workspace/rssminer -ignores "test/,/\.,\.css$,.#,src/templates,target/,public/,android/" -proxy 9090 -command ./scripts/preprocess'
   if has_inotify
     t1 = Thread.new {
       sh 'while inotifywait -r -e modify scss/; do rake css_compile reload; done'
