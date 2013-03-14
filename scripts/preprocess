@@ -47,6 +47,7 @@ while [ $# -ne 0 ]; do
             # compress files in templates to src/templates
             target=$(echo $file | sed -e 's/templates/src\/templates/')
             compress_html $file $target
+            rake js:tmpls
             notify_changed $file
             ;;
         clj)
