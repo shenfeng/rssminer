@@ -27,7 +27,7 @@ nohup java -server -Dsun.jnu.encoding=UTF-8 \
     --static-server //s.rss-miner.com \
     --db-url jdbc:mysql://71.19.154.89/rssminer \
     --db-user feng \
-    --fetcher-concurrency 10 \
+    --fetcher-concurrency 20 \
     --fetch-size 15 \
     --events-threshold 10 \
     --bind-ip 127.0.0.1 \
