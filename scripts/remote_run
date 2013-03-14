@@ -17,7 +17,7 @@ nohup java -server -Dsun.jnu.encoding=UTF-8 \
     -Dfile.encoding=UTF-8 \
     -Dsun.net.inetaddr.ttl=0 \
     -Djava.net.preferIPv4Stack=true \
-    -Xms96m -Xmx96m -XX:PermSize=48M -XX:MaxPermSize=48M \
+    -Xms112m -Xmx112m -XX:PermSize=48M -XX:MaxPermSize=48M \
     -jar rssminer-standalone.jar \
     --index-path $INDEX_PATH \
     --profile prod \
@@ -31,7 +31,7 @@ nohup java -server -Dsun.jnu.encoding=UTF-8 \
     --fetch-size 15 \
     --events-threshold 10 \
     --bind-ip 127.0.0.1 \
-    --worker 3 \
+    --worker 5 \
     --port 8100 \
     >>${SHARED}-output.log 2>>${SHARED}-error.log &
 
