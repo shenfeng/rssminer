@@ -59,7 +59,7 @@
        :title title
        :summary summary
        :simhash (Utils/simHash summary title)
-       :link (.toString (.resolve uri link))
+       :link (most-len (.toString (.resolve uri link)) 386)
        :tags (let [t (s/join ";" (filter tag?
                                          (map #(-> % :name trim)
                                               (:categories e))))]

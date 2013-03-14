@@ -22,7 +22,7 @@ CREATE TABLE rss_links (
   url VARCHAR(512) NOT NULL,
   title VARCHAR(1024),
   description VARCHAR(1024),
-  alternate VARCHAR(220),       -- usually, the site's link
+  alternate VARCHAR(512),       -- usually, the site's link
   added_ts TIMESTAMP DEFAULT now(),
   next_check_ts INT UNSIGNED NOT NULL DEFAULT 1,
   last_status SMALLINT UNSIGNED NOT NULL DEFAULT 0,

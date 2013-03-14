@@ -35,7 +35,7 @@
 (defn- next-check [last-url last-interval status headers]
   (if-let [location (get headers HttpUtils/LOCATION)]
     (if (= location last-url)
-      {:url location :next_check_ts (+ (now-seconds) interval)}
+      {:url location :next_check_ts (+ (now-seconds) last-interval)}
       ;; if the url is not the same
       {:url location :next_check_ts (rand-int 100000)})
     (let [interval (if (= 200 status)
