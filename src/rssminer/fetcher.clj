@@ -32,9 +32,12 @@
   (max (* 3600 8) (int (/ last-interval 1.4)))) ; min 8h
 
 ;; TODO better last_modified and etag policy
-(defn- next-check [last-interval status headers]
+(defn- next-check [last-url last-interval status headers]
   (if-let [location (get headers HttpUtils/LOCATION)]
-    {:url location :next_check_ts (rand-int 100000)}
+    (if (= location last-url)
+      {:url location :next_check_ts (+ (now-seconds) interval)}
+      ;; if the url is not the same
+      {:url location :next_check_ts (rand-int 100000)})
     (let [interval (if (= 200 status)
                      (quicker last-interval) (slower last-interval))]
       {:check_interval interval
@@ -49,7 +52,7 @@
 (defn handle-resp [{:keys [id url check_interval last_modified url]}
                    status headers body]
   (let [feeds (when (and (= 200 status) body) (parse-feed body))
-        updated (assoc-if (next-check check_interval status headers)
+        updated (assoc-if (next-check url check_interval status headers)
                           :alternate (:link feeds)
                           :last_status status
                           :error_msg ""
