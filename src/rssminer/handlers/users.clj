@@ -1,5 +1,6 @@
 (ns rssminer.handlers.users
   (:use  [ring.util.response :only [redirect]]
+         [rssminer.config :only [cfg]]
          (rssminer [util :only [md5-sum valid-email? json-str2 read-if-json defhandler]]
                    [config :only [rssminer-conf cache-control]]))
   (:require [rssminer.db.user :as db]
@@ -65,10 +66,24 @@
   (update-conf uid req :pref_sort)
   {:status 204 :body nil})
 
+(def *demo-cache-newest* (atom {}))
+
+(defn- fetch-newest* [uid limit offset]
+  (let [demo-id (:id (cfg :demo-user))]
+    (if (= demo-id uid)
+      (let [{:keys [ts data]} @*demo-cache-newest*
+            now (System/currentTimeMillis)]
+        (if (and data (< (- now ts) (* 3600 1000)))
+          data
+          (let [data (fdb/fetch-newest uid limit offset)]
+            (reset! *demo-cache-newest* {:ts now
+                                         :data data})
+            data)))
+      (fdb/fetch-newest uid limit offset))))
 
 (defhandler summary [req limit offset section uid]
   (let [data (case section
-               "newest" (fdb/fetch-newest uid limit offset)
+               "newest" (fetch-newest* uid limit offset)
                "voted" (fdb/fetch-vote uid limit offset)
                "read" (fdb/fetch-read uid limit offset)
                "recommend" (fdb/fetch-likest uid limit offset))]
