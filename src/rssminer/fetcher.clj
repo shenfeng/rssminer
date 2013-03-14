@@ -36,8 +36,8 @@
   (if-let [location (get headers HttpUtils/LOCATION)]
     (if (= location last-url)
       {:url location :next_check_ts (+ (now-seconds) last-interval)}
-      ;; if the url is not the same
-      {:url location :next_check_ts (rand-int 100000)})
+      ;; if the url is not the same, TODO delay 5 minutes
+      {:url location :next_check_ts (+ (now-seconds) (rand-int 300))})
     (let [interval (if (= 200 status)
                      (quicker last-interval) (slower last-interval))]
       {:check_interval interval

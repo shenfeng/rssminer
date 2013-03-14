@@ -61,7 +61,7 @@
                                      :thread (cfg :worker)}))
    (info "server start"  (str (cfg :bind-ip) ":" (cfg :port))
          "with" (cfg :worker) "workers"))
-  (use-index-writer!)
+  (when (cfg :searcher) (use-index-writer!))
   (when (cfg :classifier) (start-classify-daemon!))
   (when (cfg :fetcher) (start-fetcher)))
 
@@ -85,6 +85,7 @@
               :default (int 20) :parse-fn to-int]
              ["--index-path" "Path to store lucene index" :default "/var/rssminer/index"]
              ["--[no-]fetcher" "Start rss fetcher" :default false]
+             ["--[no-]searcher" "Start indexer" :default false]
              ["--[no-]classifier" "Start classifier" :default false]
              ["--[no-]proxy" "Enable Socks proxy" :default false]
              ["--[no-]help" "Print this help"])]
