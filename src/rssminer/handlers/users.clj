@@ -66,18 +66,19 @@
   (update-conf uid req :pref_sort)
   {:status 204 :body nil})
 
-(def *demo-cache-newest* (atom {}))
+(def demo-cache-newest (atom {}))
 
 (defn- fetch-newest* [uid limit offset]
   (let [demo-id (:id (cfg :demo-user))]
     (if (= demo-id uid)
-      (let [{:keys [ts data]} @*demo-cache-newest*
+      (let [cache-key (str limit "-" offset)
+            {:keys [ts data]} (@demo-cache-newest cache-key)
             now (System/currentTimeMillis)]
-        (if (and data (< (- now ts) (* 3600 1000)))
+        (if (and data (< (- now ts) (* 3600 1000))) ; cache 1 hour
           data
           (let [data (fdb/fetch-newest uid limit offset)]
-            (reset! *demo-cache-newest* {:ts now
-                                         :data data})
+            (swap! demo-cache-newest assoc cache-key {:ts now
+                                                      :data data})
             data)))
       (fdb/fetch-newest uid limit offset))))
 
