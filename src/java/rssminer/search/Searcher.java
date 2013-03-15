@@ -336,6 +336,10 @@ public class Searcher {
             int limit, int offset, boolean facted) throws IOException, ParseException,
             SQLException {
         List<Integer> subids = DBHelper.getUserSubIDS(mDs, userID);
+        // TODO workaroud it
+        if(subids.size() > 900) { // an error for lucene if more than 1024 boolean query
+            subids = subids.subList(0, 900);
+        }
         IndexSearcher searcher = openSearcher();
         try {
             BooleanQuery query = buildQuery(q, subids);
