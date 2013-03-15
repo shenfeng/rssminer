@@ -31,7 +31,7 @@ nohup java -server -Dsun.jnu.encoding=UTF-8 \
     --fetch-size 15 \
     --events-threshold 10 \
     --bind-ip 127.0.0.1 \
-    --worker 5 \
+    --worker 8 \
     --port 8100 \
     >>${SHARED}-output.log 2>>${SHARED}-error.log &
 
