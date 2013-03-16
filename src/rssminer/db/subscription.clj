@@ -2,6 +2,7 @@
   (:use [rssminer.database :only [mysql-insert-and-return
                                   mysql-query with-mysql]]
         [rssminer.util :only [now-seconds]]
+        [clojure.tools.logging :only [error]]
         [rssminer.config :only [cfg]]
         [clojure.java.jdbc :only [delete-rows update-values do-commands]])
   (:import rssminer.db.MinerDAO))
@@ -31,7 +32,11 @@
 (defn- safe-update-rss-link [id data]
   (let [data (nil-fill (nil-fill data :last_modified) :etag)]
     (with-mysql
-      (update-values :rss_links ["id = ?" id] data))))
+      (try (update-values :rss_links ["id = ?" id] data)
+           (catch Exception e
+             (update-values :rss_links ["id = ?" id]
+                            {:next_check_ts (+ (now-seconds) 7200)})
+             (error e (str "update rss:" id)))))))
 
 (defn update-rss-link [id data]
   (if-let [url (:url data)]
