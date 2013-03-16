@@ -8,7 +8,7 @@
             [clojure.string :as str]))
 
 (defn subscribe [url uid title group-name]
-  (when url
+  (when (and url (valid-url? url))
     (let [sub (or (db/fetch-rss-link-by-url url)
                   (mysql-insert-and-return :rss_links {:url url
                                                        :user_id uid}))]
