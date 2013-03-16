@@ -1,7 +1,11 @@
 (ns rssminer.admin.main
   (:gen-class)
-  (:use (rssminer [search :only [index-feed use-index-writer! close-global-index-writer!]]
-                  [database :only [mysql-query with-mysql mysql-insert]])
+  (:use (rssminer [search :only [index-feed use-index-writer!
+                                 close-global-index-writer!]]
+                  [database :only [mysql-query with-mysql mysql-insert]]
+                  [util :only [to-int]]
+                  [redis :only [set-redis-pool!]]
+                  [config :only [cfg rssminer-conf]])
         (clojure.tools [logging :only [info]]
                        [cli :only [cli]])
         [clojure.java.jdbc :only [with-query-results]])
@@ -50,10 +54,15 @@
              ["-c" "--command" "rebuild-index" :parse-fn keyword]
              ["--db-url" "Mysql Database url" :default "jdbc:mysql://localhost/rssminer"]
              ["--db-user" "Mysql Database user name" :default "feng"]
+             ["--db-pass" "Mysql Database password" :default ""]
+             ["--redis-host" "Redis host" :default "127.0.0.1"]
+             ["--redis-port" "Redis port" :default 6379 :parse-fn to-int]
              ["--index-path" "Path to store lucene index" :default "/var/rssminer/index"]
              ["--[no-]help" "Print this help"])]
     (when (:help options) (println banner) (System/exit 0))
+    (swap! rssminer-conf merge options)
+    (set-redis-pool!)
     (if (= (:command options) :rebuild-index)
       (do (db/use-mysql-database! (:db-url options) (:db-user options))
-          (use-index-writer! (:index-path options))
+          (use-index-writer!)
           (rebuild-index)))))
