@@ -182,3 +182,5 @@ ORDER BY read_date DESC
 LIMIT 150);
 
 END //
+
+insert into users (email) values ('demo@rssminer.net');
