@@ -63,7 +63,7 @@
 
 (defn mk-feeds-fixtrue [resource]
   (fn [test-fn]
-    (let [sub (subscribe "http://link-to-scottgu's rss" (:id user1) nil nil)
+    (let [sub (subscribe "http://link-to-scottgu.rss" (:id user1) nil nil)
           feeds (parse-feed (slurp resource))]
       (save-feeds feeds (:rss_link_id sub)))
     (.decRef (.openReader @searcher)) ; just refresh reader
@@ -136,7 +136,7 @@
                               ~new-f))
        ~@forms
        (finally
-        (alter-var-root ~var (fn [n#] @old#))))))
+         (alter-var-root ~var (fn [n#] @old#))))))
 
 (defn redis-queue-fixture [test-fn]
   (mocking #'fetcher-enqueue (fn [& args])
