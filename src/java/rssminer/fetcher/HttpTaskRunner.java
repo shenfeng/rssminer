@@ -12,21 +12,15 @@ import static rssminer.Utils.CLIENT;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
 import me.shenfeng.http.DynamicBytes;
-import me.shenfeng.http.client.ITextHandler;
-import me.shenfeng.http.client.TextRespListener;
+import me.shenfeng.http.client.*;
 import me.shenfeng.http.client.TextRespListener.IFilter;
-import me.shenfeng.http.client.TimeoutException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +42,14 @@ class Filter implements IFilter {
 }
 
 public class HttpTaskRunner {
+    private static boolean isValidUrl(String url) {
+        try {
+            URI.create(url);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 
     class TextHandler implements ITextHandler {
 
@@ -80,10 +82,14 @@ public class HttpTaskRunner {
                 try {
                     String rss = HtmlUtils.extractRssUrl(body, task.getUri());
                     if (rss != null && rss.length() > 0) {
-                        headers.clear();
-                        headers.put(LOCATION, rss);
-                        status = 301;
-                        logger.info("{} html, extract {}", task.getUri(), rss);
+                        if (isValidUrl(rss)) {
+                            headers.clear();
+                            headers.put(LOCATION, rss);
+                            status = 301;
+                            logger.info("{} html, extract {}", task.getUri(), rss);
+                        } else {
+                            logger.info("no valid url: {}", rss);
+                        }
                     } else {
                         logger.warn("{}, but no rss link", task.getUri());
                     }
@@ -213,6 +219,14 @@ public class HttpTaskRunner {
         if (task == null) {
             return false;
         }
+        try {
+            task.getUri();
+        } catch (Exception e) {
+            // TODO URL maybe not valid, clean db
+            logger.error("exception: {}", e);
+            task.doTask(304, new TreeMap<String, String>(), null);
+        }
+
         synchronized (runningTasks) {
             if (runningTasks.contains(task.getUri())) {
                 return false;

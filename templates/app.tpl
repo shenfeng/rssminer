@@ -83,7 +83,7 @@
       <div id="content">
         <div id="reading-area">
           <div id="welcome-list">
-            <p id="loading-msg"></p>
+            <p id="loading-msg">Loading...</p>
           </div>
           <ul id="feed-content"></ul>
         </div>
@@ -91,6 +91,7 @@
       <div id="feedback-form">
         <h3>
           {{m-feedback}}
+          <a target="_blank" href="https://github.com/shenfeng/rssminer/issues">report issue on github</a>
           <span class="close" data-title="{{m-close}}">X</span>
         </h3>
         <div>

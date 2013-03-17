@@ -235,6 +235,9 @@ $demo_warn_bg_color: #fcf4ca;
     box-shadow: rgba(0, 0, 0, 0.2) 0 2px 6px;
     border: 1px #ccc solid;
     right: 0;
+    h3 a {
+        font-size: 10px;
+    }
     div {
         padding: 8px;
     }

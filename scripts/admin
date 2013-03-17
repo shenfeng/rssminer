@@ -119,7 +119,7 @@ rebuild_index () {
         -Dfile.encoding=UTF-8 \
         -Dsun.jnu.encoding=UTF-8 \
         -Xms88m -Xmx88m -XX:PermSize=32M -XX:MaxPermSize=32M \
-        -server -cp "classes:lib/*:src/" clojure.main \
+        -server -cp `lein classpath` clojure.main \
         -m rssminer.admin.main -c rebuild-index
 }
 

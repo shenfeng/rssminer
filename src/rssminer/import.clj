@@ -3,6 +3,7 @@
         [clojure.data.json :only [read-json]]
         [clojure.tools.logging :only [info error]]
         [ring.util.response :only [redirect]]
+        [rssminer.config :only [cfg]]
         (rssminer [util :only [user-id-from-session ignore-error]]
                   [http :only [request]]))
   (:import rssminer.Utils))
@@ -33,17 +34,18 @@
   (if-let [code (-> req :params :code)]
     (let [uid (user-id-from-session req)
           resp (request {:url token-ep :post (assoc oauth2 "code" code)})]
-      (if (= 200 (:status resp))
-        (let [{:keys [access_token refresh_token]} (read-json (:body resp))
-              data (request {:url list-dp
-                             :headers {"Authorization"
-                                       (str "OAuth " access_token)}})]
-          (if (= 200 (:status data))    ; do import
-            (let [items (Utils/parseGReaderSubs (:body data))]
-              (info uid "import greader" (count items))
-              (subscribe-all uid items)))
-          (finish-import data))
-        (finish-import resp)))          ; error
+      (when (and uid (not= uid (:id (cfg :demo-user))))
+        (if (= 200 (:status resp))
+          (let [{:keys [access_token refresh_token]} (read-json (:body resp))
+                data (request {:url list-dp
+                               :headers {"Authorization"
+                                         (str "OAuth " access_token)}})]
+            (if (= 200 (:status data))   ; do import
+              (let [items (Utils/parseGReaderSubs (:body data))]
+                (info uid "import greader" (count items))
+                (subscribe-all uid items)))
+            (finish-import data))
+          (finish-import resp))))        ; error
     (finish-import "import failed")))
 
 (defn greader-import [req]

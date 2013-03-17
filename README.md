@@ -63,6 +63,8 @@ cd rssminer && ./scripts/admin init-db
 4. Run it
 
 ```sh
+
+# make sure /var/rssminer/index dir exits and is writable. refer command line args for more info
 rake run:dev # run server in dev profile, view it: http://127.0.0.1:9090
 ```
 ### Run unit test
