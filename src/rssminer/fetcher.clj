@@ -1,7 +1,7 @@
 (ns rssminer.fetcher
   (:use [clojure.tools.logging :only [warn info error]]
         (rssminer [util :only [assoc-if now-seconds]]
-                  [parser :only [parse-feed]]
+                  [parser :only [parse-feed most-len]]
                   [redis :only [fetcher-dequeue fetcher-enqueue]]
                   [config :only [rssminer-conf]]))
   (:require [rssminer.db.feed :as db]
@@ -33,7 +33,7 @@
 
 ;; TODO better last_modified and etag policy
 (defn- next-check [last-url last-interval status headers]
-  (if-let [location (get headers HttpUtils/LOCATION)]
+  (if-let [location (most-len (get headers HttpUtils/LOCATION) 500)]
     (if (= location last-url)
       {:url location :next_check_ts (+ (now-seconds) last-interval)}
       ;; if the url is not the same, TODO delay 5 minutes
