@@ -27,7 +27,7 @@ lein uberjar
 mv target/rssminer-standalone.jar .
 
 # FRONTEND_HOST="192.168.1.117"
-FRONTEND_HOST=rssminer.net
+FRONTEND_HOST=106.187.91.68
 DEPLOYMENT_USER=deploy
 SSH_TARGET="${DEPLOYMENT_USER}@${FRONTEND_HOST}"
 TARGET_DIR="/var/www/rssminer"

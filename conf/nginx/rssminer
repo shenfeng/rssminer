@@ -19,7 +19,7 @@
 
 upstream rssminer_backend {
     server 127.0.0.1:8100;
-    # per worker process
+    # per worker process, min nginx version 1.1.4
     keepalive 4;
 }
 

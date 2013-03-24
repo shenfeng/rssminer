@@ -41,6 +41,9 @@ sudo hdparm -Tt /dev/sda
 * sudo EDITOR=vi visudo add
   "deploy  ALL = NOPASSWD: /bin/cp, /bin/mkdir, /sbin/restart, /bin/readlink, /bin/chown, /sbin/start, /usr/sbin/service, /bin/ln, /bin/stop"
 
+# install rsync
+sudo apt-get install rsync
+
   sudo add-apt-repository ppa:schwuk/redis
   https://launchpad.net/~schwuk/+archive/redis
 
