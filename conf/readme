@@ -1,5 +1,35 @@
 ## for deploy
 
+# install mysql server
+apt-get install sudo            # debian
+# deb http://ftp.us.debian.org/debian wheezy main  => mysqlserver 5.5
+sudo apt-get install mysql-server-5.5
+
+sudo adduser feng && copy authen key
+
+# copy my.cnf to production, restart mysql will fail
+
+sudo rm -rfv /var/lib/mysql && sudo mkdir /var/lib/mysql && sudo chown -R mysql:mysql /var/lib/mysql && sudo mysql_install_db
+vi edit /etc/mysql/debian.cnf
+# sudo ls /var/lib/mysql/mysql -lhs
+
+# copy auth key
+# disable password login && restart ssh
+
+ChallengeResponseAuthentication no
+PasswordAuthentication no    -- the other are the default
+UsePAM no
+PubkeyAuthentication yes
+
+
+# hard disk performance
+sudo hdparm -Tt /dev/sda
+
+# install JDK
+
+
+
+
 * enable partner in /etc/apt/soruces.list
 * install sun jdk: sudo apt-get install sun-java6-jdk
 * install latest nginx

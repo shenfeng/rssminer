@@ -54,13 +54,14 @@
   (.addShutdownHook (Runtime/getRuntime) shutdown-hook)
   (use-mysql-database!)
   (set-redis-pool!)
-  (do-kill-if-prod
-   (reset! server (run-server (app) {:port (cfg :port)
-                                     :ip (cfg :bind-ip)
-                                     :worker-name-prefix "w"
-                                     :thread (cfg :worker)}))
-   (info "server start"  (str (cfg :bind-ip) ":" (cfg :port))
-         "with" (cfg :worker) "workers"))
+  (when (cfg :web)
+    (do-kill-if-prod
+     (reset! server (run-server (app) {:port (cfg :port)
+                                       :ip (cfg :bind-ip)
+                                       :worker-name-prefix "w"
+                                       :thread (cfg :worker)}))
+     (info "server start"  (str (cfg :bind-ip) ":" (cfg :port))
+           "with" (cfg :worker) "workers")))
   (when (cfg :searcher) (use-index-writer!))
   (when (cfg :classifier) (start-classify-daemon!))
   (when (cfg :fetcher) (start-fetcher)))
@@ -85,6 +86,7 @@
               :default (int 20) :parse-fn to-int]
              ["--index-path" "Path to store lucene index" :default "/var/rssminer/index"]
              ["--[no-]fetcher" "Start rss fetcher" :default false]
+             ["--[no-]web" "Start HTTP server" :default true]
              ["--[no-]searcher" "Start indexer" :default false]
              ["--[no-]classifier" "Start classifier" :default false]
              ["--[no-]proxy" "Enable Socks proxy" :default false]
