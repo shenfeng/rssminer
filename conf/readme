@@ -13,6 +13,12 @@ sudo rm -rfv /var/lib/mysql && sudo mkdir /var/lib/mysql && sudo chown -R mysql:
 vi edit /etc/mysql/debian.cnf
 # sudo ls /var/lib/mysql/mysql -lhs
 
+CREATE USER feng@'127.0.0.1' IDENTIFIED BY ''
+GRANT ALL PRIVILEGES ON *.* TO 'feng'@'127.0.0.1' with grant option;
+
+CREATE USER feng@'106.187.91.68' IDENTIFIED BY ''
+GRANT ALL PRIVILEGES ON *.* TO 'feng'@'106.187.91.68' with grant option;
+
 # copy auth key
 # disable password login && restart ssh
 
@@ -39,7 +45,7 @@ sudo hdparm -Tt /dev/sda
 
 * sudo adduser deploy && copy authen key
 * sudo EDITOR=vi visudo add
-  "deploy  ALL = NOPASSWD: /bin/cp, /bin/mkdir, /sbin/restart, /bin/readlink, /bin/chown, /sbin/start, /usr/sbin/service, /bin/ln, /bin/stop"
+  "deploy  ALL = NOPASSWD: /bin/cp, /bin/mkdir, /sbin/restart, /bin/readlink, /bin/chown, /sbin/start, /usr/sbin/service, /bin/ln, /bin/stop, /usr/sbin/nginx"
 
 # install rsync
 sudo apt-get install rsync

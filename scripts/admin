@@ -18,6 +18,19 @@ MYSQL="mysql --host $DB_HOST -uroot"
 REMOTE_SERVER='71.19.154.89'
 REMOTE_USER='feng'
 
+
+# TODO zip and copy
+# copy databases
+# create database rssminer;
+# mysqldump -ufeng -h'71.19.154.89' rssminer users | mysql -uroot rssminer
+# mysqldump -ufeng -h'71.19.154.89' rssminer rss_links | mysql -uroot rssminer
+# mysqldump -ufeng -h'71.19.154.89' rssminer feeds | mysql -uroot rssminer
+# mysqldump -ufeng -h'71.19.154.89' rssminer user_feed | mysql -uroot rssminer
+# mysqldump -ufeng -h'71.19.154.89' rssminer favicon | mysql -uroot rssminer
+# mysqldump -ufeng -h'71.19.154.89' rssminer feedback | mysql -uroot rssminer
+# mysqldump -ufeng -h'71.19.154.89' rssminer feed_data | mysql -uroot rssminer
+# mysqldump -ufeng -h'71.19.154.89' rssminer user_subscription | mysql -uroot rssminer
+
 log() {
     echo "`date "+%Y-%m-%d %H:%M:%S"` INFO -- $@"
     # echo "`date --rfc-3339=seconds` INFO -- $@"

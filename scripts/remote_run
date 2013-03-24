@@ -25,11 +25,11 @@ nohup java -server -Dsun.jnu.encoding=UTF-8 \
     --profile prod \
     --redis-host 127.0.0.1 \
     --no-proxy \
-    --fetcher \
     --static-server //s.rss-miner.com \
-    --db-url jdbc:mysql://71.19.154.89/rssminer \
+    --db-url jdbc:mysql://127.0.0.1/rssminer \
+    --fetcher \
     --db-user feng \
-    --fetcher-concurrency 35 \
+    --fetcher-concurrency 25 \
     --fetch-size 25 \
     --events-threshold 10 \
     --bind-ip 127.0.0.1 \
