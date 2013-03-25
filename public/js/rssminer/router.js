@@ -30,6 +30,9 @@
 
   function checkUrl () {
     var current = getFragment();
+    if(window.localStorage) {
+      localStorage.setItem('last_hash', current);
+    }
     if(oldHash === current) { return; }
     oldHash = current;
     loadUrl(current);

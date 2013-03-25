@@ -540,6 +540,10 @@
     'search?q=:q&tags=:tags&authors=:authors&offset=:offset': search
   });
 
+  if(window.localStorage) {
+    location.hash = localStorage.getItem('last_hash') || '';
+  }
+
   $reading_area.scroll(_.debounce(on_readarea_scroll, 40));
   $navigation.scroll(on_navigation_scroll);
 })();
