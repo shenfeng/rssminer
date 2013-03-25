@@ -106,6 +106,11 @@ task :swank => [:javac, :prepare] do
   sh "lein swank"
 end
 
+desc "lein repl"
+task :repl => [:javac, :prepare] do
+  sh "lein repl"
+end
+
 desc 'Deploy to production'
 task :deploy => [:clean, :chrome, :test, :prepare_prod] do
   sh "scripts/deploy"
