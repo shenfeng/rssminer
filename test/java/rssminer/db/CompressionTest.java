@@ -9,10 +9,11 @@ public class CompressionTest {
 
     static String JDBC_URL = "jdbc:mysql://localhost/rssminer?cachePrepStmts=true&useServerPrepStmts=true";
 
-//    @Test
+    // @Test
     public void testDeflater() throws IOException {
 
-//        String str = IOUtils.toString(new FileInputStream("/Users/feng/workspace/rssminer/test/java/rssminer/db/CompressionTest.java"));
+        // String str = IOUtils.toString(new
+        // FileInputStream("/Users/feng/workspace/rssminer/test/java/rssminer/db/CompressionTest.java"));
         String str = "-----";
         byte[] input = str.getBytes("UTF-8");
 
@@ -38,7 +39,6 @@ public class CompressionTest {
 
     private static long byteCount = 0, compressedSize = 0, combinedSize = 0, feedCount = 0;
 
-
     public static void main(String[] args) throws SQLException, UnsupportedEncodingException {
 
         Connection con = DriverManager.getConnection(JDBC_URL, "feng", "");
@@ -47,13 +47,14 @@ public class CompressionTest {
         ResultSet max = stat.executeQuery("select max(id) from feed_data");
         max.next();
         int maxId = max.getInt(1);
-        PreparedStatement ps = con.prepareStatement("select summary from feed_data where id > ? and id <= ?");
+        PreparedStatement ps = con
+                .prepareStatement("select summary from feed_data where id > ? and id <= ?");
         System.out.println("maxid = " + maxId);
 
         StringBuilder sb = new StringBuilder();
         final int LEVEL = 6;
 
-        for (int i = 0; i < maxId; ) {
+        for (int i = 0; i < maxId;) {
             ps.setInt(1, i);
             i += 10;
             ps.setInt(2, i);
@@ -66,10 +67,10 @@ public class CompressionTest {
 
                 byte[] bytes = summary.getBytes("utf8");
                 byteCount += bytes.length;
-                compressedSize += getCompressedSize(6, bytes);
+                compressedSize += getCompressedSize(LEVEL, bytes);
             }
 
-            combinedSize += getCompressedSize(6, sb.toString().getBytes("utf8"));
+            combinedSize += getCompressedSize(LEVEL, sb.toString().getBytes("utf8"));
             sb.setLength(0);
             if (i % 40000 == 0) {
                 printMessage(i);
@@ -79,9 +80,11 @@ public class CompressionTest {
     }
 
     private static void printMessage(int i) {
-        System.out.printf("index %d, %d feed, %.2fm, avg: %d, compress %.2fm, avg %d, combined %.2fm\n", i, feedCount, (double) byteCount / 1024 / 1024, byteCount / feedCount,
-                (double) compressedSize / 1024 / 1024, compressedSize / feedCount, (double) combinedSize / 1024 / 1024);
+        System.out
+                .printf("%s, index %d, %d feed, %.2fm, avg: %d, compress %.2fm, avg %d, combined %.2fm\n",
+                        new java.util.Date(), i, feedCount, (double) byteCount / 1024 / 1024,
+                        byteCount / feedCount, (double) compressedSize / 1024 / 1024,
+                        compressedSize / feedCount, (double) combinedSize / 1024 / 1024);
     }
-
 
 }
