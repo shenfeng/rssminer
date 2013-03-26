@@ -79,7 +79,7 @@ backup_db() {
     D=`date +"%Y%m%d%H%M"`
     BACKUP_SQL="$BACKUP_FOLDER/rssminer_$D.sql.gz"
     log "Back up to file $BACKUP_SQL"
-    ssh ${REMOTE_USER}@${REMOTE_SERVER} "mysqldump -u $DB_USER --routines --single-transaction --database $DB_NAME --ignore-table=rssminer.feed_data --ignore-table=rssminer.favicon --add-drop-database --add-drop-table | gzip --stdout" > $BACKUP_SQL
+    ssh ${REMOTE_USER}@${REMOTE_SERVER} "mysqldump -u $DB_USER --routines --quick --single-transaction --database $DB_NAME --ignore-table=rssminer.feed_data --ignore-table=rssminer.favicon --add-drop-database --add-drop-table | gzip --stdout" > $BACKUP_SQL
 }
 
 backup_summary() {
@@ -90,7 +90,7 @@ backup_summary() {
     D=`date +"%Y%m%d%H%M"`
     BACKUP_SQL="$BACKUP_FOLDER/feed_data_$D.sql.gz"
     log "Back up feed_data to file $BACKUP_SQL"
-    ssh ${REMOTE_USER}@${REMOTE_SERVER} "mysqldump -u $DB_USER $DB_NAME feed_data | gzip --stdout" > $BACKUP_SQL
+    ssh ${REMOTE_USER}@${REMOTE_SERVER} "mysqldump -u $DB_USER $DB_NAME feed_data --quick --single-transaction | gzip --stdout" > $BACKUP_SQL
 }
 
 restore_db () {
@@ -185,3 +185,10 @@ usage
 
 # auto start on server reboot
 # sudo update-rc.d rssminer defaults;
+
+
+for i in {1..10}
+do
+    ab -n 10000 -c 2000 -k http://your-server/ &
+    sleep 5
+done
