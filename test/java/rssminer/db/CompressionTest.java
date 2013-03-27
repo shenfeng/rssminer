@@ -37,6 +37,8 @@ public class CompressionTest {
         return count;
     }
 
+    private static long startTime = System.currentTimeMillis();
+
     private static long byteCount = 0, compressedSize = 0, combinedSize = 0, feedCount = 0;
 
     public static void main(String[] args) throws SQLException, UnsupportedEncodingException {
@@ -80,10 +82,11 @@ public class CompressionTest {
     }
 
     private static void printMessage(int i) {
+        long ms = System.currentTimeMillis() - startTime;
         System.out
-                .printf("%s, index %d, %d feed, %.2fm, avg: %d, compress %.2fm, avg %d, combined %.2fm\n",
-                        new java.util.Date(), i, feedCount, (double) byteCount / 1024 / 1024,
-                        byteCount / feedCount, (double) compressedSize / 1024 / 1024,
+                .printf("%dms, index %d, %d feed, %.2fm, avg: %d, compress %.2fm, avg %d, combined %.2fm\n",
+                        ms, i, feedCount, (double) byteCount / 1024 / 1024, byteCount
+                                / feedCount, (double) compressedSize / 1024 / 1024,
                         compressedSize / feedCount, (double) combinedSize / 1024 / 1024);
     }
 
