@@ -241,7 +241,7 @@ namespace :run do
 
   desc "Run server in production profile"
   task :prod => [:prepare_prod, :javac] do
-    sh 'scripts/run --profile prod --static-server //s.rss-miner.com'
+    sh 'scripts/run --profile prod --static-server //192.168.1.200:9090'
   end
 
   desc "Restore db from latest backup, Run server in dev profile"
