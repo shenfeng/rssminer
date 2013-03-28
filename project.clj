@@ -24,7 +24,7 @@
   :repositories {"java.net" {:url "http://download.java.net/maven/2/" :snapshots false}}
   :warn-on-reflection true
   :javac-options ["-source" "1.7" "-target" "1.7" "-g" "-encoding" "utf8"]
-  :java-source-path "src/java"
+  :java-source-paths ["src/java"]
   :aot [rssminer.main, rssminer.admin]
   :main rssminer.main
   :uberjar-name "rssminer-standalone.jar"

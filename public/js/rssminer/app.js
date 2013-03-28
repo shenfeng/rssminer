@@ -12,8 +12,7 @@
       location = window.location,
       call_if_fn = util.call_if_fn;
 
-  var SHOW_NAV = 'show-nav',
-      MIN_TIME = 400,           // at least 400ms, then record
+  var MIN_TIME = 400,           // at least 400ms, then record
       SAVE_THREASH_HOLD = 3,
       DATA_ID = 'data-id',
       SUMMARY_SELECTOR = '#s-',
@@ -25,7 +24,7 @@
       SHOW_CONTENT = 'show-content';
 
   var $reading_area = $('#reading-area'),
-      $navigation = $('#navigation'), // feed list
+      // $navigation = $('#navigation'), // feed list
       $subs_list = $('#sub-list'),    // sub list
       $feed_content = $('#feed-content'),
       $logo = $('#logo'),
@@ -189,7 +188,6 @@
       subid = subid.substring(2);
     }
     var read_cb = function () {
-      $logo.removeClass(SHOW_NAV);
       fetch_and_apppend(feedid, true, function () {
         reading_feed(feedid);
       });
@@ -208,15 +206,14 @@
   }
 
   function show_feeds (data) {
-    gcur_has_more = data.pager.has_more;
+    // gcur_has_more = data.pager.has_more;
     show_server_message();
-    var html = to_html(tmpls.feeds_nav, data);
-    $navigation.empty().append(html);
-    html = to_html(tmpls.sub_feeds, data);
+    // var html = to_html(tmpls.feeds_nav, data);
+    // $navigation.empty().append(html);
+    var html = to_html(tmpls.sub_feeds, data);
     $welcome_list.empty().append(html);
     set_document_title(data.title);
     $reading_area.removeClass(SHOW_CONTENT);
-    $logo.addClass(SHOW_NAV);
   }
 
   function show_welcome (section, page, cb) {
@@ -243,14 +240,7 @@
 
   function show_settings (section) {
     $reading_area.removeClass(SHOW_CONTENT);
-    // var old_sort = data_api.user_conf.pref_sort;
     var sections = ['add', 'settings'];
-    //     sortings = [{value: NEWEST_TAB,
-    //                  text: _LANG_(NEWEST_TAB),
-    //                  s: old_sort === NEWEST_TAB},
-    //                 {value: 'recommend', // default to recommend
-    //                  text: _LANG_('recommend'),
-    //                  s: old_sort === 'recommend'}];
     var d = {
       title: _LANG_(section),
       selected: section,
@@ -340,39 +330,46 @@
       var html = to_html(tmpls.subs_nav, {groups: subs});
       $subs_list.empty().append(html).find('img').each(util.favicon_ok);
       $subs_list.trigger('refresh.rm');
+      // console.log();
+      var old_hash = localStorage.getItem('last_hash');
+      if(!old_hash) {
+        var $item = $('#sub-list .item:first');
+        old_hash = $item.find('a').attr('href') || '';
+      }
+      location.hash = old_hash;
       util.call_if_fn(cb);
     });
   }
 
-  var is_loading = false;
-  var gcur_has_more = true;
-  function on_navigation_scroll(e) {     // feed list scroll, auto load
-    if(!gcur_has_more) { $('#navigation .loader').remove(); return; }
-    if(is_loading) { return; }
-    var total_height = $navigation[0].scrollHeight, // ie8, ff, chrome
-        scrollTop = $navigation.scrollTop(),
-        height = $navigation.height();
-    if(scrollTop + height >= total_height - 30) {
-      var fn = data_api.fetch_sub_feeds;
-      if( gcur_group === GROUP_FOLDER) {
-        fn = data_api.fetch_group_feeds;
-      } else if (gcur_group === GROUP_WELCOME ) {
-        fn = data_api.fetch_welcome;
-      }
-      gcur_page += 1;
-      is_loading = true;
-      fn(gcur_subid, gcur_page, gcur_sort, function (data) {
-        is_loading = false;
-        gcur_has_more = data.pager && data.pager.has_more;
-        if(!gcur_has_more) {
-          $('#navigation .loader').remove();
-        } else {
-          var html = to_html(tmpls.feeds_list, data);
-          $('#feed-list').append(html);
-        }
-      });
-    }
-  };
+  // var is_loading = false;
+  // var gcur_has_more = true;
+  // function on_navigation_scroll(e) {     // feed list scroll, auto load
+  //   if(!gcur_has_more) { $('#navigation .loader').remove(); return; }
+  //   if(is_loading) { return; }
+  //   var total_height = $navigation[0].scrollHeight, // ie8, ff, chrome
+  //       scrollTop = $navigation.scrollTop(),
+  //       height = $navigation.height();
+  //   if(scrollTop + height >= total_height - 30) {
+  //     var fn = data_api.fetch_sub_feeds;
+  //     if( gcur_group === GROUP_FOLDER) {
+  //       fn = data_api.fetch_group_feeds;
+  //     } else if (gcur_group === GROUP_WELCOME ) {
+  //       fn = data_api.fetch_welcome;
+  //     }
+  //     gcur_page += 1;
+  //     is_loading = true;
+  //     fn(gcur_subid, gcur_page, gcur_sort, function (data) {
+  //       is_loading = false;
+  //       gcur_has_more = data.pager && data.pager.has_more;
+  //       if(!gcur_has_more) {
+  //         $('#navigation .loader').remove();
+  //       } else {
+  //         var html = to_html(tmpls.feeds_list, data);
+  //         $('#feed-list').append(html);
+  //       }
+  //     });
+  //   }
+  // };
 
   function on_readarea_scroll(e) {
     if(!$reading_area.hasClass(SHOW_CONTENT)) { return; }
@@ -511,13 +508,7 @@
     'click #feedback-form .close': function () { $feedback.hide(); },
     'click #feedback-form button': submit_feedback,
     'click #overlay': close_shortcut_help,
-    'click .icon-ok-circle': close_shortcut_help,
-    'mouseenter #logo': function () { $logo.addClass(SHOW_NAV); },
-    'mouseleave #logo': function () {
-      if(/#read\/.+\/\d+/.test(location.hash)) { // if reading feed
-        _.delay(function () { $logo.removeClass(SHOW_NAV); }, 50);
-      }
-    }
+    'click .icon-ok-circle': close_shortcut_help
   });
 
   // app start here
@@ -540,10 +531,6 @@
     'search?q=:q&tags=:tags&authors=:authors&offset=:offset': search
   });
 
-  if(window.localStorage) {
-    location.hash = localStorage.getItem('last_hash') || '';
-  }
 
   $reading_area.scroll(_.debounce(on_readarea_scroll, 40));
-  $navigation.scroll(on_navigation_scroll);
 })();

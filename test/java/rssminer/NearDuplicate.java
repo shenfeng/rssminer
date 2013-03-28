@@ -138,7 +138,7 @@ public class NearDuplicate {
     public static void main(String[] args) throws IOException, InterruptedException {
         PerThreadDataSource db = new PerThreadDataSource("jdbc:mysql://localhost/rssminer",
                 "feng", "");
-        Searcher.initGlobalSearcher("/var/rssminer/index", db, null);
+        Searcher.initGlobalSearcher("/var/rssminer/index", db);
 
         init();
 

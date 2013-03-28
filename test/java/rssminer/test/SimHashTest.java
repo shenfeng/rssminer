@@ -59,7 +59,7 @@ public class SimHashTest {
         PerThreadDataSource db = new PerThreadDataSource("jdbc:mysql://localhost/rssminer",
                 "feng", "");
         try {
-            Searcher.initGlobalSearcher("/var/rssminer/index", db, null);
+            Searcher.initGlobalSearcher("/var/rssminer/index", db);
             con = db.getConnection();
         } catch (Exception e) {
             e.printStackTrace();

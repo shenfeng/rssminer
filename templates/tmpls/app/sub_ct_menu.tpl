@@ -1,5 +1,5 @@
 {{#folders}}
-  <li class="folder {{#selected}}selected{{/selected}}" data-title="{{m_move_to_folder}}{{name}}">
+  <li class="folder" data-title="{{m_move_to_folder}}{{name}}">
     {{ name }}
   </li>
 {{/folders}}

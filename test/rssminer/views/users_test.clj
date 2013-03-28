@@ -42,7 +42,7 @@
     (is (= conf (-> user1 :id find-by-id :conf read-if-json)))))
 
 (deftest test-welcome-list
-  (doseq [section ["newest" "voted" "read" "recommend"]]
+  (doseq [section ["newest" "voted" "read"]]
     (is (= 200 (:status (auth-app {:uri "/api/welcome"
                                    :request-method :get
                                    :params {"section" section

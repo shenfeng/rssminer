@@ -22,7 +22,6 @@ body {
 }
 
 #logo {                         /* in header */
-    &.show-nav #sub-list { display: block; }
     h1 {
         margin: 0px 65px 4px 26px;
         font-size: 28px;
@@ -132,34 +131,15 @@ body {
     background: white;
     position: relative;
     .scroll-wrap {
-        position: fixed;
-        top: $header_height;
+    /* position: fixed; */
+    /* top: $header_height; */
     }
 }
-
 
 #content { margin-left: $nav_width + 3px; }
 
-#navigation {
-    width: $nav_width;
-    font-size: 13px;
-    /* background: white url($bg_url) repeat center top; */
-    background: $background;
-    overflow-y: scroll;
-    h3 {
-        a { color: #111;  }
-        margin: 0; padding: 8px 0 8px 5px; @include overflow-ellipsis();
-    }
-    .date { margin: 4px 0 0 0; float: right; }
-    .author { max-width: 210px; }
-    .loader {
-        display: block;
-        margin: 15px auto;
-    }
-}
-
 #feed-list {                    /* navigation */
-    .indicator { top: 11px; }
+    /* .indicator { top: 11px; } */
     li {
         border-top: 1px solid white;
         line-height: 2;
@@ -186,14 +166,20 @@ ul { list-style: none; padding: 0; margin: 0; }
 .ficon-error img { display: none; }
 .ficon-ok .icon-rss { display: none; }
 
-#sub-list {                     /* in logo */
+#subs-wrapper {
     background: $background;
-    overflow-y: scroll;
+    /* overflow-y: auto; */
+    /* overflow: hidden; */
     padding-top: 3px;
-    display: none;
+    position: fixed;
+    top: $header_height;
+    overflow-y: auto;
+    &:hover {
+    /* overflow-y: auto; */
+    }
 }
 
-#sub-list {                     /* in navigation */
+#sub-list {
     .icon-folder-close { display: none; }
     li.collapse {
         .icon-folder-open { display: none; }
@@ -243,20 +229,20 @@ ul { list-style: none; padding: 0; margin: 0; }
     }
 }
 
-.indicator {
-    margin: 4px;
-    position: absolute;
-    height: 7px;
-    width: 7px;
-    @include border-radius(8px);
-}
+/* .indicator { */
+/*     margin: 4px; */
+/*     position: absolute; */
+/*     height: 7px; */
+/*     width: 7px; */
+/*     @include border-radius(8px); */
+/* } */
 
 /* by sys, virtual small than by user */
-.sys .indicator {
-    height: 6px;
-    width: 6px;
-    top: 9px;
-}
+/* .sys .indicator { */
+/*     height: 6px; */
+/*     width: 6px; */
+/*     top: 9px; */
+/* } */
 
 .c {
     font-weight: normal;
@@ -314,22 +300,28 @@ ul { list-style: none; padding: 0; margin: 0; }
     }
 }
 
-.like .icon-thumbs-up { color: $thumb_dark_color; font-size: 20px;}
+.like .icon-thumbs-up { color: $thumb_dark_color;
+                        font-size: 18px;
+                      }
+.icon-thumbs-up {
+    color: #666;
+}
 .dislike .icon-thumbs-down { color: $thumb_dark_color; font-size: 20px;}
 .neutral, .sys { .thumbs i { color: $thumb_light_color; font-size: 17px; } }
 .neutral, .sys { .thumbs i:hover { color: $thumb_dark_color; } }
 
 .feed {
     &.like {
-        .indicator { background: $like_color; }
+        a {color: #000; }
+        /* .indicator { background: $like_color; } */
         &:hover .icon-thumbs-up { visibility: visible; }
     }
     &.neutral {
-        .indicator { background: $neutral_color; }
+        /* .indicator { background: $neutral_color; } */
         &:hover .thumbs i { visibility: visible; }
     }
     &.dislike {
-        .indicator { background: $dislike_color; }
+        /* .indicator { background: $dislike_color; } */
         &:hover .icon-thumbs-down { visibility: visible; }
     }
     &.sys {
@@ -338,7 +330,10 @@ ul { list-style: none; padding: 0; margin: 0; }
 }
 
 
-.unread a { color: $unread_color; }
+.unread a {
+    color: $unread_color;
+    font-weight: bold;
+}
 .read, .sys-read { a { color: $read_color; } }
 
 #reading-area {
@@ -376,7 +371,7 @@ ul { list-style: none; padding: 0; margin: 0; }
     .author { margin-left: 15px; }
     .feed {
         a { height: 21px; padding: 9px 3px; }
-        margin-left: 20px;
+        margin-left: 10px;
         border-bottom: 1px dotted $feed_border_color;
     }
     .feeds {
@@ -493,18 +488,18 @@ ul { list-style: none; padding: 0; margin: 0; }
         }
     }
     .domain { color: white; padding: 0 10px 30px 10px ; font-size: 12px;}
-    .indicator {
-        top: 7px; right: 65px;
-        height: 12px;
-        width: 12px;
-        @include border-radius(6px);
-    }
-    .sys .indicator {
-        height: 9px;
-        width: 9px;
-        top: 7px;
-        @include border-radius(5px);
-    }
+/* .indicator { */
+/*     top: 7px; right: 65px; */
+/*     height: 12px; */
+/*     width: 12px; */
+/*     @include border-radius(6px); */
+/* } */
+/* .sys .indicator { */
+/*     height: 9px; */
+/*     width: 9px; */
+/*     top: 7px; */
+/*     @include border-radius(5px); */
+/* } */
 }
 
 #ct-menu {
@@ -514,7 +509,7 @@ ul { list-style: none; padding: 0; margin: 0; }
     li {
         width: 220px;
         margin: 0;
-        padding: 2px 4px 2px 16px;
+        padding: 4px 4px 4px 16px;
         cursor: pointer;
         position: relative;
         &:hover { background: $hover_color;}
@@ -529,6 +524,8 @@ ul { list-style: none; padding: 0; margin: 0; }
         padding: 0;
         margin-top: 3px;
     }
+    overflow-y: auto;
+    overflow-x: hidden;
     font-size: 13px;
     background: white;
     border: 1px solid $color;

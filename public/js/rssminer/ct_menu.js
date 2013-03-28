@@ -52,16 +52,33 @@
           folders: data_api.list_folder_names(subid),
           sub: data_api.get_subscription(subid)
         });
-    var top = e.clientY;
     $ct_menu.empty().append(html);
-    if($win.height() - e.clientY < $ct_menu.height()) {
-      top -= $ct_menu.height();
+    var top = e.clientY,
+        height = 'auto';
+    if($win.height() - top < $ct_menu.height()) { // not enough space on bottom
+      if(top > $ct_menu.height()) { // top has enough screen
+        top = top - $ct_menu.height();
+      } else {
+        if($win.height() / 2 > top) { // user click on the top half screen
+          // place it on the bottom and scroll
+          height = $win.height() - top - 10;
+        } else {
+          // place it on the top and scroll
+          height = top - 10;
+          top = 10;
+        }
+      }
+    } else {
+      // there is enough space on the bottom
     }
+
     $ct_menu.css({
       top: top,
       left: e.clientX,
-      display: 'block'
+      display: 'block',
+      height: height
     });
+
     return false;
   }
 
@@ -190,7 +207,7 @@
 
   util.delegate_events($('#main'), {
     'click .thumbs .icon-thumbs-down': save_vote_down,
-    'click .thumbs .icon-thumbs-up': save_vote_up
+    'click .icon-thumbs-up': save_vote_up
   });
 
   $subs_list.sortable({

@@ -86,8 +86,7 @@
   (let [data (case section
                "newest" (fetch-newest* uid limit offset)
                "voted" (fdb/fetch-vote uid limit offset)
-               "read" (fdb/fetch-read uid limit offset)
-               "recommend" (fdb/fetch-likest uid limit offset))]
+               "read" (fdb/fetch-read uid limit offset))]
     (if (and (seq data) (not= "read" section) (not= "voted" section))
       {:body data ;; ok, just cache for 10 miniutes
        :headers cache-control}

@@ -37,14 +37,14 @@
                  (case sort
                    "newest" (db/fetch-sub-newest uid rssid limit offset)
                    "oldest" (db/fetch-sub-oldest uid rssid limit offset)
-                   "recommend" (db/fetch-sub-likest uid rssid limit offset)
+                   ;; "recommend" (db/fetch-sub-likest uid rssid limit offset)
                    "read" (db/fetch-sub-read uid rssid limit offset)
                    "voted" (db/fetch-sub-vote uid rssid limit offset)))
                (let [ids (map to-int (str/split rid #"-"))]
                  (case sort
                    "newest" (db/fetch-folder-newest uid ids limit offset)
                    "oldest" (db/fetch-folder-oldest uid ids limit offset)
-                   "recommend" (db/fetch-folder-likest uid ids limit offset)
+                   ;; "recommend" (db/fetch-folder-likest uid ids limit offset)
                    "read" (db/fetch-folder-read uid ids limit offset)
                    "voted" (db/fetch-folder-vote uid ids limit offset))))]
     (if (and (seq data) (not= "read" sort) (not= "voted" sort))

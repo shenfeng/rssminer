@@ -46,7 +46,8 @@
         feeds (map bean (:feeds
                          (case sortby
                            "latest" (fdb/fetch-sub-newest uid (to-int sid) 35 offset)
-                           "likest" (fdb/fetch-sub-likest uid (to-int sid) 35 offset))))]
+                           ;; "likest" (fdb/fetch-sub-likest uid (to-int sid) 35 offset)
+                           )))]
     (tmpls/m-feeds {:feeds (readable feeds)
                     :title (:title sub)
                     :category (case sortby

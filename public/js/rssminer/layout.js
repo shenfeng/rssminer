@@ -2,37 +2,38 @@
   "use strict";
   // cache
   var $win = $(window),
-      $nav = $('#navigation'),
+      // $nav = $('#navigation'),
       $header = $('#header'),
-      $reading_area = $('#reading-area'),
-      $subs_list = $('#sub-list');
+      $reading_area = $('#reading-area');
 
   var SELECTED = 'selected';
 
   function layout () {
     var height = $win.height() - $header.height();
     $reading_area.height(height);
-    $('.scroll-wrap').each(function (idx, e) {
-      var $e = $(e),
-          $c = $(e.children[0]);
-      $c.height(height).width($e.width() + scrollbar_size);
-    });
+    $('#subs-wrapper').height(height);
+    // $subs_list.height(height);
+    // $('.scroll-wrap').each(function (idx, e) {
+    //   var $e = $(e),
+    //       $c = $(e.children[0]);
+    //   $c.height(height).width($e.width() + scrollbar_size);
+    // });
   }
 
-  var scrollbar_size = (function () {
-    var div = $(
-      '<div style="width:50px;height:50px;overflow:hidden;'
-        + 'position:absolute;top:-200px;left:-200px;"><div style="height:100px;">'
-        + '</div>'
-    );
+  // var scrollbar_size = (function () {
+  //   var div = $(
+  //     '<div style="width:50px;height:50px;overflow:hidden;'
+  //       + 'position:absolute;top:-200px;left:-200px;"><div style="height:100px;">'
+  //       + '</div>'
+  //   );
 
-    $('body').append(div);
-    var w1 = $('div', div).innerWidth();
-    div.css('overflow-y', 'scroll');
-    var w2 = $('div', div).innerWidth();
-    $(div).remove();
-    return  w1 - w2;
-  })();
+  //   $('body').append(div);
+  //   var w1 = $('div', div).innerWidth();
+  //   div.css('overflow-y', 'scroll');
+  //   var w2 = $('div', div).innerWidth();
+  //   $(div).remove();
+  //   return  w1 - w2;
+  // })();
 
 
   function scroll_into_view ($me) {

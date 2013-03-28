@@ -42,7 +42,7 @@
 (deftest test-get-subscription
   (let [[_ subscription] (prepare)
         rss-id (:rss_link_id subscription)]
-    (doseq [s ["newest" "oldest" "recommend" "read" "voted"]]
+    (doseq [s ["newest" "oldest" "read" "voted"]]
       (let [resp (auth-app {:uri (str "/api/subs/" rss-id)
                             :request-method :get
                             :params {"limit" "13" "offset" "0" "sort" s}})

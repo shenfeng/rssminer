@@ -640,7 +640,9 @@
     if(me === null) { me = 'null'; } // map null => null
     var result = [];
     _.each(_.keys(names), function (name) {
-      result.push({name: name, selected: me === name});
+      if(me !== name) {
+        result.push({name: name});
+      }
     });
     return result;
   }

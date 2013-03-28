@@ -51,8 +51,7 @@
   (:link (first (mysql-query ["SELECT link FROM feeds WHERE id = ?" id]))))
 
 (defn fetch-feeds [userid ids]
-  (let [^MinerDAO db (MinerDAO. (cfg :data-source)
-                                (cfg :redis-server))]
+  (let [^MinerDAO db (MinerDAO. (cfg :data-source))]
     (.fetchFeedsWithSummary db userid ids)))
 
 (defn- get-rssid-by-feedid [id]
@@ -103,11 +102,10 @@
                 (str/replace (name func) #"-(\w)"
                              (fn [[m l]] (str "G"(str/upper-case l)))))]
     `(defn ~func [userid# limit# offset#]
-       (let [^MinerDAO db# (MinerDAO. (cfg :data-source)
-                                      (cfg :redis-server))]
+       (let [^MinerDAO db# (MinerDAO. (cfg :data-source))]
          (dedup (. db# ~method userid# limit# offset#))))))
 
-(doseq [m '[fetch-newest fetch-likest fetch-read fetch-vote]]
+(doseq [m '[fetch-newest fetch-read fetch-vote]]
   (eval `(defg ~m)))
 
 (defmacro defsub [func]
@@ -115,14 +113,12 @@
                 (str/replace (name func) #"-(\w)"
                              (fn [[m l]] (str/upper-case l))))]
     `(defn ~func [userid# subid# limit# offset#]
-       (let [^MinerDAO db# (MinerDAO. (cfg :data-source)
-                                      (cfg :redis-server))]
+       (let [^MinerDAO db# (MinerDAO. (cfg :data-source))]
          (dedup (. db# ~method userid# subid# limit# offset#))))))
 
-(doseq [m '[fetch-sub-newest fetch-sub-oldest fetch-sub-likest
-            fetch-sub-read fetch-sub-vote]]
+(doseq [m '[fetch-sub-newest fetch-sub-oldest fetch-sub-read fetch-sub-vote]]
   (eval `(defsub ~m)))
 
-(doseq [m '[fetch-folder-newest fetch-folder-oldest fetch-folder-likest
+(doseq [m '[fetch-folder-newest fetch-folder-oldest
             fetch-folder-read fetch-folder-vote]]
   (eval `(defsub ~m)))

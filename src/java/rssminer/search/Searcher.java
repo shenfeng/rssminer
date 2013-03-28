@@ -86,12 +86,12 @@ public class Searcher {
             AUTHOR_TERM };
     public static final TermVector TV = TermVector.WITH_POSITIONS_OFFSETS;
     private List<IndexReader> pendingReader = new LinkedList<IndexReader>();
-    private final JedisPool mJedis;
 
-    public static Searcher initGlobalSearcher(String path, DataSource ds, JedisPool jedis)
-            throws IOException {
+    // private final JedisPool mJedis;
+
+    public static Searcher initGlobalSearcher(String path, DataSource ds) throws IOException {
         closeGlobalSearcher();
-        SEARCHER = new Searcher(path, ds, jedis);
+        SEARCHER = new Searcher(path, ds);
         return SEARCHER;
     }
 
@@ -113,11 +113,11 @@ public class Searcher {
         }
     }
 
-    private Searcher(String path, DataSource ds, JedisPool jedis) throws IOException {
+    private Searcher(String path, DataSource ds) throws IOException {
         final IndexWriterConfig cfg = new IndexWriterConfig(V, analyzer);
         this.mPath = path;
         this.mDs = ds;
-        this.mJedis = jedis;
+        // this.mJedis = jedis;
         if (this.mDs == null) {
             throw new NullPointerException("ds can not be null");
         }
@@ -337,7 +337,8 @@ public class Searcher {
             SQLException {
         List<Integer> subids = DBHelper.getUserSubIDS(mDs, userID);
         // TODO workaroud it
-        if(subids.size() > 900) { // an error for lucene if more than 1024 boolean query
+        if (subids.size() > 900) { // an error for lucene if more than 1024
+                                   // boolean query
             subids = subids.subList(0, 900);
         }
         IndexSearcher searcher = openSearcher();
@@ -369,7 +370,7 @@ public class Searcher {
             if (feedids.isEmpty()) {
                 ret.put("feeds", new ArrayList<Feed>(0));
             } else {
-                MinerDAO db = new MinerDAO(mDs, mJedis);
+                MinerDAO db = new MinerDAO(mDs);
                 List<Feed> feeds = MinerDAO.removeDuplicate(db.fetchFeedsWithScore(userID,
                         feedids));
                 ret.put("feeds", feeds);

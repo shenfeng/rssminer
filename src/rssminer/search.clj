@@ -17,9 +17,7 @@
   (close-global-index-writer!)
   (let [path (or path (cfg :index-path))
         start (fn [] (reset! searcher
-                            (Searcher/initGlobalSearcher path
-                                                         (cfg :data-source)
-                                                         (cfg :redis-server))))]
+                            (Searcher/initGlobalSearcher path (cfg :data-source))))]
     (close-global-index-writer!)       ; close previous searcher
     (info "using index path" path)
     (if (= path "RAM")

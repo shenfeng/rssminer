@@ -5,10 +5,10 @@
 
 package rssminer.db;
 
-public class Feed implements Comparable<Feed> {
+public class Feed {
     private int id;
     private int rssid;
-    private double score;
+    // private double score;
     private int vote;
     private String link = "";
     private String title = "";
@@ -21,13 +21,13 @@ public class Feed implements Comparable<Feed> {
 
     private String summary;
 
-    public int compareTo(Feed o) {
-        if (o.score > score)
-            return 1;
-        else if (score > o.score)
-            return -1;
-        return 0;
-    }
+    // public int compareTo(Feed o) {
+    // if (o.score > score)
+    // return 1;
+    // else if (score > o.score)
+    // return -1;
+    // return 0;
+    // }
 
     public String getAuthor() {
         return author;
@@ -53,9 +53,10 @@ public class Feed implements Comparable<Feed> {
         return rssid;
     }
 
-    public double getScore() {
-        return score;
-    }
+    //
+    // public double getScore() {
+    // return score;
+    // }
 
     public long getSimhash() {
         return simhash;
@@ -105,9 +106,10 @@ public class Feed implements Comparable<Feed> {
         this.rssid = rssid;
     }
 
-    public void setScore(double score) {
-        this.score = score;
-    }
+    //
+    // public void setScore(double score) {
+    // this.score = score;
+    // }
 
     public void setSimhash(long simhash) {
         this.simhash = simhash;

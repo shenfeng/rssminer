@@ -13,9 +13,7 @@
       <div class="wrapper">
         <div id="logo" class="show-nav" data-title="{{m-logo-title}}">
           <h1><a href="#">Rssminer</a></h1>
-          <div class="scroll-wrap">
-            <ul id="sub-list" class="scroll-inner"></ul>
-          </div>
+          <!-- <ul id="sub-list" class="scroll-inner"></ul> -->
         </div>
         {{#demo}}
           <div id="warn-msg" data-title="{{m-signup-warn}}">
@@ -75,11 +73,15 @@
       </div>
     </div>
     <div id="main">
-      <div class="scroll-wrap">
-        <div id="navigation" class="scroll-inner">
-          <ul id="feed-list" class="feeds"></ul>
-        </div>
+      <div id="subs-wrapper">
+        <ul id="sub-list" class="scroll-inner"></ul>
       </div>
+
+      <!-- <div class="scroll-wrap"> -->
+      <!--   <div id="navigation" class="scroll-inner"> -->
+      <!--     <ul id="feed-list" class="feeds"></ul> -->
+      <!--   </div> -->
+      <!-- </div> -->
       <div id="content">
         <div id="reading-area">
           <div id="welcome-list">

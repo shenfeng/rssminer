@@ -5,31 +5,18 @@
 
 package rssminer.db;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.sql.DataSource;
 
-import me.shenfeng.http.HttpUtils;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.Pipeline;
-import redis.clients.jedis.Response;
-import redis.clients.jedis.Tuple;
 import rssminer.Utils;
 
 public class MinerDAO {
     static final int COMBINED_KEY_EXPIRE = 1800; // cache half an hour
 
-    private final JedisPool jedis;
+    // private final JedisPool jedis;
     private final DataSource ds;
 
     // sub newest, oldest
@@ -43,36 +30,38 @@ public class MinerDAO {
 
     // + "join feed_data d on d.id = f.id and f.id ";
 
-    public MinerDAO(DataSource ds, JedisPool jedis) {
-        this.jedis = jedis;
+    public MinerDAO(DataSource ds) {
+        // this.jedis = jedis;
         this.ds = ds;
-        if (this.jedis == null || this.ds == null) {
-            throw new NullPointerException("jedis and ds can not be null");
+        if (this.ds == null) {
+            throw new NullPointerException("ds can not be null");
         }
     }
 
-    private void addScore(int userID, List<Feed> feeds) {
-        Jedis redis = jedis.getResource();
-        try {
-            Pipeline pipeline = redis.pipelined();
-            List<Response<Double>> scores = new ArrayList<Response<Double>>(feeds.size());
-            for (Feed f : feeds) {
-                byte[] member = Integer.toString(f.getId()).getBytes(HttpUtils.UTF_8);
-                Response<Double> score = pipeline.zscore(Utils.genKey(userID, f.getRssid()),
-                        member);
-                scores.add(score);
-            }
-            pipeline.sync();
-            for (int i = 0; i < feeds.size(); i++) {
-                Double d = scores.get(i).get();
-                if (d != null) {
-                    feeds.get(i).setScore(d);
-                }
-            }
-        } finally {
-            jedis.returnResource(redis);
-        }
-    }
+    // private void addScore(int userID, List<Feed> feeds) {
+    // Jedis redis = jedis.getResource();
+    // try {
+    // Pipeline pipeline = redis.pipelined();
+    // List<Response<Double>> scores = new
+    // ArrayList<Response<Double>>(feeds.size());
+    // for (Feed f : feeds) {
+    // byte[] member = Integer.toString(f.getId()).getBytes(HttpUtils.UTF_8);
+    // Response<Double> score = pipeline.zscore(Utils.genKey(userID,
+    // f.getRssid()),
+    // member);
+    // scores.add(score);
+    // }
+    // pipeline.sync();
+    // for (int i = 0; i < feeds.size(); i++) {
+    // Double d = scores.get(i).get();
+    // if (d != null) {
+    // feeds.get(i).setScore(d);
+    // }
+    // }
+    // } finally {
+    // jedis.returnResource(redis);
+    // }
+    // }
 
     private void appendIn(StringBuilder sb, List<Integer> ids) {
         sb.append('(');
@@ -156,27 +145,31 @@ public class MinerDAO {
     public List<Feed> fetchFeedsWithScore(int userID, List<Integer> feedids)
             throws SQLException {
         List<Feed> feeds = sortbyOrder(feedids, fetchFeeds(userID, feedids));
-        addScore(userID, feeds);
+        // addScore(userID, feeds);
         return feeds;
     }
 
-    private List<Feed> fetchFeedsWithScore(int userID, Set<Tuple> scores) throws SQLException {
-        Map<Integer, Double> map = new HashMap<Integer, Double>((int) (scores.size() * 1.5));
-        for (Tuple tuple : scores) {
-            int id = Integer.valueOf(new String(tuple.getBinaryElement(), HttpUtils.UTF_8));
-            map.put(id, tuple.getScore());
-        }
-        if (map.isEmpty()) {
-            return new ArrayList<Feed>(0);
-        } else {
-            List<Feed> feeds = fetchFeeds(userID, new ArrayList<Integer>(map.keySet()));
-            for (Feed feed : feeds) {
-                feed.setScore(map.get(feed.getId()));
-            }
-            Collections.sort(feeds); // sort by score
-            return feeds;
-        }
-    }
+    // private List<Feed> fetchFeedsWithScore(int userID, Set<Tuple> scores)
+    // throws SQLException {
+    // Map<Integer, Double> map = new HashMap<Integer, Double>((int)
+    // (scores.size() * 1.5));
+    // for (Tuple tuple : scores) {
+    // int id = Integer.valueOf(new String(tuple.getBinaryElement(),
+    // HttpUtils.UTF_8));
+    // map.put(id, tuple.getScore());
+    // }
+    // if (map.isEmpty()) {
+    // return new ArrayList<Feed>(0);
+    // } else {
+    // List<Feed> feeds = fetchFeeds(userID, new
+    // ArrayList<Integer>(map.keySet()));
+    // for (Feed feed : feeds) {
+    // feed.setScore(map.get(feed.getId()));
+    // }
+    // Collections.sort(feeds); // sort by score
+    // return feeds;
+    // }
+    // }
 
     public static List<Feed> removeDuplicate(List<Feed> feeds) {
         List<Feed> results = new ArrayList<Feed>(feeds.size());
@@ -197,32 +190,34 @@ public class MinerDAO {
 
     private List<Feed> fetchFeedsWithScore(int userID, String sql) throws SQLException {
         List<Feed> feeds = fetchFeeds(sql);
-        addScore(userID, feeds);
+        // addScore(userID, feeds);
         return feeds;
     }
 
-    // for click on folder
-    public List<Feed> fetchFolderLikest(int userID, List<Integer> rssIDs, int limit, int offset)
-            throws SQLException {
-        Jedis redis = jedis.getResource();
-        rssIDs = new ArrayList<Integer>(rssIDs);
-        byte[] key = Utils.genKey(userID, rssIDs);
-        try {
-            if (!redis.exists(key)) {
-                int count = rssIDs.size();
-                byte[][] keys = new byte[count][];
-                for (int i = 0; i < count; i++) {
-                    keys[i] = Utils.genKey(userID, rssIDs.get(i));
-                }
-                redis.zunionstore(key, keys);
-                redis.expire(key, COMBINED_KEY_EXPIRE);
-            }
-            Set<Tuple> scores = redis.zrevrangeWithScores(key, offset, offset + limit - 1);
-            return fetchFeedsWithScore(userID, scores);
-        } finally {
-            jedis.returnResource(redis);
-        }
-    }
+    // // for click on folder
+    // public List<Feed> fetchFolderLikest(int userID, List<Integer> rssIDs, int
+    // limit, int offset)
+    // throws SQLException {
+    // Jedis redis = jedis.getResource();
+    // rssIDs = new ArrayList<Integer>(rssIDs);
+    // byte[] key = Utils.genKey(userID, rssIDs);
+    // try {
+    // if (!redis.exists(key)) {
+    // int count = rssIDs.size();
+    // byte[][] keys = new byte[count][];
+    // for (int i = 0; i < count; i++) {
+    // keys[i] = Utils.genKey(userID, rssIDs.get(i));
+    // }
+    // redis.zunionstore(key, keys);
+    // redis.expire(key, COMBINED_KEY_EXPIRE);
+    // }
+    // Set<Tuple> scores = redis.zrevrangeWithScores(key, offset, offset + limit
+    // - 1);
+    // return fetchFeedsWithScore(userID, scores);
+    // } finally {
+    // jedis.returnResource(redis);
+    // }
+    // }
 
     public List<Feed> fetchFolderNewest(int userID, List<Integer> rssIDs, int limit, int offset)
             throws SQLException {
@@ -270,27 +265,29 @@ public class MinerDAO {
     }
 
     // global
-    public List<Feed> fetchGLikest(int userID, int limit, int offset) throws SQLException {
-        byte[] key = Utils.genKey(userID);
-        Jedis redis = jedis.getResource();
-        try {
-            List<Integer> subIDS = DBHelper.getUserSubIDS(ds, userID);
-            int count = subIDS.size();
-            if (count < 1) {
-                return new ArrayList<Feed>(0);
-            }
-            byte[][] keys = new byte[count][];
-            for (int i = 0; i < count; i++) {
-                keys[i] = Utils.genKey(userID, subIDS.get(i));
-            }
-            redis.zunionstore(key, keys);
-            Set<Tuple> scores = redis.zrevrangeWithScores(key, offset, offset + limit - 1);
-            redis.del(key);
-            return fetchFeedsWithScore(userID, scores);
-        } finally {
-            jedis.returnResource(redis);
-        }
-    }
+    // public List<Feed> fetchGLikest(int userID, int limit, int offset) throws
+    // SQLException {
+    // byte[] key = Utils.genKey(userID);
+    // Jedis redis = jedis.getResource();
+    // try {
+    // List<Integer> subIDS = DBHelper.getUserSubIDS(ds, userID);
+    // int count = subIDS.size();
+    // if (count < 1) {
+    // return new ArrayList<Feed>(0);
+    // }
+    // byte[][] keys = new byte[count][];
+    // for (int i = 0; i < count; i++) {
+    // keys[i] = Utils.genKey(userID, subIDS.get(i));
+    // }
+    // redis.zunionstore(key, keys);
+    // Set<Tuple> scores = redis.zrevrangeWithScores(key, offset, offset + limit
+    // - 1);
+    // redis.del(key);
+    // return fetchFeedsWithScore(userID, scores);
+    // } finally {
+    // jedis.returnResource(redis);
+    // }
+    // }
 
     // global
     public List<Feed> fetchGNewest(int userID, int limit, int offset) throws SQLException {
@@ -322,17 +319,19 @@ public class MinerDAO {
         return fetchFeeds(sb.toString());
     }
 
-    public List<Feed> fetchSubLikest(int userID, int subID, int limit, int offset)
-            throws SQLException {
-        byte[] key = Utils.genKey(userID, subID);
-        Jedis redis = jedis.getResource();
-        try {
-            Set<Tuple> scores = redis.zrevrangeWithScores(key, offset, offset + limit - 1);
-            return fetchFeedsWithScore(userID, scores);
-        } finally {
-            jedis.returnResource(redis);
-        }
-    }
+    // public List<Feed> fetchSubLikest(int userID, int subID, int limit, int
+    // offset)
+    // throws SQLException {
+    // byte[] key = Utils.genKey(userID, subID);
+    // Jedis redis = jedis.getResource();
+    // try {
+    // Set<Tuple> scores = redis.zrevrangeWithScores(key, offset, offset + limit
+    // - 1);
+    // return fetchFeedsWithScore(userID, scores);
+    // } finally {
+    // jedis.returnResource(redis);
+    // }
+    // }
 
     public List<Feed> fetchSubNewest(int userID, int subID, int limit, int offset)
             throws SQLException {
@@ -382,33 +381,36 @@ public class MinerDAO {
                 subs.add(s);
             }
             Utils.closeQuietly(rs);
-            String sql = "select like_score,neutral_score from users where id = " + userID;
-            rs = stat.executeQuery(sql);
-            if (rs.next()) {
-                double like = rs.getDouble(1);
-                double neutral = rs.getDouble(2);
-                Jedis redis = jedis.getResource();
-                Pipeline pipeline = redis.pipelined();
-                List<Response<Long>> scores = new ArrayList<Response<Long>>(subs.size() * 2);
-                try {
-                    for (Subscription s : subs) {
-                        byte[] key = Utils.genKey(userID, s.getId());
-                        Response<Long> l = pipeline.zcount(key, like, Double.MAX_VALUE);
-                        Response<Long> n = pipeline.zcount(key, neutral, like);
-                        scores.add(l);
-                        scores.add(n);
-                    }
-                    pipeline.sync();
-                    int idx = 0;
-                    for (Subscription s : subs) {
-                        s.setLike(scores.get(idx++).get().intValue());
-                        s.setNeutral(scores.get(idx++).get().intValue());
-                    }
-                } finally {
-                    jedis.returnResource(redis);
-                }
-            }
-            Utils.closeQuietly(rs);
+            // String sql =
+            // "select like_score,neutral_score from users where id = " +
+            // userID;
+            // rs = stat.executeQuery(sql);
+            // if (rs.next()) {
+            // double like = rs.getDouble(1);
+            // double neutral = rs.getDouble(2);
+            // Jedis redis = jedis.getResource();
+            // Pipeline pipeline = redis.pipelined();
+            // List<Response<Long>> scores = new
+            // ArrayList<Response<Long>>(subs.size() * 2);
+            // try {
+            // for (Subscription s : subs) {
+            // byte[] key = Utils.genKey(userID, s.getId());
+            // Response<Long> l = pipeline.zcount(key, like, Double.MAX_VALUE);
+            // Response<Long> n = pipeline.zcount(key, neutral, like);
+            // scores.add(l);
+            // scores.add(n);
+            // }
+            // pipeline.sync();
+            // int idx = 0;
+            // for (Subscription s : subs) {
+            // s.setLike(scores.get(idx++).get().intValue());
+            // s.setNeutral(scores.get(idx++).get().intValue());
+            // }
+            // } finally {
+            // jedis.returnResource(redis);
+            // }
+            // }
+            // Utils.closeQuietly(rs);
             Utils.closeQuietly(stat);
             return subs;
         } finally {
