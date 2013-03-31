@@ -6,7 +6,7 @@
                          [params :only [wrap-params]])
         [clojure.tools.logging :only [info]]
         [ring.util.response :only [redirect]]
-        [me.shenfeng.http.server :only [run-server]]
+        [org.httpkit.server :only [run-server]]
         (rssminer [database :only [use-mysql-database!
                                    close-global-mysql-factory!]]
                   [util :only [to-int]]

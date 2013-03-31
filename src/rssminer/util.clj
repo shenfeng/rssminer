@@ -7,7 +7,6 @@
   (:import java.util.Date
            java.sql.Timestamp
            java.net.URI
-           me.shenfeng.http.HttpUtils
            [rssminer.db Feed Subscription]
            [java.io StringWriter PrintWriter StringReader]
            [java.security NoSuchAlgorithmException MessageDigest]))
@@ -93,6 +92,9 @@
                   ~@body))))
 
 (defn valid-url? [url] (ignore-error (.getHost (URI/create url))))
+
+(defn resolve-url [base part]
+  (ignore-error (.toString (.resolve (URI/create base) part))))
 
 (defn mobile? [req]
   (when-let [ua (get-in req  [:headers "user-agent"])]

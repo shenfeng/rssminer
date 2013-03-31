@@ -1,6 +1,5 @@
 (ns rssminer.admin.admin
-  (:use [me.shenfeng.http.server :only [defwshandler send-mesg on-close]]
-        [clojure.tools.logging :only [info]]
+  (:use [clojure.tools.logging :only [info]]
         [rssminer.config :only [rssminer-conf]]
         [rssminer.classify :only [on-feed-event]]
         [rssminer.util :only [defhandler to-int]]

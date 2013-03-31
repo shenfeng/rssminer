@@ -26,9 +26,9 @@ public class RetryHttpTask implements IHttpTask {
         return mTask.getUri();
     }
 
-    public Map<String, String> getHeaders() {
+    public Map<String, Object> getHeaders() {
         // with empty header to retry (302)
-        return new TreeMap<String, String>();
+        return new TreeMap<String, Object>();
     }
 
     public Proxy getProxy() {

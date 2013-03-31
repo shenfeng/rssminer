@@ -1,10 +1,17 @@
 (ns rssminer.views.reader-test
   (:use clojure.test
         [rssminer.database :only [mysql-insert]]
+        [rssminer.main :only [-main]]
+        [rssminer.config :only [cfg]]
         [rssminer.test-common :only [test-app auth-app auth-app2
-                                     app-fixture]]))
+                                     app-fixture]])
+  (:require [org.httpkit.client :as http]))
 
-(use-fixtures :each app-fixture)
+(defn server-fixture [test-fn]
+  (-main)
+  (test-fn))
+
+(use-fixtures :each server-fixture app-fixture)
 
 (deftest test-index-page
   (let [resp (test-app {:uri "/"
@@ -52,28 +59,19 @@
   (let [host "www.test.com"
         data (byte-array (map byte (range 1 10)))]
     (mysql-insert :favicon {:hostname host :favicon nil :code 404})
-    (let [resp (:body (test-app {:uri "/fav"
-                                 :request-method :get
-                                 :headers {}
-                                 :query-string
-                                 (str "h=" (clojure.string/reverse host))}))]
-      (.addListener resp (reify Runnable
-                           (run [this]
-                             (let [resp (.get resp)]
-                               (is (= 200 (:status resp)))
-                               (is (nil? (:body resp))))))))))
+    (let [resp @(http/request {:url (str "http://127.0.0.1:" (cfg :port) "/fav")
+                               :method :get
+                               :query-params {"h" (clojure.string/reverse host)}}
+                              identity)]
+      (is (= 200 (:status resp))))))
 
 (deftest test-get-favicon2
   (let [host "www.test.com"
         data (.getBytes host)]
     (mysql-insert :favicon {:hostname host :favicon data :code 200})
-    (let [resp (:body (test-app {:uri "/fav"
-                                 :request-method :get
-                                 :headers {}
-                                 :query-string
-                                 (str "h=" (clojure.string/reverse host))}))]
-      (.addListener resp (reify Runnable
-                           (run [this]
-                             (let [resp (.get resp)]
-                               (is (= 200 (:status resp)))
-                               (is (= host (slurp (:body resp)))))))))))
+    (let [resp @(http/request {:url (str "http://127.0.0.1:" (cfg :port) "/fav")
+                               :method :get
+                               :query-params {"h" (clojure.string/reverse host)}}
+                              identity)]
+      (is (= 200 (:status resp)))
+      (is (= host (slurp (:body resp)))))))

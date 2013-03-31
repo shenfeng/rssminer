@@ -1,7 +1,7 @@
 (ns rssminer.main
   (:gen-class)
   (:use [clojure.tools.cli :only [cli]]
-        [me.shenfeng.http.server :only [run-server]]
+        [org.httpkit.server :only [run-server]]
         [clojure.java.shell :only [sh]]
         [clojure.tools.logging :only [info]]
         (rssminer [database :only [use-mysql-database! close-global-mysql-factory!]]

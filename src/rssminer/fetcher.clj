@@ -7,8 +7,7 @@
   (:require [rssminer.db.feed :as db]
             [rssminer.db.subscription :as subdb])
   (:import [rssminer.fetcher HttpTaskRunner IHttpTask IHttpTasksProvder
-            HttpTaskRunnerConf IBlockingTaskProvider]
-           me.shenfeng.http.HttpUtils))
+            HttpTaskRunnerConf IBlockingTaskProvider]))
 
 (defonce fetcher (atom nil))
 
@@ -33,7 +32,7 @@
 
 ;; TODO better last_modified and etag policy
 (defn- next-check [last-url last-interval status headers]
-  (if-let [location (most-len (get headers HttpUtils/LOCATION) 500)]
+  (if-let [location (most-len (get headers "location") 500)]
     (if (= location last-url)
       {:url location :next_check_ts (+ (now-seconds) last-interval)}
       ;; if the url is not the same, TODO delay 5 minutes
@@ -41,8 +40,8 @@
     (let [interval (if (= 200 status)
                      (quicker last-interval) (slower last-interval))]
       {:check_interval interval
-       :last_modified (get headers HttpUtils/LAST_MODIFIED)
-       :etag (if-let [^String etag (get headers HttpUtils/ETAG)]
+       :last_modified (get headers "last-modified")
+       :etag (if-let [^String etag (get headers "etag")]
                (when (< (.length etag) 64)
                  etag))
        :next_check_ts (+ (now-seconds) interval
@@ -78,8 +77,8 @@
                                   :error_msg (.getMessage t)}))
         (catch Exception e (error e url)))) ; mysql fail
     (getHeaders [this]
-      {HttpUtils/IF_MODIFIED_SINCE last_modified
-       HttpUtils/IF_NONE_MATCH etag})
+      {"If-Modified-Since" last_modified
+       "If-None-Match" etag})
     (doTask [this status headers body]
       (try (handle-resp link status headers body)
            (catch Exception e (error e (str "id:" (:id link) url)))))

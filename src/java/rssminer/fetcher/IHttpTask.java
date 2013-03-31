@@ -13,7 +13,7 @@ public interface IHttpTask {
 
     URI getUri();
 
-    Map<String, String> getHeaders();
+    Map<String, Object> getHeaders();
 
     Object doTask(int status, Map<String, String> headers, String body);
 

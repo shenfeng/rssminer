@@ -7,21 +7,18 @@ package rssminer.fetcher;
 
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
-import static me.shenfeng.http.HttpUtils.LOCATION;
 import static rssminer.Utils.CLIENT;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.*;
 
-import me.shenfeng.http.DynamicBytes;
-import me.shenfeng.http.client.*;
-import me.shenfeng.http.client.TextRespListener.IFilter;
-
+import org.httpkit.DynamicBytes;
+import org.httpkit.HttpMethod;
+import org.httpkit.client.*;
+import org.httpkit.client.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +35,6 @@ class Filter implements IFilter {
     public boolean accept(DynamicBytes partialBody) {
         return partialBody.length() <= 2 * 1024 * 1024;
     }
-
 }
 
 public class HttpTaskRunner {
@@ -51,7 +47,9 @@ public class HttpTaskRunner {
         return true;
     }
 
-    class TextHandler implements ITextHandler {
+    public static final String LOCATION = "location";
+
+    class TextHandler implements IResponseHandler {
 
         private IHttpTask task;
 
@@ -101,7 +99,14 @@ public class HttpTaskRunner {
         }
 
         // run in the HTTP client loop thread
-        public void onSuccess(int status, Map<String, String> headers, String body) {
+        public void onSuccess(int status, Map<String, String> headers, Object b) {
+            if (!(b instanceof String)) {
+
+                return;
+            }
+
+            String body = (String) b;
+
             try {
                 if (status == 301) {
                     String l = headers.get(LOCATION);
@@ -160,6 +165,8 @@ public class HttpTaskRunner {
         }
     }
 
+    private static final ExecutorService pool = Executors.newScheduledThreadPool(0);
+
     class Worker implements Runnable {
         public void run() {
             while (mRunning) {
@@ -167,9 +174,11 @@ public class HttpTaskRunner {
                     tryFillTask();
                     mConcurrent.acquire(); // limit concurrency
                     final IHttpTask task = mTaskQueue.poll(); // can not be null
-                    TextRespListener listener = new TextRespListener(new TextHandler(task),
-                            filter);
-                    CLIENT.get(task.getUri(), task.getHeaders(), task.getProxy(), listener);
+                    logger.info("task {}", task.getUri());
+                    RespListener listener = new RespListener(new TextHandler(task), filter,
+                            pool);
+                    CLIENT.exec(task.getUri().toString(), HttpMethod.GET, task.getHeaders(),
+                            null, -1, listener);
                 } catch (InterruptedException e) { // die
                 } catch (Exception e) {
                     logger.error("ERROR! should not happend", e);

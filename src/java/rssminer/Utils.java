@@ -11,25 +11,18 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.sql.*;
+import java.util.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import me.shenfeng.http.HttpUtils;
-import me.shenfeng.http.client.HttpClient;
-import me.shenfeng.http.client.HttpClientConfig;
-
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.httpkit.HttpUtils;
+import org.httpkit.client.HttpClient;
+import org.httpkit.client.HttpClientConfig;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -112,7 +105,7 @@ public class Utils {
 
     static {
         try {
-            CLIENT = new HttpClient(new HttpClientConfig(60000, USER_AGETNT));
+            CLIENT = new HttpClient(new HttpClientConfig(60000, USER_AGETNT, 1000 * 60 * 2));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

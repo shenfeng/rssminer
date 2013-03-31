@@ -5,22 +5,21 @@
         rssminer.db.subscription
         [rssminer.util :only [now-seconds]]
         [rssminer.database :only [mysql-query mysql-insert]]
-        [rssminer.test-common :only [app-fixture]])
-  (:import me.shenfeng.http.HttpUtils))
+        [rssminer.test-common :only [app-fixture]]))
 
 (use-fixtures :each app-fixture
-              (fn [test-fn]
-                (mysql-insert :rss_links
-                              {:url "http://aria42.com/blog/?feed=rss2"})
-                (test-fn)))
+  (fn [test-fn]
+    (mysql-insert :rss_links
+                  {:url "http://aria42.com/blog/?feed=rss2"})
+    (test-fn)))
 
 (deftest test-mk-provider
   (let [provider ^rssminer.fetcher.IHttpTasksProvder (mk-provider)
         task (first (.getTasks provider))]
     (is (.getUri task))
     (let [header (.getHeaders task)]
-      (is (nil? (get header HttpUtils/IF_MODIFIED_SINCE {}))
-          (nil? (get header HttpUtils/IF_NONE_MATCH {}))))))
+      (is (nil? (get header "If-Modified-Since" {}))
+          (nil? (get header "If-None-Match" {}))))))
 
 (deftest test-handle-resp
   (let [links (fetch-rss-links 10000)
