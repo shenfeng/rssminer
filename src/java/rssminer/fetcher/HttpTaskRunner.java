@@ -165,7 +165,8 @@ public class HttpTaskRunner {
         }
     }
 
-    private static final ExecutorService pool = Executors.newScheduledThreadPool(0);
+    private static final ExecutorService pool = new ThreadPoolExecutor(0, 4, 10,
+            TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 
     class Worker implements Runnable {
         public void run() {
@@ -174,11 +175,11 @@ public class HttpTaskRunner {
                     tryFillTask();
                     mConcurrent.acquire(); // limit concurrency
                     final IHttpTask task = mTaskQueue.poll(); // can not be null
-                    logger.info("task {}", task.getUri());
+                    // logger.info("task {}", task.getUri());
                     RespListener listener = new RespListener(new TextHandler(task), filter,
                             pool);
-                    CLIENT.exec(task.getUri().toString(), HttpMethod.GET, task.getHeaders(),
-                            null, -1, listener);
+                    CLIENT.exec(task.getUri().toString(), task.getHeaders(), null,
+                            new RequestConfig(HttpMethod.GET, 40000, 80000, null), listener);
                 } catch (InterruptedException e) { // die
                 } catch (Exception e) {
                     logger.error("ERROR! should not happend", e);

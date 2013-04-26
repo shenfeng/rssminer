@@ -3,7 +3,7 @@
         (rssminer [util :only [assoc-if now-seconds]]
                   [parser :only [parse-feed most-len]]
                   [redis :only [fetcher-dequeue fetcher-enqueue]]
-                  [config :only [rssminer-conf]]))
+                  [config :only [cfg rssminer-conf]]))
   (:require [rssminer.db.feed :as db]
             [rssminer.db.subscription :as subdb])
   (:import [rssminer.fetcher HttpTaskRunner IHttpTask IHttpTasksProvder
@@ -57,8 +57,8 @@
                           :error_msg ""
                           :description (:description feeds)
                           :title (:title feeds))]
-    ;; (info (str "id:" id) status url
-    ;;       (str "[" (-> feeds :entries count) "] feeds"))
+    (info (str "id:" id) status url
+          (str "[" (-> feeds :entries count) "] feeds"))
     (subdb/update-rss-link id updated)
     ;; if url is updated, feeds should be nil
     (when feeds (db/save-feeds feeds id))))
@@ -66,7 +66,7 @@
 (defn- mk-fetcher-task [{:keys [url last_modified etag] :as link}]
   (reify IHttpTask
     (getUri [this] (java.net.URI. url))
-    (getProxy [this] (:proxy @rssminer-conf))
+    (getProxy [this] (cfg :proxy))
     (onThrowable [this ^Throwable t]
       (warn (str "id:" (:id link)) url (.getMessage t))
       (try
@@ -76,9 +76,9 @@
                                   :next_check_ts (+ (now-seconds) interval)
                                   :error_msg (.getMessage t)}))
         (catch Exception e (error e url)))) ; mysql fail
-    (getHeaders [this]
-      {"If-Modified-Since" last_modified
-       "If-None-Match" etag})
+    (getHeaders [this] {"If-Modified-Since" last_modified
+                        "User-Agent" (cfg :user-agent)
+                        "If-None-Match" etag})
     (doTask [this status headers body]
       (try (handle-resp link status headers body)
            (catch Exception e (error e (str "id:" (:id link) url)))))
@@ -88,8 +88,7 @@
 (defn mk-provider []
   (reify IHttpTasksProvder
     (getTasks [this]
-      (map mk-fetcher-task (subdb/fetch-rss-links
-                            (:fetch-size @rssminer-conf))))))
+      (map mk-fetcher-task (subdb/fetch-rss-links (cfg :fetch-size))))))
 
 (defn refetch-rss-link [id]
   (if-let [rss (subdb/fetch-rss-link-by-id id)]

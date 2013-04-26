@@ -5,6 +5,8 @@
 (defonce rssminer-conf (atom {:fetch-size 100
                               :profile :test
                               :redis-port 6379
+                              ;; :user-agent "Mozilla/5.0 (X11; Linux x86_64; rv:10.0.9) Gecko/20100101 Firefox/10.0.9 Iceweasel/10.0.9"
+                              :user-agent "Mozilla/5.0 (compatible; Rssminer/1.0; +http://rssminer.net)"
                               :static-server "//127.0.0.1"
                               :redis-host "127.0.0.1"
                               :proxy Proxy/NO_PROXY}))

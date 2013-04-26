@@ -22,7 +22,6 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.httpkit.HttpUtils;
 import org.httpkit.client.HttpClient;
-import org.httpkit.client.HttpClientConfig;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -105,7 +104,7 @@ public class Utils {
 
     static {
         try {
-            CLIENT = new HttpClient(new HttpClientConfig(60000, USER_AGETNT, 1000 * 60 * 2));
+            CLIENT = new HttpClient();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
