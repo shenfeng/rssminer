@@ -2,6 +2,8 @@
 set -u                          # Treat unset variables as an error
 set -e #  Exit immediately if a simple command exits with a non-zero status
 
+lein javac
+
 java -server \
     -Xdebug -Xrunjdwp:transport=dt_socket,address=9092,server=y,suspend=n \
     -Dfile.encoding=UTF-8 \

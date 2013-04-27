@@ -126,7 +126,7 @@ public class HttpTaskRunner {
                     }
                     URI loc = task.getUri().resolve(l);
                     RetryHttpTask retry = new RetryHttpTask(task, loc);
-                    if (retry.retryTimes() < 4) {
+                    if (retry.retryTimes() < 4 && !loc.equals(task.getUri())) {
                         addTask(retry);
                     } else {
                         task.onThrowable(new Exception("redirect more than 4 times"));
@@ -175,7 +175,7 @@ public class HttpTaskRunner {
                     tryFillTask();
                     mConcurrent.acquire(); // limit concurrency
                     final IHttpTask task = mTaskQueue.poll(); // can not be null
-                    // logger.info("task {}", task.getUri());
+                    logger.info("task {}", task.getUri());
                     RespListener listener = new RespListener(new TextHandler(task), filter,
                             pool);
                     CLIENT.exec(task.getUri().toString(), task.getHeaders(), null,

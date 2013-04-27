@@ -81,7 +81,13 @@
                         "If-None-Match" etag})
     (doTask [this status headers body]
       (try (handle-resp link status headers body)
-           (catch Exception e (error e (str "id:" (:id link) url)))))
+           (catch Exception e
+             (error e (str "id:" (:id link) url))
+             (subdb/update-rss-link (:id link)
+                                    (let [interval (slower (:check_interval link))]
+                                      {:check_interval interval
+                                       :next_check_ts (+ (now-seconds) interval)
+                                       :error_msg (.getMessage e)})))))
     (toString [this]
       (str (.getUri this) " " (.getHeaders this)))))
 
