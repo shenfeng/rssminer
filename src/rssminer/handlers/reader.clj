@@ -88,6 +88,7 @@
     (send! channel {:status 404})))
 
 (defn- callback [{:keys [status error body opts headers]}]
+  ;; (println status error (:url opts))
   (let [{:keys [try-times hostname response-channel]} opts]
     (cond error
           (save-and-response 404 hostname nil response-channel)
@@ -104,13 +105,13 @@
 
           (= :html (:expected-result opts))
           (let [base (URI/create (:url opts))
-                url (HtmlUtils/extractFavicon body (URI/create base))
+                url (HtmlUtils/extractFavicon body base)
                 url (if url (.toString url)
                         (str "http://" (.getHost base) "/favicon.ico"))]
             (http/request (assoc opts :url url
                                  :expected-result :binary
-                                 :try-times (inc try-times))))
-
+                                 :try-times (inc try-times))
+                          callback))
           (= :binary (:expected-result opts))
           (save-and-response 200 hostname body response-channel))))
 
@@ -122,7 +123,8 @@
                    :hostname hostname
                    :response-channel channel
                    :expected-result :html
-                   :try-times 1} callback)))
+                   :try-times 1}
+                  callback)))
 
 (defhandler get-favicon [req h]
   (if (get-in req [:headers "if-modified-since"])
