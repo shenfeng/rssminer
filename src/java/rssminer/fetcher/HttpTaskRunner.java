@@ -11,12 +11,15 @@ import static rssminer.Utils.CLIENT;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.*;
 
+import org.httpkit.BytesInputStream;
 import org.httpkit.DynamicBytes;
 import org.httpkit.HttpMethod;
+import org.httpkit.HttpUtils;
 import org.httpkit.client.*;
 import org.httpkit.client.TimeoutException;
 import org.slf4j.Logger;
@@ -101,12 +104,12 @@ public class HttpTaskRunner {
         // run in the HTTP client loop thread
         public void onSuccess(int status, Map<String, String> headers, Object b) {
             if (!(b instanceof String)) {
-
-                return;
+                BytesInputStream bs = (BytesInputStream)b;
+                b = new String(bs.bytes(), HttpUtils.UTF_8);// maybe better
+//                return;
             }
 
             String body = (String) b;
-
             try {
                 if (status == 301) {
                     String l = headers.get(LOCATION);
@@ -300,7 +303,7 @@ public class HttpTaskRunner {
             logger.info(toString());
         }
     }
-
+    
     public String toString() {
         return format("%s: %s", mName, computeStat());
     }
