@@ -5,28 +5,23 @@
 
 package rssminer.fetcher;
 
-import static java.lang.String.format;
-import static java.lang.System.currentTimeMillis;
-import static rssminer.Utils.CLIENT;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.concurrent.*;
-
-import org.httpkit.BytesInputStream;
-import org.httpkit.DynamicBytes;
-import org.httpkit.HttpMethod;
-import org.httpkit.HttpUtils;
+import org.httpkit.*;
 import org.httpkit.client.*;
 import org.httpkit.client.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import rssminer.Utils;
 import rssminer.jsoup.HtmlUtils;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.*;
+
+import static java.lang.String.format;
+import static java.lang.System.currentTimeMillis;
+import static rssminer.Utils.CLIENT;
 
 class Filter implements IFilter {
 
@@ -54,9 +49,9 @@ public class HttpTaskRunner {
 
     class TextHandler implements IResponseHandler {
 
-        private IHttpTask task;
+        private rssminer.fetcher.IHttpTask task;
 
-        public TextHandler(IHttpTask task) {
+        public TextHandler(rssminer.fetcher.IHttpTask task) {
             if (task == null) {
                 throw new NullPointerException("task can not be null");
             }
@@ -104,7 +99,7 @@ public class HttpTaskRunner {
         // run in the HTTP client loop thread
         public void onSuccess(int status, Map<String, String> headers, Object b) {
             if (!(b instanceof String)) {
-                BytesInputStream bs = (BytesInputStream)b;
+                BytesInputStream bs = (BytesInputStream) b;
                 b = new String(bs.bytes(), HttpUtils.UTF_8);// maybe better
 //                return;
             }
@@ -128,7 +123,7 @@ public class HttpTaskRunner {
                         return;
                     }
                     URI loc = task.getUri().resolve(l);
-                    RetryHttpTask retry = new RetryHttpTask(task, loc);
+                    rssminer.fetcher.RetryHttpTask retry = new rssminer.fetcher.RetryHttpTask(task, loc);
                     if (retry.retryTimes() < 4 && !loc.equals(task.getUri())) {
                         addTask(retry);
                     } else {
@@ -177,12 +172,12 @@ public class HttpTaskRunner {
                 try {
                     tryFillTask();
                     mConcurrent.acquire(); // limit concurrency
-                    final IHttpTask task = mTaskQueue.poll(); // can not be null
+                    final rssminer.fetcher.IHttpTask task = mTaskQueue.poll(); // can not be null
                     logger.info("task {}", task.getUri());
                     RespListener listener = new RespListener(new TextHandler(task), filter,
-                            pool);
-                    CLIENT.exec(task.getUri().toString(), task.getHeaders(), null,
-                            new RequestConfig(HttpMethod.GET, 40000, 80000, null), listener);
+                            pool, 1);
+                    RequestConfig cfg = new RequestConfig(HttpMethod.GET, task.getHeaders(), null, 40000, 80000);
+                    CLIENT.exec(task.getUri().toString(), cfg, null, listener);
                 } catch (InterruptedException e) { // die
                 } catch (Exception e) {
                     logger.error("ERROR! should not happend", e);
@@ -194,12 +189,12 @@ public class HttpTaskRunner {
 
     static Logger logger = LoggerFactory.getLogger(HttpTaskRunner.class);
 
-    private final IHttpTasksProvder mBulkProvider;
-    private final IBlockingTaskProvider mBlockingProvider;
+    private final rssminer.fetcher.IHttpTasksProvder mBulkProvider;
+    private final rssminer.fetcher.IBlockingTaskProvider mBlockingProvider;
     private final String mName;
     private final Filter filter = new Filter();
-    private final ConcurrentLinkedQueue<IHttpTask> mTaskQueue;
-    private final Semaphore mConcurrent;
+    private final ConcurrentLinkedQueue<rssminer.fetcher.IHttpTask> mTaskQueue;
+        private final Semaphore mConcurrent;
 
     // mConnter is single Thread: http-client thread
     private volatile int mCounter = 0;
@@ -211,7 +206,7 @@ public class HttpTaskRunner {
 
     private final ConcurrentHashMap<Object, Object> mStat;
 
-    public HttpTaskRunner(HttpTaskRunnerConf conf) {
+    public HttpTaskRunner(rssminer.fetcher.HttpTaskRunnerConf conf) {
         mBlockingGetTimeout = conf.blockingTimeOut;
         mBulkProvider = conf.bulkProvider;
         mBlockingProvider = conf.blockingProvider;
@@ -220,7 +215,7 @@ public class HttpTaskRunner {
         }
         // consumer and producer need access concurrently,
         // prevent too many concurrent HTTP request
-        mTaskQueue = new ConcurrentLinkedQueue<IHttpTask>();
+        mTaskQueue = new ConcurrentLinkedQueue<rssminer.fetcher.IHttpTask>();
         mConcurrent = new Semaphore(conf.queueSize);
 
         mName = conf.name;
@@ -228,7 +223,7 @@ public class HttpTaskRunner {
         mStat.put("QueueSize", conf.queueSize);
     }
 
-    private boolean addTask(IHttpTask task) {
+    private boolean addTask(rssminer.fetcher.IHttpTask task) {
         if (task == null) {
             return false;
         }
@@ -261,7 +256,7 @@ public class HttpTaskRunner {
         return mStat;
     }
 
-    private void taskFinished(IHttpTask task, int status) {
+    private void taskFinished(rssminer.fetcher.IHttpTask task, int status) {
         ++mCounter;
         mConcurrent.release();
         recordStat(status);
@@ -303,7 +298,7 @@ public class HttpTaskRunner {
             logger.info(toString());
         }
     }
-    
+
     public String toString() {
         return format("%s: %s", mName, computeStat());
     }
@@ -314,10 +309,10 @@ public class HttpTaskRunner {
                 break;
             }
             // first bulk fetch, since it fast, then blocking get
-            List<IHttpTask> tasks = mBulkProvider.getTasks();
+            List<rssminer.fetcher.IHttpTask> tasks = mBulkProvider.getTasks();
             if (tasks != null) {
                 boolean add = false;
-                for (IHttpTask t : tasks) {
+                for (rssminer.fetcher.IHttpTask t : tasks) {
                     if (addTask(t)) {
                         add = true;
                     }

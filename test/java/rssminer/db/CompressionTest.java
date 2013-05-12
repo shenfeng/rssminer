@@ -7,7 +7,7 @@ import java.util.zip.Deflater;
 
 public class CompressionTest {
 
-    static String JDBC_URL = "jdbc:mysql://localhost/rssminer?cachePrepStmts=true&useServerPrepStmts=true";
+    static String JDBC_URL = "jdbc:mysql://192.168.1.101/rssminer?cachePrepStmts=true&useServerPrepStmts=true";
 
     // @Test
     public void testDeflater() throws IOException {

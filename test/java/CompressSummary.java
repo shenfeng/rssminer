@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 public class CompressSummary {
 
-    static String JDBC_URL = "jdbc:mysql://localhost/rssminer?cachePrepStmts=true&useServerPrepStmts=true";
+    static String JDBC_URL = "jdbc:mysql://192.168.1.101/rssminer?cachePrepStmts=true&useServerPrepStmts=true";
     final static int STEP = 1000;
     final static int REPORT = STEP * 10;
 

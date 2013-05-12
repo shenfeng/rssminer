@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"flag"
+	"hash/crc32"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -18,6 +19,7 @@ var (
 	dbroot    = flag.String("dbroot", ".", "data dir root")
 	addr      = flag.String("addr", ":7167", "HTTP service address (e.g., ':7167') ")
 	NOT_FOUND = errors.New("Not found")
+	CORRUPTED = errors.New("Corrupted")
 )
 
 const (
@@ -27,19 +29,26 @@ const (
 	MIN_INDEX_LENGtH = 1024 * 1024 * 16 //  16M
 	MIN_DATA_LENGtH  = 1024 * 1024 * 64
 	DATA_GROW_STEP   = 1024 * 1024 * 256
-	META_LENGTH      = 12 // key(40bit), data length(24bit), crc(32 bit)
+	// META_LENGTH      = 12 // key(40bit), data length(24bit), crc(32 bit)
 )
 
 type Dict struct {
 	mu    sync.Mutex
 	Name  string
 	data  []byte //  dataIdx is the first 8 byte
-	index []byte //  indexIdx is the first 8 byte
+	index []byte
 }
 
 type Feedb struct {
 	mu     sync.Mutex
 	tables map[string]*Dict
+}
+
+func writeByte(b []byte, l int, bitcount int) {
+	step := bitcount / 8
+	for i := 0; i < step; i++ {
+		b[i] = byte(l >> uint32((bitcount - (i+1)*8)))
+	}
 }
 
 func (db *Feedb) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -72,8 +81,8 @@ func (db *Feedb) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/octet-stream")
 			}
 
-			if r.Form.Get("gzip") != "" {
-				w.Header().Set("Content-Encoding", "gzip")
+			if r.Form.Get("deflate") != "" {
+				w.Header().Set("Content-Encoding", "deflate")
 			}
 			//			w.WriteHeader(200)
 			w.Write(data)
@@ -93,7 +102,6 @@ func (db *Feedb) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Error(w, "404 page not found", http.StatusNotFound)
-
 }
 
 func (db *Dict) Get(key uint64) (data []byte, err error) {
@@ -111,10 +119,16 @@ func (db *Dict) Get(key uint64) (data []byte, err error) {
 		return nil, NOT_FOUND
 	}
 
-	return db.data[offset : offset+length], nil
+	r := db.data[offset : offset+length]
+	if crc32.ChecksumIEEE(r) != binary.BigEndian.Uint32(db.data[offset-4:]) {
+		log.Println("ERROR: data corrupted:", key, string(r))
+		return nil, CORRUPTED
+	}
+
+	return r, nil
 }
 
-func (db *Dict) Set(key int, data []byte) error {
+func (db *Dict) Set(key int, bytes []byte) error {
 	db.mu.Lock()
 	defer db.mu.Unlock()
 	indexIdx := key * 8
@@ -131,9 +145,11 @@ func (db *Dict) Set(key int, data []byte) error {
 		db.index = openMmap(path.Join(*dbroot, db.Name, INDEX_FILE), int64(capacity))
 	}
 
-	offset := int64(binary.BigEndian.Uint64(db.data)) + META_LENGTH
+	// offset if where actually data is written
+	// 8 byte for Index
+	offset := int64(binary.BigEndian.Uint64(db.data)) + 4 + 8
 	oldLength := int64(len(db.data))
-	if offset+int64(len(data)) >= oldLength { // expand data
+	if offset+int64(len(bytes)) >= oldLength { // expand data
 		if err := syscall.Munmap(db.data); err != nil {
 			log.Println("ERROR: ", err)
 			return err
@@ -142,28 +158,26 @@ func (db *Dict) Set(key int, data []byte) error {
 	}
 
 	// write data
-	copy(db.data[offset:], data) // leave 8 byte for key | length, 4 byte for crc
-	binary.BigEndian.PutUint64(db.data, uint64(offset+int64(len(data))-META_LENGTH))
+	copy(db.data[offset:], bytes) // leave 8 byte for key | length, 4 byte for crc
+	binary.BigEndian.PutUint32(db.data[offset-4:], crc32.ChecksumIEEE(bytes))
+
+	// write data index to the first 8 byte
+	binary.BigEndian.PutUint64(db.data, uint64(offset+int64(len(bytes)))-8)
 
 	// write index
-	b := db.index
-	start := key * 8
-	b[start+0] = byte(offset >> 32)
-	b[start+1] = byte(offset >> 24)
-	b[start+2] = byte(offset >> 16)
-	b[start+3] = byte(offset >> 8)
-	b[start+4] = byte(offset)
+	writeByte(db.index[key*8:], int(offset), 40)
+	writeByte(db.index[key*8+5:], len(bytes), 24)
 
-	l := len(data)
-	b[start+5] = byte(l >> 16)
-	b[start+6] = byte(l >> 8)
-	b[start+7] = byte(l)
+	// write meta data
+	// writeByte(db.data[offset-META_LENGTH:], key, 40)
+	// writeByte(db.data[offset-META_LENGTH+5:], len(bytes), 24)
+	// writeByte(, int(), 32)
 
 	return nil
 }
 
 func openMmap(f string, minLength int64) []byte {
-	// TODO close
+	// will zero the bit
 	fd, err := syscall.Open(f, syscall.O_RDWR|syscall.O_CREAT, 0666)
 	if err != nil {
 		log.Fatal(err)
@@ -214,6 +228,8 @@ func readExitingFiles(dbroot string) (db *Feedb) {
 
 func main() {
 	flag.Parse()
+
+	log.Println(100, 100>>0)
 	//	log.SetFlags(log.Llongfile | log.LstdFlags)
 
 	//	arr := []byte{1, 2 , 3, 4, 5, 6, 7, 8}
