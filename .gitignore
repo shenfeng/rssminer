@@ -36,3 +36,4 @@ test/failed_rss/
 /android/gen
 /android/local.properties
 *ic_launcher.png
+/feedb/feedb.iml
