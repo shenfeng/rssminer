@@ -10,26 +10,25 @@ def test_ok(con, id, data):
     resp = con.getresponse()
     status = resp.status
     if status != 200:
-        print "GET data expect 200:", id, "get:", status
+        print "ERROR: expect 200:", id, "get:", status
     r = resp.read()
 
     if data:
         if r != data:
-            print "Did not get expected", len(r), len(data)
+            print "ERROR: not get expected", len(r), len(data)
             print r, "=-----------=-", data
     elif len(r) < 1:
-        print "Error, length is 1"
+        print "Error: length is 0"
 
 
 def send_and_get(id, ids=[]):
     data = "abc1234" * random.randint(1, 10)
-    print id, data
     con = httplib.HTTPConnection(HOST)
     con.request('POST', '/d/test?id=' + str(id) + "&len=" + str(len(data)), data)
     resp = con.getresponse()
     r = resp.read()
     if r != "OK":
-        print "POST expect OK:", id, "get:", r
+        print "ERROR: POST expect OK:", id, "get:", r
         # con.close()
     test_ok(con, id, data)
     ids.append(id)

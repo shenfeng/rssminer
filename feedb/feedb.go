@@ -44,13 +44,6 @@ type Feedb struct {
 	tables map[string]*Dict
 }
 
-func writeByte(b []byte, l int, bitcount int) {
-	step := bitcount / 8
-	for i := 0; i < step; i++ {
-		b[i] = byte(l >> uint32((bitcount - (i+1)*8)))
-	}
-}
-
 func (db *Feedb) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	uri := r.RequestURI
 	if strings.HasPrefix(uri, DB_PREFEX) {
@@ -110,10 +103,15 @@ func (db *Dict) Get(key uint64) (data []byte, err error) {
 		return nil, NOT_FOUND
 	}
 	// bigEndian  offset(40bit) | length(24bit)
-	idx := db.index[key*8 : key*8+8]
-	offset := uint64(idx[4]) | uint64(idx[3])<<8 | uint64(idx[2])<<16 |
-		uint64(idx[1])<<24 | uint64(idx[0])<<32
-	length := uint64(idx[7]) | uint64(idx[6])<<8 | uint64(idx[5])<<16
+//	idx := db.index[key*8 : key*8+8]
+
+	idx := binary.BigEndian.Uint64(db.index[key*8:])
+	offset := idx >> 24
+	length := idx & 0xffffff
+
+//	offset := uint64(idx[4]) | uint64(idx[3])<<8 | uint64(idx[2])<<16 |
+//		uint64(idx[1])<<24 | uint64(idx[0])<<32
+//	length := uint64(idx[7]) | uint64(idx[6])<<8 | uint64(idx[5])<<16
 
 	if offset == 0 || length == 0 {
 		return nil, NOT_FOUND
@@ -164,9 +162,13 @@ func (db *Dict) Set(key int, bytes []byte) error {
 	// write data index to the first 8 byte
 	binary.BigEndian.PutUint64(db.data, uint64(offset+int64(len(bytes)))-8)
 
+
+	idx := uint64(offset) << 24 + uint64(len(bytes))
+	binary.BigEndian.PutUint64(db.index[key*8:], idx)
+
 	// write index
-	writeByte(db.index[key*8:], int(offset), 40)
-	writeByte(db.index[key*8+5:], len(bytes), 24)
+//	writeByte(db.index[key*8:], int(offset), 40)
+//	writeByte(db.index[key*8+5:], len(bytes), 24)
 
 	// write meta data
 	// writeByte(db.data[offset-META_LENGTH:], key, 40)
