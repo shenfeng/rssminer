@@ -29,7 +29,6 @@ const (
 	MIN_INDEX_LENGtH = 1024 * 1024 * 16 //  16M
 	MIN_DATA_LENGtH  = 1024 * 1024 * 64
 	DATA_GROW_STEP   = 1024 * 1024 * 256
-	// META_LENGTH      = 12 // key(40bit), data length(24bit), crc(32 bit)
 )
 
 type Dict struct {
@@ -102,16 +101,10 @@ func (db *Dict) Get(key uint64) (data []byte, err error) {
 	if uint64(len(db.index)) < key*8 {
 		return nil, NOT_FOUND
 	}
-	// bigEndian  offset(40bit) | length(24bit)
-//	idx := db.index[key*8 : key*8+8]
 
 	idx := binary.BigEndian.Uint64(db.index[key*8:])
 	offset := idx >> 24
 	length := idx & 0xffffff
-
-//	offset := uint64(idx[4]) | uint64(idx[3])<<8 | uint64(idx[2])<<16 |
-//		uint64(idx[1])<<24 | uint64(idx[0])<<32
-//	length := uint64(idx[7]) | uint64(idx[6])<<8 | uint64(idx[5])<<16
 
 	if offset == 0 || length == 0 {
 		return nil, NOT_FOUND
@@ -162,18 +155,8 @@ func (db *Dict) Set(key int, bytes []byte) error {
 	// write data index to the first 8 byte
 	binary.BigEndian.PutUint64(db.data, uint64(offset+int64(len(bytes)))-8)
 
-
-	idx := uint64(offset) << 24 + uint64(len(bytes))
+	idx := uint64(offset)<<24 + uint64(len(bytes))
 	binary.BigEndian.PutUint64(db.index[key*8:], idx)
-
-	// write index
-//	writeByte(db.index[key*8:], int(offset), 40)
-//	writeByte(db.index[key*8+5:], len(bytes), 24)
-
-	// write meta data
-	// writeByte(db.data[offset-META_LENGTH:], key, 40)
-	// writeByte(db.data[offset-META_LENGTH+5:], len(bytes), 24)
-	// writeByte(, int(), 32)
 
 	return nil
 }
